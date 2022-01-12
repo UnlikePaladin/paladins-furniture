@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "id": "pfm",
+  "version": "${version}",
+
+  "name": "Paladin's Furniture Mod",
+  "description": "This is a Fabric mod that adds lots of new furniture to the game!",
+  "authors": [
+    "UnlikePaladin"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+
+  "license": "CC0-1.0",
+  "icon": "assets/pfm/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.unlikepaladin.pfm.PaladinFurnitureMod"
+    ],
+    "client": [
+      "com.unlikepaladin.pfm.client.PaladinFurnitureModClient"	
+]
+  },
+  "mixins": [
+      
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.11.3",
+    "fabric": "*",
+    "minecraft": "1.17.x",
+    "java": ">=16"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}

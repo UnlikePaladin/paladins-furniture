@@ -1,0 +1,13 @@
+{
+	"credit": "By UnlikePaladin",
+    	"parent": "pfm:block/froggy_chair",
+	"textures": {
+        
+		"particle": "pfm:block/froggy_chair_pink",
+		"0": "pfm:block/froggy_chair_pink",
+		"1": "pfm:block/froggy_chair_top_pink",
+		"2": "pfm:block/froggy_chair_back_pink"
+
+	}
+    
+}

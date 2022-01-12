@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/chair_classic_wool","y":90},
+    "facing=east":{"model":"pfm:block/chair_classic_wool","y":180},
+    "facing=south":{"model":"pfm:block/chair_classic_wool","y":270},
+    "facing=west":{"model":"pfm:block/chair_classic_wool","y":0}
+
+}
+
+}

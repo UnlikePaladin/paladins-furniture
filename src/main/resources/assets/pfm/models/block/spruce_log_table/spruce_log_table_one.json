@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/log_table/log_table_one",
+	"textures": {
+        
+		"particle": "block/spruce_planks",
+		"base": "block/spruce_planks",
+		"legs": "block/spruce_log"
+	}
+    
+}

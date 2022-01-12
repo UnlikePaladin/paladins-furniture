@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/log_stool",
+	"textures": {
+        
+		"particle": "block/spruce_log",
+		"top": "pfm:block/small_spruce_log_top",
+		"side": "block/spruce_log"
+	}
+    
+}

@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/froggy_chair_yellow","y":90},
+    "facing=east":{"model":"pfm:block/froggy_chair_yellow","y":180},
+    "facing=south":{"model":"pfm:block/froggy_chair_yellow","y":270},
+    "facing=west":{"model":"pfm:block/froggy_chair_yellow","y":0}
+
+}
+
+}

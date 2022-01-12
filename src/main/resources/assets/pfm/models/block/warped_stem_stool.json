@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/log_stool",
+	"textures": {
+        
+		"particle": "block/warped_stem",
+		"top": "pfm:block/small_warped_stem_top",
+		"side": "block/warped_stem"
+	}
+    
+}

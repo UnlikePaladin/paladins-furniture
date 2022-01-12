@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/table_basic/table_basic_double_corner",
+	"textures": {
+        
+		"particle": "block/jungle_planks",
+		"base": "block/stripped_jungle_log",
+		"legs": "block/jungle_planks"
+	}
+    
+}

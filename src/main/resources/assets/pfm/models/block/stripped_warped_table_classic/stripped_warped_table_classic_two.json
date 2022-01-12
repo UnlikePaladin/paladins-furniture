@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/table_classic/table_classic_two",
+	"textures": {
+        
+		"particle": "block/warped_planks",
+		"base": "block/stripped_warped_stem",
+		"legs": "block/warped_planks"
+	}
+    
+}

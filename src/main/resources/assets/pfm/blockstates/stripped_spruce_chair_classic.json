@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/stripped_spruce_chair_classic","y":90},
+    "facing=east":{"model":"pfm:block/stripped_spruce_chair_classic","y":180},
+    "facing=south":{"model":"pfm:block/stripped_spruce_chair_classic","y":270},
+    "facing=west":{"model":"pfm:block/stripped_spruce_chair_classic","y":0}
+
+}
+
+}

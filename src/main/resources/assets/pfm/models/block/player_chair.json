@@ -1,0 +1,72 @@
+{
+	"credit": "By UnlikePaladin",
+	"textures": {
+		"particle": "pfm:block/oak_planks",
+		"base": "pfm:block/oak_planks",
+		"legs": "pfm:block/oak_log"
+	},
+	"elements": [
+		{
+			"name": "Backrest",
+			"from": [0, 0, 0],
+			"to": [0, 0, 0],
+			"faces": {
+				"north": {"uv": [0, 0, 14, 2], "rotation": 90, "texture": "#base"},
+				"east": {"uv": [0, 1, 14, 14], "rotation": 270, "texture": "#base"},
+				"south": {"uv": [0, 0, 14, 2], "rotation": 270, "texture": "#base"},
+				"west": {"uv": [0, 1, 14, 14], "rotation": 270, "texture": "#base"},
+				"up": {"uv": [5, 1, 7, 14], "texture": "#base"},
+				"down": {"uv": [4, 0, 6, 13], "rotation": 90, "texture": "#base"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [54, -132, -5],
+			"translation": [0, 1, -1.25],
+			"scale": [0.34, 0.34, 0.34]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [59, 39, -5],
+			"translation": [0.5, 1, -1.25],
+			"scale": [0.34, 0.34, 0.34]
+		},
+		"firstperson_righthand": {
+			"rotation": [-1, -150, 0],
+			"translation": [1.25, 0, -1.25],
+			"scale": [0.46, 0.46, 0.46]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-1, 33, 0],
+			"translation": [1.25, 0, -1.25],
+			"scale": [0.46, 0.46, 0.46]
+		},
+		"ground": {
+			"translation": [0, -1, 0],
+			"scale": [0.39, 0.39, 0.39]
+		},
+		"gui": {
+			"rotation": [13, -58, 0],
+			"translation": [0.5, -2.5, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"head": {
+			"rotation": [0, 90, 0],
+			"translation": [0, 6.25, 0],
+			"scale": [0.78, 0.78, 0.78]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"translation": [0, -3.25, -5.75],
+			"scale": [0.9, 0.9, 0.9]
+		}
+	},
+	"groups": [
+		{
+			"name": "chair",
+			"origin": [0, 0, 0],
+			"color": 0
+			
+		}
+	]
+}

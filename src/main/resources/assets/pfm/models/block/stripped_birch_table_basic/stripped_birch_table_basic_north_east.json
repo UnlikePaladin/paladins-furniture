@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/table_basic/table_basic_north_east",
+	"textures": {
+        
+		"particle": "block/birch_planks",
+		"base": "block/stripped_birch_log",
+		"legs": "block/birch_planks"
+	}
+    
+}
