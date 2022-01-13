@@ -33,14 +33,7 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
     public static final Logger CLIENT_LOGGER = LogManager.getLogger();
     @Override
     public void onInitializeClient() {
-        File skincache_directory = new File(FabricLoader.getInstance().getConfigDir() + "/pfm_skincache");
-        if (!skincache_directory.exists()){
-            System.out.println("making skincache directory");
-            skincache_directory.mkdirs();
-        }
-        else{
-            System.out.println("Error making skincache directory, it probably already exists");
-        }
+
        // EntityPaladinClient.registerClientEntity();
       //  EntityRenderRegistry.registerRender();
         ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> state.get(ClassicChairDyeable.COLORID).getFireworkColor(), BlockItemRegistry.CHAIR_CLASSIC_WOOL);

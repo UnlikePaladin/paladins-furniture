@@ -50,6 +50,7 @@ public class PlayerChair extends HorizontalFacingBlockWEntity implements BlockEn
     public static final DirectionProperty FACING;
     private NbtCompound nbt = new NbtCompound();
     private final PlayerChair.ChairType type = getChairType();
+
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return (BlockState)state.with(FACING, rotation.rotate((Direction)state.get(FACING)));
     }

@@ -75,7 +75,7 @@ public class BasicChair extends HorizontalFacingBlock {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
-            if (player.hasVehicle() || player.isSpectator())
+            if (player.hasVehicle() || player.isSpectator() || player.isSneaking())
                 return ActionResult.FAIL;
 
             double px = pos.getX() + 0.5;
