@@ -6,7 +6,7 @@ import net.minecraft.block.entity.SkullBlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtHelper;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.StringHelper;
+import net.minecraft.util.ChatUtil;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +39,7 @@ public class PlayerChairBlockEntity extends SkullBlockEntity {
         return this.owner;
     }
      @Override
-    public void writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         if (this.owner != null) {
             NbtCompound nbtCompound = new NbtCompound();
@@ -47,7 +47,8 @@ public class PlayerChairBlockEntity extends SkullBlockEntity {
             nbt.put("SkullOwner", nbtCompound);
             System.out.println("Writing NBT: " + nbt );
         }
-    }
+         return nbt;
+     }
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
@@ -57,7 +58,7 @@ public class PlayerChairBlockEntity extends SkullBlockEntity {
             System.out.println("NBT Contains SkullOwner: " + nbt.getCompound("SkullOwner"));
         } else if (nbt.contains("ExtraType", 8)) {
             String string = nbt.getString("ExtraType");
-            if (!StringHelper.isEmpty(string)) {
+            if (!ChatUtil.isEmpty(string)) {
                 System.out.println("Contains Extra Type: " + string);
                 this.setOwner(new GameProfile((UUID)null, string));
             }
@@ -84,7 +85,7 @@ public class PlayerChairBlockEntity extends SkullBlockEntity {
 
     @Nullable
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.SKULL, this.toInitialChunkDataNbt());
     }
 
 }
