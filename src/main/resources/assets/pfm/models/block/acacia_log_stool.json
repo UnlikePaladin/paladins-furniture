@@ -1,11 +1,69 @@
 {
 	"credit": "By UnlikePaladin",
-    "parent": "pfm:block/log_stool",
 	"textures": {
-        
+		"top": "pfm:block/small_log_top",
 		"particle": "block/acacia_log",
-		"top": "pfm:block/small_acacia_log_top",
 		"side": "block/acacia_log"
-	}
-    
+	},
+	"elements": [
+		{
+			"from": [3, 0, 3],
+			"to": [13, 11, 13],
+			"faces": {
+				"north": {"uv": [0, 0, 10, 11], "texture": "#side"},
+				"east": {"uv": [2, 4, 12, 15], "texture": "#side"},
+				"south": {"uv": [3, 3, 13, 14], "texture": "#side"},
+				"west": {"uv": [2, 1, 12, 12], "texture": "#side"},
+				"up": {"uv": [0, 10, 5, 15], "texture": "#top"},
+				"down": {"uv": [0, 10, 5, 15], "texture": "#top"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [59, -140, 0],
+			"translation": [-0.5, 0.25, -1.5],
+			"scale": [0.39, 0.39, 0.39]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [59, 58, 0],
+			"translation": [0.5, 1, 0],
+			"scale": [0.39, 0.39, 0.39]
+		},
+		"firstperson_righthand": {
+			"rotation": [-1, -146, 0],
+			"scale": [0.44, 0.44, 0.44]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-1, 32, 0],
+			"scale": [0.44, 0.44, 0.44]
+		},
+		"ground": {
+			"translation": [0, -0.75, 0],
+			"scale": [0.39, 0.39, 0.39]
+		},
+		"gui": {
+			"rotation": [13, -58, 0],
+			"translation": [0.5, -2.5, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"head": {
+			"rotation": [-1, 90, 0],
+			"translation": [0, 4.5, 0],
+			"scale": [0.93, 0.95, 0.92]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"translation": [0, -3.5, -5.5],
+			"scale": [0.9, 0.9, 0.9]
+		}
+	},
+	"groups": [
+		{
+			"name": "chair",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [0]
+		}
+	]
 }

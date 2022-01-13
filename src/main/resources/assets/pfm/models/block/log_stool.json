@@ -1,8 +1,8 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
+		"top": "pfm:block/small_log_top",
 		"particle": "block/oak_log",
-		"top": "pfm:block/small_oak_log_top",
 		"side": "block/oak_log"
 	},
 	"elements": [
@@ -14,8 +14,8 @@
 				"east": {"uv": [2, 4, 12, 15], "texture": "#side"},
 				"south": {"uv": [3, 3, 13, 14], "texture": "#side"},
 				"west": {"uv": [2, 1, 12, 12], "texture": "#side"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#top"},
-				"down": {"uv": [0.4, 0, 16, 16], "texture": "#top"}
+				"up": {"uv": [5, 0, 10, 5], "texture": "#top"},
+				"down": {"uv": [5, 0, 10, 5], "texture": "#top"}
 			}
 		}
 	],
