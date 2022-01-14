@@ -208,6 +208,24 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_CRIMSON_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_WARPED_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
 
+    public static final Block MODERN_OAK_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_BIRCH_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_SPRUCE_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_JUNGLE_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_ACACIA_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_DARK_OAK_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_CRIMSON_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_WARPED_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_STRIPPED_OAK_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_STRIPPED_BIRCH_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_STRIPPED_SPRUCE_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_STRIPPED_JUNGLE_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_STRIPPED_ACACIA_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_STRIPPED_DARK_OAK_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_STRIPPED_CRIMSON_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MODERN_STRIPPED_WARPED_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.BLUE);
     public static final Item DYE_KIT_WHITE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.WHITE);
@@ -418,6 +436,23 @@ public class BlockItemRegistry {
         registerFurniture("stripped_dark_oak_table_dinner", STRIPPED_DARK_OAK_DINNER_TABLE);
         registerFurniture("stripped_crimson_table_dinner", STRIPPED_CRIMSON_DINNER_TABLE);
         registerFurniture("stripped_warped_table_dinner", STRIPPED_WARPED_DINNER_TABLE);
+
+        registerFurniture("oak_table_modern_dinner", MODERN_OAK_DINNER_TABLE);
+        registerFurniture("birch_table_modern_dinner", MODERN_BIRCH_DINNER_TABLE);
+        registerFurniture("spruce_table_modern_dinner", MODERN_SPRUCE_DINNER_TABLE);
+        registerFurniture("acacia_table_modern_dinner", MODERN_ACACIA_DINNER_TABLE);
+        registerFurniture("jungle_table_modern_dinner", MODERN_JUNGLE_DINNER_TABLE);
+        registerFurniture("dark_oak_table_modern_dinner", MODERN_DARK_OAK_DINNER_TABLE);
+        registerFurniture("crimson_table_modern_dinner", MODERN_CRIMSON_DINNER_TABLE);
+        registerFurniture("warped_table_modern_dinner", MODERN_WARPED_DINNER_TABLE);
+        registerFurniture("stripped_oak_table_modern_dinner", MODERN_STRIPPED_OAK_DINNER_TABLE);
+        registerFurniture("stripped_birch_table_modern_dinner", MODERN_STRIPPED_BIRCH_DINNER_TABLE);
+        registerFurniture("stripped_spruce_table_modern_dinner", MODERN_STRIPPED_SPRUCE_DINNER_TABLE);
+        registerFurniture("stripped_acacia_table_modern_dinner", MODERN_STRIPPED_ACACIA_DINNER_TABLE);
+        registerFurniture("stripped_jungle_table_modern_dinner", MODERN_STRIPPED_JUNGLE_DINNER_TABLE);
+        registerFurniture("stripped_dark_oak_table_modern_dinner", MODERN_STRIPPED_DARK_OAK_DINNER_TABLE);
+        registerFurniture("stripped_crimson_table_modern_dinner", MODERN_STRIPPED_CRIMSON_DINNER_TABLE);
+        registerFurniture("stripped_warped_table_modern_dinner", MODERN_STRIPPED_WARPED_DINNER_TABLE);
 
         registerFurniture("oak_log_stool", OAK_LOG_STOOL);
         registerFurniture("birch_log_stool", BIRCH_LOG_STOOL);

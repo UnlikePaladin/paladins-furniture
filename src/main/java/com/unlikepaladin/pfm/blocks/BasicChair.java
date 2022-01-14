@@ -1,12 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.UnmodifiableIterator;
 import com.unlikepaladin.pfm.entity.EntityChair;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.minecraft.block.*;
-import net.minecraft.entity.Dismounting;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -18,12 +14,9 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.CollisionView;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 public class BasicChair extends HorizontalFacingBlock {
@@ -70,7 +63,6 @@ public class BasicChair extends HorizontalFacingBlock {
 
         }
     }
-
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
