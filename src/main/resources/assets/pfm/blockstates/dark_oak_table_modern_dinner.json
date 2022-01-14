@@ -1,0 +1,129 @@
+{
+    "multipart": [
+        {
+            "when": { "AND": [
+                { "table_type": "single" },
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner"}
+        },
+        {
+            "when": { "AND": [
+                { "table_type": "single" },
+                { "facing": "south" }
+            ]},
+            "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner"}
+        },
+        
+        {
+            "when": { "AND": [
+                { "table_type": "single" },
+                { "facing": "east" }
+            ]},
+            "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner","y":90}
+        },
+        {
+            "when": { "AND": [
+                { "table_type": "single" },
+                { "facing": "west" }
+            ]},
+            "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner","y":90}
+        },
+        
+      
+      
+      
+        {
+            "when": { "AND": [
+                { "table_type": "middle" },
+                {"facing":"north"}
+            ]},
+            "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_middle" }
+        },
+        {
+            "when": { "AND": [
+                { "table_type": "middle" },
+                {"facing":"east"}
+            ]},
+            "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_middle", "y":90 }
+        },
+        {
+            "when": { "AND": [
+                { "table_type": "middle" },
+                {"facing":"west"}
+            ]},
+            "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_middle","y":90 }
+        },
+        {
+            "when": { "AND": [
+                { "table_type": "middle" },
+                {"facing":"south"}
+            ]},
+            "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_middle" }
+        },
+        
+        
+    
+        {
+        "when": { "AND": [
+            { "table_type": "left" },
+            {"facing":"north"}
+        ]},
+        "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_right"  }
+    },
+        {
+        "when": { "AND": [
+            { "table_type": "left" },
+            {"facing":"west"}
+        ]},
+        "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_left", "y":90  }
+    },
+        {
+        "when": { "AND": [
+            { "table_type": "left" },
+            {"facing":"east"}
+        ]},
+        "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_right", "y":90 }
+    },
+        {
+        "when": { "AND": [
+            { "table_type": "left" },
+            {"facing":"south"}
+        ]},
+        "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_left"  }
+    },
+        
+        
+    {
+    "when": { "AND": [
+        { "table_type": "right" },
+        {"facing":"north"}
+    ]},
+    "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_left", "y":0  }
+},
+    {
+    "when": { "AND": [
+        { "table_type": "right" },
+        {"facing":"west"}
+    ]},
+    "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_left", "y":270  }
+},
+    {
+    "when": { "AND": [
+        { "table_type": "right" },
+        {"facing":"east"}
+    ]},
+    "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_right", "y":270  }
+},
+    {
+    "when": { "AND": [
+        { "table_type": "right" },
+        {"facing":"south"}
+    ]},
+    "apply": { "model": "pfm:block/dark_oak_table_modern_dinner/dark_oak_table_modern_dinner_right", "y":0  }
+}
+   
+   
+        
+    ]
+}
