@@ -60,7 +60,10 @@ public class BasicTable extends HorizontalFacingBlock {
             this.baseBlock.onBlockAdded(this.baseBlockState, world, pos, oldState, false);
         }
     }
-
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
 
 
     @Override

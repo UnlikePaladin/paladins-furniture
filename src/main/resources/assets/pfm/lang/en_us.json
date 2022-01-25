@@ -213,5 +213,7 @@
   "block.pfm.stripped_jungle_table_dinner": "Stripped Jungle Dining Table",
   "block.pfm.stripped_dark_oak_table_dinner": "Stripped Dark Oak Dining Table",
   "block.pfm.stripped_crimson_table_dinner": "Stripped Crimson Dining Table",
-  "block.pfm.stripped_warped_table_dinner": "Stripped Warped Dining Table"
+  "block.pfm.stripped_warped_table_dinner": "Stripped Warped Dining Table",
+
+  "block.pfm.oak_kitchen_counter": "Oak Kitchen Counter"
 }

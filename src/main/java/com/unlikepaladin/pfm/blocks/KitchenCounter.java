@@ -23,6 +23,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.w3c.dom.css.Counter;
 
 
 public class KitchenCounter extends HorizontalFacingBlock {
@@ -38,6 +39,10 @@ public class KitchenCounter extends HorizontalFacingBlock {
         this.baseBlock = baseBlockState.getBlock();
     }
 
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
@@ -118,7 +123,6 @@ public class KitchenCounter extends HorizontalFacingBlock {
 
 
 
-  protected static final VoxelShape FACE_SOUTH = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 16));
     @SuppressWarnings("deprecated")
 
 
@@ -129,21 +133,100 @@ public class KitchenCounter extends HorizontalFacingBlock {
             this.baseBlock.onBlockAdded(this.baseBlockState, world, pos, oldState, false);
         }
     }
+    /**
+     * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/
+     */
+    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+
+        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
+        for (int i = 0; i < times; i++) {
+            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
+            buffer[0] = buffer[1];
+            buffer[1] = VoxelShapes.empty();
+        }
+
+        return buffer[0];
+    }
+
+
+    protected static final VoxelShape STRAIGHT = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 1, 12), createCuboidShape(0, 1, 0,16, 14, 13), createCuboidShape(0, 14, 0,16, 16, 16));
+    protected static final VoxelShape INNER_CORNER = VoxelShapes.union(createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(0, 1, 0,16, 14, 13),createCuboidShape(3, 1, 13,16, 14, 16));
+    protected static final VoxelShape OUTER_CORNER = VoxelShapes.union(createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(0, 1, 0,13, 14, 13),createCuboidShape(0, 0, 0,12, 1, 12));
+    protected static final VoxelShape LEFT_EDGE = VoxelShapes.union(createCuboidShape(2, 0, 0,16, 1, 12), createCuboidShape(2, 1, 0,16, 14, 13), createCuboidShape(0, 0, 0,2, 14, 16),createCuboidShape(0, 14, 0,16, 16, 16));
+    protected static final VoxelShape RIGHT_EDGE = VoxelShapes.union(createCuboidShape(0, 0, 0,14, 1, 12), createCuboidShape(0, 1, 0,14, 14, 13), createCuboidShape(14, 0, 0,16, 14, 16),createCuboidShape(0, 14, 0,16, 16, 16));
 
     @Override
-
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        switch(dir) {
-            case WEST:
-                return FACE_SOUTH;
-            case NORTH:
-                return FACE_SOUTH;
-            case SOUTH:
-                return FACE_SOUTH;
-            case EAST:
+        CounterShape shape = state.get(SHAPE);
+        switch(shape) {
+            case STRAIGHT:
+                if(dir.equals(Direction.NORTH))
+                    return STRAIGHT;
+                else if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT);
+                else if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT);
+                else
+                    return rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT);
+            case INNER_LEFT:
+                if(dir.equals(Direction.NORTH))
+                    return rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
+                else if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
+                else if (dir.equals(Direction.EAST))
+                    return INNER_CORNER;
+                else
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
+
+            case INNER_RIGHT:
+                if(dir.equals(Direction.NORTH))
+                    return INNER_CORNER;
+                else if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
+                else if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
+                else
+                    return rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
+            case OUTER_LEFT:
+                if(dir.equals(Direction.NORTH))
+                    return OUTER_CORNER;
+                else if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
+                else if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
+                else
+                    return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
+            case OUTER_RIGHT:
+                if(dir.equals(Direction.NORTH))
+                    return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
+                else if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
+                else if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
+                else
+                    return OUTER_CORNER;
+            case LEFT_EDGE:
+                if(dir.equals(Direction.NORTH))
+                    return LEFT_EDGE;
+                else if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE);
+                else if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE);
+                else
+                    return rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE);
+            case RIGHT_EDGE:
+                if(dir.equals(Direction.NORTH))
+                    return RIGHT_EDGE;
+                else if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE);
+                else if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
+                else
+                    return rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE);
             default:
-                return FACE_SOUTH;
+                return STRAIGHT;
         }
     }
 

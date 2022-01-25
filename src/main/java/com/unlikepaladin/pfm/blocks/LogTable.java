@@ -89,7 +89,10 @@ public class LogTable extends HorizontalFacingBlock {
         return state.with(SHAPE, TableShape.SINGLE);
     }
 
-
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
 
     /**
      * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/

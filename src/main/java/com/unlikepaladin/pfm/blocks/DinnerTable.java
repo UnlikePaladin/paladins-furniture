@@ -31,6 +31,10 @@ public class DinnerTable extends HorizontalFacingBlock {
         this.baseBlock = baseBlockState.getBlock();
     }
 
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
