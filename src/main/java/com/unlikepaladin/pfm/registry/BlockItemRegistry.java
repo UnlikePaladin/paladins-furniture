@@ -209,6 +209,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_WARPED_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
 
     public static final Block OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
 
 
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
@@ -437,6 +438,7 @@ public class BlockItemRegistry {
 
         //Counter time
         registerFurniture("oak_kitchen_counter", OAK_KITCHEN_COUNTER);
+        registerFurniture("oak_kitchen_drawer", OAK_KITCHEN_DRAWER);
 
         //Dye Kits
         registerItem("dye_kit_red", DYE_KIT_RED);

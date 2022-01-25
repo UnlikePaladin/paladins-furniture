@@ -110,21 +110,10 @@
   "block.pfm.acacia_table_basic": "Basic Acacia Table",
   "block.pfm.jungle_table_basic": "Basic Jungle Table",
   "block.pfm.dark_oak_table_basic": "Basic Dark Oak Table",
-  "block.pfm.oak_table_basic": "Basic Oak Table",
-  "block.pfm.birch_table_basic": "Basic Birch Table",
-  "block.pfm.spruce_table_basic": "Basic Spruce Table",
-  "block.pfm.acacia_table_basic": "Basic Acacia Table",
-  "block.pfm.jungle_table_basic": "Basic Jungle Table",
-  "block.pfm.dark_oak_table_basic": "Basic Dark Oak Table",
   "block.pfm.crimson_table_basic": "Basic Crimson Table",
   "block.pfm.warped_table_basic": "Basic Warped Table",
 
-  "block.pfm.stripped_oak_table_basic": "Basic Oak Table",
-  "block.pfm.stripped_birch_table_basic": "Basic Birch Table",
-  "block.pfm.stripped_spruce_table_basic": "Basic Spruce Table",
-  "block.pfm.stripped_acacia_table_basic": "Basic Acacia Table",
-  "block.pfm.stripped_jungle_table_basic": "Basic Jungle Table",
-  "block.pfm.stripped_dark_oak_table_basic": "Basic Dark Oak Table",
+
   "block.pfm.stripped_oak_table_basic": "Basic Stripped Oak Table",
   "block.pfm.stripped_birch_table_basic": "Basic Stripped Birch Table",
   "block.pfm.stripped_spruce_table_basic": "Basic Stripped Spruce Table",
@@ -214,6 +203,6 @@
   "block.pfm.stripped_dark_oak_table_dinner": "Stripped Dark Oak Dining Table",
   "block.pfm.stripped_crimson_table_dinner": "Stripped Crimson Dining Table",
   "block.pfm.stripped_warped_table_dinner": "Stripped Warped Dining Table",
-
+  "container.pfm.drawer": "Kitchen Drawer",
   "block.pfm.oak_kitchen_counter": "Oak Kitchen Counter"
 }

@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm;
 
 import com.unlikepaladin.pfm.blockentities.PlayerChairBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.DrawerBlockEntity;
 import com.unlikepaladin.pfm.client.PlayerChairScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
@@ -24,6 +25,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static final Identifier Player_Chair_Screen = new Identifier(MOD_ID, "player_chair_screen");
 	public static final ScreenHandlerType<PlayerChairScreenHandler> Player_Chair_Screen_Handler = ScreenHandlerRegistry.registerExtended(id("pfm"), PlayerChairScreenHandler::new);
 
+	public static BlockEntityType<DrawerBlockEntity> DRAWER_BLOCK_ENTITY;
 
 	public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
 	public static SoundEvent FURNITURE_DYED_EVENT = new SoundEvent(FURNITURE_DYED_ID);
@@ -75,6 +77,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 		// Proceed with mild caution.
 		EntityRegistry.registerEntities();
 		BlockItemRegistry.register();
+		DRAWER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":drawer_block_entity", FabricBlockEntityTypeBuilder.create(DrawerBlockEntity::new, BlockItemRegistry.OAK_KITCHEN_DRAWER).build(null));
 		PLAYER_CHAIR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":player_chair_block_entity", FabricBlockEntityTypeBuilder.create(PlayerChairBlockEntity::new, BlockItemRegistry.PLAYER_CHAIR).build(null));
 
 	}
