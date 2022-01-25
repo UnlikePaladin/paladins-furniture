@@ -208,6 +208,9 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_CRIMSON_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_WARPED_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
 
+    public static final Block OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.BLUE);
     public static final Item DYE_KIT_WHITE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.WHITE);
@@ -431,6 +434,9 @@ public class BlockItemRegistry {
         //Item Registry
             //This makes the chair inaccessible, on purpose
           //Registry.register(Registry.ITEM, new Identifier(MOD_ID, "player_chair"), new BlockItem(PLAYER_CHAIR, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
+
+        //Counter time
+        registerFurniture("oak_kitchen_counter", OAK_KITCHEN_COUNTER);
 
         //Dye Kits
         registerItem("dye_kit_red", DYE_KIT_RED);
