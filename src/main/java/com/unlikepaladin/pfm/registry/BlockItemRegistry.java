@@ -14,6 +14,8 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
+import java.util.function.Supplier;
+
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 
 public class BlockItemRegistry {
@@ -211,6 +213,9 @@ public class BlockItemRegistry {
     public static final Block OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
 
+    public static final Block WHITE_FREEZER = new Freezer(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block WHITE_FRIDGE = new Fridge(FabricBlockSettings.copyOf(OAK_CHAIR).nonOpaque(), () -> BlockItemRegistry.WHITE_FREEZER);
+
 
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.BLUE);
@@ -231,9 +236,11 @@ public class BlockItemRegistry {
 
 
 
-    public static void registerFurniture(String blockName, Block block) {
+    public static void registerFurniture(String blockName, Block block, Boolean registerItem) {
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, blockName),  block);
+        if (registerItem) {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, blockName), new BlockItem(block, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
+        }
     }
 
     public static void registerItem(String itemName, Item item) {
@@ -243,202 +250,205 @@ public class BlockItemRegistry {
     public static void register(){
         //Block Registry
         //Basic Chairs
-        registerFurniture("oak_chair", OAK_CHAIR);
-        registerFurniture("birch_chair", BIRCH_CHAIR);
-        registerFurniture("spruce_chair", SPRUCE_CHAIR);
-        registerFurniture("acacia_chair", ACACIA_CHAIR);
-        registerFurniture("jungle_chair", JUNGLE_CHAIR);
-        registerFurniture("dark_oak_chair", DARK_OAK_CHAIR);
-        registerFurniture("warped_chair", WARPED_CHAIR);
-        registerFurniture("crimson_chair", CRIMSON_CHAIR);
-        registerFurniture("stripped_oak_chair", STRIPPED_OAK_CHAIR);
-        registerFurniture("stripped_birch_chair", STRIPPED_BIRCH_CHAIR);
-        registerFurniture("stripped_spruce_chair", STRIPPED_SPRUCE_CHAIR);
-        registerFurniture("stripped_acacia_chair", STRIPPED_ACACIA_CHAIR);
-        registerFurniture("stripped_jungle_chair", STRIPPED_JUNGLE_CHAIR);
-        registerFurniture("stripped_dark_oak_chair", STRIPPED_DARK_OAK_CHAIR);
-        registerFurniture("stripped_warped_chair", STRIPPED_WARPED_CHAIR);
-        registerFurniture("stripped_crimson_chair", STRIPPED_CRIMSON_CHAIR);
-        registerFurniture("quartz_chair", QUARTZ_CHAIR);
-        registerFurniture("netherite_chair", NETHERITE_CHAIR);
+        registerFurniture("oak_chair", OAK_CHAIR, true);
+        registerFurniture("birch_chair", BIRCH_CHAIR, true);
+        registerFurniture("spruce_chair", SPRUCE_CHAIR, true);
+        registerFurniture("acacia_chair", ACACIA_CHAIR, true);
+        registerFurniture("jungle_chair", JUNGLE_CHAIR, true);
+        registerFurniture("dark_oak_chair", DARK_OAK_CHAIR, true);
+        registerFurniture("warped_chair", WARPED_CHAIR, true);
+        registerFurniture("crimson_chair", CRIMSON_CHAIR, true);
+        registerFurniture("stripped_oak_chair", STRIPPED_OAK_CHAIR, true);
+        registerFurniture("stripped_birch_chair", STRIPPED_BIRCH_CHAIR, true);
+        registerFurniture("stripped_spruce_chair", STRIPPED_SPRUCE_CHAIR, true);
+        registerFurniture("stripped_acacia_chair", STRIPPED_ACACIA_CHAIR, true);
+        registerFurniture("stripped_jungle_chair", STRIPPED_JUNGLE_CHAIR, true);
+        registerFurniture("stripped_dark_oak_chair", STRIPPED_DARK_OAK_CHAIR, true);
+        registerFurniture("stripped_warped_chair", STRIPPED_WARPED_CHAIR, true);
+        registerFurniture("stripped_crimson_chair", STRIPPED_CRIMSON_CHAIR, true);
+        registerFurniture("quartz_chair", QUARTZ_CHAIR, true);
+        registerFurniture("netherite_chair", NETHERITE_CHAIR, true);
 
 
         //much concern
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "player_chair"), PLAYER_CHAIR);
+        //Registry.register(Registry.BLOCK, new Identifier(MOD_ID, "player_chair"), PLAYER_CHAIR);
 
         //Dinner Chairs
-        registerFurniture("oak_chair_dinner", OAK_CHAIR_DINNER);
-        registerFurniture("birch_chair_dinner", BIRCH_CHAIR_DINNER);
-        registerFurniture("spruce_chair_dinner", SPRUCE_CHAIR_DINNER);
-        registerFurniture("acacia_chair_dinner", ACACIA_CHAIR_DINNER);
-        registerFurniture("jungle_chair_dinner", JUNGLE_CHAIR_DINNER);
-        registerFurniture("dark_oak_chair_dinner", DARK_OAK_CHAIR_DINNER);
-        registerFurniture("warped_chair_dinner", WARPED_CHAIR_DINNER);
-        registerFurniture("crimson_chair_dinner", CRIMSON_CHAIR_DINNER);
-        registerFurniture("stripped_oak_chair_dinner", STRIPPED_OAK_CHAIR_DINNER);
-        registerFurniture("stripped_birch_chair_dinner", STRIPPED_BIRCH_CHAIR_DINNER);
-        registerFurniture("stripped_spruce_chair_dinner", STRIPPED_SPRUCE_CHAIR_DINNER);
-        registerFurniture("stripped_acacia_chair_dinner", STRIPPED_ACACIA_CHAIR_DINNER);
-        registerFurniture("stripped_jungle_chair_dinner", STRIPPED_JUNGLE_CHAIR_DINNER);
-        registerFurniture("stripped_dark_oak_chair_dinner", STRIPPED_DARK_OAK_CHAIR_DINNER);
-        registerFurniture("stripped_warped_chair_dinner", STRIPPED_WARPED_CHAIR_DINNER);
-        registerFurniture("stripped_crimson_chair_dinner", STRIPPED_CRIMSON_CHAIR_DINNER);
+        registerFurniture("oak_chair_dinner", OAK_CHAIR_DINNER, true);
+        registerFurniture("birch_chair_dinner", BIRCH_CHAIR_DINNER, true);
+        registerFurniture("spruce_chair_dinner", SPRUCE_CHAIR_DINNER, true);
+        registerFurniture("acacia_chair_dinner", ACACIA_CHAIR_DINNER, true);
+        registerFurniture("jungle_chair_dinner", JUNGLE_CHAIR_DINNER, true);
+        registerFurniture("dark_oak_chair_dinner", DARK_OAK_CHAIR_DINNER, true);
+        registerFurniture("warped_chair_dinner", WARPED_CHAIR_DINNER, true);
+        registerFurniture("crimson_chair_dinner", CRIMSON_CHAIR_DINNER, true);
+        registerFurniture("stripped_oak_chair_dinner", STRIPPED_OAK_CHAIR_DINNER, true);
+        registerFurniture("stripped_birch_chair_dinner", STRIPPED_BIRCH_CHAIR_DINNER, true);
+        registerFurniture("stripped_spruce_chair_dinner", STRIPPED_SPRUCE_CHAIR_DINNER, true);
+        registerFurniture("stripped_acacia_chair_dinner", STRIPPED_ACACIA_CHAIR_DINNER, true);
+        registerFurniture("stripped_jungle_chair_dinner", STRIPPED_JUNGLE_CHAIR_DINNER, true);
+        registerFurniture("stripped_dark_oak_chair_dinner", STRIPPED_DARK_OAK_CHAIR_DINNER, true);
+        registerFurniture("stripped_warped_chair_dinner", STRIPPED_WARPED_CHAIR_DINNER, true);
+        registerFurniture("stripped_crimson_chair_dinner", STRIPPED_CRIMSON_CHAIR_DINNER, true);
 
 
         //Froggy Chairs
-        registerFurniture("froggy_chair", FROGGY_CHAIR);
-        registerFurniture("froggy_chair_pink", FROGGY_CHAIR_PINK);
-        registerFurniture("froggy_chair_light_blue", FROGGY_CHAIR_LIGHT_BLUE);
-        registerFurniture("froggy_chair_blue", FROGGY_CHAIR_BLUE);
-        registerFurniture("froggy_chair_orange",FROGGY_CHAIR_ORANGE);
-        registerFurniture("froggy_chair_yellow", FROGGY_CHAIR_YELLOW);
+        registerFurniture("froggy_chair", FROGGY_CHAIR, true);
+        registerFurniture("froggy_chair_pink", FROGGY_CHAIR_PINK, true);
+        registerFurniture("froggy_chair_light_blue", FROGGY_CHAIR_LIGHT_BLUE, true);
+        registerFurniture("froggy_chair_blue", FROGGY_CHAIR_BLUE, true);
+        registerFurniture("froggy_chair_orange",FROGGY_CHAIR_ORANGE, true);
+        registerFurniture("froggy_chair_yellow", FROGGY_CHAIR_YELLOW, true);
 
         //Classic Chairs
-        registerFurniture("chair_classic_wool", CHAIR_CLASSIC_WOOL);
-        registerFurniture("oak_chair_classic", OAK_CHAIR_CLASSIC);
-        registerFurniture("birch_chair_classic", BIRCH_CHAIR_CLASSIC);
-        registerFurniture("spruce_chair_classic", SPRUCE_CHAIR_CLASSIC);
-        registerFurniture("acacia_chair_classic", ACACIA_CHAIR_CLASSIC);
-        registerFurniture("jungle_chair_classic", JUNGLE_CHAIR_CLASSIC);
-        registerFurniture("dark_oak_chair_classic", DARK_OAK_CHAIR_CLASSIC);
-        registerFurniture("warped_chair_classic", WARPED_CHAIR_CLASSIC);
-        registerFurniture("crimson_chair_classic", CRIMSON_CHAIR_CLASSIC);
-        registerFurniture("stripped_oak_chair_classic", STRIPPED_OAK_CHAIR_CLASSIC);
-        registerFurniture("stripped_birch_chair_classic", STRIPPED_BIRCH_CHAIR_CLASSIC);
-        registerFurniture("stripped_spruce_chair_classic", STRIPPED_SPRUCE_CHAIR_CLASSIC);
-        registerFurniture("stripped_acacia_chair_classic", STRIPPED_ACACIA_CHAIR_CLASSIC);
-        registerFurniture("stripped_jungle_chair_classic", STRIPPED_JUNGLE_CHAIR_CLASSIC);
-        registerFurniture("stripped_dark_oak_chair_classic", STRIPPED_DARK_OAK_CHAIR_CLASSIC);
-        registerFurniture("stripped_warped_chair_classic", STRIPPED_WARPED_CHAIR_CLASSIC);
-        registerFurniture("stripped_crimson_chair_classic", STRIPPED_CRIMSON_CHAIR_CLASSIC);
+        registerFurniture("chair_classic_wool", CHAIR_CLASSIC_WOOL, true);
+        registerFurniture("oak_chair_classic", OAK_CHAIR_CLASSIC, true);
+        registerFurniture("birch_chair_classic", BIRCH_CHAIR_CLASSIC, true);
+        registerFurniture("spruce_chair_classic", SPRUCE_CHAIR_CLASSIC, true);
+        registerFurniture("acacia_chair_classic", ACACIA_CHAIR_CLASSIC, true);
+        registerFurniture("jungle_chair_classic", JUNGLE_CHAIR_CLASSIC, true);
+        registerFurniture("dark_oak_chair_classic", DARK_OAK_CHAIR_CLASSIC, true);
+        registerFurniture("warped_chair_classic", WARPED_CHAIR_CLASSIC, true);
+        registerFurniture("crimson_chair_classic", CRIMSON_CHAIR_CLASSIC, true);
+        registerFurniture("stripped_oak_chair_classic", STRIPPED_OAK_CHAIR_CLASSIC, true);
+        registerFurniture("stripped_birch_chair_classic", STRIPPED_BIRCH_CHAIR_CLASSIC, true);
+        registerFurniture("stripped_spruce_chair_classic", STRIPPED_SPRUCE_CHAIR_CLASSIC, true);
+        registerFurniture("stripped_acacia_chair_classic", STRIPPED_ACACIA_CHAIR_CLASSIC, true);
+        registerFurniture("stripped_jungle_chair_classic", STRIPPED_JUNGLE_CHAIR_CLASSIC, true);
+        registerFurniture("stripped_dark_oak_chair_classic", STRIPPED_DARK_OAK_CHAIR_CLASSIC, true);
+        registerFurniture("stripped_warped_chair_classic", STRIPPED_WARPED_CHAIR_CLASSIC, true);
+        registerFurniture("stripped_crimson_chair_classic", STRIPPED_CRIMSON_CHAIR_CLASSIC, true);
 
         //Modern Chair
-        registerFurniture("oak_chair_modern", OAK_CHAIR_MODERN);
-        registerFurniture("birch_chair_modern", BIRCH_CHAIR_MODERN);
-        registerFurniture("spruce_chair_modern", SPRUCE_CHAIR_MODERN);
-        registerFurniture("acacia_chair_modern", ACACIA_CHAIR_MODERN);
-        registerFurniture("jungle_chair_modern", JUNGLE_CHAIR_MODERN);
-        registerFurniture("dark_oak_chair_modern",DARK_OAK_CHAIR_MODERN );
-        registerFurniture("warped_chair_modern", WARPED_CHAIR_MODERN);
-        registerFurniture("crimson_chair_modern", CRIMSON_CHAIR_MODERN);
-        registerFurniture("stripped_oak_chair_modern", STRIPPED_OAK_CHAIR_MODERN);
-        registerFurniture("stripped_birch_chair_modern", STRIPPED_BIRCH_CHAIR_MODERN);
-        registerFurniture("stripped_spruce_chair_modern", STRIPPED_SPRUCE_CHAIR_MODERN);
-        registerFurniture("stripped_acacia_chair_modern", STRIPPED_ACACIA_CHAIR_MODERN);
-        registerFurniture("stripped_jungle_chair_modern", STRIPPED_JUNGLE_CHAIR_MODERN);
-        registerFurniture("stripped_dark_oak_chair_modern",STRIPPED_DARK_OAK_CHAIR_MODERN);
-        registerFurniture("stripped_warped_chair_modern", STRIPPED_WARPED_CHAIR_MODERN);
-        registerFurniture("stripped_crimson_chair_modern", STRIPPED_CRIMSON_CHAIR_MODERN);
+        registerFurniture("oak_chair_modern", OAK_CHAIR_MODERN, true);
+        registerFurniture("birch_chair_modern", BIRCH_CHAIR_MODERN, true);
+        registerFurniture("spruce_chair_modern", SPRUCE_CHAIR_MODERN, true);
+        registerFurniture("acacia_chair_modern", ACACIA_CHAIR_MODERN, true);
+        registerFurniture("jungle_chair_modern", JUNGLE_CHAIR_MODERN, true);
+        registerFurniture("dark_oak_chair_modern",DARK_OAK_CHAIR_MODERN , true);
+        registerFurniture("warped_chair_modern", WARPED_CHAIR_MODERN, true);
+        registerFurniture("crimson_chair_modern", CRIMSON_CHAIR_MODERN, true);
+        registerFurniture("stripped_oak_chair_modern", STRIPPED_OAK_CHAIR_MODERN, true);
+        registerFurniture("stripped_birch_chair_modern", STRIPPED_BIRCH_CHAIR_MODERN, true);
+        registerFurniture("stripped_spruce_chair_modern", STRIPPED_SPRUCE_CHAIR_MODERN, true);
+        registerFurniture("stripped_acacia_chair_modern", STRIPPED_ACACIA_CHAIR_MODERN, true);
+        registerFurniture("stripped_jungle_chair_modern", STRIPPED_JUNGLE_CHAIR_MODERN, true);
+        registerFurniture("stripped_dark_oak_chair_modern",STRIPPED_DARK_OAK_CHAIR_MODERN, true);
+        registerFurniture("stripped_warped_chair_modern", STRIPPED_WARPED_CHAIR_MODERN, true);
+        registerFurniture("stripped_crimson_chair_modern", STRIPPED_CRIMSON_CHAIR_MODERN, true);
 
         //Armchairs
-        registerFurniture("arm_chair_standard", ARM_CHAIR_STANDARD);
-        registerFurniture("arm_chair_leather", ARM_CHAIR_LEATHER);
+        registerFurniture("arm_chair_standard", ARM_CHAIR_STANDARD, true);
+        registerFurniture("arm_chair_leather", ARM_CHAIR_LEATHER, true);
 
         //Tables
-        registerFurniture("oak_table_basic", OAK_BASIC_TABLE);
-        registerFurniture("birch_table_basic", BIRCH_BASIC_TABLE);
-        registerFurniture("spruce_table_basic", SPRUCE_BASIC_TABLE);
-        registerFurniture("acacia_table_basic", ACACIA_BASIC_TABLE);
-        registerFurniture("jungle_table_basic", JUNGLE_BASIC_TABLE);
-        registerFurniture("dark_oak_table_basic",DARK_OAK_BASIC_TABLE);
-        registerFurniture("crimson_table_basic", CRIMSON_BASIC_TABLE);
-        registerFurniture("warped_table_basic", WARPED_BASIC_TABLE);
-        registerFurniture("stripped_oak_table_basic", STRIPPED_OAK_BASIC_TABLE);
-        registerFurniture("stripped_birch_table_basic", STRIPPED_BIRCH_BASIC_TABLE);
-        registerFurniture("stripped_spruce_table_basic", STRIPPED_SPRUCE_BASIC_TABLE);
-        registerFurniture("stripped_acacia_table_basic", STRIPPED_ACACIA_BASIC_TABLE);
-        registerFurniture("stripped_jungle_table_basic", STRIPPED_JUNGLE_BASIC_TABLE);
-        registerFurniture("stripped_dark_oak_table_basic", STRIPPED_DARK_OAK_BASIC_TABLE);
-        registerFurniture("stripped_crimson_table_basic", STRIPPED_CRIMSON_BASIC_TABLE);
-        registerFurniture("stripped_warped_table_basic", STRIPPED_WARPED_BASIC_TABLE);
+        registerFurniture("oak_table_basic", OAK_BASIC_TABLE, true);
+        registerFurniture("birch_table_basic", BIRCH_BASIC_TABLE, true);
+        registerFurniture("spruce_table_basic", SPRUCE_BASIC_TABLE, true);
+        registerFurniture("acacia_table_basic", ACACIA_BASIC_TABLE, true);
+        registerFurniture("jungle_table_basic", JUNGLE_BASIC_TABLE, true);
+        registerFurniture("dark_oak_table_basic",DARK_OAK_BASIC_TABLE, true);
+        registerFurniture("crimson_table_basic", CRIMSON_BASIC_TABLE, true);
+        registerFurniture("warped_table_basic", WARPED_BASIC_TABLE, true);
+        registerFurniture("stripped_oak_table_basic", STRIPPED_OAK_BASIC_TABLE, true);
+        registerFurniture("stripped_birch_table_basic", STRIPPED_BIRCH_BASIC_TABLE, true);
+        registerFurniture("stripped_spruce_table_basic", STRIPPED_SPRUCE_BASIC_TABLE, true);
+        registerFurniture("stripped_acacia_table_basic", STRIPPED_ACACIA_BASIC_TABLE, true);
+        registerFurniture("stripped_jungle_table_basic", STRIPPED_JUNGLE_BASIC_TABLE, true);
+        registerFurniture("stripped_dark_oak_table_basic", STRIPPED_DARK_OAK_BASIC_TABLE, true);
+        registerFurniture("stripped_crimson_table_basic", STRIPPED_CRIMSON_BASIC_TABLE, true);
+        registerFurniture("stripped_warped_table_basic", STRIPPED_WARPED_BASIC_TABLE, true);
 
         //Classic Table
-        registerFurniture("oak_table_classic", OAK_CLASSIC_TABLE);
-        registerFurniture("birch_table_classic", BIRCH_CLASSIC_TABLE);
-        registerFurniture("spruce_table_classic", SPRUCE_CLASSIC_TABLE);
-        registerFurniture("acacia_table_classic", ACACIA_CLASSIC_TABLE);
-        registerFurniture("jungle_table_classic", JUNGLE_CLASSIC_TABLE);
-        registerFurniture("dark_oak_table_classic", DARK_OAK_CLASSIC_TABLE);
-        registerFurniture("crimson_table_classic", CRIMSON_CLASSIC_TABLE);
-        registerFurniture("warped_table_classic", WARPED_CLASSIC_TABLE);
-        registerFurniture("stripped_oak_table_classic", STRIPPED_OAK_CLASSIC_TABLE);
-        registerFurniture("stripped_birch_table_classic", STRIPPED_BIRCH_CLASSIC_TABLE);
-        registerFurniture("stripped_spruce_table_classic", STRIPPED_SPRUCE_CLASSIC_TABLE);
-        registerFurniture("stripped_acacia_table_classic", STRIPPED_ACACIA_CLASSIC_TABLE);
-        registerFurniture("stripped_jungle_table_classic", STRIPPED_JUNGLE_CLASSIC_TABLE);
-        registerFurniture("stripped_dark_oak_table_classic", STRIPPED_DARK_OAK_CLASSIC_TABLE);
-        registerFurniture("stripped_crimson_table_classic", STRIPPED_CRIMSON_CLASSIC_TABLE);
-        registerFurniture("stripped_warped_table_classic", STRIPPED_WARPED_CLASSIC_TABLE);
+        registerFurniture("oak_table_classic", OAK_CLASSIC_TABLE, true);
+        registerFurniture("birch_table_classic", BIRCH_CLASSIC_TABLE, true);
+        registerFurniture("spruce_table_classic", SPRUCE_CLASSIC_TABLE, true);
+        registerFurniture("acacia_table_classic", ACACIA_CLASSIC_TABLE, true);
+        registerFurniture("jungle_table_classic", JUNGLE_CLASSIC_TABLE, true);
+        registerFurniture("dark_oak_table_classic", DARK_OAK_CLASSIC_TABLE, true);
+        registerFurniture("crimson_table_classic", CRIMSON_CLASSIC_TABLE, true);
+        registerFurniture("warped_table_classic", WARPED_CLASSIC_TABLE, true);
+        registerFurniture("stripped_oak_table_classic", STRIPPED_OAK_CLASSIC_TABLE, true);
+        registerFurniture("stripped_birch_table_classic", STRIPPED_BIRCH_CLASSIC_TABLE, true);
+        registerFurniture("stripped_spruce_table_classic", STRIPPED_SPRUCE_CLASSIC_TABLE, true);
+        registerFurniture("stripped_acacia_table_classic", STRIPPED_ACACIA_CLASSIC_TABLE, true);
+        registerFurniture("stripped_jungle_table_classic", STRIPPED_JUNGLE_CLASSIC_TABLE, true);
+        registerFurniture("stripped_dark_oak_table_classic", STRIPPED_DARK_OAK_CLASSIC_TABLE, true);
+        registerFurniture("stripped_crimson_table_classic", STRIPPED_CRIMSON_CLASSIC_TABLE, true);
+        registerFurniture("stripped_warped_table_classic", STRIPPED_WARPED_CLASSIC_TABLE, true);
 
         //Log Table
-        registerFurniture("oak_table_log", OAK_LOG_TABLE);
-        registerFurniture("birch_table_log", BIRCH_LOG_TABLE);
-        registerFurniture("spruce_table_log", SPRUCE_LOG_TABLE);
-        registerFurniture("acacia_table_log", ACACIA_LOG_TABLE);
-        registerFurniture("jungle_table_log", JUNGLE_LOG_TABLE);
-        registerFurniture("dark_oak_table_log", DARK_OAK_LOG_TABLE);
-        registerFurniture("crimson_table_log", CRIMSON_LOG_TABLE);
-        registerFurniture("warped_table_log", WARPED_LOG_TABLE);
-        registerFurniture("stripped_oak_table_log", STRIPPED_OAK_LOG_TABLE);
-        registerFurniture("stripped_birch_table_log", STRIPPED_BIRCH_LOG_TABLE);
-        registerFurniture("stripped_spruce_table_log", STRIPPED_SPRUCE_LOG_TABLE);
-        registerFurniture("stripped_acacia_table_log", STRIPPED_ACACIA_LOG_TABLE);
-        registerFurniture("stripped_jungle_table_log", STRIPPED_JUNGLE_LOG_TABLE);
-        registerFurniture("stripped_dark_oak_table_log", STRIPPED_DARK_OAK_LOG_TABLE);
-        registerFurniture("stripped_crimson_table_log", STRIPPED_CRIMSON_LOG_TABLE);
-        registerFurniture("stripped_warped_table_log", STRIPPED_WARPED_LOG_TABLE);
+        registerFurniture("oak_table_log", OAK_LOG_TABLE, true);
+        registerFurniture("birch_table_log", BIRCH_LOG_TABLE, true);
+        registerFurniture("spruce_table_log", SPRUCE_LOG_TABLE, true);
+        registerFurniture("acacia_table_log", ACACIA_LOG_TABLE, true);
+        registerFurniture("jungle_table_log", JUNGLE_LOG_TABLE, true);
+        registerFurniture("dark_oak_table_log", DARK_OAK_LOG_TABLE, true);
+        registerFurniture("crimson_table_log", CRIMSON_LOG_TABLE, true);
+        registerFurniture("warped_table_log", WARPED_LOG_TABLE, true);
+        registerFurniture("stripped_oak_table_log", STRIPPED_OAK_LOG_TABLE, true);
+        registerFurniture("stripped_birch_table_log", STRIPPED_BIRCH_LOG_TABLE, true);
+        registerFurniture("stripped_spruce_table_log", STRIPPED_SPRUCE_LOG_TABLE, true);
+        registerFurniture("stripped_acacia_table_log", STRIPPED_ACACIA_LOG_TABLE, true);
+        registerFurniture("stripped_jungle_table_log", STRIPPED_JUNGLE_LOG_TABLE, true);
+        registerFurniture("stripped_dark_oak_table_log", STRIPPED_DARK_OAK_LOG_TABLE, true);
+        registerFurniture("stripped_crimson_table_log", STRIPPED_CRIMSON_LOG_TABLE, true);
+        registerFurniture("stripped_warped_table_log", STRIPPED_WARPED_LOG_TABLE, true);
 
         //Raw Log Table
-        registerFurniture("oak_raw_table_log", OAK_RAW_LOG_TABLE);
-        registerFurniture("birch_raw_table_log", BIRCH_RAW_LOG_TABLE);
-        registerFurniture("acacia_raw_table_log", ACACIA_RAW_LOG_TABLE);
-        registerFurniture("spruce_raw_table_log", SPRUCE_RAW_LOG_TABLE);
-        registerFurniture("jungle_raw_table_log", JUNGLE_RAW_LOG_TABLE);
-        registerFurniture("dark_oak_raw_table_log", DARK_OAK_RAW_LOG_TABLE);
-        registerFurniture("warped_raw_table_stem", WARPED_RAW_STEM_TABLE);
-        registerFurniture("crimson_raw_table_stem", CRIMSON_RAW_STEM_TABLE);
-        registerFurniture("stripped_oak_raw_table_log", STRIPPED_OAK_RAW_LOG_TABLE);
-        registerFurniture("stripped_birch_raw_table_log", STRIPPED_BIRCH_RAW_LOG_TABLE);
-        registerFurniture("stripped_acacia_raw_table_log", STRIPPED_ACACIA_RAW_LOG_TABLE);
-        registerFurniture("stripped_spruce_raw_table_log", STRIPPED_SPRUCE_RAW_LOG_TABLE);
-        registerFurniture("stripped_jungle_raw_table_log", STRIPPED_JUNGLE_RAW_LOG_TABLE);
-        registerFurniture("stripped_dark_oak_raw_table_log", STRIPPED_DARK_OAK_RAW_LOG_TABLE);
-        registerFurniture("stripped_warped_raw_table_stem", STRIPPED_WARPED_RAW_STEM_TABLE);
-        registerFurniture("stripped_crimson_raw_table_stem", STRIPPED_CRIMSON_RAW_STEM_TABLE);
+        registerFurniture("oak_raw_table_log", OAK_RAW_LOG_TABLE, true);
+        registerFurniture("birch_raw_table_log", BIRCH_RAW_LOG_TABLE, true);
+        registerFurniture("acacia_raw_table_log", ACACIA_RAW_LOG_TABLE, true);
+        registerFurniture("spruce_raw_table_log", SPRUCE_RAW_LOG_TABLE, true);
+        registerFurniture("jungle_raw_table_log", JUNGLE_RAW_LOG_TABLE, true);
+        registerFurniture("dark_oak_raw_table_log", DARK_OAK_RAW_LOG_TABLE, true);
+        registerFurniture("warped_raw_table_stem", WARPED_RAW_STEM_TABLE, true);
+        registerFurniture("crimson_raw_table_stem", CRIMSON_RAW_STEM_TABLE, true);
+        registerFurniture("stripped_oak_raw_table_log", STRIPPED_OAK_RAW_LOG_TABLE, true);
+        registerFurniture("stripped_birch_raw_table_log", STRIPPED_BIRCH_RAW_LOG_TABLE, true);
+        registerFurniture("stripped_acacia_raw_table_log", STRIPPED_ACACIA_RAW_LOG_TABLE, true);
+        registerFurniture("stripped_spruce_raw_table_log", STRIPPED_SPRUCE_RAW_LOG_TABLE, true);
+        registerFurniture("stripped_jungle_raw_table_log", STRIPPED_JUNGLE_RAW_LOG_TABLE, true);
+        registerFurniture("stripped_dark_oak_raw_table_log", STRIPPED_DARK_OAK_RAW_LOG_TABLE, true);
+        registerFurniture("stripped_warped_raw_table_stem", STRIPPED_WARPED_RAW_STEM_TABLE, true);
+        registerFurniture("stripped_crimson_raw_table_stem", STRIPPED_CRIMSON_RAW_STEM_TABLE, true);
 
-        registerFurniture("oak_table_dinner", OAK_DINNER_TABLE);
-        registerFurniture("birch_table_dinner", BIRCH_DINNER_TABLE);
-        registerFurniture("spruce_table_dinner", SPRUCE_DINNER_TABLE);
-        registerFurniture("acacia_table_dinner", ACACIA_DINNER_TABLE);
-        registerFurniture("jungle_table_dinner", JUNGLE_DINNER_TABLE);
-        registerFurniture("dark_oak_table_dinner", DARK_OAK_DINNER_TABLE);
-        registerFurniture("crimson_table_dinner", CRIMSON_DINNER_TABLE);
-        registerFurniture("warped_table_dinner", WARPED_DINNER_TABLE);
-        registerFurniture("stripped_oak_table_dinner", STRIPPED_OAK_DINNER_TABLE);
-        registerFurniture("stripped_birch_table_dinner", STRIPPED_BIRCH_DINNER_TABLE);
-        registerFurniture("stripped_spruce_table_dinner", STRIPPED_SPRUCE_DINNER_TABLE);
-        registerFurniture("stripped_acacia_table_dinner", STRIPPED_ACACIA_DINNER_TABLE);
-        registerFurniture("stripped_jungle_table_dinner", STRIPPED_JUNGLE_DINNER_TABLE);
-        registerFurniture("stripped_dark_oak_table_dinner", STRIPPED_DARK_OAK_DINNER_TABLE);
-        registerFurniture("stripped_crimson_table_dinner", STRIPPED_CRIMSON_DINNER_TABLE);
-        registerFurniture("stripped_warped_table_dinner", STRIPPED_WARPED_DINNER_TABLE);
+        registerFurniture("oak_table_dinner", OAK_DINNER_TABLE, true);
+        registerFurniture("birch_table_dinner", BIRCH_DINNER_TABLE, true);
+        registerFurniture("spruce_table_dinner", SPRUCE_DINNER_TABLE, true);
+        registerFurniture("acacia_table_dinner", ACACIA_DINNER_TABLE, true);
+        registerFurniture("jungle_table_dinner", JUNGLE_DINNER_TABLE, true);
+        registerFurniture("dark_oak_table_dinner", DARK_OAK_DINNER_TABLE, true);
+        registerFurniture("crimson_table_dinner", CRIMSON_DINNER_TABLE, true);
+        registerFurniture("warped_table_dinner", WARPED_DINNER_TABLE, true);
+        registerFurniture("stripped_oak_table_dinner", STRIPPED_OAK_DINNER_TABLE, true);
+        registerFurniture("stripped_birch_table_dinner", STRIPPED_BIRCH_DINNER_TABLE, true);
+        registerFurniture("stripped_spruce_table_dinner", STRIPPED_SPRUCE_DINNER_TABLE, true);
+        registerFurniture("stripped_acacia_table_dinner", STRIPPED_ACACIA_DINNER_TABLE, true);
+        registerFurniture("stripped_jungle_table_dinner", STRIPPED_JUNGLE_DINNER_TABLE, true);
+        registerFurniture("stripped_dark_oak_table_dinner", STRIPPED_DARK_OAK_DINNER_TABLE, true);
+        registerFurniture("stripped_crimson_table_dinner", STRIPPED_CRIMSON_DINNER_TABLE, true);
+        registerFurniture("stripped_warped_table_dinner", STRIPPED_WARPED_DINNER_TABLE, true);
 
-        registerFurniture("oak_log_stool", OAK_LOG_STOOL);
-        registerFurniture("birch_log_stool", BIRCH_LOG_STOOL);
-        registerFurniture("spruce_log_stool", SPRUCE_LOG_STOOL);
-        registerFurniture("acacia_log_stool", ACACIA_LOG_STOOL);
-        registerFurniture("jungle_log_stool", JUNGLE_LOG_STOOL);
-        registerFurniture("dark_oak_log_stool", DARK_OAK_LOG_STOOL);
-        registerFurniture("crimson_stem_stool", CRIMSON_STEM_STOOL);
-        registerFurniture("warped_stem_stool", WARPED_STEM_STOOL);
+        registerFurniture("oak_log_stool", OAK_LOG_STOOL, true);
+        registerFurniture("birch_log_stool", BIRCH_LOG_STOOL, true);
+        registerFurniture("spruce_log_stool", SPRUCE_LOG_STOOL, true);
+        registerFurniture("acacia_log_stool", ACACIA_LOG_STOOL, true);
+        registerFurniture("jungle_log_stool", JUNGLE_LOG_STOOL, true);
+        registerFurniture("dark_oak_log_stool", DARK_OAK_LOG_STOOL, true);
+        registerFurniture("crimson_stem_stool", CRIMSON_STEM_STOOL, true);
+        registerFurniture("warped_stem_stool", WARPED_STEM_STOOL, true);
 
         //Item Registry
             //This makes the chair inaccessible, on purpose
           //Registry.register(Registry.ITEM, new Identifier(MOD_ID, "player_chair"), new BlockItem(PLAYER_CHAIR, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
 
         //Counter time
-        registerFurniture("oak_kitchen_counter", OAK_KITCHEN_COUNTER);
-        registerFurniture("oak_kitchen_drawer", OAK_KITCHEN_DRAWER);
+        registerFurniture("oak_kitchen_counter", OAK_KITCHEN_COUNTER, true);
+        registerFurniture("oak_kitchen_drawer", OAK_KITCHEN_DRAWER, true);
+
+        registerFurniture("white_fridge", WHITE_FRIDGE, true);
+        registerFurniture("white_freezer", WHITE_FREEZER, false);
 
         //Dye Kits
         registerItem("dye_kit_red", DYE_KIT_RED);

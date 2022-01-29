@@ -37,7 +37,7 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     private final BlockState baseBlockState;
     public KitchenDrawer(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
     }
