@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.entity.model.ChairEntityModel;
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import com.unlikepaladin.pfm.entity.render.RenderChair;
 import com.unlikepaladin.pfm.entity.render.RenderPlayerChairBlockEntity;
+import com.unlikepaladin.pfm.menus.FreezerScreen;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.EntityPaladinClient;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
@@ -38,7 +39,7 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
       //  EntityRenderRegistry.registerRender();
         ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> state.get(ClassicChairDyeable.COLORID).getFireworkColor(), BlockItemRegistry.CHAIR_CLASSIC_WOOL);
         ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> state.get(ArmChairDyeable.COLORID).getFireworkColor(), BlockItemRegistry.ARM_CHAIR_STANDARD);
-        ScreenRegistry.register(PaladinFurnitureMod.Player_Chair_Screen_Handler, PlayerChairScreen::new);
+       //ScreenRegistry.register(PaladinFurnitureMod.Player_Chair_Screen_Handler, PlayerChairScreen::new);
 
         EntityRendererRegistry.INSTANCE.register(EntityRegistry.CHAIR, (context) -> {
             return new RenderChair(context);});
@@ -47,6 +48,7 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(MODEL_CHAIR_LAYER, ChairEntityModel::getTexturedModelData);
 
         BlockEntityRendererRegistry.INSTANCE.register(PaladinFurnitureMod.PLAYER_CHAIR_BLOCK_ENTITY, RenderPlayerChairBlockEntity::new);
+        ScreenRegistry.register(PaladinFurnitureMod.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
 
 
     }

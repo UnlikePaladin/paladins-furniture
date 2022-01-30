@@ -25,10 +25,10 @@ public class PlayerChairScreenHandler extends Generic3x3ContainerScreenHandler {
     public boolean canUse(PlayerEntity player) {
         return true;
     }
-    @Override
+   /* @Override
     public ScreenHandlerType<?> getType() {
         return PaladinFurnitureMod.Player_Chair_Screen_Handler;
     }
-
+*/
 
 }

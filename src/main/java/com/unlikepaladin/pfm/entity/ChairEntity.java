@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.entity;
 
 import com.google.common.collect.UnmodifiableIterator;
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.BasicChair;
 import net.minecraft.entity.Dismounting;
 import net.minecraft.entity.EntityPose;
@@ -11,7 +10,6 @@ import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.Packet;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -20,11 +18,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
-public class EntityChair extends MobEntity {
+public class ChairEntity extends MobEntity {
 
 
 
-    public EntityChair(EntityType<? extends EntityChair> type, World world) {
+    public ChairEntity(EntityType<? extends ChairEntity> type, World world) {
         super(type, world);
         this.noClip = true;
     }
@@ -59,7 +57,7 @@ public class EntityChair extends MobEntity {
     }
 
     public static DefaultAttributeContainer getAttributeContainer() {
-        return EntityChair.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 0).build();
+        return ChairEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 0).build();
 
     }
 

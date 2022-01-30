@@ -1,12 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.UnmodifiableIterator;
-import com.unlikepaladin.pfm.entity.EntityChair;
+import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.minecraft.block.*;
-import net.minecraft.entity.Dismounting;
-import net.minecraft.entity.EntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -18,12 +14,9 @@ import net.minecraft.util.math.*;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.CollisionView;
 import net.minecraft.world.World;
-import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Predicate;
 
 public class BasicChair extends HorizontalFacingBlock {
@@ -82,9 +75,9 @@ public class BasicChair extends HorizontalFacingBlock {
             double py = pos.getY() + height;
             double pz = pos.getZ() + 0.5;
 
-            List<EntityChair> active = world.getEntitiesByClass(EntityChair.class, new Box(pos), new Predicate<EntityChair>() {
+            List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), new Predicate<ChairEntity>() {
                 @Override
-                public boolean test(EntityChair entity) {
+                public boolean test(ChairEntity entity) {
                     return entity.hasPlayerRider();
                 }
             });
@@ -92,7 +85,7 @@ public class BasicChair extends HorizontalFacingBlock {
                 return ActionResult.FAIL;
 
             float yaw = state.get(FACING).getOpposite().asRotation();
-            EntityChair entity = EntityRegistry.CHAIR.create(world);
+            ChairEntity entity = EntityRegistry.CHAIR.create(world);
             entity.refreshPositionAndAngles(px, py, pz, yaw, 0);
             entity.setNoGravity(true);
             entity.setSilent(true);

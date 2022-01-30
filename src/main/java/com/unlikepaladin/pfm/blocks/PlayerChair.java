@@ -1,14 +1,11 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.google.gson.Gson;
 import com.mojang.authlib.GameProfile;
-import com.mojang.util.UUIDTypeAdapter;
 import com.unlikepaladin.pfm.blockentities.PlayerChairBlockEntity;
-import com.unlikepaladin.pfm.entity.EntityChair;
+import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -19,7 +16,6 @@ import net.minecraft.nbt.NbtHelper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockMirror;
@@ -36,12 +32,7 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 import java.util.function.Predicate;
 
@@ -161,9 +152,9 @@ public class PlayerChair extends HorizontalFacingBlockWEntity implements BlockEn
             double py = pos.getY() + height;
             double pz = pos.getZ() + 0.5;
 
-            List<EntityChair> active = world.getEntitiesByClass(EntityChair.class, new Box(pos), new Predicate<EntityChair>() {
+            List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), new Predicate<ChairEntity>() {
                 @Override
-                public boolean test(EntityChair entity) {
+                public boolean test(ChairEntity entity) {
                     return entity.hasPlayerRider();
                 }
             });
@@ -171,7 +162,7 @@ public class PlayerChair extends HorizontalFacingBlockWEntity implements BlockEn
                 return ActionResult.FAIL;
 
             float yaw = state.get(FACING).getOpposite().asRotation();
-            EntityChair entity = EntityRegistry.CHAIR.create(world);
+            ChairEntity entity = EntityRegistry.CHAIR.create(world);
             entity.refreshPositionAndAngles(px, py, pz, yaw, 0);
             entity.setNoGravity(true);
             entity.setSilent(true);

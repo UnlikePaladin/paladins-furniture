@@ -1,12 +1,12 @@
 package com.unlikepaladin.pfm.entity.model;
 
 import com.google.common.collect.ImmutableList;
-import com.unlikepaladin.pfm.entity.EntityChair;
+import com.unlikepaladin.pfm.entity.ChairEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.AnimalModel;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
 
-public class ModelEmpty extends AnimalModel<EntityChair> {
+public class ModelEmpty extends AnimalModel<ChairEntity> {
     private final ModelPart base;
 
     public ModelEmpty(ModelPart modelPart) {
@@ -26,7 +26,7 @@ public class ModelEmpty extends AnimalModel<EntityChair> {
     }
 
     @Override
-    public void setAngles(EntityChair entity, float limbAngle, float limbDistance, float customAngle, float headYaw, float headPitch) {
+    public void setAngles(ChairEntity entity, float limbAngle, float limbDistance, float customAngle, float headYaw, float headPitch) {
 
     }
     public static TexturedModelData getTexturedModelData() {

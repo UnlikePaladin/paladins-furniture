@@ -1,34 +1,60 @@
 package com.unlikepaladin.pfm.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.RecipeType;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldEvents;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 public class Freezer extends HorizontalFacingBlockWEntity{
     public static final BooleanProperty OPEN = Properties.OPEN;
     private final Block baseBlock;
     private final BlockState baseBlockState;
+    private Supplier<Block> fridge;
 
-    public Freezer(Settings settings) {
+    public Freezer(Settings settings, Supplier<Block> fridge) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
+        this.fridge = fridge;
         this.baseBlock = baseBlockState.getBlock();
     }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+         if (!world.isClient) {
+                //This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity casted to
+                //a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
+                NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
+                if (screenHandlerFactory != null) {
+                    //With this call the server will request the client to open the appropriate Screenhandler
+                    player.openHandledScreen(screenHandlerFactory);
+                }
+            }
+            return ActionResult.SUCCESS;
+    }
+
+
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
@@ -43,6 +69,11 @@ public class Freezer extends HorizontalFacingBlockWEntity{
     @Override
     public boolean hasSidedTransparency(BlockState state) {
         return true;
+    }
+
+    @Override
+    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+        return this.fridge.get().getPickStack(world, pos, state);
     }
 
     @Override
@@ -95,9 +126,32 @@ public class Freezer extends HorizontalFacingBlockWEntity{
         return world.getBlockState(pos.down()).getBlock() instanceof Fridge;
     }
 
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.isOf(newState.getBlock())) {
+            return;
+        }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof Inventory) {
+            ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
+            world.updateComparators(pos, this);
+        }
+        super.onStateReplaced(state, world, pos, newState, moved);
+    }
+
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return null;
+        return new FreezerBlockEntity(pos,state);
+    }
+    @Override
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(world, type, PaladinFurnitureMod.FREEZER_BLOCK_ENTITY);
+    }
+
+    @Nullable
+    protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends FreezerBlockEntity> expectedType) {
+        return world.isClient ? null : Freezer.checkType(givenType, expectedType, FreezerBlockEntity::tick);
     }
 }

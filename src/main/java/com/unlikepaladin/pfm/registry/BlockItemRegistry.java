@@ -213,7 +213,7 @@ public class BlockItemRegistry {
     public static final Block OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
 
-    public static final Block WHITE_FREEZER = new Freezer(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block WHITE_FREEZER = new Freezer(FabricBlockSettings.copyOf(OAK_CHAIR),() -> BlockItemRegistry.WHITE_FRIDGE);
     public static final Block WHITE_FRIDGE = new Fridge(FabricBlockSettings.copyOf(OAK_CHAIR).nonOpaque(), () -> BlockItemRegistry.WHITE_FREEZER);
 
 

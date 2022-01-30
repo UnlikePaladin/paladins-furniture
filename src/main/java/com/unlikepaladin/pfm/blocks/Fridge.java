@@ -1,16 +1,24 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.blocks.blockentities.DrawerBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.enums.DoubleBlockHalf;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -55,7 +63,23 @@ public class Fridge extends HorizontalFacingBlockWEntity{
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         world.setBlockState(pos.up(), this.freezer.get().getDefaultState().with(FACING, placer.getHorizontalFacing()), Block.NOTIFY_ALL);
+        BlockEntity blockEntity;
+        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof FridgeBlockEntity) {
+            ((FridgeBlockEntity)blockEntity).setCustomName(itemStack.getName());
+        }
         super.onPlaced(world, pos, state, placer, itemStack);
+    }
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.isOf(newState.getBlock())) {
+            return;
+        }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof Inventory) {
+            ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
+            world.updateComparators(pos, this);
+        }
+        super.onStateReplaced(state, world, pos, newState, moved);
     }
 
 
@@ -74,6 +98,21 @@ public class Fridge extends HorizontalFacingBlockWEntity{
     @Override
     public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
         return false;
+    }
+
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (world.isClient) {
+            return ActionResult.SUCCESS;
+        }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof FridgeBlockEntity) {
+            player.openHandledScreen((FridgeBlockEntity)blockEntity);
+            //player.incrementStat(Stats.OPE);
+            PiglinBrain.onGuardedBlockInteracted(player, true);
+        }
+        return ActionResult.CONSUME;
     }
 
     protected static void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
@@ -97,10 +136,6 @@ public class Fridge extends HorizontalFacingBlockWEntity{
         return null;
     }
 
-
-
-
-
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient && player.isCreative()) {
@@ -109,9 +144,17 @@ public class Fridge extends HorizontalFacingBlockWEntity{
         super.onBreak(world, pos, state, player);
     }
 
+
+
+
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return null;
+        return new FridgeBlockEntity(pos, state);
+    }
+
+    @Override
+    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+        return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
     }
 }

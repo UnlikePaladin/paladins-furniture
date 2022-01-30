@@ -1,21 +1,13 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.entity.EntityChair;
-import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.minecraft.block.*;
-import net.minecraft.block.enums.StairShape;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.State;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
 import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -23,7 +15,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import org.w3c.dom.css.Counter;
 
 
 public class KitchenCounter extends HorizontalFacingBlock {
