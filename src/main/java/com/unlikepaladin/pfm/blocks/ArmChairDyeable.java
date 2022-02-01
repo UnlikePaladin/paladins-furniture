@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;

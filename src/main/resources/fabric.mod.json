@@ -37,5 +37,7 @@
   },
   "suggests": {
     "another-mod": "*"
-  }
+  },
+
+  "accessWidener" : "pfm.accesswidener"
 }

@@ -10,6 +10,10 @@ archivesBaseName = project.archives_base_name
 version = project.mod_version
 group = project.maven_group
 
+loom {
+    accessWidenerPath = file("src/main/resources/pfm.accesswidener")
+}
+
 repositories {
 	// Add repositories to retrieve artifacts from in here.
 	// You should only use this when depending on other mods because
@@ -17,6 +21,7 @@ repositories {
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
 }
+
 
 dependencies {
 	// To change the versions see the gradle.properties file
@@ -41,6 +46,7 @@ tasks.withType(JavaCompile).configureEach {
 	it.options.release = 16
 }
 
+
 java {
 	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 	// if it is present.
@@ -48,11 +54,16 @@ java {
 	withSourcesJar()
 }
 
+
+
 jar {
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
 	}
 }
+
+
+
 
 // configure the maven publication
 publishing {

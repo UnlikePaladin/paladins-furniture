@@ -1,4 +1,5 @@
-package com.unlikepaladin.pfm.blockentities;
+package com.unlikepaladin.pfm.blocks.blockentities;
+
 import com.mojang.authlib.GameProfile;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -9,7 +10,6 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.ChatUtil;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
-
 
 import java.util.UUID;
 

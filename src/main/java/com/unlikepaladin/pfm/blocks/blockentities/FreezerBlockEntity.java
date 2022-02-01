@@ -9,8 +9,8 @@ import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,7 +23,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
-import net.minecraft.screen.*;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -47,7 +49,7 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
         RecipeInputProvider {
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
         super(PaladinFurnitureMod.FREEZER_BLOCK_ENTITY, pos, state);
-        this.recipeType = RecipeType.SMELTING;
+        this.recipeType = PaladinFurnitureMod.FREEZING_RECIPE;
     }
     private static final int[] TOP_SLOTS = new int[]{0};
     private static final int[] BOTTOM_SLOTS = new int[]{2, 1};
@@ -114,7 +116,8 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
     public static Map<Item, Integer> createFuelTimeMap() {
         LinkedHashMap<Item, Integer> map = Maps.newLinkedHashMap();
         FreezerBlockEntity.addFuel(map, Items.SNOWBALL, 50);
-        FreezerBlockEntity.addFuel(map, Items.SNOW, 400);
+        FreezerBlockEntity.addFuel(map, Items.SNOW, 62);
+        FreezerBlockEntity.addFuel(map, Items.SNOW_BLOCK, 400);
         FreezerBlockEntity.addFuel(map, Items.ICE, 1600);
         FreezerBlockEntity.addFuel(map, Items.PACKED_ICE, 14400);
         FreezerBlockEntity.addFuel(map, Items.BLUE_ICE, 129600);
@@ -134,7 +137,7 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
         Item item2 = item.asItem();
         fuelTimes.put(item2, fuelTime);
     }
-    private static int getCookTime(World world, RecipeType<? extends AbstractCookingRecipe> recipeType, Inventory inventory) {
+    private static int getFreezeTime(World world, RecipeType<? extends AbstractCookingRecipe> recipeType, Inventory inventory) {
         return world.getRecipeManager().getFirstMatch(recipeType, inventory, world).map(AbstractCookingRecipe::getCookTime).orElse(200);
     }
 
@@ -245,7 +248,7 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
             stack.setCount(this.getMaxCountPerStack());
         }
         if (slot == 0 && !bl) {
-            this.freezeTimeTotal = FreezerBlockEntity.getCookTime(this.world, this.recipeType, this);
+            this.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(this.world, this.recipeType, this);
             this.freezeTime = 0;
             this.markDirty();
         }
@@ -295,7 +298,6 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
     @Override
         public void onOpen(PlayerEntity player) {
             if (!this.removed && !player.isSpectator()) {
-                this.setOpen(this.getCachedState(), true);
                 this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
             }
         }
@@ -303,7 +305,6 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
     @Override
     public void onClose(PlayerEntity player) {
         if (!this.removed && !player.isSpectator()) {
-            this.setOpen(this.getCachedState(), false);
             this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
@@ -390,6 +391,10 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
         ItemStack itemStack = slots.get(0);
         ItemStack itemStack2 = recipe.getOutput();
         ItemStack itemStack3 = slots.get(2);
+        if (itemStack2.isOf(Items.OBSIDIAN) || itemStack2.isOf(Items.ICE)) {
+            slots.set(0, new ItemStack(Items.BUCKET));
+        }
+
         if (itemStack3.isEmpty()) {
             slots.set(2, itemStack2.copy());
         } else if (itemStack3.isOf(itemStack2.getItem())) {
@@ -448,7 +453,7 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
                 ++blockEntity.freezeTime;
                 if (blockEntity.freezeTime == blockEntity.freezeTimeTotal) {
                     blockEntity.freezeTime = 0;
-                    blockEntity.freezeTimeTotal = FreezerBlockEntity.getCookTime(world, blockEntity.recipeType, blockEntity);
+                    blockEntity.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(world, blockEntity.recipeType, blockEntity);
                     if (FreezerBlockEntity.craftRecipe(recipe, blockEntity.inventory, i)) {
                         blockEntity.setLastRecipe(recipe);
                     }
@@ -462,7 +467,7 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
         }
         if (bl != blockEntity.isActive()) {
             bl2 = true;
-            //state = (BlockState)state.with(AbstractFurnaceBlock.LIT, blockEntity.isActive());
+          //  state = (BlockState)state.with(Freezer.OPEN, blockEntity.isActive());
             world.setBlockState(pos, state, Block.NOTIFY_ALL);
         }
         if (bl2) {

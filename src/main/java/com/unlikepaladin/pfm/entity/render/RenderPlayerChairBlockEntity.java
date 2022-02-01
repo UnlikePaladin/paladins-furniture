@@ -1,52 +1,28 @@
 package com.unlikepaladin.pfm.entity.render;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
-import com.google.gson.Gson;
-import com.google.gson.JsonParser;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
-import com.mojang.util.UUIDTypeAdapter;
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blockentities.PlayerChairBlockEntity;
 import com.unlikepaladin.pfm.blocks.PlayerChair;
+import com.unlikepaladin.pfm.blocks.blockentities.PlayerChairBlockEntity;
 import com.unlikepaladin.pfm.entity.model.ChairEntityModel;
 import com.unlikepaladin.pfm.registry.EntityPaladinClient;
-import net.minecraft.block.AbstractSkullBlock;
 import net.minecraft.block.BlockState;
-
-import net.minecraft.block.SkullBlock;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-
-import net.minecraft.client.render.block.entity.SkullBlockEntityModel;
-import net.minecraft.client.render.entity.model.DragonHeadEntityModel;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
-import net.minecraft.client.render.entity.model.EntityModelLoader;
-import net.minecraft.client.render.entity.model.SkullEntityModel;
-import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.DefaultSkinHelper;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
-import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
 import java.util.Map;
-import java.util.UUID;
 
 
 public class RenderPlayerChairBlockEntity implements BlockEntityRenderer<PlayerChairBlockEntity> {

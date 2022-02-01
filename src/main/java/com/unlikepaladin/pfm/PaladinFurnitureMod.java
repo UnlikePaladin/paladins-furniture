@@ -1,11 +1,12 @@
 package com.unlikepaladin.pfm;
 
-import com.unlikepaladin.pfm.blockentities.PlayerChairBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.DrawerBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.PlayerChairBlockEntity;
 import com.unlikepaladin.pfm.menus.AbstractFreezerScreenHandler;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
+import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.fabricmc.api.ModInitializer;
@@ -15,6 +16,9 @@ import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.CookingRecipeSerializer;
+import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
@@ -73,7 +77,8 @@ public class PaladinFurnitureMod implements ModInitializer {
 		stacks.add(new ItemStack(BlockItemRegistry.DYE_KIT_BLACK));
 	})
 			.build();
-
+	public static RecipeType<FreezingRecipe> FREEZING_RECIPE;
+	public static RecipeSerializer<FreezingRecipe> FREEZING_RECIPE_SERIALIZER;
 
 	//System.out.println("Hello Fabric world!");
 
@@ -87,6 +92,11 @@ public class PaladinFurnitureMod implements ModInitializer {
 		DRAWER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":drawer_block_entity", FabricBlockEntityTypeBuilder.create(DrawerBlockEntity::new, BlockItemRegistry.OAK_KITCHEN_DRAWER).build(null));
 		FRIDGE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":fridge_block_entity", FabricBlockEntityTypeBuilder.create(FridgeBlockEntity::new, BlockItemRegistry.WHITE_FRIDGE).build(null));
 		FREEZER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":freezer_block_entity", FabricBlockEntityTypeBuilder.create(FreezerBlockEntity::new, BlockItemRegistry.WHITE_FREEZER).build(null));
+		FREEZING_RECIPE = Registry.register(Registry.RECIPE_TYPE, MOD_ID + ":freezing",  new RecipeType<FreezingRecipe>() {
+			@Override
+			public String toString() {return "freezing";}
+		});
+		FREEZING_RECIPE_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "freezing"), new CookingRecipeSerializer<>(FreezingRecipe::new, 200));
 
 		PLAYER_CHAIR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":player_chair_block_entity", FabricBlockEntityTypeBuilder.create(PlayerChairBlockEntity::new, BlockItemRegistry.PLAYER_CHAIR).build(null));
 

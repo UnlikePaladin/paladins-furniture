@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.menus;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.screen.recipebook.AbstractFurnaceRecipeBookScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class FreezerScreen extends HandledScreen<ScreenHandler> {
-    private final Identifier background = new Identifier("minecraft","textures/gui/container/furnace.png");
+    private final Identifier background = new Identifier(PaladinFurnitureMod.MOD_ID,"textures/gui/container/freezer.png");
     private boolean narrow;
 
     /*public FreezerScreen(T handler, AbstractFurnaceRecipeBookScreen recipeBook, PlayerInventory inventory, Text title, Identifier background) {

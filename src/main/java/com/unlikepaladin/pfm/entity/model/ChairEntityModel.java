@@ -1,13 +1,11 @@
 package com.unlikepaladin.pfm.entity.model;
 
-import com.unlikepaladin.pfm.blockentities.PlayerChairBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.PlayerChairBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.entity.model.CompositeEntityModel;
-import net.minecraft.client.render.entity.model.EntityModelPartNames;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.Entity;
 

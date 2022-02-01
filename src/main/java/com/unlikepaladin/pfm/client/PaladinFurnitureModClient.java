@@ -9,21 +9,17 @@ import com.unlikepaladin.pfm.entity.render.RenderChair;
 import com.unlikepaladin.pfm.entity.render.RenderPlayerChairBlockEntity;
 import com.unlikepaladin.pfm.menus.FreezerScreen;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
-import com.unlikepaladin.pfm.registry.EntityPaladinClient;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
-import com.unlikepaladin.pfm.registry.EntityRenderRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.fabricmc.loader.api.FabricLoader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.util.concurrent.CompletableFuture;
 
 import static com.unlikepaladin.pfm.registry.EntityPaladinClient.MODEL_CHAIR_LAYER;

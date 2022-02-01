@@ -1,10 +1,13 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.authlib.GameProfile;
-import com.unlikepaladin.pfm.blockentities.PlayerChairBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.PlayerChairBlockEntity;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
-import net.minecraft.block.*;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockEntityProvider;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;

@@ -14,8 +14,6 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.util.function.Supplier;
-
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 
 public class BlockItemRegistry {
