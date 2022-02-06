@@ -36,6 +36,7 @@ public abstract class AbstractFreezerScreenHandler extends AbstractRecipeScreenH
         AbstractFreezerScreenHandler.checkSize(inventory, 3);
         AbstractFreezerScreenHandler.checkDataCount(propertyDelegate, 4);
         this.inventory = inventory;
+        inventory.onOpen(playerInventory.player);
         this.propertyDelegate = propertyDelegate;
         this.world = playerInventory.player.world;
         this.addSlot(new Slot(inventory, 0, 56, 17));
@@ -96,7 +97,7 @@ public abstract class AbstractFreezerScreenHandler extends AbstractRecipeScreenH
     }
 
     public Inventory getInventory() {
-        return inventory;
+        return this.inventory;
     }
 
     @Override
@@ -164,6 +165,12 @@ public abstract class AbstractFreezerScreenHandler extends AbstractRecipeScreenH
     @Override
     public boolean canInsertIntoSlot(int index) {
         return index != 1;
+    }
+
+    @Override
+    public void close(PlayerEntity player) {
+        super.close(player);
+        this.inventory.onClose(player);
     }
 }
 

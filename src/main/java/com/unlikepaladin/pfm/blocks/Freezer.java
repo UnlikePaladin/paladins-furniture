@@ -2,13 +2,11 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
@@ -23,10 +21,14 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
+
+import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class Freezer extends HorizontalFacingBlockWEntity{
     public static final BooleanProperty OPEN = Properties.OPEN;
@@ -51,6 +53,7 @@ public class Freezer extends HorizontalFacingBlockWEntity{
                 if (screenHandlerFactory != null) {
                     //With this call the server will request the client to open the appropriate Screenhandler
                     player.openHandledScreen(screenHandlerFactory);
+                    PiglinBrain.onGuardedBlockInteracted(player, true);
                 }
             }
             return ActionResult.SUCCESS;
@@ -111,7 +114,39 @@ public class Freezer extends HorizontalFacingBlockWEntity{
         return null;
     }
 
+    protected static final VoxelShape FREEZER = VoxelShapes.union(createCuboidShape(0.5, -16, 3,15.5, 16, 16),createCuboidShape(0.5, 5, 2,14.83, 16, 3.1),createCuboidShape(13, 5.19, 0.09,14, 15.19, 1.09),createCuboidShape(13, 5.19, 0.98,14, 6.19, 2.98),createCuboidShape(13, 14.19, 1.06,14, 15.19, 3.06));
+    protected static final VoxelShape FREEZER_OPEN = VoxelShapes.union(createCuboidShape(0.5, -16, 2.8,15.5, 16, 16),createCuboidShape(0.5, 5, -11.29,1.5, 16, 3.05),createCuboidShape(-1.41, 5.19, -10.45,-0.41, 15.19, -9.45),createCuboidShape(-0.52, 5.19, -10.45,1.48, 6.19, -9.45),createCuboidShape(-0.44, 14.19, -10.45,1.26, 15.19, -9.45));
 
+
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        Direction dir = state.get(FACING);
+        Boolean open = state.get(OPEN);
+        switch (dir) {
+            case NORTH:
+                if (open)
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, FREEZER_OPEN);
+                else
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, FREEZER);
+            case SOUTH:
+                if (open)
+                    return FREEZER_OPEN;
+                else
+                    return FREEZER;
+            case EAST:
+                if (open)
+                    return rotateShape(Direction.NORTH, Direction.WEST, FREEZER_OPEN);
+                else
+                    return rotateShape(Direction.NORTH, Direction.WEST, FREEZER);
+            case WEST:
+            default:
+                if (open)
+                    return rotateShape(Direction.NORTH, Direction.EAST, FREEZER_OPEN);
+                else
+                    return rotateShape(Direction.NORTH, Direction.EAST, FREEZER);
+        }
+    }
 
 
 

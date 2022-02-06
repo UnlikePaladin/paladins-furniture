@@ -4,13 +4,12 @@ import com.google.common.collect.Maps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.Freezer;
 import com.unlikepaladin.pfm.blocks.Fridge;
-import com.unlikepaladin.pfm.menus.AbstractFreezerScreenHandler;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.LockableContainerBlockEntity;
+import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
+import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -40,27 +40,84 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker,
+public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker,
         RecipeInputProvider {
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
         super(PaladinFurnitureMod.FREEZER_BLOCK_ENTITY, pos, state);
         this.recipeType = PaladinFurnitureMod.FREEZING_RECIPE;
     }
+    private final ViewerCountManager stateManager = new ViewerCountManager() {
+
+
+        @Override
+        protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
+            if (state.getBlock() instanceof Freezer) {
+                FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
+                FreezerBlockEntity.this.setOpen(state, true);
+            }
+        }
+
+        @Override
+        protected void onContainerClose(World world, BlockPos pos, BlockState state) {
+            if (state.getBlock() instanceof Freezer) {
+                FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
+                FreezerBlockEntity.this.setOpen(state, false);
+            }
+        }
+
+
+        @Override
+        protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
+
+        }
+
+        @Override
+        protected boolean isPlayerViewing(PlayerEntity player) {
+            if (player.currentScreenHandler instanceof FreezerScreenHandler) {
+                Inventory inventory = ((FreezerScreenHandler)player.currentScreenHandler).getInventory();
+                return inventory == FreezerBlockEntity.this;
+            }
+            return false;
+        }
+    };
+
+
+
+
+
+
+    @Override
+    public void onOpen(PlayerEntity player) {
+        if (!this.removed && !player.isSpectator()) {
+            this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+        }
+    }
+
+    @Override
+    public void onClose(PlayerEntity player) {
+        if (!this.removed && !player.isSpectator()) {
+            this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+        }
+    }
+
+
+
+
+
+
+
     private static final int[] TOP_SLOTS = new int[]{0};
     private static final int[] BOTTOM_SLOTS = new int[]{2, 1};
     private static final int[] SIDE_SLOTS = new int[]{1};
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(3, ItemStack.EMPTY);
+    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY);
     int fuelTime;
     int fuelTimeTotal;
     int freezeTime;
     int freezeTimeTotal;
-
-
     protected final PropertyDelegate propertyDelegate = new PropertyDelegate() {
 
         @Override
@@ -144,42 +201,6 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
     public static boolean canUseAsFuel(ItemStack stack) {
         return FreezerBlockEntity.createFuelTimeMap().containsKey(stack.getItem());
     }
-
-
-    private final ViewerCountManager stateManager = new ViewerCountManager() {
-
-
-        @Override
-        protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Freezer) {
-                FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
-                FreezerBlockEntity.this.setOpen(state, true);
-            }
-        }
-
-        @Override
-        protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Freezer) {
-                FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
-                FreezerBlockEntity.this.setOpen(state, false);
-            }
-        }
-
-
-        @Override
-        protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
-
-        }
-
-        @Override
-        protected boolean isPlayerViewing(PlayerEntity player) {
-            if (player.currentScreenHandler instanceof AbstractFreezerScreenHandler) {
-                Inventory inventory = ((AbstractFreezerScreenHandler)player.currentScreenHandler).getInventory();
-                return inventory == FreezerBlockEntity.this;
-            }
-            return false;
-        }
-    };
 
     @Override
     public int[] getAvailableSlots(Direction side) {
@@ -289,26 +310,6 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
         }
 
 
-
-
-
-
-
-
-    @Override
-        public void onOpen(PlayerEntity player) {
-            if (!this.removed && !player.isSpectator()) {
-                this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
-            }
-        }
-
-    @Override
-    public void onClose(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
-            this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
-        }
-    }
-
     protected int getFuelTime(ItemStack fuel) {
         if (fuel.isEmpty()) {
             return 0;
@@ -347,12 +348,12 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
 
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Fridge.OPEN, open), Block.NOTIFY_ALL);
+        this.world.setBlockState(this.getPos(), state.with(Freezer.OPEN, open), Block.NOTIFY_ALL);
     }
 
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.get(Fridge.FACING).getVector();
+        Vec3i vec3i = state.get(Freezer.FACING).getVector();
         double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
@@ -363,6 +364,13 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
     public Text getDisplayName() {
         return new TranslatableText("container.pfm.freezer");
     }
+
+    @Override
+    protected Text getContainerName() {
+        return getDisplayName();
+    }
+
+
     private static boolean canAcceptRecipeOutput(@Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
         if (slots.get(0).isEmpty() || recipe == null) {
             return false;
@@ -417,13 +425,10 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
         return createScreenHandler(syncId, inv);
     }
 
-
+    @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
         return new FreezerScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
     }
-
-
-
 
     public static void tick(World world, BlockPos pos, BlockState state, FreezerBlockEntity blockEntity) {
         boolean bl = blockEntity.isActive();
@@ -467,8 +472,6 @@ public class FreezerBlockEntity extends BlockEntity implements NamedScreenHandle
         }
         if (bl != blockEntity.isActive()) {
             bl2 = true;
-          //  state = (BlockState)state.with(Freezer.OPEN, blockEntity.isActive());
-            world.setBlockState(pos, state, Block.NOTIFY_ALL);
         }
         if (bl2) {
             FreezerBlockEntity.markDirty(world, pos, state);

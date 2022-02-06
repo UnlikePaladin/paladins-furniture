@@ -1,10 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PiglinBrain;
@@ -22,10 +19,14 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
+
+import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class Fridge extends HorizontalFacingBlockWEntity{
     public static final BooleanProperty OPEN = Properties.OPEN;
@@ -53,7 +54,7 @@ public class Fridge extends HorizontalFacingBlockWEntity{
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return world.getBlockState(pos.up()).isAir() || world.getBlockState(pos.up()).getBlock() instanceof Freezer;
+        return world.getBlockState(pos.up()).isAir() || world.getBlockState(pos.up()).getBlock() == this.freezer;
     }
     @Override
     public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
@@ -143,6 +144,54 @@ public class Fridge extends HorizontalFacingBlockWEntity{
         }
         super.onBreak(world, pos, state, player);
     }
+
+    protected static final VoxelShape FRIDGE = VoxelShapes.union(createCuboidShape(0.5, 0, 3, 15.5, 32, 16), createCuboidShape(12.98, 4, 0.03,13.98, 20, 1.03),createCuboidShape(12.98, 4, 0.92,13.98, 5, 2.92),createCuboidShape(12.98, 18.98, 1,13.98, 19.98, 2.9),createCuboidShape(0.5, 1, 1.93,14.78, 19.98, 3.03));
+    protected static final VoxelShape FRIDGE_OPEN = VoxelShapes.union(createCuboidShape(0.5, 0, 3,15.5, 32, 16),createCuboidShape(-1.41, 4, -10.39,-0.41, 19.98, -9.39),createCuboidShape(-0.52, 4, -10.39,1.48, 5, -9.39),createCuboidShape(-0.45, 18.98, -10.39,1.45, 19.98, -9.39),createCuboidShape(0.5, 1, -11.59,1.48, 20, 3.11),createCuboidShape(0.75, 7.7, -10.42,3.75, 10.8, 2.98),createCuboidShape(0.75, 12.2, -10.42,3.75, 15.3, 2.98));
+    @Override
+    public boolean isSideInvisible(BlockState state, BlockState stateFrom, Direction direction) {
+        if (stateFrom.isOf(this)) {
+            return true;
+        }
+        return super.isSideInvisible(state, stateFrom, direction);
+    }
+
+    @Override
+    public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
+        return 1.0f;
+    }
+
+
+
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        Direction dir = state.get(FACING);
+        Boolean open = state.get(OPEN);
+        switch (dir) {
+            case NORTH:
+                if (open)
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, FRIDGE_OPEN);
+                else
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, FRIDGE);
+            case SOUTH:
+                if (open)
+                    return FRIDGE_OPEN;
+                else
+                    return FRIDGE;
+            case EAST:
+                if (open)
+                    return rotateShape(Direction.NORTH, Direction.WEST, FRIDGE_OPEN);
+                else
+                    return rotateShape(Direction.NORTH, Direction.WEST, FRIDGE);
+            case WEST:
+            default:
+                if (open)
+                    return rotateShape(Direction.NORTH, Direction.EAST, FRIDGE_OPEN);
+                else
+                    return rotateShape(Direction.NORTH, Direction.EAST, FRIDGE);
+        }
+    }
+
 
 
 

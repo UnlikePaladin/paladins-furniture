@@ -26,6 +26,23 @@ import net.minecraft.world.World;
 
 
 public class FridgeBlockEntity extends LootableContainerBlockEntity {
+
+
+    @Override
+    public int size() {
+            return 54;
+        }
+
+
+
+
+
+    public static void copyInventory(FridgeBlockEntity from, FridgeBlockEntity to) {
+        DefaultedList<ItemStack> defaultedList = from.getInvStackList();
+        from.setInvStackList(to.getInvStackList());
+        to.setInvStackList(defaultedList);
+    }
+
     public FridgeBlockEntity(BlockPos pos, BlockState state) {
         super(PaladinFurnitureMod.FRIDGE_BLOCK_ENTITY, pos, state);
     }
@@ -64,23 +81,6 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
             return false;
         }
     };
-
-
-
-        @Override
-        public int size() {
-            return 54;
-        }
-
-
-
-
-
-    public static void copyInventory(FridgeBlockEntity from, FridgeBlockEntity to) {
-        DefaultedList<ItemStack> defaultedList = from.getInvStackList();
-        from.setInvStackList(to.getInvStackList());
-        to.setInvStackList(defaultedList);
-    }
 
 
 
