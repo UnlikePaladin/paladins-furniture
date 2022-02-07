@@ -127,12 +127,14 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
         }
         return nbt;
     }
+    String blockname = this.getCachedState().getBlock().getTranslationKey();
     protected Text getContainerName() {
-        return new TranslatableText("container.pfm.fridge");
+        blockname = blockname.replace("block.pfm", "");
+        return new TranslatableText("container.pfm" + blockname);
     }
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Fridge.OPEN, open), Block.NOTIFY_ALL);
+        this.world.setBlockState(this.getPos(), state.with(Fridge.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
     }
 
     @Override

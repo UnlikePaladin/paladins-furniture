@@ -214,6 +214,7 @@ public class BlockItemRegistry {
     public static final Block WHITE_FREEZER = new Freezer(FabricBlockSettings.copyOf(OAK_CHAIR),() -> BlockItemRegistry.WHITE_FRIDGE);
     public static final Block WHITE_FRIDGE = new Fridge(FabricBlockSettings.copyOf(OAK_CHAIR).nonOpaque(), () -> BlockItemRegistry.WHITE_FREEZER);
 
+    public static final Block XBOX_FRIDGE = new XboxFridge(FabricBlockSettings.copyOf(OAK_CHAIR).nonOpaque(), null);
 
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.BLUE);
@@ -447,6 +448,7 @@ public class BlockItemRegistry {
 
         registerFurniture("white_fridge", WHITE_FRIDGE, true);
         registerFurniture("white_freezer", WHITE_FREEZER, false);
+        registerFurniture("xbox_fridge", XBOX_FRIDGE, true);
 
         //Dye Kits
         registerItem("dye_kit_red", DYE_KIT_RED);

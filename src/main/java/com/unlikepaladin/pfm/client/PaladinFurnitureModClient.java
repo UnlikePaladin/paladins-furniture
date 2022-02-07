@@ -48,40 +48,10 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
         BlockEntityRendererRegistry.INSTANCE.register(PaladinFurnitureMod.PLAYER_CHAIR_BLOCK_ENTITY, RenderPlayerChairBlockEntity::new);
         ScreenRegistry.register(PaladinFurnitureMod.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.WHITE_FRIDGE, RenderLayer.getCutout());
-
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.XBOX_FRIDGE, RenderLayer.getCutout());
 
     }
-    private static CompletableFuture globalLoadTask;
-    public static CompletableFuture doTask(Runnable toRun) {
-        return doTask(toRun, null);
-    }
 
-    public static CompletableFuture doTask(Runnable toRun, @Nullable Runnable onFinished) {
-        //If the global load task doesn't exist, create it.
-        if (globalLoadTask == null || globalLoadTask.isDone()) {
-            globalLoadTask = CompletableFuture.runAsync(
-                    () -> {
-                        runTask(toRun, onFinished);
-                    }
-            );
-        } else {
-            //Otherwise, queue up next task.
-            globalLoadTask = globalLoadTask.thenRunAsync(
-                    () -> {
-                        runTask(toRun, onFinished);
-                    }
-            );
-        }
-
-        return globalLoadTask;
-    }
-
-    private static void runTask(Runnable toRun, @Nullable Runnable onFinished) {
-        toRun.run();
-
-        if (onFinished != null)
-            onFinished.run();
-    }
 
     }
 

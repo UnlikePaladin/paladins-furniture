@@ -1,0 +1,154 @@
+{
+	"credit": "By UnlikePaladin",
+	"textures": {
+		"2": "pfm:block/xbox_fridge/fridge_back_dark",
+		"4": "pfm:block/xbox_fridge/xbox_logo",
+		"particle": "pfm:block/xbox_fridge/fridge_xbox",
+		"base": "pfm:block/xbox_fridge/fridge_xbox"
+	},
+	"elements": [
+		{
+			"name": "bulk",
+			"from": [0.5, 0, 3],
+			"to": [15.5, 16, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 15, 16], "texture": "#base"},
+				"east": {"uv": [0, 0, 13, 16], "texture": "#base"},
+				"south": {"uv": [0, 0, 15, 16], "texture": "#base"},
+				"west": {"uv": [0, 0, 13, 16], "texture": "#base"},
+				"up": {"uv": [0, 0, 15, 13], "rotation": 180, "texture": "#base"},
+				"down": {"uv": [0, 0, 15, 13], "rotation": 180, "texture": "#base"}
+			}
+		},
+		{
+			"name": "bulk",
+			"from": [1, 0, 15.01563],
+			"to": [15, 15, 16.01563],
+			"faces": {
+				"north": {"uv": [0, 0, 14, 15], "texture": "#2"},
+				"east": {"uv": [0, 0, 1, 15], "texture": "#2"},
+				"south": {"uv": [0, 0, 14, 15], "rotation": 180, "texture": "#2"},
+				"west": {"uv": [0, 0, 1, 15], "texture": "#2"},
+				"up": {"uv": [0, 0, 14, 1], "rotation": 180, "texture": "#2"},
+				"down": {"uv": [0, 0, 14, 1], "rotation": 180, "texture": "#2"}
+			}
+		},
+		{
+			"name": "door",
+			"from": [12.29688, 1.01563, 1.5625],
+			"to": [13.29688, 2.01563, 2.5625],
+			"faces": {
+				"north": {"uv": [15, 14, 16.2, 15], "texture": "#base"},
+				"east": {"uv": [15, 14, 16.2, 15], "texture": "#base"},
+				"south": {"uv": [15, 14, 16.2, 15], "texture": "#base"},
+				"west": {"uv": [15, 14, 16.2, 15], "texture": "#base"},
+				"up": {"uv": [15, 14, 16.2, 15], "rotation": 180, "texture": "#base"},
+				"down": {"uv": [15, 14, 16.2, 15], "rotation": 180, "texture": "#base"}
+			}
+		},
+		{
+			"name": "door",
+			"from": [11.875, 13.01563, 1.83438],
+			"to": [13.875, 15.01563, 2.83438],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 15.88571], "texture": "#4"},
+				"east": {"uv": [13, 12.78689, 16, 15.78689], "texture": "#4"},
+				"south": {"uv": [13, 12.78689, 16, 15.78689], "texture": "#4"},
+				"west": {"uv": [13, 12.78689, 16, 15.78689], "texture": "#4"},
+				"up": {"uv": [13, 13, 16, 16], "rotation": 180, "texture": "#4"},
+				"down": {"uv": [13, 12.78689, 16, 15.78689], "rotation": 180, "texture": "#4"}
+			}
+		},
+		{
+			"name": "door",
+			"from": [0.5125, 0, 1.90625],
+			"to": [15.3125, 16, 2.90625],
+			"faces": {
+				"north": {"uv": [0, 0, 14.8, 16], "texture": "#base"},
+				"east": {"uv": [0, 0, 1, 16], "texture": "#base"},
+				"south": {"uv": [0, 0, 14.8, 16], "texture": "#base"},
+				"west": {"uv": [0, 0, 1, 16], "texture": "#base"},
+				"up": {"uv": [0, 0, 14.8, 1], "rotation": 180, "texture": "#base"},
+				"down": {"uv": [0, 0, 14.8, 1], "rotation": 180, "texture": "#base"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [59, 40, 0],
+			"translation": [-0.5, 0.25, -1.5],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [59, 40, 0],
+			"translation": [-0.5, 0.25, -1.5],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"firstperson_righthand": {
+			"rotation": [1, 19, 0],
+			"translation": [0.25, 0.25, 1],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"firstperson_lefthand": {
+			"rotation": [1, 19, 0],
+			"translation": [0.25, 0.25, 1],
+			"scale": [0.25, 0.25, 0.25]
+		},
+		"ground": {
+			"translation": [0, -1.75, 0],
+			"scale": [0.26, 0.26, 0.26]
+		},
+		"gui": {
+			"rotation": [13, -144, 0],
+			"translation": [0.5, -3.5, 0],
+			"scale": [0.43, 0.43, 0.43]
+		},
+		"head": {
+			"rotation": [-1, -1, 0],
+			"translation": [0.75, -16, -1.5],
+			"scale": [0.93, 0.95, 0.92]
+		},
+		"fixed": {
+			"translation": [0, -5.5, -2.75],
+			"scale": [0.66, 0.66, 0.66]
+		}
+	},
+	"groups": [
+		{
+			"name": "fridge",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [
+				{
+					"name": "top",
+					"origin": [0, 0, 0],
+					"color": 0,
+					"children": [0]
+				},
+				{
+					"name": "handle_top",
+					"origin": [0, 0, 0],
+					"color": 0,
+					"children": []
+				},
+				{
+					"name": "bottom",
+					"origin": [0, 0, 0],
+					"color": 0,
+					"children": [
+						1,
+						2,
+						3,
+						4,
+						{
+							"name": "handle_bottom",
+							"origin": [0, 0, 0],
+							"color": 0,
+							"children": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

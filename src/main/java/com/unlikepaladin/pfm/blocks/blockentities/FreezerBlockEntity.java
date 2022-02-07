@@ -348,7 +348,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Freezer.OPEN, open), Block.NOTIFY_ALL);
+        this.world.setBlockState(this.getPos(), state.with(Freezer.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
     }
 
 
