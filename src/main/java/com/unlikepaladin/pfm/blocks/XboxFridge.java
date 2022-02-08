@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
+import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -53,7 +54,7 @@ public class XboxFridge extends Fridge
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof FridgeBlockEntity) {
             player.openHandledScreen((FridgeBlockEntity)blockEntity);
-            //player.incrementStat(Stats.OPE);
+            player.incrementStat(StatisticsRegistry.FRIDGE_OPENED);
             PiglinBrain.onGuardedBlockInteracted(player, true);
         }
         return ActionResult.CONSUME;

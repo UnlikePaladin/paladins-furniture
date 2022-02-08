@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import com.unlikepaladin.pfm.entity.render.RenderChair;
 import com.unlikepaladin.pfm.entity.render.RenderPlayerChairBlockEntity;
 import com.unlikepaladin.pfm.menus.FreezerScreen;
+import com.unlikepaladin.pfm.menus.StoveScreen;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.fabricmc.api.ClientModInitializer;
@@ -17,6 +18,7 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistr
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.minecraft.client.gui.screen.ingame.SmokerScreen;
 import net.minecraft.client.render.RenderLayer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -47,8 +49,11 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
 
         BlockEntityRendererRegistry.INSTANCE.register(PaladinFurnitureMod.PLAYER_CHAIR_BLOCK_ENTITY, RenderPlayerChairBlockEntity::new);
         ScreenRegistry.register(PaladinFurnitureMod.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
+        ScreenRegistry.register(PaladinFurnitureMod.STOVE_SCREEN_HANDLER, StoveScreen::new);
+
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.WHITE_FRIDGE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.XBOX_FRIDGE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.SIMPLE_STOVE, RenderLayer.getCutout());
 
     }
 

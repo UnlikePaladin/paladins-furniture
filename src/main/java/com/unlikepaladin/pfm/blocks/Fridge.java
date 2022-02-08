@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
+import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.Entity;
@@ -112,7 +113,7 @@ public class Fridge extends HorizontalFacingBlockWEntity{
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof FridgeBlockEntity) {
             player.openHandledScreen((FridgeBlockEntity)blockEntity);
-            //player.incrementStat(Stats.OPE);
+            player.incrementStat(StatisticsRegistry.FRIDGE_OPENED);
             PiglinBrain.onGuardedBlockInteracted(player, true);
         }
         return ActionResult.CONSUME;

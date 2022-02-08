@@ -207,10 +207,19 @@
   "container.pfm.white_fridge": "Fridge",
   "container.pfm.xbox_fridge": "Xbox Series X Fridge",
   "container.pfm.freezer": "Freezer",
+  "container.pfm.simple_stove": "Stove",
+  "block.pfm.simple_stove": "White Stove",
+
   "block.pfm.white_fridge": "White Fridge",
   "block.pfm.xbox_fridge": "Xbox Series X Fridge",
 
   "block.pfm.oak_kitchen_counter": "Oak Kitchen Counter",
-  "block.pfm.oak_kitchen_drawer": "Oak Kitchen Drawer"
+  "block.pfm.oak_kitchen_drawer": "Oak Kitchen Drawer",
+
+
+  "stat.pfm.fridge_opened": "Interactions with Fridge",
+  "stat.pfm.freezer_opened": "Interactions with Freezer",
+  "stat.pfm.drawer_searched": "Drawers Opened",
+  "stat.pfm.stove_opened": "Interactions with Stove"
 
 }

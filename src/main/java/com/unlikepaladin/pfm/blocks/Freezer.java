@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
+import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -51,6 +52,7 @@ public class Freezer extends HorizontalFacingBlockWEntity{
                 //a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
                 NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
                 if (screenHandlerFactory != null) {
+                    player.incrementStat(StatisticsRegistry.FREEZER_OPENED);
                     //With this call the server will request the client to open the appropriate Screenhandler
                     player.openHandledScreen(screenHandlerFactory);
                     PiglinBrain.onGuardedBlockInteracted(player, true);

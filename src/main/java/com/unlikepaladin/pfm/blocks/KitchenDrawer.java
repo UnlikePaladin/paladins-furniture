@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.DrawerBlockEntity;
+import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -92,7 +93,7 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof DrawerBlockEntity) {
             player.openHandledScreen((DrawerBlockEntity)blockEntity);
-            //player.incrementStat(Stats.OPE);
+            player.incrementStat(StatisticsRegistry.DRAWER_SEARCHED);
             PiglinBrain.onGuardedBlockInteracted(player, true);
         }
         return ActionResult.CONSUME;

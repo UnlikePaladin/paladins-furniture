@@ -10,6 +10,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -211,10 +212,12 @@ public class BlockItemRegistry {
     public static final Block OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
 
-    public static final Block WHITE_FREEZER = new Freezer(FabricBlockSettings.copyOf(OAK_CHAIR),() -> BlockItemRegistry.WHITE_FRIDGE);
-    public static final Block WHITE_FRIDGE = new Fridge(FabricBlockSettings.copyOf(OAK_CHAIR).nonOpaque(), () -> BlockItemRegistry.WHITE_FREEZER);
+    public static final Block WHITE_FREEZER = new Freezer(FabricBlockSettings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE),() -> BlockItemRegistry.WHITE_FRIDGE);
+    public static final Block WHITE_FRIDGE = new Fridge(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque(), () -> BlockItemRegistry.WHITE_FREEZER);
 
-    public static final Block XBOX_FRIDGE = new XboxFridge(FabricBlockSettings.copyOf(OAK_CHAIR).nonOpaque(), null);
+    public static final Block XBOX_FRIDGE = new XboxFridge(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque(), null);
+
+    public static final Block SIMPLE_STOVE = new Stove(FabricBlockSettings.copyOf(WHITE_FREEZER));
 
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.BLUE);
@@ -449,6 +452,8 @@ public class BlockItemRegistry {
         registerFurniture("white_fridge", WHITE_FRIDGE, true);
         registerFurniture("white_freezer", WHITE_FREEZER, false);
         registerFurniture("xbox_fridge", XBOX_FRIDGE, true);
+
+        registerFurniture("simple_stove", SIMPLE_STOVE, true);
 
         //Dye Kits
         registerItem("dye_kit_red", DYE_KIT_RED);
