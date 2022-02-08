@@ -1,5 +1,6 @@
-# Paladin's Furniture Mod
-Icon is a WIP, don't get too attached 
+
+![Paladin's Furniture Mod Banner](https://github.com/UnlikePaladin/paladin-furniture-mod/blob/main/docs/banner.png?raw=true)
+
 
 ## Installation
 
