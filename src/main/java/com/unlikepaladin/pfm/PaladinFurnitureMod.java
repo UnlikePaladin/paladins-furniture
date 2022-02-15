@@ -104,8 +104,6 @@ public class PaladinFurnitureMod implements ModInitializer {
 		});
 		FREEZING_RECIPE_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "freezing"), new CookingRecipeSerializer<>(FreezingRecipe::new, 200));
 
-		PLAYER_CHAIR_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":player_chair_block_entity", FabricBlockEntityTypeBuilder.create(PlayerChairBlockEntity::new, BlockItemRegistry.PLAYER_CHAIR).build(null));
-
 		FREEZER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(FREEZER, FreezerScreenHandler::new);
 		STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(STOVE, StoveScreenHandler::new);
 

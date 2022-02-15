@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.registry;
 
-import com.unlikepaladin.pfm.entity.model.ChairEntityModel;
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
 import net.minecraft.client.render.entity.model.EntityModelLayer;
@@ -13,7 +12,6 @@ public class EntityPaladinClient {
     public static void registerClientEntity() {
 
         EntityModelLayerRegistry.registerModelLayer(MODEL_CUBE_LAYER, ModelEmpty::getTexturedModelData);
-        EntityModelLayerRegistry.registerModelLayer(MODEL_CHAIR_LAYER, ChairEntityModel::getTexturedModelData);
 
     }
 
