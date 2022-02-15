@@ -1,7 +1,7 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-        "particle": "block/oak_planks",
+		"particle": "block/oak_planks",
 		"base": "block/oak_planks",
 		"legs": "block/oak_log"
 	},
@@ -98,9 +98,9 @@
 			"scale": [0.39, 0.39, 0.39]
 		},
 		"gui": {
-			"rotation": [13, 40, 0],
-			"translation": [0, -0.5, 0],
-			"scale": [0.58, 0.58, 0.58]
+			"rotation": [30, 45, 0],
+			"translation": [0.5, -0.5, 0],
+			"scale": [0.5, 0.5, 0.5]
 		},
 		"head": {
 			"rotation": [-1, -180, 0],
