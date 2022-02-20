@@ -243,6 +243,8 @@ public class BlockItemRegistry {
 
 
 
+    public static final Block OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
+
 
     public static final Block WHITE_FREEZER = new Freezer(FabricBlockSettings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE),() -> BlockItemRegistry.WHITE_FRIDGE);
     public static final Block WHITE_FRIDGE = new Fridge(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque(), () -> BlockItemRegistry.WHITE_FREEZER);
@@ -288,12 +290,26 @@ public class BlockItemRegistry {
 
     public static final Block LIGHT_WOOD_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block LIGHT_WOOD_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block DARK_WOOD_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block DARK_WOOD_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block GRANITE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.GRANITE));
     public static final Block GRANITE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.GRANITE));
     public static final Block CALCITE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.CALCITE));
     public static final Block CALCITE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.CALCITE));
     public static final Block NETHERITE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK));
     public static final Block NETHERITE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK));
+    public static final Block ANDESITE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+    public static final Block ANDESITE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+    public static final Block DIORITE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+    public static final Block DIORITE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+    public static final Block STONE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
+    public static final Block STONE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
+    public static final Block DEEPSLATE_TILE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES));
+    public static final Block DEEPSLATE_TILE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES));
+    public static final Block BLACKSTONE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE));
+    public static final Block BLACKSTONE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE));
+    public static final Block DEEPSLATE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+    public static final Block DEEPSLATE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
 
     public static void registerFurniture(String blockName, Block block, Boolean registerItem) {
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, blockName),  block);
@@ -506,6 +522,8 @@ public class BlockItemRegistry {
         //Counter time
         registerFurniture("oak_kitchen_counter", OAK_KITCHEN_COUNTER, true);
         registerFurniture("oak_kitchen_drawer", OAK_KITCHEN_DRAWER, true);
+        registerFurniture("oak_kitchen_cabinet", OAK_KITCHEN_CABINET, true);
+
         registerFurniture("spruce_kitchen_counter", SPRUCE_KITCHEN_COUNTER, true);
         registerFurniture("spruce_kitchen_drawer", SPRUCE_KITCHEN_DRAWER, true);
         registerFurniture("birch_kitchen_counter", BIRCH_KITCHEN_COUNTER, true);
@@ -546,12 +564,26 @@ public class BlockItemRegistry {
 
         registerFurniture("light_wood_kitchen_counter", LIGHT_WOOD_KITCHEN_COUNTER, true);
         registerFurniture("light_wood_kitchen_drawer", LIGHT_WOOD_KITCHEN_DRAWER, true);
+        registerFurniture("dark_wood_kitchen_counter", DARK_WOOD_KITCHEN_COUNTER, true);
+        registerFurniture("dark_wood_kitchen_drawer", DARK_WOOD_KITCHEN_DRAWER, true);
         registerFurniture("granite_kitchen_counter", GRANITE_KITCHEN_COUNTER, true);
         registerFurniture("granite_kitchen_drawer", GRANITE_KITCHEN_DRAWER, true);
         registerFurniture("calcite_kitchen_counter", CALCITE_KITCHEN_COUNTER, true);
         registerFurniture("calcite_kitchen_drawer", CALCITE_KITCHEN_DRAWER, true);
         registerFurniture("netherite_kitchen_counter", NETHERITE_KITCHEN_COUNTER, true);
         registerFurniture("netherite_kitchen_drawer", NETHERITE_KITCHEN_DRAWER, true);
+        registerFurniture("andesite_kitchen_counter", ANDESITE_KITCHEN_COUNTER, true);
+        registerFurniture("andesite_kitchen_drawer", ANDESITE_KITCHEN_DRAWER, true);
+        registerFurniture("diorite_kitchen_counter", DIORITE_KITCHEN_COUNTER, true);
+        registerFurniture("diorite_kitchen_drawer", DIORITE_KITCHEN_DRAWER, true);
+        registerFurniture("stone_kitchen_counter", STONE_KITCHEN_COUNTER, true);
+        registerFurniture("stone_kitchen_drawer", STONE_KITCHEN_DRAWER, true);
+        registerFurniture("deepslate_tile_kitchen_counter", DEEPSLATE_TILE_KITCHEN_COUNTER, true);
+        registerFurniture("deepslate_tile_kitchen_drawer", DEEPSLATE_TILE_KITCHEN_DRAWER, true);
+        registerFurniture("blackstone_kitchen_counter", BLACKSTONE_KITCHEN_COUNTER, true);
+        registerFurniture("blackstone_kitchen_drawer", BLACKSTONE_KITCHEN_DRAWER, true);
+        registerFurniture("deepslate_kitchen_counter", DEEPSLATE_KITCHEN_COUNTER, true);
+        registerFurniture("deepslate_kitchen_drawer", DEEPSLATE_KITCHEN_DRAWER, true);
 
         registerFurniture("white_fridge", WHITE_FRIDGE, true);
         registerFurniture("white_freezer", WHITE_FREEZER, false);

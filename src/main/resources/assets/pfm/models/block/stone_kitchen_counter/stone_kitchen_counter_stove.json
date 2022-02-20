@@ -1,0 +1,14 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_counter/kitchen_counter_stove",
+	"textures": {
+		"2": "block/black_stained_glass",
+		"3": "block/spruce_herringbone_planks",
+		"4": "block/iron_block",
+		"5": "block/white_concrete",
+		"particle": "block/white_concrete",
+		"base": "block/white_concrete",
+		"legs": "block/smooth_stone"
+	}
+    
+}
