@@ -1,8 +1,10 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
-import net.minecraft.block.*;
-import net.minecraft.block.enums.StairShape;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -15,9 +17,13 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+
+import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class ArmChairDyeable extends ArmChair implements DyeableFurniture {
     public static final EnumProperty<ArmChairShape> SHAPE = EnumProperty.of("shape", ArmChairShape.class);
@@ -40,12 +46,108 @@ public class ArmChairDyeable extends ArmChair implements DyeableFurniture {
 
 
     }
+
+
+
+    protected static final VoxelShape STANDARD = VoxelShapes.union(createCuboidShape(12, 0, 12 ,14.5, 3, 14.5),createCuboidShape(12, 0, 1.5,14.5, 3, 4), createCuboidShape(1, 0, 1.5, 3.5, 3, 4), createCuboidShape(1, 0, 12, 3.5, 3, 14.5), createCuboidShape(6.6, 2, 13, 16.3, 13.71, 16), createCuboidShape(6.6, 2, 0, 16.3, 13.71, 3), createCuboidShape(0.3, 2, 3, 16.3, 10.51, 13), createCuboidShape(0.3, 10.5, 3, 5.3, 25.51, 13), createCuboidShape(0.3, 2, 13, 6.6, 25.51, 16), createCuboidShape(0.3, 2, 0, 6.6, 25.51, 3));
+    protected static final VoxelShape MIDDLE = VoxelShapes.union(createCuboidShape(0, 2, 0.3,16, 9.51, 16),createCuboidShape(0, 9.5, 0.3,16, 25.51, 5.3), createCuboidShape(0, 9.5, 5.3, 16, 10.5, 16));
+    protected static final VoxelShape OUTER = VoxelShapes.union(createCuboidShape(0, 2, 0,16, 10.51, 15.7),createCuboidShape(0, 10.5, 10.7,5.3, 25.51, 15.7), createCuboidShape(0.3, 2, 15.7, 5.3, 25.51, 16),createCuboidShape(5.3, 2, 15.7,16, 10.51, 16),createCuboidShape(12.5, 0, 1.7,15, 3, 4.2),createCuboidShape(1, 0, 11.7,3.5, 3, 14.2));
+    protected static final VoxelShape LEFT_EDGE = VoxelShapes.union(createCuboidShape(1.5, 0, 12,4, 3, 14.5),createCuboidShape(1.5, 0, 1,4, 3, 3.5), createCuboidShape(0, 2, 6.6, 3, 13.71, 16),createCuboidShape(3, 2, 0.3,16, 10.51, 16),createCuboidShape(3, 10.5, 0.3,16, 25.51, 5.3),createCuboidShape(0, 2, 0.3,3, 25.51, 6.6));
+    protected static final VoxelShape RIGHT_EDGE = VoxelShapes.union(createCuboidShape(12.5, 0, 12,15, 3, 14.5),createCuboidShape(12.5, 0, 1,15, 3, 3.5), createCuboidShape(13, 2, 6.6, 16, 13.71, 16),createCuboidShape(0, 2, 0.3,13, 10.51, 16),createCuboidShape(0, 10.5, 0.3,13, 25.51, 5.3),createCuboidShape(13, 2, 0.3,16, 25.51, 6.6));
+    protected static final VoxelShape INNER = VoxelShapes.union(createCuboidShape(12.5, 0, 12,15, 3, 14.5),createCuboidShape(1, 0, 1.5,3.5, 3, 4), createCuboidShape(0.3, 2, 0.3, 16, 10.51, 16),createCuboidShape(0.3, 10.5, 5.3,5.3, 25.51, 16),createCuboidShape(0.3, 10.5, 0.3,16, 25.51, 5.3));
+
+    @SuppressWarnings("deprecated")
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+        Direction dir = state.get(FACING);
+        ArmChairShape shape = state.get(SHAPE);
+        switch(shape) {
+            case STRAIGHT:
+                if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.WEST, Direction.EAST, STANDARD);
+                if (dir.equals(Direction.NORTH))
+                    return rotateShape(Direction.WEST, Direction.NORTH, STANDARD);
+                if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.WEST, Direction.SOUTH, STANDARD);
+                else
+                    return STANDARD;
+            case MIDDLE:
+                if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.WEST, Direction.NORTH, MIDDLE);
+                if (dir.equals(Direction.NORTH))
+                    return MIDDLE;
+                if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.WEST, Direction.EAST, MIDDLE);
+                else
+                    return rotateShape(Direction.WEST, Direction.SOUTH, MIDDLE);
+            case OUTER_LEFT:
+                if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.WEST, Direction.EAST, OUTER);
+                if (dir.equals(Direction.NORTH))
+                    return rotateShape(Direction.WEST, Direction.NORTH, OUTER);
+                if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.WEST, Direction.SOUTH, OUTER);
+                else
+                    return OUTER;
+            case OUTER_RIGHT:
+                if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.WEST, Direction.SOUTH, OUTER);
+                if (dir.equals(Direction.NORTH))
+                    return rotateShape(Direction.WEST, Direction.EAST, OUTER);
+                if (dir.equals(Direction.SOUTH))
+                    return OUTER;
+                else
+                    return rotateShape(Direction.WEST, Direction.NORTH, OUTER);
+            case LEFT_EDGE:
+                if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.WEST, Direction.NORTH, LEFT_EDGE);
+                if (dir.equals(Direction.NORTH))
+                    return LEFT_EDGE;
+                if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.WEST, Direction.EAST, LEFT_EDGE);
+                else
+                    return rotateShape(Direction.WEST, Direction.SOUTH, LEFT_EDGE);
+            case RIGHT_EDGE:
+                if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.WEST, Direction.NORTH, RIGHT_EDGE);
+                if (dir.equals(Direction.NORTH))
+                    return RIGHT_EDGE;
+                if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.WEST, Direction.EAST, RIGHT_EDGE);
+                else
+                    return rotateShape(Direction.WEST, Direction.SOUTH, RIGHT_EDGE);
+            case INNER_RIGHT:
+                if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.WEST, Direction.EAST, INNER);
+                if (dir.equals(Direction.NORTH))
+                    return rotateShape(Direction.WEST, Direction.NORTH, INNER);
+                if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.WEST, Direction.SOUTH, INNER);
+                else
+                    return INNER;
+            case INNER_LEFT:
+                if (dir.equals(Direction.EAST))
+                    return rotateShape(Direction.WEST, Direction.NORTH, INNER);
+                if (dir.equals(Direction.NORTH))
+                    return INNER;
+                if (dir.equals(Direction.SOUTH))
+                    return rotateShape(Direction.WEST, Direction.EAST, INNER);
+                else
+                    return rotateShape(Direction.WEST, Direction.SOUTH, INNER);
+            default:
+                return STANDARD;
+
+
+        }
+    }
+
+
+
     protected DyeColor getColor (BlockState state) {
         return state.get(this.COLORID);
     }
     public void dropKit(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         DyeColor dyeColor = getColor(state);
-        System.out.println("Dye Color in break: " + dyeColor);
         if (!player.getAbilities().creativeMode && !world.isClient && state.get(DYED)){
             switch (dyeColor){
                 case RED:

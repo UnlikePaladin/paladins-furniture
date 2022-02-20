@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.KitchenCabinet;
 import com.unlikepaladin.pfm.blocks.KitchenDrawer;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -17,6 +18,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
@@ -35,7 +37,7 @@ public class DrawerBlockEntity extends LootableContainerBlockEntity {
 
         @Override
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof KitchenDrawer) {
+            if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet){
                 DrawerBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
                 DrawerBlockEntity.this.setOpen(state, true);
             }
@@ -43,7 +45,7 @@ public class DrawerBlockEntity extends LootableContainerBlockEntity {
 
         @Override
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof KitchenDrawer) {
+            if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet) {
                 DrawerBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
                 DrawerBlockEntity.this.setOpen(state, false);
             }
@@ -127,11 +129,17 @@ public class DrawerBlockEntity extends LootableContainerBlockEntity {
             Inventories.writeNbt(nbt, this.inventory);
         }
     }
+
+    String blockname = this.getCachedState().getBlock().getTranslationKey();
     protected Text getContainerName() {
+    if (this.getCachedState().getBlock() instanceof KitchenDrawer)
         return new TranslatableText("container.pfm.drawer");
+    else
+        return new TranslatableText("container.pfm.cabinet");
     }
+
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(KitchenDrawer.OPEN, open), Block.NOTIFY_ALL);
+        this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), Block.NOTIFY_ALL);
     }
 
     @Override
@@ -140,7 +148,7 @@ public class DrawerBlockEntity extends LootableContainerBlockEntity {
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.get(KitchenDrawer.FACING).getVector();
+        Vec3i vec3i = state.get(Properties.HORIZONTAL_FACING).getVector();
         double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;

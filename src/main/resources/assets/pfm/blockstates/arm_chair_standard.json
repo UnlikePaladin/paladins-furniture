@@ -74,38 +74,38 @@
 
 
       "facing=north,shape=outer_left":{
-         "model":"pfm:block/arm_chair/kitchen_counter_outer_corner",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,shape=outer_left":{
-         "model":"pfm:block/arm_chair/kitchen_counter_outer_corner",
+         "model":"pfm:block/arm_chair/arm_chair_outer_corner",
          "y":90,"uvlock":"true"
       },
-      "facing=south,shape=outer_left":{
-         "model":"pfm:block/arm_chair/kitchen_counter_outer_corner",
+      "facing=east,shape=outer_left":{
+         "model":"pfm:block/arm_chair/arm_chair_outer_corner",
          "y":180,"uvlock":"true"
       },
-      "facing=west,shape=outer_left":{
-         "model":"pfm:block/arm_chair/kitchen_counter_outer_corner",
+      "facing=south,shape=outer_left":{
+         "model":"pfm:block/arm_chair/arm_chair_outer_corner",
          "y":270,"uvlock":"true"
+      },
+      "facing=west,shape=outer_left":{
+         "model":"pfm:block/arm_chair/arm_chair_outer_corner",
+         "y":0,"uvlock":"true"
       },
       
       
       "facing=north,shape=outer_right":{
-         "model":"pfm:block/arm_chair/kitchen_counter_outer_corner",
-         "y":90,"uvlock":"true"
-      },
-      "facing=east,shape=outer_right":{
-         "model":"pfm:block/arm_chair/kitchen_counter_outer_corner",
+         "model":"pfm:block/arm_chair/arm_chair_outer_corner",
          "y":180,"uvlock":"true"
       },
-      "facing=south,shape=outer_right":{
-         "model":"pfm:block/arm_chair/kitchen_counter_outer_corner",
+      "facing=east,shape=outer_right":{
+         "model":"pfm:block/arm_chair/arm_chair_outer_corner",
          "y":270,"uvlock":"true"
       },
+      "facing=south,shape=outer_right":{
+         "model":"pfm:block/arm_chair/arm_chair_outer_corner",
+         "y":0,"uvlock":"true"
+      },
       "facing=west,shape=outer_right":{
-         "model":"pfm:block/arm_chair/kitchen_counter_outer_corner",
-         "y":0, "uvlock":"true"
+         "model":"pfm:block/arm_chair/arm_chair_outer_corner",
+         "y":90, "uvlock":"true"
       },
       
       
@@ -124,17 +124,17 @@
       },
       "facing=west,shape=inner_left":{
          "model":"pfm:block/arm_chair/arm_chair_corner_left",
-         "y":180,"uvlock":"true"
+         "y":270,"uvlock":"true"
       },
       
       
       "facing=north,shape=inner_right":{
          "model":"pfm:block/arm_chair/arm_chair_corner_right",
-         "y":90,"uvlock":"true"
+         "y":180,"uvlock":"true"
       },
       "facing=east,shape=inner_right":{
          "model":"pfm:block/arm_chair/arm_chair_corner_right",
-         "y":0,"uvlock":"true"
+         "y":270,"uvlock":"true"
       },
       "facing=south,shape=inner_right":{
          "model":"pfm:block/arm_chair/arm_chair_corner_right",
@@ -142,7 +142,7 @@
       },
       "facing=west,shape=inner_right":{
          "model":"pfm:block/arm_chair/arm_chair_corner_right",
-         "y":180, "uvlock":"true"
+         "y":90, "uvlock":"true"
       }
    }
 }
