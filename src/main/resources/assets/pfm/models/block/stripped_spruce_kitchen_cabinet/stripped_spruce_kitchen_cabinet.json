@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_cabinet/kitchen_cabinet",
+	"textures": {
+        
+		"particle": "block/spruce_planks",
+		"base": "block/stripped_spruce_log",
+		"legs": "block/spruce_planks"
+	}
+    
+}

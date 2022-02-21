@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_cabinet/kitchen_cabinet_open",
+	"textures": {
+		
+		"particle": "block/stripped_birch_log",
+		"base": "block/stripped_birch_log",
+		"legs": "block/polished_diorite"
+	}
+    
+}

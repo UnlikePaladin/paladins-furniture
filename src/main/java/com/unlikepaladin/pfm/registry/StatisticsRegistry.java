@@ -10,6 +10,7 @@ public class StatisticsRegistry {
     public static final Identifier FRIDGE_OPENED = new Identifier(PaladinFurnitureMod.MOD_ID, "fridge_opened");
     public static final Identifier FREEZER_OPENED = new Identifier(PaladinFurnitureMod.MOD_ID, "freezer_opened");
     public static final Identifier DRAWER_SEARCHED = new Identifier(PaladinFurnitureMod.MOD_ID, "drawer_searched");
+    public static final Identifier CABINET_SEARCHED = new Identifier(PaladinFurnitureMod.MOD_ID, "cabinet_searched");
     public static final Identifier STOVE_OPENED = new Identifier(PaladinFurnitureMod.MOD_ID, "stove_opened");
 
     public static void register(){
@@ -21,6 +22,9 @@ public class StatisticsRegistry {
 
         Registry.register(Registry.CUSTOM_STAT, "drawer_searched", DRAWER_SEARCHED);
         Stats.CUSTOM.getOrCreateStat(DRAWER_SEARCHED, StatFormatter.DEFAULT);
+
+        Registry.register(Registry.CUSTOM_STAT, "cabinet_searched", CABINET_SEARCHED);
+        Stats.CUSTOM.getOrCreateStat(CABINET_SEARCHED, StatFormatter.DEFAULT);
 
         Registry.register(Registry.CUSTOM_STAT, "stove_opened", STOVE_OPENED);
         Stats.CUSTOM.getOrCreateStat(STOVE_OPENED, StatFormatter.DEFAULT);

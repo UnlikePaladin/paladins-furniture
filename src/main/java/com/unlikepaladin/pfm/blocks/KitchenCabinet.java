@@ -8,8 +8,10 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.state.State;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -23,12 +25,21 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
-public class KitchenCabinet extends KitchenCounter implements BlockEntityProvider {
+import static com.unlikepaladin.pfm.blocks.KitchenCounter.SHAPE;
+import static com.unlikepaladin.pfm.blocks.KitchenCounter.rotateShape;
+
+public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntityProvider {
+    private final BlockState baseBlockState;
+    private final Block baseBlock;
+
     public KitchenCabinet(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
+        this.baseBlockState = this.getDefaultState();
+        this.baseBlock = baseBlockState.getBlock();
     }
     public static final BooleanProperty OPEN = Properties.OPEN;
 
@@ -51,6 +62,7 @@ public class KitchenCabinet extends KitchenCounter implements BlockEntityProvide
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(SHAPE);
         stateManager.add(OPEN);
+
     }
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
@@ -223,6 +235,76 @@ public class KitchenCabinet extends KitchenCounter implements BlockEntityProvide
         }
         super.onStateReplaced(state, world, pos, newState, moved);
     }
+    public boolean isCounter(BlockState state) {
+        return state.getBlock() instanceof KitchenCabinet;
+    }
+
+    public boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
+    {
+        BlockState state = world.getBlockState(pos.offset(direction));
+        return (state.getBlock() instanceof KitchenCabinet);
+    }
+    private boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
+        BlockState blockState = world.getBlockState(pos.offset(dir));
+        return !this.isCounter(blockState); //|| blockState.get(FACING) != state.get(FACING);
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+
+        return direction.getAxis().isHorizontal() ? state.with(SHAPE, getShape(state, world, pos)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+    @Override
+    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
+        if (!state.isOf(state.getBlock())) {
+            this.baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
+            this.baseBlock.onBlockAdded(this.baseBlockState, world, pos, oldState, false);
+        }
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        Direction direction = ctx.getSide();
+        BlockPos blockPos = ctx.getBlockPos();
+        World world = ctx.getWorld();
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
+        return blockState.with(SHAPE, this.getShape(blockState, world, blockPos));
+    }
+
+    private CounterShape getShape(BlockState state, BlockView world, BlockPos pos) {
+        Direction direction3 = null;
+        Object direction2;
+        Direction direction = state.get(FACING);
+        BlockState blockState = world.getBlockState(pos.offset(direction));
+        boolean right = this.canConnect(world, pos, state.get(FACING).rotateYCounterclockwise(), state.get(FACING));
+        boolean left = this.canConnect(world, pos, state.get(FACING).rotateYClockwise(), state.get(FACING));
+
+        if (isCounter(blockState) && ((Direction)(direction2 = blockState.get(FACING))).getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, ((Direction)direction2).getOpposite())) {
+            if (direction2 == direction.rotateYCounterclockwise()) {
+                return CounterShape.OUTER_LEFT;
+            }
+            return CounterShape.OUTER_RIGHT;
+        }
+        direction2 = world.getBlockState(pos.offset(direction.getOpposite()));
+        boolean innerCorner = isCounter((BlockState)direction2) && (direction3 = (Direction) ((State)direction2).get(FACING)).getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3);
+        if (innerCorner) {
+            if (direction3 == direction.rotateYCounterclockwise()) {
+                return CounterShape.INNER_LEFT;
+            }
+            return CounterShape.INNER_RIGHT;
+        }
+        if (left && right) {
+            return CounterShape.STRAIGHT;
+        }
+        else if (left) {
+            return CounterShape.LEFT_EDGE;
+        }
+        else if (right) {
+            return CounterShape.RIGHT_EDGE;
+        }
+        return CounterShape.STRAIGHT;
+    }
+
 
 
     @Override
@@ -233,7 +315,7 @@ public class KitchenCabinet extends KitchenCounter implements BlockEntityProvide
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof DrawerBlockEntity) {
             player.openHandledScreen((DrawerBlockEntity)blockEntity);
-            player.incrementStat(StatisticsRegistry.DRAWER_SEARCHED);
+            player.incrementStat(StatisticsRegistry.CABINET_SEARCHED);
             PiglinBrain.onGuardedBlockInteracted(player, true);
         }
         return ActionResult.CONSUME;
@@ -242,6 +324,11 @@ public class KitchenCabinet extends KitchenCounter implements BlockEntityProvide
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
     }
 
     @Override

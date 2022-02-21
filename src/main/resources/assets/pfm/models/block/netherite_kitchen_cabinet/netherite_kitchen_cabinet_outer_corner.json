@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_cabinet/kitchen_cabinet_outer_corner",
+	"textures": {
+        
+		"particle": "block/netherite_block",
+		"base": "block/ancient_debris_side",
+		"legs": "block/netherite_block"
+	}
+    
+}

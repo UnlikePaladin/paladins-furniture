@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_cabinet/kitchen_cabinet_inner_corner_open",
+	"textures": {
+        
+		"particle": "block/stripped_warped_stem",
+		"base": "block/stripped_warped_stem",
+		"legs": "block/calcite"
+	}
+    
+}
