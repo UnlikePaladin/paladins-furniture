@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
 import com.unlikepaladin.pfm.menus.AbstractFreezerScreenHandler;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
+import com.unlikepaladin.pfm.menus.IronStoveScreenHandler;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
@@ -35,18 +36,18 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static BlockEntityType<FridgeBlockEntity> FRIDGE_BLOCK_ENTITY;
 	public static BlockEntityType<FreezerBlockEntity> FREEZER_BLOCK_ENTITY;
 	public static BlockEntityType<StoveBlockEntity> STOVE_BLOCK_ENTITY;
+	public static BlockEntityType<IronStoveBlockEntity> IRON_STOVE_BLOCK_ENTITY;
 
 	public static final Identifier FREEZER = new Identifier(MOD_ID, "freezer_block_entity");
-	public static final Identifier STOVE = new Identifier(MOD_ID, "stove_block_entity");
 
 	public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
 	public static SoundEvent FURNITURE_DYED_EVENT = new SoundEvent(FURNITURE_DYED_ID);
 	public static ScreenHandlerType<AbstractFreezerScreenHandler> FREEZER_SCREEN_HANDLER;
 	public static ScreenHandlerType<StoveScreenHandler> STOVE_SCREEN_HANDLER;
+	public static ScreenHandlerType<IronStoveScreenHandler> IRON_STOVE_SCREEN_HANDLER;
 
 
 
-	public static BlockEntityType<PlayerChairBlockEntity> PLAYER_CHAIR_BLOCK_ENTITY;
 	public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 
 
@@ -97,6 +98,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 		FRIDGE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":fridge_block_entity", FabricBlockEntityTypeBuilder.create(FridgeBlockEntity::new, BlockItemRegistry.WHITE_FRIDGE).build(null));
 		FREEZER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":freezer_block_entity", FabricBlockEntityTypeBuilder.create(FreezerBlockEntity::new, BlockItemRegistry.WHITE_FREEZER).build(null));
 		STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":stove_block_entity", FabricBlockEntityTypeBuilder.create(StoveBlockEntity::new, BlockItemRegistry.SIMPLE_STOVE).build(null));
+		IRON_STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":iron_stove_block_entity", FabricBlockEntityTypeBuilder.create(IronStoveBlockEntity::new, BlockItemRegistry.IRON_STOVE).build(null));
 
 		FREEZING_RECIPE = Registry.register(Registry.RECIPE_TYPE, MOD_ID + ":freezing",  new RecipeType<FreezingRecipe>() {
 			@Override
@@ -105,7 +107,8 @@ public class PaladinFurnitureMod implements ModInitializer {
 		FREEZING_RECIPE_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "freezing"), new CookingRecipeSerializer<>(FreezingRecipe::new, 200));
 
 		FREEZER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(FREEZER, FreezerScreenHandler::new);
-		STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(STOVE, StoveScreenHandler::new);
+		STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "stove_block_entity"), StoveScreenHandler::new);
+		IRON_STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "iron_stove_block_entity"), IronStoveScreenHandler::new);
 
 	}
 }
