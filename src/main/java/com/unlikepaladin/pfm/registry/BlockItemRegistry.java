@@ -281,6 +281,7 @@ public class BlockItemRegistry {
     public static final Block XBOX_FRIDGE = new XboxFridge(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque(), null);
 
     public static final Block SIMPLE_STOVE = new Stove(FabricBlockSettings.copyOf(WHITE_FREEZER));
+    public static final Block IRON_STOVE = new IronStove(FabricBlockSettings.copyOf(WHITE_FREEZER));
 
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.BLUE);
@@ -694,6 +695,7 @@ public class BlockItemRegistry {
         registerFurniture("xbox_fridge", XBOX_FRIDGE, true);
 
         registerFurniture("simple_stove", SIMPLE_STOVE, true);
+        registerFurniture("iron_stove", IRON_STOVE, true);
 
         registerBlock("oak_herringbone_planks", OAK_HERRINGBONE_PLANKS, true);
         registerBlock("spruce_herringbone_planks", SPRUCE_HERRINGBONE_PLANKS, true);

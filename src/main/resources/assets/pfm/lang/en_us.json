@@ -209,7 +209,9 @@
   "container.pfm.xbox_fridge": "Xbox Series X Fridge",
   "container.pfm.freezer": "Freezer",
   "container.pfm.simple_stove": "Stove",
+  "container.pfm.iron_stove": "Stove",
   "block.pfm.simple_stove": "White Stove",
+  "block.pfm.iron_stove": "Iron Stove",
 
   "block.pfm.white_fridge": "White Fridge",
   "block.pfm.xbox_fridge": "Xbox Series X Fridge",
