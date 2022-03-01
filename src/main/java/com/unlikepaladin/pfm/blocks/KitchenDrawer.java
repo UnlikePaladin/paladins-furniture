@@ -8,7 +8,6 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.StateManager;
@@ -25,7 +24,6 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 
@@ -37,7 +35,7 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     private final BlockState baseBlockState;
     public KitchenDrawer(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
     }
@@ -59,30 +57,17 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
         return false;
     }
 
-    @Override
+
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
+        stateManager.add(SHAPE);
     }
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        Direction direction = ctx.getSide();
-        BlockPos blockPos = ctx.getBlockPos();
-        World world = ctx.getWorld();
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        return blockState.with(OPEN, false);
-    }
 
 
-
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-
-        return direction.getAxis().isHorizontal() ? state.with(OPEN, false) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-    }
 
 
     @Override
