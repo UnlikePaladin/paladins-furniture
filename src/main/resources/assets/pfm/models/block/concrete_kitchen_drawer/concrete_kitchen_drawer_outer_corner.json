@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_drawer/kitchen_drawer_outer_corner",
+	"textures": {
+        
+		"particle": "pfm:block/raw_concrete",
+		"base": "block/white_concrete",
+		"legs": "pfm:block/raw_concrete"
+	}
+    
+}
