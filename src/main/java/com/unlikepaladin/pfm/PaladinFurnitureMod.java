@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm;
 
+import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
 import com.unlikepaladin.pfm.menus.AbstractFreezerScreenHandler;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
@@ -92,6 +93,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		EntityRegistry.registerEntities();
+		SinkBehavior.registerBehavior();
 		BlockItemRegistry.register();
 		StatisticsRegistry.register();
 		DRAWER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":drawer_block_entity", FabricBlockEntityTypeBuilder.create(DrawerBlockEntity::new, BlockItemRegistry.OAK_KITCHEN_DRAWER).build(null));

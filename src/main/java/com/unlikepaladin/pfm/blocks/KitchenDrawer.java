@@ -112,35 +112,149 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     }
 
 
-    protected static final VoxelShape DRAWER = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 1, 12), createCuboidShape(0, 1, 0,16, 14, 13),createCuboidShape(0, 14, 0,16, 16, 16), createCuboidShape(1, 8, 12,15, 13, 14), createCuboidShape(1, 2, 12, 15, 7, 14), createCuboidShape(6, 4, 14, 10, 5, 15), createCuboidShape(6, 10, 14, 10, 11, 15));
-    protected static final VoxelShape DRAWER_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 1, 12), createCuboidShape(0, 1, 0,16, 8, 13), createCuboidShape(0, 8, 0, 1, 14, 13), createCuboidShape(15, 8, 0, 16, 14, 13), createCuboidShape(1, 8, 0, 15, 14, 4),createCuboidShape(1, 13, 12, 15, 14, 13), createCuboidShape(1, 9, 3, 2, 13, 18), createCuboidShape(1, 8, 3, 15, 9, 18), createCuboidShape(14, 9, 3, 15, 13, 18), createCuboidShape(6, 10, 19, 10, 11, 20), createCuboidShape(1, 8, 18, 15, 13, 19), createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(1, 2, 12, 15, 7, 14), createCuboidShape(6, 4, 14,10, 5, 15));
+    protected static final VoxelShape STRAIGHT = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 1, 12), createCuboidShape(0, 1, 0,16, 14, 13),createCuboidShape(0, 14, 0,16, 16, 16), createCuboidShape(1, 8, 12,15, 13, 14), createCuboidShape(1, 2, 12, 15, 7, 14), createCuboidShape(6, 4, 14, 10, 5, 15), createCuboidShape(6, 10, 14, 10, 11, 15));
+    protected static final VoxelShape STRAIGHT_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 1, 12), createCuboidShape(0, 1, 0,16, 14, 13), createCuboidShape(6, 10, 19, 10, 11, 20), createCuboidShape(1, 8, 13, 15, 13, 19), createCuboidShape(0, 14, 0, 16, 16, 16),createCuboidShape(1, 2, 12, 15, 7, 14), createCuboidShape(6, 4, 14, 10, 5, 15));
+    protected static final VoxelShape OUTER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,12, 1, 12),createCuboidShape(0, 1, 0,13, 14, 13),createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(5, 10, 19,8, 11, 20),createCuboidShape(1, 8, 13,12, 13, 19),createCuboidShape(1, 2, 12,12, 7, 14),createCuboidShape(5, 4, 14,8, 5, 15),createCuboidShape(12, 8, 1,14, 13, 12),createCuboidShape(12, 2, 1,14, 7, 12),createCuboidShape(14, 4, 5,15, 5, 8),createCuboidShape(14, 10, 5,15, 11, 8));
+    protected static final VoxelShape OUTER_CORNER = VoxelShapes.union(createCuboidShape(0, 0, 0,12, 1, 12),createCuboidShape(0, 1, 0,13, 14, 13),createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(5, 10, 14,8, 11, 15),createCuboidShape(1, 8, 13,12, 13, 14),createCuboidShape(1, 2, 12,12, 7, 14),createCuboidShape(5, 4, 14,8, 5, 15),createCuboidShape(12, 8, 1,14, 13, 12),createCuboidShape(12, 2, 1,14, 7, 12),createCuboidShape(14, 4, 5,15, 5, 8),createCuboidShape(14, 10, 5,15, 11, 8));
+    protected static final VoxelShape INNER_CORNER = VoxelShapes.union(createCuboidShape(4, 0, 0,16, 1, 16),createCuboidShape(0, 0, 0,4, 1, 11.9),createCuboidShape(3, 1, 0,16, 14, 16),createCuboidShape(0, 1, 0,3, 14, 13),createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(1, 2, 12,3, 7, 14),createCuboidShape(1, 8, 12,3, 13, 14),createCuboidShape(2, 8, 14,13, 13, 15));
+    protected static final VoxelShape RIGHT_EDGE = VoxelShapes.union(createCuboidShape(0,0,0,14, 1, 12),createCuboidShape(0,1,0,14, 14, 13),createCuboidShape(0,14,0,16, 16, 16),createCuboidShape(14,0,0,16, 14, 16),createCuboidShape(1,8,12,13, 13, 14),createCuboidShape(1, 2, 12,13, 7, 14),createCuboidShape(6, 4, 14,9,5,15),createCuboidShape(6,10,14,9, 11, 15));
+    protected static final VoxelShape LEFT_EDGE = VoxelShapes.union(createCuboidShape(2,0,0,16, 1, 12),createCuboidShape(2,1,0,16, 14, 13),createCuboidShape(0,0,0,2, 14, 16),createCuboidShape(0,14,0,16, 16, 16),createCuboidShape(3,8,12,15, 13, 14),createCuboidShape(3, 2, 12,15, 7, 14),createCuboidShape(8,4,14,11, 5, 15),createCuboidShape(8, 10, 14,11, 11, 15));
+    protected static final VoxelShape RIGHT_EDGE_OPEN =  VoxelShapes.union(createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(14, 0, 0,16, 14, 16),createCuboidShape(0, 0, 0,14, 1, 12),createCuboidShape(0, 1, 0,14, 14, 13),createCuboidShape(6, 10, 19,10, 11, 20),createCuboidShape(1, 8, 13,13, 13, 19),createCuboidShape(1, 2, 12,13, 7, 14),createCuboidShape(6, 4, 14,10, 5, 15));
+    protected static final VoxelShape LEFT_EDGE_OPEN = VoxelShapes.union(createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(0, 0, 0,2, 14, 16),createCuboidShape(2, 0, 0,16, 1, 12),createCuboidShape(2, 1, 0,16, 14, 13),createCuboidShape(8, 10, 19,12, 11, 20),createCuboidShape(3, 8, 13,15, 13, 19),createCuboidShape(3, 2, 12,15, 7, 14),createCuboidShape(8, 4, 14,12, 5, 15));
 
     @Override
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         Boolean open = state.get(OPEN);
-        switch(dir) {
-            case NORTH:
-                if(open)
-                    return DRAWER_OPEN;
+        CounterShape shape = state.get(SHAPE);
+
+        switch(shape) {
+            case STRAIGHT:
+                if(dir.equals(Direction.NORTH))
+                    if (open)
+                        return STRAIGHT_OPEN;
+                    else
+                        return STRAIGHT;
+                else if (dir.equals(Direction.SOUTH))
+                    if (open)
+                        return rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT_OPEN);
+                    else
+                        return rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT);
+                else if (dir.equals(Direction.EAST))
+                    if (open)
+                        return rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT_OPEN);
+                    else
+                        return rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT);
                 else
-                    return DRAWER;
-            case SOUTH:
                 if(open)
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, DRAWER_OPEN);
+                    return rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT_OPEN);
                 else
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, DRAWER);
-            case EAST:
-                if(open)
-                    return rotateShape(Direction.NORTH, Direction.EAST, DRAWER_OPEN);
+                    return rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT);
+
+            case INNER_LEFT:
+                if(dir.equals(Direction.NORTH))
+                        return rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
+                else if (dir.equals(Direction.SOUTH))
+                        return rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
+                else if (dir.equals(Direction.EAST))
+                        return INNER_CORNER;
                 else
-                    return rotateShape(Direction.NORTH, Direction.EAST, DRAWER);
-            case WEST:
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
+            case INNER_RIGHT:
+                if(dir.equals(Direction.NORTH))
+                        return INNER_CORNER;
+                else if (dir.equals(Direction.SOUTH))
+                        return rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
+                else if (dir.equals(Direction.EAST))
+                        return rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
+                else
+                    return rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
+            case OUTER_LEFT:
+                if(dir.equals(Direction.NORTH))
+                    if (open)
+                        return OUTER_CORNER_OPEN;
+                    else
+                        return OUTER_CORNER;
+                else if (dir.equals(Direction.SOUTH))
+                    if (open)
+                        return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER_OPEN);
+                    else
+                        return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
+                else if (dir.equals(Direction.EAST))
+                    if (open)
+                        return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER_OPEN);
+                    else
+                        return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
+                else
+                if (open)
+                    return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER_OPEN);
+                else
+                    return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
+            case OUTER_RIGHT:
+                if(dir.equals(Direction.NORTH))
+                    if (open)
+                        return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER_OPEN);
+                    else
+                        return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
+                else if (dir.equals(Direction.SOUTH))
+                    if (open)
+                        return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER_OPEN);
+                    else
+                        return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
+                else if (dir.equals(Direction.EAST))
+                    if (open)
+                        return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER_OPEN);
+                    else
+                        return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
+                else
+                if (open)
+                    return OUTER_CORNER_OPEN;
+                else
+                    return OUTER_CORNER;
+            case LEFT_EDGE:
+                if(dir.equals(Direction.NORTH))
+                    if (open)
+                        return LEFT_EDGE_OPEN;
+                    else
+                        return LEFT_EDGE;
+                else if (dir.equals(Direction.SOUTH))
+                    if (open)
+                        return rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE_OPEN);
+                    else
+                        return rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE);
+                else if (dir.equals(Direction.EAST))
+                    if (open)
+                        return rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE_OPEN);
+                    else
+                        return rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE);
+                else
+                if (open)
+                    return rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE_OPEN);
+                else
+                    return rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE);
+            case RIGHT_EDGE:
+                if(dir.equals(Direction.NORTH))
+                    if (open)
+                        return RIGHT_EDGE_OPEN;
+                    else
+                        return RIGHT_EDGE;
+                else if (dir.equals(Direction.SOUTH))
+                    if (open)
+                        return rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE_OPEN);
+                    else
+                        return rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE);
+                else if (dir.equals(Direction.EAST))
+                    if (open)
+                        return rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE_OPEN);
+                    else
+                        return rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
+                else
+                if (open)
+                    return rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE_OPEN);
+                else
+                    return rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE);
             default:
-                if(open)
-                    return rotateShape(Direction.NORTH, Direction.WEST, DRAWER_OPEN);
-                else
-                    return rotateShape(Direction.NORTH, Direction.WEST, DRAWER);
+                return STRAIGHT;
         }
     }
 

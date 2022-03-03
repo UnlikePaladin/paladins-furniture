@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.registry;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
+import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.items.DyeKit;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -210,6 +211,7 @@ public class BlockItemRegistry {
     public static final Block OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
 
     public static final Block BIRCH_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block BIRCH_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -577,6 +579,7 @@ public class BlockItemRegistry {
         registerFurniture("oak_kitchen_counter", OAK_KITCHEN_COUNTER, true);
         registerFurniture("oak_kitchen_drawer", OAK_KITCHEN_DRAWER, true);
         registerFurniture("oak_kitchen_cabinet", OAK_KITCHEN_CABINET, true);
+        registerFurniture("oak_kitchen_sink", OAK_KITCHEN_SINK, true);
 
         registerFurniture("spruce_kitchen_counter", SPRUCE_KITCHEN_COUNTER, true);
         registerFurniture("spruce_kitchen_drawer", SPRUCE_KITCHEN_DRAWER, true);

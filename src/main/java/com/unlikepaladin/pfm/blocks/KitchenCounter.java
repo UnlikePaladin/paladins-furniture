@@ -89,7 +89,7 @@ public class KitchenCounter extends HorizontalFacingBlock {
     public boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
-        boolean canConnect = (state.getBlock() instanceof KitchenCounter || state.getBlock() instanceof AbstractFurnaceBlock);
+        boolean canConnect = (state.getBlock() instanceof KitchenCounter || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock);
 
         return canConnect;
     }
@@ -99,7 +99,7 @@ public class KitchenCounter extends HorizontalFacingBlock {
         return !this.isCounter(blockState); //|| blockState.get(FACING) != state.get(FACING);
     }
     public boolean isCounter(BlockState state) {
-        return state.getBlock() instanceof KitchenCounter || state.getBlock() instanceof AbstractFurnaceBlock;
+        return state.getBlock() instanceof KitchenCounter || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock;
     }
 
     @Override
