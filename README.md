@@ -1,5 +1,4 @@
 
-![Paladin's Furniture Mod Banner](https://github.com/UnlikePaladin/paladin-furniture-mod/blob/main/docs/banner.png?raw=true)
 
 
 ## Installation
@@ -15,4 +14,4 @@ I've made a [Discord](https://discord.gg/zbMDUPB), join to get help or support, 
 
 ## License
 
-Paldin's Furniture Mod is licensed under GNU LGPLv3, a free and open-source license. For more information, please see the [license file](LICENSE).
+This mod is licensed under GNU LGPLv3, a free and open-source license. For more information, please see the [license file](LICENSE).
