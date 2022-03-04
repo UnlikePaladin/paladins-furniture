@@ -31,12 +31,10 @@ public class ClassicChairDyeable extends ClassicChair implements DyeableFurnitur
 
     }
     protected DyeColor getColor (BlockState state){
-        System.out.println("Get Color: " + this.COLORID);
         return state.get(this.COLORID);
     }
     public void dropKit(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         DyeColor dyeColor = getColor(state);
-        System.out.println("Dye Color in break: " + dyeColor);
         if (!player.getAbilities().creativeMode && !world.isClient && state.get(DYED)){
             switch (dyeColor){
                 case RED:

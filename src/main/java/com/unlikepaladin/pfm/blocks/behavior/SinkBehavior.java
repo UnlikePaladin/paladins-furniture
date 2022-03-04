@@ -23,7 +23,7 @@ import java.util.function.Predicate;
 
 public interface SinkBehavior extends CauldronBehavior {
 
-    SinkBehavior FILL_SINK_WITH_WATER = (state, world, pos, player, hand, stack) -> SinkBehavior.fillCauldron(world, pos, player, hand, stack, (BlockState) world.getBlockState(pos).with(KitchenSink.LEVEL_4, 3), SoundEvents.ITEM_BUCKET_EMPTY);
+    SinkBehavior FILL_SINK_WITH_WATER = (state, world, pos, player, hand, stack) -> SinkBehavior.fillCauldron(world, pos, player, hand, stack, state.with(KitchenSink.LEVEL_4, 3), SoundEvents.ITEM_BUCKET_EMPTY);
     Map<Item, CauldronBehavior> WATER_SINK_BEHAVIOR = CauldronBehavior.createMap();
     CauldronBehavior CLEAN_SHULKER_BOX = (state, world, pos, player, hand, stack) -> {
         if (state.get(KitchenSink.LEVEL_4) == 0) {
@@ -121,6 +121,24 @@ public interface SinkBehavior extends CauldronBehavior {
         behavior.put(Items.WATER_BUCKET, FILL_SINK_WITH_WATER);
     }
     static void registerBehavior() {
+        WATER_SINK_BEHAVIOR.put(Items.POTION, (state, world, pos, player, hand, stack) -> {
+            if (PotionUtil.getPotion(stack) != Potions.WATER) {
+                return ActionResult.PASS;
+            }
+            if (!world.isClient) {
+                Item item = stack.getItem();
+                player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
+                player.incrementStat(Stats.USE_CAULDRON);
+                player.incrementStat(Stats.USED.getOrCreateStat(item));
+                world.setBlockState(pos, state.with(KitchenSink.LEVEL_4, state.get(KitchenSink.LEVEL_4) + 1));
+                world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
+            }
+            return ActionResult.success(world.isClient);
+        });
+
+
+
         SinkBehavior.registerBucketBehavior(WATER_SINK_BEHAVIOR);
         WATER_SINK_BEHAVIOR.put(Items.BUCKET, (state2, world, pos, player, hand, stack) -> SinkBehavior.emptyCauldron(state2, world, pos, player, hand, stack, new ItemStack(Items.WATER_BUCKET), state -> state.get(KitchenSink.LEVEL_4) == 3, SoundEvents.ITEM_BUCKET_FILL));
         WATER_SINK_BEHAVIOR.put(Items.GLASS_BOTTLE, (state, world, pos, player, hand, stack) -> {
