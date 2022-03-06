@@ -26,6 +26,7 @@ import net.minecraft.world.WorldEvents;
 import net.minecraft.world.biome.Biome;
 
 import java.util.Map;
+import java.util.Random;
 import java.util.function.Predicate;
 
 public class KitchenSink extends AbstractCauldronBlock {
@@ -76,7 +77,6 @@ public class KitchenSink extends AbstractCauldronBlock {
         return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
     }
     private VoxelShape FACING_NORTH = VoxelShapes.combineAndSimplify(VoxelShapes.union(VoxelShapes.fullCube(), createCuboidShape(1.0625, 11.3, 0.296,15.0625, 16.3, 12.296)),VoxelShapes.union(createCuboidShape(2, 11, 2.3,14, 16.3, 11.3),createCuboidShape(0, 0, 13,16, 14, 16),createCuboidShape(0, 0, 12,16, 1, 13)), BooleanBiFunction.ONLY_FIRST);
-    private VoxelShape outline_seen = VoxelShapes.union(FACING_NORTH,createCuboidShape(7.5, 16.02, 0.58,8.5, 21, 1.58),createCuboidShape(10.5, 14.61, 0.58,11.3, 17.61, 1.38),createCuboidShape(4.5, 14.61, 0.58,5.31, 17.61, 1.38),createCuboidShape(4, 14.61, 0.36,12.2, 16.61, 2.06),createCuboidShape(10.5, 17.61, 0.58,12.5, 18.41, 1.38),createCuboidShape(3.31, 17.61, 0.58,5.31, 18.41, 1.38),createCuboidShape(7.5, 20, 1.52,8.5, 21, 4.52));
     private VoxelShape FACING_EAST = VoxelShapes.combineAndSimplify(VoxelShapes.union(VoxelShapes.fullCube(), createCuboidShape(3.704, 11.3, 1.0625,15.704, 16.3, 15.0625)), VoxelShapes.union(createCuboidShape(4.7, 11, 2,13.7, 16.3, 14),createCuboidShape(0,0,0,3, 14, 16),createCuboidShape(3, 0, 0,4, 1, 16)), BooleanBiFunction.ONLY_FIRST);
     private VoxelShape FACING_SOUTH = VoxelShapes.combineAndSimplify(VoxelShapes.union(VoxelShapes.fullCube(), createCuboidShape(0.9375, 11.3, 3.704,14.9375, 16.3, 15.704)), VoxelShapes.union(createCuboidShape(2, 11, 4.7,14, 16.3, 13.7),createCuboidShape(0, 0, 0,16, 14, 3),createCuboidShape(0, 0, 3,16, 1, 4)), BooleanBiFunction.ONLY_FIRST);
     private VoxelShape FACING_WEST = VoxelShapes.combineAndSimplify(VoxelShapes.union(VoxelShapes.fullCube(), createCuboidShape(0.296, 11.3, 0.9375,12.296, 16.3, 14.9375)), VoxelShapes.union(createCuboidShape(2.3, 11, 2,11.3, 16.3, 14),createCuboidShape(13, 0, 0,16, 14, 16),createCuboidShape(12, 0, 0,13, 1, 16)), BooleanBiFunction.ONLY_FIRST);
@@ -112,6 +112,7 @@ public class KitchenSink extends AbstractCauldronBlock {
                 return FACING_WEST;
         }    }
 
+
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         if (!world.isClient && entity.isOnFire() && this.isEntityTouchingFluid(state, pos, entity)) {
@@ -120,6 +121,11 @@ public class KitchenSink extends AbstractCauldronBlock {
                 this.onFireCollision(state, world, pos);
             }
         }
+    }
+
+    @Override
+    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
+        super.randomDisplayTick(state, world, pos, random);
     }
 
     protected void onFireCollision(BlockState state, World world, BlockPos pos) {
