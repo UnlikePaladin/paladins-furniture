@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks.behavior;
 
 import com.unlikepaladin.pfm.blocks.KitchenSink;
+import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.block.entity.BannerBlockEntity;
@@ -64,7 +65,7 @@ public interface SinkBehavior extends CauldronBehavior {
         }
         return ActionResult.success(world.isClient);
 };
-    public static final CauldronBehavior CLEAN_BANNER = (state, world, pos, player, hand, stack) -> {
+    CauldronBehavior CLEAN_BANNER = (state, world, pos, player, hand, stack) -> {
         if (BannerBlockEntity.getPatternCount(stack) <= 0 || state.get(KitchenSink.LEVEL_4) == 0) {
             return ActionResult.PASS;
         }
@@ -92,7 +93,7 @@ public interface SinkBehavior extends CauldronBehavior {
         if (!world.isClient) {
             Item item = stack.getItem();
             player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.BUCKET)));
-            player.incrementStat(Stats.FILL_CAULDRON);
+            player.incrementStat(StatisticsRegistry.SINK_FILLED);
             player.incrementStat(Stats.USED.getOrCreateStat(item));
             world.setBlockState(pos, state);
             world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0f, 1.0f);
@@ -108,7 +109,7 @@ public interface SinkBehavior extends CauldronBehavior {
         if (!world.isClient) {
             Item item = stack.getItem();
             player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, output));
-            player.incrementStat(Stats.USE_CAULDRON);
+            player.incrementStat(StatisticsRegistry.USE_SINK);
             player.incrementStat(Stats.USED.getOrCreateStat(item));
             world.setBlockState(pos, state.with(KitchenSink.LEVEL_4, 0));
             world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0f, 1.0f);
@@ -128,7 +129,7 @@ public interface SinkBehavior extends CauldronBehavior {
             if (!world.isClient) {
                 Item item = stack.getItem();
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
-                player.incrementStat(Stats.USE_CAULDRON);
+                player.incrementStat(StatisticsRegistry.USE_SINK);
                 player.incrementStat(Stats.USED.getOrCreateStat(item));
                 world.setBlockState(pos, state.with(KitchenSink.LEVEL_4, state.get(KitchenSink.LEVEL_4) + 1));
                 world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
@@ -145,7 +146,7 @@ public interface SinkBehavior extends CauldronBehavior {
             if (!world.isClient) {
                 Item item = stack.getItem();
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, PotionUtil.setPotion(new ItemStack(Items.POTION), Potions.WATER)));
-                player.incrementStat(Stats.USE_CAULDRON);
+                player.incrementStat(StatisticsRegistry.USE_SINK);
                 player.incrementStat(Stats.USED.getOrCreateStat(item));
                 KitchenSink.decrementFluidLevel(state, world, pos);
                 world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
@@ -159,7 +160,7 @@ public interface SinkBehavior extends CauldronBehavior {
             }
             if (!world.isClient) {
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
-                player.incrementStat(Stats.USE_CAULDRON);
+                player.incrementStat(StatisticsRegistry.USE_SINK);
                 player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
                 world.setBlockState(pos, state.cycle(KitchenSink.LEVEL_4));
                 world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);

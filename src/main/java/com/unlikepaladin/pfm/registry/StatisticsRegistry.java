@@ -12,10 +12,18 @@ public class StatisticsRegistry {
     public static final Identifier DRAWER_SEARCHED = new Identifier(PaladinFurnitureMod.MOD_ID, "drawer_searched");
     public static final Identifier CABINET_SEARCHED = new Identifier(PaladinFurnitureMod.MOD_ID, "cabinet_searched");
     public static final Identifier STOVE_OPENED = new Identifier(PaladinFurnitureMod.MOD_ID, "stove_opened");
+    public static final Identifier SINK_FILLED = new Identifier(PaladinFurnitureMod.MOD_ID, "sink_filled");
+    public static final Identifier USE_SINK = new Identifier(PaladinFurnitureMod.MOD_ID, "use_sink");
 
     public static void register(){
         Registry.register(Registry.CUSTOM_STAT, "fridge_opened", FRIDGE_OPENED);
         Stats.CUSTOM.getOrCreateStat(FRIDGE_OPENED, StatFormatter.DEFAULT);
+
+        Registry.register(Registry.CUSTOM_STAT, "sink_filled", SINK_FILLED);
+        Stats.CUSTOM.getOrCreateStat(SINK_FILLED, StatFormatter.DEFAULT);
+
+        Registry.register(Registry.CUSTOM_STAT, "use_sink", USE_SINK);
+        Stats.CUSTOM.getOrCreateStat(USE_SINK, StatFormatter.DEFAULT);
 
         Registry.register(Registry.CUSTOM_STAT, "freezer_opened", FREEZER_OPENED);
         Stats.CUSTOM.getOrCreateStat(FREEZER_OPENED, StatFormatter.DEFAULT);
