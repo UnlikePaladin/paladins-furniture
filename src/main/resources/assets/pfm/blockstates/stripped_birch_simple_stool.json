@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/stripped_birch_simple_stool","y":90},
+    "facing=east":{"model":"pfm:block/stripped_birch_simple_stool","y":180},
+    "facing=south":{"model":"pfm:block/stripped_birch_simple_stool","y":270},
+    "facing=west":{"model":"pfm:block/stripped_birch_simple_stool","y":0}
+
+}
+
+}

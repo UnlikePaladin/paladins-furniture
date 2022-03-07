@@ -25,13 +25,13 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class BasicChair extends HorizontalFacingBlock {
-    private float height = 0.36f;
+    public float height;
 
 
     public BasicChair(Settings settings) {
         super(settings);
     setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
-
+        this.height = 0.36f;
     }
 
 
@@ -77,7 +77,7 @@ public class BasicChair extends HorizontalFacingBlock {
                 return ActionResult.FAIL;
 
             double px = pos.getX() + 0.5;
-            double py = pos.getY() + height;
+            double py = pos.getY() + this.height;
             double pz = pos.getZ() + 0.5;
 
             List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), new Predicate<ChairEntity>() {

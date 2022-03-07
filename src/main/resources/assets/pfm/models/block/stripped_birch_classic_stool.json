@@ -1,0 +1,12 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_stool",
+	"textures": {
+        
+		"particle": "block/birch_planks",
+		"base": "block/stripped_birch_log",
+		"cushion": "block/stripped_birch_log",
+		"legs": "block/birch_planks"
+	}
+    
+}

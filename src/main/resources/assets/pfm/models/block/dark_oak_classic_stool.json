@@ -1,0 +1,12 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_stool",
+	"textures": {
+        
+		"particle": "block/dark_oak_planks",
+		"base": "block/dark_oak_planks",
+		"cushion": "block/dark_oak_planks",
+		"legs": "block/dark_oak_log"
+	}
+    
+}
