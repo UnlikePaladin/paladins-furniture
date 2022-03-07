@@ -10,14 +10,14 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-public class ClassicChair extends BasicChair {
+public class ModernStool extends BasicChair {
     public float height;
 
 
-    public ClassicChair(Settings settings) {
+    public ModernStool(Settings settings) {
         super(settings);
     setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
-        this.height = 0.36f;
+        this.height = 1.0f;
     }
 
 
@@ -25,7 +25,6 @@ public class ClassicChair extends BasicChair {
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing().getOpposite());
     }
-    protected static final VoxelShape FACE_WEST = VoxelShapes.union(createCuboidShape(2, 9, 2.05 ,4, 24, 13.91), createCuboidShape(3.8, 7.86, 1.97, 15, 10.26, 13.97), createCuboidShape(2, 0, 11.9, 4, 9, 13.9), createCuboidShape(12, 0, 11.9, 14, 9, 13.9), createCuboidShape(2, 0, 2.05, 4, 9, 4.05), createCuboidShape(12, 0, 2.05, 14, 9, 4.05));
     @SuppressWarnings("deprecated")
 
 
@@ -45,21 +44,20 @@ public class ClassicChair extends BasicChair {
         return buffer[0];
     }
 
-
+    protected static final VoxelShape MODERN_STOOL = VoxelShapes.union(createCuboidShape(7.125, 1, 7 ,9.125, 10, 9), createCuboidShape(5.125, 0, 5, 11.125, 1, 11), createCuboidShape(4.625, 10, 4.5, 11.625, 12, 11.5), createCuboidShape(4.625, 12, 9.5, 11.625, 15, 11.5));
     @Override
-
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         switch(dir) {
             case WEST:
-                return FACE_WEST;
+                return rotateShape(Direction.NORTH, Direction.EAST, MODERN_STOOL);
             case NORTH:
-                return rotateShape(Direction.WEST, Direction.NORTH, FACE_WEST);
+                return rotateShape(Direction.NORTH, Direction.SOUTH, MODERN_STOOL);
             case SOUTH:
-                return rotateShape(Direction.WEST, Direction.SOUTH, FACE_WEST);
-                case EAST:
+                return MODERN_STOOL;
+            case EAST:
             default:
-                return rotateShape(Direction.WEST, Direction.EAST, FACE_WEST);
+                return rotateShape(Direction.NORTH, Direction.WEST, MODERN_STOOL);
 
 
         }

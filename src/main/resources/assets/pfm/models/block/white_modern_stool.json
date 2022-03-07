@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/modern_stool",
+	"textures": {
+        
+		"particle": "block/white_concrete",
+		"base": "block/white_concrete",
+		"legs": "block/light_gray_concrete"
+	}
+    
+}

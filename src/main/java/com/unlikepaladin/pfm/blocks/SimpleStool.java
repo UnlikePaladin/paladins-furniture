@@ -10,14 +10,14 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-public class ClassicChair extends BasicChair {
+public class SimpleStool extends BasicChair {
     public float height;
 
 
-    public ClassicChair(Settings settings) {
+    public SimpleStool(Settings settings) {
         super(settings);
     setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
-        this.height = 0.36f;
+        this.height = 0.5f;
     }
 
 
@@ -45,24 +45,10 @@ public class ClassicChair extends BasicChair {
         return buffer[0];
     }
 
-
+    protected static VoxelShape SIMPLE_STOOL = VoxelShapes.union(createCuboidShape(3.625, 0, 3.5,5.625, 10, 5.5),createCuboidShape(10.625, 0, 3.5,12.625, 10, 5.5),createCuboidShape(10.625, 0, 10.5,12.625, 10, 12.5),createCuboidShape(3.625, 10, 3.5,12.625, 12, 12.5),createCuboidShape(3.625, 0, 10.5,5.625, 10, 12.5));
     @Override
-
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
-        switch(dir) {
-            case WEST:
-                return FACE_WEST;
-            case NORTH:
-                return rotateShape(Direction.WEST, Direction.NORTH, FACE_WEST);
-            case SOUTH:
-                return rotateShape(Direction.WEST, Direction.SOUTH, FACE_WEST);
-                case EAST:
-            default:
-                return rotateShape(Direction.WEST, Direction.EAST, FACE_WEST);
-
-
-        }
+        return SIMPLE_STOOL;
     }
 
 

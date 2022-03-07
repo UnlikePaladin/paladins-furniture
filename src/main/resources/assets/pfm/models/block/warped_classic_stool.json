@@ -1,0 +1,12 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_stool",
+	"textures": {
+        
+		"particle": "block/warped_planks",
+		"base": "block/warped_planks",
+		"cushion": "block/warped_planks",
+		"legs": "block/warped_stem"
+	}
+    
+}
