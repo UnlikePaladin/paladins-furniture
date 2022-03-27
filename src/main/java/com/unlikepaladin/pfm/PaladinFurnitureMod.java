@@ -38,6 +38,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static BlockEntityType<FreezerBlockEntity> FREEZER_BLOCK_ENTITY;
 	public static BlockEntityType<StoveBlockEntity> STOVE_BLOCK_ENTITY;
 	public static BlockEntityType<IronStoveBlockEntity> IRON_STOVE_BLOCK_ENTITY;
+	public static BlockEntityType<LightSwitchBlockEntity> LIGHT_SWITCH_BLOCK_ENTITY;
 
 	public static final Identifier FREEZER = new Identifier(MOD_ID, "freezer_block_entity");
 
@@ -101,6 +102,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 		FREEZER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":freezer_block_entity", FabricBlockEntityTypeBuilder.create(FreezerBlockEntity::new, BlockItemRegistry.WHITE_FREEZER).build(null));
 		STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":stove_block_entity", FabricBlockEntityTypeBuilder.create(StoveBlockEntity::new, BlockItemRegistry.SIMPLE_STOVE).build(null));
 		IRON_STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":iron_stove_block_entity", FabricBlockEntityTypeBuilder.create(IronStoveBlockEntity::new, BlockItemRegistry.IRON_STOVE).build(null));
+		LIGHT_SWITCH_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":light_switch_block_entity", FabricBlockEntityTypeBuilder.create(LightSwitchBlockEntity::new, BlockItemRegistry.LIGHT_SWITCH).build(null));
 
 		FREEZING_RECIPE = Registry.register(Registry.RECIPE_TYPE, MOD_ID + ":freezing",  new RecipeType<FreezingRecipe>() {
 			@Override

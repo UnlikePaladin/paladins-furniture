@@ -2,6 +2,7 @@
 	"credit": "By UnlikePaladin",
 	"textures": {
 		"0": "block/light_gray_concrete",
+		"wire": "block/light_gray_concrete",
 		"1": "block/gray_concrete",
 		"2": "pfm:block/lamp",
 		"particle": "block/light_gray_concrete"
@@ -94,30 +95,17 @@
 		},
 		{
 			"from": [7.5, 9, 7.5],
-			"to": [8.5, 14.5, 8.5],
+			"to": [8.5, 16, 8.5],
 			"faces": {
-				"north": {"uv": [0, 0, 1, 5.5], "texture": "#0"},
-				"east": {"uv": [0, 0, 1, 5.5], "texture": "#0"},
-				"south": {"uv": [0, 0, 1, 5.5], "texture": "#0"},
-				"west": {"uv": [0, 0, 1, 5.5], "texture": "#0"},
-				"up": {"uv": [0, 0, 1, 1], "texture": "#0"},
-				"down": {"uv": [0, 0, 1, 1], "texture": "#0"}
-			}
-		},
-		{
-			"from": [6.5, 14.5, 6.5],
-			"to": [9.5, 15, 9.5],
-			"faces": {
-				"north": {"uv": [0, 0, 3, 0.5], "texture": "#0"},
-				"east": {"uv": [0, 0, 3, 0.5], "texture": "#0"},
-				"south": {"uv": [0, 0, 3, 0.5], "texture": "#0"},
-				"west": {"uv": [0, 0, 3, 0.5], "texture": "#0"},
-				"up": {"uv": [0, 0, 3, 3], "texture": "#0"},
-				"down": {"uv": [0, 0, 3, 3], "texture": "#0"}
+				"north": {"uv": [0, 0, 1, 5.5], "texture": "#wire"},
+				"east": {"uv": [0, 0, 1, 5.5], "texture": "#wire"},
+				"south": {"uv": [0, 0, 1, 5.5], "texture": "#wire"},
+				"west": {"uv": [0, 0, 1, 5.5], "texture": "#wire"},
+				"up": {"uv": [0, 0, 1, 1], "texture": "#wire"},
+				"down": {"uv": [0, 0, 1, 1], "texture": "#wire"}
 			}
 		}
 	],
-	"display": {},
 	"groups": [
 		0,
 		1,
@@ -136,7 +124,7 @@
 			"name": "wire",
 			"origin": [8, 12, 8],
 			"color": 0,
-			"children": [8]
+			"children": []
 		}
 	]
 }

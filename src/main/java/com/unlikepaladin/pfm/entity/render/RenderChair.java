@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.entity.render;
 
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
-import com.unlikepaladin.pfm.registry.EntityPaladinClient;
+import com.unlikepaladin.pfm.client.EntityPaladinClient;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;

@@ -46,7 +46,6 @@ public class KitchenSink extends AbstractCauldronBlock {
     }
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-      //  super.appendProperties(stateManager);
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(LEVEL_4);
 

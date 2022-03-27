@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.registry;
+package com.unlikepaladin.pfm.client;
 
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;

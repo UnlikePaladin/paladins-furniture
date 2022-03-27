@@ -26,22 +26,10 @@ import net.minecraft.world.World;
 
 
 public class FridgeBlockEntity extends LootableContainerBlockEntity {
-
-
     @Override
     public int size() {
             return 54;
         }
-
-
-
-
-
-    public static void copyInventory(FridgeBlockEntity from, FridgeBlockEntity to) {
-        DefaultedList<ItemStack> defaultedList = from.getInvStackList();
-        from.setInvStackList(to.getInvStackList());
-        to.setInvStackList(defaultedList);
-    }
 
     public FridgeBlockEntity(BlockPos pos, BlockState state) {
         super(PaladinFurnitureMod.FRIDGE_BLOCK_ENTITY, pos, state);
@@ -82,8 +70,6 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
         }
     };
 
-
-
     @Override
     protected DefaultedList<ItemStack> getInvStackList() {
         return this.inventory;
@@ -93,7 +79,6 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
     protected void setInvStackList(DefaultedList<ItemStack> list) {
         this.inventory = list;
     }
-
 
     @Override
         public void onOpen(PlayerEntity player) {
@@ -108,7 +93,6 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
             this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
-
 
     @Override
     public void readNbt(NbtCompound nbt) {
@@ -127,6 +111,7 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
         }
     }
     String blockname = this.getCachedState().getBlock().getTranslationKey();
+
     protected Text getContainerName() {
         blockname = blockname.replace("block.pfm", "");
         return new TranslatableText("container.pfm" + blockname);
