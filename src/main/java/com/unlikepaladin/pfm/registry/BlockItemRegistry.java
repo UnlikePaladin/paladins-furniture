@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.items.DyeKit;
+import com.unlikepaladin.pfm.items.LightSwitchItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.minecraft.block.*;
@@ -12,9 +13,12 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+
+import java.util.function.ToIntFunction;
 
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 
@@ -388,7 +392,14 @@ public class BlockItemRegistry {
     public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND));
 
     public static final Block IRON_CHAIN = new ChainBlock(FabricBlockSettings.copyOf(Blocks.IRON_BARS).sounds(BlockSoundGroup.METAL));
-
+    public static final Block GRAY_MODERN_PENDANT = new PendantBlock(FabricBlockSettings.copyOf(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)));
+    public static final Block WHITE_MODERN_PENDANT = new PendantBlock(FabricBlockSettings.copyOf(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)));
+    public static final Block GLASS_MODERN_PENDANT = new PendantBlock(FabricBlockSettings.copyOf(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)));
+    public static final Block LIGHT_SWITCH = new LightSwitch(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE).sounds(BlockSoundGroup.STONE).nonOpaque());
+    public static final BlockItem LIGHT_SWITCH_ITEM = new LightSwitchItem(LIGHT_SWITCH, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+    private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
+        return state -> state.get(Properties.LIT)? litLevel : 0;
+    }
     public static final Block CONCRETE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(RAW_CONCRETE));
     public static final Block CONCRETE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(RAW_CONCRETE));
     public static final Block CONCRETE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(RAW_CONCRETE));
@@ -467,7 +478,12 @@ public class BlockItemRegistry {
             Registry.register(Registry.ITEM, new Identifier(MOD_ID, blockName), new BlockItem(block, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         }
     }
-
+    public static void registerBlock(String blockName, Block block, Boolean registerItem, BlockItem item) {
+        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, blockName),  block);
+        if (registerItem) {
+            Registry.register(Registry.ITEM, new Identifier(MOD_ID, blockName), item);
+        }
+    }
     public static void registerItem(String itemName, Item item) {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, itemName), item);
     }
@@ -617,7 +633,6 @@ public class BlockItemRegistry {
         registerFurniture("stripped_dark_oak_table_log", STRIPPED_DARK_OAK_LOG_TABLE, true);
         registerFurniture("stripped_crimson_table_log", STRIPPED_CRIMSON_LOG_TABLE, true);
         registerFurniture("stripped_warped_table_log", STRIPPED_WARPED_LOG_TABLE, true);
-
         //Raw Log Table
         registerFurniture("oak_raw_table_log", OAK_RAW_LOG_TABLE, true);
         registerFurniture("birch_raw_table_log", BIRCH_RAW_LOG_TABLE, true);
@@ -849,6 +864,7 @@ public class BlockItemRegistry {
         registerFurniture("stone_kitchen_drawer", STONE_KITCHEN_DRAWER, true);
         registerFurniture("stone_kitchen_cabinet", STONE_KITCHEN_CABINET, true);
         registerFurniture("stone_kitchen_sink", STONE_KITCHEN_SINK, true);
+        registerBlock("light_switch", LIGHT_SWITCH,true, LIGHT_SWITCH_ITEM);
 
         registerFurniture("deepslate_tile_kitchen_counter", DEEPSLATE_TILE_KITCHEN_COUNTER, true);
         registerFurniture("deepslate_tile_kitchen_drawer", DEEPSLATE_TILE_KITCHEN_DRAWER, true);
@@ -884,6 +900,10 @@ public class BlockItemRegistry {
         registerBlock("raw_concrete", RAW_CONCRETE, true);
         registerBlock("raw_concrete_powder", RAW_CONCRETE_POWDER, true);
         registerBlock("iron_chain", IRON_CHAIN, true);
+
+        registerFurniture("gray_modern_pendant", GRAY_MODERN_PENDANT, true);
+        registerFurniture("white_modern_pendant", WHITE_MODERN_PENDANT, true);
+        registerFurniture("glass_modern_pendant", GLASS_MODERN_PENDANT, true);
 
         //Dye Kits
         registerItem("dye_kit_red", DYE_KIT_RED);

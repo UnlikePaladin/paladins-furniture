@@ -104,6 +104,9 @@
   "item.pfm.dye_kit_light_gray":"Light Gray Dye Kit",
   "item.pfm.dye_kit_white":"White Dye Kit",
 
+  "block.pfm.light_switch":"Light Switch",
+  "message.pfm.light_switch_not_canopy": "You must only select the light's canopy",
+
   "block.pfm.oak_table_basic": "Basic Oak Table",
   "block.pfm.birch_table_basic": "Basic Birch Table",
   "block.pfm.spruce_table_basic": "Basic Spruce Table",
@@ -364,6 +367,11 @@
 
   "block.pfm.raw_concrete": "Raw Concrete",
   "block.pfm.raw_concrete_powder": "Raw Concrete Powder",
+  "block.pfm.iron_chain": "Iron Chain",
+  "block.pfm.gray_modern_pendant": "Gray Modern Light Pendant",
+  "block.pfm.white_modern_pendant": "White Modern Light Pendant",
+  "block.pfm.glass_modern_pendant": "Glass Modern Light Pendant",
+
 
   "block.pfm.concrete_kitchen_counter": "Concrete Kitchen Counter",
   "block.pfm.concrete_kitchen_drawer": "Concrete Kitchen Drawer",

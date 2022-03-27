@@ -1,0 +1,10 @@
+{
+    "variants":
+    {
+        "up=false,down=false":{"model":"pfm:block/glass_modern_pendant/glass_modern_pendant"},
+        "up=true,down=false":{"model":"pfm:block/glass_modern_pendant/glass_modern_pendant_bottom"},
+        "up=false,down=true":{"model":"pfm:block/glass_modern_pendant/glass_modern_pendant_top"},
+        "up=true,down=true":{"model":"pfm:block/glass_modern_pendant/glass_modern_pendant_middle"}
+    }
+
+}
