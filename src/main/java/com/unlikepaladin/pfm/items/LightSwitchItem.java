@@ -38,12 +38,8 @@ public class LightSwitchItem extends BlockItem {
             return new TypedActionResult<>(ActionResult.FAIL, stack);
         }
         if (player.isSneaking()) {
-            System.out.println("Cleared Lights");
             stack.setNbt(null);
             return new TypedActionResult<>(ActionResult.SUCCESS, stack);
-        }
-        else {
-            System.out.println("Not sneaking or didn't clear lights");
         }
         return new TypedActionResult<>(ActionResult.PASS, stack);
     }
@@ -68,6 +64,9 @@ public class LightSwitchItem extends BlockItem {
                         context.getPlayer().sendMessage(new TranslatableText("message.pfm.light_switch_not_canopy"), false);
                }
 
+           }
+           else {
+               addLight(context.getStack(), pos);
            }
             return ActionResult.SUCCESS;
         }

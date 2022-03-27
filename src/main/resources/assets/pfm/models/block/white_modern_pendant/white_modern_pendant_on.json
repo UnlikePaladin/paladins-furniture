@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/modern_pendant/modern_pendant_on",
+	"textures": {
+        
+		"particle": "block/white_concrete",
+		"0": "block/light_gray_concrete",
+		"1": "block/white_concrete"
+	}
+    
+}
