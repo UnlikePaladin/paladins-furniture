@@ -395,6 +395,8 @@ public class BlockItemRegistry {
     public static final Block GRAY_MODERN_PENDANT = new PendantBlock(FabricBlockSettings.copyOf(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)));
     public static final Block WHITE_MODERN_PENDANT = new PendantBlock(FabricBlockSettings.copyOf(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)));
     public static final Block GLASS_MODERN_PENDANT = new PendantBlock(FabricBlockSettings.copyOf(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)));
+    public static final Block SIMPLE_LIGHT = new SimpleLight(FabricBlockSettings.copyOf(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)));
+
     public static final Block LIGHT_SWITCH = new LightSwitch(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE).sounds(BlockSoundGroup.STONE).nonOpaque());
     public static final BlockItem LIGHT_SWITCH_ITEM = new LightSwitchItem(LIGHT_SWITCH, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP));
     private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
@@ -904,6 +906,7 @@ public class BlockItemRegistry {
         registerFurniture("gray_modern_pendant", GRAY_MODERN_PENDANT, true);
         registerFurniture("white_modern_pendant", WHITE_MODERN_PENDANT, true);
         registerFurniture("glass_modern_pendant", GLASS_MODERN_PENDANT, true);
+        registerFurniture("simple_light", SIMPLE_LIGHT, true);
 
         //Dye Kits
         registerItem("dye_kit_red", DYE_KIT_RED);

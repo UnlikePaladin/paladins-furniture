@@ -26,7 +26,7 @@ public class PendantBlock extends PowerableBlock {
 
     public PendantBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(UP, false).with(DOWN, false).with(LIT,  false));
+        setDefaultState(this.getStateManager().getDefaultState().with(UP, false).with(DOWN, false).with(LIT,  false).with(POWERLOCKED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
     }
@@ -34,8 +34,7 @@ public class PendantBlock extends PowerableBlock {
     @Override
     public void setPowered(World world, BlockPos lightPos, boolean powered) {
         BlockState state = world.getBlockState(lightPos);
-        LOGGER.info(state);
-        world.setBlockState(lightPos, state.with(LIT, powered));
+        world.setBlockState(lightPos, state.with(LIT, powered).with(POWERLOCKED,powered));
     }
 
     @Override
@@ -112,17 +111,16 @@ public class PendantBlock extends PowerableBlock {
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
-        if (state.get(LIT).booleanValue() && !world.isReceivingRedstonePower(pos)) {
+        if (state.get(LIT) && !world.isReceivingRedstonePower(pos) && !state.get(POWERLOCKED)) {
             world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_LISTENERS);
         }
     }
-
-
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(UP);
         builder.add(DOWN);
         builder.add(LIT);
+        builder.add(POWERLOCKED);
     }
 }

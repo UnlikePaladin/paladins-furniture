@@ -57,8 +57,6 @@ public class LightSwitchBlockEntity extends BlockEntity {
         lights.forEach(lightPos ->
         {
             BlockState state = world.getBlockState(lightPos);
-            System.out.println(state);
-            System.out.println(powered + " " + lightPos);
             ((PowerableBlock) state.getBlock()).setPowered(world, lightPos, powered);
 
         });
