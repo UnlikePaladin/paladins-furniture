@@ -360,6 +360,7 @@ public class BlockItemRegistry {
 
     public static final Block SIMPLE_STOVE = new Stove(FabricBlockSettings.copyOf(WHITE_FREEZER));
     public static final Block IRON_STOVE = new IronStove(FabricBlockSettings.copyOf(WHITE_FREEZER));
+    public static final Block MICROWAVE = new Microwave(FabricBlockSettings.copyOf(WHITE_FREEZER));
 
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.BLUE);
@@ -866,7 +867,6 @@ public class BlockItemRegistry {
         registerFurniture("stone_kitchen_drawer", STONE_KITCHEN_DRAWER, true);
         registerFurniture("stone_kitchen_cabinet", STONE_KITCHEN_CABINET, true);
         registerFurniture("stone_kitchen_sink", STONE_KITCHEN_SINK, true);
-        registerBlock("light_switch", LIGHT_SWITCH,true, LIGHT_SWITCH_ITEM);
 
         registerFurniture("deepslate_tile_kitchen_counter", DEEPSLATE_TILE_KITCHEN_COUNTER, true);
         registerFurniture("deepslate_tile_kitchen_drawer", DEEPSLATE_TILE_KITCHEN_DRAWER, true);
@@ -886,7 +886,7 @@ public class BlockItemRegistry {
         registerFurniture("white_fridge", WHITE_FRIDGE, true);
         registerFurniture("white_freezer", WHITE_FREEZER, false);
         registerFurniture("xbox_fridge", XBOX_FRIDGE, true);
-
+        registerFurniture("microwave", MICROWAVE, true);
         registerFurniture("simple_stove", SIMPLE_STOVE, true);
         registerFurniture("iron_stove", IRON_STOVE, true);
 
@@ -907,6 +907,7 @@ public class BlockItemRegistry {
         registerFurniture("white_modern_pendant", WHITE_MODERN_PENDANT, true);
         registerFurniture("glass_modern_pendant", GLASS_MODERN_PENDANT, true);
         registerFurniture("simple_light", SIMPLE_LIGHT, true);
+        registerBlock("light_switch", LIGHT_SWITCH,true, LIGHT_SWITCH_ITEM);
 
         //Dye Kits
         registerItem("dye_kit_red", DYE_KIT_RED);

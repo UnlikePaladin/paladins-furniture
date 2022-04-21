@@ -2,10 +2,7 @@ package com.unlikepaladin.pfm;
 
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
-import com.unlikepaladin.pfm.menus.AbstractFreezerScreenHandler;
-import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
-import com.unlikepaladin.pfm.menus.IronStoveScreenHandler;
-import com.unlikepaladin.pfm.menus.StoveScreenHandler;
+import com.unlikepaladin.pfm.menus.*;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
@@ -30,15 +27,13 @@ import org.apache.logging.log4j.Logger;
 public class PaladinFurnitureMod implements ModInitializer {
 
 	public static final String MOD_ID = "pfm";
-	public static final Identifier Player_Chair_Screen = new Identifier(MOD_ID, "player_chair_screen");
-	//public static final ScreenHandlerType<PlayerChairScreenHandler> Player_Chair_Screen_Handler = ScreenHandlerRegistry.registerExtended(id("pfm"), PlayerChairScreenHandler::new);
-
 	public static BlockEntityType<DrawerBlockEntity> DRAWER_BLOCK_ENTITY;
 	public static BlockEntityType<FridgeBlockEntity> FRIDGE_BLOCK_ENTITY;
 	public static BlockEntityType<FreezerBlockEntity> FREEZER_BLOCK_ENTITY;
 	public static BlockEntityType<StoveBlockEntity> STOVE_BLOCK_ENTITY;
 	public static BlockEntityType<IronStoveBlockEntity> IRON_STOVE_BLOCK_ENTITY;
 	public static BlockEntityType<LightSwitchBlockEntity> LIGHT_SWITCH_BLOCK_ENTITY;
+	public static BlockEntityType<MicrowaveBlockEntity> MICROWAVE_BLOCK_ENTITY;
 
 	public static final Identifier FREEZER = new Identifier(MOD_ID, "freezer_block_entity");
 
@@ -47,6 +42,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static ScreenHandlerType<AbstractFreezerScreenHandler> FREEZER_SCREEN_HANDLER;
 	public static ScreenHandlerType<StoveScreenHandler> STOVE_SCREEN_HANDLER;
 	public static ScreenHandlerType<IronStoveScreenHandler> IRON_STOVE_SCREEN_HANDLER;
+	public static ScreenHandlerType<MicrowaveScreenHandler> MICROWAVE_SCREEN_HANDLER;
 
 
 
@@ -86,6 +82,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static RecipeType<FreezingRecipe> FREEZING_RECIPE;
 	public static RecipeSerializer<FreezingRecipe> FREEZING_RECIPE_SERIALIZER;
 
+
 	//System.out.println("Hello Fabric world!");
 
 	@Override
@@ -103,16 +100,18 @@ public class PaladinFurnitureMod implements ModInitializer {
 		STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":stove_block_entity", FabricBlockEntityTypeBuilder.create(StoveBlockEntity::new, BlockItemRegistry.SIMPLE_STOVE).build(null));
 		IRON_STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":iron_stove_block_entity", FabricBlockEntityTypeBuilder.create(IronStoveBlockEntity::new, BlockItemRegistry.IRON_STOVE).build(null));
 		LIGHT_SWITCH_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":light_switch_block_entity", FabricBlockEntityTypeBuilder.create(LightSwitchBlockEntity::new, BlockItemRegistry.LIGHT_SWITCH).build(null));
-
+		MICROWAVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":microwave_block_entity", FabricBlockEntityTypeBuilder.create(MicrowaveBlockEntity::new, BlockItemRegistry.MICROWAVE).build(null));
 		FREEZING_RECIPE = Registry.register(Registry.RECIPE_TYPE, MOD_ID + ":freezing",  new RecipeType<FreezingRecipe>() {
 			@Override
 			public String toString() {return "freezing";}
 		});
+
 		FREEZING_RECIPE_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "freezing"), new CookingRecipeSerializer<>(FreezingRecipe::new, 200));
 
 		FREEZER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(FREEZER, FreezerScreenHandler::new);
 		STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "stove_block_entity"), StoveScreenHandler::new);
 		IRON_STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "iron_stove_block_entity"), IronStoveScreenHandler::new);
+		MICROWAVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "microwave_block_entity"), MicrowaveScreenHandler::new);
 
 	}
 }

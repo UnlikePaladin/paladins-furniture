@@ -1,0 +1,13 @@
+{
+    "variants": {
+        "facing=east,open=true":  { "model": "pfm:block/microwave/microwave_open", "y": 90 },
+        "facing=south,open=true":  { "model": "pfm:block/microwave/microwave_open", "y": 180 },
+        "facing=west,open=true":  { "model": "pfm:block/microwave/microwave_open", "y": 270 },
+        "facing=north,open=true":  { "model": "pfm:block/microwave/microwave_open" },
+
+        "facing=east,open=false":  { "model": "pfm:block/microwave/microwave", "y": 90 },
+        "facing=south,open=false":  { "model": "pfm:block/microwave/microwave", "y": 180 },
+        "facing=west,open=false":  { "model": "pfm:block/microwave/microwave", "y": 270 },
+        "facing=north,open=false":  { "model": "pfm:block/microwave/microwave"}
+    }
+}

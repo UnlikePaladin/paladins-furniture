@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import com.unlikepaladin.pfm.entity.render.RenderChair;
 import com.unlikepaladin.pfm.menus.FreezerScreen;
 import com.unlikepaladin.pfm.menus.IronStoveScreen;
+import com.unlikepaladin.pfm.menus.MicrowaveScreen;
 import com.unlikepaladin.pfm.menus.StoveScreen;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.fabricmc.api.ClientModInitializer;
@@ -32,7 +33,7 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
         ScreenRegistry.register(PaladinFurnitureMod.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
         ScreenRegistry.register(PaladinFurnitureMod.STOVE_SCREEN_HANDLER, StoveScreen::new);
         ScreenRegistry.register(PaladinFurnitureMod.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
-
+        ScreenRegistry.register(PaladinFurnitureMod.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
 
     }
 

@@ -5,11 +5,11 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
-public class FreezerOutputSlot extends Slot {
+public class GenericOutputSlot extends Slot {
     private final PlayerEntity player;
     private int amount;
 
-    public FreezerOutputSlot(PlayerEntity player, Inventory inventory, int index, int x, int y) {
+    public GenericOutputSlot(PlayerEntity player, Inventory inventory, int index, int x, int y) {
         super(inventory, index, x, y);
         this.player = player;
     }

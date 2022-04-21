@@ -156,6 +156,12 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
         world.updateNeighborsAlways(pos.offset(getDirection(state).getOpposite()), this);
     }
 
+    @Override
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        super.onBreak(world, pos, state, player);
+        lightSwitchBlockEntity.setState(false);
+    }
+
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {

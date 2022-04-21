@@ -13,6 +13,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
@@ -29,6 +30,11 @@ public class PendantBlock extends PowerableBlock {
         setDefaultState(this.getStateManager().getDefaultState().with(UP, false).with(DOWN, false).with(LIT,  false).with(POWERLOCKED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+    }
+
+    @Override
+    public boolean hasSidedTransparency(BlockState state) {
+        return true;
     }
 
     @Override
@@ -54,6 +60,9 @@ public class PendantBlock extends PowerableBlock {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (!state.canPlaceAt(world, pos)) {
+            return Blocks.AIR.getDefaultState();
+        }
         return direction.getAxis().isVertical() ? canConnect(state, world, pos) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
@@ -108,6 +117,14 @@ public class PendantBlock extends PowerableBlock {
             }
         }
     }
+    @Override
+    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+        Direction direction = Direction.UP;
+        return Block.sideCoversSmallSquare(world, pos.offset(direction), direction.getOpposite());
+    }
+
+
+
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
