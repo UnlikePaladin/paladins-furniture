@@ -23,7 +23,6 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         return new TranslatableText("container.pfm" + blockname);
     }
 
-
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
         return new StoveScreenHandler(syncId, playerInventory, this, this.propertyDelegate);

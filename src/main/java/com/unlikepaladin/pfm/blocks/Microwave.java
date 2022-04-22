@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -24,6 +25,9 @@ import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.shape.VoxelShape;
+import net.minecraft.util.shape.VoxelShapes;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -113,4 +117,19 @@ public class Microwave extends HorizontalFacingBlockWEntity{
         return world.isClient ? null : Microwave.checkType(givenType, expectedType, MicrowaveBlockEntity::tick);
     }
 
+    @Override
+    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+        return false;
+    }
+
+    private final VoxelShape MICROWAVE = VoxelShapes.union(createCuboidShape(1.8, 0, 3.8,14.2, 1, 13.2),createCuboidShape(2, 1, 4,14, 7, 13));
+    private final VoxelShape MICROWAVE_OPEN = VoxelShapes.union(createCuboidShape(1.8, 0, 3.8,14.2, 1, 13.2),createCuboidShape(2, 1, 4,14, 7, 13),createCuboidShape(2, 1, 13,3.1, 7, 20.9));
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        if (state.get(OPEN)) {
+            return MICROWAVE_OPEN;
+        }
+        return MICROWAVE;
+    }
 }

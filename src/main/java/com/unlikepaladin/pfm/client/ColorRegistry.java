@@ -52,6 +52,7 @@ public class ColorRegistry {
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.GRAY_MODERN_PENDANT, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.WHITE_MODERN_PENDANT, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.GLASS_MODERN_PENDANT, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.MICROWAVE, RenderLayer.getTranslucent());
 
     }
 
