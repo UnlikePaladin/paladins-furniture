@@ -32,4 +32,4 @@ bin/
 # fabric
 
 run/
-runServer/
+/runServer/

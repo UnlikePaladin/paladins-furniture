@@ -1,11 +1,16 @@
 package com.unlikepaladin.pfm.menus;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.menus.slots.GenericOutputSlot;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.RecipeBookCategory;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
@@ -13,6 +18,7 @@ import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScreenHandler<Inventory> {
@@ -21,13 +27,18 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     protected final World world;
     private final RecipeType<? extends AbstractCookingRecipe> recipeType;
     private final RecipeBookCategory category;
-
-    protected AbstractMicrowaveScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory) {
-        this(type, recipeType, category, syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(4));
+    public boolean isActive;
+    public MicrowaveBlockEntity microwaveBlockEntity;
+    protected AbstractMicrowaveScreenHandler(MicrowaveBlockEntity microwaveBlockEntity, ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
+        this(microwaveBlockEntity, type, recipeType, category, syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(4));
+        this.isActive = buf.readBoolean();
+        microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(buf.readBlockPos());
+        this.microwaveBlockEntity = microwaveBlockEntity;
     }
 
-    protected AbstractMicrowaveScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
+    protected AbstractMicrowaveScreenHandler(MicrowaveBlockEntity microwaveBlockEntity, ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(type, syncId);
+        this.microwaveBlockEntity = microwaveBlockEntity;
         int i;
         this.recipeType = recipeType;
         this.category = category;
@@ -38,7 +49,8 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
         this.propertyDelegate = propertyDelegate;
         this.world = playerInventory.player.world;
         this.addSlot(new Slot(inventory, 0, 56, 35));
-        this.addSlot(new GenericOutputSlot(playerInventory.player, inventory, 1, 116, 35));
+        this.addSlot(new GenericOutputSlot(playerInventory.player, inventory, 1, 116, 35,1));
+        isActive = false;
 
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
@@ -49,6 +61,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
         this.addProperties(propertyDelegate);
+
     }
 
     @Override
@@ -56,6 +69,22 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
         if (this.inventory instanceof RecipeInputProvider) {
             ((RecipeInputProvider) this.inventory).provideRecipeInputs(finder);
         }
+    }
+
+    public boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive){
+        this.isActive = isActive;
+        PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+        BlockPos pos = microwaveBlockEntity.getPos();
+        passedData.writeBlockPos(pos);
+        passedData.writeBoolean(isActive);
+        System.out.println("Setting" + isActive + "in handler");
+
+        // Send packet to server to change the block for us
+        ClientSidePacketRegistry.INSTANCE.sendToServer(PaladinFurnitureMod.MICROWAVE_PACKET_ID, passedData);
     }
 
     @Override
@@ -133,7 +162,6 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
         }
         return i * 24 / j;
     }
-
 
 
     public boolean isActive() {

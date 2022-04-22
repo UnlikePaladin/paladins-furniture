@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.registry.EntityRegistry;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.entity.BlockEntityType;
@@ -20,9 +21,12 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.Objects;
 
 public class PaladinFurnitureMod implements ModInitializer {
 
@@ -34,6 +38,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static BlockEntityType<IronStoveBlockEntity> IRON_STOVE_BLOCK_ENTITY;
 	public static BlockEntityType<LightSwitchBlockEntity> LIGHT_SWITCH_BLOCK_ENTITY;
 	public static BlockEntityType<MicrowaveBlockEntity> MICROWAVE_BLOCK_ENTITY;
+	public static final Identifier MICROWAVE_PACKET_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_activate");
 
 	public static final Identifier FREEZER = new Identifier(MOD_ID, "freezer_block_entity");
 
@@ -111,7 +116,22 @@ public class PaladinFurnitureMod implements ModInitializer {
 		FREEZER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(FREEZER, FreezerScreenHandler::new);
 		STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "stove_block_entity"), StoveScreenHandler::new);
 		IRON_STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "iron_stove_block_entity"), IronStoveScreenHandler::new);
-		MICROWAVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "microwave_block_entity"), MicrowaveScreenHandler::new);
+		MICROWAVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerExtended(new Identifier(MOD_ID, "microwave_block_entity"), MicrowaveScreenHandler::new);
+		ServerSidePacketRegistry.INSTANCE.register(MICROWAVE_PACKET_ID, (packetContext, attachedData) -> {
+			// Get the BlockPos we put earlier in the IO thread
+			BlockPos pos = attachedData.readBlockPos();
+			boolean active = attachedData.readBoolean();
+			packetContext.getTaskQueue().execute(() -> {
+				// Execute on the main thread
+
+				// ALWAYS validate that the information received is valid in a C2S packet!
+				if(Objects.nonNull(packetContext.getPlayer().world.getBlockEntity(pos))){
+					MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos);
+					microwaveBlockEntity.setActive(active);
+				}
+
+			});
+		});
 
 	}
 }

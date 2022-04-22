@@ -2,31 +2,42 @@ package com.unlikepaladin.pfm.client;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
-import com.unlikepaladin.pfm.entity.render.RenderChair;
+import com.unlikepaladin.pfm.entity.render.ChairEntityRenderer;
+import com.unlikepaladin.pfm.entity.render.MicrowaveBlockEntityRenderer;
 import com.unlikepaladin.pfm.menus.FreezerScreen;
 import com.unlikepaladin.pfm.menus.IronStoveScreen;
 import com.unlikepaladin.pfm.menus.MicrowaveScreen;
 import com.unlikepaladin.pfm.menus.StoveScreen;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.rendereregistry.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.Objects;
+
 import static com.unlikepaladin.pfm.client.EntityPaladinClient.MODEL_CUBE_LAYER;
 
-
+@Environment(EnvType.CLIENT)
 public class PaladinFurnitureModClient implements ClientModInitializer {
     public static final Logger CLIENT_LOGGER = LogManager.getLogger();
+    public static Identifier MICROWAVE_UPDATE_PACKET_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_button_update");
+
     @Override
     public void onInitializeClient() {
-
-       // EntityPaladinClient.registerClientEntity();
+        // EntityPaladinClient.registerClientEntity();
       //  EntityRenderRegistry.registerRender();
         ColorRegistry.registerAll();
-        EntityRendererRegistry.INSTANCE.register(EntityRegistry.CHAIR, RenderChair::new);
+        EntityRendererRegistry.INSTANCE.register(EntityRegistry.CHAIR, ChairEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(PaladinFurnitureMod.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(MODEL_CUBE_LAYER, ModelEmpty::getTexturedModelData);
 
@@ -35,8 +46,19 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
         ScreenRegistry.register(PaladinFurnitureMod.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
         ScreenRegistry.register(PaladinFurnitureMod.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
 
+        ClientSidePacketRegistry.INSTANCE.register(MICROWAVE_UPDATE_PACKET_ID,
+                (packetContext, attachedData) -> {
+                    // Get the BlockPos we put earlier, in the networking thread
+                    boolean active = attachedData.readBoolean();
+                    packetContext.getTaskQueue().execute(() -> {
+                        // Use the pos in the main thread
+                        if (Objects.nonNull(MinecraftClient.getInstance().currentScreen))  {
+                        MicrowaveScreen currentScreen = (MicrowaveScreen) MinecraftClient.getInstance().currentScreen;
+                        currentScreen.getScreenHandler().setActive(active);}
+                    });
+                });
     }
 
 
-    }
 
+}

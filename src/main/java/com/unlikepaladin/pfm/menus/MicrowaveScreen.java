@@ -2,26 +2,40 @@ package com.unlikepaladin.pfm.menus;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
-public class MicrowaveScreen extends HandledScreen<ScreenHandler> {
+public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
     private final Identifier background = new Identifier(PaladinFurnitureMod.MOD_ID,"textures/gui/container/microwave.png");
     private boolean narrow;
-    public MicrowaveScreen(ScreenHandler handler, PlayerInventory inventory, Text title) {
+    public boolean isActive;
+    private MicrowaveBlockEntity microwaveBlockEntity;
+
+    private final TranslatableText startButtonText = new TranslatableText("gui.pfm.microwave.start_button");
+    public MicrowaveScreen(MicrowaveScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
     }
+
+    public ButtonWidget startButton;
 
     @Override
     public void init() {
         super.init();
+        this.microwaveBlockEntity = handler.microwaveBlockEntity;
+        isActive = handler.getActive();
         this.narrow = this.width < 379;
         this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
+        this.startButton = this.addDrawableChild(new ButtonWidget(this.x, this.y, 40, 20, startButtonText, button -> {
+            handler.setActive(true);
+            System.out.println("Button Active");
+        }));
     }
 
     @Override
@@ -57,4 +71,15 @@ public class MicrowaveScreen extends HandledScreen<ScreenHandler> {
         this.drawTexture(matrices, i + 79, j + 34, 176, 14, k + 1, 16);
     }
 
+    @Override
+    protected void handledScreenTick() {
+        super.handledScreenTick();
+        this.isActive = handler.isActive;
+        if(this.handler.getSlot(0).getStack().isEmpty()) {
+            this.startButton.active = false;
+        }
+        else {
+            this.startButton.active = !isActive;
+        }
+    }
 }

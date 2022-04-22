@@ -2,8 +2,14 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.Microwave;
+import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
+import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
@@ -14,10 +20,13 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -32,10 +41,15 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class MicrowaveBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker {
+import java.util.stream.Stream;
+
+public class MicrowaveBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker, BlockEntityClientSerializable, ExtendedScreenHandlerFactory {
+    public boolean isActive = false;
+
     public MicrowaveBlockEntity(BlockPos pos, BlockState state) {
         super(PaladinFurnitureMod.MICROWAVE_BLOCK_ENTITY, pos, state);
         this.recipeType = RecipeType.SMOKING;
+        world = this.getWorld();
     }
 
     //Slot 0 = input, 2 = output, 1 = fuel
@@ -146,6 +160,33 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     @Override
+    public void readNbt(NbtCompound nbt) {
+        super.readNbt(nbt);
+        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+        Inventories.readNbt(nbt, this.inventory);
+        this.cookTime = nbt.getShort("CookTime");
+        this.cookTimeTotal = nbt.getShort("CookTimeTotal");
+        NbtCompound nbtCompound = nbt.getCompound("RecipesUsed");
+        this.isActive = nbt.getBoolean("isActive");
+        for (String string : nbtCompound.getKeys()) {
+            this.recipesUsed.put(new Identifier(string), nbtCompound.getInt(string));
+        }
+    }
+
+    @Override
+    public NbtCompound writeNbt(NbtCompound nbt) {
+        super.writeNbt(nbt);
+        nbt.putShort("CookTime", (short)this.cookTime);
+        nbt.putShort("CookTimeTotal", (short)this.cookTimeTotal);
+        Inventories.writeNbt(nbt, this.inventory);
+        NbtCompound nbtCompound = new NbtCompound();
+        nbt.putBoolean("isActive", this.isActive);
+        this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), (int)integer));
+        nbt.put("RecipesUsed", nbtCompound);
+        return nbt;
+    }
+
+    @Override
     public int[] getAvailableSlots(Direction side) {
         if (side == Direction.DOWN) {
             return BOTTOM_SLOTS;
@@ -164,7 +205,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new MicrowaveScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
+        return new MicrowaveScreenHandler(this,syncId, playerInventory, this, this.propertyDelegate);
     }
 
 
@@ -246,6 +287,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         return null;
     }
 
+
     private static boolean canAcceptRecipeOutput(@Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
         if (slots.get(0).isEmpty() || recipe == null) {
             return false;
@@ -302,40 +344,81 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         this.world.setBlockState(this.getPos(), state.with(Microwave.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
     }
 
-    private boolean isActive() {
-        return !this.inventory.get(0).isEmpty();
-    }
 
     public static void tick(World world, BlockPos pos, BlockState state, MicrowaveBlockEntity blockEntity) {
-        boolean bl = blockEntity.isActive();
+        boolean bl = blockEntity.isActive;
         boolean bl2 = false;
         ItemStack itemStack = blockEntity.inventory.get(0);
-        if (blockEntity.isActive() || !itemStack.isEmpty()) {
+        if (blockEntity.isActive || !itemStack.isEmpty()) {
             Recipe recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
             int i = blockEntity.getMaxCountPerStack();
 
-            if (blockEntity.isActive() && canAcceptRecipeOutput(recipe, blockEntity.inventory, i)) {
+            if (blockEntity.isActive && canAcceptRecipeOutput(recipe, blockEntity.inventory, i)) {
                 ++blockEntity.cookTime;
                 if (blockEntity.cookTime == blockEntity.cookTimeTotal) {
                     blockEntity.cookTime = 0;
                     blockEntity.cookTimeTotal = getCookTime(world, blockEntity.recipeType, blockEntity);
                     if (craftRecipe(recipe, blockEntity.inventory, i)) {
                         blockEntity.setLastRecipe(recipe);
+                        System.out.println("Setting" + false + "in craft recipe");
+                        blockEntity.setActiveonClient(false);
                     }
                     bl2 = true;
                 }
             } else {
                 blockEntity.cookTime = 0;
             }
-        } else if (!blockEntity.isActive() && blockEntity.cookTime > 0) {
+        } else if (!blockEntity.isActive && blockEntity.cookTime > 0) {
             blockEntity.cookTime = MathHelper.clamp(blockEntity.cookTime - 2, 0, blockEntity.cookTimeTotal);
         }
-        if (bl != blockEntity.isActive()) {
+        if (bl != blockEntity.isActive) {
             bl2 = true;
         }
         if (bl2) {
             markDirty(world, pos, state);
         }
+
+    }
+
+    public Direction getHorizontalFacing() {
+        return getCachedState().get(Microwave.FACING);
+    }
+
+    @Override
+    public void fromClientTag(NbtCompound tag) {
+        readNbt(tag);
+    }
+
+    @Override
+    public NbtCompound toClientTag(NbtCompound tag) {
+        return writeNbt(tag);
+    }
+
+    @Override
+    public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
+        packetByteBuf.writeBoolean(this.isActive);
+        packetByteBuf.writeBlockPos(this.pos);
+    }
+
+    public void setActive(boolean active) {
+        this.isActive = active;
+        NbtCompound nbtCompound = new NbtCompound();
+        nbtCompound.putBoolean("isActive", active);
+        this.writeNbt(nbtCompound);
+        this.markDirty();
+       // System.out.println(world.isClient + "On Entity Setter" + active);
+    }
+
+    public void setActiveonClient(boolean active) {
+        setActive(active);
+        Stream<PlayerEntity> watchingPlayers = PlayerStream.watching(world,pos);
+        // Look at the other methods of `PlayerStream` to capture different groups of players.
+        // We'll get to this later
+        PacketByteBuf clientData = new PacketByteBuf(Unpooled.buffer());
+        clientData.writeBoolean(active);
+        // Then we'll send the packet to all the players
+        watchingPlayers.forEach(player ->
+                ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, PaladinFurnitureModClient.MICROWAVE_UPDATE_PACKET_ID,clientData));
     }
 }
 

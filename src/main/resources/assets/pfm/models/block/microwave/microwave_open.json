@@ -5,7 +5,8 @@
 		"3": "block/gray_concrete",
 		"4": "block/white_stained_glass",
 		"10": "block/light_gray_concrete",
-		"11": "block/white_concrete"
+		"11": "block/white_concrete",
+		"particle": "block/iron_block"
 	},
 	"elements": [
 		{

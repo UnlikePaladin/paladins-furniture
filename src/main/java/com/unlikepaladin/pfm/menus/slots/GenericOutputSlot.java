@@ -8,10 +8,12 @@ import net.minecraft.screen.slot.Slot;
 public class GenericOutputSlot extends Slot {
     private final PlayerEntity player;
     private int amount;
+    public int maxItemCount;
 
-    public GenericOutputSlot(PlayerEntity player, Inventory inventory, int index, int x, int y) {
+    public GenericOutputSlot(PlayerEntity player, Inventory inventory, int index, int x, int y, int maxItemCount) {
         super(inventory, index, x, y);
         this.player = player;
+        this.maxItemCount = maxItemCount;
     }
 
     @Override
@@ -38,6 +40,12 @@ public class GenericOutputSlot extends Slot {
         this.amount += amount;
         this.onCrafted(stack);
     }
+
+    @Override
+    public int getMaxItemCount() {
+        return maxItemCount == 0 ? maxItemCount = super.getMaxItemCount() : maxItemCount;
+    }
+
 
     @Override
     protected void onCrafted(ItemStack stack) {
