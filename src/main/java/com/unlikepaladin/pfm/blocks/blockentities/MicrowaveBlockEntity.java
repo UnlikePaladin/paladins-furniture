@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.Microwave;
-import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -417,8 +416,10 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         PacketByteBuf clientData = new PacketByteBuf(Unpooled.buffer());
         clientData.writeBoolean(active);
         // Then we'll send the packet to all the players
-        watchingPlayers.forEach(player ->
-                ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, PaladinFurnitureModClient.MICROWAVE_UPDATE_PACKET_ID,clientData));
+        watchingPlayers.forEach(player -> {
+                ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, PaladinFurnitureMod.MICROWAVE_UPDATE_PACKET_ID,clientData);
+            }
+        );
     }
 }
 
