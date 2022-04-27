@@ -41,6 +41,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static final Identifier MICROWAVE_PACKET_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_activate");
 
 	public static final Identifier FREEZER = new Identifier(MOD_ID, "freezer_block_entity");
+	public static Identifier MICROWAVE_UPDATE_PACKET_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_button_update");
 
 	public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
 	public static SoundEvent FURNITURE_DYED_EVENT = new SoundEvent(FURNITURE_DYED_ID);
@@ -117,14 +118,11 @@ public class PaladinFurnitureMod implements ModInitializer {
 		STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "stove_block_entity"), StoveScreenHandler::new);
 		IRON_STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "iron_stove_block_entity"), IronStoveScreenHandler::new);
 		MICROWAVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerExtended(new Identifier(MOD_ID, "microwave_block_entity"), MicrowaveScreenHandler::new);
+
 		ServerSidePacketRegistry.INSTANCE.register(MICROWAVE_PACKET_ID, (packetContext, attachedData) -> {
-			// Get the BlockPos we put earlier in the IO thread
 			BlockPos pos = attachedData.readBlockPos();
 			boolean active = attachedData.readBoolean();
 			packetContext.getTaskQueue().execute(() -> {
-				// Execute on the main thread
-
-				// ALWAYS validate that the information received is valid in a C2S packet!
 				if(Objects.nonNull(packetContext.getPlayer().world.getBlockEntity(pos))){
 					MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos);
 					microwaveBlockEntity.setActive(active);

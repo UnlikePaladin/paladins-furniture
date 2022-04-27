@@ -50,7 +50,6 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
         this.world = playerInventory.player.world;
         this.addSlot(new Slot(inventory, 0, 56, 35));
         this.addSlot(new GenericOutputSlot(playerInventory.player, inventory, 1, 116, 35,1));
-        isActive = false;
 
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
@@ -81,8 +80,6 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
         BlockPos pos = microwaveBlockEntity.getPos();
         passedData.writeBlockPos(pos);
         passedData.writeBoolean(isActive);
-        System.out.println("Setting" + isActive + "in handler");
-
         // Send packet to server to change the block for us
         ClientSidePacketRegistry.INSTANCE.sendToServer(PaladinFurnitureMod.MICROWAVE_PACKET_ID, passedData);
     }

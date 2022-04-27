@@ -18,7 +18,6 @@ import net.fabricmc.fabric.api.client.rendereregistry.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -29,7 +28,6 @@ import static com.unlikepaladin.pfm.client.EntityPaladinClient.MODEL_CUBE_LAYER;
 @Environment(EnvType.CLIENT)
 public class PaladinFurnitureModClient implements ClientModInitializer {
     public static final Logger CLIENT_LOGGER = LogManager.getLogger();
-    public static Identifier MICROWAVE_UPDATE_PACKET_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_button_update");
 
     @Override
     public void onInitializeClient() {
@@ -46,7 +44,7 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
         ScreenRegistry.register(PaladinFurnitureMod.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
         ScreenRegistry.register(PaladinFurnitureMod.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
 
-        ClientSidePacketRegistry.INSTANCE.register(MICROWAVE_UPDATE_PACKET_ID,
+        ClientSidePacketRegistry.INSTANCE.register(PaladinFurnitureMod.MICROWAVE_UPDATE_PACKET_ID,
                 (packetContext, attachedData) -> {
                     // Get the BlockPos we put earlier, in the networking thread
                     boolean active = attachedData.readBoolean();
@@ -58,6 +56,7 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
                     });
                 });
     }
+
 
 
 

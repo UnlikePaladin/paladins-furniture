@@ -34,7 +34,6 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
         this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
         this.startButton = this.addDrawableChild(new ButtonWidget(this.x, this.y, 40, 20, startButtonText, button -> {
             handler.setActive(true);
-            System.out.println("Button Active");
         }));
     }
 
@@ -79,7 +78,7 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
             this.startButton.active = false;
         }
         else {
-            this.startButton.active = !isActive;
+            this.startButton.active = !this.handler.isActive();
         }
     }
 }
