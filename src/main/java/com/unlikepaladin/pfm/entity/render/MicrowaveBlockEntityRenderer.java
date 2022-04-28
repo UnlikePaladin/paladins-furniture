@@ -12,21 +12,53 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 
 @Environment(value= EnvType.CLIENT)
 public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implements BlockEntityRenderer<T> {
+    public ItemStack itemStack;
+    public MicrowaveBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
 
-    public MicrowaveBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {}
+    }
 
     @Override
     public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        itemStack = blockEntity.getStack(0);
         matrices.push();
-        ItemStack itemStack = blockEntity.getStack(0);
         int lightAbove = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up());
-        matrices.translate(0.4, 0.2 , 0.5);
-        if (blockEntity.isActive) {
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((blockEntity.getWorld().getTime() + tickDelta) * 4));}
+        double offset = 0; //blockEntity.getFacing().getOffsetX();
+        Direction facing = blockEntity.getFacing();
+        float x,y,z;
+        switch (facing) {
+            case NORTH -> {
+                x = 0.4f;
+                y = 0.2f;
+                z = 0.5f;
+            }
+            case SOUTH -> {
+                x = 0.6f;
+                y = 0.2f;
+                z = 0.5f;
+            }
+            case WEST -> {
+                x = 0.5f;
+                y = 0.2f;
+                z = 0.6f;
+            }
+            case EAST -> {
+                x = 0.5f;
+                y = 0.2f;
+                z = 0.4f;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + facing);
+        }
+        matrices.translate(x, y ,z);
+        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-facing.asRotation()));
+        //MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getLastRecipe(), blockEntity.inventory ,blockEntity.getMaxCountPerStack())
+        //System.out.println(MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getRecipe(), blockEntity.inventory ,blockEntity.getMaxCountPerStack()));
+        if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getRecipe(), blockEntity.inventory ,blockEntity.getMaxCountPerStack())) {
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((blockEntity.getWorld().getTime() + tickDelta) * 4));}
         matrices.scale(0.5f, 0.5f, 0.5f);
         MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.GROUND, lightAbove, overlay, matrices, vertexConsumers, 0);
         matrices.pop();

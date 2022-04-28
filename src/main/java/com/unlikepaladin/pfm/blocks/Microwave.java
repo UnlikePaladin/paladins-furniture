@@ -31,8 +31,12 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import static com.unlikepaladin.pfm.blocks.ClassicChair.rotateShape;
+
 public class Microwave extends HorizontalFacingBlockWEntity{
     public static final BooleanProperty OPEN = Properties.OPEN;
+    public static final BooleanProperty POWERED = Properties.POWERED;
+
     private final Block baseBlock;
     private final BlockState baseBlockState;
 
@@ -46,6 +50,7 @@ public class Microwave extends HorizontalFacingBlockWEntity{
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
+        stateManager.add(POWERED);
     }
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -127,8 +132,32 @@ public class Microwave extends HorizontalFacingBlockWEntity{
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        if (state.get(OPEN)) {
-            return MICROWAVE_OPEN;
+        Direction direction = state.get(FACING);
+        switch (direction) {
+            case NORTH ->{
+                if (state.get(OPEN)) {
+                    return MICROWAVE_OPEN;
+                 }
+                return MICROWAVE;
+            }
+            case SOUTH -> {
+                if (state.get(OPEN)) {
+                    return rotateShape(Direction.NORTH, Direction.SOUTH, MICROWAVE_OPEN);
+                }
+                return rotateShape(Direction.NORTH, Direction.SOUTH, MICROWAVE);
+            }
+            case EAST ->{
+                if (state.get(OPEN)) {
+                    return rotateShape(Direction.NORTH, Direction.EAST, MICROWAVE_OPEN);
+                }
+                return rotateShape(Direction.NORTH, Direction.EAST, MICROWAVE);
+            }
+            case WEST -> {
+                if (state.get(OPEN)) {
+                    return rotateShape(Direction.NORTH, Direction.WEST, MICROWAVE_OPEN);
+                }
+                return rotateShape(Direction.NORTH, Direction.WEST, MICROWAVE);
+            }
         }
         return MICROWAVE;
     }

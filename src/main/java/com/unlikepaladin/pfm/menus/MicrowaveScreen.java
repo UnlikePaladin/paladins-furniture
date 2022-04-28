@@ -8,9 +8,15 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.World;
 
 public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
     private final Identifier background = new Identifier(PaladinFurnitureMod.MOD_ID,"textures/gui/container/microwave.png");
@@ -34,6 +40,7 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
         this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
         this.startButton = this.addDrawableChild(new ButtonWidget(this.x, this.y, 40, 20, startButtonText, button -> {
             handler.setActive(true);
+            System.out.println(" button");
         }));
     }
 
@@ -70,11 +77,20 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
         this.drawTexture(matrices, i + 79, j + 34, 176, 14, k + 1, 16);
     }
 
+    public Recipe<?> getRecipe(World world, Inventory inventory) {
+        return world.getRecipeManager().getFirstMatch(RecipeType.SMOKING, inventory, world).orElse(null);
+    }
+
     @Override
     protected void handledScreenTick() {
         super.handledScreenTick();
         this.isActive = handler.isActive;
-        if(this.handler.getSlot(0).getStack().isEmpty()) {
+        //MicrowaveBlockEntity.canAcceptRecipeOutput(microwaveBlockEntity.getRecipe(), microwaveBlockEntity.inventory ,microwaveBlockEntity.getMaxCountPerStack())
+       //this.handler.getSlot(0).getStack().isEmpty()
+        DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1,handler.getInventory().getStack(0));
+        Recipe<?> recipe = getRecipe(handler.world, handler.getInventory());
+        //System.out.println(inventory);
+        if(!MicrowaveBlockEntity.canAcceptRecipeOutput(recipe, inventory ,microwaveBlockEntity.getMaxCountPerStack())) {
             this.startButton.active = false;
         }
         else {

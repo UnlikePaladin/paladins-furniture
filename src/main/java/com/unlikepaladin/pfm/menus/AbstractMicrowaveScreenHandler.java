@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.menus;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
-import com.unlikepaladin.pfm.menus.slots.GenericOutputSlot;
+import com.unlikepaladin.pfm.menus.slots.SizeableSlot;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,10 +13,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.screen.AbstractRecipeScreenHandler;
-import net.minecraft.screen.ArrayPropertyDelegate;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -30,7 +27,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     public boolean isActive;
     public MicrowaveBlockEntity microwaveBlockEntity;
     protected AbstractMicrowaveScreenHandler(MicrowaveBlockEntity microwaveBlockEntity, ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(microwaveBlockEntity, type, recipeType, category, syncId, playerInventory, new SimpleInventory(3), new ArrayPropertyDelegate(4));
+        this(microwaveBlockEntity, type, recipeType, category, syncId, playerInventory, new SimpleInventory(1), new ArrayPropertyDelegate(2));
         this.isActive = buf.readBoolean();
         microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(buf.readBlockPos());
         this.microwaveBlockEntity = microwaveBlockEntity;
@@ -42,14 +39,13 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
         int i;
         this.recipeType = recipeType;
         this.category = category;
-        AbstractMicrowaveScreenHandler.checkSize(inventory, 2);
+        AbstractMicrowaveScreenHandler.checkSize(inventory, 1);
         AbstractMicrowaveScreenHandler.checkDataCount(propertyDelegate, 2);
         this.inventory = inventory;
         inventory.onOpen(playerInventory.player);
         this.propertyDelegate = propertyDelegate;
         this.world = playerInventory.player.world;
-        this.addSlot(new Slot(inventory, 0, 56, 35));
-        this.addSlot(new GenericOutputSlot(playerInventory.player, inventory, 1, 116, 35,1));
+        this.addSlot(new SizeableSlot(playerInventory.player, inventory, 0, 56, 35));
 
         for (i = 0; i < 3; ++i) {
             for (int j = 0; j < 9; ++j) {
@@ -87,7 +83,6 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     @Override
     public void clearCraftingSlots() {
         this.getSlot(0).setStack(ItemStack.EMPTY);
-        this.getSlot(1).setStack(ItemStack.EMPTY);
     }
 
     @Override
@@ -112,7 +107,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
 
     @Override
     public int getCraftingSlotCount() {
-        return 2;
+        return 1;
     }
 
     @Override
@@ -127,11 +122,11 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     @Override
     public ItemStack transferSlot(PlayerEntity player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.slots.get(index);
+        Slot slot = this.slots.get(index);
         if (slot != null && slot.hasStack()) {
             ItemStack itemStack2 = slot.getStack();
             itemStack = itemStack2.copy();
-            if (index == 1 || index == 0 ? !this.insertItem(itemStack2, 3, 38, false) : (this.isCookable(itemStack2) ? !this.insertItem(itemStack2, 0, 1, false) : (index >= 3 && index < 30 ? !this.insertItem(itemStack2, 30, 38, false) : index >= 30 && index < 38 && !this.insertItem(itemStack2, 3, 30, false)))) {
+            if (index == 0 ? !this.insertItem(itemStack2, 3, 37, false) : (this.isCookable(itemStack2) ? !this.insertItemToSlot(itemStack2, 0, 1, false) : (index >= 3 && index < 30 ? !this.insertItem(itemStack2, 30, 37, false) : index >= 30 && index < 37 && !this.insertItem(itemStack2, 3, 30, false)))) {
                 return ItemStack.EMPTY;
             }
             if (itemStack2.isEmpty()) {
@@ -145,6 +140,39 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
             slot.onTakeItem(player, itemStack2);
         }
         return itemStack;
+    }
+
+    protected boolean insertItemToSlot(ItemStack stack, int startIndex, int endIndex, boolean fromLast) {
+        ItemStack itemStack;
+        Slot slot;
+        boolean bl = false;
+        int i = startIndex;
+        if (fromLast) {
+            i = endIndex - 1;
+        }
+        if (!stack.isEmpty()) {
+            i = fromLast ? endIndex - 1 : startIndex;
+            while (fromLast ? i >= startIndex : i < endIndex) {
+                slot = this.slots.get(i);
+                itemStack = slot.getStack();
+                if (itemStack.isEmpty() && slot.canInsert(stack)) {
+                    if (stack.getCount() > slot.getMaxItemCount()) {
+                        slot.setStack(stack.split(slot.getMaxItemCount()));
+                    } else {
+                        slot.setStack(stack.split(stack.getCount()));
+                    }
+                    slot.markDirty();
+                    bl = true;
+                    break;
+                }
+                if (fromLast) {
+                    --i;
+                    continue;
+                }
+                ++i;
+            }
+        }
+        return bl;
     }
 
     protected boolean isCookable(ItemStack itemStack) {
@@ -172,7 +200,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
 
     @Override
     public boolean canInsertIntoSlot(int index) {
-        return index != 1;
+        return true;
     }
 
     @Override
