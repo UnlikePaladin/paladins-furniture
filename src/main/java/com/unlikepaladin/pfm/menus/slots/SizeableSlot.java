@@ -5,20 +5,26 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 
-public class GenericOutputSlot extends Slot {
-    private final PlayerEntity player;
+public class SizeableSlot extends Slot {
     private int amount;
-    public int maxItemCount;
-
-    public GenericOutputSlot(PlayerEntity player, Inventory inventory, int index, int x, int y, int maxItemCount) {
+    private final PlayerEntity player;
+    public SizeableSlot(PlayerEntity player, Inventory inventory, int index, int x, int y) {
         super(inventory, index, x, y);
         this.player = player;
-        this.maxItemCount = maxItemCount;
+    }
+
+    @Override
+    public int getMaxItemCount() {
+        return 1;
+    }
+    @Override
+    public int getMaxItemCount(ItemStack stack) {
+        return 1;
     }
 
     @Override
     public boolean canInsert(ItemStack stack) {
-        return false;
+        return true;
     }
 
     @Override
@@ -42,14 +48,8 @@ public class GenericOutputSlot extends Slot {
     }
 
     @Override
-    public int getMaxItemCount() {
-        return maxItemCount == 0 ? maxItemCount = super.getMaxItemCount() : maxItemCount;
-    }
-
-    @Override
     protected void onCrafted(ItemStack stack) {
         stack.onCraft(this.player.world, this.player, this.amount);
         this.amount = 0;
     }
 }
-

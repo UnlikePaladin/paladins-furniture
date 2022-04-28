@@ -56,7 +56,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         @Override
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof Microwave) {
-                MicrowaveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
+                MicrowaveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, 0);
                 MicrowaveBlockEntity.this.setOpen(state, true);
             }
         }
@@ -64,8 +64,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         @Override
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof Microwave) {
-                MicrowaveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
-
+                MicrowaveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, 0);
                 MicrowaveBlockEntity.this.setOpen(state, false);
             }
         }
@@ -85,17 +84,18 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         }
     };
 
-    void playSound(BlockState state, SoundEvent soundEvent) {
+    void playSound(BlockState state, SoundEvent soundEvent, int pitch) {
         Vec3i vec3i = state.get(Microwave.FACING).getVector();
         double d = (double) this.pos.getX() + 0.5 + (double) vec3i.getX() / 2.0;
         double e = (double) this.pos.getY() + 0.5 + (double) vec3i.getY() / 2.0;
         double f = (double) this.pos.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
-        this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.2f + 0.9f);
+        float i = pitch == 0 ? (i = this.world.random.nextFloat() * 0.2f + 0.9f) : (i = pitch);
+        this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, i);
     }
 
     private static final int[] TOP_SLOTS = new int[]{0};
     private static final int[] BOTTOM_SLOTS = new int[]{1};
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY);
+    public DefaultedList<ItemStack> inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY);
     int cookTime;
     int cookTimeTotal;
     protected final PropertyDelegate propertyDelegate = new PropertyDelegate() {
@@ -220,12 +220,12 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        return slot != 1;
+        return true;
     }
 
     @Override
     public int size() {
-        return 2;
+        return 1;
     }
 
     @Override
@@ -286,8 +286,10 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         return null;
     }
 
-
-    private static boolean canAcceptRecipeOutput(@Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
+    public Recipe<?> getRecipe() {
+        return world.getRecipeManager().getFirstMatch(this.recipeType, this, world).orElse(null);
+    }
+    public static boolean canAcceptRecipeOutput(@Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
         if (slots.get(0).isEmpty() || recipe == null) {
             return false;
         }
@@ -295,13 +297,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         if (itemStack.isEmpty()) {
             return false;
         }
-        ItemStack itemStack2 = slots.get(1);
-        if (itemStack2.isEmpty()) {
-            return true;
-        }
-        if (!itemStack2.isItemEqualIgnoreDamage(itemStack)) {
-            return false;
-        }
+        ItemStack itemStack2 = slots.get(0);
         if (itemStack2.getCount() < count && itemStack2.getCount() < itemStack2.getMaxCount()) {
             return true;
         }
@@ -325,17 +321,8 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         if (recipe == null || !MicrowaveBlockEntity.canAcceptRecipeOutput(recipe, slots, count)) {
             return false;
         }
-        ItemStack itemStack = slots.get(0);
         ItemStack itemStack2 = recipe.getOutput();
-        ItemStack itemStack3 = slots.get(1);
-
-
-        if (itemStack3.isEmpty()) {
-            slots.set(1, itemStack2.copy());
-        } else if (itemStack3.isOf(itemStack2.getItem())) {
-            itemStack3.increment(1);
-        }
-        itemStack.decrement(1);
+        slots.set(0, itemStack2.copy());
         return true;
     }
 
@@ -351,7 +338,6 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         if (blockEntity.isActive || !itemStack.isEmpty()) {
             Recipe recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
             int i = blockEntity.getMaxCountPerStack();
-
             if (blockEntity.isActive && canAcceptRecipeOutput(recipe, blockEntity.inventory, i)) {
                 ++blockEntity.cookTime;
                 if (blockEntity.cookTime == blockEntity.cookTimeTotal) {
@@ -359,13 +345,16 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
                     blockEntity.cookTimeTotal = getCookTime(world, blockEntity.recipeType, blockEntity);
                     if (craftRecipe(recipe, blockEntity.inventory, i)) {
                         blockEntity.setLastRecipe(recipe);
-                        System.out.println("Setting" + false + "in craft recipe");
+                        blockEntity.world.setBlockState(pos, state.with(Microwave.POWERED, false), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+                        blockEntity.playSound(state, SoundEvents.BLOCK_NOTE_BLOCK_PLING, 100);
                         blockEntity.setActiveonClient(false);
                     }
                     bl2 = true;
                 }
             } else {
                 blockEntity.cookTime = 0;
+                //blockEntity.setActiveonClient(false);
+                //System.out.println("setting to false");
             }
         } else if (!blockEntity.isActive && blockEntity.cookTime > 0) {
             blockEntity.cookTime = MathHelper.clamp(blockEntity.cookTime - 2, 0, blockEntity.cookTimeTotal);
@@ -379,9 +368,6 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     }
 
-    public Direction getHorizontalFacing() {
-        return getCachedState().get(Microwave.FACING);
-    }
 
     @Override
     public void fromClientTag(NbtCompound tag) {
@@ -392,7 +378,9 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     public NbtCompound toClientTag(NbtCompound tag) {
         return writeNbt(tag);
     }
-
+    public Direction getFacing() {
+        return this.getCachedState().get(Microwave.FACING);
+    }
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
         packetByteBuf.writeBoolean(this.isActive);
@@ -405,7 +393,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         nbtCompound.putBoolean("isActive", active);
         this.writeNbt(nbtCompound);
         this.markDirty();
-       // System.out.println(world.isClient + "On Entity Setter" + active);
+        world.setBlockState(pos, this.getCachedState().with(Microwave.POWERED, true), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
     }
 
     public void setActiveonClient(boolean active) {
@@ -415,6 +403,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         // We'll get to this later
         PacketByteBuf clientData = new PacketByteBuf(Unpooled.buffer());
         clientData.writeBoolean(active);
+        clientData.writeBlockPos(pos);
         // Then we'll send the packet to all the players
         watchingPlayers.forEach(player -> {
                 ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, PaladinFurnitureMod.MICROWAVE_UPDATE_PACKET_ID,clientData);
