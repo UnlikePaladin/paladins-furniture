@@ -447,6 +447,8 @@
   "stat.pfm.cabinet_searched": "Cabinets Opened",
   "stat.pfm.stove_opened": "Interactions with Stove",
   "stat.pfm.sink_filled": "Sinks Filled",
-  "stat.pfm.use_sink": "Water Taken from Sink"
+  "stat.pfm.use_sink": "Water Taken from Sink",
 
+  "subtitles.pfm.microwave_running": "Microwave humming",
+  "subtitles.pfm.microwave_beep": "Microwave beeping"
 }
