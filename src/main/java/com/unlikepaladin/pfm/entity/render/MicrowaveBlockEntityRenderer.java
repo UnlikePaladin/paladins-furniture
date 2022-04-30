@@ -27,7 +27,6 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
         itemStack = blockEntity.getStack(0);
         matrices.push();
         int lightAbove = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up());
-        double offset = 0; //blockEntity.getFacing().getOffsetX();
         Direction facing = blockEntity.getFacing();
         float x,y,z;
         switch (facing) {

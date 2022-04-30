@@ -1,0 +1,14 @@
+{
+  "microwave_beep": {
+    "subtitle": "subtitles.pfm.microwave_beep",
+    "sounds": [
+      "pfm:microwave_beep"
+    ]
+  },
+  "microwave_running": {
+    "subtitle": "subtitles.pfm.microwave_running",
+    "sounds": [
+      "pfm:microwave_running"
+    ]
+  }
+}
