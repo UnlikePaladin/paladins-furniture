@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.menus.*;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
+import com.unlikepaladin.pfm.registry.SoundRegistry;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
@@ -100,6 +101,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 		SinkBehavior.registerBehavior();
 		BlockItemRegistry.register();
 		StatisticsRegistry.register();
+		SoundRegistry.register();
 		DRAWER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":drawer_block_entity", FabricBlockEntityTypeBuilder.create(DrawerBlockEntity::new, BlockItemRegistry.OAK_KITCHEN_DRAWER).build(null));
 		FRIDGE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":fridge_block_entity", FabricBlockEntityTypeBuilder.create(FridgeBlockEntity::new, BlockItemRegistry.WHITE_FRIDGE).build(null));
 		FREEZER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":freezer_block_entity", FabricBlockEntityTypeBuilder.create(FreezerBlockEntity::new, BlockItemRegistry.WHITE_FREEZER).build(null));

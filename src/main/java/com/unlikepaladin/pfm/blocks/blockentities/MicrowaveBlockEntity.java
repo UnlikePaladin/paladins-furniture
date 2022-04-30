@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.Microwave;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
+import com.unlikepaladin.pfm.registry.SoundRegistry;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
@@ -346,15 +347,19 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
                     if (craftRecipe(recipe, blockEntity.inventory, i)) {
                         blockEntity.setLastRecipe(recipe);
                         blockEntity.world.setBlockState(pos, state.with(Microwave.POWERED, false), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
-                        blockEntity.playSound(state, SoundEvents.BLOCK_NOTE_BLOCK_PLING, 100);
+                        blockEntity.playSound(state, SoundRegistry.MICROWAVE_BEEP_EVENT, 1);
                         blockEntity.setActiveonClient(false);
                     }
                     bl2 = true;
                 }
+                else {
+                    blockEntity.playSound(state, SoundRegistry.MICROWAVE_RUNNING_EVENT, 1);
+                }
             } else {
                 blockEntity.cookTime = 0;
-                //blockEntity.setActiveonClient(false);
-                //System.out.println("setting to false");
+                if(itemStack.isEmpty()) {
+                    blockEntity.setActiveonClient(false);
+                }
             }
         } else if (!blockEntity.isActive && blockEntity.cookTime > 0) {
             blockEntity.cookTime = MathHelper.clamp(blockEntity.cookTime - 2, 0, blockEntity.cookTimeTotal);
