@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.LightSwitchBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -14,6 +15,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.tag.BlockTags;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -55,7 +57,7 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
             return ActionResult.SUCCESS;
         }
         lightSwitchBlockEntity = (LightSwitchBlockEntity) world.getBlockEntity(pos);
-        BlockState blockState = this.togglePower(state, world, pos);
+        BlockState blockState = this.togglePower(state, world, pos, false, false);
         float f = blockState.get(POWERED) ? 0.9f : 0.8f;
         world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3f, f);
         world.emitGameEvent(player, blockState.get(POWERED) ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
@@ -93,8 +95,12 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
         builder.add(FACING);
         builder.add(POWERED);
     }
-    public BlockState togglePower(BlockState state, World world, BlockPos pos) {
-        state = state.cycle(POWERED);
+    public BlockState togglePower(BlockState state, World world, BlockPos pos, boolean listenTo, boolean toggleTo) {
+        if(listenTo) {
+            state = state.with(POWERED, toggleTo);
+        }
+        else {
+        state = state.cycle(POWERED);}
         world.setBlockState(pos, state, Block.NOTIFY_ALL);
         this.updateNeighbors(state, world, pos);
         lightSwitchBlockEntity = (LightSwitchBlockEntity) world.getBlockEntity(pos);
@@ -158,8 +164,14 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        super.onBreak(world, pos, state, player);
-        lightSwitchBlockEntity.setState(false);
+        if (lightSwitchBlockEntity != null) {
+            this.togglePower(state, world, pos, true, false);
+        }
+        this.spawnBreakParticles(world, player, pos, state);
+        if (state.isIn(BlockTags.GUARDED_BY_PIGLINS)) {
+            PiglinBrain.onGuardedBlockInteracted(player, false);
+        }
+        world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
     }
 
     @Nullable

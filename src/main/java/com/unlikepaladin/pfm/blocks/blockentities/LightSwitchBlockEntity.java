@@ -14,11 +14,11 @@ import net.minecraft.util.math.BlockPos;
 import java.util.List;
 
 public class LightSwitchBlockEntity extends BlockEntity {
-
+    private final List<BlockPos> lights;
     public LightSwitchBlockEntity(BlockPos pos, BlockState state) {
         super(PaladinFurnitureMod.LIGHT_SWITCH_BLOCK_ENTITY, pos, state);
+        lights = DefaultedList.of();
     }
-    private final List<BlockPos> lights = DefaultedList.of();
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
@@ -46,22 +46,25 @@ public class LightSwitchBlockEntity extends BlockEntity {
             lights.add(lightPos);
         }
     }
+    public void isLightValid(){
 
+    }
     public void setState(boolean powered)
     {
-        lights.removeIf(lightPos ->
-        {
-            BlockState state = world.getBlockState(lightPos);
-            return !(state.getBlock() instanceof PowerableBlock);
-        });
-        lights.forEach(lightPos ->
-        {
-            BlockState state = world.getBlockState(lightPos);
-            ((PowerableBlock) state.getBlock()).setPowered(world, lightPos, powered);
+        if(!lights.isEmpty()) {
+            lights.removeIf(lightPos ->
+            {
+                BlockState state = world.getBlockState(lightPos);
+                return !(state.getBlock() instanceof PowerableBlock);
+            });
+            lights.forEach(lightPos ->
+            {
+                BlockState state = world.getBlockState(lightPos);
+                ((PowerableBlock) state.getBlock()).setPowered(world, lightPos, powered);
 
-        });
+            });
 
-
+        }
     }
 
 }

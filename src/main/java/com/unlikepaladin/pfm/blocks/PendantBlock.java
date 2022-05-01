@@ -120,7 +120,7 @@ public class PendantBlock extends PowerableBlock {
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         Direction direction = Direction.UP;
-        return Block.sideCoversSmallSquare(world, pos.offset(direction), direction.getOpposite());
+        return Block.sideCoversSmallSquare(world, pos.offset(direction), direction.getOpposite()) || state.getBlock() instanceof PendantBlock;
     }
 
 
