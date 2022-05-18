@@ -1,0 +1,17 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "X  ",
+    "XXX",
+    "X X"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:orange_concrete"
+    }
+  },
+  "result": {
+    "item": "pfm:froggy_chair_orange",
+    "count": 4
+  }
+}

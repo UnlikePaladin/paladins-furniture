@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "S  ",
+    "SXX",
+    "S S"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_jungle_log"
+    },
+    "S": {
+      "item": "minecraft:jungle_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_jungle_chair_classic",
+    "count": 4
+  }
+}

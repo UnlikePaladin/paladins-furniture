@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XSX",
+    "XYX",
+    "XSX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:stripped_jungle_log"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    },
+    "S": {
+      "item": "minecraft:jungle_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_jungle_kitchen_cabinet",
+    "count": 1
+  }
+}

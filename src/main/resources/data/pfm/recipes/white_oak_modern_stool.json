@@ -1,0 +1,19 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    " S " 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:white_concrete"
+    },
+    "S": {
+      "item": "minecraft:stripped_dark_oak_log"
+    }
+  },
+  "result": {
+    "item": "pfm:white_oak_modern_stool",
+    "count": 4
+  }
+}

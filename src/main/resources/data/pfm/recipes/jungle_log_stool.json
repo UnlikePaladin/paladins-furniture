@@ -1,0 +1,15 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:jungle_log"
+    }
+  },
+  "result": {
+    "item": "pfm:jungle_log_stool",
+    "count": 4
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "XYX",
+    "XXX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:white_concrete"
+    },
+    "Y": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "result": {
+    "item": "pfm:simple_stove",
+    "count": 1
+  }
+}

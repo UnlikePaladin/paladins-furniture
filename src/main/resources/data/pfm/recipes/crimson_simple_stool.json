@@ -1,0 +1,18 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "S S"  ],
+   "key": {
+    "X": {
+      "item": "minecraft:crimson_planks"
+    },
+    "S": {
+      "item": "minecraft:crimson_stem"
+    }
+  },
+  "result": {
+    "item": "pfm:crimson_simple_stool",
+    "count": 4
+  }
+}

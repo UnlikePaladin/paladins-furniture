@@ -4,6 +4,8 @@ import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
 import com.unlikepaladin.pfm.menus.*;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
+import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
+import com.unlikepaladin.pfm.recipes.FurnitureSerializer;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import com.unlikepaladin.pfm.registry.SoundRegistry;
@@ -50,7 +52,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static ScreenHandlerType<StoveScreenHandler> STOVE_SCREEN_HANDLER;
 	public static ScreenHandlerType<IronStoveScreenHandler> IRON_STOVE_SCREEN_HANDLER;
 	public static ScreenHandlerType<MicrowaveScreenHandler> MICROWAVE_SCREEN_HANDLER;
-
+	public static ScreenHandlerType<WorkbenchScreenHandler> WORKBENCH_SCREEN_HANDLER;
 
 
 	public static final Logger GENERAL_LOGGER = LogManager.getLogger();
@@ -89,6 +91,8 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static RecipeType<FreezingRecipe> FREEZING_RECIPE;
 	public static RecipeSerializer<FreezingRecipe> FREEZING_RECIPE_SERIALIZER;
 
+	public static RecipeType<FurnitureRecipe> FURNITURE_RECIPE;
+	public static RecipeSerializer<FurnitureRecipe> FURNITURE_SERIALIZER;
 
 	//System.out.println("Hello Fabric world!");
 
@@ -113,10 +117,14 @@ public class PaladinFurnitureMod implements ModInitializer {
 			@Override
 			public String toString() {return "freezing";}
 		});
-
 		FREEZING_RECIPE_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "freezing"), new CookingRecipeSerializer<>(FreezingRecipe::new, 200));
-
 		FREEZER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(FREEZER, FreezerScreenHandler::new);
+		FURNITURE_RECIPE = Registry.register(Registry.RECIPE_TYPE, MOD_ID + ":furniture",  new RecipeType<FurnitureRecipe>() {
+			@Override
+			public String toString() {return "furniture";}
+		});
+		FURNITURE_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID,"furniture"), new FurnitureSerializer());
+		WORKBENCH_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID,"furniture"), WorkbenchScreenHandler::new);
 		STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "stove_block_entity"), StoveScreenHandler::new);
 		IRON_STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "iron_stove_block_entity"), IronStoveScreenHandler::new);
 		MICROWAVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerExtended(new Identifier(MOD_ID, "microwave_block_entity"), MicrowaveScreenHandler::new);

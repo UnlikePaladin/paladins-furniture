@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:white_concrete"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    },
+    "S": {
+      "item": "pfm:raw_concrete"
+    }
+  },
+  "result": {
+    "item": "pfm:concrete_kitchen_drawer",
+    "count": 1
+  }
+}

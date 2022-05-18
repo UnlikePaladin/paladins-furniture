@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:oak_planks"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    },
+    "S": {
+      "item": "minecraft:oak_log"
+    }
+  },
+  "result": {
+    "item": "pfm:oak_kitchen_drawer",
+    "count": 1
+  }
+}

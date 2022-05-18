@@ -1,0 +1,26 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SZS",
+    "XYX",
+    "XXX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:smooth_quartz"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:stripped_oak_log"
+    }
+  },
+  "result": {
+    "item": "pfm:light_wood_kitchen_sink",
+    "count": 1
+  }
+}

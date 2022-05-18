@@ -1,0 +1,26 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SZS",
+    "XYX",
+    "XXX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:stripped_oak_log"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:polished_andesite"
+    }
+  },
+  "result": {
+    "item": "pfm:andesite_kitchen_sink",
+    "count": 1
+  }
+}

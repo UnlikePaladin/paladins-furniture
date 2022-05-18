@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X",
+    "Z"
+],
+   "key": {
+    "X": {
+      "item": "minecraft:water_bottle"
+    },
+    "Z": {
+      "item": "minecraft:lapis_lazuli"
+    }
+  },
+  "result": {
+    "item": "pfm:dye_kit_blue",
+    "count": 4
+  }
+}

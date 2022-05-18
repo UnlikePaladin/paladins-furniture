@@ -1,4 +1,6 @@
 {
+  "block.pfm.working_table": "Wood Working Table",
+
   "block.pfm.oak_chair": "Basic Oak Chair",
   "block.pfm.birch_chair": "Basic Birch Chair",
   "block.pfm.spruce_chair": "Basic Spruce Chair",
@@ -264,6 +266,7 @@
   "block.pfm.stripped_crimson_table_dinner": "Stripped Crimson Dining Table",
   "block.pfm.stripped_warped_table_dinner": "Stripped Warped Dining Table",
   "container.pfm.drawer": "Kitchen Drawer",
+  "container.pfm.working_table": "Wood Working Table",
   "container.pfm.cabinet": "Kitchen Cabinet",
   "container.pfm.white_fridge": "Fridge",
   "container.pfm.xbox_fridge": "Xbox Series X Fridge",
@@ -369,6 +372,7 @@
 
   "block.pfm.raw_concrete": "Raw Concrete",
   "block.pfm.raw_concrete_powder": "Raw Concrete Powder",
+  "block.pfm.leather_block": "Leather Block",
   "block.pfm.iron_chain": "Iron Chain",
   "block.pfm.gray_modern_pendant": "Gray Modern Light Pendant",
   "block.pfm.white_modern_pendant": "White Modern Light Pendant",

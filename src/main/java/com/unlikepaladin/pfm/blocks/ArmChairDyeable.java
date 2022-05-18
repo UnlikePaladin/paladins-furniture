@@ -265,6 +265,7 @@ public class ArmChairDyeable extends ArmChair implements DyeableFurniture {
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         dropKit(world, pos, state, player);
+        super.onBreak(world, pos, state, player);
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
