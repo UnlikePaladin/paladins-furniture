@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shapeles",
-  "pattern": [
-    "X",
-    "Z"
-],
-   "key": {
-    "X": {
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
       "item": "minecraft:glass_bottle"
     },
-    "Z": {
+    {
       "item": "minecraft:gray_dye"
     }
-  },
+  ],
   "result": {
     "item": "pfm:dye_kit_gray",
     "count": 4
