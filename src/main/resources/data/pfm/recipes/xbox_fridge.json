@@ -13,9 +13,9 @@
       "item": "minecraft:chest"
     },
     "Z": {
-      "item": "minecraft:redstone_dust"
+      "item": "minecraft:redstone"
     },
-    "S": {
+    "P": {
       "item": "minecraft:white_concrete"
     }
   },

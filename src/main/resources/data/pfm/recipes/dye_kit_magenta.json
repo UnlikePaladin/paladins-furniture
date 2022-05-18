@@ -1,12 +1,12 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:shapeless",
   "pattern": [
     "X",
     "Z"
 ],
    "key": {
     "X": {
-      "item": "minecraft:water_bottle"
+      "item": "minecraft:glass_bottle"
     },
     "Z": {
       "item": "minecraft:magenta_dye"
