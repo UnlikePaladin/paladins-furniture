@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "pfm:working_table",
     "pfm:oak_chair",
     "pfm:birch_chair",
     "pfm:spruce_chair",
