@@ -1,0 +1,26 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SZS",
+    "XYX",
+    "XXX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:stripped_warped_stem"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:warped_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_warped_kitchen_sink",
+    "count": 1
+  }
+}

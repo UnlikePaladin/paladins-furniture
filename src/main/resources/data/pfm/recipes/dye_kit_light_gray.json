@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "X",
+    "Z"
+],
+   "key": {
+    "X": {
+      "item": "minecraft:water_bottle"
+    },
+    "Z": {
+      "item": "minecraft:light_gray_dye"
+    }
+  },
+  "result": {
+    "item": "pfm:dye_kit_light_gray",
+    "count": 4
+  }
+}

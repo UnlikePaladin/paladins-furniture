@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/working_table","y":180},
+    "facing=east":{"model":"pfm:block/working_table","y":270},
+    "facing=south":{"model":"pfm:block/working_table","y":0},
+    "facing=west":{"model":"pfm:block/working_table","y":90}
+
+}
+
+}

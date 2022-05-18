@@ -1,0 +1,17 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    " X ",
+    " X "
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_warped_stem"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_warped_raw_table_log",
+    "count": 4
+  }
+}

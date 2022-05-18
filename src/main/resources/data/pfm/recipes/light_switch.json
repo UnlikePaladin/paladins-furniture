@@ -1,0 +1,16 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "YY",
+    "YY"
+],
+   "key": {
+    "Y": {
+      "item": "minecraft:white_concrete"
+    }
+  },
+  "result": {
+    "item": "pfm:light_switch",
+    "count": 2
+  }
+}

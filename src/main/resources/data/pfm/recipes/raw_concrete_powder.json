@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "XXX",
+    "XYY",
+    "YYY"
+],
+   "key": {
+    "X": {
+      "item": "minecraft:gravel"
+    },
+    "Y": {
+      "item": "minecraft:sand"
+    }
+  },
+  "result": {
+    "item": "pfm:raw_concrete_powder",
+    "count": 1
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "X  ",
+    "SXX",
+    "S S"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:crimson_planks"
+    },
+    "S": {
+      "item": "minecraft:crimson_log"
+    }
+  },
+  "result": {
+    "item": "pfm:crimson_chair_modern",
+    "count": 4
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "YXY",
+    "ZZZ"
+],
+   "key": {
+    "X": {
+      "item": "minecraft:redstone_lamp"
+    },
+    "Y": {
+      "item": "minecraft:light_gray_conrete"
+    },
+    "Z": {
+      "item": "minecraft:glass"
+    }
+  },
+  "result": {
+    "item": "pfm:simple_light",
+    "count": 2
+  }
+}

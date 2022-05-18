@@ -1,13 +1,10 @@
 package com.unlikepaladin.pfm.client;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import com.unlikepaladin.pfm.entity.render.ChairEntityRenderer;
 import com.unlikepaladin.pfm.entity.render.MicrowaveBlockEntityRenderer;
-import com.unlikepaladin.pfm.menus.FreezerScreen;
-import com.unlikepaladin.pfm.menus.IronStoveScreen;
-import com.unlikepaladin.pfm.menus.MicrowaveScreen;
-import com.unlikepaladin.pfm.menus.StoveScreen;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -40,6 +37,7 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
         EntityModelLayerRegistry.registerModelLayer(MODEL_CUBE_LAYER, ModelEmpty::getTexturedModelData);
 
         ScreenRegistry.register(PaladinFurnitureMod.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
+        ScreenRegistry.register(PaladinFurnitureMod.WORKBENCH_SCREEN_HANDLER, WorkbenchScreen::new);
         ScreenRegistry.register(PaladinFurnitureMod.STOVE_SCREEN_HANDLER, StoveScreen::new);
         ScreenRegistry.register(PaladinFurnitureMod.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
         ScreenRegistry.register(PaladinFurnitureMod.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);

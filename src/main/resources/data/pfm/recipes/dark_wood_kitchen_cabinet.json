@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XSX",
+    "XYX",
+    "XSX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:smooth_quartz"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    },
+    "S": {
+      "item": "minecraft:stripped_dark_oak_log"
+    }
+  },
+  "result": {
+    "item": "pfm:dark_wood_kitchen_cabinet",
+    "count": 1
+  }
+}

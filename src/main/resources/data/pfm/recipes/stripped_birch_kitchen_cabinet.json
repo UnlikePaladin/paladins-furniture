@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XSX",
+    "XYX",
+    "XSX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:stripped_birch_log"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    },
+    "S": {
+      "item": "minecraft:birch_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_birch_kitchen_cabinet",
+    "count": 1
+  }
+}

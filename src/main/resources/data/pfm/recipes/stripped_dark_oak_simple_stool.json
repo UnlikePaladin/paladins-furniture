@@ -1,0 +1,18 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "S S"  ],
+   "key": {
+    "X": {
+      "item": "minecraft:stripped_dark_oak_log"
+    },
+    "S": {
+      "item": "minecraft:dark_oak_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_dark_oak_simple_stool",
+    "count": 4
+  }
+}

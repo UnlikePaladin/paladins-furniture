@@ -391,6 +391,7 @@ public class BlockItemRegistry {
 
     public static final Block RAW_CONCRETE = new Block(FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE));
     public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND));
+    public static final Block LEATHER_BLOCK = new Block(FabricBlockSettings.copyOf(Blocks.WHITE_WOOL).sounds(BlockSoundGroup.WOOL));
 
     public static final Block IRON_CHAIN = new ChainBlock(FabricBlockSettings.copyOf(Blocks.IRON_BARS).sounds(BlockSoundGroup.METAL));
     public static final Block GRAY_MODERN_PENDANT = new PendantBlock(FabricBlockSettings.copyOf(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)));
@@ -468,6 +469,8 @@ public class BlockItemRegistry {
     public static final Block DEEPSLATE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
     public static final Block DEEPSLATE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.DEEPSLATE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
 
+    public static final Block WORKING_TABLE = new WorkingTable(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE).sounds(BlockSoundGroup.WOOD));
+
     public static void registerFurniture(String blockName, Block block, Boolean registerItem) {
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, blockName),  block);
         if (registerItem) {
@@ -493,6 +496,8 @@ public class BlockItemRegistry {
 
     public static void register(){
         //Block Registry
+        registerFurniture("working_table", WORKING_TABLE, true);
+
         //Basic Chairs
         registerFurniture("oak_chair", OAK_CHAIR, true);
         registerFurniture("birch_chair", BIRCH_CHAIR, true);
@@ -902,6 +907,7 @@ public class BlockItemRegistry {
         registerBlock("raw_concrete", RAW_CONCRETE, true);
         registerBlock("raw_concrete_powder", RAW_CONCRETE_POWDER, true);
         registerBlock("iron_chain", IRON_CHAIN, true);
+        registerBlock("leather_block", LEATHER_BLOCK, true);
 
         registerFurniture("gray_modern_pendant", GRAY_MODERN_PENDANT, true);
         registerFurniture("white_modern_pendant", WHITE_MODERN_PENDANT, true);

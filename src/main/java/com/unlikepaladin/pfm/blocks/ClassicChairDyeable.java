@@ -96,6 +96,7 @@ public class ClassicChairDyeable extends ClassicChair implements DyeableFurnitur
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         dropKit(world, pos, state, player);
+        super.onBreak(world, pos, state, player);
     }
 
 

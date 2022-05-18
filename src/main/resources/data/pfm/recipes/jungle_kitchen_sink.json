@@ -1,0 +1,26 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SZS",
+    "XYX",
+    "XXX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:jungle_planks"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "S": {
+      "item": "minecraft:jungle_log"
+    }
+  },
+  "result": {
+    "item": "pfm:jungle_kitchen_sink",
+    "count": 1
+  }
+}
