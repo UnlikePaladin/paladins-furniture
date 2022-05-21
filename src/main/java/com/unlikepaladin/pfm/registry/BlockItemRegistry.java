@@ -355,6 +355,8 @@ public class BlockItemRegistry {
 
     public static final Block WHITE_FREEZER = new Freezer(FabricBlockSettings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE),() -> BlockItemRegistry.WHITE_FRIDGE);
     public static final Block WHITE_FRIDGE = new Fridge(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque(), () -> BlockItemRegistry.WHITE_FREEZER);
+    public static final Block IRON_FREEZER = new IronFreezer(FabricBlockSettings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.METAL),() -> BlockItemRegistry.IRON_FRIDGE);
+    public static final Block IRON_FRIDGE = new IronFridge(FabricBlockSettings.copyOf(IRON_FREEZER).nonOpaque(), () -> BlockItemRegistry.IRON_FREEZER);
 
     public static final Block XBOX_FRIDGE = new XboxFridge(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque(), null);
 
@@ -890,6 +892,8 @@ public class BlockItemRegistry {
 
         registerFurniture("white_fridge", WHITE_FRIDGE, true);
         registerFurniture("white_freezer", WHITE_FREEZER, false);
+        registerFurniture("iron_fridge", IRON_FRIDGE, true);
+        registerFurniture("iron_freezer", IRON_FREEZER, false);
         registerFurniture("xbox_fridge", XBOX_FRIDGE, true);
         registerFurniture("microwave", MICROWAVE, true);
         registerFurniture("simple_stove", SIMPLE_STOVE, true);

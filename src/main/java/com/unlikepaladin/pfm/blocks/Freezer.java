@@ -95,7 +95,7 @@ public class Freezer extends HorizontalFacingBlockWEntity{
 
     }
 
-    protected static void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    protected void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         BlockPos blockPos;
         BlockState blockState = world.getBlockState(blockPos = pos.down());
         if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof  Fridge) {
@@ -118,9 +118,6 @@ public class Freezer extends HorizontalFacingBlockWEntity{
 
     protected static final VoxelShape FREEZER = VoxelShapes.union(createCuboidShape(0.5, -16, 3,15.5, 16, 16),createCuboidShape(0.5, 5, 2,14.83, 16, 3.1),createCuboidShape(13, 5.19, 0.09,14, 15.19, 1.09),createCuboidShape(13, 5.19, 0.98,14, 6.19, 2.98),createCuboidShape(13, 14.19, 1.06,14, 15.19, 3.06));
     protected static final VoxelShape FREEZER_OPEN = VoxelShapes.union(createCuboidShape(0.5, -16, 2.8,15.5, 16, 16),createCuboidShape(0.5, 5, -11.29,1.5, 16, 3.05),createCuboidShape(-1.41, 5.19, -10.45,-0.41, 15.19, -9.45),createCuboidShape(-0.52, 5.19, -10.45,1.48, 6.19, -9.45),createCuboidShape(-0.44, 14.19, -10.45,1.26, 15.19, -9.45));
-
-
-
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
@@ -155,7 +152,7 @@ public class Freezer extends HorizontalFacingBlockWEntity{
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient && player.isCreative()) {
-            onBreakInCreative(world, pos,state, player);
+            this.onBreakInCreative(world, pos,state, player);
         }
         super.onBreak(world, pos, state, player);
     }
@@ -178,6 +175,18 @@ public class Freezer extends HorizontalFacingBlockWEntity{
         super.onStateReplaced(state, world, pos, newState, moved);
     }
 
+   @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+       super.onBroken(world, pos, state);
+       BlockPos blockPos;
+       BlockState blockState = world.getBlockState(blockPos = pos.down());
+       if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof Fridge) {
+           ItemScatterer.spawn((World) world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(this.fridge.get().asItem()));
+           BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
+           world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
+       }
+    }
+
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
@@ -191,6 +200,7 @@ public class Freezer extends HorizontalFacingBlockWEntity{
 
     @Nullable
     protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends FreezerBlockEntity> expectedType) {
+        givenType = (BlockEntityType<T>) expectedType;
         return world.isClient ? null : Freezer.checkType(givenType, expectedType, FreezerBlockEntity::tick);
     }
 }
