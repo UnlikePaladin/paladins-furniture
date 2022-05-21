@@ -269,6 +269,7 @@
   "container.pfm.working_table": "Wood Working Table",
   "container.pfm.cabinet": "Kitchen Cabinet",
   "container.pfm.white_fridge": "Fridge",
+  "container.pfm.iron_fridge": "Iron Fridge",
   "container.pfm.xbox_fridge": "Xbox Series X Fridge",
   "container.pfm.freezer": "Freezer",
   "container.pfm.simple_stove": "Stove",
@@ -279,6 +280,7 @@
   "block.pfm.microwave": "Microwave",
   "gui.pfm.microwave.start_button": "Start",
   "block.pfm.white_fridge": "White Fridge",
+  "block.pfm.iron_fridge": "Iron Fridge",
   "block.pfm.xbox_fridge": "Xbox Series X Fridge",
 
   "block.pfm.oak_kitchen_counter": "Oak Kitchen Counter",

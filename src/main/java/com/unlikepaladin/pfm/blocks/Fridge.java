@@ -4,7 +4,6 @@ import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
@@ -24,7 +23,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.*;
-import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -50,6 +48,7 @@ public class Fridge extends HorizontalFacingBlockWEntity{
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
     }
+
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
@@ -59,6 +58,7 @@ public class Fridge extends HorizontalFacingBlockWEntity{
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         return world.getBlockState(pos.up()).isAir() || world.getBlockState(pos.up()).getBlock() == this.freezer;
     }
+
     @Override
     public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
         return true;
@@ -73,6 +73,7 @@ public class Fridge extends HorizontalFacingBlockWEntity{
         }
         super.onPlaced(world, pos, state, placer, itemStack);
     }
+
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.isOf(newState.getBlock())) {
@@ -86,10 +87,9 @@ public class Fridge extends HorizontalFacingBlockWEntity{
         super.onStateReplaced(state, world, pos, newState, moved);
     }
 
-
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!(direction.getAxis() != Direction.Axis.Y != (direction == Direction.UP) || neighborState.getBlock() instanceof Freezer)) {
+        if (!(direction.getAxis() != Direction.Axis.Y != (direction == Direction.UP) || neighborState.getBlock() == this.freezer.get())) {
             return Blocks.AIR.getDefaultState();
         }
         if (direction == Direction.DOWN && !state.canPlaceAt(world, pos)) {
@@ -103,7 +103,6 @@ public class Fridge extends HorizontalFacingBlockWEntity{
     public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
         return false;
     }
-
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -119,14 +118,22 @@ public class Fridge extends HorizontalFacingBlockWEntity{
         return ActionResult.CONSUME;
     }
 
-
-    protected static void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         BlockPos blockPos;
         BlockState blockState = world.getBlockState(blockPos = pos.up());
-        if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof  Freezer) {
+        if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof Freezer) {
             BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
             world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
             world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
+            System.out.println("OnCreative Called top");
+        }
+        blockPos = pos.down();
+        blockState = world.getBlockState(blockPos);
+        if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof Freezer) {
+            BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
+            world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
+            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
+            System.out.println("OnCreative Called bottom");
         }
     }
 
@@ -144,7 +151,7 @@ public class Fridge extends HorizontalFacingBlockWEntity{
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (!world.isClient && player.isCreative()) {
-            onBreakInCreative(world, pos, state, player);
+            this.onBreakInCreative(world, pos, state, player);
         }
         super.onBreak(world, pos, state, player);
     }
@@ -161,8 +168,6 @@ public class Fridge extends HorizontalFacingBlockWEntity{
     public float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos) {
         return 1.0f;
     }
-
-
 
     protected static final VoxelShape FRIDGE = VoxelShapes.union(createCuboidShape(0.5, 0, 3, 15.5, 32, 16), createCuboidShape(12.98, 4, 0.03,13.98, 20, 1.03),createCuboidShape(12.98, 4, 0.92,13.98, 5, 2.92),createCuboidShape(12.98, 18.98, 1,13.98, 19.98, 2.9),createCuboidShape(0.5, 1, 1.93,14.78, 19.98, 3.03));
     protected static final VoxelShape FRIDGE_OPEN = VoxelShapes.union(createCuboidShape(0.5, 0, 3,15.5, 32, 16),createCuboidShape(-1.41, 4, -10.39,-0.41, 19.98, -9.39),createCuboidShape(-0.52, 4, -10.39,1.48, 5, -9.39),createCuboidShape(-0.45, 18.98, -10.39,1.45, 19.98, -9.39),createCuboidShape(0.5, 1, -11.59,1.48, 20, 3.11),createCuboidShape(0.75, 7.7, -10.42,3.75, 10.8, 2.98),createCuboidShape(0.75, 12.2, -10.42,3.75, 15.3, 2.98));
@@ -194,10 +199,6 @@ public class Fridge extends HorizontalFacingBlockWEntity{
                     return rotateShape(Direction.NORTH, Direction.EAST, FRIDGE);
         }
     }
-
-
-
-
 
     @Nullable
     @Override
