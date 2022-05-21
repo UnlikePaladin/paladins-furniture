@@ -46,14 +46,10 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
     protected static final VoxelShape STRAIGHT = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 8), createCuboidShape(0, 1, 8,16, 16, 9), createCuboidShape(6, 3, 9,7, 7, 10), createCuboidShape(9, 3, 9,10, 7, 10));
     protected static final VoxelShape INNER_CORNER = VoxelShapes.union(createCuboidShape(0, 0, 0,8, 16, 8),createCuboidShape(1, 3, 9,2, 7, 10), createCuboidShape(0, 1, 8,8, 16, 9),createCuboidShape(7, 1, 9,8, 16, 16),createCuboidShape(8, 0, 0,16, 16, 16),createCuboidShape(6, 3, 13,7, 7, 14));
     protected static final VoxelShape OUTER_CORNER = VoxelShapes.union(createCuboidShape(0, 0, 0,8, 16, 8),createCuboidShape(6, 3, 9,7, 7, 10),createCuboidShape(0, 1, 8,8, 16, 9),createCuboidShape(8, 1, 0,9, 16, 8),createCuboidShape(9, 3, 6,10, 7, 7));
-    protected static final VoxelShape LEFT_EDGE = VoxelShapes.union(createCuboidShape(8, 0, 0,16, 16, 8), createCuboidShape(8, 1, 8,16, 16, 9), createCuboidShape(14, 3, 9,15, 7, 10));
-    protected static final VoxelShape RIGHT_EDGE = VoxelShapes.union(createCuboidShape(0, 0, 0,8, 16, 8), createCuboidShape(0, 1, 8,8, 16, 9), createCuboidShape(1, 3, 9,2, 7, 10));
 
     protected static final VoxelShape STRAIGHT_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 8), createCuboidShape(16, 3, 14,17, 7, 15), createCuboidShape(15, 1, 8,16, 16, 16), createCuboidShape(-1, 3, 14,0, 7, 15),createCuboidShape(0, 1, 8,1, 16, 16));
     protected static final VoxelShape INNER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(7, 1, 9,8, 16, 16),createCuboidShape(8, 0, 8,16, 16, 16), createCuboidShape(6, 3, 13,7, 7, 14),createCuboidShape(0, 0, 0,16, 16, 8));
     protected static final VoxelShape OUTER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,8, 16, 8),createCuboidShape(0, 1, 8,1, 16, 16),createCuboidShape(-1, 3, 14,0, 7, 15),createCuboidShape(8, 1, 0,9, 16, 8),createCuboidShape(9, 3, 6,10, 7, 7));
-    protected static final VoxelShape LEFT_EDGE_OPEN = VoxelShapes.union(createCuboidShape(8, 0, 0,16, 16, 8), createCuboidShape(7, 3, 14,8, 7, 15), createCuboidShape(8, 1, 8,9, 16, 16));
-    protected static final VoxelShape RIGHT_EDGE_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,8, 16, 8), createCuboidShape(7, 1, 8,8, 16, 16), createCuboidShape(8, 3, 14,9, 7, 15));
 
 
 
@@ -176,48 +172,6 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
                         return OUTER_CORNER_OPEN;
                     else
                         return OUTER_CORNER;
-            case LEFT_EDGE:
-                if(dir.equals(Direction.NORTH))
-                    if (open)
-                        return LEFT_EDGE_OPEN;
-                    else
-                        return LEFT_EDGE;
-                else if (dir.equals(Direction.SOUTH))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE);
-                else if (dir.equals(Direction.EAST))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE);
-                else
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE);
-            case RIGHT_EDGE:
-                if(dir.equals(Direction.NORTH))
-                    if (open)
-                        return RIGHT_EDGE_OPEN;
-                    else
-                        return RIGHT_EDGE;
-                else if (dir.equals(Direction.SOUTH))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE);
-                else if (dir.equals(Direction.EAST))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
-                else
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE);
             default:
                 return STRAIGHT;
         }
@@ -276,9 +230,6 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
         Object direction2;
         Direction direction = state.get(FACING);
         BlockState blockState = world.getBlockState(pos.offset(direction));
-        boolean right = this.canConnect(world, pos, state.get(FACING).rotateYCounterclockwise(), state.get(FACING));
-        boolean left = this.canConnect(world, pos, state.get(FACING).rotateYClockwise(), state.get(FACING));
-
         if (isCounter(blockState) && ((Direction)(direction2 = blockState.get(FACING))).getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, ((Direction)direction2).getOpposite())) {
             if (direction2 == direction.rotateYCounterclockwise()) {
                 return CounterShape.OUTER_LEFT;
@@ -292,15 +243,6 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
                 return CounterShape.INNER_LEFT;
             }
             return CounterShape.INNER_RIGHT;
-        }
-        if (left && right) {
-            return CounterShape.STRAIGHT;
-        }
-        else if (left) {
-            return CounterShape.LEFT_EDGE;
-        }
-        else if (right) {
-            return CounterShape.RIGHT_EDGE;
         }
         return CounterShape.STRAIGHT;
     }
