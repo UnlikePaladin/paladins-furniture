@@ -189,7 +189,7 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
         }
         super.onStateReplaced(state, world, pos, newState, moved);
     }
-    public boolean isCounter(BlockState state) {
+    public boolean isCabinet(BlockState state) {
         return state.getBlock() instanceof KitchenCabinet;
     }
 
@@ -198,9 +198,10 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
         BlockState state = world.getBlockState(pos.offset(direction));
         return (state.getBlock() instanceof KitchenCabinet);
     }
+
     private boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
         BlockState blockState = world.getBlockState(pos.offset(dir));
-        return !this.isCounter(blockState); //|| blockState.get(FACING) != state.get(FACING);
+        return !this.isCabinet(blockState); //|| blockState.get(FACING) != state.get(FACING);
     }
 
     @Override
@@ -230,14 +231,14 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
         Object direction2;
         Direction direction = state.get(FACING);
         BlockState blockState = world.getBlockState(pos.offset(direction));
-        if (isCounter(blockState) && ((Direction)(direction2 = blockState.get(FACING))).getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, ((Direction)direction2).getOpposite())) {
+        if (isCabinet(blockState) && ((Direction)(direction2 = blockState.get(FACING))).getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, ((Direction)direction2).getOpposite())) {
             if (direction2 == direction.rotateYCounterclockwise()) {
                 return CounterShape.OUTER_LEFT;
             }
             return CounterShape.OUTER_RIGHT;
         }
         direction2 = world.getBlockState(pos.offset(direction.getOpposite()));
-        boolean innerCorner = isCounter((BlockState)direction2) && (direction3 = (Direction) ((State)direction2).get(FACING)).getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3);
+        boolean innerCorner = isCabinet((BlockState)direction2) && (direction3 = (Direction) ((State)direction2).get(FACING)).getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3);
         if (innerCorner) {
             if (direction3 == direction.rotateYCounterclockwise()) {
                 return CounterShape.INNER_LEFT;

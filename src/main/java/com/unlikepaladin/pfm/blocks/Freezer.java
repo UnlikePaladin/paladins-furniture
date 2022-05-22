@@ -190,7 +190,7 @@ public class Freezer extends HorizontalFacingBlockWEntity{
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new FreezerBlockEntity(pos,state);
+        return new FreezerBlockEntity(PaladinFurnitureMod.FREEZER_BLOCK_ENTITY, pos,state);
     }
     @Override
     @Nullable
