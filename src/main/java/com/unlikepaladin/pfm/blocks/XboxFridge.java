@@ -189,7 +189,7 @@ public class XboxFridge extends Fridge
                         return rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_OPEN);
                     else
                         return rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE);
-                }
+            }
         }
     }
 }
