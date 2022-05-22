@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -44,6 +45,10 @@ import java.util.Map;
 
 public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker,
         RecipeInputProvider {
+    public FreezerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
+        super(blockEntityType, pos, state);
+        this.recipeType = PaladinFurnitureMod.FREEZING_RECIPE;
+    }
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
         super(PaladinFurnitureMod.FREEZER_BLOCK_ENTITY, pos, state);
         this.recipeType = PaladinFurnitureMod.FREEZING_RECIPE;

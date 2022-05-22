@@ -1,9 +1,12 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Properties;
@@ -13,6 +16,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -27,6 +31,12 @@ public class IronFreezer extends Freezer{
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         return world.getBlockState(pos.up()).getBlock() == this.fridge.get();
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new FreezerBlockEntity(PaladinFurnitureMod.IRON_FREEZER_BLOCK_ENTITY, pos,state);
     }
 
     protected static final VoxelShape FREEZER = VoxelShapes.union(createCuboidShape(0.7, 1, 2,14.7, 16, 3),createCuboidShape(14.3, 1, 2.3,15.3, 16, 3.3),createCuboidShape(0.7, 0, 3,15.7, 16, 16),createCuboidShape(1.7, 14, 1.06,2.7, 15, 2.06),createCuboidShape(1.7, 14, 0.06,14.2, 15, 1.06));

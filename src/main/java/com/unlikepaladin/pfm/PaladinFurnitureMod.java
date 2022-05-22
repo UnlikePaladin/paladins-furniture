@@ -37,6 +37,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static BlockEntityType<DrawerBlockEntity> DRAWER_BLOCK_ENTITY;
 	public static BlockEntityType<FridgeBlockEntity> FRIDGE_BLOCK_ENTITY;
 	public static BlockEntityType<FreezerBlockEntity> FREEZER_BLOCK_ENTITY;
+	public static BlockEntityType<FreezerBlockEntity> IRON_FREEZER_BLOCK_ENTITY;
 	public static BlockEntityType<StoveBlockEntity> STOVE_BLOCK_ENTITY;
 	public static BlockEntityType<IronStoveBlockEntity> IRON_STOVE_BLOCK_ENTITY;
 	public static BlockEntityType<LightSwitchBlockEntity> LIGHT_SWITCH_BLOCK_ENTITY;
@@ -108,6 +109,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 		SoundRegistry.register();
 		DRAWER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":drawer_block_entity", FabricBlockEntityTypeBuilder.create(DrawerBlockEntity::new, BlockItemRegistry.OAK_KITCHEN_DRAWER).build(null));
 		FRIDGE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":fridge_block_entity", FabricBlockEntityTypeBuilder.create(FridgeBlockEntity::new, BlockItemRegistry.WHITE_FRIDGE).build(null));
+		IRON_FREEZER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":iron_freezer_block_entity", FabricBlockEntityTypeBuilder.create(FreezerBlockEntity::new, BlockItemRegistry.IRON_FREEZER).build(null));
 		FREEZER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":freezer_block_entity", FabricBlockEntityTypeBuilder.create(FreezerBlockEntity::new, BlockItemRegistry.WHITE_FREEZER).build(null));
 		STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":stove_block_entity", FabricBlockEntityTypeBuilder.create(StoveBlockEntity::new, BlockItemRegistry.SIMPLE_STOVE).build(null));
 		IRON_STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":iron_stove_block_entity", FabricBlockEntityTypeBuilder.create(IronStoveBlockEntity::new, BlockItemRegistry.IRON_STOVE).build(null));
