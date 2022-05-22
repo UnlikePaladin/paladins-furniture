@@ -83,13 +83,10 @@ public class XboxFridge extends Fridge
             if (neighborState.isOf(this) && neighborState.get(HALF) != doubleBlockHalf) {
                 return state.with(FACING, neighborState.get(FACING)).with(OPEN, neighborState.get(OPEN));
             }
-            return Blocks.AIR.getDefaultState();
         }
-        if (doubleBlockHalf == DoubleBlockHalf.LOWER && direction == Direction.DOWN && !state.canPlaceAt(world, pos)) {
-            return Blocks.AIR.getDefaultState();
-        }
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return state;
     }
+
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         BlockPos blockPos = pos.down();
@@ -111,11 +108,26 @@ public class XboxFridge extends Fridge
         return null;
     }
 
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        BlockPos blockPos;
+        BlockState blockState = world.getBlockState(blockPos = pos.down());
+        if (blockState.isOf(state.getBlock())) {
+            BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
+            world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
+        }
+        blockState = world.getBlockState(blockPos = pos.up());
+        if (blockState.isOf(state.getBlock())) {
+            BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
+            world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
+        }
+        super.onBroken(world, pos, state);
+    }
+
     protected static final VoxelShape XBOX_FRIDGE = VoxelShapes.union(createCuboidShape(0.5, 1, 3,15.5, 32, 16),createCuboidShape(1, 0, 2.84,15, 1, 15.84),createCuboidShape(0.51, 1, 1.91,15.31, 16, 2.91));
     protected static final VoxelShape XBOX_FRIDGE_UPPER = VoxelShapes.union(createCuboidShape(0.5, -15, 3,15.5, 16, 16),createCuboidShape(1, -16, 2.84,15, -15, 15.84),createCuboidShape(0.51, 0, 1.91,15.31, 16, 2.91));
     protected static final VoxelShape XBOX_FRIDGE_OPEN = VoxelShapes.union(createCuboidShape(0.5, 1, 3,15.5, 32, 16),createCuboidShape(1, 0, 2.84,15, 1, 15.84),createCuboidShape(0.5, 16, -11.69,1.5, 32, 3.11));
     protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN = VoxelShapes.union(createCuboidShape(0.5, -15, 3,15.5, 16, 16),createCuboidShape(1, -16, 2.84,15, -15, 15.84),createCuboidShape(0.5, 0, -11.69,1.5, 16, 3.11));
-
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
