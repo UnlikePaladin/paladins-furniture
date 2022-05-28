@@ -46,7 +46,6 @@ public class PaladinFurnitureMod implements ModInitializer {
 
 	public static final Identifier FREEZER = new Identifier(MOD_ID, "freezer_block_entity");
 	public static Identifier MICROWAVE_UPDATE_PACKET_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_button_update");
-
 	public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
 	public static SoundEvent FURNITURE_DYED_EVENT = new SoundEvent(FURNITURE_DYED_ID);
 	public static ScreenHandlerType<AbstractFreezerScreenHandler> FREEZER_SCREEN_HANDLER;
@@ -54,6 +53,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static ScreenHandlerType<IronStoveScreenHandler> IRON_STOVE_SCREEN_HANDLER;
 	public static ScreenHandlerType<MicrowaveScreenHandler> MICROWAVE_SCREEN_HANDLER;
 	public static ScreenHandlerType<WorkbenchScreenHandler> WORKBENCH_SCREEN_HANDLER;
+	public static final Identifier FURNITURE_ID = new Identifier(MOD_ID,"furniture");
 
 
 	public static final Logger GENERAL_LOGGER = LogManager.getLogger();
@@ -121,7 +121,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 		});
 		FREEZING_RECIPE_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(MOD_ID, "freezing"), new CookingRecipeSerializer<>(FreezingRecipe::new, 200));
 		FREEZER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(FREEZER, FreezerScreenHandler::new);
-		FURNITURE_RECIPE = Registry.register(Registry.RECIPE_TYPE, MOD_ID + ":furniture",  new RecipeType<FurnitureRecipe>() {
+		FURNITURE_RECIPE = Registry.register(Registry.RECIPE_TYPE, FURNITURE_ID,  new RecipeType<FurnitureRecipe>() {
 			@Override
 			public String toString() {return "furniture";}
 		});

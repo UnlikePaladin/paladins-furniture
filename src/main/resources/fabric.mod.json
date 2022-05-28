@@ -23,7 +23,10 @@
     ],
     "client": [
       "com.unlikepaladin.pfm.client.PaladinFurnitureModClient"	
-]
+],
+    "rei": [
+      "com.unlikepaladin.pfm.compat.rei.PaladinFurnitureModREIPlugin"
+    ]
   },
   "mixins": [
       
