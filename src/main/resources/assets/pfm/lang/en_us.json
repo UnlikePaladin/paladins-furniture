@@ -456,5 +456,9 @@
   "stat.pfm.use_sink": "Water Taken from Sink",
 
   "subtitles.pfm.microwave_running": "Microwave humming",
-  "subtitles.pfm.microwave_beep": "Microwave beeping"
+  "subtitles.pfm.microwave_beep": "Microwave beeping",
+
+  "rei.pfm.freezer": "Freezing",
+  "rei.pfm.furniture": "Workbench"
+
 }
