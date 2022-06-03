@@ -392,7 +392,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         ItemStack itemStack = slots.get(0);
         ItemStack itemStack2 = recipe.getOutput();
         ItemStack itemStack3 = slots.get(2);
-        if (itemStack2.isOf(Items.OBSIDIAN) || itemStack2.isOf(Items.ICE)) {
+        if (itemStack2.isOf(Items.OBSIDIAN) || itemStack2.isOf(Items.ICE) || itemStack2.isOf(Items.BLUE_ICE)) {
             slots.set(0, new ItemStack(Items.BUCKET));
         }
 
