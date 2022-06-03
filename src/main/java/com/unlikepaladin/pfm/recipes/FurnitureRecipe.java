@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.*;
+import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -40,6 +41,11 @@ public class FurnitureRecipe implements IFurnitureRecipe {
     @Override
     public Identifier getId() {
         return this.id;
+    }
+
+    @Override
+    public ItemStack createIcon() {
+        return BlockItemRegistry.WORKING_TABLE.asItem().getDefaultStack();
     }
 
     @Override

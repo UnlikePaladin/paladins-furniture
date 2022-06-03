@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.blocks;
 
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.State;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -51,42 +50,48 @@ public class KitchenCounter extends HorizontalFacingBlock {
         BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
         return blockState.with(SHAPE, this.getShape(blockState, world, blockPos));
     }
-    private CounterShape getShape(BlockState state, BlockView world, BlockPos pos) {
-        Direction direction3 = null;
-        Object direction2;
+
+    private static CounterShape getShape(BlockState state, BlockView world, BlockPos pos) {
         Direction direction = state.get(FACING);
         BlockState blockState = world.getBlockState(pos.offset(direction));
-        boolean right = this.canConnect(world, pos, state.get(FACING).rotateYCounterclockwise(), state.get(FACING));
-        boolean left = this.canConnect(world, pos, state.get(FACING).rotateYClockwise(), state.get(FACING));
+        if (isCounter(blockState)) {
+            Direction direction2 = blockState.get(FACING);
 
-        if (isCounter(blockState) && ((Direction)(direction2 = blockState.get(FACING))).getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, ((Direction)direction2).getOpposite())) {
-            if (direction2 == direction.rotateYCounterclockwise()) {
-                return CounterShape.OUTER_LEFT;
+            if (direction2.getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
+                if (direction2 == direction.rotateYCounterclockwise()) {
+                    return CounterShape.OUTER_LEFT;
+                }
+
+                return CounterShape.OUTER_RIGHT;
             }
-            return CounterShape.OUTER_RIGHT;
         }
-        direction2 = world.getBlockState(pos.offset(direction.getOpposite()));
-        boolean innerCorner = isCounter((BlockState)direction2) && (direction3 = (Direction) ((State)direction2).get(FACING)).getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3);
-        if (innerCorner) {
-            if (direction3 == direction.rotateYCounterclockwise()) {
-                return CounterShape.INNER_LEFT;
+
+        BlockState direction2 = world.getBlockState(pos.offset(direction.getOpposite()));
+        if (isCounter(direction2)) {
+            Direction direction3 = direction2.get(FACING);
+            if (direction3.getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3)) {
+                if (direction3 == direction.rotateYCounterclockwise()) {
+                    return CounterShape.INNER_LEFT;
+                }
+
+                return CounterShape.INNER_RIGHT;
             }
-            return CounterShape.INNER_RIGHT;
         }
+        boolean right = canConnect(world, pos, state.get(FACING).rotateYCounterclockwise(), state.get(FACING));
+        boolean left = canConnect(world, pos, state.get(FACING).rotateYClockwise(), state.get(FACING));
         if (left && right) {
             return CounterShape.STRAIGHT;
-        }
-        else if (left) {
+        } else if (left) {
             return CounterShape.LEFT_EDGE;
-        }
-        else if (right) {
+        } else if (right) {
             return CounterShape.RIGHT_EDGE;
         }
         return CounterShape.STRAIGHT;
+
     }
 
 
-    public boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
+    public static boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
         boolean canConnect = (state.getBlock() instanceof KitchenCounter || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock);
@@ -94,17 +99,31 @@ public class KitchenCounter extends HorizontalFacingBlock {
         return canConnect;
     }
 
-    private boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
+    private static boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
         BlockState blockState = world.getBlockState(pos.offset(dir));
-        return !this.isCounter(blockState); //|| blockState.get(FACING) != state.get(FACING);
+        return !canConnectToCounter(blockState); //|| blockState.get(FACING) != state.get(FACING);
     }
-    public boolean isCounter(BlockState state) {
+    public static boolean canConnectToCounter(BlockState state) {
         return state.getBlock() instanceof KitchenCounter || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock;
     }
-
+    public static boolean isCounter(BlockState state) {
+        return state.getBlock() instanceof KitchenCounter;
+    }
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-
+        if (world.isClient())  {
+        System.out.println("");
+        System.out.println("Block is of ");
+        System.out.println(state);
+        System.out.println("Direction is of ");
+        System.out.println(direction);
+        System.out.println("Neighbor Block is of is of ");
+        System.out.println(neighborState);
+        System.out.println("Pos is of is of ");
+        System.out.println(pos);
+        System.out.println("Neighbor Pos is of is of ");
+        System.out.println(neighborPos);
+        }
         return direction.getAxis().isHorizontal() ? state.with(SHAPE, getShape(state, world, pos)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
