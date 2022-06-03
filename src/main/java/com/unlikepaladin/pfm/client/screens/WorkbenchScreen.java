@@ -21,6 +21,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> imple
     private static final Identifier TEXTURE = new Identifier("textures/gui/container/crafting_table.png");
 
     private boolean narrow;
+    private final RecipeBookWidget recipeBook = new RecipeBookWidget();
 
     public WorkbenchScreen(WorkbenchScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
@@ -67,18 +68,16 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> imple
         super.onMouseClick(slot, slotId, button, actionType);
     }
 
-    @Override
     public void refreshRecipeBook() {
     }
 
-    @Override
     public void removed() {
         super.removed();
     }
 
     @Override
     public RecipeBookWidget getRecipeBookWidget() {
-        return null;
+        return this.recipeBook;
     }
 }
 
