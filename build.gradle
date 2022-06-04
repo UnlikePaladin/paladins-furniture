@@ -27,8 +27,8 @@ repositories {
 }
 
 dependencies {
-	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:7.4.456"
-	modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:7.4.456"
+	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:8.2.471"
+	modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:8.2.471"
 }
 
 dependencies {
@@ -36,7 +36,7 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "vazkii.patchouli:Patchouli:1.18.1-66-FABRIC-SNAPSHOT"
+	modImplementation "vazkii.patchouli:Patchouli:1.18.2-70-FABRIC-SNAPSHOT"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"

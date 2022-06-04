@@ -86,7 +86,7 @@ public class LightSwitchItem extends BlockItem {
                     NbtElement nbtElement = lights.get(i);
                     BlockPos lightPos = BlockPos.fromLong(((NbtLong) nbtElement).longValue());
                     BlockPos placedPos = pos.offset(facing);
-                    double distance = Math.sqrt(lightPos.getSquaredDistance(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5, true));
+                    double distance = Math.sqrt(lightPos.getSquaredDistance(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5));
                     return !(distance > 16) && state.getBlock().canPlaceAt(state, world, pos);
                 }
 
