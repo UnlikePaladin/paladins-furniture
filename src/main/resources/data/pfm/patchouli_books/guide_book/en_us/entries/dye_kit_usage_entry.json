@@ -1,0 +1,15 @@
+{
+  "name": "Usage",
+  "icon": "pfm:dye_kit_red",
+  "category": "pfm:dye_kit_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The dye kits can be used to change the wool color on the furniture by shift right clicking, they can also be used on sheep."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

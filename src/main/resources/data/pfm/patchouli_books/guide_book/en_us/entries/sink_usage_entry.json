@@ -1,0 +1,15 @@
+{
+  "name": "Usage",
+  "icon": "pfm:oak_kitchen_sink",
+  "category": "pfm:sink_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The sink works mostly like a cauldron, it can be filled with a water bucket or bottle, or if there's a water source one block underground you can grab that water too. It can be used to remove dye off of armor and shulker boxes, it can extinguish fire and it outputs a comparator signal as well."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

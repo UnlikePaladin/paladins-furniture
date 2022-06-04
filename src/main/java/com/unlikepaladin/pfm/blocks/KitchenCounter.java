@@ -15,7 +15,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-
 public class KitchenCounter extends HorizontalFacingBlock {
     private float height = 0.36f;
     private final Block baseBlock;
@@ -90,12 +89,10 @@ public class KitchenCounter extends HorizontalFacingBlock {
 
     }
 
-
     public static boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
         boolean canConnect = (state.getBlock() instanceof KitchenCounter || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock);
-
         return canConnect;
     }
 
@@ -103,36 +100,21 @@ public class KitchenCounter extends HorizontalFacingBlock {
         BlockState blockState = world.getBlockState(pos.offset(dir));
         return !canConnectToCounter(blockState); //|| blockState.get(FACING) != state.get(FACING);
     }
+
     public static boolean canConnectToCounter(BlockState state) {
         return state.getBlock() instanceof KitchenCounter || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock;
     }
+
     public static boolean isCounter(BlockState state) {
         return state.getBlock() instanceof KitchenCounter;
     }
+
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (world.isClient())  {
-        System.out.println("");
-        System.out.println("Block is of ");
-        System.out.println(state);
-        System.out.println("Direction is of ");
-        System.out.println(direction);
-        System.out.println("Neighbor Block is of is of ");
-        System.out.println(neighborState);
-        System.out.println("Pos is of is of ");
-        System.out.println(pos);
-        System.out.println("Neighbor Pos is of is of ");
-        System.out.println(neighborPos);
-        }
         return direction.getAxis().isHorizontal() ? state.with(SHAPE, getShape(state, world, pos)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
-
-
-
     @SuppressWarnings("deprecated")
-
-
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (!state.isOf(state.getBlock())) {
@@ -152,10 +134,8 @@ public class KitchenCounter extends HorizontalFacingBlock {
             buffer[0] = buffer[1];
             buffer[1] = VoxelShapes.empty();
         }
-
         return buffer[0];
     }
-
 
     protected static final VoxelShape STRAIGHT = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 1, 12), createCuboidShape(0, 1, 0,16, 14, 13), createCuboidShape(0, 14, 0,16, 16, 16));
     protected static final VoxelShape INNER_CORNER = VoxelShapes.union(createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(0, 1, 0,16, 14, 13),createCuboidShape(3, 1, 13,16, 14, 16));
@@ -236,8 +216,6 @@ public class KitchenCounter extends HorizontalFacingBlock {
                 return STRAIGHT;
         }
     }
-
-
 }
 
 enum CounterShape implements StringIdentifiable
