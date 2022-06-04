@@ -1,0 +1,16 @@
+{
+  "name": "Crafting",
+  "icon": "minecraft:white_concrete",
+  "category": "pfm:stove_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The stove can be crafted from a furnace and the material which can be either concrete or iron, put these in the Wood Working Table in the order shown to craft one."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:simple_stove",
+      "recipe2": "pfm:iron_stove"
+    }
+  ]
+}

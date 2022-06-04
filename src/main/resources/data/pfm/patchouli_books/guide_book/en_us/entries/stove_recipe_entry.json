@@ -1,0 +1,32 @@
+{
+  "name": "Recipes",
+  "icon": "pfm:simple_stove",
+  "category": "pfm:stove_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The stove can be used like a smoker which means any smoker recipes will work."
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:baked_potato_from_smoking",
+      "recipe2": "minecraft:cooked_beef_from_smoking",
+      "recipe3": "minecraft:cooked_chicken_from_smoking",
+      "customicon": "pfm:simple_stove"
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:cooked_cod_from_smoking",
+      "recipe2": "minecraft:cooked_salmon_from_smoking",
+      "recipe3": "minecraft:cooked_mutton_from_smoking",
+      "customicon": "pfm:simple_stove"
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:cooked_rabbit_from_smoking",
+      "recipe2": "minecraft:dried_kelp_from_smoking",
+      "recipe3": "",
+      "customicon": "pfm:simple_stove"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Crafting",
+  "icon": "minecraft:spruce_planks",
+  "category": "pfm:working_table_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Wood Working Table can be crafted on the Vanilla Crafting Table, you'll need 8 of any wood planks and 1 iron ingot."
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:working_table"
+    }
+  ]
+}

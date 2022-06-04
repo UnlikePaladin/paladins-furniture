@@ -1,0 +1,26 @@
+{
+  "components": [
+    {
+      "type": "patchouli:item", "item": "#item", "x": 48, "y": 8
+    },
+    {
+      "type": "patchouli:image",
+      "image": "patchouli:textures/gui/crafting.png",
+      "width": 62,
+      "height": 22,
+      "texture_width": 128,
+      "texture_height": 256,
+      "u": 2,
+      "v": 104,
+      "x": 25,
+      "y": 5
+    },
+    {
+      "type": "patchouli:header",
+      "text": "#item->iname",
+      "centered": "true",
+      "y": -6,
+      "x": 57
+    }
+  ]
+}

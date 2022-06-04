@@ -459,6 +459,9 @@
   "subtitles.pfm.microwave_beep": "Microwave beeping",
 
   "rei.pfm.freezer": "Freezing",
-  "rei.pfm.furniture": "Workbench"
+  "rei.pfm.furniture": "Workbench",
+  "pfm.patchouli.guide_book.name": "Paladin's Furniture",
+  "pfm.patchouli.guide_book.landing_text": "This is a guide for everything related to the furniture in this mod. It will show you how to use and craft the furniture and appliances in it.",
+  "pfm.patchouli.guide_book.subtitle": "  Your Guide to the Mod"
 
 }

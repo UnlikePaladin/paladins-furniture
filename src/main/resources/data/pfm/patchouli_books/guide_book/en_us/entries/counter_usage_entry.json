@@ -1,0 +1,15 @@
+{
+  "name": "Usage",
+  "icon": "pfm:oak_kitchen_counter",
+  "category": "pfm:counter_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The counter is purely decorative, they connect to each other in a similar manner to stairs."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

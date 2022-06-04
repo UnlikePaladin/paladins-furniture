@@ -1,19 +1,23 @@
 {
   "type": "pfm:furniture",
   "pattern": [
-    "XY",
-    "YX"
-],
+    "YZY",
+    "YXY",
+    "YZY"
+  ],
    "key": {
     "Y": {
       "item": "minecraft:white_concrete"
     },
      "X": {
        "item": "minecraft:redstone"
+     },
+     "Z": {
+       "item": "minecraft:light_gray_concrete"
      }
   },
   "result": {
     "item": "pfm:light_switch",
-    "count": 2
+    "count": 6
   }
 }

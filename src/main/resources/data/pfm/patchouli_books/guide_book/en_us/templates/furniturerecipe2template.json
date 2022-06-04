@@ -1,0 +1,21 @@
+{
+  "include": [
+    {
+      "template": "pfm:furniturerecipetemplate",
+      "as": "nn",
+      "using": {
+        "recipe": "#recipe",
+        "custom_text": "#text"
+      }
+    },
+    {
+      "template": "pfm:furniturerecipetemplate",
+      "as": "uu",
+      "using": {
+        "recipe": "#recipe2",
+        "custom_text": "#text"
+      },
+      "y": 75
+    }
+  ]
+}
