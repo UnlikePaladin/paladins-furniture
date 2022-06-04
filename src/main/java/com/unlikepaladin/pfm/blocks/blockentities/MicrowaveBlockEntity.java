@@ -400,13 +400,11 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         nbtCompound.putBoolean("isActive", active);
         this.writeNbt(nbtCompound);
         this.markDirty();
-        System.out.println("Setting Active on BE");
         BlockState state = this.getCachedState().with(Microwave.POWERED, true);
         world.setBlockState(pos, state, 3);
     }
 
     public void setActiveonClient(boolean active) {
-        System.out.println("Setting Active on Client");
         setActive(active);
         Stream<PlayerEntity> watchingPlayers = PlayerStream.watching(world,pos);
         // Look at the other methods of `PlayerStream` to capture different groups of players.
