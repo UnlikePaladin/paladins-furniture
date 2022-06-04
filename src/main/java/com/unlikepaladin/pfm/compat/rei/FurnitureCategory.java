@@ -16,7 +16,6 @@ import me.shedaniel.rei.api.common.entry.InputIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -25,7 +24,7 @@ import java.util.List;
 
 public class FurnitureCategory implements DisplayCategory<FurnitureDisplay> {
     public static final EntryStack<ItemStack> ICON = EntryStacks.of(BlockItemRegistry.WORKING_TABLE);
-    public static final TranslatableText TITLE = new TranslatableText("rei.pfm.furniture");
+    public static final Text TITLE = Text.translatable("rei.pfm.furniture");
 
     public CategoryIdentifier<? extends FurnitureDisplay> getCategoryIdentifier() {
         return FurnitureDisplay.IDENTIFIER;

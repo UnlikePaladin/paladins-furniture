@@ -12,7 +12,7 @@ import com.unlikepaladin.pfm.registry.SoundRegistry;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.minecraft.block.entity.BlockEntityType;
@@ -131,12 +131,12 @@ public class PaladinFurnitureMod implements ModInitializer {
 		IRON_STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(MOD_ID, "iron_stove_block_entity"), IronStoveScreenHandler::new);
 		MICROWAVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerExtended(new Identifier(MOD_ID, "microwave_block_entity"), MicrowaveScreenHandler::new);
 
-		ServerSidePacketRegistry.INSTANCE.register(MICROWAVE_PACKET_ID, (packetContext, attachedData) -> {
+		ServerPlayNetworking.registerGlobalReceiver(MICROWAVE_PACKET_ID, (server, player, handler, attachedData, responseSender) -> {
 			BlockPos pos = attachedData.readBlockPos();
 			boolean active = attachedData.readBoolean();
-			packetContext.getTaskQueue().execute(() -> {
-				if(Objects.nonNull(packetContext.getPlayer().world.getBlockEntity(pos))){
-					MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos);
+			server.submitAndJoin(() -> {
+				if(Objects.nonNull(player.world.getBlockEntity(pos))){
+					MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) player.world.getBlockEntity(pos);
 					microwaveBlockEntity.setActive(active);
 				}
 

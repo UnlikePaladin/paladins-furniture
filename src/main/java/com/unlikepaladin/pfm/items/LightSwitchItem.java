@@ -13,7 +13,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtLong;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -61,7 +61,7 @@ public class LightSwitchItem extends BlockItem {
                }
                else {
                     if (context.getWorld().isClient)
-                        context.getPlayer().sendMessage(new TranslatableText("message.pfm.light_switch_not_canopy"), false);
+                        context.getPlayer().sendMessage(Text.translatable("message.pfm.light_switch_not_canopy"), false);
                }
 
            }

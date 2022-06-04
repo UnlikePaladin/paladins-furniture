@@ -8,6 +8,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -15,8 +16,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Random;
 
 public class PendantBlock extends PowerableBlock {
     public static final BooleanProperty UP = Properties.UP;
@@ -124,7 +123,6 @@ public class PendantBlock extends PowerableBlock {
         Direction direction = Direction.UP;
         return Block.sideCoversSmallSquare(world, pos.offset(direction), direction.getOpposite()) || state.getBlock() instanceof PendantBlock;
     }
-
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (state.get(LIT) && !world.isReceivingRedstonePower(pos) && !state.get(POWERLOCKED)) {

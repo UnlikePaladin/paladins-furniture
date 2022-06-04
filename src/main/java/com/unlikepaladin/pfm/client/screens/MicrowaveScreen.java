@@ -14,7 +14,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
@@ -27,7 +26,7 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
     public boolean isActive;
     private MicrowaveBlockEntity microwaveBlockEntity;
 
-    private final TranslatableText startButtonText = new TranslatableText("gui.pfm.microwave.start_button");
+    private final Text startButtonText = Text.translatable("gui.pfm.microwave.start_button");
     public MicrowaveScreen(MicrowaveScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
     }

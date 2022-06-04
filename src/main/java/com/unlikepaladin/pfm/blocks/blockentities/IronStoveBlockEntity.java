@@ -8,7 +8,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
 public class IronStoveBlockEntity extends AbstractFurnaceBlockEntity {
@@ -19,7 +18,7 @@ public class IronStoveBlockEntity extends AbstractFurnaceBlockEntity {
     @Override
     protected Text getContainerName() {
         blockname = blockname.replace("block.pfm", "");
-        return new TranslatableText("container.pfm" + blockname);
+        return Text.translatable("container.pfm" + blockname);
     }
 
 

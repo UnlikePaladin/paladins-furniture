@@ -6,9 +6,9 @@ import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
 import com.unlikepaladin.pfm.registry.SoundRegistry;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.fabricmc.fabric.api.server.PlayerStream;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
@@ -33,7 +33,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -43,7 +42,7 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.stream.Stream;
+import java.util.Collection;
 
 public class MicrowaveBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker, ExtendedScreenHandlerFactory {
     public boolean isActive = false;
@@ -154,7 +153,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public Text getDisplayName() {
-        return new TranslatableText("container.pfm.microwave");
+        return Text.translatable("container.pfm.microwave");
     }
 
     private static int getCookTime(World world, RecipeType<? extends AbstractCookingRecipe> recipeType, Inventory inventory) {
@@ -406,7 +405,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     public void setActiveonClient(boolean active) {
         setActive(active);
-        Stream<PlayerEntity> watchingPlayers = PlayerStream.watching(world,pos);
+        Collection<ServerPlayerEntity> watchingPlayers = PlayerLookup.tracking(this);
         // Look at the other methods of `PlayerStream` to capture different groups of players.
         // We'll get to this later
         PacketByteBuf clientData = new PacketByteBuf(Unpooled.buffer());
@@ -414,7 +413,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         clientData.writeBlockPos(pos);
         // Then we'll send the packet to all the players
         watchingPlayers.forEach(player -> {
-                ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, PaladinFurnitureMod.MICROWAVE_UPDATE_PACKET_ID, clientData);
+                ServerPlayNetworking.send(player, PaladinFurnitureMod.MICROWAVE_UPDATE_PACKET_ID, clientData);
             }
         );
     }

@@ -12,7 +12,6 @@ import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -30,7 +29,7 @@ public class WorkingTable extends HorizontalFacingBlock {
     public WorkingTable(Settings settings) {
         super(settings);
     }
-    private static final Text TITLE = new TranslatableText("container.pfm.working_table");
+    private static final Text TITLE = Text.translatable("container.pfm.working_table");
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient) {
