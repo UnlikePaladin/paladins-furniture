@@ -99,6 +99,7 @@ public class PendantBlock extends PowerableBlock {
         BlockState state = this.getDefaultState().with(LIT, powered);
         return canConnect(state, ctx.getWorld(), ctx.getBlockPos());
     }
+
     @Override
     public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
         if (world.isClient) {
@@ -111,20 +112,18 @@ public class PendantBlock extends PowerableBlock {
         boolean bl = (state.get(LIT));
         if (bl != world.isReceivingRedstonePower(pos)) {
             if (bl) {
-                world.getBlockTickScheduler().schedule(pos, this, 4);
+                world.createAndScheduleBlockTick(pos, this, 4);
             } else {
                 world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_LISTENERS);
             }
         }
     }
+
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         Direction direction = Direction.UP;
         return Block.sideCoversSmallSquare(world, pos.offset(direction), direction.getOpposite()) || state.getBlock() instanceof PendantBlock;
     }
-
-
-
 
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {

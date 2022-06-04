@@ -21,12 +21,11 @@ public class LightSwitchBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         NbtList tagList = new NbtList();
         lights.forEach(blockPos -> tagList.add(NbtLong.of(blockPos.asLong())));
         nbt.put("lights", tagList);
-        return nbt;
     }
 
     @Override

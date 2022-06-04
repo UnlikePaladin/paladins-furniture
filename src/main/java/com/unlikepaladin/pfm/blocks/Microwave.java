@@ -42,7 +42,7 @@ public class Microwave extends HorizontalFacingBlockWEntity{
 
     public Microwave(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(OPEN, false).with(FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(OPEN, false).with(POWERED, false).with(FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
     }
