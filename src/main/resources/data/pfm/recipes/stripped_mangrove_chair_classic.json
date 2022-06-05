@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "S  ",
+    "SXX",
+    "S S"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_mangrove_log"
+    },
+    "S": {
+      "item": "minecraft:mangrove_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_mangrove_chair_classic",
+    "count": 4
+  }
+}

@@ -1,0 +1,12 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_stool",
+	"textures": {
+        
+		"particle": "block/mangrove_planks",
+		"base": "block/mangrove_planks",
+		"cushion": "block/mangrove_planks",
+		"legs": "block/mangrove_log"
+	}
+    
+}

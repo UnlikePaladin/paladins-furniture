@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:mangrove_planks"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    },
+    "S": {
+      "item": "minecraft:mangrove_log"
+    }
+  },
+  "result": {
+    "item": "pfm:mangrove_kitchen_drawer",
+    "count": 1
+  }
+}

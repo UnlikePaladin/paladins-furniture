@@ -7,6 +7,7 @@
   "block.pfm.acacia_chair": "Basic Acacia Chair",
   "block.pfm.jungle_chair": "Basic Jungle Chair",
   "block.pfm.dark_oak_chair": "Basic Dark Oak Chair",
+  "block.pfm.mangrove_chair": "Basic Mangrove Chair",
   "block.pfm.warped_chair": "Basic Warped Chair",
   "block.pfm.crimson_chair": "Basic Crimson Chair",
 
@@ -16,6 +17,7 @@
   "block.pfm.stripped_acacia_chair": "Basic Stripped Acacia Chair",
   "block.pfm.stripped_jungle_chair": "Basic Stripped Jungle Chair",
   "block.pfm.stripped_dark_oak_chair": "Basic Stripped Dark Oak Chair",
+  "block.pfm.stripped_mangrove_chair": "Basic Stripped Mangrove Chair",
   "block.pfm.stripped_warped_chair": "Basic Stripped Warped Chair",
   "block.pfm.stripped_crimson_chair": "Basic Stripped Crimson Chair",
   "block.pfm.quartz_chair": "Basic Quartz Chair",
@@ -27,6 +29,7 @@
   "block.pfm.acacia_chair_dinner": "Dining Acacia Chair",
   "block.pfm.jungle_chair_dinner": "Dining Jungle Chair",
   "block.pfm.dark_oak_chair_dinner": "Dining Dark Oak Chair",
+  "block.pfm.mangrove_chair_dinner": "Dining Mangrove Chair",
   "block.pfm.warped_chair_dinner": "Dining Warped Chair",
   "block.pfm.crimson_chair_dinner": "Dining Crimson Chair",
 
@@ -36,6 +39,7 @@
   "block.pfm.stripped_acacia_chair_dinner": "Dining Stripped Acacia Chair",
   "block.pfm.stripped_jungle_chair_dinner": "Dining Stripped Jungle Chair",
   "block.pfm.stripped_dark_oak_chair_dinner": "Dining Stripped Dark Oak Chair",
+  "block.pfm.stripped_mangrove_chair_dinner": "Dining Stripped Mangrove Chair",
   "block.pfm.stripped_warped_chair_dinner": "Dining Stripped Warped Chair",
   "block.pfm.stripped_crimson_chair_dinner": "Dining Stripped Crimson Chair",
 
@@ -52,6 +56,7 @@
   "block.pfm.acacia_chair_classic": "Classic Acacia Chair",
   "block.pfm.jungle_chair_classic": "Classic Jungle Chair",
   "block.pfm.dark_oak_chair_classic": "Classic Dark Oak Chair",
+  "block.pfm.mangrove_chair_classic": "Classic Mangrove Chair",
   "block.pfm.warped_chair_classic": "Classic Warped Chair",
   "block.pfm.crimson_chair_classic": "Classic Crimson Chair",
 
@@ -61,6 +66,7 @@
   "block.pfm.stripped_acacia_chair_classic": "Classic Stripped Acacia Chair",
   "block.pfm.stripped_jungle_chair_classic": "Classic Stripped Jungle Chair",
   "block.pfm.stripped_dark_oak_chair_classic": "Classic Stripped Dark Oak Chair",
+  "block.pfm.stripped_mangrove_chair_classic": "Classic Stripped Mangrove Chair",
   "block.pfm.stripped_warped_chair_classic": "Classic Stripped Warped Chair",
   "block.pfm.stripped_crimson_chair_classic": "Classic Stripped Crimson Chair",
   "block.pfm.chair_classic_wool": "Wool Classic Chair",
@@ -74,6 +80,7 @@
   "block.pfm.acacia_chair_modern": "Modern Acacia Chair",
   "block.pfm.jungle_chair_modern": "Modern Jungle Chair",
   "block.pfm.dark_oak_chair_modern": "Modern Dark Oak Chair",
+  "block.pfm.mangrove_chair_modern": "Modern Mangrove Chair",
   "block.pfm.warped_chair_modern": "Modern Warped Chair",
   "block.pfm.crimson_chair_modern": "Modern Crimson Chair",
 
@@ -83,6 +90,7 @@
   "block.pfm.stripped_acacia_chair_modern": "Modern Stripped Acacia Chair",
   "block.pfm.stripped_jungle_chair_modern": "Modern Stripped Jungle Chair",
   "block.pfm.stripped_dark_oak_chair_modern": "Modern Stripped Dark Oak Chair",
+  "block.pfm.stripped_mangrove_chair_modern": "Modern Stripped Mangrove Chair",
   "block.pfm.stripped_warped_chair_modern": "Modern Stripped Warped Chair",
   "block.pfm.stripped_crimson_chair_modern": "Modern Stripped Crimson Chair",
 
@@ -115,6 +123,7 @@
   "block.pfm.acacia_table_basic": "Basic Acacia Table",
   "block.pfm.jungle_table_basic": "Basic Jungle Table",
   "block.pfm.dark_oak_table_basic": "Basic Dark Oak Table",
+  "block.pfm.mangrove_table_basic": "Basic Mangrove Table",
   "block.pfm.crimson_table_basic": "Basic Crimson Table",
   "block.pfm.warped_table_basic": "Basic Warped Table",
 
@@ -125,6 +134,7 @@
   "block.pfm.stripped_acacia_table_basic": "Basic Stripped Acacia Table",
   "block.pfm.stripped_jungle_table_basic": "Basic Stripped Jungle Table",
   "block.pfm.stripped_dark_oak_table_basic": "Basic Stripped Dark Oak Table",
+  "block.pfm.stripped_mangrove_table_basic": "Basic Stripped Mangrove Table",
   "block.pfm.stripped_crimson_table_basic": "Basic Stripped Crimson Table",
   "block.pfm.stripped_warped_table_basic": "Basic Stripped Warped Table",
 
@@ -134,6 +144,7 @@
   "block.pfm.acacia_table_classic": "Classic Acacia Table",
   "block.pfm.jungle_table_classic": "Classic Jungle Table",
   "block.pfm.dark_oak_table_classic": "Classic Dark Oak Table",
+  "block.pfm.mangrove_table_classic": "Classic Mangrove Table",
   "block.pfm.crimson_table_classic": "Classic Crimson Table",
   "block.pfm.warped_table_classic": "Classic Warped Table",
 
@@ -143,6 +154,7 @@
   "block.pfm.stripped_acacia_table_classic": "Classic Stripped Acacia Table",
   "block.pfm.stripped_jungle_table_classic": "Classic Stripped Jungle Table",
   "block.pfm.stripped_dark_oak_table_classic": "Classic Stripped Dark Oak Table",
+  "block.pfm.stripped_mangrove_table_classic": "Classic Stripped Mangrove Table",
   "block.pfm.stripped_crimson_table_classic": "Classic Stripped Crimson Table",
   "block.pfm.stripped_warped_table_classic": "Classic Stripped Warped Table",
 
@@ -153,6 +165,7 @@
   "block.pfm.acacia_table_log": "Acacia Log Table",
   "block.pfm.jungle_table_log": "Jungle Log Table",
   "block.pfm.dark_oak_table_log": "Dark Oak Log Table",
+  "block.pfm.mangrove_table_log": "Mangrove Log Table",
   "block.pfm.crimson_table_log": "Crimson Log Table",
   "block.pfm.warped_table_log": "Warped Log Table",
 
@@ -162,6 +175,7 @@
   "block.pfm.stripped_acacia_table_log": "Stripped Acacia Log Table",
   "block.pfm.stripped_jungle_table_log": "Stripped Jungle Log Table",
   "block.pfm.stripped_dark_oak_table_log": "Stripped Dark Oak Log Table",
+  "block.pfm.stripped_mangrove_table_log": "Stripped Mangrove Log Table",
   "block.pfm.stripped_crimson_table_log": "Stripped Crimson Log Table",
   "block.pfm.stripped_warped_table_log": "Stripped Warped Log Table",
 
@@ -171,6 +185,7 @@
   "block.pfm.acacia_raw_table_log": "Raw Acacia Log Table",
   "block.pfm.jungle_raw_table_log": "Raw Jungle Log Table",
   "block.pfm.dark_oak_raw_table_log": "Raw Dark Oak Log Table",
+  "block.pfm.mangrove_raw_table_log": "Raw Mangrove Log Table",
   "block.pfm.warped_raw_table_stem": "Raw Warped Stem Table",
   "block.pfm.crimson_raw_table_stem": "Raw Crimson Stem Table",
   "block.pfm.stripped_oak_raw_table_log": "Raw Stripped Oak Log Table",
@@ -179,6 +194,7 @@
   "block.pfm.stripped_acacia_raw_table_log": "Raw Stripped Acacia Log Table",
   "block.pfm.stripped_jungle_raw_table_log": "Raw Stripped Jungle Log Table",
   "block.pfm.stripped_dark_oak_raw_table_log": "Raw Stripped Dark Oak Log Table",
+  "block.pfm.stripped_mangrove_raw_table_log": "Raw Stripped Mangrove Log Table",
   "block.pfm.stripped_warped_raw_table_stem": "Raw Stripped Warped Stem Table",
   "block.pfm.stripped_crimson_raw_table_stem": "Raw Stripped Crimson Stem Table",
 
@@ -188,6 +204,7 @@
   "block.pfm.acacia_log_stool": "Acacia Log Stool",
   "block.pfm.jungle_log_stool": "Jungle Log Stool",
   "block.pfm.dark_oak_log_stool": "Dark Oak Log Stool",
+  "block.pfm.mangrove_log_stool": "Oak Log Stool",
   "block.pfm.crimson_stem_stool": "Crimson Stem Stool",
   "block.pfm.warped_stem_stool": "Warped Stem Stool",
 
@@ -214,6 +231,7 @@
   "block.pfm.acacia_modern_stool": "Acacia Modern Stool",
   "block.pfm.jungle_modern_stool": "Jungle Modern Stool",
   "block.pfm.dark_oak_modern_stool": "Dark Oak Modern Stool",
+  "block.pfm.mangrove_modern_stool": "Mangrove Modern Stool",
   "block.pfm.crimson_modern_stool": "Crimson Modern Stool",
   "block.pfm.warped_modern_stool": "Warped Modern Stool",
   "block.pfm.stripped_oak_modern_stool": "Stripped Oak Modern Stool",
@@ -222,6 +240,7 @@
   "block.pfm.stripped_acacia_modern_stool": "Stripped Acacia Modern Stool",
   "block.pfm.stripped_jungle_modern_stool": "Stripped Jungle Modern Stool",
   "block.pfm.stripped_dark_oak_modern_stool": "Stripped Dark Oak Modern Stool",
+  "block.pfm.stripped_mangrove_modern_stool": "Stripped Mangrove Modern Stool",
   "block.pfm.stripped_crimson_modern_stool": "Stripped Crimson Modern Stool",
   "block.pfm.stripped_warped_modern_stool": "Stripped Warped Modern Stool",
   "block.pfm.white_modern_stool": "White Modern Concrete Stool",
@@ -238,6 +257,7 @@
   "block.pfm.acacia_simple_stool": "Acacia Simple Stool",
   "block.pfm.jungle_simple_stool": "Jungle Simple Stool",
   "block.pfm.dark_oak_simple_stool": "Dark Oak Simple Stool",
+  "block.pfm.mangrove_simple_stool": "Mangrove Simple Stool",
   "block.pfm.crimson_simple_stool": "Crimson Simple Stool",
   "block.pfm.warped_simple_stool": "Warped Simple Stool",
   "block.pfm.stripped_oak_simple_stool": "Stripped Oak Simple Stool",
@@ -246,6 +266,7 @@
   "block.pfm.stripped_acacia_simple_stool": "Stripped Acacia Simple Stool",
   "block.pfm.stripped_jungle_simple_stool": "Stripped Jungle Simple Stool",
   "block.pfm.stripped_dark_oak_simple_stool": "Stripped Dark Oak Simple Stool",
+  "block.pfm.stripped_mangrove_simple_stool": "Stripped Mangrove Simple Stool",
   "block.pfm.stripped_crimson_simple_stool": "Stripped Crimson Simple Stool",
   "block.pfm.stripped_warped_simple_stool": "Stripped Warped Simple Stool",
 
@@ -255,6 +276,7 @@
   "block.pfm.acacia_table_dinner": "Acacia Dining Table",
   "block.pfm.jungle_table_dinner": "Jungle Dining Table",
   "block.pfm.dark_oak_table_dinner": "Dark Oak Dining Table",
+  "block.pfm.mangrove_table_dinner": "Mangrove Dining Table",
   "block.pfm.crimson_table_dinner": "Crimson Dining Table",
   "block.pfm.warped_table_dinner": "Warped Dining Table",
   "block.pfm.stripped_oak_table_dinner": "Stripped Oak Dining Table",
@@ -263,6 +285,7 @@
   "block.pfm.stripped_acacia_table_dinner": "Stripped Acacia Dining Table",
   "block.pfm.stripped_jungle_table_dinner": "Stripped Jungle Dining Table",
   "block.pfm.stripped_dark_oak_table_dinner": "Stripped Dark Oak Dining Table",
+  "block.pfm.stripped_mangrove_table_dinner": "Stripped Mangrove Dining Table",
   "block.pfm.stripped_crimson_table_dinner": "Stripped Crimson Dining Table",
   "block.pfm.stripped_warped_table_dinner": "Stripped Warped Dining Table",
   "container.pfm.drawer": "Kitchen Drawer",
@@ -313,6 +336,11 @@
   "block.pfm.jungle_kitchen_cabinet": "Jungle Kitchen Cabinet",
   "block.pfm.jungle_kitchen_sink": "Jungle Kitchen Sink",
 
+  "block.pfm.mangrove_kitchen_counter": "Mangrove Kitchen Counter",
+  "block.pfm.mangrove_kitchen_drawer": "Mangrove Kitchen Drawer",
+  "block.pfm.mangrove_kitchen_cabinet": "Mangrove Kitchen Cabinet",
+  "block.pfm.mangrove_kitchen_sink": "Mangrove Kitchen Sink",
+
   "block.pfm.crimson_kitchen_counter": "Crimson Kitchen Counter",
   "block.pfm.crimson_kitchen_drawer": "Crimson Kitchen Drawer",
   "block.pfm.crimson_kitchen_cabinet": "Crimson Kitchen Cabinet",
@@ -353,6 +381,11 @@
   "block.pfm.stripped_jungle_kitchen_cabinet": "Stripped Jungle Kitchen Cabinet",
   "block.pfm.stripped_jungle_kitchen_sink": "Stripped Jungle Kitchen Sink",
 
+  "block.pfm.stripped_mangrove_kitchen_counter": "Stripped Mangrove Kitchen Counter",
+  "block.pfm.stripped_mangrove_kitchen_drawer": "Stripped Mangrove Kitchen Drawer",
+  "block.pfm.stripped_mangrove_kitchen_cabinet": "Stripped Mangrove Kitchen Cabinet",
+  "block.pfm.stripped_mangrove_kitchen_sink": "Stripped Mangrove Kitchen Sink",
+
   "block.pfm.stripped_crimson_kitchen_counter": "Stripped Crimson Kitchen Counter",
   "block.pfm.stripped_crimson_kitchen_drawer": "Stripped Crimson Kitchen Drawer",
   "block.pfm.stripped_crimson_kitchen_cabinet": "Stripped Crimson Kitchen Cabinet",
@@ -369,6 +402,7 @@
   "block.pfm.acacia_herringbone_planks": "Acacia Herringbone Planks",
   "block.pfm.birch_herringbone_planks": "Birch Herringbone Planks",
   "block.pfm.spruce_herringbone_planks": "Spruce Herringbone Planks",
+  "block.pfm.mangrove_herringbone_planks": "Mangrove Herringbone Planks",
   "block.pfm.warped_herringbone_planks": "Warped Herringbone Planks",
   "block.pfm.crimson_herringbone_planks": "Crimson Herringbone Planks",
 

@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/mangrove_modern_stool","y":180},
+    "facing=east":{"model":"pfm:block/mangrove_modern_stool","y":270},
+    "facing=south":{"model":"pfm:block/mangrove_modern_stool","y":0},
+    "facing=west":{"model":"pfm:block/mangrove_modern_stool","y":90}
+
+}
+
+}

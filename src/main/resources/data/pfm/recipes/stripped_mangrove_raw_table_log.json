@@ -1,0 +1,17 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    " X ",
+    " X "
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_mangrove_log"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_mangrove_raw_table_log",
+    "count": 4
+  }
+}

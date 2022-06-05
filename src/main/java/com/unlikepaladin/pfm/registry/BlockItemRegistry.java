@@ -29,6 +29,7 @@ public class BlockItemRegistry {
     public static final Block ACACIA_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block JUNGLE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_CHAIR = new BasicChair(FabricBlockSettings.of(Material.NETHER_WOOD).strength(2.0f).resistance(2.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.WOOD));
     public static final Block WARPED_CHAIR = new BasicChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -37,6 +38,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_ACACIA_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_JUNGLE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_WARPED_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_CRIMSON_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block QUARTZ_CHAIR = new BasicChair(FabricBlockSettings.of(Material.STONE).strength(2.0f).resistance(2.0f).nonOpaque().requiresTool());
@@ -51,6 +53,7 @@ public class BlockItemRegistry {
     public static final Block ACACIA_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block JUNGLE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -59,6 +62,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_ACACIA_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_JUNGLE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_WARPED_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_CRIMSON_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
@@ -78,6 +82,7 @@ public class BlockItemRegistry {
     public static final Block ACACIA_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block JUNGLE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -86,6 +91,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_ACACIA_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_JUNGLE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_WARPED_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_CRIMSON_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block CHAIR_CLASSIC_WOOL = new ClassicChairDyeable(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -97,6 +103,7 @@ public class BlockItemRegistry {
     public static final Block ACACIA_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block JUNGLE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -105,6 +112,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_ACACIA_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_JUNGLE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_WARPED_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_CRIMSON_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
@@ -122,6 +130,7 @@ public class BlockItemRegistry {
     public static final Block ACACIA_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block JUNGLE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -130,6 +139,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_JUNGLE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_ACACIA_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_CRIMSON_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_WARPED_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
@@ -140,6 +150,7 @@ public class BlockItemRegistry {
     public static final Block ACACIA_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block JUNGLE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -148,6 +159,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_ACACIA_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_JUNGLE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_CRIMSON_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_WARPED_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
@@ -158,6 +170,7 @@ public class BlockItemRegistry {
     public static final Block ACACIA_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block JUNGLE_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -166,6 +179,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_ACACIA_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_JUNGLE_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_CRIMSON_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_WARPED_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
@@ -175,6 +189,7 @@ public class BlockItemRegistry {
     public static final Block ACACIA_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block JUNGLE_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_RAW_STEM_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_RAW_STEM_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -183,6 +198,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_ACACIA_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_JUNGLE_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_CRIMSON_RAW_STEM_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_WARPED_RAW_STEM_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
@@ -192,6 +208,7 @@ public class BlockItemRegistry {
     public static final Block JUNGLE_LOG_STOOL = new LogStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block ACACIA_LOG_STOOL = new LogStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_LOG_STOOL = new LogStool(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_LOG_STOOL = new LogStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_STEM_STOOL = new LogStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_STEM_STOOL = new LogStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
@@ -201,6 +218,7 @@ public class BlockItemRegistry {
     public static final Block JUNGLE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block ACACIA_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -209,6 +227,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_JUNGLE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_ACACIA_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_CRIMSON_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_WARPED_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
@@ -218,6 +237,7 @@ public class BlockItemRegistry {
     public static final Block JUNGLE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block ACACIA_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -226,6 +246,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_JUNGLE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_ACACIA_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_CRIMSON_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_WARPED_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WHITE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
@@ -241,6 +262,7 @@ public class BlockItemRegistry {
     public static final Block JUNGLE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block ACACIA_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -249,6 +271,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_JUNGLE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_ACACIA_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_CRIMSON_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_WARPED_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
@@ -258,6 +281,7 @@ public class BlockItemRegistry {
     public static final Block JUNGLE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block ACACIA_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block WARPED_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -266,6 +290,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_JUNGLE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_ACACIA_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_CRIMSON_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_WARPED_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
@@ -298,6 +323,11 @@ public class BlockItemRegistry {
     public static final Block DARK_OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+
+    public static final Block MANGROVE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block MANGROVE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
 
     public static final Block CRIMSON_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block CRIMSON_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(WARPED_CHAIR));
@@ -338,6 +368,11 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_DARK_OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+
+    public static final Block STRIPPED_MANGROVE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_MANGROVE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
 
     public static final Block STRIPPED_CRIMSON_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_CRIMSON_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(WARPED_CHAIR));
@@ -387,6 +422,7 @@ public class BlockItemRegistry {
     public static final Block DARK_OAK_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.DARK_OAK_PLANKS).sounds(BlockSoundGroup.WOOD));
     public static final Block JUNGLE_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.JUNGLE_PLANKS).sounds(BlockSoundGroup.WOOD));
     public static final Block BIRCH_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.BIRCH_PLANKS).sounds(BlockSoundGroup.WOOD));
+    public static final Block MANGROVE_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.MANGROVE_PLANKS).sounds(BlockSoundGroup.WOOD));
     public static final Block WARPED_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.WARPED_PLANKS).sounds(BlockSoundGroup.WOOD));
     public static final Block CRIMSON_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.CRIMSON_PLANKS).sounds(BlockSoundGroup.WOOD));
 
@@ -507,6 +543,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_chair", ACACIA_CHAIR, true);
         registerFurniture("jungle_chair", JUNGLE_CHAIR, true);
         registerFurniture("dark_oak_chair", DARK_OAK_CHAIR, true);
+        registerFurniture("mangrove_chair", MANGROVE_CHAIR, true);
         registerFurniture("warped_chair", WARPED_CHAIR, true);
         registerFurniture("crimson_chair", CRIMSON_CHAIR, true);
         registerFurniture("stripped_oak_chair", STRIPPED_OAK_CHAIR, true);
@@ -515,6 +552,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_acacia_chair", STRIPPED_ACACIA_CHAIR, true);
         registerFurniture("stripped_jungle_chair", STRIPPED_JUNGLE_CHAIR, true);
         registerFurniture("stripped_dark_oak_chair", STRIPPED_DARK_OAK_CHAIR, true);
+        registerFurniture("stripped_mangrove_chair", STRIPPED_MANGROVE_CHAIR, true);
         registerFurniture("stripped_warped_chair", STRIPPED_WARPED_CHAIR, true);
         registerFurniture("stripped_crimson_chair", STRIPPED_CRIMSON_CHAIR, true);
         registerFurniture("quartz_chair", QUARTZ_CHAIR, true);
@@ -529,6 +567,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_chair_dinner", ACACIA_CHAIR_DINNER, true);
         registerFurniture("jungle_chair_dinner", JUNGLE_CHAIR_DINNER, true);
         registerFurniture("dark_oak_chair_dinner", DARK_OAK_CHAIR_DINNER, true);
+        registerFurniture("mangrove_chair_dinner", MANGROVE_CHAIR_DINNER, true);
         registerFurniture("warped_chair_dinner", WARPED_CHAIR_DINNER, true);
         registerFurniture("crimson_chair_dinner", CRIMSON_CHAIR_DINNER, true);
         registerFurniture("stripped_oak_chair_dinner", STRIPPED_OAK_CHAIR_DINNER, true);
@@ -536,6 +575,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_spruce_chair_dinner", STRIPPED_SPRUCE_CHAIR_DINNER, true);
         registerFurniture("stripped_acacia_chair_dinner", STRIPPED_ACACIA_CHAIR_DINNER, true);
         registerFurniture("stripped_jungle_chair_dinner", STRIPPED_JUNGLE_CHAIR_DINNER, true);
+        registerFurniture("stripped_mangrove_chair_dinner", STRIPPED_MANGROVE_CHAIR_DINNER, true);
         registerFurniture("stripped_dark_oak_chair_dinner", STRIPPED_DARK_OAK_CHAIR_DINNER, true);
         registerFurniture("stripped_warped_chair_dinner", STRIPPED_WARPED_CHAIR_DINNER, true);
         registerFurniture("stripped_crimson_chair_dinner", STRIPPED_CRIMSON_CHAIR_DINNER, true);
@@ -557,6 +597,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_chair_classic", ACACIA_CHAIR_CLASSIC, true);
         registerFurniture("jungle_chair_classic", JUNGLE_CHAIR_CLASSIC, true);
         registerFurniture("dark_oak_chair_classic", DARK_OAK_CHAIR_CLASSIC, true);
+        registerFurniture("mangrove_chair_classic", MANGROVE_CHAIR_CLASSIC, true);
         registerFurniture("warped_chair_classic", WARPED_CHAIR_CLASSIC, true);
         registerFurniture("crimson_chair_classic", CRIMSON_CHAIR_CLASSIC, true);
         registerFurniture("stripped_oak_chair_classic", STRIPPED_OAK_CHAIR_CLASSIC, true);
@@ -565,6 +606,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_acacia_chair_classic", STRIPPED_ACACIA_CHAIR_CLASSIC, true);
         registerFurniture("stripped_jungle_chair_classic", STRIPPED_JUNGLE_CHAIR_CLASSIC, true);
         registerFurniture("stripped_dark_oak_chair_classic", STRIPPED_DARK_OAK_CHAIR_CLASSIC, true);
+        registerFurniture("stripped_mangrove_chair_classic", STRIPPED_MANGROVE_CHAIR_CLASSIC, true);
         registerFurniture("stripped_warped_chair_classic", STRIPPED_WARPED_CHAIR_CLASSIC, true);
         registerFurniture("stripped_crimson_chair_classic", STRIPPED_CRIMSON_CHAIR_CLASSIC, true);
 
@@ -575,6 +617,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_chair_modern", ACACIA_CHAIR_MODERN, true);
         registerFurniture("jungle_chair_modern", JUNGLE_CHAIR_MODERN, true);
         registerFurniture("dark_oak_chair_modern",DARK_OAK_CHAIR_MODERN , true);
+        registerFurniture("mangrove_chair_modern", MANGROVE_CHAIR_MODERN, true);
         registerFurniture("warped_chair_modern", WARPED_CHAIR_MODERN, true);
         registerFurniture("crimson_chair_modern", CRIMSON_CHAIR_MODERN, true);
         registerFurniture("stripped_oak_chair_modern", STRIPPED_OAK_CHAIR_MODERN, true);
@@ -583,6 +626,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_acacia_chair_modern", STRIPPED_ACACIA_CHAIR_MODERN, true);
         registerFurniture("stripped_jungle_chair_modern", STRIPPED_JUNGLE_CHAIR_MODERN, true);
         registerFurniture("stripped_dark_oak_chair_modern",STRIPPED_DARK_OAK_CHAIR_MODERN, true);
+        registerFurniture("stripped_mangrove_chair_modern", STRIPPED_MANGROVE_CHAIR_MODERN, true);
         registerFurniture("stripped_warped_chair_modern", STRIPPED_WARPED_CHAIR_MODERN, true);
         registerFurniture("stripped_crimson_chair_modern", STRIPPED_CRIMSON_CHAIR_MODERN, true);
 
@@ -597,6 +641,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_table_basic", ACACIA_BASIC_TABLE, true);
         registerFurniture("jungle_table_basic", JUNGLE_BASIC_TABLE, true);
         registerFurniture("dark_oak_table_basic",DARK_OAK_BASIC_TABLE, true);
+        registerFurniture("mangrove_table_basic", MANGROVE_BASIC_TABLE, true);
         registerFurniture("crimson_table_basic", CRIMSON_BASIC_TABLE, true);
         registerFurniture("warped_table_basic", WARPED_BASIC_TABLE, true);
         registerFurniture("stripped_oak_table_basic", STRIPPED_OAK_BASIC_TABLE, true);
@@ -605,6 +650,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_acacia_table_basic", STRIPPED_ACACIA_BASIC_TABLE, true);
         registerFurniture("stripped_jungle_table_basic", STRIPPED_JUNGLE_BASIC_TABLE, true);
         registerFurniture("stripped_dark_oak_table_basic", STRIPPED_DARK_OAK_BASIC_TABLE, true);
+        registerFurniture("stripped_mangrove_table_basic", STRIPPED_MANGROVE_BASIC_TABLE, true);
         registerFurniture("stripped_crimson_table_basic", STRIPPED_CRIMSON_BASIC_TABLE, true);
         registerFurniture("stripped_warped_table_basic", STRIPPED_WARPED_BASIC_TABLE, true);
 
@@ -615,6 +661,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_table_classic", ACACIA_CLASSIC_TABLE, true);
         registerFurniture("jungle_table_classic", JUNGLE_CLASSIC_TABLE, true);
         registerFurniture("dark_oak_table_classic", DARK_OAK_CLASSIC_TABLE, true);
+        registerFurniture("mangrove_table_classic", MANGROVE_CLASSIC_TABLE, true);
         registerFurniture("crimson_table_classic", CRIMSON_CLASSIC_TABLE, true);
         registerFurniture("warped_table_classic", WARPED_CLASSIC_TABLE, true);
         registerFurniture("stripped_oak_table_classic", STRIPPED_OAK_CLASSIC_TABLE, true);
@@ -623,6 +670,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_acacia_table_classic", STRIPPED_ACACIA_CLASSIC_TABLE, true);
         registerFurniture("stripped_jungle_table_classic", STRIPPED_JUNGLE_CLASSIC_TABLE, true);
         registerFurniture("stripped_dark_oak_table_classic", STRIPPED_DARK_OAK_CLASSIC_TABLE, true);
+        registerFurniture("stripped_mangrove_table_classic", STRIPPED_MANGROVE_CLASSIC_TABLE, true);
         registerFurniture("stripped_crimson_table_classic", STRIPPED_CRIMSON_CLASSIC_TABLE, true);
         registerFurniture("stripped_warped_table_classic", STRIPPED_WARPED_CLASSIC_TABLE, true);
 
@@ -633,6 +681,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_table_log", ACACIA_LOG_TABLE, true);
         registerFurniture("jungle_table_log", JUNGLE_LOG_TABLE, true);
         registerFurniture("dark_oak_table_log", DARK_OAK_LOG_TABLE, true);
+        registerFurniture("mangrove_table_log", MANGROVE_LOG_TABLE, true);
         registerFurniture("crimson_table_log", CRIMSON_LOG_TABLE, true);
         registerFurniture("warped_table_log", WARPED_LOG_TABLE, true);
         registerFurniture("stripped_oak_table_log", STRIPPED_OAK_LOG_TABLE, true);
@@ -641,6 +690,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_acacia_table_log", STRIPPED_ACACIA_LOG_TABLE, true);
         registerFurniture("stripped_jungle_table_log", STRIPPED_JUNGLE_LOG_TABLE, true);
         registerFurniture("stripped_dark_oak_table_log", STRIPPED_DARK_OAK_LOG_TABLE, true);
+        registerFurniture("stripped_mangrove_table_log", STRIPPED_MANGROVE_LOG_TABLE, true);
         registerFurniture("stripped_crimson_table_log", STRIPPED_CRIMSON_LOG_TABLE, true);
         registerFurniture("stripped_warped_table_log", STRIPPED_WARPED_LOG_TABLE, true);
         //Raw Log Table
@@ -650,6 +700,7 @@ public class BlockItemRegistry {
         registerFurniture("spruce_raw_table_log", SPRUCE_RAW_LOG_TABLE, true);
         registerFurniture("jungle_raw_table_log", JUNGLE_RAW_LOG_TABLE, true);
         registerFurniture("dark_oak_raw_table_log", DARK_OAK_RAW_LOG_TABLE, true);
+        registerFurniture("mangrove_raw_table_log", MANGROVE_RAW_LOG_TABLE, true);
         registerFurniture("warped_raw_table_stem", WARPED_RAW_STEM_TABLE, true);
         registerFurniture("crimson_raw_table_stem", CRIMSON_RAW_STEM_TABLE, true);
         registerFurniture("stripped_oak_raw_table_log", STRIPPED_OAK_RAW_LOG_TABLE, true);
@@ -658,6 +709,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_spruce_raw_table_log", STRIPPED_SPRUCE_RAW_LOG_TABLE, true);
         registerFurniture("stripped_jungle_raw_table_log", STRIPPED_JUNGLE_RAW_LOG_TABLE, true);
         registerFurniture("stripped_dark_oak_raw_table_log", STRIPPED_DARK_OAK_RAW_LOG_TABLE, true);
+        registerFurniture("stripped_mangrove_raw_table_log", STRIPPED_MANGROVE_RAW_LOG_TABLE, true);
         registerFurniture("stripped_warped_raw_table_stem", STRIPPED_WARPED_RAW_STEM_TABLE, true);
         registerFurniture("stripped_crimson_raw_table_stem", STRIPPED_CRIMSON_RAW_STEM_TABLE, true);
 
@@ -667,6 +719,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_table_dinner", ACACIA_DINNER_TABLE, true);
         registerFurniture("jungle_table_dinner", JUNGLE_DINNER_TABLE, true);
         registerFurniture("dark_oak_table_dinner", DARK_OAK_DINNER_TABLE, true);
+        registerFurniture("mangrove_table_dinner", MANGROVE_DINNER_TABLE, true);
         registerFurniture("crimson_table_dinner", CRIMSON_DINNER_TABLE, true);
         registerFurniture("warped_table_dinner", WARPED_DINNER_TABLE, true);
         registerFurniture("stripped_oak_table_dinner", STRIPPED_OAK_DINNER_TABLE, true);
@@ -675,6 +728,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_acacia_table_dinner", STRIPPED_ACACIA_DINNER_TABLE, true);
         registerFurniture("stripped_jungle_table_dinner", STRIPPED_JUNGLE_DINNER_TABLE, true);
         registerFurniture("stripped_dark_oak_table_dinner", STRIPPED_DARK_OAK_DINNER_TABLE, true);
+        registerFurniture("stripped_mangrove_table_dinner", STRIPPED_MANGROVE_DINNER_TABLE, true);
         registerFurniture("stripped_crimson_table_dinner", STRIPPED_CRIMSON_DINNER_TABLE, true);
         registerFurniture("stripped_warped_table_dinner", STRIPPED_WARPED_DINNER_TABLE, true);
 
@@ -684,6 +738,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_log_stool", ACACIA_LOG_STOOL, true);
         registerFurniture("jungle_log_stool", JUNGLE_LOG_STOOL, true);
         registerFurniture("dark_oak_log_stool", DARK_OAK_LOG_STOOL, true);
+        registerFurniture("mangrove_log_stool", MANGROVE_LOG_STOOL, true);
         registerFurniture("crimson_stem_stool", CRIMSON_STEM_STOOL, true);
         registerFurniture("warped_stem_stool", WARPED_STEM_STOOL, true);
 
@@ -693,6 +748,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_simple_stool", ACACIA_SIMPLE_STOOL, true);
         registerFurniture("jungle_simple_stool", JUNGLE_SIMPLE_STOOL, true);
         registerFurniture("dark_oak_simple_stool", DARK_OAK_SIMPLE_STOOL, true);
+        registerFurniture("mangrove_simple_stool", MANGROVE_SIMPLE_STOOL, true);
         registerFurniture("crimson_simple_stool", CRIMSON_SIMPLE_STOOL, true);
         registerFurniture("warped_simple_stool", WARPED_SIMPLE_STOOL, true);
         registerFurniture("stripped_oak_simple_stool", STRIPPED_OAK_SIMPLE_STOOL, true);
@@ -701,6 +757,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_acacia_simple_stool", STRIPPED_ACACIA_SIMPLE_STOOL, true);
         registerFurniture("stripped_jungle_simple_stool", STRIPPED_JUNGLE_SIMPLE_STOOL, true);
         registerFurniture("stripped_dark_oak_simple_stool", STRIPPED_DARK_OAK_SIMPLE_STOOL, true);
+        registerFurniture("stripped_mangrove_simple_stool", STRIPPED_MANGROVE_SIMPLE_STOOL, true);
         registerFurniture("stripped_crimson_simple_stool", STRIPPED_CRIMSON_SIMPLE_STOOL, true);
         registerFurniture("stripped_warped_simple_stool", STRIPPED_WARPED_SIMPLE_STOOL, true);
 
@@ -710,6 +767,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_classic_stool", ACACIA_CLASSIC_STOOL, true);
         registerFurniture("jungle_classic_stool", JUNGLE_CLASSIC_STOOL, true);
         registerFurniture("dark_oak_classic_stool", DARK_OAK_CLASSIC_STOOL, true);
+        registerFurniture("mangrove_classic_stool", MANGROVE_CLASSIC_STOOL, true);
         registerFurniture("crimson_classic_stool", CRIMSON_CLASSIC_STOOL, true);
         registerFurniture("warped_classic_stool", WARPED_CLASSIC_STOOL, true);
         registerFurniture("stripped_oak_classic_stool", STRIPPED_OAK_CLASSIC_STOOL, true);
@@ -718,6 +776,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_acacia_classic_stool", STRIPPED_ACACIA_CLASSIC_STOOL, true);
         registerFurniture("stripped_jungle_classic_stool", STRIPPED_JUNGLE_CLASSIC_STOOL, true);
         registerFurniture("stripped_dark_oak_classic_stool", STRIPPED_DARK_OAK_CLASSIC_STOOL, true);
+        registerFurniture("stripped_mangrove_classic_stool", STRIPPED_MANGROVE_CLASSIC_STOOL, true);
         registerFurniture("stripped_crimson_classic_stool", STRIPPED_CRIMSON_CLASSIC_STOOL, true);
         registerFurniture("stripped_warped_classic_stool", STRIPPED_WARPED_CLASSIC_STOOL, true);
 
@@ -727,6 +786,7 @@ public class BlockItemRegistry {
         registerFurniture("acacia_modern_stool", ACACIA_MODERN_STOOL, true);
         registerFurniture("jungle_modern_stool", JUNGLE_MODERN_STOOL, true);
         registerFurniture("dark_oak_modern_stool", DARK_OAK_MODERN_STOOL, true);
+        registerFurniture("mangrove_modern_stool", MANGROVE_MODERN_STOOL, true);
         registerFurniture("crimson_modern_stool", CRIMSON_MODERN_STOOL, true);
         registerFurniture("warped_modern_stool", WARPED_MODERN_STOOL, true);
         registerFurniture("stripped_oak_modern_stool", STRIPPED_OAK_MODERN_STOOL, true);
@@ -735,6 +795,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_acacia_modern_stool", STRIPPED_ACACIA_MODERN_STOOL, true);
         registerFurniture("stripped_jungle_modern_stool", STRIPPED_JUNGLE_MODERN_STOOL, true);
         registerFurniture("stripped_dark_oak_modern_stool", STRIPPED_DARK_OAK_MODERN_STOOL, true);
+        registerFurniture("stripped_mangrove_modern_stool", STRIPPED_MANGROVE_MODERN_STOOL, true);
         registerFurniture("stripped_crimson_modern_stool", STRIPPED_CRIMSON_MODERN_STOOL, true);
         registerFurniture("stripped_warped_modern_stool", STRIPPED_WARPED_MODERN_STOOL, true);
         registerFurniture("white_modern_stool", WHITE_MODERN_STOOL, true);
@@ -775,6 +836,11 @@ public class BlockItemRegistry {
         registerFurniture("dark_oak_kitchen_cabinet", DARK_OAK_KITCHEN_CABINET, true);
         registerFurniture("dark_oak_kitchen_sink", DARK_OAK_KITCHEN_SINK, true);
 
+        registerFurniture("mangrove_kitchen_counter", MANGROVE_KITCHEN_COUNTER, true);
+        registerFurniture("mangrove_kitchen_drawer", MANGROVE_KITCHEN_DRAWER, true);
+        registerFurniture("mangrove_kitchen_cabinet", MANGROVE_KITCHEN_CABINET, true);
+        registerFurniture("mangrove_kitchen_sink", MANGROVE_KITCHEN_SINK, true);
+
         registerFurniture("crimson_kitchen_counter", CRIMSON_KITCHEN_COUNTER, true);
         registerFurniture("crimson_kitchen_drawer", CRIMSON_KITCHEN_DRAWER, true);
         registerFurniture("crimson_kitchen_cabinet", CRIMSON_KITCHEN_CABINET, true);
@@ -814,6 +880,11 @@ public class BlockItemRegistry {
         registerFurniture("stripped_dark_oak_kitchen_drawer", STRIPPED_DARK_OAK_KITCHEN_DRAWER, true);
         registerFurniture("stripped_dark_oak_kitchen_cabinet", STRIPPED_DARK_OAK_KITCHEN_CABINET, true);
         registerFurniture("stripped_dark_oak_kitchen_sink", STRIPPED_DARK_OAK_KITCHEN_SINK, true);
+
+        registerFurniture("stripped_mangrove_kitchen_counter", STRIPPED_MANGROVE_KITCHEN_COUNTER, true);
+        registerFurniture("stripped_mangrove_kitchen_drawer", STRIPPED_MANGROVE_KITCHEN_DRAWER, true);
+        registerFurniture("stripped_mangrove_kitchen_cabinet", STRIPPED_MANGROVE_KITCHEN_CABINET, true);
+        registerFurniture("stripped_mangrove_kitchen_sink", STRIPPED_MANGROVE_KITCHEN_SINK, true);
 
         registerFurniture("stripped_crimson_kitchen_counter", STRIPPED_CRIMSON_KITCHEN_COUNTER, true);
         registerFurniture("stripped_crimson_kitchen_drawer", STRIPPED_CRIMSON_KITCHEN_DRAWER, true);
@@ -905,6 +976,7 @@ public class BlockItemRegistry {
         registerBlock("jungle_herringbone_planks", JUNGLE_HERRINGBONE_PLANKS, true);
         registerBlock("acacia_herringbone_planks", ACACIA_HERRINGBONE_PLANKS, true);
         registerBlock("dark_oak_herringbone_planks", DARK_OAK_HERRINGBONE_PLANKS, true);
+        registerBlock("mangrove_herringbone_planks", MANGROVE_HERRINGBONE_PLANKS, true);
         registerBlock("crimson_herringbone_planks", CRIMSON_HERRINGBONE_PLANKS, true);
         registerBlock("warped_herringbone_planks", WARPED_HERRINGBONE_PLANKS, true);
 
