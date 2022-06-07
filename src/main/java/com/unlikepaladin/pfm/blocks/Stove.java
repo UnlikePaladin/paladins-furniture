@@ -55,8 +55,6 @@ public class Stove extends SmokerBlock {
             case EAST:
             default:
                 return rotateShape(Direction.NORTH, Direction.WEST, STOVE);
-
-
         }
     }
     @Override
@@ -83,7 +81,7 @@ public class Stove extends SmokerBlock {
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new StoveBlockEntity(pos, state);
+        return new StoveBlockEntity(PaladinFurnitureMod.STOVE_BLOCK_ENTITY, pos, state);
     }
 
     @Override

@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/stripped_oak_kitchen_counter/stripped_oak_kitchen_counter_oven","y":180,"uvlock":"true"},
+    "facing=east":{"model":"pfm:block/stripped_oak_kitchen_counter/stripped_oak_kitchen_counter_oven","y":270,"uvlock":"true"},
+    "facing=south":{"model":"pfm:block/stripped_oak_kitchen_counter/stripped_oak_kitchen_counter_oven","y":0,"uvlock":"true"},
+    "facing=west":{"model":"pfm:block/stripped_oak_kitchen_counter/stripped_oak_kitchen_counter_oven","y":90,"uvlock":"true"}
+
+}
+
+}

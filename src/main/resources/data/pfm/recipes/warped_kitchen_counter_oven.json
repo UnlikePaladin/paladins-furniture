@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:warped_planks"
+    },
+    "Y": {
+      "item": "minecraft:furnace"
+    },
+    "S": {
+      "item": "minecraft:warped_stem"
+    }
+  },
+  "result": {
+    "item": "pfm:warped_kitchen_counter_oven",
+    "count": 1
+  }
+}

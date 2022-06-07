@@ -43,11 +43,7 @@ public class ArmChairDyeable extends ArmChair implements DyeableFurniture {
         stateManager.add(COLORID);
         stateManager.add(DYED);
         stateManager.add(SHAPE);
-
-
     }
-
-
 
     protected static final VoxelShape STANDARD = VoxelShapes.union(createCuboidShape(12, 0, 12 ,14.5, 3, 14.5),createCuboidShape(12, 0, 1.5,14.5, 3, 4), createCuboidShape(1, 0, 1.5, 3.5, 3, 4), createCuboidShape(1, 0, 12, 3.5, 3, 14.5), createCuboidShape(6.6, 2, 13, 16.3, 13.71, 16), createCuboidShape(6.6, 2, 0, 16.3, 13.71, 3), createCuboidShape(0.3, 2, 3, 16.3, 10.51, 13), createCuboidShape(0.3, 10.5, 3, 5.3, 25.51, 13), createCuboidShape(0.3, 2, 13, 6.6, 25.51, 16), createCuboidShape(0.3, 2, 0, 6.6, 25.51, 3));
     protected static final VoxelShape MIDDLE = VoxelShapes.union(createCuboidShape(0, 2, 0.3,16, 9.51, 16),createCuboidShape(0, 9.5, 0.3,16, 25.51, 5.3), createCuboidShape(0, 9.5, 5.3, 16, 10.5, 16));
@@ -136,8 +132,6 @@ public class ArmChairDyeable extends ArmChair implements DyeableFurniture {
                     return rotateShape(Direction.WEST, Direction.SOUTH, INNER);
             default:
                 return STANDARD;
-
-
         }
     }
 
@@ -211,13 +205,13 @@ public class ArmChairDyeable extends ArmChair implements DyeableFurniture {
     }
 
 
-    private static ArmChairShape getShape(BlockState state, BlockView world, BlockPos pos) {
+    private ArmChairShape getShape(BlockState state, BlockView world, BlockPos pos) {
         Direction direction3;
         Object direction2;
         Direction direction = state.get(FACING);
         BlockState blockState = world.getBlockState(pos.offset(direction));
-        boolean right = canConnect(world, pos, state.get(FACING).rotateYCounterclockwise(), state.get(FACING));
-        boolean left = canConnect(world, pos, state.get(FACING).rotateYClockwise(), state.get(FACING));
+        boolean right = this.canConnect(world, pos, state.get(FACING).rotateYCounterclockwise(), state.get(FACING));
+        boolean left = this.canConnect(world, pos, state.get(FACING).rotateYClockwise(), state.get(FACING));
         if (ArmChairDyeable.isArmChair(blockState) && ((Direction)(direction2 = blockState.get(FACING))).getAxis() != state.get(FACING).getAxis() && ArmChairDyeable.isDifferentOrientation(state, world, pos, ((Direction)direction2).getOpposite())) {
             if (direction2 == direction.rotateYCounterclockwise()) {
                 return ArmChairShape.OUTER_LEFT;
@@ -243,12 +237,10 @@ public class ArmChairDyeable extends ArmChair implements DyeableFurniture {
         return ArmChairShape.STRAIGHT;
     }
 
-    private static boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
+    public boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
-        boolean canConnect = (state.getBlock() instanceof ArmChairDyeable);
-
-        return canConnect;
+        return (state.getBlock().equals(BlockItemRegistry.ARM_CHAIR_STANDARD));
     }
 
     private static boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
