@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/kitchen_counter/kitchen_stovetop","y":180,"uvlock":"true"},
+    "facing=east":{"model":"pfm:block/kitchen_counter/kitchen_stovetop","y":270,"uvlock":"true"},
+    "facing=south":{"model":"pfm:block/kitchen_counter/kitchen_stovetop","y":0,"uvlock":"true"},
+    "facing=west":{"model":"pfm:block/kitchen_counter/kitchen_stovetop","y":90,"uvlock":"true"}
+
+}
+
+}

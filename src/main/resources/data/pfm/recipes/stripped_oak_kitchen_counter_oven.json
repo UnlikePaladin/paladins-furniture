@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX" 
+],
+   "key": {
+    "X": {
+      "item": "minecraft:stripped_oak_log"
+    },
+    "Y": {
+      "item": "minecraft:furnace"
+    },
+    "S": {
+      "item": "minecraft:oak_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_oak_kitchen_counter_oven",
+    "count": 1
+  }
+}
