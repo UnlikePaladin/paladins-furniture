@@ -112,6 +112,13 @@ public class ClassicTable extends Block {
     final static VoxelShape table_classic_two = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(13, 0, 12,15, 15, 14), createCuboidShape(13, 0, 2, 15, 15, 4));
     final static VoxelShape table_classic_one = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(13, 0, 13, 15, 15, 15));
 
+    final static VoxelShape table_classic_one_west = rotateShape(Direction.NORTH, Direction.WEST, table_classic_one);
+    final static VoxelShape table_classic_middle_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_classic_middle);
+    final static VoxelShape table_classic_one_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_classic_one);
+    final static VoxelShape table_classic_one_east = rotateShape(Direction.NORTH, Direction.EAST, table_classic_one);
+    final static VoxelShape table_classic_two_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_classic_two);
+    final static VoxelShape table_classic_two_west = rotateShape(Direction.NORTH, Direction.WEST, table_classic_two);
+    final static VoxelShape table_classic_two_east = rotateShape(Direction.NORTH, Direction.EAST, table_classic_two);
     //Cursed I know
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
 
@@ -123,33 +130,33 @@ public class ClassicTable extends Block {
         if ( !(north || south || west || east)) {
             return table_classic;
         }
-            if (south && west && !(north || east)) {
-                return rotateShape(Direction.NORTH, Direction.WEST, table_classic_one);
-            }
-                if (east && west && south && !north) {
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, table_classic_middle);
-                }
-                     if (north && west && south && !east) {
-                        return table_classic_middle;
-                    }
+        if (south && west && !(north || east)) {
+            return table_classic_one_west;
+        }
+        if (east && west && south && !north) {
+            return table_classic_middle_south;
+        }
+         if (north && west && south && !east) {
+            return table_classic_middle;
+        }
 
-                     if (north && west && east && !south) {
-                            return table_classic_middle;
-                        }
+         if (north && west && east && !south) {
+            return table_classic_middle;
+        }
 
-                    if (north && south && east && !west) {
-                            return table_classic_middle;
-                        }
+        if (north && south && east && !west) {
+            return table_classic_middle;
+        }
 
-                    if ((north && west) && !(east || south)) {
-                            return table_classic_one;
-                        }
+        if ((north && west) && !(east || south)) {
+            return table_classic_one;
+        }
 
-                 if ((east && south) && !(west || north)) {
-                     return rotateShape(Direction.NORTH, Direction.SOUTH, table_classic_one);
-                }
+        if ((east && south) && !(west || north)) {
+            return table_classic_one_south;
+        }
         if ((east && north) && !(west || south)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_classic_one);
+            return table_classic_one_east;
         }
         if (east && north && west && south) {
             return table_classic_middle;
@@ -161,7 +168,7 @@ public class ClassicTable extends Block {
             return table_classic_middle;
         }
         if (east && !(north || south || west)) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_classic_two);
+            return table_classic_two_south;
         }
 
         if (west && !(north || south || east)) {
@@ -169,15 +176,15 @@ public class ClassicTable extends Block {
         }
 
         if (south && !(north || west || east)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_classic_two);
+            return table_classic_two_west;
         }
         if (north && !(south || west || east)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_classic_two);
+            return table_classic_two_east;
         }
-        else {
-                            return VoxelShapes.fullCube();
-                        }
-
+        else
+        {
+            return VoxelShapes.fullCube();
+        }
 
     }
 }

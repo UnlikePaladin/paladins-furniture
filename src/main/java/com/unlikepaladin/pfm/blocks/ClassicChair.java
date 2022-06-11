@@ -25,10 +25,7 @@ public class ClassicChair extends BasicChair {
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing().getOpposite());
     }
-    protected static final VoxelShape FACE_WEST = VoxelShapes.union(createCuboidShape(2, 9, 2.05 ,4, 24, 13.91), createCuboidShape(3.8, 7.86, 1.97, 15, 10.26, 13.97), createCuboidShape(2, 0, 11.9, 4, 9, 13.9), createCuboidShape(12, 0, 11.9, 14, 9, 13.9), createCuboidShape(2, 0, 2.05, 4, 9, 4.05), createCuboidShape(12, 0, 2.05, 14, 9, 4.05));
     @SuppressWarnings("deprecated")
-
-
     /**
      * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/
      */
@@ -45,24 +42,19 @@ public class ClassicChair extends BasicChair {
         return buffer[0];
     }
 
-
+    protected static final VoxelShape FACE_WEST = VoxelShapes.union(createCuboidShape(2, 9, 2.05 ,4, 24, 13.91), createCuboidShape(3.8, 7.86, 1.97, 15, 10.26, 13.97), createCuboidShape(2, 0, 11.9, 4, 9, 13.9), createCuboidShape(12, 0, 11.9, 14, 9, 13.9), createCuboidShape(2, 0, 2.05, 4, 9, 4.05), createCuboidShape(12, 0, 2.05, 14, 9, 4.05));
+    protected static final VoxelShape FACE_EAST = rotateShape(Direction.WEST, Direction.EAST, FACE_WEST);
+    protected static final VoxelShape FACE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, FACE_WEST);
+    protected static final VoxelShape FACE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, FACE_WEST);
     @Override
-
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        switch(dir) {
-            case WEST:
-                return FACE_WEST;
-            case NORTH:
-                return rotateShape(Direction.WEST, Direction.NORTH, FACE_WEST);
-            case SOUTH:
-                return rotateShape(Direction.WEST, Direction.SOUTH, FACE_WEST);
-                case EAST:
-            default:
-                return rotateShape(Direction.WEST, Direction.EAST, FACE_WEST);
-
-
-        }
+        return switch (dir) {
+            case WEST -> FACE_WEST;
+            case NORTH -> FACE_NORTH;
+            case SOUTH -> FACE_SOUTH;
+            default -> FACE_EAST;
+        };
     }
 
 

@@ -74,10 +74,10 @@ public class PendantBlock extends PowerableBlock {
         }
     }
 
-    private static VoxelShape single = VoxelShapes.union(createCuboidShape(4, 0, 4,12, 7, 12),createCuboidShape(5, 5, 5,11, 9, 11),createCuboidShape(7.5, 9, 7.5,8.5, 15.5, 8.5),createCuboidShape(6.5, 15.5, 6.5,9.5, 16, 9.5));
-    private static VoxelShape up = VoxelShapes.union(createCuboidShape(4, 0, 4,12, 7, 12),createCuboidShape(5, 5, 5,11, 9, 11),createCuboidShape(7.5, 9, 7.5,8.5, 16, 8.5));
-    private static VoxelShape middle = createCuboidShape(7.5, 0, 7.5,8.5, 16, 8.5);
-    private static VoxelShape down = VoxelShapes.union(createCuboidShape(7.5, 0, 7.5,8.5, 15.5, 8.5),createCuboidShape(6.5, 15.5, 6.5,9.5, 16, 9.5));
+    private static final VoxelShape single = VoxelShapes.union(createCuboidShape(4, 0, 4,12, 7, 12),createCuboidShape(5, 5, 5,11, 9, 11),createCuboidShape(7.5, 9, 7.5,8.5, 15.5, 8.5),createCuboidShape(6.5, 15.5, 6.5,9.5, 16, 9.5));
+    private static final VoxelShape up = VoxelShapes.union(createCuboidShape(4, 0, 4,12, 7, 12),createCuboidShape(5, 5, 5,11, 9, 11),createCuboidShape(7.5, 9, 7.5,8.5, 16, 8.5));
+    private static final VoxelShape middle = createCuboidShape(7.5, 0, 7.5,8.5, 16, 8.5);
+    private static final VoxelShape down = VoxelShapes.union(createCuboidShape(7.5, 0, 7.5,8.5, 15.5, 8.5),createCuboidShape(6.5, 15.5, 6.5,9.5, 16, 9.5));
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
     if (state.get(UP) && state.get(DOWN)) {

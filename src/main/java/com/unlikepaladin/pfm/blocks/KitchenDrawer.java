@@ -35,7 +35,7 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     private final BlockState baseBlockState;
     public KitchenDrawer(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT).with(UP, false).with(DOWN, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
     }
@@ -62,13 +62,12 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
         stateManager.add(SHAPE);
+        stateManager.add(UP);
+        stateManager.add(DOWN);
     }
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
-
-
-
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -109,7 +108,6 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
         return buffer[0];
     }
 
-
     protected static final VoxelShape STRAIGHT = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 1, 12), createCuboidShape(0, 1, 0,16, 14, 13),createCuboidShape(0, 14, 0,16, 16, 16), createCuboidShape(1, 8, 12,15, 13, 14), createCuboidShape(1, 2, 12, 15, 7, 14), createCuboidShape(6, 4, 14, 10, 5, 15), createCuboidShape(6, 10, 14, 10, 11, 15));
     protected static final VoxelShape STRAIGHT_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 1, 12), createCuboidShape(0, 1, 0,16, 14, 13), createCuboidShape(6, 10, 19, 10, 11, 20), createCuboidShape(1, 8, 13, 15, 13, 19), createCuboidShape(0, 14, 0, 16, 16, 16),createCuboidShape(1, 2, 12, 15, 7, 14), createCuboidShape(6, 4, 14, 10, 5, 15));
     protected static final VoxelShape OUTER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,12, 1, 12),createCuboidShape(0, 1, 0,13, 14, 13),createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(5, 10, 19,8, 11, 20),createCuboidShape(1, 8, 13,12, 13, 19),createCuboidShape(1, 2, 12,12, 7, 14),createCuboidShape(5, 4, 14,8, 5, 15),createCuboidShape(12, 8, 1,14, 13, 12),createCuboidShape(12, 2, 1,14, 7, 12),createCuboidShape(14, 4, 5,15, 5, 8),createCuboidShape(14, 10, 5,15, 11, 8));
@@ -119,138 +117,476 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     protected static final VoxelShape LEFT_EDGE = VoxelShapes.union(createCuboidShape(2,0,0,16, 1, 12),createCuboidShape(2,1,0,16, 14, 13),createCuboidShape(0,0,0,2, 14, 16),createCuboidShape(0,14,0,16, 16, 16),createCuboidShape(3,8,12,15, 13, 14),createCuboidShape(3, 2, 12,15, 7, 14),createCuboidShape(8,4,14,11, 5, 15),createCuboidShape(8, 10, 14,11, 11, 15));
     protected static final VoxelShape RIGHT_EDGE_OPEN =  VoxelShapes.union(createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(14, 0, 0,16, 14, 16),createCuboidShape(0, 0, 0,14, 1, 12),createCuboidShape(0, 1, 0,14, 14, 13),createCuboidShape(6, 10, 19,10, 11, 20),createCuboidShape(1, 8, 13,13, 13, 19),createCuboidShape(1, 2, 12,13, 7, 14),createCuboidShape(6, 4, 14,10, 5, 15));
     protected static final VoxelShape LEFT_EDGE_OPEN = VoxelShapes.union(createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(0, 0, 0,2, 14, 16),createCuboidShape(2, 0, 0,16, 1, 12),createCuboidShape(2, 1, 0,16, 14, 13),createCuboidShape(8, 10, 19,12, 11, 20),createCuboidShape(3, 8, 13,15, 13, 19),createCuboidShape(3, 2, 12,15, 7, 14),createCuboidShape(8, 4, 14,12, 5, 15));
+
+    protected static final VoxelShape STRAIGHT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT);
+    protected static final VoxelShape STRAIGHT_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT_OPEN);
+    protected static final VoxelShape STRAIGHT_EAST = rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT);
+    protected static final VoxelShape STRAIGHT_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT_OPEN);
+    protected static final VoxelShape STRAIGHT_WEST = rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT);
+    protected static final VoxelShape STRAIGHT_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT_OPEN);
+    protected static final VoxelShape INNER_CORNER_WEST = rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
+    protected static final VoxelShape INNER_CORNER_EAST = rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
+    protected static final VoxelShape INNER_CORNER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
+    protected static final VoxelShape OUTER_CORNER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
+    protected static final VoxelShape OUTER_CORNER_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER_OPEN);
+    protected static final VoxelShape OUTER_CORNER_EAST = rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
+    protected static final VoxelShape OUTER_CORNER_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER_OPEN);
+    protected static final VoxelShape OUTER_CORNER_WEST = rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
+    protected static final VoxelShape OUTER_CORNER_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER_OPEN);
+    protected static final VoxelShape LEFT_EDGE_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE_OPEN);
+    protected static final VoxelShape LEFT_EDGE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE);
+    protected static final VoxelShape LEFT_EDGE_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE_OPEN);
+    protected static final VoxelShape LEFT_EDGE_WEST =  rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE);
+    protected static final VoxelShape LEFT_EDGE_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE_OPEN);
+    protected static final VoxelShape LEFT_EDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE_OPEN);
+    protected static final VoxelShape RIGHT_EDGE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE_OPEN);
+    protected static final VoxelShape RIGHT_EDGE_WEST =  rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE_OPEN);
+    protected static final VoxelShape RIGHT_EDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
+
+    protected static final VoxelShape MIDDLE = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 13),createCuboidShape(13, 2, 14,14, 6, 15),createCuboidShape(1, 1, 13,15, 15, 14));
+    protected static final VoxelShape MIDDLE_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 13),createCuboidShape(1, 1, 13,2, 15, 27),createCuboidShape(0, 2, 25,1, 6, 26));
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,13, 16, 13),createCuboidShape(1, 2, 12.75,2, 15, 23.75),createCuboidShape(0, 2.5, 21.75,1, 6.5, 22.75),createCuboidShape(13, 2, 1,14, 15, 12),createCuboidShape(14, 2.5, 10,15, 6.5, 11));
+    protected static final VoxelShape MIDDLE_OUTER_CORNER = VoxelShapes.union(createCuboidShape(0, 0, 0,13, 16, 13),createCuboidShape(13, 2, 1,14, 15, 12),createCuboidShape(14, 2.5, 10,15, 6.5, 11),createCuboidShape(1, 2, 12,12, 15, 14),createCuboidShape(10, 2.5, 14,11, 6.5, 15));
+    protected static final VoxelShape MIDDLE_INNER_CORNER = VoxelShapes.union(createCuboidShape(3, 0, 13,16, 16, 16),createCuboidShape(0, 0, 0,16, 16, 13),createCuboidShape(2, 1, 14,3, 15, 16),createCuboidShape(0, 1, 13,3, 15, 14));
+    protected static final VoxelShape MIDDLE_INNER_CORNER_WEST =  rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_INNER_CORNER);
+    protected static final VoxelShape MIDDLE_INNER_CORNER_EAST =  rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_INNER_CORNER);
+    protected static final VoxelShape MIDDLE_INNER_CORNER_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_INNER_CORNER);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_WEST =  rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_OUTER_CORNER);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_EAST =  rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_OUTER_CORNER);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_OUTER_CORNER);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN_WEST =  rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_OUTER_CORNER_OPEN);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN_EAST =  rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_OUTER_CORNER_OPEN);
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_OUTER_CORNER_OPEN);
+    protected static final VoxelShape MIDDLE_WEST = rotateShape(Direction.NORTH, Direction.WEST, MIDDLE);
+    protected static final VoxelShape MIDDLE_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_OPEN);
+    protected static final VoxelShape MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MIDDLE);
+    protected static final VoxelShape MIDDLE_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_OPEN);
+    protected static final VoxelShape MIDDLE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE);
+    protected static final VoxelShape MIDDLE_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_OPEN);
+
+    protected static final VoxelShape BOTTOM = VoxelShapes.union(createCuboidShape(0, 1, 0,16, 16, 13),createCuboidShape(0, 0, 0,16, 1, 12),createCuboidShape(13, 2, 14,14, 6, 15),createCuboidShape(1, 1, 13,15, 15, 14));
+    protected static final VoxelShape BOTTOM_OPEN = VoxelShapes.union(createCuboidShape(0, 1, 0,16, 16, 13),createCuboidShape(0, 0, 0,16, 1, 12),createCuboidShape(1, 1, 13,2, 15, 27),createCuboidShape(0, 2, 25,1, 6, 26));
+    protected static final VoxelShape BOTTOM_OUTER_CORNER = VoxelShapes.union(createCuboidShape(0, 1, 0,13, 16, 13),createCuboidShape(13, 2, 1,14, 15, 12),createCuboidShape(14, 2.5, 10,15, 6.5, 11),createCuboidShape(1, 2, 12,12, 15, 14),createCuboidShape(10, 2.5, 14,11, 6.5, 15),createCuboidShape(0, 0, 0,12, 1, 12));
+    protected static final VoxelShape BOTTOM_OUTER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(0, 1, 0,13, 16, 13),createCuboidShape(1, 2, 12.75,2, 15, 23.75),createCuboidShape(0, 2.5, 21.75,1, 6.5, 22.75),createCuboidShape(13, 2, 1,14, 15, 12),createCuboidShape(14, 2.5, 10,15, 6.5, 11),createCuboidShape(14, 2.5, 10,15, 6.5, 11));
+    protected static final VoxelShape BOTTOM_INNER_CORNER = VoxelShapes.union(createCuboidShape(3, 1, 13,16, 16, 16),createCuboidShape(0, 1, 0,16, 16, 13),createCuboidShape(0, 0, 0,16, 1, 12),createCuboidShape(4, 0, 12,16, 1, 16),createCuboidShape(2, 1, 14,3, 15, 16),createCuboidShape(0, 1, 13,3, 15, 14));
+    protected static final VoxelShape BOTTOM_INNER_CORNER_WEST =  rotateShape(Direction.NORTH, Direction.WEST, BOTTOM_INNER_CORNER);
+    protected static final VoxelShape BOTTOM_INNER_CORNER_EAST =  rotateShape(Direction.NORTH, Direction.EAST, BOTTOM_INNER_CORNER);
+    protected static final VoxelShape BOTTOM_INNER_CORNER_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM_INNER_CORNER);
+    protected static final VoxelShape BOTTOM_OUTER_CORNER_WEST =  rotateShape(Direction.NORTH, Direction.WEST, BOTTOM_OUTER_CORNER);
+    protected static final VoxelShape BOTTOM_OUTER_CORNER_EAST =  rotateShape(Direction.NORTH, Direction.EAST, BOTTOM_OUTER_CORNER);
+    protected static final VoxelShape BOTTOM_OUTER_CORNER_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM_OUTER_CORNER);
+    protected static final VoxelShape BOTTOM_OUTER_CORNER_OPEN_WEST =  rotateShape(Direction.NORTH, Direction.WEST, BOTTOM_OUTER_CORNER_OPEN);
+    protected static final VoxelShape BOTTOM_OUTER_CORNER_OPEN_EAST =  rotateShape(Direction.NORTH, Direction.EAST, BOTTOM_OUTER_CORNER_OPEN);
+    protected static final VoxelShape BOTTOM_OUTER_CORNER_OPEN_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM_OUTER_CORNER_OPEN);
+    protected static final VoxelShape BOTTOM_WEST = rotateShape(Direction.NORTH, Direction.WEST, BOTTOM);
+    protected static final VoxelShape BOTTOM_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, BOTTOM_OPEN);
+    protected static final VoxelShape BOTTOM_EAST = rotateShape(Direction.NORTH, Direction.EAST, BOTTOM);
+    protected static final VoxelShape BOTTOM_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, BOTTOM_OPEN);
+    protected static final VoxelShape BOTTOM_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM);
+    protected static final VoxelShape BOTTOM_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM_OPEN);
     @Override
-        public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         Boolean open = state.get(OPEN);
         CounterShape shape = state.get(SHAPE);
+        boolean up = state.get(UP);
+        boolean down = state.get(DOWN);
+        if (down) {
+            switch (shape) {
+                case INNER_LEFT: switch (dir) {
+                    case NORTH -> {
+                            return MIDDLE_INNER_CORNER_WEST;
+                    }
+                    case SOUTH -> {
+                        return MIDDLE_INNER_CORNER_EAST;
+                    }
+                    case WEST -> {
+                        return MIDDLE_INNER_CORNER_SOUTH;
+                    }
+                    default -> {
+                        return MIDDLE_INNER_CORNER;
+                    }
+                }
+                case INNER_RIGHT: switch (dir) {
+                    case NORTH -> {
+                        return MIDDLE_INNER_CORNER;
+                    }
+                    case SOUTH -> {
+                        return MIDDLE_INNER_CORNER_SOUTH;
+                    }
+                    case WEST -> {
+                        return MIDDLE_INNER_CORNER_WEST;
+                    }
+                    default -> {
+                        return MIDDLE_INNER_CORNER_EAST;
+                    }
+                }
+                case OUTER_RIGHT: switch (dir) {
+                    case NORTH -> {
+                        if (open)
+                        {
+                            return MIDDLE_OUTER_CORNER_OPEN_EAST;
+                        }
+                        return MIDDLE_OUTER_CORNER_EAST;
+                    }
+                    case SOUTH -> {
+                        if (open)
+                        {
+                            return MIDDLE_OUTER_CORNER_OPEN_WEST;
+                        }
+                        return MIDDLE_OUTER_CORNER_WEST;
+                    }
+                    case WEST -> {
+                        if (open)
+                        {
+                            return MIDDLE_OUTER_CORNER_OPEN;
+                        }
+                        return MIDDLE_OUTER_CORNER;
+                    }
+                    default -> {
+                        if (open)
+                        {
+                            return MIDDLE_OUTER_CORNER_OPEN_SOUTH;
+                        }
+                        return MIDDLE_OUTER_CORNER_SOUTH;
+                    }
+                }
+                case OUTER_LEFT: switch (dir) {
+                    case NORTH -> {
+                        if (open)
+                        {
+                            return MIDDLE_OUTER_CORNER_OPEN;
+                        }
+                        return MIDDLE_OUTER_CORNER;
+                    }
+                    case SOUTH -> {
+                        if (open)
+                        {
+                            return MIDDLE_OUTER_CORNER_OPEN_SOUTH;
+                        }
+                        return MIDDLE_OUTER_CORNER_SOUTH;
+                    }
+                    case WEST -> {
+                        if (open)
+                        {
+                            return MIDDLE_OUTER_CORNER_OPEN_WEST;
+                        }
+                        return MIDDLE_OUTER_CORNER_WEST;
+                    }
+                    default -> {
+                        if (open)
+                        {
+                            return MIDDLE_OUTER_CORNER_OPEN_EAST;
+                        }
+                        return MIDDLE_OUTER_CORNER_EAST;
+                    }
+                }
+                default: switch (dir) {
+                    case NORTH -> {
+                        if(open){
+                            return MIDDLE_OPEN;
+                        }
+                        return MIDDLE;
+                    }
+                    case SOUTH -> {
+                        if (open) {
+                            return MIDDLE_OPEN_SOUTH;
+                        }
+                        return MIDDLE_SOUTH;
+                    }
+                    case WEST -> {
+                        if (open){
+                            return MIDDLE_OPEN_WEST;
+                        }
+                        return MIDDLE_WEST;
+                    }
+                    default -> {
+                        if (open) {
+                            return MIDDLE_OPEN_EAST;
+                        }
+                        return MIDDLE_EAST;
+                    }
+                }
+            }
+        } else if (up) {
+            switch (shape) {
+                case OUTER_RIGHT: switch (dir) {
+                    case NORTH -> {
+                        if (open) {
+                            return BOTTOM_OUTER_CORNER_OPEN_EAST;
+                        }
+                        return BOTTOM_OUTER_CORNER_EAST;
+                    }
+                    case SOUTH -> {
+                        if (open)
+                        {
+                            return BOTTOM_OUTER_CORNER_OPEN_WEST;
+                        }
+                        return BOTTOM_OUTER_CORNER_WEST;
+                    }
+                    case WEST -> {
+                        if (open)
+                        {
+                            return BOTTOM_OUTER_CORNER_OPEN;
+                        }
+                        return BOTTOM_OUTER_CORNER;
+                    }
+                    default -> {
+                        if (open)
+                        {
+                            return BOTTOM_OUTER_CORNER_OPEN_SOUTH;
+                        }
+                        return BOTTOM_OUTER_CORNER_SOUTH;
+                    }
+                }
+                case OUTER_LEFT: switch (dir) {
+                    case NORTH -> {
+                        if (open)
+                        {
+                            return BOTTOM_OUTER_CORNER_OPEN;
+                        }
+                        return BOTTOM_OUTER_CORNER;
+                    }
+                    case WEST -> {
+                        if (open)
+                        {
+                            return BOTTOM_OUTER_CORNER_OPEN_WEST;
+                        }
+                        return BOTTOM_OUTER_CORNER_WEST;
+                    }
+                    case SOUTH -> {
+                        if (open)
+                        {
+                            return BOTTOM_OUTER_CORNER_OPEN_SOUTH;
+                        }
+                        return BOTTOM_OUTER_CORNER_SOUTH;
+                    }
+                    default -> {
+                        if (open)
+                        {
+                            return BOTTOM_OUTER_CORNER_OPEN_EAST;
+                        }
+                        return BOTTOM_OUTER_CORNER_EAST;
+                    }
+                }
+                case INNER_LEFT: switch (dir) {
+                    case NORTH -> {
+                        return BOTTOM_INNER_CORNER_WEST;
+                    }
+                    case SOUTH -> {
+                        return BOTTOM_INNER_CORNER_EAST;
+                    }
+                    case WEST -> {
+                        return BOTTOM_INNER_CORNER_SOUTH;
+                    }
+                    default -> {
+                        return BOTTOM_INNER_CORNER;
+                    }
+                }
+                case INNER_RIGHT: switch (dir) {
+                    case NORTH -> {
+                        return BOTTOM_INNER_CORNER;
+                    }
+                    case SOUTH -> {
+                        return BOTTOM_INNER_CORNER_SOUTH;
+                    }
+                    case WEST -> {
+                        return BOTTOM_INNER_CORNER_WEST;
+                    }
+                    default -> {
+                        return BOTTOM_INNER_CORNER_EAST;
+                    }
+                }
+                default: switch (dir) {
+                    case NORTH -> {
+                        if (open)
+                        {
+                            return BOTTOM_OPEN;
+                        }
+                        return BOTTOM;
+                    }
+                    case SOUTH -> {
+                        if (open)
+                        {
+                            return BOTTOM_OPEN_SOUTH;
+                        }
+                        return BOTTOM_SOUTH;
+                    }
+                    case WEST -> {
+                        if (open)
+                        {
+                            return BOTTOM_OPEN_WEST;
+                        }
+                        return BOTTOM_WEST;
+                    }
+                    default -> {
+                        if (open)
+                        {
+                            return BOTTOM_OPEN_EAST;
+                        }
+                        return BOTTOM_EAST;
+                    }
+                }
+            }
+        }
+
         switch(shape) {
             case STRAIGHT:
-                if(dir.equals(Direction.NORTH))
-                    if (open)
-                        return STRAIGHT_OPEN;
-                    else
-                        return STRAIGHT;
-                else if (dir.equals(Direction.SOUTH))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT);
-                else if (dir.equals(Direction.EAST))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT);
-                else
-                if(open)
-                    return rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT_OPEN);
-                else
-                    return rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT);
+                 switch(dir) {
+                    case NORTH -> {
+                        if (open) {
+                           return STRAIGHT_OPEN;
+                        }
+                            return STRAIGHT;
+                    }
+                     case SOUTH -> {
+                         if (open) {
+                             return STRAIGHT_OPEN_SOUTH;
+                         }
+                         return STRAIGHT_SOUTH;
+                     }
+                     case EAST -> {
+                         if (open) {
+                             return STRAIGHT_OPEN_EAST;
+                         }
+                         return STRAIGHT_EAST;
+                     }
+                     default -> {
+                         if (open) {
+                             return STRAIGHT_OPEN_WEST;
+                         }
+                         return STRAIGHT_WEST;
+                     }
+                }
 
             case INNER_LEFT:
-                if(dir.equals(Direction.NORTH))
-                        return rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
-                else if (dir.equals(Direction.SOUTH))
-                        return rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
-                else if (dir.equals(Direction.EAST))
-                        return INNER_CORNER;
-                else
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
+                switch (dir) {
+                    case NORTH -> {return INNER_CORNER_WEST;}
+                    case SOUTH -> {return INNER_CORNER_EAST;}
+                    case EAST ->  {return INNER_CORNER;}
+                    default -> {return INNER_CORNER_SOUTH;}
+                }
+
             case INNER_RIGHT:
-                if(dir.equals(Direction.NORTH))
-                        return INNER_CORNER;
-                else if (dir.equals(Direction.SOUTH))
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
-                else if (dir.equals(Direction.EAST))
-                        return rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
-                else
-                    return rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
+                switch (dir) {
+                    case NORTH -> {return INNER_CORNER;}
+                    case SOUTH -> {return INNER_CORNER_SOUTH;}
+                    case EAST ->  {return INNER_CORNER_EAST;}
+                    default -> {return INNER_CORNER_WEST;}
+                }
             case OUTER_LEFT:
-                if(dir.equals(Direction.NORTH))
-                    if (open)
-                        return OUTER_CORNER_OPEN;
-                    else
+                switch (dir) {
+                    case NORTH -> {
+                        if (open) {
+                            return OUTER_CORNER_OPEN;
+                        }
                         return OUTER_CORNER;
-                else if (dir.equals(Direction.SOUTH))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
-                else if (dir.equals(Direction.EAST))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
-                else
-                if (open)
-                    return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER_OPEN);
-                else
-                    return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
+                    }
+                    case SOUTH -> {
+                        if (open) {
+                            return OUTER_CORNER_OPEN_SOUTH;
+                        }
+                        return OUTER_CORNER_SOUTH;
+                    }
+                    case EAST -> {
+                        if (open) {
+                            return OUTER_CORNER_OPEN_EAST;
+                        }
+                        return OUTER_CORNER_EAST;
+                    }
+                    default -> {
+                        if (open) {
+                            return OUTER_CORNER_OPEN_WEST;
+                        }
+                        return OUTER_CORNER_WEST;
+                    }
+                }
             case OUTER_RIGHT:
-                if(dir.equals(Direction.NORTH))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
-                else if (dir.equals(Direction.SOUTH))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
-                else if (dir.equals(Direction.EAST))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
-                else
-                if (open)
-                    return OUTER_CORNER_OPEN;
-                else
-                    return OUTER_CORNER;
+                switch (dir) {
+                    case NORTH -> {
+                        if (open) {
+                            return OUTER_CORNER_OPEN_EAST;
+                        }
+                        return OUTER_CORNER_EAST;
+                    }
+                    case SOUTH -> {
+                        if (open) {
+                            return OUTER_CORNER_OPEN_WEST;
+                        }
+                        return OUTER_CORNER_WEST;
+                    }
+                    case EAST -> {
+                        if (open) {
+                            return OUTER_CORNER_OPEN_SOUTH;
+                        }
+                        return OUTER_CORNER_SOUTH;
+                    }
+                    default -> {
+                        if (open) {
+                            return OUTER_CORNER_OPEN;
+                        }
+                        return OUTER_CORNER;
+                    }
+                }
             case LEFT_EDGE:
-                if(dir.equals(Direction.NORTH))
-                    if (open)
-                        return LEFT_EDGE_OPEN;
-                    else
+                switch (dir) {
+                    case NORTH -> {
+                        if (open) {
+                            return LEFT_EDGE_OPEN;
+                        }
                         return LEFT_EDGE;
-                else if (dir.equals(Direction.SOUTH))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE);
-                else if (dir.equals(Direction.EAST))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE);
-                else
-                if (open)
-                    return rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE_OPEN);
-                else
-                    return rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE);
+                    }
+                    case SOUTH -> {
+                        if (open) {
+                            return LEFT_EDGE_OPEN_SOUTH;
+                        }
+                        return LEFT_EDGE_SOUTH;
+                    }
+                    case EAST -> {
+                        if (open) {
+                            return LEFT_EDGE_OPEN_EAST;
+                        }
+                        return LEFT_EDGE_EAST;
+                    }
+                    default -> {
+                        if (open) {
+                            return LEFT_EDGE_OPEN_WEST;
+                        }
+                        return LEFT_EDGE_WEST;
+                    }
+                }
             case RIGHT_EDGE:
-                if(dir.equals(Direction.NORTH))
-                    if (open)
-                        return RIGHT_EDGE_OPEN;
-                    else
+                switch (dir) {
+                    case NORTH -> {
+                        if (open) {
+                            return RIGHT_EDGE_OPEN;
+                        }
                         return RIGHT_EDGE;
-                else if (dir.equals(Direction.SOUTH))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE);
-                else if (dir.equals(Direction.EAST))
-                    if (open)
-                        return rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE_OPEN);
-                    else
-                        return rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
-                else
-                if (open)
-                    return rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE_OPEN);
-                else
-                    return rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE);
+                    }
+                    case SOUTH -> {
+                        if (open) {
+                            return RIGHT_EDGE_OPEN_SOUTH;
+                        }
+                        return RIGHT_EDGE_SOUTH;
+                    }
+                    case EAST -> {
+                        if (open) {
+                            return RIGHT_EDGE_OPEN_EAST;
+                        }
+                        return RIGHT_EDGE_EAST;
+                    }
+                    default -> {
+                        if (open) {
+                            return RIGHT_EDGE_OPEN_WEST;
+                        }
+                        return RIGHT_EDGE_WEST;
+                    }
+                }
             default:
-                return STRAIGHT;
+                return VoxelShapes.fullCube();
         }
     }
 

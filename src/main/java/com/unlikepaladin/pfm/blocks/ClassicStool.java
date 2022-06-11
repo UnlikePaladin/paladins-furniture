@@ -44,22 +44,18 @@ public class ClassicStool extends BasicChair {
         return buffer[0];
     }
     protected static final VoxelShape CLASSIC_STOOL = VoxelShapes.union(createCuboidShape(3.625, 0, 3.5,5.625, 10, 5.5), createCuboidShape(10.625, 0, 3.5, 12.625, 10, 5.5), createCuboidShape(10.625, 0, 10.5, 12.625, 20, 12.5), createCuboidShape(3.625, 10, 3.5, 12.625, 12, 10.5), createCuboidShape(5.625, 10, 10.5, 10.625, 12, 12.5), createCuboidShape(5.625, 15, 11, 10.625, 19.5, 12),createCuboidShape(3.625, 0, 10.5,5.625, 20, 12.5));
+    protected static final VoxelShape CLASSIC_STOOL_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, CLASSIC_STOOL);
+    protected static final VoxelShape CLASSIC_STOOL_WEST = rotateShape(Direction.NORTH, Direction.WEST, CLASSIC_STOOL);
+    protected static final VoxelShape CLASSIC_STOOL_EAST = rotateShape(Direction.NORTH, Direction.EAST, CLASSIC_STOOL);
     @Override
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        switch(dir) {
-            case WEST:
-                return rotateShape(Direction.NORTH, Direction.EAST, CLASSIC_STOOL);
-            case NORTH:
-                return rotateShape(Direction.NORTH, Direction.SOUTH, CLASSIC_STOOL);
-            case SOUTH:
-                return CLASSIC_STOOL;
-            case EAST:
-            default:
-                return rotateShape(Direction.NORTH, Direction.WEST, CLASSIC_STOOL);
-
-
-        }
+        return switch (dir) {
+            case WEST -> CLASSIC_STOOL_EAST;
+            case NORTH -> CLASSIC_STOOL_SOUTH;
+            case SOUTH -> CLASSIC_STOOL;
+            default -> CLASSIC_STOOL_WEST;
+        };
     }
 
 

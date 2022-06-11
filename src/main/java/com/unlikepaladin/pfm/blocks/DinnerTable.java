@@ -112,14 +112,17 @@ public class DinnerTable extends HorizontalFacingBlock {
 
 
     protected TableShape getShape(BlockState state) {
-        return state.get(this.SHAPE);
+        return state.get(SHAPE);
     }
 
     final static VoxelShape dinner_table = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(0.1, 0, 2, 15.8, 14, 4.05), createCuboidShape(0.1, 0, 11.9, 15.8, 14, 13.95));
     final static VoxelShape dinner_table_middle = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16));
     final static VoxelShape dinner_table_one = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(0.1, 0, 2, 15.8, 14, 4.05));
+    final static VoxelShape dinner_table_one_west = rotateShape(Direction.NORTH, Direction.WEST, dinner_table_one);
+    final static VoxelShape dinner_table_one_east = rotateShape(Direction.NORTH, Direction.EAST, dinner_table_one);
+    final static VoxelShape dinner_table_one_south = rotateShape(Direction.NORTH, Direction.SOUTH, dinner_table_one);
+    final static VoxelShape dinner_table_east = rotateShape(Direction.NORTH, Direction.EAST, dinner_table);
 
-    //Cursed I know
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         TableShape tableShape = getShape(state);
         Direction dir = state.get(FACING);
@@ -129,7 +132,7 @@ public class DinnerTable extends HorizontalFacingBlock {
         switch (tableShape) {
             case LEFT -> {
                 if (dirNorthOrSouth) {
-                    return rotateShape(Direction.NORTH, Direction.WEST, dinner_table_one);}
+                    return dinner_table_one_west;}
                 else if (dirWestOrEast) {
                     return dinner_table_one;}
                 else {
@@ -138,9 +141,9 @@ public class DinnerTable extends HorizontalFacingBlock {
             }
             case RIGHT -> {
                 if (dirNorthOrSouth) {
-                return rotateShape(Direction.NORTH, Direction.EAST, dinner_table_one);}
+                return dinner_table_one_east;}
                 else if (dirWestOrEast) {
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, dinner_table_one);}
+                    return dinner_table_one_south;}
                 else {
                     return dinner_table;
                 }
@@ -152,8 +155,9 @@ public class DinnerTable extends HorizontalFacingBlock {
                 if (dirWestOrEast) {
                     return dinner_table;}
                 else {
-                    return rotateShape(Direction.NORTH, Direction.EAST, dinner_table);
-                } }
+                    return dinner_table_east;
+                }
+            }
         }
 
     }

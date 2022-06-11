@@ -125,7 +125,6 @@ public class Fridge extends HorizontalFacingBlockWEntity{
             BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
             world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
             world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
-            System.out.println("OnCreative Called top");
         }
         blockPos = pos.down();
         blockState = world.getBlockState(blockPos);
@@ -133,7 +132,6 @@ public class Fridge extends HorizontalFacingBlockWEntity{
             BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
             world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
             world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
-            System.out.println("OnCreative Called bottom");
         }
     }
 
@@ -171,6 +169,13 @@ public class Fridge extends HorizontalFacingBlockWEntity{
 
     protected static final VoxelShape FRIDGE = VoxelShapes.union(createCuboidShape(0.5, 0, 3, 15.5, 32, 16), createCuboidShape(12.98, 4, 0.03,13.98, 20, 1.03),createCuboidShape(12.98, 4, 0.92,13.98, 5, 2.92),createCuboidShape(12.98, 18.98, 1,13.98, 19.98, 2.9),createCuboidShape(0.5, 1, 1.93,14.78, 19.98, 3.03));
     protected static final VoxelShape FRIDGE_OPEN = VoxelShapes.union(createCuboidShape(0.5, 0, 3,15.5, 32, 16),createCuboidShape(-1.41, 4, -10.39,-0.41, 19.98, -9.39),createCuboidShape(-0.52, 4, -10.39,1.48, 5, -9.39),createCuboidShape(-0.45, 18.98, -10.39,1.45, 19.98, -9.39),createCuboidShape(0.5, 1, -11.59,1.48, 20, 3.11),createCuboidShape(0.75, 7.7, -10.42,3.75, 10.8, 2.98),createCuboidShape(0.75, 12.2, -10.42,3.75, 15.3, 2.98));
+
+    protected static final VoxelShape FRIDGE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FRIDGE);
+    protected static final VoxelShape FRIDGE_SOUTH_OPEN = rotateShape(Direction.NORTH, Direction.SOUTH, FRIDGE_OPEN);
+    protected static final VoxelShape FRIDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, FRIDGE);
+    protected static final VoxelShape FRIDGE_EAST_OPEN = rotateShape(Direction.NORTH, Direction.EAST, FRIDGE_OPEN);
+    protected static final VoxelShape FRIDGE_WEST = rotateShape(Direction.NORTH, Direction.WEST, FRIDGE);
+    protected static final VoxelShape FRIDGE_WEST_OPEN = rotateShape(Direction.NORTH, Direction.WEST, FRIDGE_OPEN);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
@@ -178,9 +183,9 @@ public class Fridge extends HorizontalFacingBlockWEntity{
         switch (dir) {
             case NORTH:
                 if (open)
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, FRIDGE_OPEN);
+                    return FRIDGE_SOUTH_OPEN;
                 else
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, FRIDGE);
+                    return FRIDGE_SOUTH;
             case SOUTH:
                 if (open)
                     return FRIDGE_OPEN;
@@ -188,15 +193,14 @@ public class Fridge extends HorizontalFacingBlockWEntity{
                     return FRIDGE;
             case EAST:
                 if (open)
-                    return rotateShape(Direction.NORTH, Direction.WEST, FRIDGE_OPEN);
+                    return FRIDGE_WEST_OPEN;
                 else
-                    return rotateShape(Direction.NORTH, Direction.WEST, FRIDGE);
-            case WEST:
+                    return FRIDGE_WEST;
             default:
                 if (open)
-                    return rotateShape(Direction.NORTH, Direction.EAST, FRIDGE_OPEN);
+                    return FRIDGE_EAST_OPEN;
                 else
-                    return rotateShape(Direction.NORTH, Direction.EAST, FRIDGE);
+                    return FRIDGE_EAST;
         }
     }
 

@@ -130,6 +130,12 @@ public class Microwave extends HorizontalFacingBlockWEntity{
     private final VoxelShape MICROWAVE = VoxelShapes.union(createCuboidShape(1.8, 0, 3.8,14.2, 1, 13.2),createCuboidShape(2, 1, 4,14, 7, 13));
     private final VoxelShape MICROWAVE_OPEN = VoxelShapes.union(createCuboidShape(1.8, 0, 3.8,14.2, 1, 13.2),createCuboidShape(2, 1, 4,14, 7, 13),createCuboidShape(2, 1, 13,3.1, 7, 20.9));
 
+    private final VoxelShape MICROWAVE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MICROWAVE);
+    private final VoxelShape MICROWAVE_SOUTH_OPEN = rotateShape(Direction.NORTH, Direction.SOUTH, MICROWAVE_OPEN);
+    private final VoxelShape MICROWAVE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MICROWAVE);
+    private final VoxelShape MICROWAVE_EAST_OPEN = rotateShape(Direction.NORTH, Direction.EAST, MICROWAVE_OPEN);
+    private final VoxelShape MICROWAVE_WEST = rotateShape(Direction.NORTH, Direction.WEST, MICROWAVE);
+    private final VoxelShape MICROWAVE_WEST_OPEN = rotateShape(Direction.NORTH, Direction.WEST, MICROWAVE_OPEN);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction direction = state.get(FACING);
@@ -142,21 +148,21 @@ public class Microwave extends HorizontalFacingBlockWEntity{
             }
             case SOUTH -> {
                 if (state.get(OPEN)) {
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, MICROWAVE_OPEN);
+                    return MICROWAVE_SOUTH_OPEN;
                 }
-                return rotateShape(Direction.NORTH, Direction.SOUTH, MICROWAVE);
+                return MICROWAVE_SOUTH;
             }
             case EAST ->{
                 if (state.get(OPEN)) {
-                    return rotateShape(Direction.NORTH, Direction.EAST, MICROWAVE_OPEN);
+                    return MICROWAVE_EAST_OPEN;
                 }
-                return rotateShape(Direction.NORTH, Direction.EAST, MICROWAVE);
+                return MICROWAVE_EAST;
             }
             case WEST -> {
                 if (state.get(OPEN)) {
-                    return rotateShape(Direction.NORTH, Direction.WEST, MICROWAVE_OPEN);
+                    return MICROWAVE_WEST_OPEN;
                 }
-                return rotateShape(Direction.NORTH, Direction.WEST, MICROWAVE);
+                return MICROWAVE_WEST;
             }
         }
         return MICROWAVE;

@@ -30,6 +30,12 @@ public class IronFridge extends Fridge{
 
     protected static final VoxelShape FRIDGE = VoxelShapes.union(createCuboidShape(0.7, 1, 3, 15.7, 16, 16), createCuboidShape(13.2, 1.2, 0.1,14.2, 15.2, 1.1),createCuboidShape(13.2, 1.2, 1,14.2, 2.2, 3),createCuboidShape(13.2, 14.2, 1.1,14.2, 15.2, 3.1),createCuboidShape(14, 1, 2.3,15.5, 16, 3.3),createCuboidShape(0.7, 1, 2,14.6, 16, 3));
     protected static final VoxelShape FRIDGE_OPEN = VoxelShapes.union(createCuboidShape(0.7, 0, 3,15.7, 16, 16),createCuboidShape(-1.2, 1.2, -10.5,-0.2, 15.2, -9.5),createCuboidShape(-0.3, 1.2, -10.5,1.7, 2.2, -9.5),createCuboidShape(-0.3, 14.2, -10.5,1.7, 15.2, -9.5),createCuboidShape(1, 1, -11.7,2, 16, -10.3),createCuboidShape(0.7, 1, -10.9,1.7, 16, 3));
+    protected static final VoxelShape FRIDGE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FRIDGE);
+    protected static final VoxelShape FRIDGE_SOUTH_OPEN = rotateShape(Direction.NORTH, Direction.SOUTH, FRIDGE_OPEN);
+    protected static final VoxelShape FRIDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, FRIDGE);
+    protected static final VoxelShape FRIDGE_EAST_OPEN = rotateShape(Direction.NORTH, Direction.EAST, FRIDGE_OPEN);
+    protected static final VoxelShape FRIDGE_WEST = rotateShape(Direction.NORTH, Direction.WEST, FRIDGE);
+    protected static final VoxelShape FRIDGE_WEST_OPEN = rotateShape(Direction.NORTH, Direction.WEST, FRIDGE_OPEN);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
@@ -37,9 +43,9 @@ public class IronFridge extends Fridge{
         switch (dir) {
             case NORTH:
                 if (open)
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, FRIDGE_OPEN);
+                    return FRIDGE_SOUTH_OPEN;
                 else
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, FRIDGE);
+                    return FRIDGE_SOUTH;
             case SOUTH:
                 if (open)
                     return FRIDGE_OPEN;
@@ -47,15 +53,15 @@ public class IronFridge extends Fridge{
                     return FRIDGE;
             case EAST:
                 if (open)
-                    return rotateShape(Direction.NORTH, Direction.WEST, FRIDGE_OPEN);
+                    return FRIDGE_WEST_OPEN;
                 else
-                    return rotateShape(Direction.NORTH, Direction.WEST, FRIDGE);
+                    return FRIDGE_WEST;
             case WEST:
             default:
                 if (open)
-                    return rotateShape(Direction.NORTH, Direction.EAST, FRIDGE_OPEN);
+                    return FRIDGE_EAST_OPEN;
                 else
-                    return rotateShape(Direction.NORTH, Direction.EAST, FRIDGE);
+                    return FRIDGE_EAST;
         }
     }
 

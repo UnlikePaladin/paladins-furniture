@@ -108,22 +108,24 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
         return state;
     }
     private static final VoxelShape lightSwitch = VoxelShapes.union(createCuboidShape(5, 3, 15,11, 11, 16));
-
+    private static final VoxelShape lightSwitchSouth = rotateShape(Direction.NORTH, Direction.SOUTH, lightSwitch);
+    private static final VoxelShape lightSwitchEast = rotateShape(Direction.NORTH, Direction.EAST, lightSwitch);
+    private static final VoxelShape lightSwitchWest = rotateShape(Direction.NORTH, Direction.WEST, lightSwitch);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction facing = getDirection(state);
         switch (facing) {
             case SOUTH -> {
-                return rotateShape(Direction.NORTH, Direction.SOUTH, lightSwitch);
+                return lightSwitchSouth;
             }
             case EAST -> {
-                return rotateShape(Direction.NORTH, Direction.EAST, lightSwitch);
+                return lightSwitchEast;
+            }
+            case WEST -> {
+                return lightSwitchWest;
             }
             default ->  {
                 return lightSwitch;
-            }
-            case WEST -> {
-                return rotateShape(Direction.NORTH, Direction.WEST, lightSwitch);
             }
         }
     }

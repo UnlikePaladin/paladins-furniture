@@ -45,22 +45,18 @@ public class ModernStool extends BasicChair {
     }
 
     protected static final VoxelShape MODERN_STOOL = VoxelShapes.union(createCuboidShape(7.125, 1, 7 ,9.125, 10, 9), createCuboidShape(5.125, 0, 5, 11.125, 1, 11), createCuboidShape(4.625, 10, 4.5, 11.625, 12, 11.5), createCuboidShape(4.625, 12, 9.5, 11.625, 15, 11.5));
+    protected static final VoxelShape MODERN_STOOL_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MODERN_STOOL);
+    protected static final VoxelShape MODERN_STOOL_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_STOOL);
+    protected static final VoxelShape MODERN_STOOL_WEST = rotateShape(Direction.NORTH, Direction.WEST, MODERN_STOOL);
     @Override
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        switch(dir) {
-            case WEST:
-                return rotateShape(Direction.NORTH, Direction.EAST, MODERN_STOOL);
-            case NORTH:
-                return rotateShape(Direction.NORTH, Direction.SOUTH, MODERN_STOOL);
-            case SOUTH:
-                return MODERN_STOOL;
-            case EAST:
-            default:
-                return rotateShape(Direction.NORTH, Direction.WEST, MODERN_STOOL);
-
-
-        }
+        return switch (dir) {
+            case WEST -> MODERN_STOOL_EAST;
+            case NORTH -> MODERN_STOOL_SOUTH;
+            case SOUTH -> MODERN_STOOL;
+            default -> MODERN_STOOL_WEST;
+        };
     }
 
 

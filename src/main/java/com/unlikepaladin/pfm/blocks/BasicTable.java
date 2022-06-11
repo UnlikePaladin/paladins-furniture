@@ -147,7 +147,39 @@ public class BasicTable extends HorizontalFacingBlock {
     final static VoxelShape table_basic_corner_tri = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 14, 4, 14, 16), createCuboidShape(12, 0, 14, 14, 14, 16), createCuboidShape(11, 0, 0, 13, 14, 2));
     final static VoxelShape table_basic_corner_tri_west = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 14, 4, 14, 16), createCuboidShape(12, 0, 14, 14, 14, 16), createCuboidShape(3, 0, 0, 5, 14, 2));
 
-    //Cursed I know
+    final static VoxelShape table_basic_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic);
+    final static VoxelShape table_basic_east_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic_east);
+    final static VoxelShape table_basic_north_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic_north);
+    final static VoxelShape table_basic_north_facing_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_north);
+    final static VoxelShape table_basic_east_facing_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_east);
+    final static VoxelShape table_basic_east_facing_west = rotateShape(Direction.NORTH, Direction.WEST, table_basic_east);
+    final static VoxelShape table_basic_north_facing_west = rotateShape(Direction.NORTH, Direction.WEST, table_basic_north);
+    final static VoxelShape table_basic_north_west_facing_east = rotateShape(Direction.WEST, Direction.EAST, table_basic_north_west);
+    final static VoxelShape table_basic_north_west_north_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic_north_west);
+    final static VoxelShape table_basic_north_east_facing_west = rotateShape(Direction.NORTH, Direction.WEST, table_basic_north_east);
+    final static VoxelShape table_basic_north_west_facing_west = rotateShape(Direction.NORTH, Direction.WEST, table_basic_north_west);
+    final static VoxelShape table_basic_north_east_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic_north_east);
+    final static VoxelShape table_basic_north_east_facing_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_north_east);
+    final static VoxelShape table_basic_north_south_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic_north_south);
+    final static VoxelShape table_basic_leg_facing_west = rotateShape(Direction.NORTH, Direction.WEST, table_basic_leg);
+    final static VoxelShape table_basic_leg_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic_leg);
+    final static VoxelShape table_basic_leg_facing_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_leg);
+    final static VoxelShape table_basic_double_corner_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic_double_corner);
+    final static VoxelShape table_basic_corner_north_east_facing_west = rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner_north_east);
+    final static VoxelShape table_basic_corner_north_west_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic_corner_north_west);
+    final static VoxelShape table_basic_corner_north_west_facing_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_north_west);
+    final static VoxelShape table_basic_corner_north_east_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic_corner_north_east);
+    final static VoxelShape table_basic_corner_north_east_facing_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_north_east);
+    final static VoxelShape table_basic_corner_north_west_facing_west = rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner_north_west);
+    final static VoxelShape table_basic_corner_facing_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner);
+    final static VoxelShape table_basic_corner_m_facing_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_m);
+    final static VoxelShape table_basic_corner_m_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic_corner_m);
+    final static VoxelShape table_basic_corner_facing_east = rotateShape(Direction.NORTH, Direction.EAST, table_basic_corner);
+    final static VoxelShape table_basic_corner_m_facing_west = rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner_m);
+    final static VoxelShape table_basic_corner_facing_west = rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner);
+    final static VoxelShape table_basic_corner_tri_west_facing_south = rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_tri_west);
+
+    //Cursed I know, probably will rewrite this at some point in the future
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         boolean dirNorthOrSouth = dir.equals(Direction.NORTH) || dir.equals(Direction.SOUTH);
@@ -164,7 +196,7 @@ public class BasicTable extends HorizontalFacingBlock {
         if (dirNorthOrSouth && !(north || south || west || east)) {
             return table_basic;
         } else if (dirWestOrEast && !(north || south || west || east)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic);
+            return table_basic_facing_east;
         }
 
         if (dirNorthOrSouth && north && !(south || west || east)) {
@@ -173,46 +205,42 @@ public class BasicTable extends HorizontalFacingBlock {
             return table_basic_east;
         }
         if (dirNorthOrSouth && east && !(south || west || north)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_east);
+            return table_basic_east_facing_east;
         } else if (dirWestOrEast && east && !(south || west || north)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_north);
+            return table_basic_north_facing_east;
         }
         if (dirNorthOrSouth && south && !(west || east || north)) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_north);
+            return table_basic_north_facing_south;
         } else if (dirWestOrEast && south && !(west || east || north)) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_east);
+            return table_basic_east_facing_south;
         }
         if (dirNorthOrSouth && west && !(south || east || north)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_east);
+            return table_basic_east_facing_west;
         } else if (dirWestOrEast && west && !(south || east || north)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_north);
+            return table_basic_north_facing_west;
         }
 
 
         if (dirNorthOrSouth && (east && north) && !(south || west || cornerNorthEast)) {
             return table_basic_north_east;
         } else if (dirWestOrEast && (east && north) && !(south || west || cornerNorthEast)) {
-            return rotateShape(Direction.WEST, Direction.EAST, table_basic_north_west);
+            return table_basic_north_west_facing_east;
         }
         if (dirNorthOrSouth && (west && north) && !(south || east || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_north_west);
+            return table_basic_north_west_north_facing_east;
         } else if (dirWestOrEast && (west && north) && !(south || east || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_north_east);
+            return table_basic_north_east_facing_west;
         }
         if (dirNorthOrSouth && (south && east) && !(west || north || cornerSouthEast)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_north_west);
+            return table_basic_north_west_facing_west;
         } else if (dirWestOrEast && (south && east) && !(west || north || cornerSouthEast)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_north_east);
+            return table_basic_north_east_facing_east;
         }
         if (dirNorthOrSouth && (south && west) && !(east || north || cornerSouthWest)) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_north_east);
+            return table_basic_north_east_facing_south;
         } else if (dirWestOrEast && (south && west) && !(east || north || cornerSouthWest)) {
             return table_basic_north_west;
         }
-
-
-
-
 
         if (dirNorthOrSouth && (south && north) && !(east || west)) {
             return table_basic_north_south;
@@ -222,18 +250,16 @@ public class BasicTable extends HorizontalFacingBlock {
         if (dirNorthOrSouth && (east && west) && !(north || south)) {
             return table_basic_middle;
         } else if (dirWestOrEast && (east && west) && !(north || south)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_north_south);
+            return table_basic_north_south_facing_east;
         }
 
-
-
         if (dirNorthOrSouth && (north && west && south) && !(east || cornerNorthEast ||cornerNorthWest || cornerSouthEast || cornerSouthWest)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_leg);
+            return table_basic_leg_facing_west;
         } else if (dirWestOrEast && (north && west && south) && !(east || cornerNorthEast ||cornerNorthWest || cornerSouthEast || cornerSouthWest)) {
             return table_basic_middle ;
         }
         if (dirNorthOrSouth && (north && east && south) && !(west || cornerNorthEast ||cornerNorthWest || cornerSouthEast || cornerSouthWest)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_leg);
+            return table_basic_leg_facing_east;
         } else if (dirWestOrEast && (north && east && south) && !(west || cornerNorthEast ||cornerNorthWest || cornerSouthEast || cornerSouthWest)) {
             return table_basic_middle ;
         }
@@ -245,30 +271,29 @@ public class BasicTable extends HorizontalFacingBlock {
         if (dirNorthOrSouth && (south && east && west) && !( north || cornerNorthEast ||cornerNorthWest || cornerSouthEast || cornerSouthWest)) {
             return table_basic_middle;
         } else if (dirWestOrEast && (south && east && west) && !(north || cornerNorthEast ||cornerNorthWest || cornerSouthEast || cornerSouthWest)) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_leg);
+            return table_basic_leg_facing_south;
         }
 
         if (dirNorthOrSouth && (north && east && west && cornerNorthWest && cornerNorthEast) && !( south || cornerSouthEast || cornerSouthWest)) {
             return table_basic_double_corner;
         } else if (dirWestOrEast && (north && east && west && cornerNorthWest && cornerNorthEast) && !( south || cornerSouthEast || cornerSouthWest)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_double_corner);
+            return table_basic_double_corner_facing_east;
         }
         if (dirNorthOrSouth && (south && east && west && cornerSouthEast && cornerSouthWest) && !( north || cornerNorthEast || cornerNorthWest)) {
             return table_basic_double_corner;
         } else if (dirWestOrEast && (south && east && west && cornerSouthEast && cornerSouthWest) && !( north || cornerNorthEast || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_double_corner);
+            return table_basic_double_corner_facing_east;
         }
         if (dirNorthOrSouth && (south && east && north && cornerNorthEast && cornerSouthEast) && !( west || cornerNorthWest || cornerSouthWest)) {
             return table_basic_double_corner;
         } else if (dirWestOrEast && (south && east && north && cornerNorthEast && cornerSouthEast) && !( west  || cornerNorthWest || cornerSouthWest)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_double_corner);
+            return table_basic_double_corner_facing_east;
         }
         if (dirNorthOrSouth && (south && west && north && cornerNorthWest && cornerSouthWest) && !( east || cornerSouthEast || cornerNorthEast)) {
             return table_basic_double_corner;
         } else if (dirWestOrEast && (south && west && north && cornerNorthWest && cornerSouthWest) && !( east || cornerSouthEast || cornerNorthEast)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_double_corner);
+            return table_basic_double_corner_facing_east;
         }
-
 
         if ((south && west && north && east) && !(cornerSouthWest || cornerNorthWest || cornerSouthEast || cornerNorthEast)) {
             return table_basic_middle;}
@@ -276,30 +301,30 @@ public class BasicTable extends HorizontalFacingBlock {
         if (dirNorthOrSouth && cornerNorthWest && !(cornerSouthWest || cornerSouthEast || cornerNorthEast)) {
             return table_basic_corner_north_west;
         } else if (dirWestOrEast && cornerNorthWest && !(cornerSouthWest || cornerSouthEast || cornerNorthEast)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner_north_east);
+            return table_basic_corner_north_east_facing_west;
         }
 
         if (dirNorthOrSouth && cornerNorthEast  && !(cornerSouthWest || cornerSouthEast || cornerNorthWest)) {
             return table_basic_corner_north_east;
         } else if (dirWestOrEast && cornerNorthEast && !(cornerSouthWest || cornerSouthEast || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_corner_north_west);
+            return table_basic_corner_north_west_facing_east;
         }
 
         if (dirNorthOrSouth && cornerSouthEast  && !(cornerSouthWest || cornerNorthEast || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_north_west);
+            return table_basic_corner_north_west_facing_south;
         } else if (dirWestOrEast && cornerSouthEast && !(cornerSouthWest || cornerNorthEast || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_corner_north_east);
+            return table_basic_corner_north_east_facing_east;
         }
         if (dirNorthOrSouth && cornerSouthWest  && !(cornerSouthEast || cornerNorthEast || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_north_east);
+            return table_basic_corner_north_east_facing_south;
         } else if (dirWestOrEast && cornerSouthWest && !(cornerSouthEast || cornerNorthEast || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner_north_west);
+            return table_basic_corner_north_west_facing_west;
         }
 
         if (dirNorthOrSouth && south && west && north && cornerNorthWest && cornerSouthWest && east && cornerSouthEast && cornerNorthEast) {
             return table_basic_double_corner;}
            else if (dirWestOrEast && south && west && north && cornerNorthWest && cornerSouthWest && east && cornerSouthEast && cornerNorthEast) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_double_corner);
+            return table_basic_double_corner_facing_east;
         }
         if (dirNorthOrSouth && (south && west && north && cornerNorthWest && east && cornerNorthEast) && !(cornerSouthEast || cornerSouthWest)) {
             return table_basic_corner;}
@@ -307,56 +332,56 @@ public class BasicTable extends HorizontalFacingBlock {
             return table_basic_corner_m;
         }
         if (dirNorthOrSouth && (south && west && north && cornerSouthWest && east && cornerSouthEast) && !(cornerNorthEast || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner);}
+            return table_basic_corner_facing_south;}
         else if (dirWestOrEast && (south && west && north && cornerSouthWest && cornerSouthEast && east) && !(cornerNorthEast || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_m);
+            return table_basic_corner_m_facing_south;
         }
         if (dirNorthOrSouth && (south && west && north && cornerNorthEast && east && cornerSouthEast) && !(cornerSouthWest || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_corner_m);}
+            return table_basic_corner_m_facing_east;}
         else if (dirWestOrEast && (south && west && north && cornerNorthEast && cornerSouthEast && east) && !(cornerSouthWest || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.EAST, table_basic_corner);
+            return table_basic_corner_facing_east;
         }
         if (dirNorthOrSouth && (south && west && north && cornerSouthWest && east && cornerNorthWest) && !(cornerSouthEast || cornerNorthEast)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner_m);}
+            return table_basic_corner_m_facing_west;}
         else if (dirWestOrEast && (south && west && north && cornerSouthWest && cornerNorthWest && east) && !(cornerSouthEast || cornerNorthEast)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner);
+            return table_basic_corner_facing_west;
         }
 
         if (dirNorthOrSouth && (south && west && north && cornerSouthWest && east && cornerSouthEast && cornerNorthEast) && !cornerNorthWest) {
             return table_basic_corner_tri;}
         else if (dirWestOrEast && (south && west && north && cornerSouthWest && east && cornerNorthEast && cornerSouthEast) && !cornerNorthWest) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner);
+            return table_basic_corner_facing_west;
         }
 
         if (dirNorthOrSouth && (south && west && north && cornerNorthWest && east && cornerSouthEast && cornerNorthEast) && !cornerSouthWest) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_tri_west);}
+            return table_basic_corner_tri_west_facing_south;}
         else if (dirWestOrEast && (south && west && north && cornerNorthWest && east && cornerNorthEast && cornerSouthEast) && !cornerSouthWest) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner);
+            return table_basic_corner_facing_west;
         }
 
-        if (dirNorthOrSouth && (south && west && north && cornerNorthWest && east && cornerSouthEast) && !(cornerNorthEast ||cornerSouthWest)) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_tri_west);}
+        if (dirNorthOrSouth && (south && west && north && cornerNorthWest && east && cornerSouthEast) && !(cornerNorthEast || cornerSouthWest)) {
+            return table_basic_corner_tri_west_facing_south;}
         else if (dirWestOrEast && (south && west && north && cornerNorthWest && east && cornerSouthEast) && !(cornerSouthWest || cornerNorthEast)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner);
+            return table_basic_corner_facing_west;
         }
 
         if (dirNorthOrSouth && (south && west && north && cornerNorthWest && east && cornerSouthWest && cornerSouthEast) && !cornerNorthEast) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_tri_west);}
+            return table_basic_corner_tri_west_facing_south;}
         else if (dirWestOrEast && (south && west && north && cornerNorthWest && east && cornerSouthEast && cornerSouthWest) && !cornerNorthEast) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner);
+            return table_basic_corner_facing_west;
         }
 
         if (dirNorthOrSouth && (south && west && north && cornerNorthWest && east && cornerSouthWest && cornerNorthEast) && !cornerSouthEast) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_tri_west);}
+            return table_basic_corner_tri_west_facing_south;}
         else if (dirWestOrEast && (south && west && north && cornerNorthWest && east && cornerNorthEast && cornerSouthWest) && !cornerSouthEast) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner);
+            return table_basic_corner_facing_west;
         }
 
 
         if (dirNorthOrSouth && (south && west && north && east && cornerSouthWest && cornerNorthEast) && !(cornerSouthEast || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.SOUTH, table_basic_corner_tri_west);}
+            return table_basic_corner_tri_west_facing_south;}
         else if (dirWestOrEast && (south && west && north && east && cornerSouthWest && cornerNorthEast) && !(cornerSouthEast || cornerNorthWest)) {
-            return rotateShape(Direction.NORTH, Direction.WEST, table_basic_corner);
+            return table_basic_corner_facing_west;
         }
 
         else

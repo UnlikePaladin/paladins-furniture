@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_drawer/kitchen_drawer_middle_outer_corner",
+	"textures": {
+        
+		"particle": "block/stripped_acacia_log",
+		"base": "block/stripped_acacia_log",
+		"legs": "block/acacia_planks"
+	}
+    
+}

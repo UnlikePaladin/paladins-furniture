@@ -36,8 +36,6 @@ public class ArmChair extends BasicChair {
             case EAST:
             default:
                 return FACE_EAST;
-
-
         }
     }
 

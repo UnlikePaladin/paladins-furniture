@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockRotation;
@@ -19,11 +20,13 @@ public class KitchenCounter extends HorizontalFacingBlock {
     private float height = 0.36f;
     private final Block baseBlock;
     public static final EnumProperty<CounterShape> SHAPE = EnumProperty.of("shape", CounterShape.class);
+    public static final BooleanProperty UP = Properties.UP;
+    public static final BooleanProperty DOWN = Properties.DOWN;
 
     private final BlockState baseBlockState;
     public KitchenCounter(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(UP, false).with(DOWN,false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
     }
@@ -37,6 +40,8 @@ public class KitchenCounter extends HorizontalFacingBlock {
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(SHAPE);
+        stateManager.add(UP);
+        stateManager.add(DOWN);
     }
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
@@ -47,9 +52,13 @@ public class KitchenCounter extends HorizontalFacingBlock {
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
         BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        return blockState.with(SHAPE, this.getShape(blockState, world, blockPos));
+        boolean up = connectsVertical(world.getBlockState(blockPos.up()).getBlock());
+        boolean down = connectsVertical(world.getBlockState(blockPos.down()).getBlock());
+        return blockState.with(SHAPE, getShape(blockState, world, blockPos)).with(UP, up).with(DOWN, down);
     }
-
+    public static boolean connectsVertical(Block block) {
+        return block instanceof KitchenCounter || block instanceof KitchenCounterOven || block instanceof Fridge || block instanceof Freezer;
+    }
     private static CounterShape getShape(BlockState state, BlockView world, BlockPos pos) {
         Direction direction = state.get(FACING);
         BlockState blockState = world.getBlockState(pos.offset(direction));
@@ -111,7 +120,17 @@ public class KitchenCounter extends HorizontalFacingBlock {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return direction.getAxis().isHorizontal() ? state.with(SHAPE, getShape(state, world, pos)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+       if ( direction.getAxis().isHorizontal()) {
+           return state.with(SHAPE, getShape(state, world, pos));
+       }
+       else if (direction.getAxis().isVertical()) {
+           boolean up = connectsVertical(world.getBlockState(pos.up()).getBlock());
+           boolean down = connectsVertical(world.getBlockState(pos.down()).getBlock());
+           return state.with(UP, up).with(DOWN, down);
+       }
+       else{
+            return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        }
     }
 
     @SuppressWarnings("deprecated")
@@ -142,80 +161,175 @@ public class KitchenCounter extends HorizontalFacingBlock {
     protected static final VoxelShape OUTER_CORNER = VoxelShapes.union(createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(0, 1, 0,13, 14, 13),createCuboidShape(0, 0, 0,12, 1, 12));
     protected static final VoxelShape LEFT_EDGE = VoxelShapes.union(createCuboidShape(2, 0, 0,16, 1, 12), createCuboidShape(2, 1, 0,16, 14, 13), createCuboidShape(0, 0, 0,2, 14, 16),createCuboidShape(0, 14, 0,16, 16, 16));
     protected static final VoxelShape RIGHT_EDGE = VoxelShapes.union(createCuboidShape(0, 0, 0,14, 1, 12), createCuboidShape(0, 1, 0,14, 14, 13), createCuboidShape(14, 0, 0,16, 14, 16),createCuboidShape(0, 14, 0,16, 16, 16));
+    protected static final VoxelShape MIDDLE = VoxelShapes.union(createCuboidShape(0, 0, 0, 16, 16, 13));
+    protected static final VoxelShape INNER_MIDDLE = VoxelShapes.union(createCuboidShape(0, 0, 0, 16, 16, 13), createCuboidShape(3, 0, 13,16, 16, 16));
+    protected static final VoxelShape OUTER_MIDDLE = VoxelShapes.union(createCuboidShape(0, 0, 0,13, 16, 13));
+    protected static final VoxelShape BOTTOM = VoxelShapes.union(createCuboidShape(0, 1, 0, 16, 16, 13),createCuboidShape(0, 0, 0,16, 1, 12));
+    protected static final VoxelShape OUTER_BOTTOM = VoxelShapes.union(createCuboidShape(0, 0, 0, 12, 1, 12),createCuboidShape(0, 1, 0,13, 16, 13));
+    protected static final VoxelShape INNER_BOTTOM = VoxelShapes.union(createCuboidShape(0, 1, 0, 16, 16, 13),createCuboidShape(3, 1, 13,16, 16, 16),createCuboidShape(0, 0, 0,16, 1, 12),createCuboidShape(4, 0, 12,16, 1, 16));
 
+    protected static final VoxelShape MIDDLE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE);
+    protected static final VoxelShape MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MIDDLE);
+    protected static final VoxelShape MIDDLE_WEST = rotateShape(Direction.NORTH, Direction.WEST, MIDDLE);
+
+    protected static final VoxelShape INNER_MIDDLE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, INNER_MIDDLE);
+    protected static final VoxelShape INNER_MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, INNER_MIDDLE);
+    protected static final VoxelShape INNER_MIDDLE_WEST = rotateShape(Direction.NORTH, Direction.WEST, INNER_MIDDLE);
+
+    protected static final VoxelShape OUTER_MIDDLE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_MIDDLE);
+    protected static final VoxelShape OUTER_MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, OUTER_MIDDLE);
+    protected static final VoxelShape OUTER_MIDDLE_WEST = rotateShape(Direction.NORTH, Direction.WEST, OUTER_MIDDLE);
+
+    protected static final VoxelShape OUTER_BOTTOM_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_BOTTOM);
+    protected static final VoxelShape OUTER_BOTTOM_EAST = rotateShape(Direction.NORTH, Direction.EAST, OUTER_BOTTOM);
+    protected static final VoxelShape OUTER_BOTTOM_WEST = rotateShape(Direction.NORTH, Direction.WEST, OUTER_BOTTOM);
+
+    protected static final VoxelShape INNER_BOTTOM_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, INNER_BOTTOM);
+    protected static final VoxelShape INNER_BOTTOM_EAST = rotateShape(Direction.NORTH, Direction.EAST, INNER_BOTTOM);
+    protected static final VoxelShape INNER_BOTTOM_WEST = rotateShape(Direction.NORTH, Direction.WEST, INNER_BOTTOM);
+
+    protected static final VoxelShape BOTTOM_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM);
+    protected static final VoxelShape BOTTOM_EAST = rotateShape(Direction.NORTH, Direction.EAST, BOTTOM);
+    protected static final VoxelShape BOTTOM_WEST = rotateShape(Direction.NORTH, Direction.WEST, BOTTOM);
+
+    protected static final VoxelShape STRAIGHT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT);
+    protected static final VoxelShape STRAIGHT_EAST = rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT);
+    protected static final VoxelShape STRAIGHT_WEST = rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT);
+
+    protected static final VoxelShape INNER_CORNER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
+    protected static final VoxelShape INNER_CORNER_EAST = rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
+    protected static final VoxelShape INNER_CORNER_WEST = rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
+
+    protected static final VoxelShape OUTER_CORNER_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
+    protected static final VoxelShape OUTER_CORNER_EAST = rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
+    protected static final VoxelShape OUTER_CORNER_WEST = rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
+
+    protected static final VoxelShape LEFT_EDGE_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE);
+    protected static final VoxelShape LEFT_EDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE);
+    protected static final VoxelShape LEFT_EDGE_WEST = rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE);
+
+    protected static final VoxelShape RIGHT_EDGE_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_WEST = rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE);
     @Override
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         CounterShape shape = state.get(SHAPE);
-        switch(shape) {
-            case STRAIGHT:
-                if(dir.equals(Direction.NORTH))
-                    return STRAIGHT;
-                else if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT);
-                else if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT);
-                else
-                    return rotateShape(Direction.NORTH, Direction.WEST, STRAIGHT);
-            case INNER_LEFT:
-                if(dir.equals(Direction.NORTH))
-                    return rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
-                else if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
-                else if (dir.equals(Direction.EAST))
-                    return INNER_CORNER;
-                else
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
-
-            case INNER_RIGHT:
-                if(dir.equals(Direction.NORTH))
-                    return INNER_CORNER;
-                else if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, INNER_CORNER);
-                else if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.NORTH, Direction.EAST, INNER_CORNER);
-                else
-                    return rotateShape(Direction.NORTH, Direction.WEST, INNER_CORNER);
-            case OUTER_LEFT:
-                if(dir.equals(Direction.NORTH))
-                    return OUTER_CORNER;
-                else if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
-                else if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
-                else
-                    return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
-            case OUTER_RIGHT:
-                if(dir.equals(Direction.NORTH))
-                    return rotateShape(Direction.NORTH, Direction.EAST, OUTER_CORNER);
-                else if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER);
-                else if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_CORNER);
-                else
-                    return OUTER_CORNER;
-            case LEFT_EDGE:
-                if(dir.equals(Direction.NORTH))
-                    return LEFT_EDGE;
-                else if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, LEFT_EDGE);
-                else if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.NORTH, Direction.EAST, LEFT_EDGE);
-                else
-                    return rotateShape(Direction.NORTH, Direction.WEST, LEFT_EDGE);
-            case RIGHT_EDGE:
-                if(dir.equals(Direction.NORTH))
-                    return RIGHT_EDGE;
-                else if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, RIGHT_EDGE);
-                else if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
-                else
-                    return rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE);
-            default:
-                return STRAIGHT;
+        boolean up = state.get(UP);
+        boolean down = state.get(DOWN);
+        if (down) {
+            return switch (shape) {
+                case INNER_LEFT -> switch (dir) {
+                    case NORTH -> INNER_MIDDLE_WEST;
+                    case SOUTH -> INNER_MIDDLE_EAST;
+                    case WEST -> INNER_MIDDLE_SOUTH;
+                    default -> INNER_MIDDLE;
+                };
+                case INNER_RIGHT -> switch (dir) {
+                    case NORTH -> INNER_MIDDLE;
+                    case SOUTH -> INNER_MIDDLE_SOUTH;
+                    case WEST -> INNER_MIDDLE_WEST;
+                    default -> INNER_MIDDLE_EAST;
+                };
+                case OUTER_RIGHT -> switch (dir) {
+                    case NORTH -> OUTER_MIDDLE_EAST;
+                    case SOUTH -> OUTER_MIDDLE_WEST;
+                    case WEST -> OUTER_MIDDLE;
+                    default -> OUTER_MIDDLE_SOUTH;
+                };
+                case OUTER_LEFT -> switch (dir) {
+                    case NORTH -> OUTER_MIDDLE;
+                    case SOUTH -> OUTER_MIDDLE_SOUTH;
+                    case WEST -> OUTER_MIDDLE_WEST;
+                    default -> OUTER_MIDDLE_EAST;
+                };
+                default -> switch (dir) {
+                    case NORTH -> MIDDLE;
+                    case SOUTH -> MIDDLE_SOUTH;
+                    case WEST -> MIDDLE_WEST;
+                    default -> MIDDLE_EAST;
+                };
+            };
+        } else if (up) {
+            return switch (shape) {
+                case OUTER_RIGHT -> switch (dir) {
+                    case NORTH -> OUTER_BOTTOM_EAST;
+                    case SOUTH -> OUTER_BOTTOM_WEST;
+                    case WEST -> OUTER_BOTTOM;
+                    default -> OUTER_BOTTOM_SOUTH;
+                };
+                case OUTER_LEFT -> switch (dir) {
+                    case NORTH -> OUTER_BOTTOM;
+                    case SOUTH -> OUTER_BOTTOM_SOUTH;
+                    case WEST -> OUTER_BOTTOM_WEST;
+                    default -> OUTER_BOTTOM_EAST;
+                };
+                case INNER_LEFT -> switch (dir) {
+                    case NORTH -> INNER_BOTTOM_WEST;
+                    case SOUTH -> INNER_BOTTOM_EAST;
+                    case WEST -> INNER_BOTTOM_SOUTH;
+                    default -> INNER_BOTTOM;
+                };
+                case INNER_RIGHT -> switch (dir) {
+                    case NORTH -> INNER_BOTTOM;
+                    case SOUTH -> INNER_BOTTOM_SOUTH;
+                    case WEST -> INNER_BOTTOM_WEST;
+                    default -> INNER_BOTTOM_EAST;
+                };
+                default -> switch (dir) {
+                    case NORTH -> BOTTOM;
+                    case SOUTH -> BOTTOM_SOUTH;
+                    case WEST -> BOTTOM_WEST;
+                    default -> BOTTOM_EAST;
+                };
+            };
         }
-    }
+
+            return switch (shape) {
+                case STRAIGHT -> switch (dir) {
+                    case NORTH -> STRAIGHT;
+                    case SOUTH -> STRAIGHT_SOUTH;
+                    case EAST -> STRAIGHT_EAST;
+                    default -> STRAIGHT_WEST;
+                };
+                case INNER_LEFT -> switch (dir) {
+                    case NORTH -> INNER_CORNER_WEST;
+                    case SOUTH -> INNER_CORNER_EAST;
+                    case EAST -> INNER_CORNER;
+                    default -> INNER_CORNER_SOUTH;
+                };
+                case INNER_RIGHT -> switch (dir) {
+                    case NORTH -> INNER_CORNER;
+                    case SOUTH -> INNER_CORNER_SOUTH;
+                    case EAST -> INNER_CORNER_EAST;
+                    default -> INNER_CORNER_WEST;
+                };
+                case OUTER_LEFT -> switch (dir) {
+                    case NORTH -> OUTER_CORNER;
+                    case SOUTH -> OUTER_CORNER_SOUTH;
+                    case EAST -> OUTER_CORNER_EAST;
+                    default -> OUTER_CORNER_WEST;
+                };
+                case OUTER_RIGHT -> switch (dir) {
+                    case NORTH -> OUTER_CORNER_EAST;
+                    case SOUTH -> OUTER_CORNER_WEST;
+                    case EAST -> OUTER_CORNER_SOUTH;
+                    default -> OUTER_CORNER;
+                };
+                case LEFT_EDGE -> switch (dir) {
+                    case NORTH -> LEFT_EDGE;
+                    case SOUTH -> LEFT_EDGE_SOUTH;
+                    case EAST -> LEFT_EDGE_EAST;
+                    default -> LEFT_EDGE_WEST;
+                };
+                case RIGHT_EDGE -> switch (dir) {
+                    case NORTH -> RIGHT_EDGE;
+                    case SOUTH -> RIGHT_EDGE_SOUTH;
+                    case EAST -> RIGHT_EDGE_EAST;
+                    default -> RIGHT_EDGE_WEST;
+                };
+            };
+        }
 }
 
 enum CounterShape implements StringIdentifiable

@@ -118,6 +118,13 @@ public class Freezer extends HorizontalFacingBlockWEntity{
 
     protected static final VoxelShape FREEZER = VoxelShapes.union(createCuboidShape(0.5, -16, 3,15.5, 16, 16),createCuboidShape(0.5, 5, 2,14.83, 16, 3.1),createCuboidShape(13, 5.19, 0.09,14, 15.19, 1.09),createCuboidShape(13, 5.19, 0.98,14, 6.19, 2.98),createCuboidShape(13, 14.19, 1.06,14, 15.19, 3.06));
     protected static final VoxelShape FREEZER_OPEN = VoxelShapes.union(createCuboidShape(0.5, -16, 2.8,15.5, 16, 16),createCuboidShape(0.5, 5, -11.29,1.5, 16, 3.05),createCuboidShape(-1.41, 5.19, -10.45,-0.41, 15.19, -9.45),createCuboidShape(-0.52, 5.19, -10.45,1.48, 6.19, -9.45),createCuboidShape(-0.44, 14.19, -10.45,1.26, 15.19, -9.45));
+
+    protected static final VoxelShape FREEZER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FREEZER);
+    protected static final VoxelShape FREEZER_SOUTH_OPEN = rotateShape(Direction.NORTH, Direction.SOUTH, FREEZER_OPEN);
+    protected static final VoxelShape FREEZER_EAST = rotateShape(Direction.NORTH, Direction.EAST, FREEZER);
+    protected static final VoxelShape FREEZER_EAST_OPEN = rotateShape(Direction.NORTH, Direction.EAST, FREEZER_OPEN);
+    protected static final VoxelShape FREEZER_WEST = rotateShape(Direction.NORTH, Direction.WEST, FREEZER);
+    protected static final VoxelShape FREEZER_WEST_OPEN = rotateShape(Direction.NORTH, Direction.WEST, FREEZER_OPEN);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
@@ -125,9 +132,9 @@ public class Freezer extends HorizontalFacingBlockWEntity{
         switch (dir) {
             case NORTH:
                 if (open)
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, FREEZER_OPEN);
+                    return FREEZER_SOUTH_OPEN;
                 else
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, FREEZER);
+                    return FREEZER_SOUTH;
             case SOUTH:
                 if (open)
                     return FREEZER_OPEN;
@@ -135,19 +142,17 @@ public class Freezer extends HorizontalFacingBlockWEntity{
                     return FREEZER;
             case EAST:
                 if (open)
-                    return rotateShape(Direction.NORTH, Direction.WEST, FREEZER_OPEN);
+                    return FREEZER_WEST_OPEN;
                 else
-                    return rotateShape(Direction.NORTH, Direction.WEST, FREEZER);
+                    return FREEZER_WEST;
             case WEST:
             default:
                 if (open)
-                    return rotateShape(Direction.NORTH, Direction.EAST, FREEZER_OPEN);
+                    return FREEZER_EAST_OPEN;
                 else
-                    return rotateShape(Direction.NORTH, Direction.EAST, FREEZER);
+                    return FREEZER_EAST;
         }
     }
-
-
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {

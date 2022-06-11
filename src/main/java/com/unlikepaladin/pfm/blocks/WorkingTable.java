@@ -47,13 +47,16 @@ public class WorkingTable extends HorizontalFacingBlock {
     }
 
     public static VoxelShape WORKTABLE_SHAPE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16,16,16), createCuboidShape(2, 1, 2,14, 14, 14),createCuboidShape(1.5, 0, 1,4.5, 1, 15),createCuboidShape(11.5, 0, 1,14.5, 1, 15),createCuboidShape(0, 16, 14,16, 18, 16),createCuboidShape(0, 16, 12,1, 17, 14),createCuboidShape(15, 16, 12,16, 17, 14));
+    public static VoxelShape WORKTABLE_SHAPE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, WORKTABLE_SHAPE);
+    public static VoxelShape WORKTABLE_SHAPE_EAST = rotateShape(Direction.NORTH, Direction.EAST, WORKTABLE_SHAPE);
+    public static VoxelShape WORKTABLE_SHAPE_WEST = rotateShape(Direction.NORTH, Direction.WEST, WORKTABLE_SHAPE);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         switch (state.get(FACING)) {
-            case NORTH -> {return rotateShape(Direction.NORTH, Direction.SOUTH, WORKTABLE_SHAPE);}
+            case NORTH -> {return WORKTABLE_SHAPE_SOUTH;}
             case SOUTH -> {return WORKTABLE_SHAPE;}
-            case WEST -> {return rotateShape(Direction.NORTH, Direction.EAST, WORKTABLE_SHAPE);}
-            default -> {return rotateShape(Direction.NORTH, Direction.WEST, WORKTABLE_SHAPE);}
+            case WEST -> {return WORKTABLE_SHAPE_EAST;}
+            default -> {return WORKTABLE_SHAPE_WEST;}
         }
     }
 
