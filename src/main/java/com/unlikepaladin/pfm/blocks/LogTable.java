@@ -112,13 +112,16 @@ public class LogTable extends HorizontalFacingBlock {
 
 
     protected TableShape getShape(BlockState state) {
-        return state.get(this.SHAPE);
+        return state.get(SHAPE);
     }
 
     final static VoxelShape log_table = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 5, 4.5, 14, 11), createCuboidShape(11.5, 0, 5, 14, 14, 11));
     final static VoxelShape log_table_middle = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16));
     final static VoxelShape log_table_one = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(6, 0, 5, 8.5, 14, 11));
-
+    final static VoxelShape log_table_one_west = rotateShape(Direction.NORTH, Direction.WEST, log_table_one);
+    final static VoxelShape log_table_one_south = rotateShape(Direction.NORTH, Direction.SOUTH, log_table_one);
+    final static VoxelShape log_table_one_east = rotateShape(Direction.NORTH, Direction.EAST, log_table_one);
+    final static VoxelShape log_table_east = rotateShape(Direction.NORTH, Direction.EAST, log_table);
     //Cursed I know
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         TableShape tableShape = getShape(state);
@@ -131,16 +134,16 @@ public class LogTable extends HorizontalFacingBlock {
                 if (dirNorthOrSouth) {
                     return log_table_one;}
                 else if (dirWestOrEast) {
-                    return rotateShape(Direction.NORTH, Direction.WEST, log_table_one);}
+                    return log_table_one_west;}
                 else {
                     return log_table;
                 }
             }
             case RIGHT -> {
                 if (dirNorthOrSouth) {
-                return rotateShape(Direction.NORTH, Direction.SOUTH, log_table_one);}
+                return log_table_one_south;}
                 else if (dirWestOrEast) {
-                    return rotateShape(Direction.NORTH, Direction.EAST, log_table_one);}
+                    return log_table_one_east;}
                 else {
                     return log_table;
                 }
@@ -150,10 +153,11 @@ public class LogTable extends HorizontalFacingBlock {
             }
             default -> {
                 if (dirWestOrEast) {
-                    return rotateShape(Direction.NORTH, Direction.EAST, log_table);}
+                    return log_table_east;}
                 else {
                     return log_table;
-                } }
+                }
+            }
         }
 
     }

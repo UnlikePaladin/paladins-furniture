@@ -44,8 +44,6 @@ public class FroggyChair extends BasicChair {
             case EAST:
             default:
                 return FACE_EAST;
-
-
         }
     }
 

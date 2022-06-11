@@ -1,0 +1,14 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_counter/kitchen_counter_oven_middle",
+	"textures": {
+		"2": "block/black_stained_glass",
+		"3": "block/light_gray_concrete",
+		"4": "block/iron_block",
+		"5": "block/gray_concrete",
+		"particle": "block/warped_planks",
+		"base": "block/warped_planks",
+		"legs": "block/warped_stem"
+	}
+    
+}

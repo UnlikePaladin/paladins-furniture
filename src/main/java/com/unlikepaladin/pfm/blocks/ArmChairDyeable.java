@@ -52,6 +52,29 @@ public class ArmChairDyeable extends ArmChair implements DyeableFurniture {
     protected static final VoxelShape RIGHT_EDGE = VoxelShapes.union(createCuboidShape(12.5, 0, 12,15, 3, 14.5),createCuboidShape(12.5, 0, 1,15, 3, 3.5), createCuboidShape(13, 2, 6.6, 16, 13.71, 16),createCuboidShape(0, 2, 0.3,13, 10.51, 16),createCuboidShape(0, 10.5, 0.3,13, 25.51, 5.3),createCuboidShape(13, 2, 0.3,16, 25.51, 6.6));
     protected static final VoxelShape INNER = VoxelShapes.union(createCuboidShape(12.5, 0, 12,15, 3, 14.5),createCuboidShape(1, 0, 1.5,3.5, 3, 4), createCuboidShape(0.3, 2, 0.3, 16, 10.51, 16),createCuboidShape(0.3, 10.5, 5.3,5.3, 25.51, 16),createCuboidShape(0.3, 10.5, 0.3,16, 25.51, 5.3));
 
+    protected static final VoxelShape STANDARD_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, STANDARD);
+    protected static final VoxelShape STANDARD_EAST = rotateShape(Direction.WEST, Direction.EAST, STANDARD);
+    protected static final VoxelShape STANDARD_NORTH = rotateShape(Direction.WEST, Direction.NORTH, STANDARD);
+
+    protected static final VoxelShape MIDDLE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, MIDDLE);
+    protected static final VoxelShape MIDDLE_EAST = rotateShape(Direction.WEST, Direction.EAST, MIDDLE);
+    protected static final VoxelShape MIDDLE_WEST = rotateShape(Direction.WEST, Direction.NORTH, MIDDLE);
+
+    protected static final VoxelShape OUTER_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, OUTER);
+    protected static final VoxelShape OUTER_EAST = rotateShape(Direction.WEST, Direction.EAST, OUTER);
+    protected static final VoxelShape OUTER_WEST = rotateShape(Direction.WEST, Direction.NORTH, OUTER);
+
+    protected static final VoxelShape LEFT_EDGE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, LEFT_EDGE);
+    protected static final VoxelShape LEFT_EDGE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, LEFT_EDGE);
+    protected static final VoxelShape LEFT_EDGE_EAST = rotateShape(Direction.WEST, Direction.EAST, LEFT_EDGE);
+
+    protected static final VoxelShape RIGHT_EDGE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, RIGHT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, RIGHT_EDGE);
+    protected static final VoxelShape RIGHT_EDGE_EAST = rotateShape(Direction.WEST, Direction.EAST, RIGHT_EDGE);
+
+    protected static final VoxelShape INNER_NORTH = rotateShape(Direction.WEST, Direction.NORTH, INNER);
+    protected static final VoxelShape INNER_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, INNER);
+    protected static final VoxelShape INNER_EAST = rotateShape(Direction.WEST, Direction.EAST, INNER);
     @SuppressWarnings("deprecated")
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
@@ -59,77 +82,61 @@ public class ArmChairDyeable extends ArmChair implements DyeableFurniture {
         ArmChairShape shape = state.get(SHAPE);
         switch(shape) {
             case STRAIGHT:
-                if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.WEST, Direction.EAST, STANDARD);
-                if (dir.equals(Direction.NORTH))
-                    return rotateShape(Direction.WEST, Direction.NORTH, STANDARD);
-                if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.WEST, Direction.SOUTH, STANDARD);
-                else
-                    return STANDARD;
+                return switch (dir) {
+                    case NORTH -> STANDARD_NORTH;
+                    case SOUTH -> STANDARD_SOUTH;
+                    case EAST -> STANDARD_EAST;
+                    default -> STANDARD;
+                };
             case MIDDLE:
-                if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.WEST, Direction.NORTH, MIDDLE);
-                if (dir.equals(Direction.NORTH))
-                    return MIDDLE;
-                if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.WEST, Direction.EAST, MIDDLE);
-                else
-                    return rotateShape(Direction.WEST, Direction.SOUTH, MIDDLE);
+                return switch (dir) {
+                    case NORTH -> MIDDLE;
+                    case SOUTH -> MIDDLE_EAST;
+                    case EAST -> MIDDLE_WEST;
+                    default -> MIDDLE_SOUTH;
+                };
             case OUTER_LEFT:
-                if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.WEST, Direction.EAST, OUTER);
-                if (dir.equals(Direction.NORTH))
-                    return rotateShape(Direction.WEST, Direction.NORTH, OUTER);
-                if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.WEST, Direction.SOUTH, OUTER);
-                else
-                    return OUTER;
+                return switch (dir) {
+                    case NORTH -> OUTER_WEST;
+                    case SOUTH -> OUTER_SOUTH;
+                    case EAST -> OUTER_EAST;
+                    default -> OUTER;
+                };
             case OUTER_RIGHT:
-                if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.WEST, Direction.SOUTH, OUTER);
-                if (dir.equals(Direction.NORTH))
-                    return rotateShape(Direction.WEST, Direction.EAST, OUTER);
-                if (dir.equals(Direction.SOUTH))
-                    return OUTER;
-                else
-                    return rotateShape(Direction.WEST, Direction.NORTH, OUTER);
+                return switch (dir) {
+                    case NORTH -> OUTER_EAST;
+                    case SOUTH -> OUTER;
+                    case EAST -> OUTER_SOUTH;
+                    default -> OUTER_WEST;
+                };
             case LEFT_EDGE:
-                if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.WEST, Direction.NORTH, LEFT_EDGE);
-                if (dir.equals(Direction.NORTH))
-                    return LEFT_EDGE;
-                if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.WEST, Direction.EAST, LEFT_EDGE);
-                else
-                    return rotateShape(Direction.WEST, Direction.SOUTH, LEFT_EDGE);
+                return switch (dir) {
+                    case NORTH -> LEFT_EDGE;
+                    case SOUTH -> LEFT_EDGE_EAST;
+                    case EAST -> LEFT_EDGE_NORTH;
+                    default -> LEFT_EDGE_SOUTH;
+                };
             case RIGHT_EDGE:
-                if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.WEST, Direction.NORTH, RIGHT_EDGE);
-                if (dir.equals(Direction.NORTH))
-                    return RIGHT_EDGE;
-                if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.WEST, Direction.EAST, RIGHT_EDGE);
-                else
-                    return rotateShape(Direction.WEST, Direction.SOUTH, RIGHT_EDGE);
+                return switch (dir) {
+                    case NORTH -> RIGHT_EDGE;
+                    case SOUTH -> RIGHT_EDGE_EAST;
+                    case EAST -> RIGHT_EDGE_NORTH;
+                    default -> RIGHT_EDGE_SOUTH;
+                };
             case INNER_RIGHT:
-                if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.WEST, Direction.EAST, INNER);
-                if (dir.equals(Direction.NORTH))
-                    return rotateShape(Direction.WEST, Direction.NORTH, INNER);
-                if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.WEST, Direction.SOUTH, INNER);
-                else
-                    return INNER;
+                return switch (dir) {
+                    case NORTH -> INNER_NORTH;
+                    case SOUTH -> INNER_SOUTH;
+                    case EAST -> INNER_EAST;
+                    default -> INNER;
+                };
             case INNER_LEFT:
-                if (dir.equals(Direction.EAST))
-                    return rotateShape(Direction.WEST, Direction.NORTH, INNER);
-                if (dir.equals(Direction.NORTH))
-                    return INNER;
-                if (dir.equals(Direction.SOUTH))
-                    return rotateShape(Direction.WEST, Direction.EAST, INNER);
-                else
-                    return rotateShape(Direction.WEST, Direction.SOUTH, INNER);
+                return switch (dir) {
+                    case NORTH -> INNER;
+                    case SOUTH -> INNER_EAST;
+                    case EAST -> INNER_NORTH;
+                    default -> INNER_SOUTH;
+                };
             default:
                 return STANDARD;
         }

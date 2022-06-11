@@ -128,6 +128,20 @@ public class XboxFridge extends Fridge
     protected static final VoxelShape XBOX_FRIDGE_UPPER = VoxelShapes.union(createCuboidShape(0.5, -15, 3,15.5, 16, 16),createCuboidShape(1, -16, 2.84,15, -15, 15.84),createCuboidShape(0.51, 0, 1.91,15.31, 16, 2.91));
     protected static final VoxelShape XBOX_FRIDGE_OPEN = VoxelShapes.union(createCuboidShape(0.5, 1, 3,15.5, 32, 16),createCuboidShape(1, 0, 2.84,15, 1, 15.84),createCuboidShape(0.5, 16, -11.69,1.5, 32, 3.11));
     protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN = VoxelShapes.union(createCuboidShape(0.5, -15, 3,15.5, 16, 16),createCuboidShape(1, -16, 2.84,15, -15, 15.84),createCuboidShape(0.5, 0, -11.69,1.5, 16, 3.11));
+
+    protected static final VoxelShape XBOX_FRIDGE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_UPPER);
+    protected static final VoxelShape XBOX_FRIDGE_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_OPEN);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_UPPER_OPEN);
+    protected static final VoxelShape XBOX_FRIDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_EAST = rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_UPPER);
+    protected static final VoxelShape XBOX_FRIDGE_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_OPEN);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_UPPER_OPEN);
+    protected static final VoxelShape XBOX_FRIDGE_WEST = rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_WEST = rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_UPPER);
+    protected static final VoxelShape XBOX_FRIDGE_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_OPEN);
+    protected static final VoxelShape XBOX_FRIDGE_UPPER_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_UPPER_OPEN);
+
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
@@ -138,15 +152,15 @@ public class XboxFridge extends Fridge
             case NORTH:
                 if (half == DoubleBlockHalf.UPPER){
                     if (open) {
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_UPPER_OPEN);}
+                    return XBOX_FRIDGE_UPPER_OPEN_SOUTH;}
                     else {
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_UPPER);}
+                        return XBOX_FRIDGE_UPPER_SOUTH;}
                     }
                 else {
                     if (open)
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE_OPEN);
+                    return XBOX_FRIDGE_OPEN_SOUTH;
                     else
-                        return rotateShape(Direction.NORTH, Direction.SOUTH, XBOX_FRIDGE);
+                        return XBOX_FRIDGE_SOUTH;
                 }
 
             case SOUTH:
@@ -166,29 +180,28 @@ public class XboxFridge extends Fridge
             case EAST:
                 if (half == DoubleBlockHalf.UPPER){
                     if (open) {
-                        return rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_UPPER_OPEN);}
+                        return XBOX_FRIDGE_UPPER_OPEN_WEST;}
                     else {
-                        return rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_UPPER);}
+                        return XBOX_FRIDGE_UPPER_WEST;}
                 }
                 else {
                     if (open)
-                        return rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE_OPEN);
+                        return XBOX_FRIDGE_OPEN_WEST;
                     else
-                        return rotateShape(Direction.NORTH, Direction.WEST, XBOX_FRIDGE);
+                        return XBOX_FRIDGE_WEST;
                 }
-            case WEST:
             default:
                 if (half == DoubleBlockHalf.UPPER){
                     if (open) {
-                        return rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_UPPER_OPEN);}
+                        return XBOX_FRIDGE_UPPER_OPEN_EAST;}
                     else {
-                        return rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_UPPER);}
+                        return XBOX_FRIDGE_UPPER_EAST;}
                 }
                 else {
                     if (open)
-                        return rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE_OPEN);
+                        return XBOX_FRIDGE_OPEN_EAST;
                     else
-                        return rotateShape(Direction.NORTH, Direction.EAST, XBOX_FRIDGE);
+                        return XBOX_FRIDGE_EAST;
             }
         }
     }

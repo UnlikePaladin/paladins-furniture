@@ -64,8 +64,6 @@ public class BasicChair extends HorizontalFacingBlock {
             case EAST:
             default:
                 return FACE_EAST;
-
-
         }
     }
 

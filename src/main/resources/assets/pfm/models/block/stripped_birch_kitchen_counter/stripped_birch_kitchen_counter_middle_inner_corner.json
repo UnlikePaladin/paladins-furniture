@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_counter/kitchen_counter_middle_inner_corner",
+	"textures": {
+        
+		"particle": "block/birch_planks",
+		"base": "block/stripped_birch_log",
+		"legs": "block/birch_planks"
+	}
+    
+}

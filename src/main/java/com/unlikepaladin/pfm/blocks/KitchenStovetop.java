@@ -43,19 +43,17 @@ public class KitchenStovetop extends HorizontalFacingBlock {
     }
 
     protected static final VoxelShape STOVETOP = VoxelShapes.union(createCuboidShape(0, 0, 1, 16, 0.5, 15));
+    protected static final VoxelShape STOVETOP_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STOVETOP);
+    protected static final VoxelShape STOVETOP_EAST = rotateShape(Direction.NORTH, Direction.EAST, STOVETOP);
+    protected static final VoxelShape STOVETOP_WEST = rotateShape(Direction.NORTH, Direction.WEST, STOVETOP);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        switch(dir) {
-            case WEST:
-                return rotateShape(Direction.NORTH, Direction.EAST, STOVETOP);
-            case NORTH:
-                return rotateShape(Direction.NORTH, Direction.SOUTH, STOVETOP);
-            case SOUTH:
-                return STOVETOP;
-            case EAST:
-            default:
-                return rotateShape(Direction.NORTH, Direction.WEST, STOVETOP);
-        }
+        return switch (dir) {
+            case WEST -> STOVETOP_EAST;
+            case NORTH -> STOVETOP_SOUTH;
+            case SOUTH -> STOVETOP;
+            default -> STOVETOP_WEST;
+        };
     }
 }

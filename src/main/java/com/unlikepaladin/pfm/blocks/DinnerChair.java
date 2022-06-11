@@ -51,8 +51,6 @@ public class DinnerChair extends BasicChair {
             case EAST:
             default:
                 return FACE_EAST;
-
-
         }
     }
 

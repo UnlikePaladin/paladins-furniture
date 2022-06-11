@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_drawer/kitchen_drawer_middle_outer_corner_open_mirrored",
+	"textures": {
+        
+		"particle": "block/stripped_spruce_log",
+		"base": "block/stripped_spruce_log",
+		"legs": "block/spruce_planks"
+	}
+    
+}

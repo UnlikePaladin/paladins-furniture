@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_drawer/kitchen_drawer_middle_inner_corner",
+	"textures": {
+        
+		"particle": "block/spruce_planks",
+		"base": "block/spruce_planks",
+		"legs": "block/spruce_log"
+	}
+    
+}

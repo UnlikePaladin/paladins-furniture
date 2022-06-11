@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_counter/kitchen_counter_middle_outer_corner",
+	"textures": {
+        
+		"particle": "block/stripped_oak_log",
+		"base": "block/quartz_block_bottom",
+		"legs": "block/stripped_oak_log"
+	}
+    
+}
