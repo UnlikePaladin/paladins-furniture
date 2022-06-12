@@ -1,9 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.BlockRotation;
@@ -12,6 +9,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
@@ -31,6 +29,10 @@ public class KitchenStovetop extends HorizontalFacingBlock {
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         Block neighborBlock = world.getBlockState(pos.down()).getBlock();
         return neighborBlock instanceof KitchenCounterOven || neighborBlock instanceof KitchenCounter;
+    }
+
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        return direction == Direction.DOWN && !this.canPlaceAt(state, world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     public BlockState rotate(BlockState state, BlockRotation rotation) {
