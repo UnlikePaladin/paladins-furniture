@@ -389,6 +389,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_MANGROVE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_MANGROVE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_MANGROVE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block STRIPPED_MANGROVE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
 
     public static final Block STRIPPED_CRIMSON_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_CRIMSON_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(WARPED_CHAIR));
@@ -930,6 +931,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_mangrove_kitchen_drawer", STRIPPED_MANGROVE_KITCHEN_DRAWER, true);
         registerFurniture("stripped_mangrove_kitchen_cabinet", STRIPPED_MANGROVE_KITCHEN_CABINET, true);
         registerFurniture("stripped_mangrove_kitchen_sink", STRIPPED_MANGROVE_KITCHEN_SINK, true);
+        registerFurniture("stripped_mangrove_kitchen_counter_oven", STRIPPED_MANGROVE_KITCHEN_COUNTER_OVEN, true);
 
         registerFurniture("stripped_crimson_kitchen_counter", STRIPPED_CRIMSON_KITCHEN_COUNTER, true);
         registerFurniture("stripped_crimson_kitchen_drawer", STRIPPED_CRIMSON_KITCHEN_DRAWER, true);

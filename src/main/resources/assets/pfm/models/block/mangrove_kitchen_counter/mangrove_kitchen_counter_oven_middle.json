@@ -1,6 +1,6 @@
 {
 	"credit": "By UnlikePaladin",
-    "parent": "pfm:block/kitchen_counter/kitchen_counter_oven",
+    "parent": "pfm:block/kitchen_counter/kitchen_counter_oven_middle",
 	"textures": {
 		"2": "block/black_stained_glass",
 		"3": "block/light_gray_concrete",
