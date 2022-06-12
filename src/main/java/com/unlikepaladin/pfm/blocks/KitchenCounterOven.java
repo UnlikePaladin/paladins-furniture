@@ -15,8 +15,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Random;
-
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class KitchenCounterOven extends Stove{
@@ -27,9 +25,6 @@ public class KitchenCounterOven extends Stove{
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new StoveBlockEntity(PaladinFurnitureMod.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, pos, state);
-    }
-    @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
     }
 
     @Override
