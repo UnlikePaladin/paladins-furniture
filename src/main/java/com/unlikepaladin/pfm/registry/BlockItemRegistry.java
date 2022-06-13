@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.items.DyeKit;
+import com.unlikepaladin.pfm.items.FurnitureGuideBook;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
@@ -16,6 +17,7 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 
 import java.util.function.ToIntFunction;
@@ -416,6 +418,8 @@ public class BlockItemRegistry {
 
     public static final Block LIGHT_SWITCH = new LightSwitch(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE).sounds(BlockSoundGroup.STONE).nonOpaque());
     public static final BlockItem LIGHT_SWITCH_ITEM = new LightSwitchItem(LIGHT_SWITCH, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+    private static final Item FURNITURE_BOOK = new FurnitureGuideBook(new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).maxCount(1));
+
     private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
         return state -> state.get(Properties.LIT)? litLevel : 0;
     }
@@ -526,6 +530,7 @@ public class BlockItemRegistry {
 
     public static void register(){
         //Block Registry
+        registerItem("furniture_book", FURNITURE_BOOK);
         registerFurniture("working_table", WORKING_TABLE, true);
 
         //Basic Chairs
@@ -977,6 +982,7 @@ public class BlockItemRegistry {
         registerFurniture("glass_modern_pendant", GLASS_MODERN_PENDANT, true);
         registerFurniture("simple_light", SIMPLE_LIGHT, true);
         registerBlock("light_switch", LIGHT_SWITCH,true, LIGHT_SWITCH_ITEM);
+
 
         //Dye Kits
         registerItem("dye_kit_red", DYE_KIT_RED);

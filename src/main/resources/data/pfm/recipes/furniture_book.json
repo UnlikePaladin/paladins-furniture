@@ -1,5 +1,5 @@
 {
-  "type": "patchouli:shapeless_book_recipe",
+  "type": "minecraft:crafting_shapeless",
   "ingredients": [
     {
       "item": "minecraft:iron_ingot"
@@ -11,5 +11,7 @@
       "item": "minecraft:orange_dye"
     }
   ],
-  "book": "pfm:guide_book"
+  "result": {
+    "item": "pfm:furniture_book"
+  }
 }
