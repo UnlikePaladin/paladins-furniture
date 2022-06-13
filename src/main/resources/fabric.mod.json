@@ -24,7 +24,7 @@
     "client": [
       "com.unlikepaladin.pfm.client.PaladinFurnitureModClient"	
 ],
-    "rei": [
+    "rei_client": [
       "com.unlikepaladin.pfm.compat.rei.PaladinFurnitureModREIPlugin"
     ]
   },

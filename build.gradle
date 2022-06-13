@@ -28,9 +28,9 @@ repositories {
 }
 
 dependencies {
-	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:9.0.466"
+	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:9.0.475"
 	modCompileOnly "vazkii.patchouli:Patchouli:1.18.2-70-FABRIC-SNAPSHOT"
-	//modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:9.0.466"
+	modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:9.0.475"
 }
 
 dependencies {
@@ -67,7 +67,7 @@ java {
 
 jar {
 	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
+		rename { "${it}_${project.archivesBaseName}_${project.minecraft_version}"}
 	}
 }
 
