@@ -5,5 +5,6 @@
   "subtitle": "pfm.patchouli.guide_book.subtitle",
   "book_texture": "pfm:textures/gui/book_orange.png",
   "model": "pfm:book_orange",
-  "creative_tab": "pfm.furniture"
+  "dont_generate_book": "true",
+  "custom_book_item": "pfm:furniture_book"
 }

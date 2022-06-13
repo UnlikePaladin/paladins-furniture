@@ -117,6 +117,8 @@
 
   "block.pfm.light_switch":"Light Switch",
   "message.pfm.light_switch_not_canopy": "You must only select the light's canopy",
+  "message.pfm.patchouli_not_installed": "To use this book you must install the Patchouli mod",
+  "item.pfm.furniture_book": "Paladin's Furniture",
 
   "block.pfm.oak_table_basic": "Basic Oak Table",
   "block.pfm.birch_table_basic": "Basic Birch Table",
