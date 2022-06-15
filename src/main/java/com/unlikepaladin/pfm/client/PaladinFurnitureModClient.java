@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.client;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.screens.*;
+import com.unlikepaladin.pfm.compat.sandwichable.client.PFMSandwichableClient;
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import com.unlikepaladin.pfm.entity.render.ChairEntityRenderer;
 import com.unlikepaladin.pfm.entity.render.MicrowaveBlockEntityRenderer;
@@ -15,6 +16,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -54,6 +56,9 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
                 }
             });
         });
+        if (FabricLoader.getInstance().isModLoaded("sandwichable")) {
+            PFMSandwichableClient.register();
+        }
     }
 
 

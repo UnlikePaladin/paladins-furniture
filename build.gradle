@@ -46,26 +46,6 @@ if (project.sandwichable_compatibility == "true") {
 		modCompileOnly("dev.lambdaurora:spruceui:${project.spruceui_version}")
 	}
 }
-if (project.sandwichable_compatibility == "true") {
-	repositories {
-		mavenLocal()
-		maven {
-			name 'Gegy'
-			url 'https://maven.gegy.dev'
-		}
-		maven {
-			name = "Modrinth"
-			url = "https://api.modrinth.com/maven"
-			content {
-				includeGroup "maven.modrinth"
-			}
-		}
-	}
-	dependencies {
-		modCompileOnly "maven.modrinth:sandwichable:${project.sandwichable_version}"
-		modCompileOnly("dev.lambdaurora:spruceui:${project.spruceui_version}")
-	}
-}
 if (project.rei_compatibility == "true"){
 	dependencies {
 		modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
@@ -78,8 +58,8 @@ dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation "vazkii.patchouli:Patchouli:${project.patchouli_version}"
-	modImplementation "dev.emi:emi:${project.emi_version}"
+	modCompileOnly "vazkii.patchouli:Patchouli:${project.patchouli_version}"
+	modCompileOnly "dev.emi:emi:${project.emi_version}"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"

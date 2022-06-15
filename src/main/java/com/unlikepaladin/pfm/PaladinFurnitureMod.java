@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm;
 
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
+import com.unlikepaladin.pfm.compat.sandwichable.PFMSandwichableRegistry;
 import com.unlikepaladin.pfm.menus.*;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
@@ -15,6 +16,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -107,6 +109,9 @@ public class PaladinFurnitureMod implements ModInitializer {
 		EntityRegistry.registerEntities();
 		SinkBehavior.registerBehavior();
 		BlockItemRegistry.register();
+		if (FabricLoader.getInstance().isModLoaded("sandwichable")) {
+			PFMSandwichableRegistry.register();
+		}
 		StatisticsRegistry.register();
 		SoundRegistry.register();
 		DRAWER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":drawer_block_entity", FabricBlockEntityTypeBuilder.create(DrawerBlockEntity::new, BlockItemRegistry.OAK_KITCHEN_DRAWER).build(null));

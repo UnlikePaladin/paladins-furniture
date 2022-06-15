@@ -305,6 +305,7 @@
   "block.pfm.kitchen_stovetop": "Kitchen Stovetop",
   "block.pfm.simple_stove": "White Stove",
   "block.pfm.iron_stove": "Iron Stove",
+  "block.pfm.iron_toaster": "Iron Toaster",
   "container.pfm.microwave": "Microwave",
   "block.pfm.microwave": "Microwave",
   "gui.pfm.microwave.start_button": "Start",
