@@ -12,6 +12,7 @@ public class StatisticsRegistry {
     public static final Identifier DRAWER_SEARCHED = new Identifier(PaladinFurnitureMod.MOD_ID, "drawer_searched");
     public static final Identifier CABINET_SEARCHED = new Identifier(PaladinFurnitureMod.MOD_ID, "cabinet_searched");
     public static final Identifier STOVE_OPENED = new Identifier(PaladinFurnitureMod.MOD_ID, "stove_opened");
+    public static final Identifier STOVETOP_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "stovetop_used");
     public static final Identifier SINK_FILLED = new Identifier(PaladinFurnitureMod.MOD_ID, "sink_filled");
     public static final Identifier USE_SINK = new Identifier(PaladinFurnitureMod.MOD_ID, "use_sink");
 
@@ -36,5 +37,8 @@ public class StatisticsRegistry {
 
         Registry.register(Registry.CUSTOM_STAT, "stove_opened", STOVE_OPENED);
         Stats.CUSTOM.getOrCreateStat(STOVE_OPENED, StatFormatter.DEFAULT);
+
+        Registry.register(Registry.CUSTOM_STAT, "stovetop_used", STOVETOP_USED);
+        Stats.CUSTOM.getOrCreateStat(STOVETOP_USED, StatFormatter.DEFAULT);
     }
 }
