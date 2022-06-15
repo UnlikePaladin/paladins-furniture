@@ -1,28 +1,45 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
+import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ItemEntity;
+import net.minecraft.entity.ai.pathing.NavigationType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
-public class KitchenStovetop extends HorizontalFacingBlock {
+public class KitchenStovetop extends HorizontalFacingBlockWEntity {
+    public static final BooleanProperty LIT = Properties.LIT;
     public KitchenStovetop(Settings settings) {
         super(settings);
-    }
-
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
-        builder.add(FACING);
     }
 
     @Override
@@ -30,6 +47,39 @@ public class KitchenStovetop extends HorizontalFacingBlock {
         Block neighborBlock = world.getBlockState(pos.down()).getBlock();
         return neighborBlock instanceof KitchenCounterOven || neighborBlock instanceof KitchenCounter;
     }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        ItemStack itemStack;
+        StovetopBlockEntity stovetopBlockEntity;
+        Optional<CampfireCookingRecipe> optional;
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof StovetopBlockEntity && (optional = (stovetopBlockEntity = (StovetopBlockEntity)blockEntity).getRecipeFor(itemStack = player.getStackInHand(hand))).isPresent()) {
+            if (!world.isClient && stovetopBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+                player.incrementStat(StatisticsRegistry.STOVETOP_USED);
+                return ActionResult.SUCCESS;
+            }
+            return ActionResult.CONSUME;
+        }
+        else if(blockEntity instanceof StovetopBlockEntity && player.isSneaking()){
+            stovetopBlockEntity = (StovetopBlockEntity)blockEntity;
+            if(player.getStackInHand(hand).isEmpty())
+            for (int i = 0; i < stovetopBlockEntity.getItemsBeingCooked().size(); i++) {
+                ItemStack stack = stovetopBlockEntity.getItemsBeingCooked().get(i);
+                if (stack.isEmpty()) continue;
+                if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()){
+                    ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stovetopBlockEntity.removeStack(i));
+                    world.spawnEntity(itemEntity);
+                    player.incrementStat(StatisticsRegistry.STOVETOP_USED);
+                    return ActionResult.SUCCESS;
+                }
+            }
+            return ActionResult.CONSUME;
+        }
+
+        return ActionResult.PASS;
+    }
+
 
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         return direction == Direction.DOWN && !this.canPlaceAt(state, world, pos) ? Blocks.AIR.getDefaultState() : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
@@ -57,5 +107,41 @@ public class KitchenStovetop extends HorizontalFacingBlock {
             case SOUTH -> STOVETOP;
             default -> STOVETOP_WEST;
         };
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new StovetopBlockEntity(pos, state);
+    }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+        builder.add(LIT, FACING);
+    }
+    @Override
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        if (world.isClient) {
+            if (state.get(LIT).booleanValue()) {
+                return checkType(type, PaladinFurnitureMod.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::clientTick);
+            }
+        } else {
+            if (state.get(LIT).booleanValue()) {
+                return checkType(type, PaladinFurnitureMod.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::litServerTick);
+            }
+            return checkType(type, PaladinFurnitureMod.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::unlitServerTick);
+        }
+        return null;
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        return false;
     }
 }

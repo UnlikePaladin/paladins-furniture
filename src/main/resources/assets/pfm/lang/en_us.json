@@ -523,6 +523,7 @@
   "stat.pfm.drawer_searched": "Drawers Opened",
   "stat.pfm.cabinet_searched": "Cabinets Opened",
   "stat.pfm.stove_opened": "Interactions with Stove",
+  "stat.pfm.stove_used": "Interactions with Stovetop",
   "stat.pfm.sink_filled": "Sinks Filled",
   "stat.pfm.use_sink": "Water Taken from Sink",
 

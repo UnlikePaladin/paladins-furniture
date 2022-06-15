@@ -43,6 +43,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static BlockEntityType<IronStoveBlockEntity> IRON_STOVE_BLOCK_ENTITY;
 	public static BlockEntityType<LightSwitchBlockEntity> LIGHT_SWITCH_BLOCK_ENTITY;
 	public static BlockEntityType<MicrowaveBlockEntity> MICROWAVE_BLOCK_ENTITY;
+	public static BlockEntityType<StovetopBlockEntity> STOVE_TOP_BLOCK_ENTITY;
 	public static final Identifier MICROWAVE_PACKET_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_activate");
 
 	public static final Identifier FREEZER = new Identifier(MOD_ID, "freezer_block_entity");
@@ -113,6 +114,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 		IRON_FREEZER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":iron_freezer_block_entity", FabricBlockEntityTypeBuilder.create(FreezerBlockEntity::new, BlockItemRegistry.IRON_FREEZER).build(null));
 		FREEZER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":freezer_block_entity", FabricBlockEntityTypeBuilder.create(FreezerBlockEntity::new, BlockItemRegistry.WHITE_FREEZER).build(null));
 		STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":stove_block_entity", FabricBlockEntityTypeBuilder.create(StoveBlockEntity::new, BlockItemRegistry.SIMPLE_STOVE).build(null));
+		STOVE_TOP_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":stovetop_block_entity", FabricBlockEntityTypeBuilder.create(StovetopBlockEntity::new, BlockItemRegistry.KITCHEN_STOVETOP).build(null));
 		KITCHEN_COUNTER_OVEN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":kitchen_counter_oven_block_entity", FabricBlockEntityTypeBuilder.create(StoveBlockEntity::new,
 						BlockItemRegistry.OAK_KITCHEN_COUNTER_OVEN,
 						BlockItemRegistry.BIRCH_KITCHEN_COUNTER_OVEN,
