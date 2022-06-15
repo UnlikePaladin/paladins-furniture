@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -101,6 +102,14 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
 
     public DefaultedList<ItemStack> getItemsBeingCooked() {
         return this.itemsBeingCooked;
+    }
+
+    public Inventory getInventory(){
+        SimpleInventory inventory = new SimpleInventory(itemsBeingCooked.size());
+        for (int i = 0; i < itemsBeingCooked.size(); i++) {
+            inventory.setStack(i, itemsBeingCooked.get(i));
+        }
+        return inventory;
     }
 
     @Override

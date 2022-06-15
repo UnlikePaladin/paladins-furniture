@@ -21,6 +21,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -144,4 +145,20 @@ public class KitchenStovetop extends HorizontalFacingBlockWEntity {
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
     }
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.isOf(newState.getBlock())) {
+            System.out.println("returned");
+            return;
+        }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof StovetopBlockEntity stovetopBlockEntity) {
+            ItemScatterer.spawn(world, pos, stovetopBlockEntity.getInventory());
+            world.updateComparators(pos, this);
+            stovetopBlockEntity.markRemoved();
+        }
+        super.onStateReplaced(state, world, pos, newState, moved);
+    }
+
 }
