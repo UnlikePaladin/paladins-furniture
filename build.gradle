@@ -24,7 +24,6 @@ repositories {
 repositories {
 	maven { url "https://maven.shedaniel.me" }
 	maven { url 'https://maven.blamejared.com' }
-
 }
 
 if (project.sandwichable_compatibility == "true") {
