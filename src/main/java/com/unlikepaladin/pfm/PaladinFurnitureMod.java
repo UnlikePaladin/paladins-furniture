@@ -109,6 +109,9 @@ public class PaladinFurnitureMod implements ModInitializer {
 		EntityRegistry.registerEntities();
 		SinkBehavior.registerBehavior();
 		BlockItemRegistry.register();
+		if (FabricLoader.getInstance().isModLoaded("sandwichable")) {
+			PFMSandwichableRegistry.register();
+		}
 		StatisticsRegistry.register();
 		SoundRegistry.register();
 		DRAWER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":drawer_block_entity", FabricBlockEntityTypeBuilder.create(DrawerBlockEntity::new, BlockItemRegistry.OAK_KITCHEN_DRAWER).build(null));

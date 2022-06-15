@@ -46,6 +46,9 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
         ScreenRegistry.register(PaladinFurnitureMod.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
         ScreenRegistry.register(PaladinFurnitureMod.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
 
+        if (FabricLoader.getInstance().isModLoaded("sandwichable")) {
+            PFMSandwichableClient.register();
+        }
         ClientSidePacketRegistry.INSTANCE.register(PaladinFurnitureMod.MICROWAVE_UPDATE_PACKET_ID,
                 (packetContext, attachedData) -> {
                     // Get the BlockPos we put earlier, in the networking thread
