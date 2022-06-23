@@ -1,13 +1,19 @@
 package com.unlikepaladin.pfm.compat.sandwichable;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.compat.arrp.JFurnitureRecipe;
 import com.unlikepaladin.pfm.compat.sandwichable.blocks.PFMToaster;
 import com.unlikepaladin.pfm.compat.sandwichable.blocks.blockentities.PFMToasterBlockEntity;
 import net.devtech.arrp.api.RRPCallback;
 import net.devtech.arrp.api.RuntimeResourcePack;
+import net.devtech.arrp.impl.RuntimeResourcePackImpl;
 import net.devtech.arrp.json.loot.JCondition;
-import net.devtech.arrp.json.recipe.*;
+import net.devtech.arrp.json.recipe.JIngredient;
+import net.devtech.arrp.json.recipe.JKeys;
+import net.devtech.arrp.json.recipe.JPattern;
+import net.devtech.arrp.json.recipe.JResult;
 import net.devtech.arrp.json.tags.JTag;
+import net.devtech.arrp.util.UnsafeByteArrayOutputStream;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
@@ -18,6 +24,10 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.Items;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 import static net.devtech.arrp.api.RuntimeResourcePack.id;
@@ -51,19 +61,17 @@ public class PFMSandwichableRegistry {
                         )
 
             );
-            pack.addTag(id("minecraft:mineable/pickaxe"), JTag.tag().add(id("iron_toaster")));
-            pack.addRecipe(id("pfm:iron_toaster"), JRecipe.shaped(JPattern.pattern(" L ","IRI", "III"), JKeys.keys().key("I", JIngredient.ingredient().item(Items.IRON_INGOT)).key("L", JIngredient.ingredient().item(Items.LEVER)).key("R", JIngredient.ingredient().item(Items.REDSTONE)), JResult.item(PFMSandwichableRegistry.IRON_TOASTER.asItem())));
-
-            PaladinFurnitureMod.GENERAL_LOGGER.info("wtf is this loading even?");
-            RRPCallback.BEFORE_VANILLA.register(aaaaa -> {
-                pack.dump();
-                aaaaa.add(pack);
+            pack.addTag(id("minecraft:blocks/mineable/pickaxe"), JTag.tag().add(id("pfm:iron_toaster")));
+            JFurnitureRecipe recipe =  new JFurnitureRecipe(JResult.item(PFMSandwichableRegistry.IRON_TOASTER.asItem()), JPattern.pattern(" L ","IRI", "III"), JKeys.keys().key("I", JIngredient.ingredient().item(Items.IRON_INGOT)).key("L", JIngredient.ingredient().item(Items.LEVER)).key("R", JIngredient.ingredient().item(Items.REDSTONE)));
+            pack.addData(fix(id("pfm","iron_toaster"), "recipes", "json"), serialize(recipe));
+            RRPCallback.BEFORE_VANILLA.register(a -> {
+                a.add(pack);
             });
     }
 
 
     //IGNORE ME PLS
-   /* private static byte[] serialize(Object object) {
+   private static byte[] serialize(Object object) {
         UnsafeByteArrayOutputStream ubaos = new UnsafeByteArrayOutputStream();
         OutputStreamWriter writer = new OutputStreamWriter(ubaos, StandardCharsets.UTF_8);
         RuntimeResourcePackImpl.GSON.toJson(object, writer);
@@ -77,7 +85,7 @@ public class PFMSandwichableRegistry {
 
     private static Identifier fix(Identifier identifier, String prefix, String append) {
         return new Identifier(identifier.getNamespace(), prefix + '/' + identifier.getPath() + '.' + append);
-    }*/
+    }
 }
 
 
