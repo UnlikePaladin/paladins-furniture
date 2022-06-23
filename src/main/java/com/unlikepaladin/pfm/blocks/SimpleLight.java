@@ -16,16 +16,26 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class SimpleLight extends PowerableBlock{
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
+    private static final List<SimpleLight> SIMPLE_LIGHTS = new ArrayList<>();
     public SimpleLight(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(LIT,  false).with(POWERLOCKED, false));
+        SIMPLE_LIGHTS.add(this);
     }
     @Override
     public void setPowered(World world, BlockPos lightPos, boolean powered) {
         BlockState state = world.getBlockState(lightPos);
         world.setBlockState(lightPos, state.with(LIT, powered).with(POWERLOCKED, powered));
+    }
+
+    public static Stream<SimpleLight> streamSimpleLights() {
+        return SIMPLE_LIGHTS.stream();
     }
 
     @Nullable

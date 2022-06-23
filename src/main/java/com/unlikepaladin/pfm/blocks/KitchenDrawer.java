@@ -26,6 +26,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 
 public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider{
     private float height = 0.36f;
@@ -33,11 +37,26 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     public static final BooleanProperty OPEN = Properties.OPEN;
 
     private final BlockState baseBlockState;
+    private static final List<KitchenDrawer> WOOD_DRAWERS = new ArrayList<>();
+    private static final List<KitchenDrawer> STONE_DRAWERS = new ArrayList<>();
     public KitchenDrawer(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT).with(UP, false).with(DOWN, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenDrawer.class)){
+            WOOD_DRAWERS.add(this);
+        }
+        else if (this.getClass().isAssignableFrom(KitchenDrawer.class)){
+            STONE_DRAWERS.add(this);
+        }
+    }
+
+    public static Stream<KitchenDrawer> streamWoodDrawers() {
+        return WOOD_DRAWERS.stream();
+    }
+    public static Stream<KitchenDrawer> streamStoneDrawers() {
+        return STONE_DRAWERS.stream();
     }
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {

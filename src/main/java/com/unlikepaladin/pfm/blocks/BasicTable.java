@@ -15,6 +15,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class BasicTable extends HorizontalFacingBlock {
 
     private final Block baseBlock;
@@ -29,13 +33,27 @@ public class BasicTable extends HorizontalFacingBlock {
     public static final BooleanProperty CORNER_SOUTH_WEST = BooleanProperty.of("corner_south_west");
 
     private final BlockState baseBlockState;
+    private static final List<BasicTable> WOOD_BASIC_TABLES = new ArrayList<>();
+    private static final List<BasicTable> STONE_BASIC_TABLES = new ArrayList<>();
     public BasicTable(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(NORTH, false).with(SOUTH,false).with(EAST,false).with(WEST,false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(BasicTable.class)){
+            WOOD_BASIC_TABLES.add(this);
+        }
+        else if (this.getClass().isAssignableFrom(BasicTable.class)){
+            STONE_BASIC_TABLES.add(this);
+        }
     }
 
+    public static Stream<BasicTable> streamWoodBasicTables() {
+        return WOOD_BASIC_TABLES.stream();
+    }
+    public static Stream<BasicTable> streamStoneBasicTables() {
+        return STONE_BASIC_TABLES.stream();
+    }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {

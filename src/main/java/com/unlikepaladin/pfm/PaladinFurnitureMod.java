@@ -184,6 +184,5 @@ public class PaladinFurnitureMod implements ModInitializer {
 
 			});
 		});
-
 	}
 }

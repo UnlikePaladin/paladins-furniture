@@ -28,19 +28,38 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 import static com.unlikepaladin.pfm.blocks.KitchenCounter.SHAPE;
 import static com.unlikepaladin.pfm.blocks.KitchenCounter.rotateShape;
 
 public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntityProvider {
     private final BlockState baseBlockState;
     private final Block baseBlock;
-
+    private static final List<KitchenCabinet> WOOD_CABINETS = new ArrayList<>();
+    private static final List<KitchenCabinet> STONE_CABINETS = new ArrayList<>();
     public KitchenCabinet(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCabinet.class)){
+            WOOD_CABINETS.add(this);
+        }
+        else if (this.getClass().isAssignableFrom(KitchenCabinet.class)){
+            STONE_CABINETS.add(this);
+        }
     }
+
+    public static Stream<KitchenCabinet> streamWoodCabinets() {
+        return WOOD_CABINETS.stream();
+    }
+    public static Stream<KitchenCabinet> streamStoneCabinets() {
+        return STONE_CABINETS.stream();
+    }
+
     public static final BooleanProperty OPEN = Properties.OPEN;
 
     protected static final VoxelShape STRAIGHT = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 8), createCuboidShape(0, 1, 8,16, 16, 9), createCuboidShape(6, 3, 9,7, 7, 10), createCuboidShape(9, 3, 9,10, 7, 10));

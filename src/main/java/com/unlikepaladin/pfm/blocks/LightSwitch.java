@@ -30,15 +30,25 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 import static com.unlikepaladin.pfm.blocks.BasicTable.rotateShape;
 
 public class LightSwitch extends HorizontalFacingBlockWEntity {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final BooleanProperty POWERED = Properties.POWERED;
     public LightSwitchBlockEntity lightSwitchBlockEntity;
+    private static final List<LightSwitch> LIGHT_SWITCHES = new ArrayList<>();
     public LightSwitch(Settings settings) {
         super(settings);
         this.setDefaultState(stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWERED, false));
+        LIGHT_SWITCHES.add(this);
+    }
+
+    public static Stream<LightSwitch> streamlightSwitches() {
+        return LIGHT_SWITCHES.stream();
     }
 
     @Nullable

@@ -33,14 +33,24 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class KitchenStovetop extends HorizontalFacingBlockWEntity {
     public static final BooleanProperty LIT = Properties.LIT;
+    private static final List<KitchenStovetop> KITCHEN_STOVETOPS = new ArrayList<>();
+
     public KitchenStovetop(Settings settings) {
         super(settings);
+        KITCHEN_STOVETOPS.add(this);
+    }
+
+    public static Stream<KitchenStovetop> streamKitchenStovetop() {
+        return KITCHEN_STOVETOPS.stream();
     }
 
     @Override

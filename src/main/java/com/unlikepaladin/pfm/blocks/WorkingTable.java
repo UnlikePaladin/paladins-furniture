@@ -23,12 +23,24 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 import static com.unlikepaladin.pfm.blocks.ClassicStool.rotateShape;
 
 public class WorkingTable extends HorizontalFacingBlock {
+    private static final List<WorkingTable> WORKING_TABLES = new ArrayList<>();
+
     public WorkingTable(Settings settings) {
         super(settings);
+        WORKING_TABLES.add(this);
     }
+    private static final Text TITLE = Text.translatable("container.pfm.working_table");
+    public static Stream<WorkingTable> streamWorkingTables() {
+        return WORKING_TABLES.stream();
+    }
+
     private static final Text TITLE = Text.translatable("container.pfm.working_table");
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
