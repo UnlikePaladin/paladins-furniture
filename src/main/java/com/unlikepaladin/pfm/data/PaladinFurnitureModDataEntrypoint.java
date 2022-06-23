@@ -1,62 +1,117 @@
 package com.unlikepaladin.pfm.data;
 
-import com.unlikepaladin.pfm.compat.sandwichable.PFMSandwichableRegistry;
+import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTablesProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipesProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.resource.conditions.v1.ConditionJsonProvider;
-import net.fabricmc.fabric.api.resource.conditions.v1.DefaultResourceConditions;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
-import net.minecraft.item.Items;
 import net.minecraft.tag.BlockTags;
 
-import java.util.function.Consumer;
-
 public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoint {
-    public static final ConditionJsonProvider conditions = DefaultResourceConditions.anyModLoaded("sandwichable");
+
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator dataGenerator) {
-       // if (FabricLoader.getInstance().isModLoaded("sandwichable")) {
-            dataGenerator.addProvider(SandwichableRecipeProvider::new);
-            dataGenerator.addProvider(SandwichableLootTableProvider::new);
-            dataGenerator.addProvider(SandwichableBlockTagProvider::new);
-       // }
+            dataGenerator.addProvider(PFMBlockTagProvider::new);
     }
 
-    private static class SandwichableRecipeProvider extends FabricRecipesProvider {
-        private SandwichableRecipeProvider(FabricDataGenerator dataGenerator) {
-            super(dataGenerator);
-        }
-
-        @Override
-        protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
-            ShapedRecipeJsonFactory.create(PFMSandwichableRegistry.IRON_TOASTER, 1).input('A', Items.LEVER).input('B', Items.IRON_INGOT).input('D', Items.REDSTONE).pattern(" A ").pattern("BDB").pattern("BBB");
-        }
-    }
-
-    private static class SandwichableLootTableProvider extends FabricBlockLootTablesProvider {
-        private SandwichableLootTableProvider(FabricDataGenerator dataGenerator) {
-            super(dataGenerator);
-        }
-
-        @Override
-        protected void generateBlockLootTables() {
-            this.addDrop(PFMSandwichableRegistry.IRON_TOASTER);
-        }
-    }
-
-    private static class SandwichableBlockTagProvider extends FabricTagProvider.BlockTagProvider {
-        private SandwichableBlockTagProvider(FabricDataGenerator dataGenerator) {
+    private static class PFMBlockTagProvider extends FabricTagProvider.BlockTagProvider {
+        private PFMBlockTagProvider(FabricDataGenerator dataGenerator) {
             super(dataGenerator);
         }
 
         @Override
         protected void generateTags() {
-            this.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE).add(PFMSandwichableRegistry.IRON_TOASTER);
-        }
-    }
+            this.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+                    .add(BlockItemRegistry.QUARTZ_CHAIR)
+                    .add(BlockItemRegistry.NETHERITE_CHAIR)
+                    .add(BlockItemRegistry.FROGGY_CHAIR)
+                    .add(BlockItemRegistry.FROGGY_CHAIR_PINK)
+                    .add(BlockItemRegistry.FROGGY_CHAIR_BLUE)
+                    .add(BlockItemRegistry.FROGGY_CHAIR_LIGHT_BLUE)
+                    .add(BlockItemRegistry.FROGGY_CHAIR_ORANGE)
+                    .add(BlockItemRegistry.FROGGY_CHAIR_YELLOW)
+                    .add(BlockItemRegistry.WHITE_FREEZER)
+                    .add(BlockItemRegistry.WHITE_FRIDGE)
+                    .add(BlockItemRegistry.IRON_FREEZER)
+                    .add(BlockItemRegistry.IRON_FRIDGE)
+                    .add(BlockItemRegistry.XBOX_FRIDGE)
+                    .add(BlockItemRegistry.SIMPLE_STOVE)
+                    .add(BlockItemRegistry.IRON_STOVE)
+                    .add(BlockItemRegistry.MICROWAVE)
+                    .add(BlockItemRegistry.RAW_CONCRETE)
+                    .add(BlockItemRegistry.IRON_CHAIN)
+                    .add(BlockItemRegistry.FROGGY_CHAIR_LIGHT_BLUE)
+                    .add(BlockItemRegistry.GRAY_MODERN_PENDANT)
+                    .add(BlockItemRegistry.WHITE_MODERN_PENDANT)
+                    .add(BlockItemRegistry.GLASS_MODERN_PENDANT)
+                    .add(BlockItemRegistry.SIMPLE_LIGHT)
+                    .add(BlockItemRegistry.LIGHT_SWITCH)
+                    .add(BlockItemRegistry.CONCRETE_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.CONCRETE_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.CONCRETE_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.CONCRETE_KITCHEN_SINK)
+                    .add(BlockItemRegistry.CONCRETE_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.DARK_CONCRETE_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.DARK_CONCRETE_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.DARK_CONCRETE_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.DARK_CONCRETE_KITCHEN_SINK)
+                    .add(BlockItemRegistry.DARK_CONCRETE_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.DARK_WOOD_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.DARK_WOOD_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.DARK_WOOD_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.DARK_WOOD_KITCHEN_SINK)
+                    .add(BlockItemRegistry.DARK_WOOD_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.LIGHT_WOOD_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.LIGHT_WOOD_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.LIGHT_WOOD_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.LIGHT_WOOD_KITCHEN_SINK)
+                    .add(BlockItemRegistry.LIGHT_WOOD_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.GRANITE_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.GRANITE_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.GRANITE_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.GRANITE_KITCHEN_SINK)
+                    .add(BlockItemRegistry.GRANITE_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.CALCITE_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.CALCITE_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.CALCITE_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.CALCITE_KITCHEN_SINK)
+                    .add(BlockItemRegistry.CALCITE_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.ANDESITE_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.ANDESITE_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.ANDESITE_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.ANDESITE_KITCHEN_SINK)
+                    .add(BlockItemRegistry.ANDESITE_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.NETHERITE_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.NETHERITE_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.NETHERITE_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.NETHERITE_KITCHEN_SINK)
+                    .add(BlockItemRegistry.NETHERITE_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.DIORITE_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.DIORITE_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.DIORITE_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.DIORITE_KITCHEN_SINK)
+                    .add(BlockItemRegistry.DIORITE_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.STONE_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.STONE_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.STONE_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.STONE_KITCHEN_SINK)
+                    .add(BlockItemRegistry.STONE_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.BLACKSTONE_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.BLACKSTONE_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.BLACKSTONE_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.BLACKSTONE_KITCHEN_SINK)
+                    .add(BlockItemRegistry.BLACKSTONE_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.DEEPSLATE_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.DEEPSLATE_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.DEEPSLATE_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.DEEPSLATE_KITCHEN_SINK)
+                    .add(BlockItemRegistry.DEEPSLATE_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.DEEPSLATE_TILE_KITCHEN_COUNTER)
+                    .add(BlockItemRegistry.DEEPSLATE_TILE_KITCHEN_DRAWER)
+                    .add(BlockItemRegistry.DEEPSLATE_TILE_KITCHEN_CABINET)
+                    .add(BlockItemRegistry.DEEPSLATE_TILE_KITCHEN_SINK)
+                    .add(BlockItemRegistry.DEEPSLATE_TILE_KITCHEN_COUNTER_OVEN)
+                    .add(BlockItemRegistry.KITCHEN_STOVETOP);
+            }
 
+        }
 }

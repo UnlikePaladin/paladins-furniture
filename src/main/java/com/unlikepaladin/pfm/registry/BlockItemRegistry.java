@@ -418,7 +418,7 @@ public class BlockItemRegistry {
 
     public static final Block LIGHT_SWITCH = new LightSwitch(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE).sounds(BlockSoundGroup.STONE).nonOpaque());
     public static final BlockItem LIGHT_SWITCH_ITEM = new LightSwitchItem(LIGHT_SWITCH, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP));
-    private static final Item FURNITURE_BOOK = new FurnitureGuideBook(new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).maxCount(1));
+    public static final Item FURNITURE_BOOK = new FurnitureGuideBook(new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).maxCount(1));
 
     private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
         return state -> state.get(Properties.LIT)? litLevel : 0;
