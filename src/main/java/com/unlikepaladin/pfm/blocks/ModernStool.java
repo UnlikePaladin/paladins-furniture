@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.property.Properties;
@@ -10,14 +11,32 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class ModernStool extends BasicChair {
     public float height;
 
-
+    private static final List<ModernStool> WOOD_MODERN_STOOLS = new ArrayList<>();
+    private static final List<ModernStool> STONE_MODERN_STOOLS = new ArrayList<>();
     public ModernStool(Settings settings) {
         super(settings);
-    setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
         this.height = 1.0f;
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ModernStool.class)){
+            WOOD_MODERN_STOOLS.add(this);
+        }
+        else if (this.getClass().isAssignableFrom(ModernStool.class)){
+            STONE_MODERN_STOOLS.add(this);
+        }
+    }
+
+    public static Stream<ModernStool> streamWoodModernStools() {
+        return WOOD_MODERN_STOOLS.stream();
+    }
+    public static Stream<ModernStool> streamStoneModernStools() {
+        return STONE_MODERN_STOOLS.stream();
     }
 
 

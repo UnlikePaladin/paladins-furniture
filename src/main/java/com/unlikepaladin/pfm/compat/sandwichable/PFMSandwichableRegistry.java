@@ -7,7 +7,6 @@ import com.unlikepaladin.pfm.compat.sandwichable.blocks.blockentities.PFMToaster
 import net.devtech.arrp.api.RRPCallback;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.impl.RuntimeResourcePackImpl;
-import net.devtech.arrp.json.loot.JCondition;
 import net.devtech.arrp.json.recipe.JIngredient;
 import net.devtech.arrp.json.recipe.JKeys;
 import net.devtech.arrp.json.recipe.JPattern;
@@ -57,7 +56,6 @@ public class PFMSandwichableRegistry {
                                 .entry(entry()
                                         .type("minecraft:item")
                                         .name("pfm:iron_toaster"))
-                                        .condition(new JCondition("minecraft:survives_explosion"))
                         )
 
             );

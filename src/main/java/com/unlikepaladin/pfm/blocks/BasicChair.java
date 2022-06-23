@@ -2,10 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -21,20 +18,34 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class BasicChair extends HorizontalFacingBlock {
     public float height;
 
-
+    private static final List<BasicChair> WOOD_BASIC_CHAIRS = new ArrayList<>();
+    private static final List<BasicChair> STONE_BASIC_CHAIRS = new ArrayList<>();
     public BasicChair(Settings settings) {
         super(settings);
-    setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
         this.height = 0.36f;
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(BasicChair.class)){
+            WOOD_BASIC_CHAIRS.add(this);
+        }
+        else if (this.getClass().isAssignableFrom(BasicChair.class)){
+            STONE_BASIC_CHAIRS.add(this);
+        }
     }
 
-
+    public static Stream<BasicChair> streamWoodBasicChairs() {
+        return WOOD_BASIC_CHAIRS.stream();
+    }
+    public static Stream<BasicChair> streamStoneBasicChairs() {
+        return STONE_BASIC_CHAIRS.stream();
+    }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {

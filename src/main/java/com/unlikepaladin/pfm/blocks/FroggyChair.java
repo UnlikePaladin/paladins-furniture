@@ -10,14 +10,24 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class FroggyChair extends BasicChair {
     public float height = 0.36f;
 
-
+    private static final List<FroggyChair> FROGGY_CHAIRS = new ArrayList<>();
     public FroggyChair(Settings settings) {
         super(settings);
-    setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        if (this.getClass().isAssignableFrom(FroggyChair.class)){
+            FROGGY_CHAIRS.add(this);
+        }
+    }
 
+    public static Stream<FroggyChair> streamFroggyChair() {
+        return FROGGY_CHAIRS.stream();
     }
 
 

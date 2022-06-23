@@ -27,7 +27,10 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
@@ -36,13 +39,18 @@ public class Freezer extends HorizontalFacingBlockWEntity{
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private Supplier<Block> fridge;
-
+    private static final List<Freezer> FREEZERS = new ArrayList<>();
     public Freezer(Settings settings, Supplier<Block> fridge) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
         this.fridge = fridge;
         this.baseBlock = baseBlockState.getBlock();
+        FREEZERS.add(this);
+    }
+
+    public static Stream<Freezer> streamFreezers() {
+        return FREEZERS.stream();
     }
 
     @Override

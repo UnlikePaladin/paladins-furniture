@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
@@ -13,15 +14,32 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 
 public class ClassicChairDyeable extends ClassicChair implements DyeableFurniture {
 
-
+    private static final List<ClassicChairDyeable> WOOD_DYEABLE_CLASSIC_CHAIRS = new ArrayList<>();
+    private static final List<ClassicChairDyeable> STONE_DYEABLE_CLASSIC_CHAIRS = new ArrayList<>();
     public ClassicChairDyeable(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(COLORID, DyeColor.WHITE).with(DYED, false));
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ClassicChairDyeable.class)){
+            WOOD_DYEABLE_CLASSIC_CHAIRS.add(this);
+        }
+        else if (this.getClass().isAssignableFrom(ClassicChairDyeable.class)){
+            STONE_DYEABLE_CLASSIC_CHAIRS.add(this);
+        }
     }
 
+    public static Stream<ClassicChairDyeable> streamWoodDyeableChair() {
+        return WOOD_DYEABLE_CLASSIC_CHAIRS.stream();
+    }
+    public static Stream<ClassicChairDyeable> streamStoneDyeableChair() {
+        return STONE_DYEABLE_CLASSIC_CHAIRS.stream();
+    }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {

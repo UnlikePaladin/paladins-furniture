@@ -14,20 +14,38 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class DinnerTable extends HorizontalFacingBlock {
 
     private final Block baseBlock;
     public static final EnumProperty<TableShape> SHAPE = EnumProperty.of("table_type", TableShape.class);
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
-
     private final BlockState baseBlockState;
 
+    private static final List<DinnerTable> WOOD_DINNER_TABLES = new ArrayList<>();
+    private static final List<DinnerTable> STONE_DINNER_TABLES = new ArrayList<>();
     public DinnerTable(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, TableShape.SINGLE).with(FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(DinnerTable.class)){
+            WOOD_DINNER_TABLES.add(this);
+        }
+        else if (this.getClass().isAssignableFrom(DinnerTable.class)){
+            STONE_DINNER_TABLES.add(this);
+        }
+    }
+
+    public static Stream<DinnerTable> streamWoodDinnerTables() {
+        return WOOD_DINNER_TABLES.stream();
+    }
+    public static Stream<DinnerTable> streamStoneDinnerTables() {
+        return STONE_DINNER_TABLES.stream();
     }
 
     @Override

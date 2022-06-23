@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -21,14 +22,33 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class KitchenCounterOven extends Stove{
+    private static final List<KitchenCounterOven> WOOD_COUNTER_OVENS = new ArrayList<>();
+    private static final List<KitchenCounterOven> STONE_COUNTER_OVENS = new ArrayList<>();
     public KitchenCounterOven(Settings settings) {
         super(settings);
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCounterOven.class)){
+            WOOD_COUNTER_OVENS.add(this);
+        }
+        else if (this.getClass().isAssignableFrom(KitchenCounterOven.class)){
+            STONE_COUNTER_OVENS.add(this);
+        }
     }
+
+    public static Stream<KitchenCounterOven> streamWoodCounterOvens() {
+        return WOOD_COUNTER_OVENS.stream();
+    }
+    public static Stream<KitchenCounterOven> streamStoneCounterOvens() {
+        return STONE_COUNTER_OVENS.stream();
+    }
+
     public static final BooleanProperty UP = Properties.UP;
     public static final BooleanProperty DOWN = Properties.DOWN;
 

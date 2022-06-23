@@ -22,14 +22,24 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class Stove extends SmokerBlock {
+    private static final List<Stove> STOVES = new ArrayList<>();
 
     public Stove(Settings settings) {
         super(settings);
+        if (this.getClass().isAssignableFrom(Stove.class)){
+            STOVES.add(this);
+        }
+    }
+    public static Stream<Stove> streamStoves() {
+        return STOVES.stream();
     }
 
     @Override

@@ -14,6 +14,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class LogTable extends HorizontalFacingBlock {
 
     private final Block baseBlock;
@@ -22,14 +26,20 @@ public class LogTable extends HorizontalFacingBlock {
 
 
     private final BlockState baseBlockState;
-
+    private static final List<LogTable> WOOD_LOG_TABLES = new ArrayList<>();
     public LogTable(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, TableShape.SINGLE).with(FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(LogTable.class)){
+            WOOD_LOG_TABLES.add(this);
+        }
     }
 
+    public static Stream<LogTable> streamWoodLogTables() {
+        return WOOD_LOG_TABLES.stream();
+    }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
