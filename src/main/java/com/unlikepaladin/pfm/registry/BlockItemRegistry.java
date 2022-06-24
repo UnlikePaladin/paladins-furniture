@@ -20,11 +20,16 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.ToIntFunction;
+import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 
 public class BlockItemRegistry {
+    private static final List<Block> BLOCKS = new ArrayList<>();
+
     public static final Block OAK_CHAIR = new BasicChair(FabricBlockSettings.of(Material.WOOD).strength(2.0f).resistance(2.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.WOOD));
     public static final Block BIRCH_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block SPRUCE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -540,25 +545,32 @@ public class BlockItemRegistry {
 
     public static final Block WORKING_TABLE = new WorkingTable(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE).sounds(BlockSoundGroup.WOOD));
 
-    public static void registerFurniture(String blockName, Block block, Boolean registerItem) {
+    public static Stream<Block> streamBlocks() {
+        return BLOCKS.stream();
+    }
+
+    public static void registerFurniture(String blockName, Block block, boolean registerItem) {
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, blockName),  block);
         if (registerItem) {
-        Registry.register(Registry.ITEM, new Identifier(MOD_ID, blockName), new BlockItem(block, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
+            BLOCKS.add(block);
+            registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
         }
     }
 
-    public static void registerBlock(String blockName, Block block, Boolean registerItem) {
+    public static void registerBlock(String blockName, Block block, boolean registerItem) {
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, blockName),  block);
         if (registerItem) {
-            Registry.register(Registry.ITEM, new Identifier(MOD_ID, blockName), new BlockItem(block, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+            BLOCKS.add(block);
+            registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         }
     }
-    public static void registerBlock(String blockName, Block block, Boolean registerItem, BlockItem item) {
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, blockName),  block);
-        if (registerItem) {
-            Registry.register(Registry.ITEM, new Identifier(MOD_ID, blockName), item);
-        }
+
+    public static void registerBlock(String blockName, Block block, BlockItem item) {
+            registerBlock(blockName, block, false);
+            registerItem(blockName, item);
+            BLOCKS.add(block);
     }
+
     public static void registerItem(String itemName, Item item) {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, itemName), item);
     }
@@ -1054,7 +1066,7 @@ public class BlockItemRegistry {
         registerFurniture("white_modern_pendant", WHITE_MODERN_PENDANT, true);
         registerFurniture("glass_modern_pendant", GLASS_MODERN_PENDANT, true);
         registerFurniture("simple_light", SIMPLE_LIGHT, true);
-        registerBlock("light_switch", LIGHT_SWITCH,true, LIGHT_SWITCH_ITEM);
+        registerBlock("light_switch", LIGHT_SWITCH, LIGHT_SWITCH_ITEM);
 
 
         //Dye Kits
