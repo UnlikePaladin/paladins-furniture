@@ -4,14 +4,33 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTablesProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.minecraft.block.Block;
 import net.minecraft.tag.BlockTags;
+
+import java.util.stream.Stream;
 
 public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoint {
 
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator dataGenerator) {
             dataGenerator.addProvider(PFMBlockTagProvider::new);
+            dataGenerator.addProvider(PFMLootTableProvider::new);
+    }
+    private static class PFMLootTableProvider extends FabricBlockLootTablesProvider {
+        private PFMLootTableProvider(FabricDataGenerator dataGenerator) {
+            super(dataGenerator);
+        }
+
+        @Override
+        protected void generateBlockLootTables() {
+            Stream<Block> blocks = BlockItemRegistry.streamBlocks();
+            blocks.forEach(block ->
+                this.addDrop(block)
+            );
+
+        }
     }
 
     private static class PFMBlockTagProvider extends FabricTagProvider.BlockTagProvider {
