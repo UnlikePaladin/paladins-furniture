@@ -66,10 +66,10 @@ public abstract class FurnitureDisplay<C extends FurnitureRecipe> extends BasicD
 
     /**
      * Registers a size provider for crafting recipes.
-     * This is not reloadable, please statically register your provider, and
-     * do not repeatedly register it.
+     * This is not reloadable, please statically registerBlocks your provider, and
+     * do not repeatedly registerBlocks it.
      *
-     * @param sizeProvider the provider to register
+     * @param sizeProvider the provider to registerBlocks
      * @param <R>          the recipe type
      */
     public static <R extends FurnitureRecipe> void registerSizeProvider(CraftingRecipeSizeProvider<R> sizeProvider) {

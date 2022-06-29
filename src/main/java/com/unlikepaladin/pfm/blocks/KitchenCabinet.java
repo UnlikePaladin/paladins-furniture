@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.DrawerBlockEntity;
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -38,25 +39,25 @@ import static com.unlikepaladin.pfm.blocks.KitchenCounter.rotateShape;
 public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntityProvider {
     private final BlockState baseBlockState;
     private final Block baseBlock;
-    private static final List<KitchenCabinet> WOOD_CABINETS = new ArrayList<>();
-    private static final List<KitchenCabinet> STONE_CABINETS = new ArrayList<>();
+    private static final List<FurnitureBlock> WOOD_CABINETS = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_CABINETS = new ArrayList<>();
     public KitchenCabinet(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCabinet.class)){
-            WOOD_CABINETS.add(this);
+            WOOD_CABINETS.add(new FurnitureBlock(this, "kitchen_cabinet"));
         }
         else if (this.getClass().isAssignableFrom(KitchenCabinet.class)){
-            STONE_CABINETS.add(this);
+            STONE_CABINETS.add(new FurnitureBlock(this, "kitchen_cabinet"));
         }
     }
 
-    public static Stream<KitchenCabinet> streamWoodCabinets() {
+    public static Stream<FurnitureBlock> streamWoodCabinets() {
         return WOOD_CABINETS.stream();
     }
-    public static Stream<KitchenCabinet> streamStoneCabinets() {
+    public static Stream<FurnitureBlock> streamStoneCabinets() {
         return STONE_CABINETS.stream();
     }
 

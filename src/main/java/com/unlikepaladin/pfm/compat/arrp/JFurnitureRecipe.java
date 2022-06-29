@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.compat.arrp;
 
-import net.devtech.arrp.json.recipe.*;
+import net.devtech.arrp.json.recipe.JKeys;
+import net.devtech.arrp.json.recipe.JPattern;
+import net.devtech.arrp.json.recipe.JResult;
 
 public class JFurnitureRecipe implements Cloneable  {
     private final JResult result;

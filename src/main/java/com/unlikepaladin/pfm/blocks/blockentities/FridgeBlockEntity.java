@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.Fridge;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
@@ -32,7 +32,7 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
         }
 
     public FridgeBlockEntity(BlockPos pos, BlockState state) {
-        super(PaladinFurnitureMod.FRIDGE_BLOCK_ENTITY, pos, state);
+        super(BlockEntityRegistry.FRIDGE_BLOCK_ENTITY, pos, state);
     }
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(54, ItemStack.EMPTY);
     private final ViewerCountManager stateManager = new ViewerCountManager() {

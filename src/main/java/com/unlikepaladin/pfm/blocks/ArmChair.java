@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -16,15 +17,15 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class ArmChair extends BasicChair {
-    private static final List<ArmChair> ARM_CHAIRS = new ArrayList<>();
+    private static final List<FurnitureBlock> ARM_CHAIRS = new ArrayList<>();
     public ArmChair(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
         if (this.getClass().isAssignableFrom(ArmChair.class)) {
-            ARM_CHAIRS.add(this);
+            ARM_CHAIRS.add(new FurnitureBlock(this, "armchair_"));
         }
     }
-    public static Stream<ArmChair> streamArmChairs() {
+    public static Stream<FurnitureBlock> streamArmChairs() {
         return ARM_CHAIRS.stream();
     }
 

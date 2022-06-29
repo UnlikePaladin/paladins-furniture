@@ -1,7 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
+import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
@@ -30,22 +31,22 @@ import java.util.stream.Stream;
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class KitchenCounterOven extends Stove{
-    private static final List<KitchenCounterOven> WOOD_COUNTER_OVENS = new ArrayList<>();
-    private static final List<KitchenCounterOven> STONE_COUNTER_OVENS = new ArrayList<>();
+    private static final List<FurnitureBlock> WOOD_COUNTER_OVENS = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_COUNTER_OVENS = new ArrayList<>();
     public KitchenCounterOven(Settings settings) {
         super(settings);
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCounterOven.class)){
-            WOOD_COUNTER_OVENS.add(this);
+            WOOD_COUNTER_OVENS.add(new FurnitureBlock(this, "kitchen_counter_oven"));
         }
         else if (this.getClass().isAssignableFrom(KitchenCounterOven.class)){
-            STONE_COUNTER_OVENS.add(this);
+            STONE_COUNTER_OVENS.add(new FurnitureBlock(this, "kitchen_counter_oven"));
         }
     }
 
-    public static Stream<KitchenCounterOven> streamWoodCounterOvens() {
+    public static Stream<FurnitureBlock> streamWoodCounterOvens() {
         return WOOD_COUNTER_OVENS.stream();
     }
-    public static Stream<KitchenCounterOven> streamStoneCounterOvens() {
+    public static Stream<FurnitureBlock> streamStoneCounterOvens() {
         return STONE_COUNTER_OVENS.stream();
     }
 
@@ -54,7 +55,7 @@ public class KitchenCounterOven extends Stove{
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new StoveBlockEntity(PaladinFurnitureMod.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, pos, state);
+        return new StoveBlockEntity(BlockEntityRegistry.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, pos, state);
     }
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
@@ -94,7 +95,7 @@ public class KitchenCounterOven extends Stove{
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(world, type, PaladinFurnitureMod.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
+        return checkType(world, type, BlockEntityRegistry.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
     }
 
     protected static final VoxelShape COUNTER_OVEN = VoxelShapes.union(createCuboidShape(0, 1, 0, 16, 14, 14),createCuboidShape(0, 0, 0, 16, 1, 12),createCuboidShape(0, 14, 0, 16, 16, 16),createCuboidShape(1.8, 11.2, 14.54, 14.3, 11.8, 15.14),createCuboidShape(2.5, 11.2, 13.07, 3.1, 11.8, 14.57),createCuboidShape(12.6, 11.2, 13.07, 13.2, 11.8, 14.57),createCuboidShape(1.8, 1.9, 14.44, 14.3, 2.5, 15.04),createCuboidShape(2.5, 1.9, 12.47, 3.1, 2.5, 14.47),createCuboidShape(12.6, 1.9, 12.47, 13.2, 2.5, 14.47));

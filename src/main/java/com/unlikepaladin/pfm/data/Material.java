@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.data;
 
+import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;
 
 import java.util.Objects;
@@ -7,8 +8,9 @@ import java.util.Objects;
 public abstract class Material {
 
     Identifier materialID;
-    Material(Identifier materialID){
-        this.materialID = materialID;
+    Block block;
+    Material(Block block){
+        this.block = block;
     }
 
     boolean isMaterialModded(){
@@ -19,4 +21,7 @@ public abstract class Material {
         return materialID.getNamespace();
     }
 
+    public Block getBlock() {
+        return this.block;
+    }
 }

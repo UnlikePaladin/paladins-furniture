@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XSX",
+    "XYX",
+    "XSX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:smooth_quartz"
+    },
+    "S": {
+      "item": "minecraft:deepslate_tiles"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "pfm:deepslate_tile_kitchen_cabinet"
+  }
+}

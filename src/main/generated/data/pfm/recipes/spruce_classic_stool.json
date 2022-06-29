@@ -1,0 +1,19 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SXX",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:spruce_log"
+    },
+    "X": {
+      "item": "minecraft:spruce_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:spruce_classic_stool",
+    "count": 4
+  }
+}

@@ -1,7 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
+import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
@@ -30,15 +31,15 @@ import java.util.stream.Stream;
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class Stove extends SmokerBlock {
-    private static final List<Stove> STOVES = new ArrayList<>();
+    private static final List<FurnitureBlock> STOVES = new ArrayList<>();
 
     public Stove(Settings settings) {
         super(settings);
         if (this.getClass().isAssignableFrom(Stove.class)){
-            STOVES.add(this);
+            STOVES.add(new FurnitureBlock(this, "stove"));
         }
     }
-    public static Stream<Stove> streamStoves() {
+    public static Stream<FurnitureBlock> streamStoves() {
         return STOVES.stream();
     }
 
@@ -90,13 +91,13 @@ public class Stove extends SmokerBlock {
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new StoveBlockEntity(PaladinFurnitureMod.STOVE_BLOCK_ENTITY, pos, state);
+        return new StoveBlockEntity(BlockEntityRegistry.STOVE_BLOCK_ENTITY, pos, state);
     }
 
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return Stove.checkType(world, type, PaladinFurnitureMod.STOVE_BLOCK_ENTITY);
+        return Stove.checkType(world, type, BlockEntityRegistry.STOVE_BLOCK_ENTITY);
     }
 
 }

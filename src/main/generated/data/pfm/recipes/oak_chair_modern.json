@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "X  ",
+    "SXX",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:oak_log"
+    },
+    "X": {
+      "item": "minecraft:oak_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:oak_chair_modern",
+    "count": 4
+  }
+}

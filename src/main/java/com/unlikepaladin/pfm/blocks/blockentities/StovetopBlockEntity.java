@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.KitchenStovetop;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -32,7 +32,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Block
     private final int[] cookingTimes = new int[4];
     private final int[] cookingTotalTimes = new int[4];
     public StovetopBlockEntity( BlockPos pos, BlockState state) {
-        super(PaladinFurnitureMod.STOVE_TOP_BLOCK_ENTITY, pos, state);
+        super(BlockEntityRegistry.STOVE_TOP_BLOCK_ENTITY, pos, state);
     }
     public static void litServerTick(World world, BlockPos pos, BlockState state, StovetopBlockEntity stovetopBlockEntity) {
         boolean bl = false;

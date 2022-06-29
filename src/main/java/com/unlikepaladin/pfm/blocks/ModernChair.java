@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
@@ -18,23 +19,23 @@ import java.util.stream.Stream;
 public class ModernChair extends BasicChair {
     public float height = 0.36f;
 
-    private static final List<ModernChair> WOOD_MODERN_CHAIRS = new ArrayList<>();
-    private static final List<ModernChair> STONE_MODERN_CHAIRS = new ArrayList<>();
+    private static final List<FurnitureBlock> WOOD_MODERN_CHAIRS = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_MODERN_CHAIRS = new ArrayList<>();
     public ModernChair(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ModernChair.class)){
-            WOOD_MODERN_CHAIRS.add(this);
+            WOOD_MODERN_CHAIRS.add(new FurnitureBlock(this, "chair_modern"));
         }
         else if (this.getClass().isAssignableFrom(ModernChair.class)){
-            STONE_MODERN_CHAIRS.add(this);
+            STONE_MODERN_CHAIRS.add(new FurnitureBlock(this, "chair_modern"));
         }
     }
 
-    public static Stream<ModernChair> streamWoodModernChairs() {
+    public static Stream<FurnitureBlock> streamWoodModernChairs() {
         return WOOD_MODERN_CHAIRS.stream();
     }
-    public static Stream<ModernChair> streamStoneModernChairs() {
+    public static Stream<FurnitureBlock> streamStoneModernChairs() {
         return STONE_MODERN_CHAIRS.stream();
     }
 

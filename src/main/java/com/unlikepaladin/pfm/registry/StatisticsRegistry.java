@@ -16,7 +16,7 @@ public class StatisticsRegistry {
     public static final Identifier SINK_FILLED = new Identifier(PaladinFurnitureMod.MOD_ID, "sink_filled");
     public static final Identifier USE_SINK = new Identifier(PaladinFurnitureMod.MOD_ID, "use_sink");
 
-    public static void register(){
+    public static void registerStatistics(){
         Registry.register(Registry.CUSTOM_STAT, "fridge_opened", FRIDGE_OPENED);
         Stats.CUSTOM.getOrCreateStat(FRIDGE_OPENED, StatFormatter.DEFAULT);
 

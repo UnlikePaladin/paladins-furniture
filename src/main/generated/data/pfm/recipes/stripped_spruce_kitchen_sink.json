@@ -1,0 +1,25 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SZS",
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_spruce_log"
+    },
+    "S": {
+      "item": "minecraft:spruce_planks"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_spruce_kitchen_sink"
+  }
+}

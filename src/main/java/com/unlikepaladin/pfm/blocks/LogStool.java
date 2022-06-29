@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
@@ -17,16 +18,16 @@ import java.util.stream.Stream;
 
 public class LogStool extends BasicChair {
     
-    private static final List<LogStool> WOOD_LOG_STOOLS = new ArrayList<>();
+    private static final List<FurnitureBlock> WOOD_LOG_STOOLS = new ArrayList<>();
     public LogStool(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(LogStool.class)){
-            WOOD_LOG_STOOLS.add(this);
+            WOOD_LOG_STOOLS.add(new FurnitureBlock(this, "_stool"));
         }
     }
 
-    public static Stream<LogStool> streamWoodLogStools() {
+    public static Stream<FurnitureBlock> streamWoodLogStools() {
         return WOOD_LOG_STOOLS.stream();
     }
 

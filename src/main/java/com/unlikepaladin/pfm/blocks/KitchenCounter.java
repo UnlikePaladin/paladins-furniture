@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -28,25 +29,25 @@ public class KitchenCounter extends HorizontalFacingBlock {
     public static final BooleanProperty DOWN = Properties.DOWN;
 
     private final BlockState baseBlockState;
-    private static final List<KitchenCounter> WOOD_COUNTERS = new ArrayList<>();
-    private static final List<KitchenCounter> STONE_COUNTERS = new ArrayList<>();
+    private static final List<FurnitureBlock> WOOD_COUNTERS = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_COUNTERS = new ArrayList<>();
     public KitchenCounter(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(UP, false).with(DOWN,false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCounter.class)){
-            WOOD_COUNTERS.add(this);
+            WOOD_COUNTERS.add(new FurnitureBlock(this, "kitchen_counter"));
         }
         else if (this.getClass().isAssignableFrom(KitchenCounter.class)){
-            STONE_COUNTERS.add(this);
+            STONE_COUNTERS.add(new FurnitureBlock(this, "kitchen_counter"));
         }
     }
 
-    public static Stream<KitchenCounter> streamWoodCounters() {
+    public static Stream<FurnitureBlock> streamWoodCounters() {
         return WOOD_COUNTERS.stream();
     }
-    public static Stream<KitchenCounter> streamStoneCounters() {
+    public static Stream<FurnitureBlock> streamStoneCounters() {
         return STONE_COUNTERS.stream();
     }
 
