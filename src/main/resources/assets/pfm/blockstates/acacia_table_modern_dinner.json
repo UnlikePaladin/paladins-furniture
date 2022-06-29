@@ -14,7 +14,7 @@
             ]},
             "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner"}
         },
-        
+
         {
             "when": { "AND": [
                 { "table_type": "single" },
@@ -29,10 +29,10 @@
             ]},
             "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner","y":90}
         },
-        
-      
-      
-      
+
+
+
+
         {
             "when": { "AND": [
                 { "table_type": "middle" },
@@ -61,9 +61,9 @@
             ]},
             "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_middle" }
         },
-        
-        
-    
+
+
+
         {
         "when": { "AND": [
             { "table_type": "left" },
@@ -92,8 +92,8 @@
         ]},
         "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_left"  }
     },
-        
-        
+
+
     {
     "when": { "AND": [
         { "table_type": "right" },
