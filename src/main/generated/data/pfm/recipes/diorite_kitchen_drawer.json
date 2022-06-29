@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_birch_log"
+    },
+    "S": {
+      "item": "minecraft:polished_diorite"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "pfm:diorite_kitchen_drawer"
+  }
+}

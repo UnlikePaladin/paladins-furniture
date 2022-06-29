@@ -1,0 +1,21 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "pfm:froggy_chair_orange"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "pfm:froggy_chair_orange"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe"
+    ]
+  ]
+}

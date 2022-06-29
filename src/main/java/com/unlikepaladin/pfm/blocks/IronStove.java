@@ -1,8 +1,9 @@
 package com.unlikepaladin.pfm.blocks;
 
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.IronStoveBlockEntity;
+import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
@@ -31,15 +32,15 @@ import java.util.stream.Stream;
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class IronStove extends Stove {
-    private static final List<IronStove> IRON_STOVES = new ArrayList<>();
+    private static final List<FurnitureBlock> IRON_STOVES = new ArrayList<>();
     public IronStove(Settings settings) {
         super(settings);
         if (this.getClass().isAssignableFrom(IronStove.class)){
-            IRON_STOVES.add(this);
+            IRON_STOVES.add(new FurnitureBlock(this, "stove"));
         }
     }
 
-    public static Stream<IronStove> streamIronStoves() {
+    public static Stream<FurnitureBlock> streamIronStoves() {
         return IRON_STOVES.stream();
     }
 
@@ -89,7 +90,7 @@ public class IronStove extends Stove {
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(world, type, PaladinFurnitureMod.IRON_STOVE_BLOCK_ENTITY);
+        return checkType(world, type, BlockEntityRegistry.IRON_STOVE_BLOCK_ENTITY);
     }
 
     @Override

@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import com.unlikepaladin.pfm.entity.render.ChairEntityRenderer;
 import com.unlikepaladin.pfm.entity.render.MicrowaveBlockEntityRenderer;
 import com.unlikepaladin.pfm.entity.render.StovetopBlockEntityRenderer;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -35,8 +36,8 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
         //  EntityRenderRegistry.registerRender();
         ColorRegistry.registerAll();
         EntityRendererRegistry.register(EntityRegistry.CHAIR, ChairEntityRenderer::new);
-        BlockEntityRendererRegistry.register(PaladinFurnitureMod.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(PaladinFurnitureMod.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntityRegistry.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntityRegistry.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntityRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(MODEL_CUBE_LAYER, ModelEmpty::getTexturedModelData);
 

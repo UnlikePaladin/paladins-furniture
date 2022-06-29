@@ -1,0 +1,21 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "pfm:diorite_kitchen_cabinet"
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "pfm:diorite_kitchen_cabinet"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe"
+    ]
+  ]
+}

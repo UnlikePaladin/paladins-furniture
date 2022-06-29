@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -26,25 +27,25 @@ public class DinnerTable extends HorizontalFacingBlock {
 
     private final BlockState baseBlockState;
 
-    private static final List<DinnerTable> WOOD_DINNER_TABLES = new ArrayList<>();
-    private static final List<DinnerTable> STONE_DINNER_TABLES = new ArrayList<>();
+    private static final List<FurnitureBlock> WOOD_DINNER_TABLES = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_DINNER_TABLES = new ArrayList<>();
     public DinnerTable(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, TableShape.SINGLE).with(FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(DinnerTable.class)){
-            WOOD_DINNER_TABLES.add(this);
+            WOOD_DINNER_TABLES.add(new FurnitureBlock(this, "table_dinner"));
         }
         else if (this.getClass().isAssignableFrom(DinnerTable.class)){
-            STONE_DINNER_TABLES.add(this);
+            STONE_DINNER_TABLES.add(new FurnitureBlock(this, "table_dinner"));
         }
     }
 
-    public static Stream<DinnerTable> streamWoodDinnerTables() {
+    public static Stream<FurnitureBlock> streamWoodDinnerTables() {
         return WOOD_DINNER_TABLES.stream();
     }
-    public static Stream<DinnerTable> streamStoneDinnerTables() {
+    public static Stream<FurnitureBlock> streamStoneDinnerTables() {
         return STONE_DINNER_TABLES.stream();
     }
 

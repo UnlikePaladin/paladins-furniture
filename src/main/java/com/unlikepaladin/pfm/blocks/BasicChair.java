@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.minecraft.block.*;
@@ -26,24 +27,24 @@ import java.util.stream.Stream;
 public class BasicChair extends HorizontalFacingBlock {
     public float height;
 
-    private static final List<BasicChair> WOOD_BASIC_CHAIRS = new ArrayList<>();
-    private static final List<BasicChair> STONE_BASIC_CHAIRS = new ArrayList<>();
+    private static final List<FurnitureBlock> WOOD_BASIC_CHAIRS = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_BASIC_CHAIRS = new ArrayList<>();
     public BasicChair(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
         this.height = 0.36f;
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(BasicChair.class)){
-            WOOD_BASIC_CHAIRS.add(this);
+            WOOD_BASIC_CHAIRS.add(new FurnitureBlock(this, "chair"));
         }
         else if (this.getClass().isAssignableFrom(BasicChair.class)){
-            STONE_BASIC_CHAIRS.add(this);
+            STONE_BASIC_CHAIRS.add(new FurnitureBlock(this, "chair"));
         }
     }
 
-    public static Stream<BasicChair> streamWoodBasicChairs() {
+    public static Stream<FurnitureBlock> streamWoodBasicChairs() {
         return WOOD_BASIC_CHAIRS.stream();
     }
-    public static Stream<BasicChair> streamStoneBasicChairs() {
+    public static Stream<FurnitureBlock> streamStoneBasicChairs() {
         return STONE_BASIC_CHAIRS.stream();
     }
 

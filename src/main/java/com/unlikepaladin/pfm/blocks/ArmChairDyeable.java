@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,18 +29,18 @@ import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class ArmChairDyeable extends ArmChair implements DyeableFurniture {
     public static final EnumProperty<ArmChairShape> SHAPE = EnumProperty.of("shape", ArmChairShape.class);
-    private static final List<ArmChairDyeable> DYEABLE_ARMCHAIRS = new ArrayList<>();
+    private static final List<FurnitureBlock> DYEABLE_ARMCHAIRS = new ArrayList<>();
     public ArmChairDyeable(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(COLORID, DyeColor.WHITE).with(DYED, false).with(SHAPE, ArmChairShape.STRAIGHT));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
             if (this.getClass().isAssignableFrom(ArmChairDyeable.class)) {
-                DYEABLE_ARMCHAIRS.add(this);
+                DYEABLE_ARMCHAIRS.add(new FurnitureBlock(this, "armchair_"));
             }
     }
 
-    public static Stream<ArmChairDyeable> streamArmChairDyeable() {
+    public static Stream<FurnitureBlock> streamArmChairDyeable() {
         return DYEABLE_ARMCHAIRS.stream();
     }
 

@@ -46,8 +46,8 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_JUNGLE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_MANGROVE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_WARPED_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_CRIMSON_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_WARPED_CHAIR = new BasicChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
+    public static final Block STRIPPED_CRIMSON_CHAIR = new BasicChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block QUARTZ_CHAIR = new BasicChair(FabricBlockSettings.of(Material.STONE).strength(2.0f).resistance(2.0f).nonOpaque().requiresTool());
     public static final Block NETHERITE_CHAIR = new BasicChair(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE));
 
@@ -173,9 +173,9 @@ public class BlockItemRegistry {
     public static final Block ACACIA_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block JUNGLE_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block DARK_OAK_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block CRIMSON_STEM_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
+    public static final Block WARPED_STEM_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block MANGROVE_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block CRIMSON_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
-    public static final Block WARPED_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_OAK_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_BIRCH_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_SPRUCE_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -183,8 +183,8 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_JUNGLE_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_DARK_OAK_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_MANGROVE_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_CRIMSON_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
-    public static final Block STRIPPED_WARPED_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
+    public static final Block STRIPPED_CRIMSON_STEM_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
+    public static final Block STRIPPED_WARPED_STEM_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
     public static final Block OAK_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block BIRCH_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -286,7 +286,7 @@ public class BlockItemRegistry {
     public static final Block DARK_OAK_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block MANGROVE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block CRIMSON_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
-    public static final Block WARPED_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
+    public static final Block WARPED_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_OAK_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_BIRCH_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_SPRUCE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -298,22 +298,22 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_WARPED_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
     public static final Block OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.of(Material.WOOD).strength(2.0f).resistance(3.0f).nonOpaque().sounds(BlockSoundGroup.WOOD).mapColor(MapColor.OAK_TAN));
-    public static final Block OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
+    public static final Block OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
+    public static final Block OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
 
     public static final Block BIRCH_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER).mapColor(MapColor.PALE_YELLOW));
-    public static final Block BIRCH_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block BIRCH_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block BIRCH_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block BIRCH_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block BIRCH_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
+    public static final Block BIRCH_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
+    public static final Block BIRCH_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block BIRCH_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
 
     public static final Block SPRUCE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER).mapColor(MapColor.SPRUCE_BROWN));
-    public static final Block SPRUCE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block SPRUCE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block SPRUCE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block SPRUCE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block SPRUCE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
+    public static final Block SPRUCE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
+    public static final Block SPRUCE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block SPRUCE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
 
     public static final Block JUNGLE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER).mapColor(MapColor.DIRT_BROWN));
     public static final Block JUNGLE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -322,71 +322,70 @@ public class BlockItemRegistry {
     public static final Block JUNGLE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
 
     public static final Block ACACIA_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER).mapColor(MapColor.ORANGE));
-    public static final Block ACACIA_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block ACACIA_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block ACACIA_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block ACACIA_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block ACACIA_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
+    public static final Block ACACIA_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
+    public static final Block ACACIA_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block ACACIA_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
 
     public static final Block DARK_OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER).mapColor(MapColor.BROWN));
-    public static final Block DARK_OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block DARK_OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block DARK_OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block DARK_OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block DARK_OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
+    public static final Block DARK_OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
+    public static final Block DARK_OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block DARK_OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
 
     public static final Block CRIMSON_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.of(Material.NETHER_WOOD).strength(2.0f).resistance(3.0f).nonOpaque().sounds(BlockSoundGroup.NETHER_STEM).mapColor(MapColor.DULL_PINK));
+    public static final Block CRIMSON_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
+    public static final Block CRIMSON_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
+    public static final Block CRIMSON_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block CRIMSON_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
+
     public static final Block MANGROVE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block MANGROVE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block MANGROVE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block MANGROVE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block MANGROVE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
 
-    public static final Block CRIMSON_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(WARPED_CHAIR));
-    public static final Block CRIMSON_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(WARPED_CHAIR));
-    public static final Block CRIMSON_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(WARPED_CHAIR));
-    public static final Block CRIMSON_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(WARPED_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block CRIMSON_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
-
     public static final Block WARPED_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER).mapColor(MapColor.DARK_AQUA));
-    public static final Block WARPED_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(WARPED_CHAIR));
-    public static final Block WARPED_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(WARPED_CHAIR));
-    public static final Block WARPED_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(WARPED_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block WARPED_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block WARPED_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
+    public static final Block WARPED_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
+    public static final Block WARPED_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block WARPED_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
-    public static final Block STRIPPED_OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block STRIPPED_OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
+    public static final Block STRIPPED_OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
+    public static final Block STRIPPED_OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block STRIPPED_OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_BIRCH_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
-    public static final Block STRIPPED_BIRCH_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_BIRCH_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_BIRCH_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block STRIPPED_BIRCH_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_BIRCH_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
+    public static final Block STRIPPED_BIRCH_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
+    public static final Block STRIPPED_BIRCH_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block STRIPPED_BIRCH_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_SPRUCE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
-    public static final Block STRIPPED_SPRUCE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_SPRUCE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_SPRUCE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block STRIPPED_SPRUCE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_SPRUCE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
+    public static final Block STRIPPED_SPRUCE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
+    public static final Block STRIPPED_SPRUCE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block STRIPPED_SPRUCE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_JUNGLE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
-    public static final Block STRIPPED_JUNGLE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_JUNGLE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_JUNGLE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block STRIPPED_JUNGLE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_JUNGLE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
+    public static final Block STRIPPED_JUNGLE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
+    public static final Block STRIPPED_JUNGLE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block STRIPPED_JUNGLE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_ACACIA_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
-    public static final Block STRIPPED_ACACIA_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_ACACIA_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_ACACIA_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block STRIPPED_ACACIA_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_ACACIA_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
+    public static final Block STRIPPED_ACACIA_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
+    public static final Block STRIPPED_ACACIA_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block STRIPPED_ACACIA_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_DARK_OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
-    public static final Block STRIPPED_DARK_OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_DARK_OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block STRIPPED_DARK_OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block STRIPPED_DARK_OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_DARK_OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
+    public static final Block STRIPPED_DARK_OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
+    public static final Block STRIPPED_DARK_OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block STRIPPED_DARK_OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_MANGROVE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_MANGROVE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -394,18 +393,17 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_MANGROVE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block STRIPPED_MANGROVE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
 
-    public static final Block STRIPPED_CRIMSON_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_CRIMSON_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
-    public static final Block STRIPPED_CRIMSON_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(WARPED_CHAIR));
-    public static final Block STRIPPED_CRIMSON_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(WARPED_CHAIR));
-    public static final Block STRIPPED_CRIMSON_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(WARPED_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block STRIPPED_CRIMSON_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_CRIMSON_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
+    public static final Block STRIPPED_CRIMSON_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
+    public static final Block STRIPPED_CRIMSON_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block STRIPPED_CRIMSON_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_WARPED_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
-    public static final Block STRIPPED_WARPED_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(WARPED_CHAIR));
-    public static final Block STRIPPED_WARPED_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(WARPED_CHAIR));
-    public static final Block STRIPPED_WARPED_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(WARPED_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block STRIPPED_WARPED_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_WARPED_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
+    public static final Block STRIPPED_WARPED_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
+    public static final Block STRIPPED_WARPED_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block STRIPPED_WARPED_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
 
     public static final Block WHITE_FREEZER = new Freezer(FabricBlockSettings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE),() -> BlockItemRegistry.WHITE_FRIDGE);
     public static final Block WHITE_FRIDGE = new Fridge(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque(), () -> BlockItemRegistry.WHITE_FREEZER);
@@ -414,9 +412,9 @@ public class BlockItemRegistry {
 
     public static final Block XBOX_FRIDGE = new XboxFridge(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque(), null);
 
-    public static final Block SIMPLE_STOVE = new Stove(FabricBlockSettings.copyOf(WHITE_FREEZER));
-    public static final Block IRON_STOVE = new IronStove(FabricBlockSettings.copyOf(WHITE_FREEZER));
-    public static final Block MICROWAVE = new Microwave(FabricBlockSettings.copyOf(WHITE_FREEZER));
+    public static final Block WHITE_STOVE = new Stove(FabricBlockSettings.copyOf(WHITE_FREEZER));
+    public static final Block IRON_STOVE = new IronStove(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
+    public static final Block IRON_MICROWAVE = new Microwave(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
 
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.BLUE);
@@ -435,15 +433,15 @@ public class BlockItemRegistry {
     public static final Item DYE_KIT_CYAN = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.CYAN);
     public static final Item DYE_KIT_GRAY = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.GRAY);
 
-    public static final Block ACACIA_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.ACACIA_PLANKS).sounds(BlockSoundGroup.WOOD));
-    public static final Block SPRUCE_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.SPRUCE_PLANKS).sounds(BlockSoundGroup.WOOD));
-    public static final Block OAK_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).sounds(BlockSoundGroup.WOOD));
-    public static final Block DARK_OAK_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.DARK_OAK_PLANKS).sounds(BlockSoundGroup.WOOD));
-    public static final Block JUNGLE_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.JUNGLE_PLANKS).sounds(BlockSoundGroup.WOOD));
-    public static final Block BIRCH_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.BIRCH_PLANKS).sounds(BlockSoundGroup.WOOD));
-    public static final Block MANGROVE_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.MANGROVE_PLANKS).sounds(BlockSoundGroup.WOOD));
-    public static final Block WARPED_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.WARPED_PLANKS).sounds(BlockSoundGroup.WOOD));
-    public static final Block CRIMSON_HERRINGBONE_PLANKS = new Block(FabricBlockSettings.copyOf(Blocks.CRIMSON_PLANKS).sounds(BlockSoundGroup.WOOD));
+    public static final Block ACACIA_HERRINGBONE_PLANKS = new HerringbonePlanks(FabricBlockSettings.copyOf(Blocks.ACACIA_PLANKS).sounds(BlockSoundGroup.WOOD));
+    public static final Block SPRUCE_HERRINGBONE_PLANKS = new HerringbonePlanks(FabricBlockSettings.copyOf(Blocks.SPRUCE_PLANKS).sounds(BlockSoundGroup.WOOD));
+    public static final Block OAK_HERRINGBONE_PLANKS = new HerringbonePlanks(FabricBlockSettings.copyOf(Blocks.OAK_PLANKS).sounds(BlockSoundGroup.WOOD));
+    public static final Block DARK_OAK_HERRINGBONE_PLANKS = new HerringbonePlanks(FabricBlockSettings.copyOf(Blocks.DARK_OAK_PLANKS).sounds(BlockSoundGroup.WOOD));
+    public static final Block JUNGLE_HERRINGBONE_PLANKS = new HerringbonePlanks(FabricBlockSettings.copyOf(Blocks.JUNGLE_PLANKS).sounds(BlockSoundGroup.WOOD));
+    public static final Block BIRCH_HERRINGBONE_PLANKS = new HerringbonePlanks(FabricBlockSettings.copyOf(Blocks.BIRCH_PLANKS).sounds(BlockSoundGroup.WOOD));
+    public static final Block MANGROVE_HERRINGBONE_PLANKS = new HerringbonePlanks(FabricBlockSettings.copyOf(Blocks.MANGROVE_PLANKS).sounds(BlockSoundGroup.WOOD));
+    public static final Block WARPED_HERRINGBONE_PLANKS = new HerringbonePlanks(FabricBlockSettings.copyOf(Blocks.WARPED_PLANKS).sounds(BlockSoundGroup.WOOD));
+    public static final Block CRIMSON_HERRINGBONE_PLANKS = new HerringbonePlanks(FabricBlockSettings.copyOf(Blocks.CRIMSON_PLANKS).sounds(BlockSoundGroup.WOOD));
 
 
     public static final Block RAW_CONCRETE = new Block(FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE));
@@ -575,7 +573,7 @@ public class BlockItemRegistry {
         Registry.register(Registry.ITEM, new Identifier(MOD_ID, itemName), item);
     }
 
-    public static void register(){
+    public static void registerBlocks(){
         //Block Registry
         registerItem("furniture_book", FURNITURE_BOOK);
         registerFurniture("working_table", WORKING_TABLE, true);
@@ -727,8 +725,8 @@ public class BlockItemRegistry {
         registerFurniture("jungle_table_log", JUNGLE_LOG_TABLE, true);
         registerFurniture("dark_oak_table_log", DARK_OAK_LOG_TABLE, true);
         registerFurniture("mangrove_table_log", MANGROVE_LOG_TABLE, true);
-        registerFurniture("crimson_table_log", CRIMSON_LOG_TABLE, true);
-        registerFurniture("warped_table_log", WARPED_LOG_TABLE, true);
+        registerFurniture("crimson_table_stem", CRIMSON_STEM_TABLE, true);
+        registerFurniture("warped_table_stem", WARPED_STEM_TABLE, true);
         registerFurniture("stripped_oak_table_log", STRIPPED_OAK_LOG_TABLE, true);
         registerFurniture("stripped_birch_table_log", STRIPPED_BIRCH_LOG_TABLE, true);
         registerFurniture("stripped_spruce_table_log", STRIPPED_SPRUCE_LOG_TABLE, true);
@@ -736,8 +734,8 @@ public class BlockItemRegistry {
         registerFurniture("stripped_jungle_table_log", STRIPPED_JUNGLE_LOG_TABLE, true);
         registerFurniture("stripped_dark_oak_table_log", STRIPPED_DARK_OAK_LOG_TABLE, true);
         registerFurniture("stripped_mangrove_table_log", STRIPPED_MANGROVE_LOG_TABLE, true);
-        registerFurniture("stripped_crimson_table_log", STRIPPED_CRIMSON_LOG_TABLE, true);
-        registerFurniture("stripped_warped_table_log", STRIPPED_WARPED_LOG_TABLE, true);
+        registerFurniture("stripped_crimson_table_stem", STRIPPED_CRIMSON_STEM_TABLE, true);
+        registerFurniture("stripped_warped_table_stem", STRIPPED_WARPED_STEM_TABLE, true);
         //Raw Log Table
         registerFurniture("oak_raw_table_log", OAK_RAW_LOG_TABLE, true);
         registerFurniture("birch_raw_table_log", BIRCH_RAW_LOG_TABLE, true);
@@ -1042,8 +1040,8 @@ public class BlockItemRegistry {
         registerFurniture("iron_fridge", IRON_FRIDGE, true);
         registerFurniture("iron_freezer", IRON_FREEZER, false);
         registerFurniture("xbox_fridge", XBOX_FRIDGE, true);
-        registerFurniture("microwave", MICROWAVE, true);
-        registerFurniture("simple_stove", SIMPLE_STOVE, true);
+        registerFurniture("iron_microwave", IRON_MICROWAVE, true);
+        registerFurniture("white_stove", WHITE_STOVE, true);
         registerFurniture("iron_stove", IRON_STOVE, true);
         registerFurniture("kitchen_stovetop", KITCHEN_STOVETOP, true);
 

@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -37,17 +38,17 @@ public class Fridge extends HorizontalFacingBlockWEntity{
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private Supplier<Block> freezer;
-    private static final List<Fridge> FRIDGES = new ArrayList<>();
+    private static final List<FurnitureBlock> FRIDGES = new ArrayList<>();
     public Fridge(Settings settings, Supplier<Block> freezer) {
         super(settings);
         this.freezer = freezer;
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
-        FRIDGES.add(this);
+        FRIDGES.add(new FurnitureBlock(this, "fridge"));
     }
 
-    public static Stream<Fridge> streamFridges() {
+    public static Stream<FurnitureBlock> streamFridges() {
         return FRIDGES.stream();
     }
 

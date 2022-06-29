@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -134,14 +134,14 @@ public class KitchenStovetop extends HorizontalFacingBlockWEntity {
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         if (world.isClient) {
-            if (state.get(LIT).booleanValue()) {
-                return checkType(type, PaladinFurnitureMod.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::clientTick);
+            if (state.get(LIT)) {
+                return checkType(type, BlockEntityRegistry.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::clientTick);
             }
         } else {
-            if (state.get(LIT).booleanValue()) {
-                return checkType(type, PaladinFurnitureMod.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::litServerTick);
+            if (state.get(LIT)) {
+                return checkType(type, BlockEntityRegistry.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::litServerTick);
             }
-            return checkType(type, PaladinFurnitureMod.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::unlitServerTick);
+            return checkType(type, BlockEntityRegistry.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::unlitServerTick);
         }
         return null;
     }

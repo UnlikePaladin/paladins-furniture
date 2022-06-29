@@ -1,7 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
+import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -43,17 +44,17 @@ public class Microwave extends HorizontalFacingBlockWEntity{
 
     private final Block baseBlock;
     private final BlockState baseBlockState;
-    private static final List<Microwave> MICROWAVES = new ArrayList<>();
+    private static final List<FurnitureBlock> MICROWAVES = new ArrayList<>();
 
     public Microwave(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(OPEN, false).with(POWERED, false).with(FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
-        MICROWAVES.add(this);
+        MICROWAVES.add(new FurnitureBlock(this, "microwave"));
     }
 
-    public static Stream<Microwave> streamMicrowaves() {
+    public static Stream<FurnitureBlock> streamMicrowaves() {
         return MICROWAVES.stream();
     }
     @Override
@@ -124,7 +125,7 @@ public class Microwave extends HorizontalFacingBlockWEntity{
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(world, type, PaladinFurnitureMod.MICROWAVE_BLOCK_ENTITY);
+        return checkType(world, type, BlockEntityRegistry.MICROWAVE_BLOCK_ENTITY);
     }
 
     @Nullable

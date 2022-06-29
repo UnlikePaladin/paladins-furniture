@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -24,8 +25,8 @@ public class ClassicTable extends Block {
     public static final BooleanProperty SOUTH = BooleanProperty.of("south");
     public static final BooleanProperty WEST = BooleanProperty.of("west");
 
-    private static final List<ClassicTable> WOOD_CLASSIC_TABLES = new ArrayList<>();
-    private static final List<ClassicTable> STONE_CLASSIC_TABLES = new ArrayList<>();
+    private static final List<FurnitureBlock> WOOD_CLASSIC_TABLES = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_CLASSIC_TABLES = new ArrayList<>();
     private final BlockState baseBlockState;
     public ClassicTable(Settings settings) {
         super(settings);
@@ -33,17 +34,17 @@ public class ClassicTable extends Block {
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ClassicTable.class)){
-            WOOD_CLASSIC_TABLES.add(this);
+            WOOD_CLASSIC_TABLES.add(new FurnitureBlock(this, "table_classic"));
         }
         else if (this.getClass().isAssignableFrom(ClassicTable.class)){
-            STONE_CLASSIC_TABLES.add(this);
+            STONE_CLASSIC_TABLES.add(new FurnitureBlock(this, "table_classic"));
         }
     }
 
-    public static Stream<ClassicTable> streamWoodClassicTables() {
+    public static Stream<FurnitureBlock> streamWoodClassicTables() {
         return WOOD_CLASSIC_TABLES.stream();
     }
-    public static Stream<ClassicTable> streamStoneClassicTables() {
+    public static Stream<FurnitureBlock> streamStoneClassicTables() {
         return STONE_CLASSIC_TABLES.stream();
     }
 

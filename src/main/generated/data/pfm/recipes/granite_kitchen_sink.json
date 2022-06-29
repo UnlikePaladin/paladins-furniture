@@ -1,0 +1,25 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SZS",
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:white_terracotta"
+    },
+    "S": {
+      "item": "minecraft:polished_granite"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "pfm:granite_kitchen_sink"
+  }
+}
