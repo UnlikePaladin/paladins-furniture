@@ -1,0 +1,19 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SXX",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:acacia_log"
+    },
+    "X": {
+      "item": "minecraft:acacia_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:acacia_classic_stool",
+    "count": 4
+  }
+}

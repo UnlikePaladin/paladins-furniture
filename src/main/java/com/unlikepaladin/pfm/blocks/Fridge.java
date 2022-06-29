@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -25,7 +26,10 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
@@ -34,13 +38,18 @@ public class Fridge extends HorizontalFacingBlockWEntity{
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private Supplier<Block> freezer;
-
+    private static final List<FurnitureBlock> FRIDGES = new ArrayList<>();
     public Fridge(Settings settings, Supplier<Block> freezer) {
         super(settings);
         this.freezer = freezer;
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        FRIDGES.add(new FurnitureBlock(this, "fridge"));
+    }
+
+    public static Stream<FurnitureBlock> streamFridges() {
+        return FRIDGES.stream();
     }
 
     @Override

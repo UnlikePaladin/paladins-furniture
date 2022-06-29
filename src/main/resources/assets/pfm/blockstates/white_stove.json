@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/white_stove","y":180},
+    "facing=east":{"model":"pfm:block/white_stove","y":270},
+    "facing=south":{"model":"pfm:block/white_stove","y":0},
+    "facing=west":{"model":"pfm:block/white_stove","y":90}
+
+}
+
+}

@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.DrawerBlockEntity;
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -26,6 +27,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 
 public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider{
     private float height = 0.36f;
@@ -33,11 +38,26 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     public static final BooleanProperty OPEN = Properties.OPEN;
 
     private final BlockState baseBlockState;
+    private static final List<FurnitureBlock> WOOD_DRAWERS = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_DRAWERS = new ArrayList<>();
     public KitchenDrawer(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT).with(UP, false).with(DOWN, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenDrawer.class)){
+            WOOD_DRAWERS.add(new FurnitureBlock(this, "kitchen_drawer"));
+        }
+        else if (this.getClass().isAssignableFrom(KitchenDrawer.class)){
+            STONE_DRAWERS.add(new FurnitureBlock(this, "kitchen_drawer"));
+        }
+    }
+
+    public static Stream<FurnitureBlock> streamWoodDrawers() {
+        return WOOD_DRAWERS.stream();
+    }
+    public static Stream<FurnitureBlock> streamStoneDrawers() {
+        return STONE_DRAWERS.stream();
     }
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {

@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.Freezer;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -50,7 +51,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         this.recipeType = PaladinFurnitureMod.FREEZING_RECIPE;
     }
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
-        super(PaladinFurnitureMod.FREEZER_BLOCK_ENTITY, pos, state);
+        super(BlockEntityRegistry.FREEZER_BLOCK_ENTITY, pos, state);
         this.recipeType = PaladinFurnitureMod.FREEZING_RECIPE;
     }
     private final ViewerCountManager stateManager = new ViewerCountManager() {

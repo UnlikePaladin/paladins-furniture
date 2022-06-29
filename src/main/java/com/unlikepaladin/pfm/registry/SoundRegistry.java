@@ -10,7 +10,7 @@ public class SoundRegistry {
     public static SoundEvent MICROWAVE_BEEP_EVENT = new SoundEvent(MICROWAVE_BEEP_ID);
     public static final Identifier MICROWAVE_RUNNING_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_running");
     public static SoundEvent MICROWAVE_RUNNING_EVENT = new SoundEvent(MICROWAVE_RUNNING_ID);
-    public static void register(){
+    public static void registerSounds(){
         Registry.register(Registry.SOUND_EVENT, MICROWAVE_BEEP_ID, MICROWAVE_BEEP_EVENT);
         Registry.register(Registry.SOUND_EVENT, MICROWAVE_RUNNING_ID, MICROWAVE_RUNNING_EVENT);
 

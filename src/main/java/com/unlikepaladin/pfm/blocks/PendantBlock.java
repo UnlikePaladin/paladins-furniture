@@ -16,7 +16,10 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class PendantBlock extends PowerableBlock {
     public static final BooleanProperty UP = Properties.UP;
@@ -24,12 +27,17 @@ public class PendantBlock extends PowerableBlock {
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
     private final BlockState baseBlockState;
     private final Block baseBlock;
-
+    private static final List<PendantBlock> PENDANTS = new ArrayList<>();
     public PendantBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(UP, false).with(DOWN, false).with(LIT,  false).with(POWERLOCKED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        PENDANTS.add(this);
+    }
+
+    public static Stream<PendantBlock> streamPendantLights() {
+        return PENDANTS.stream();
     }
 
     @Override

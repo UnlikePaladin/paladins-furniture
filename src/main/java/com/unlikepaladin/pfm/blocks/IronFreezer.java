@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
@@ -36,7 +36,7 @@ public class IronFreezer extends Freezer{
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new FreezerBlockEntity(PaladinFurnitureMod.IRON_FREEZER_BLOCK_ENTITY, pos,state);
+        return new FreezerBlockEntity(BlockEntityRegistry.IRON_FREEZER_BLOCK_ENTITY, pos,state);
     }
 
     protected static final VoxelShape FREEZER = VoxelShapes.union(createCuboidShape(0.7, 1, 2,14.7, 16, 3),createCuboidShape(14.3, 1, 2.3,15.3, 16, 3.3),createCuboidShape(0.7, 0, 3,15.7, 16, 16),createCuboidShape(1.7, 14, 1.06,2.7, 15, 2.06),createCuboidShape(1.7, 14, 0.06,14.2, 15, 1.06));

@@ -9,7 +9,7 @@
     },
     {
       "type": "pfm:furniturerecipe2template",
-      "recipe": "pfm:simple_stove",
+      "recipe": "pfm:white_stove",
       "recipe2": "pfm:iron_stove"
     }
   ]

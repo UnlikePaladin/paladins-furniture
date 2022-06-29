@@ -8,13 +8,21 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
 public class SimpleSofa extends ArmChairDyeable{
+    private static final List<SimpleSofa> SIMPLE_SOFAS = new ArrayList<>();
     public SimpleSofa(Settings settings) {
         super(settings);
+        SIMPLE_SOFAS.add(this);
     }
-
+    public static Stream<SimpleSofa> streamSimpleSofas() {
+        return SIMPLE_SOFAS.stream();
+    }
     @Override
     public boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
     {

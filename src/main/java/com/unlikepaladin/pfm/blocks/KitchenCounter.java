@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -16,6 +17,10 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class KitchenCounter extends HorizontalFacingBlock {
     private float height = 0.36f;
     private final Block baseBlock;
@@ -24,11 +29,26 @@ public class KitchenCounter extends HorizontalFacingBlock {
     public static final BooleanProperty DOWN = Properties.DOWN;
 
     private final BlockState baseBlockState;
+    private static final List<FurnitureBlock> WOOD_COUNTERS = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_COUNTERS = new ArrayList<>();
     public KitchenCounter(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(UP, false).with(DOWN,false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCounter.class)){
+            WOOD_COUNTERS.add(new FurnitureBlock(this, "kitchen_counter"));
+        }
+        else if (this.getClass().isAssignableFrom(KitchenCounter.class)){
+            STONE_COUNTERS.add(new FurnitureBlock(this, "kitchen_counter"));
+        }
+    }
+
+    public static Stream<FurnitureBlock> streamWoodCounters() {
+        return WOOD_COUNTERS.stream();
+    }
+    public static Stream<FurnitureBlock> streamStoneCounters() {
+        return STONE_COUNTERS.stream();
     }
 
     @Override

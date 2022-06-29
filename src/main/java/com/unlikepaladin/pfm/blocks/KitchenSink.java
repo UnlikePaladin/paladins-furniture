@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.entity.Entity;
@@ -25,9 +26,12 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.biome.Biome;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class KitchenSink extends AbstractCauldronBlock {
     private final BlockState baseBlockState;
@@ -35,7 +39,8 @@ public class KitchenSink extends AbstractCauldronBlock {
     private final Predicate<Biome.Precipitation> precipitationPredicate;
     public static final IntProperty LEVEL_4 = IntProperty.of("level", 0, 3);
     private final Map<Item, CauldronBehavior> behaviorMap;
-
+    private static final List<FurnitureBlock> WOOD_SINKS = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_SINKS = new ArrayList<>();
     public KitchenSink(Settings settings, Predicate<Biome.Precipitation> precipitationPredicate, Map<Item, CauldronBehavior> map) {
         super(settings, map);
         this.setDefaultState(this.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_4, 0));
@@ -43,7 +48,21 @@ public class KitchenSink extends AbstractCauldronBlock {
         this.precipitationPredicate = precipitationPredicate;
         this.behaviorMap = map;
         this.baseBlock = baseBlockState.getBlock();
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenSink.class)){
+            WOOD_SINKS.add(new FurnitureBlock(this, "kitchen_sink"));
+        }
+        else if (this.getClass().isAssignableFrom(KitchenSink.class)){
+            STONE_SINKS.add(new FurnitureBlock(this, "kitchen_sink"));
+        }
     }
+
+    public static Stream<FurnitureBlock> streamWoodSinks() {
+        return WOOD_SINKS.stream();
+    }
+    public static Stream<FurnitureBlock> streamStoneSinks() {
+        return STONE_SINKS.stream();
+    }
+
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);

@@ -48,12 +48,12 @@ public class ColorRegistry {
 
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.WHITE_FRIDGE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.XBOX_FRIDGE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.SIMPLE_STOVE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.WHITE_STOVE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.IRON_CHAIN, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.GRAY_MODERN_PENDANT, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.WHITE_MODERN_PENDANT, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.GLASS_MODERN_PENDANT, RenderLayer.getTranslucent());
-        BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.MICROWAVE, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.IRON_MICROWAVE, RenderLayer.getTranslucent());
 
     }
 

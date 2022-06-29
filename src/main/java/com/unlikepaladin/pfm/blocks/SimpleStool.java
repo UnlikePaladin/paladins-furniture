@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.property.Properties;
@@ -10,16 +12,33 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class SimpleStool extends BasicChair {
     public float height;
 
-
+    private static final List<FurnitureBlock> WOOD_SIMPLE_STOOLS = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_SIMPLE_STOOLS = new ArrayList<>();
     public SimpleStool(Settings settings) {
         super(settings);
-    setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
         this.height = 0.5f;
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(SimpleStool.class)){
+            WOOD_SIMPLE_STOOLS.add(new FurnitureBlock(this, "simple_stool"));
+        }
+        else if (this.getClass().isAssignableFrom(SimpleStool.class)){
+            STONE_SIMPLE_STOOLS.add(new FurnitureBlock(this, "simple_stool"));
+        }
     }
 
+    public static Stream<FurnitureBlock> streamWoodSimpleStools() {
+        return WOOD_SIMPLE_STOOLS.stream();
+    }
+    public static Stream<FurnitureBlock> streamStoneSimpleStools() {
+        return STONE_SIMPLE_STOOLS.stream();
+    }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {

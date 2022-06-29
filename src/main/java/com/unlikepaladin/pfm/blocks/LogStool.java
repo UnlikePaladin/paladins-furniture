@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.property.Properties;
@@ -10,11 +12,23 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
-public class LogStool extends BasicChair {
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
+public class LogStool extends BasicChair {
+    
+    private static final List<FurnitureBlock> WOOD_LOG_STOOLS = new ArrayList<>();
     public LogStool(Settings settings) {
         super(settings);
-    setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(LogStool.class)){
+            WOOD_LOG_STOOLS.add(new FurnitureBlock(this, "_stool"));
+        }
+    }
+
+    public static Stream<FurnitureBlock> streamWoodLogStools() {
+        return WOOD_LOG_STOOLS.stream();
     }
 
     @Override
@@ -27,7 +41,6 @@ public class LogStool extends BasicChair {
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
                 return COLLISION;
         }
-
 
 }
 

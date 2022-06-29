@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
@@ -10,14 +11,24 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class FroggyChair extends BasicChair {
     public float height = 0.36f;
 
-
+    private static final List<FurnitureBlock> FROGGY_CHAIRS = new ArrayList<>();
     public FroggyChair(Settings settings) {
         super(settings);
-    setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        if (this.getClass().isAssignableFrom(FroggyChair.class)){
+            FROGGY_CHAIRS.add(new FurnitureBlock(this, "froggy_chair_"));
+        }
+    }
 
+    public static Stream<FurnitureBlock> streamFroggyChair() {
+        return FROGGY_CHAIRS.stream();
     }
 
 

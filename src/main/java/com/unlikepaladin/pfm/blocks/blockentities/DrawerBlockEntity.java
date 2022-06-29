@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.KitchenCabinet;
 import com.unlikepaladin.pfm.blocks.KitchenDrawer;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
@@ -29,7 +29,7 @@ import net.minecraft.world.World;
 
 public class DrawerBlockEntity extends LootableContainerBlockEntity {
     public DrawerBlockEntity(BlockPos pos, BlockState state) {
-        super(PaladinFurnitureMod.DRAWER_BLOCK_ENTITY, pos, state);
+        super(BlockEntityRegistry.DRAWER_BLOCK_ENTITY, pos, state);
     }
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
     private final ViewerCountManager stateManager = new ViewerCountManager() {

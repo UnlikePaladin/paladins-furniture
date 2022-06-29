@@ -1,23 +1,18 @@
 package com.unlikepaladin.pfm;
 
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
-import com.unlikepaladin.pfm.blocks.blockentities.*;
+import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.compat.sandwichable.PFMSandwichableRegistry;
 import com.unlikepaladin.pfm.menus.*;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.FurnitureSerializer;
-import com.unlikepaladin.pfm.registry.BlockItemRegistry;
-import com.unlikepaladin.pfm.registry.EntityRegistry;
-import com.unlikepaladin.pfm.registry.SoundRegistry;
-import com.unlikepaladin.pfm.registry.StatisticsRegistry;
+import com.unlikepaladin.pfm.registry.*;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CookingRecipeSerializer;
@@ -36,16 +31,7 @@ import java.util.Objects;
 public class PaladinFurnitureMod implements ModInitializer {
 
 	public static final String MOD_ID = "pfm";
-	public static BlockEntityType<DrawerBlockEntity> DRAWER_BLOCK_ENTITY;
-	public static BlockEntityType<FridgeBlockEntity> FRIDGE_BLOCK_ENTITY;
-	public static BlockEntityType<FreezerBlockEntity> FREEZER_BLOCK_ENTITY;
-	public static BlockEntityType<FreezerBlockEntity> IRON_FREEZER_BLOCK_ENTITY;
-	public static BlockEntityType<StoveBlockEntity> STOVE_BLOCK_ENTITY;
-	public static BlockEntityType<StoveBlockEntity> KITCHEN_COUNTER_OVEN_BLOCK_ENTITY;
-	public static BlockEntityType<IronStoveBlockEntity> IRON_STOVE_BLOCK_ENTITY;
-	public static BlockEntityType<LightSwitchBlockEntity> LIGHT_SWITCH_BLOCK_ENTITY;
-	public static BlockEntityType<MicrowaveBlockEntity> MICROWAVE_BLOCK_ENTITY;
-	public static BlockEntityType<StovetopBlockEntity> STOVE_TOP_BLOCK_ENTITY;
+
 	public static final Identifier MICROWAVE_PACKET_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_activate");
 
 	public static final Identifier FREEZER = new Identifier(MOD_ID, "freezer_block_entity");
@@ -108,53 +94,14 @@ public class PaladinFurnitureMod implements ModInitializer {
 		// Proceed with mild caution.
 		EntityRegistry.registerEntities();
 		SinkBehavior.registerBehavior();
-		BlockItemRegistry.register();
+		BlockItemRegistry.registerBlocks();
 		if (FabricLoader.getInstance().isModLoaded("sandwichable")) {
 			PFMSandwichableRegistry.register();
 		}
-		StatisticsRegistry.register();
-		SoundRegistry.register();
-		DRAWER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":drawer_block_entity", FabricBlockEntityTypeBuilder.create(DrawerBlockEntity::new, BlockItemRegistry.OAK_KITCHEN_DRAWER).build(null));
-		FRIDGE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":fridge_block_entity", FabricBlockEntityTypeBuilder.create(FridgeBlockEntity::new, BlockItemRegistry.WHITE_FRIDGE).build(null));
-		IRON_FREEZER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":iron_freezer_block_entity", FabricBlockEntityTypeBuilder.create(FreezerBlockEntity::new, BlockItemRegistry.IRON_FREEZER).build(null));
-		FREEZER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":freezer_block_entity", FabricBlockEntityTypeBuilder.create(FreezerBlockEntity::new, BlockItemRegistry.WHITE_FREEZER).build(null));
-		STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":stove_block_entity", FabricBlockEntityTypeBuilder.create(StoveBlockEntity::new, BlockItemRegistry.SIMPLE_STOVE).build(null));
-		STOVE_TOP_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":stovetop_block_entity", FabricBlockEntityTypeBuilder.create(StovetopBlockEntity::new, BlockItemRegistry.KITCHEN_STOVETOP).build(null));
-		KITCHEN_COUNTER_OVEN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":kitchen_counter_oven_block_entity", FabricBlockEntityTypeBuilder.create(StoveBlockEntity::new,
-						BlockItemRegistry.OAK_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.BIRCH_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.SPRUCE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.ACACIA_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.SPRUCE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.JUNGLE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.DARK_OAK_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.CRIMSON_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.WARPED_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.STRIPPED_OAK_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.STRIPPED_BIRCH_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.STRIPPED_SPRUCE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.STRIPPED_ACACIA_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.STRIPPED_SPRUCE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.STRIPPED_JUNGLE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.STRIPPED_DARK_OAK_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.STRIPPED_CRIMSON_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.STRIPPED_WARPED_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.CONCRETE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.DARK_CONCRETE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.LIGHT_WOOD_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.DARK_WOOD_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.GRANITE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.CALCITE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.DIORITE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.ANDESITE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.STONE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.BLACKSTONE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.DEEPSLATE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.DEEPSLATE_TILE_KITCHEN_COUNTER_OVEN,
-						BlockItemRegistry.NETHERITE_KITCHEN_COUNTER_OVEN).build(null));
-		IRON_STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":iron_stove_block_entity", FabricBlockEntityTypeBuilder.create(IronStoveBlockEntity::new, BlockItemRegistry.IRON_STOVE).build(null));
-		LIGHT_SWITCH_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":light_switch_block_entity", FabricBlockEntityTypeBuilder.create(LightSwitchBlockEntity::new, BlockItemRegistry.LIGHT_SWITCH).build(null));
-		MICROWAVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":microwave_block_entity", FabricBlockEntityTypeBuilder.create(MicrowaveBlockEntity::new, BlockItemRegistry.MICROWAVE).build(null));
+		StatisticsRegistry.registerStatistics();
+		SoundRegistry.registerSounds();
+		BlockEntityRegistry.registerBlockEntities();
+
 		FREEZING_RECIPE = Registry.register(Registry.RECIPE_TYPE, MOD_ID + ":freezing",  new RecipeType<FreezingRecipe>() {
 			@Override
 			public String toString() {return "freezing";}
@@ -182,6 +129,5 @@ public class PaladinFurnitureMod implements ModInitializer {
 
 			});
 		});
-
 	}
 }

@@ -23,7 +23,10 @@
     ],
     "client": [
       "com.unlikepaladin.pfm.client.PaladinFurnitureModClient"	
-],
+    ],
+    "fabric-datagen": [
+      "com.unlikepaladin.pfm.data.PaladinFurnitureModDataEntrypoint"
+    ],
     "rei": [
       "com.unlikepaladin.pfm.compat.rei.PaladinFurnitureModREIPlugin"
     ]

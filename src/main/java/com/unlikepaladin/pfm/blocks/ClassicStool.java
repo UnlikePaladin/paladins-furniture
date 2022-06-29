@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.property.Properties;
@@ -10,23 +12,38 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class ClassicStool extends BasicChair {
     public float height;
 
-
+    private static final List<FurnitureBlock> WOOD_CLASSIC_STOOLS = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_CLASSIC_STOOLS = new ArrayList<>();
     public ClassicStool(Settings settings) {
         super(settings);
-    setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
         this.height = 0.5f;
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ClassicStool.class)){
+            WOOD_CLASSIC_STOOLS.add(new FurnitureBlock(this, "classic_stool"));
+        }
+        else if (this.getClass().isAssignableFrom(ClassicStool.class)){
+            STONE_CLASSIC_STOOLS.add(new FurnitureBlock(this, "classic_stool"));
+        }
     }
 
+    public static Stream<FurnitureBlock> streamWoodClassicStools() {
+        return WOOD_CLASSIC_STOOLS.stream();
+    }
+    public static Stream<FurnitureBlock> streamStoneClassicStools() {
+        return STONE_CLASSIC_STOOLS.stream();
+    }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing().getOpposite());
     }
-    @SuppressWarnings("deprecated")
-
 
     /**
      * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/

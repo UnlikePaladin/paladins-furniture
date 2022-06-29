@@ -1,7 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
+import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -27,7 +28,10 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
@@ -36,13 +40,18 @@ public class Freezer extends HorizontalFacingBlockWEntity{
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private Supplier<Block> fridge;
-
+    private static final List<FurnitureBlock> FREEZERS = new ArrayList<>();
     public Freezer(Settings settings, Supplier<Block> fridge) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
         this.fridge = fridge;
         this.baseBlock = baseBlockState.getBlock();
+        FREEZERS.add(new FurnitureBlock(this, "freezer_"));
+    }
+
+    public static Stream<FurnitureBlock> streamFreezers() {
+        return FREEZERS.stream();
     }
 
     @Override
@@ -195,12 +204,12 @@ public class Freezer extends HorizontalFacingBlockWEntity{
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new FreezerBlockEntity(PaladinFurnitureMod.FREEZER_BLOCK_ENTITY, pos,state);
+        return new FreezerBlockEntity(BlockEntityRegistry.FREEZER_BLOCK_ENTITY, pos,state);
     }
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(world, type, PaladinFurnitureMod.FREEZER_BLOCK_ENTITY);
+        return checkType(world, type, BlockEntityRegistry.FREEZER_BLOCK_ENTITY);
     }
 
     @Nullable

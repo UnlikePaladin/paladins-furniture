@@ -1,0 +1,25 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SZS",
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:crimson_planks"
+    },
+    "S": {
+      "item": "minecraft:crimson_stem"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "pfm:crimson_kitchen_sink"
+  }
+}
