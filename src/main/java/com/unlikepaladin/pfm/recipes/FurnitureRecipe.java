@@ -4,6 +4,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.*;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
@@ -50,7 +51,7 @@ public class FurnitureRecipe implements IFurnitureRecipe {
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return RecipeSerializer.SHAPED;
+        return PaladinFurnitureMod.FURNITURE_SERIALIZER;
     }
 
     @Override
