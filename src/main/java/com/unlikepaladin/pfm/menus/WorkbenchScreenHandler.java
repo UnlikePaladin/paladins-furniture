@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.menus;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.menus.slots.FurnitureOutputSlot;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -16,7 +17,6 @@ import net.minecraft.recipe.book.RecipeBookCategory;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.screen.slot.CraftingResultSlot;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
@@ -39,7 +39,7 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
         int i;
         this.context = context;
         this.player = playerInventory.player;
-        this.addSlot(new CraftingResultSlot(playerInventory.player, this.input, this.result, 0, 124, 35));
+        this.addSlot(new FurnitureOutputSlot(playerInventory.player, this.input, this.result, 0, 124, 35));
         for (i = 0; i < 3; ++i) {
             for (j = 0; j < 3; ++j) {
                 this.addSlot(new Slot(this.input, j + i * 3, 30 + j * 18, 17 + i * 18));
@@ -56,15 +56,15 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
     }
 
     protected static void updateResult(ScreenHandler handler, World world, PlayerEntity player, CraftingInventory craftingInventory, CraftingResultInventory resultInventory) {
-        FurnitureRecipe craftingRecipe;
+        FurnitureRecipe furnitureRecipe;
         if (world.isClient) {
             return;
         }
         ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)player;
         ItemStack itemStack = ItemStack.EMPTY;
         Optional<FurnitureRecipe> optional = world.getServer().getRecipeManager().getFirstMatch(PaladinFurnitureMod.FURNITURE_RECIPE, craftingInventory, world);
-        if (optional.isPresent() && resultInventory.shouldCraftRecipe(world, serverPlayerEntity, craftingRecipe = optional.get())) {
-            itemStack = craftingRecipe.craft(craftingInventory);
+        if (optional.isPresent() && resultInventory.shouldCraftRecipe(world, serverPlayerEntity, furnitureRecipe = optional.get())) {
+            itemStack = furnitureRecipe.craft(craftingInventory);
         }
         resultInventory.setStack(0, itemStack);
         handler.setPreviousTrackedSlot(0, itemStack);
@@ -73,7 +73,7 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
 
     @Override
     public void onContentChanged(Inventory inventory) {
-        this.context.run((world, pos) -> com.unlikepaladin.pfm.menus.WorkbenchScreenHandler.updateResult(this, world, this.player, this.input, this.result));
+        this.context.run((world, pos) -> WorkbenchScreenHandler.updateResult(this, world, this.player, this.input, this.result));
     }
 
     @Override
@@ -100,18 +100,18 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
 
     @Override
     public boolean canUse(PlayerEntity player) {
-        return net.minecraft.screen.CraftingScreenHandler.canUse(this.context, player, BlockItemRegistry.WORKING_TABLE);
+        return WorkbenchScreenHandler.canUse(this.context, player, BlockItemRegistry.WORKING_TABLE);
     }
 
     @Override
     public ItemStack transferSlot(PlayerEntity player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = (Slot)this.slots.get(index);
+        Slot slot = this.slots.get(index);
         if (slot != null && slot.hasStack()) {
             ItemStack itemStack2 = slot.getStack();
             itemStack = itemStack2.copy();
             if (index == 0) {
-                this.context.run((world, pos) -> itemStack2.getItem().onCraft(itemStack2, (World)world, player));
+                this.context.run((world, pos) -> itemStack2.getItem().onCraft(itemStack2, world, player));
                 if (!this.insertItem(itemStack2, 10, 46, true)) {
                     return ItemStack.EMPTY;
                 }
