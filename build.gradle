@@ -93,7 +93,7 @@ repositories {
 		}
 	}
 
-	if (project.emi_compatiblity == "true") {
+	if (project.emi_compatibility == "true") {
 		dependencies {
 			modImplementation("dev.emi:emi:${project.emi_version}")
 		}

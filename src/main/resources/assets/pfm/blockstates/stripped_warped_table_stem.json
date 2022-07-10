@@ -1,193 +1,129 @@
 {
-    "multipart": [
-        {
-            "when": { "AND": [
-                { "table_type": "single" },
-                { "facing": "north" }
-            ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner"}
-=======
-            "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table"}
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-        },
-        {
-            "when": { "AND": [
-                { "table_type": "single" },
-                { "facing": "south" }
-            ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner"}
-=======
-            "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table"}
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-        },
-        
-        {
-            "when": { "AND": [
-                { "table_type": "single" },
-                { "facing": "east" }
-            ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner","y":90}
-=======
-            "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table", "y":90}
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-        },
-        {
-            "when": { "AND": [
-                { "table_type": "single" },
-                { "facing": "west" }
-            ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner","y":90}
-=======
-            "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table", "y":90}
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-        },
-        
-      
-      
-      
-        {
-            "when": { "AND": [
-                { "table_type": "middle" },
-                {"facing":"north"}
-            ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_middle" }
-=======
-            "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_middle" }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-        },
-        {
-            "when": { "AND": [
-                { "table_type": "middle" },
-                {"facing":"east"}
-            ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_middle", "y":90 }
-=======
-            "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_middle", "y":90 }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-        },
-        {
-            "when": { "AND": [
-                { "table_type": "middle" },
-                {"facing":"west"}
-            ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_middle","y":90 }
-=======
-            "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_middle","y":90 }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-        },
-        {
-            "when": { "AND": [
-                { "table_type": "middle" },
-                {"facing":"south"}
-            ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_middle" }
-=======
-            "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_middle" }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-        },
-        
-        
-    
-        {
-        "when": { "AND": [
-            { "table_type": "left" },
-            {"facing":"north"}
-        ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-        "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_right"  }
-=======
-        "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":0  }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-    },
-        {
-        "when": { "AND": [
-            { "table_type": "left" },
-            {"facing":"west"}
-        ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-        "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_left", "y":90  }
-=======
-        "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":270  }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-    },
-        {
-        "when": { "AND": [
-            { "table_type": "left" },
-            {"facing":"east"}
-        ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-        "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_right", "y":90 }
-=======
-        "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":270  }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-    },
-        {
-        "when": { "AND": [
-            { "table_type": "left" },
-            {"facing":"south"}
-        ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-        "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_left"  }
-=======
-        "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":0  }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-    },
-        
-        
+  "multipart": [
     {
-    "when": { "AND": [
+      "when": { "AND": [
+        { "table_type": "single" },
+        { "facing": "north" }
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table"}
+    },
+    {
+      "when": { "AND": [
+        { "table_type": "single" },
+        { "facing": "south" }
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table"}
+    },
+
+    {
+      "when": { "AND": [
+        { "table_type": "single" },
+        { "facing": "west" }
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table", "y":90}
+    },
+    {
+      "when": { "AND": [
+        { "table_type": "single" },
+        { "facing": "east" }
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table", "y":90}
+    },
+
+
+
+
+    {
+      "when": { "AND": [
+        { "table_type": "middle" },
+        {"facing":"north"}
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_middle" }
+    },
+    {
+      "when": { "AND": [
+        { "table_type": "middle" },
+        {"facing":"west"}
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_middle", "y":90 }
+    },
+    {
+      "when": { "AND": [
+        { "table_type": "middle" },
+        {"facing":"east"}
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_middle","y":90 }
+    },
+    {
+      "when": { "AND": [
+        { "table_type": "middle" },
+        {"facing":"south"}
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_middle" }
+    },
+
+
+
+    {
+      "when": { "AND": [
+        { "table_type": "left" },
+        {"facing":"north"}
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":0  }
+    },
+    {
+      "when": { "AND": [
+        { "table_type": "left" },
+        {"facing":"east"}
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":270  }
+    },
+    {
+      "when": { "AND": [
+        { "table_type": "left" },
+        {"facing":"west"}
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":270  }
+    },
+    {
+      "when": { "AND": [
+        { "table_type": "left" },
+        {"facing":"south"}
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":0  }
+    },
+
+
+    {
+      "when": { "AND": [
         { "table_type": "right" },
         {"facing":"north"}
-    ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-    "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_left", "y":0  }
-=======
-    "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":180  }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-},
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":180  }
+    },
     {
-    "when": { "AND": [
-        { "table_type": "right" },
-        {"facing":"west"}
-    ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-    "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_left", "y":270  }
-=======
-    "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":90  }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-},
-    {
-    "when": { "AND": [
+      "when": { "AND": [
         { "table_type": "right" },
         {"facing":"east"}
-    ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-    "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_right", "y":270  }
-=======
-    "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":90  }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-},
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":90  }
+    },
     {
-    "when": { "AND": [
+      "when": { "AND": [
+        { "table_type": "right" },
+        {"facing":"west"}
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":90  }
+    },
+    {
+      "when": { "AND": [
         { "table_type": "right" },
         {"facing":"south"}
-    ]},
-<<<<<<< HEAD:src/main/resources/assets/pfm/blockstates/acacia_table_modern_dinner.json
-    "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_right", "y":0  }
-=======
-    "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":180  }
->>>>>>> 84635f9 (Most Recipes are data generated, some Registry changes and some Block IDs also are different.):src/main/resources/assets/pfm/blockstates/stripped_warped_table_stem.json
-}
-   
-   
-        
-    ]
+      ]},
+      "apply": { "model": "pfm:block/stripped_warped_stem_table/stripped_warped_stem_table_one", "y":180  }
+    }
+
+
+
+  ]
 }
