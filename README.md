@@ -12,4 +12,4 @@ I've made a [Discord](https://discord.gg/zbMDUPB), you can join to ask for help 
 
 ## License
 
-Paldin's Furniture Mod is licensed under GNU LGPLv3, a free and open-source license. For more information, please see the [license file](LICENSE).
+Paldin's Furniture is licensed under GNU LGPLv3, a free and open-source license. For more information, please see the [license file](LICENSE).
