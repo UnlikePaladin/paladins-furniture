@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XX",
-    "XX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:oak_slab"
     }
   },
+  "pattern": [
+    "XX",
+    "XX"
+  ],
   "result": {
-    "item": "pfm:oak_herringbone_planks",
-    "count": 4
+    "count": 4,
+    "item": "pfm:oak_herringbone_planks"
   }
 }

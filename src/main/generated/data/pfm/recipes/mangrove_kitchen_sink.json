@@ -1,0 +1,25 @@
+{
+  "type": "pfm:furniture",
+  "key": {
+    "S": {
+      "item": "minecraft:mangrove_log"
+    },
+    "X": {
+      "item": "minecraft:mangrove_planks"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "pattern": [
+    "SZS",
+    "XYX",
+    "XXX"
+  ],
+  "result": {
+    "item": "pfm:mangrove_kitchen_sink"
+  }
+}

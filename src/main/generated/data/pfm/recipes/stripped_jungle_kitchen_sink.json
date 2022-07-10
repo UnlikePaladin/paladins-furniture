@@ -1,24 +1,24 @@
 {
   "type": "pfm:furniture",
+  "key": {
+    "S": {
+      "item": "minecraft:jungle_planks"
+    },
+    "X": {
+      "item": "minecraft:stripped_jungle_log"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
   "pattern": [
     "SZS",
     "XYX",
     "XXX"
   ],
-  "key": {
-    "X": {
-      "item": "minecraft:stripped_jungle_log"
-    },
-    "S": {
-      "item": "minecraft:jungle_planks"
-    },
-    "Z": {
-      "item": "minecraft:iron_ingot"
-    },
-    "Y": {
-      "item": "minecraft:bucket"
-    }
-  },
   "result": {
     "item": "pfm:stripped_jungle_kitchen_sink"
   }

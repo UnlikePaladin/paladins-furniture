@@ -41,7 +41,6 @@ public class WorkingTable extends HorizontalFacingBlock {
         return WORKING_TABLES.stream();
     }
 
-    private static final Text TITLE = Text.translatable("container.pfm.working_table");
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient) {
