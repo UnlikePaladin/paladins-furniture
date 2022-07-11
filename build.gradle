@@ -87,7 +87,9 @@ if (project.patchouli_compatibility == "true") {
 
 if (project.emi_compatibility == "true") {
 	dependencies {
-		modImplementation "dev.emi:emi:${project.emi_version}"
+		modImplementation "dev.emi:emi:${project.emi_version}" {
+			transitive = false
+		}
 	}
 } else {
 	dependencies {
