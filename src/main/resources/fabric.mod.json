@@ -3,17 +3,17 @@
   "id": "pfm",
   "version": "${version}",
 
-  "name": "Paladin's Furniture Mod",
+  "name": "Paladin's Furniture",
   "description": "This is a Fabric mod that adds lots of new furniture to the game!",
   "authors": [
     "UnlikePaladin"
   ],
   "contact": {
     "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "sources": "https://github.com/UnlikePaladin/paladins-furniture"
   },
 
-  "license": "CC0-1.0",
+  "license": "LGPL-3.0-only",
   "icon": "assets/pfm/icon.png",
 
   "environment": "*",
