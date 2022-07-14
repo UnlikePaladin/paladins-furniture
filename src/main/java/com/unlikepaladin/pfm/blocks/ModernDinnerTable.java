@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -14,12 +15,18 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 public class ModernDinnerTable extends HorizontalFacingBlock {
 
     private final Block baseBlock;
     public static final EnumProperty<TableShape> SHAPE = EnumProperty.of("table_type", TableShape.class);
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
+    private static final List<FurnitureBlock> WOOD_DINNER_MODERN_TABLES = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_DINNER_MODERN_TABLES = new ArrayList<>();
 
     private final BlockState baseBlockState;
 
@@ -28,8 +35,20 @@ public class ModernDinnerTable extends HorizontalFacingBlock {
         setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, TableShape.SINGLE).with(FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ModernDinnerTable.class)){
+            WOOD_DINNER_MODERN_TABLES.add(new FurnitureBlock(this, "table_modern_dinner"));
+        }
+        else if (this.getClass().isAssignableFrom(ModernDinnerTable.class)){
+            STONE_DINNER_MODERN_TABLES.add(new FurnitureBlock(this, "table_modern_dinner"));
+        }
     }
 
+    public static Stream<FurnitureBlock> streamWoodModernDinnerTables() {
+        return WOOD_DINNER_MODERN_TABLES.stream();
+    }
+    public static Stream<FurnitureBlock> streamStoneModernDinnerTables() {
+        return STONE_DINNER_MODERN_TABLES.stream();
+    }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
@@ -111,9 +130,14 @@ public class ModernDinnerTable extends HorizontalFacingBlock {
         return state.get(this.SHAPE);
     }
 
-    final static VoxelShape modern_dinner_table = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(12, 0, 12, 14, 14, 14), createCuboidShape(12, 0, 2, 14, 14, 4), createCuboidShape(13, 2, 7,15, 14, 9), createCuboidShape(1, 2, 7, 3, 14, 9),createCuboidShape(2, 0, 2,4, 14, 4),createCuboidShape(2, 0, 4, 4, 2, 12), createCuboidShape(3, 2, 7,13, 4, 9),createCuboidShape(12, 0, 4,14, 2, 12), createCuboidShape(2, 0, 12,4, 14, 14));
-    final static VoxelShape modern_dinner_table_middle = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16),createCuboidShape(0, 2, 7,16, 4, 9 ));
-    final static VoxelShape modern_dinner_table_one = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(13, 2, 7, 15, 14, 9), createCuboidShape(12, 0, 12,14, 14, 14), createCuboidShape(12, 0, 4,14, 2, 12 ), createCuboidShape(0, 2, 7,13, 4, 9), createCuboidShape(12, 0, 2,14, 14, 4 ));
+    final static VoxelShape MODERN_DINNER_TABLE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(12, 0, 12, 14, 14, 14), createCuboidShape(12, 0, 2, 14, 14, 4), createCuboidShape(13, 2, 7,15, 14, 9), createCuboidShape(1, 2, 7, 3, 14, 9),createCuboidShape(2, 0, 2,4, 14, 4),createCuboidShape(2, 0, 4, 4, 2, 12), createCuboidShape(3, 2, 7,13, 4, 9),createCuboidShape(12, 0, 4,14, 2, 12), createCuboidShape(2, 0, 12,4, 14, 14));
+    final static VoxelShape MODERN_DINNER_TABLE_MIDDLE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16),createCuboidShape(0, 2, 7,16, 4, 9 ));
+    final static VoxelShape MODERN_DINNER_TABLE_ONE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(13, 2, 7, 15, 14, 9), createCuboidShape(12, 0, 12,14, 14, 14), createCuboidShape(12, 0, 4,14, 2, 12 ), createCuboidShape(0, 2, 7,13, 4, 9), createCuboidShape(12, 0, 2,14, 14, 4 ));
+    final static VoxelShape MODERN_DINNER_TABLE_ONE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MODERN_DINNER_TABLE_ONE);
+    final static VoxelShape MODERN_DINNER_TABLE_ONE_WEST = rotateShape(Direction.NORTH, Direction.WEST, MODERN_DINNER_TABLE_ONE);
+    final static VoxelShape MODERN_DINNER_TABLE_ONE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_DINNER_TABLE_ONE);
+    final static VoxelShape MODERN_DINNER_TABLE_MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_DINNER_TABLE_MIDDLE);
+    final static VoxelShape MODERN_DINNER_TABLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_DINNER_TABLE);
 
     //Cursed I know
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
@@ -125,36 +149,36 @@ public class ModernDinnerTable extends HorizontalFacingBlock {
         switch (tableShape) {
             case LEFT -> {
                 if (dir.equals(Direction.NORTH)) {
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, modern_dinner_table_one);}
+                    return MODERN_DINNER_TABLE_ONE_SOUTH;}
                 else if (dir.equals(Direction.SOUTH)) {
-                    return modern_dinner_table_one;}
+                    return MODERN_DINNER_TABLE_ONE;}
                 else if (dir.equals(Direction.EAST)) {
-                    return rotateShape(Direction.NORTH, Direction.WEST, modern_dinner_table_one);}
+                    return MODERN_DINNER_TABLE_ONE_WEST;}
                 else {
-                    return rotateShape(Direction.NORTH, Direction.EAST, modern_dinner_table_one);}
+                    return MODERN_DINNER_TABLE_ONE_EAST;}
             }
             case RIGHT -> {
                 if (dir.equals(Direction.NORTH)) {
-                    return modern_dinner_table_one;}
+                    return MODERN_DINNER_TABLE_ONE;}
                 else if (dir.equals(Direction.SOUTH)) {
-                    return rotateShape(Direction.NORTH, Direction.SOUTH, modern_dinner_table_one);}
+                    return MODERN_DINNER_TABLE_ONE_SOUTH;}
                 else if (dir.equals(Direction.EAST)) {
-                    return rotateShape(Direction.NORTH, Direction.EAST, modern_dinner_table_one);}
+                    return MODERN_DINNER_TABLE_ONE_EAST;}
                 else {
-                    return rotateShape(Direction.NORTH, Direction.WEST, modern_dinner_table_one);}
+                    return MODERN_DINNER_TABLE_ONE_WEST;}
             }
             case MIDDLE -> {
                 if (dirNorthOrSouth) {
-                    return modern_dinner_table_middle;
+                    return MODERN_DINNER_TABLE_MIDDLE;
                 } else {
-                    return rotateShape(Direction.NORTH, Direction.EAST, modern_dinner_table_middle);
+                    return MODERN_DINNER_TABLE_MIDDLE_EAST;
                 }
             }
             default -> {
                 if (dirWestOrEast) {
-                    return rotateShape(Direction.NORTH, Direction.EAST, modern_dinner_table);}
+                    return MODERN_DINNER_TABLE_EAST;}
                 else {
-                    return  modern_dinner_table;
+                    return MODERN_DINNER_TABLE;
                 }
             }
         }
