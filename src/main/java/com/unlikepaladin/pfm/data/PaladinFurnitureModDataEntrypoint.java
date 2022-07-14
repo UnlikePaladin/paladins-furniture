@@ -71,6 +71,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             DinnerTable[] stoneDinnerTables = DinnerTable.streamStoneDinnerTables().map(FurnitureBlock::getBlock).toArray(DinnerTable[]::new);
             ModernChair[] stoneModernChairs = ModernChair.streamStoneModernChairs().map(FurnitureBlock::getBlock).toArray(ModernChair[]::new);
             ModernStool[] stoneModernStools = ModernStool.streamStoneModernStools().map(FurnitureBlock::getBlock).toArray(ModernStool[]::new);
+            ModernDinnerTable[] stoneModernDinnerTables = ModernDinnerTable.streamStoneModernDinnerTables().map(FurnitureBlock::getBlock).toArray(ModernDinnerTable[]::new);
 
             SimpleStool[] stoneSimpleStools = SimpleStool.streamStoneSimpleStools().map(FurnitureBlock::getBlock).toArray(SimpleStool[]::new);
             PendantBlock[] pendantLights = PendantBlock.streamPendantLights().toList().toArray(new PendantBlock[0]);
@@ -98,6 +99,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(stoneClassicTables)
                     .add(stoneDinnerChairs)
                     .add(stoneDinnerTables)
+                    .add(stoneModernDinnerTables)
                     .add(stoneModernChairs)
                     .add(stoneModernStools)
                     .add(stoneSimpleStools)
@@ -133,6 +135,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             LogStool[] woodLogStools = LogStool.streamWoodLogStools().map(FurnitureBlock::getBlock).toArray(LogStool[]::new);
             LogTable[] woodLogTables = LogTable.streamWoodLogTables().map(FurnitureBlock::getBlock).toArray(LogTable[]::new);
             ModernChair[] woodModernChairs = ModernChair.streamWoodModernChairs().map(FurnitureBlock::getBlock).toArray(ModernChair[]::new);
+            ModernDinnerTable[] woodModernDinnerTables = ModernDinnerTable.streamWoodModernDinnerTables().map(FurnitureBlock::getBlock).toArray(ModernDinnerTable[]::new);
 
             ModernStool[] woodModernStools = ModernStool.streamWoodModernStools().map(FurnitureBlock::getBlock).toArray(ModernStool[]::new);
             SimpleStool[] woodSimpleStools = SimpleStool.streamWoodSimpleStools().map(FurnitureBlock::getBlock).toArray(SimpleStool[]::new);
@@ -158,6 +161,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(woodDinnerTables)
                     .add(woodLogStools)
                     .add(woodLogTables)
+                    .add(woodModernDinnerTables)
                     .add(woodModernChairs)
                     .add(woodModernStools)
                     .add(woodSimpleStools)
@@ -166,6 +170,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(armChairs)
                     .add(workingTables)
                     .add(herringbonePlanks);
+
+                this.getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
+                    .add(BlockItemRegistry.RAW_CONCRETE_POWDER);
         }
 
     }
@@ -298,6 +305,11 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             FurnitureBlock[] woodBasicTables = BasicTable.streamWoodBasicTables().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock basicTable : woodBasicTables) {
                 offerBasicTableRecipe(basicTable.block, Ingredient.ofItems(basicTable.getSecondMaterial().asItem()), Ingredient.ofItems(basicTable.getBaseMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] woodModernDinnerTables = ModernDinnerTable.streamWoodModernDinnerTables().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock modernDinnerTables : woodModernDinnerTables) {
+                offerModernDinnerTableRecipe(modernDinnerTables.block, Ingredient.ofItems(modernDinnerTables.getSecondMaterial().asItem()), Ingredient.ofItems(modernDinnerTables.getBaseMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] woodClassicTables = ClassicTable.streamWoodClassicTables().toList().toArray(new FurnitureBlock[0]);
@@ -452,6 +464,10 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
 
     public static void offerBasicTableRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonFactory.create(output, 4).input('S', legMaterial).input('X', baseMaterial).pattern("XXX").pattern("S S").pattern("SSS").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+
+    public static void offerModernDinnerTableRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, Consumer<RecipeJsonProvider> exporter) {
+        FurnitureRecipeJsonFactory.create(output, 4).input('S', legMaterial).input('X', baseMaterial).pattern("XXX").pattern("SSS").pattern("S S").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerClassicTableRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, Consumer<RecipeJsonProvider> exporter) {
