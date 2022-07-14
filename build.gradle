@@ -124,6 +124,8 @@ tasks.withType(JavaCompile).configureEach {
 assemble.dependsOn runDatagen
 
 sourceSets {
+	project.logger.lifecycle('running source sets')
+
 	main {
 		resources {
 			srcDirs += [
@@ -140,16 +142,11 @@ java {
 	withSourcesJar()
 }
 
-
-
 jar {
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
 	}
 }
-
-
-
 
 // configure the maven publication
 publishing {

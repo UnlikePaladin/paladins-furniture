@@ -185,7 +185,6 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock basicChair : woodBasicChairs) {
                 offerBasicChairRecipe(basicChair.block, Ingredient.ofItems(basicChair.getSecondMaterial().asItem()), Ingredient.ofItems(basicChair.getBaseMaterial().asItem()), exporter);
             }
-
             FurnitureBlock[] woodDinnerChairs = DinnerChair.streamWoodDinnerChairs().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock dinnerChair : woodDinnerChairs) {
                 offerDinnerChairRecipe(dinnerChair.block, Ingredient.ofItems(dinnerChair.getSecondMaterial().asItem()), Ingredient.ofItems(dinnerChair.getBaseMaterial().asItem()), exporter);
