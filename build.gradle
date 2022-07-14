@@ -11,7 +11,7 @@ version = project.mod_version
 group = project.maven_group
 
 loom {
-    accessWidenerPath = file("src/main/resources/pfm.accesswidener")
+	accessWidenerPath = file("src/main/resources/pfm.accesswidener")
 
 	runs {
 		datagen {
@@ -33,8 +33,6 @@ repositories {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/"
 	}
-}
-repositories {
 	maven {
 		name 'Gegy'
 		url 'https://maven.gegy.dev'
@@ -57,19 +55,21 @@ if (project.sandwichable_compatibility == "true") {
 		modImplementation("maven.modrinth:sandwichable:${project.sandwichable_version}")
 		modImplementation("dev.lambdaurora:spruceui:${project.spruceui_version}")
 	}
-} else {
+}
+else {
 	dependencies {
 		modCompileOnly("maven.modrinth:sandwichable:${project.sandwichable_version}")
 		modCompileOnly("dev.lambdaurora:spruceui:${project.spruceui_version}")
 	}
 }
 
-if (project.rei_compatibility == "true") {
+if (project.rei_compatibility == "true"){
 	dependencies {
 		modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
 		modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
 	}
-} else {
+}
+else {
 	dependencies {
 		modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
 	}
@@ -79,19 +79,19 @@ if (project.patchouli_compatibility == "true") {
 	dependencies {
 		modImplementation("vazkii.patchouli:Patchouli:${project.patchouli_version}")
 	}
-} else {
+}
+else {
 	dependencies {
 		modCompileOnly("vazkii.patchouli:Patchouli:${project.patchouli_version}")
 	}
 }
 
-if (project.emi_compatibility == "true") {
+if (project.emi_compatibility == "true"){
 	dependencies {
-		modImplementation "dev.emi:emi:${project.emi_version}" {
-			transitive = false
-		}
+		modImplementation "dev.emi:emi:${project.emi_version}"
 	}
-} else {
+}
+else {
 	dependencies {
 		modCompileOnly "dev.emi:emi:${project.emi_version}"
 	}
@@ -109,13 +109,12 @@ dependencies {
 }
 
 processResources {
-	inputs.property "version", project.version+project.minecraft_version
+	inputs.property "version", project.version
 
 	filesMatching("fabric.mod.json") {
 		expand "version": project.version
 	}
 }
-
 
 tasks.withType(JavaCompile).configureEach {
 	// Minecraft 1.17 (21w19a) upwards uses Java 16.
@@ -123,7 +122,6 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 assemble.dependsOn runDatagen
-
 
 sourceSets {
 	main {
@@ -143,11 +141,14 @@ java {
 }
 
 
+
 jar {
 	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}" }
+		rename { "${it}_${project.archivesBaseName}"}
 	}
 }
+
+
 
 
 // configure the maven publication
