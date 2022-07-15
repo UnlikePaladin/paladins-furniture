@@ -1,13 +1,45 @@
 {"variants":
     {
-    "open=true,facing=north":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_open","y":90},
-    "open=true,facing=east":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_open","y":180},
-    "open=true,facing=south":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_open","y":270},
-    "open=true,facing=west":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_open","y":0},
+    "shape=right,open=true,facing=north":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_right_open","y":90},
+    "shape=right,open=true,facing=east":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_right_open","y":180},
+    "shape=right,open=true,facing=south":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_right_open","y":270},
+    "shape=right,open=true,facing=west":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_right_open","y":0},
 
-    "open=false,facing=north":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand","y":90},
-    "open=false,facing=east":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand","y":180},
-    "open=false,facing=south":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand","y":270},
-    "open=false,facing=west":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand","y":0}
+    "shape=right,open=false,facing=north":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_right","y":90},
+    "shape=right,open=false,facing=east":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_right","y":180},
+    "shape=right,open=false,facing=south":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_right","y":270},
+    "shape=right,open=false,facing=west":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_right","y":0},
+
+    "shape=left,open=true,facing=north":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_left_open","y":90},
+    "shape=left,open=true,facing=east":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_left_open","y":180},
+    "shape=left,open=true,facing=south":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_left_open","y":270},
+    "shape=left,open=true,facing=west":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_left_open","y":0},
+
+    "shape=left,open=false,facing=north":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_left","y":90},
+    "shape=left,open=false,facing=east":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_left","y":180},
+    "shape=left,open=false,facing=south":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_left","y":270},
+    "shape=left,open=false,facing=west":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_left","y":0},
+
+    "shape=middle,open=true,facing=north":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_middle_open","y":90},
+    "shape=middle,open=true,facing=east":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_middle_open","y":180},
+    "shape=middle,open=true,facing=south":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_middle_open","y":270},
+    "shape=middle,open=true,facing=west":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_middle_open","y":0},
+
+    "shape=middle,open=false,facing=north":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_middle","y":90},
+    "shape=middle,open=false,facing=east":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_middle","y":180},
+    "shape=middle,open=false,facing=south":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_middle","y":270},
+    "shape=middle,open=false,facing=west":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_middle","y":0},
+
+    "shape=single,open=true,facing=north":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_open","y":90},
+    "shape=single,open=true,facing=east":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_open","y":180},
+    "shape=single,open=true,facing=south":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_open","y":270},
+    "shape=single,open=true,facing=west":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand_open","y":0},
+
+    "shape=single,open=false,facing=north":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand","y":90},
+    "shape=single,open=false,facing=east":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand","y":180},
+    "shape=single,open=false,facing=south":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand","y":270},
+    "shape=single,open=false,facing=west":{"model":"pfm:block/stripped_dark_oak_classic_nightstand/stripped_dark_oak_classic_nightstand","y":0}
+
+
     }
 }

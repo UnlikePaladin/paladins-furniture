@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_nightstand/classic_nightstand_right",
+	"textures": {
+        
+		"particle": "block/stripped_birch_log",
+		"base": "block/stripped_birch_log",
+		"support": "block/birch_planks"
+	}
+    
+}
