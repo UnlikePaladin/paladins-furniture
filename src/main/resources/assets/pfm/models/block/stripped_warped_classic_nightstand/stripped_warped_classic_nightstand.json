@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_nightstand/classic_nightstand",
+	"textures": {
+        
+		"particle": "block/stripped_warped_stem",
+		"base": "block/stripped_warped_stem",
+		"support": "block/warped_planks"
+	}
+    
+}

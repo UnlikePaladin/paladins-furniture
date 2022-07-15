@@ -5,7 +5,7 @@
         
 		"particle": "block/dark_oak_planks",
 		"base": "block/dark_oak_planks",
-		"legs": "block/dark_oak_log"
+		"support": "block/dark_oak_log"
 	}
     
 }

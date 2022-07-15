@@ -5,7 +5,7 @@
         
 		"particle": "block/warped_planks",
 		"base": "block/warped_planks",
-		"legs": "block/warped_stem"
+		"support": "block/warped_stem"
 	}
     
 }

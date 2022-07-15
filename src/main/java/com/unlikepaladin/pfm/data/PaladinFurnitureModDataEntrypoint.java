@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.data.server.RecipeProvider;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
@@ -72,6 +73,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             ModernChair[] stoneModernChairs = ModernChair.streamStoneModernChairs().map(FurnitureBlock::getBlock).toArray(ModernChair[]::new);
             ModernStool[] stoneModernStools = ModernStool.streamStoneModernStools().map(FurnitureBlock::getBlock).toArray(ModernStool[]::new);
             ModernDinnerTable[] stoneModernDinnerTables = ModernDinnerTable.streamStoneModernDinnerTables().map(FurnitureBlock::getBlock).toArray(ModernDinnerTable[]::new);
+            ClassicNightstand[] stoneClassicNightstands = ClassicNightstand.streamStoneClassicNightstands().map(FurnitureBlock::getBlock).toArray(ClassicNightstand[]::new);
 
             SimpleStool[] stoneSimpleStools = SimpleStool.streamStoneSimpleStools().map(FurnitureBlock::getBlock).toArray(SimpleStool[]::new);
             PendantBlock[] pendantLights = PendantBlock.streamPendantLights().toList().toArray(new PendantBlock[0]);
@@ -113,6 +115,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(ironStoves)
                     .add(froggyChairs)
                     .add(stove)
+                    .add(stoneClassicNightstands)
                     .add(BlockItemRegistry.RAW_CONCRETE)
                     .add(BlockItemRegistry.IRON_CHAIN);
 
@@ -137,6 +140,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             ModernChair[] woodModernChairs = ModernChair.streamWoodModernChairs().map(FurnitureBlock::getBlock).toArray(ModernChair[]::new);
             ModernDinnerTable[] woodModernDinnerTables = ModernDinnerTable.streamWoodModernDinnerTables().map(FurnitureBlock::getBlock).toArray(ModernDinnerTable[]::new);
 
+            ClassicNightstand[] woodClassicNightstands = ClassicNightstand.streamWoodClassicNightstands().map(FurnitureBlock::getBlock).toArray(ClassicNightstand[]::new);
             ModernStool[] woodModernStools = ModernStool.streamWoodModernStools().map(FurnitureBlock::getBlock).toArray(ModernStool[]::new);
             SimpleStool[] woodSimpleStools = SimpleStool.streamWoodSimpleStools().map(FurnitureBlock::getBlock).toArray(SimpleStool[]::new);
             SimpleSofa[] simpleSofas = SimpleSofa.streamSimpleSofas().toList().toArray(new SimpleSofa[0]);
@@ -168,6 +172,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(simpleSofas)
                     .add(armChairDyeables)
                     .add(armChairs)
+                    .add(woodClassicNightstands)
                     .add(workingTables)
                     .add(herringbonePlanks);
 
@@ -385,6 +390,11 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock stove : ironStove) {
                 offerStoveRecipe(stove.block,  Ingredient.ofItems(stove.getFridgeMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
             }
+
+            FurnitureBlock[] classicNightStands = ClassicNightstand.streamWoodClassicNightstands().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock nightStand : classicNightStands) {
+                offerClassicNightStandRecipe(nightStand.block,  Ingredient.ofItems(nightStand.getSecondMaterial()), Ingredient.ofItems(nightStand.getBaseMaterial()), exporter);
+            }
         }
     }
 
@@ -471,6 +481,10 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
 
     public static void offerClassicTableRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonBuilder.create(output, 4).input('S', legMaterial).input('X', baseMaterial).pattern("XXX").pattern("S S").pattern("S S").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+
+    public static void offerClassicNightStandRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, Consumer<RecipeJsonProvider> exporter) {
+        FurnitureRecipeJsonBuilder.create(output, 4).input('S', legMaterial).input('X', baseMaterial).input('Z', Blocks.CHEST).pattern("SXS").pattern("SZS").pattern("S S").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerDinnerTableRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, Consumer<RecipeJsonProvider> exporter) {
