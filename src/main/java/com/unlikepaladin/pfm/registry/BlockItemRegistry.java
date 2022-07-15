@@ -413,6 +413,8 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_WARPED_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_CRIMSON_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
+    public static final Block OAK_RED_SIMPLE_BED = new SimpleBed(DyeColor.RED, FabricBlockSettings.copyOf(OAK_CHAIR));
+
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.BLUE);
     public static final Item DYE_KIT_WHITE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.WHITE);
@@ -786,6 +788,8 @@ public class BlockItemRegistry {
         registerFurniture("stripped_dark_oak_classic_nightstand", STRIPPED_DARK_OAK_CLASSIC_NIGHTSTAND, true);
         registerFurniture("stripped_crimson_classic_nightstand", STRIPPED_CRIMSON_CLASSIC_NIGHTSTAND, true);
         registerFurniture("stripped_warped_classic_nightstand", STRIPPED_WARPED_CLASSIC_NIGHTSTAND, true);
+
+        registerFurniture("oak_red_simple_bed", OAK_RED_SIMPLE_BED, true);
 
         registerFurniture("oak_log_stool", OAK_LOG_STOOL, true);
         registerFurniture("birch_log_stool", BIRCH_LOG_STOOL, true);

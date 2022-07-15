@@ -2,14 +2,14 @@ package com.unlikepaladin.pfm.blocks;
 
 import net.minecraft.util.StringIdentifiable;
 
-public enum TableShape implements StringIdentifiable {
+public enum MiddleShape implements StringIdentifiable {
     LEFT("left"),
     RIGHT("right"),
     MIDDLE("middle"),
     SINGLE("single");
 
     private final String name;
-    TableShape(String name) {
+    MiddleShape(String name) {
         this.name = name;
     }
     public String toString() {

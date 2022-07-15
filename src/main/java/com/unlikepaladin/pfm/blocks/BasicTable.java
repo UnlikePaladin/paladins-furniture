@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 public class BasicTable extends HorizontalFacingBlock {
 
     private final Block baseBlock;
-    public static final EnumProperty<TableShape> TYPE = EnumProperty.of("type", TableShape.class);
+    public static final EnumProperty<MiddleShape> TYPE = EnumProperty.of("type", MiddleShape.class);
     public static final BooleanProperty NORTH = BooleanProperty.of("north");
     public static final BooleanProperty EAST = BooleanProperty.of("east");
     public static final BooleanProperty SOUTH = BooleanProperty.of("south");
