@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 public class DinnerTable extends HorizontalFacingBlock {
 
     private final Block baseBlock;
-    public static final EnumProperty<TableShape> SHAPE = EnumProperty.of("table_type", TableShape.class);
+    public static final EnumProperty<MiddleShape> SHAPE = EnumProperty.of("table_type", MiddleShape.class);
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     private final BlockState baseBlockState;
@@ -31,7 +31,7 @@ public class DinnerTable extends HorizontalFacingBlock {
     private static final List<FurnitureBlock> STONE_DINNER_TABLES = new ArrayList<>();
     public DinnerTable(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, TableShape.SINGLE).with(FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(DinnerTable.class)){
@@ -98,17 +98,17 @@ public class DinnerTable extends HorizontalFacingBlock {
         boolean right = isTable(world, pos, dir.rotateYClockwise(), dir);
         if(left && right)
         {
-            return state.with(SHAPE, TableShape.MIDDLE);
+            return state.with(SHAPE, MiddleShape.MIDDLE);
         }
         else if(left)
         {
-            return state.with(SHAPE, TableShape.RIGHT);
+            return state.with(SHAPE, MiddleShape.RIGHT);
         }
         else if(right)
         {
-            return state.with(SHAPE, TableShape.LEFT);
+            return state.with(SHAPE, MiddleShape.LEFT);
         }
-        return state.with(SHAPE, TableShape.SINGLE);
+        return state.with(SHAPE, MiddleShape.SINGLE);
     }
 
 
@@ -130,7 +130,7 @@ public class DinnerTable extends HorizontalFacingBlock {
     }
 
 
-    protected TableShape getShape(BlockState state) {
+    protected MiddleShape getShape(BlockState state) {
         return state.get(SHAPE);
     }
 
@@ -143,7 +143,7 @@ public class DinnerTable extends HorizontalFacingBlock {
     final static VoxelShape dinner_table_east = rotateShape(Direction.NORTH, Direction.EAST, dinner_table);
 
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        TableShape tableShape = getShape(state);
+        MiddleShape tableShape = getShape(state);
         Direction dir = state.get(FACING);
         boolean dirNorthOrSouth = dir.equals(Direction.NORTH) || dir.equals(Direction.SOUTH);
         boolean dirWestOrEast = dir.equals(Direction.WEST) || dir.equals(Direction.EAST);
