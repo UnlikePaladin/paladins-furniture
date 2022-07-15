@@ -5,7 +5,7 @@
         
 		"particle": "block/acacia_planks",
 		"base": "block/acacia_planks",
-		"legs": "block/acacia_log"
+		"support": "block/acacia_log"
 	}
     
 }

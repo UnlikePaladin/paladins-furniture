@@ -5,7 +5,7 @@
         
 		"particle": "block/crimson_planks",
 		"base": "block/crimson_planks",
-		"legs": "block/crimson_stem"
+		"support": "block/crimson_stem"
 	}
     
 }

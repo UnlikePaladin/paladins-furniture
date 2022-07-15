@@ -5,7 +5,7 @@
         
 		"particle": "block/spruce_planks",
 		"base": "block/spruce_planks",
-		"legs": "block/spruce_log"
+		"support": "block/spruce_log"
 	}
     
 }

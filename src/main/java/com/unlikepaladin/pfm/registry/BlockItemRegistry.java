@@ -396,6 +396,23 @@ public class BlockItemRegistry {
     public static final Block IRON_STOVE = new IronStove(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
     public static final Block IRON_MICROWAVE = new Microwave(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
 
+    public static final Block OAK_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block BIRCH_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block SPRUCE_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block ACACIA_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block JUNGLE_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block DARK_OAK_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block CRIMSON_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
+    public static final Block WARPED_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
+    public static final Block STRIPPED_OAK_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_BIRCH_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_SPRUCE_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_ACACIA_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_JUNGLE_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_DARK_OAK_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block STRIPPED_WARPED_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
+    public static final Block STRIPPED_CRIMSON_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
+
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.BLUE);
     public static final Item DYE_KIT_WHITE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.WHITE);
@@ -752,6 +769,23 @@ public class BlockItemRegistry {
         registerFurniture("stripped_dark_oak_table_modern_dinner", STRIPPED_DARK_OAK_MODERN_DINNER_TABLE, true);
         registerFurniture("stripped_crimson_table_modern_dinner", STRIPPED_CRIMSON_MODERN_DINNER_TABLE, true);
         registerFurniture("stripped_warped_table_modern_dinner", STRIPPED_WARPED_MODERN_DINNER_TABLE, true);
+
+        registerFurniture("oak_classic_nightstand", OAK_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("birch_classic_nightstand", BIRCH_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("spruce_classic_nightstand", SPRUCE_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("acacia_classic_nightstand", ACACIA_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("jungle_classic_nightstand", JUNGLE_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("dark_oak_classic_nightstand", DARK_OAK_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("crimson_classic_nightstand", CRIMSON_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("warped_classic_nightstand", WARPED_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("stripped_oak_classic_nightstand", STRIPPED_OAK_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("stripped_birch_classic_nightstand", STRIPPED_BIRCH_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("stripped_spruce_classic_nightstand", STRIPPED_SPRUCE_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("stripped_acacia_classic_nightstand", STRIPPED_ACACIA_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("stripped_jungle_classic_nightstand", STRIPPED_JUNGLE_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("stripped_dark_oak_classic_nightstand", STRIPPED_DARK_OAK_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("stripped_crimson_classic_nightstand", STRIPPED_CRIMSON_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("stripped_warped_classic_nightstand", STRIPPED_WARPED_CLASSIC_NIGHTSTAND, true);
 
         registerFurniture("oak_log_stool", OAK_LOG_STOOL, true);
         registerFurniture("birch_log_stool", BIRCH_LOG_STOOL, true);

@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.blocks.blockentities.DrawerBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
@@ -97,7 +97,6 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(SHAPE);
         stateManager.add(OPEN);
-
     }
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
@@ -263,20 +262,13 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
         return state.getBlock() instanceof KitchenCabinet;
     }
 
-    public boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
-    {
-        BlockState state = world.getBlockState(pos.offset(direction));
-        return (state.getBlock() instanceof KitchenCabinet);
-    }
-
     private boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
         BlockState blockState = world.getBlockState(pos.offset(dir));
-        return !this.isCabinet(blockState); //|| blockState.get(FACING) != state.get(FACING);
+        return !this.isCabinet(blockState);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-
         return direction.getAxis().isHorizontal() ? state.with(SHAPE, getShape(state, world, pos)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
     @Override
@@ -326,8 +318,8 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
             return ActionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof DrawerBlockEntity) {
-            player.openHandledScreen((DrawerBlockEntity)blockEntity);
+        if (blockEntity instanceof GenericStorageBlockEntity) {
+            player.openHandledScreen((GenericStorageBlockEntity)blockEntity);
             player.incrementStat(StatisticsRegistry.CABINET_SEARCHED);
             PiglinBrain.onGuardedBlockInteracted(player, true);
         }
@@ -347,14 +339,14 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         BlockEntity blockEntity;
-        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof DrawerBlockEntity) {
-            ((DrawerBlockEntity)blockEntity).setCustomName(itemStack.getName());
+        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof GenericStorageBlockEntity) {
+            ((GenericStorageBlockEntity)blockEntity).setCustomName(itemStack.getName());
         }
     }
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new DrawerBlockEntity(pos,state);
+        return new GenericStorageBlockEntity(pos,state);
     }
 
     @Override

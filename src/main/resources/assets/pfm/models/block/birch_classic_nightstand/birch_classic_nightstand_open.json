@@ -5,7 +5,7 @@
         
 		"particle": "block/birch_planks",
 		"base": "block/birch_planks",
-		"legs": "block/birch_log"
+		"support": "block/birch_log"
 	}
     
 }

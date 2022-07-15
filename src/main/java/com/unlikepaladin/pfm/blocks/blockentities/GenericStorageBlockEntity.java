@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
+import com.unlikepaladin.pfm.blocks.ClassicNightstand;
 import com.unlikepaladin.pfm.blocks.KitchenCabinet;
 import com.unlikepaladin.pfm.blocks.KitchenDrawer;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
@@ -27,8 +28,8 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 
-public class DrawerBlockEntity extends LootableContainerBlockEntity {
-    public DrawerBlockEntity(BlockPos pos, BlockState state) {
+public class GenericStorageBlockEntity extends LootableContainerBlockEntity {
+    public GenericStorageBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntityRegistry.DRAWER_BLOCK_ENTITY, pos, state);
     }
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
@@ -37,17 +38,17 @@ public class DrawerBlockEntity extends LootableContainerBlockEntity {
 
         @Override
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet){
-                DrawerBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
-                DrawerBlockEntity.this.setOpen(state, true);
+            if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand){
+                GenericStorageBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
+                GenericStorageBlockEntity.this.setOpen(state, true);
             }
         }
 
         @Override
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet) {
-                DrawerBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
-                DrawerBlockEntity.this.setOpen(state, false);
+            if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand) {
+                GenericStorageBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
+                GenericStorageBlockEntity.this.setOpen(state, false);
             }
         }
 
@@ -61,7 +62,7 @@ public class DrawerBlockEntity extends LootableContainerBlockEntity {
         protected boolean isPlayerViewing(PlayerEntity player) {
             if (player.currentScreenHandler instanceof GenericContainerScreenHandler) {
                 Inventory inventory = ((GenericContainerScreenHandler)player.currentScreenHandler).getInventory();
-                return inventory == DrawerBlockEntity.this;
+                return inventory == GenericStorageBlockEntity.this;
             }
             return false;
         }
@@ -78,7 +79,7 @@ public class DrawerBlockEntity extends LootableContainerBlockEntity {
 
 
 
-    public static void copyInventory(DrawerBlockEntity from, DrawerBlockEntity to) {
+    public static void copyInventory(GenericStorageBlockEntity from, GenericStorageBlockEntity to) {
         DefaultedList<ItemStack> defaultedList = from.getInvStackList();
         from.setInvStackList(to.getInvStackList());
         to.setInvStackList(defaultedList);
@@ -135,6 +136,8 @@ public class DrawerBlockEntity extends LootableContainerBlockEntity {
     protected Text getContainerName() {
     if (this.getCachedState().getBlock() instanceof KitchenDrawer)
         return new TranslatableText("container.pfm.drawer");
+    else if (this.getCachedState().getBlock() instanceof ClassicNightstand)
+        return new TranslatableText("container.pfm.nightstand");
     else
         return new TranslatableText("container.pfm.cabinet");
     }

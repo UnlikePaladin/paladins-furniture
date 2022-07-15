@@ -1,0 +1,13 @@
+{"variants":
+    {
+    "open=true,facing=north":{"model":"pfm:block/stripped_birch_classic_nightstand/stripped_birch_classic_nightstand_open","y":90},
+    "open=true,facing=east":{"model":"pfm:block/stripped_birch_classic_nightstand/stripped_birch_classic_nightstand_open","y":180},
+    "open=true,facing=south":{"model":"pfm:block/stripped_birch_classic_nightstand/stripped_birch_classic_nightstand_open","y":270},
+    "open=true,facing=west":{"model":"pfm:block/stripped_birch_classic_nightstand/stripped_birch_classic_nightstand_open","y":0},
+
+    "open=false,facing=north":{"model":"pfm:block/stripped_birch_classic_nightstand/stripped_birch_classic_nightstand","y":90},
+    "open=false,facing=east":{"model":"pfm:block/stripped_birch_classic_nightstand/stripped_birch_classic_nightstand","y":180},
+    "open=false,facing=south":{"model":"pfm:block/stripped_birch_classic_nightstand/stripped_birch_classic_nightstand","y":270},
+    "open=false,facing=west":{"model":"pfm:block/stripped_birch_classic_nightstand/stripped_birch_classic_nightstand","y":0}
+    }
+}
