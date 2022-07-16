@@ -74,7 +74,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 		stacks.add(new ItemStack(BlockItemRegistry.DYE_KIT_PURPLE));
 		stacks.add(new ItemStack(BlockItemRegistry.DYE_KIT_MAGENTA));
 		stacks.add(new ItemStack(BlockItemRegistry.DYE_KIT_PINK));
-		stacks.add(new ItemStack(BlockItemRegistry.DYE_KIT_BLACK));
+		stacks.add(new ItemStack(BlockItemRegistry.DYE_KIT_BROWN));
 		stacks.add(new ItemStack(BlockItemRegistry.DYE_KIT_WHITE));
 		stacks.add(new ItemStack(BlockItemRegistry.DYE_KIT_GRAY));
 		stacks.add(new ItemStack(BlockItemRegistry.DYE_KIT_LIGHT_GRAY));

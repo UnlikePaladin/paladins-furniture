@@ -62,56 +62,56 @@
                 { "part": "foot" },
                 { "facing": "north" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot"}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot"}
         },
         {
             "when": { "AND": [
                 { "part": "foot" },
                 { "facing": "east" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot", "y": 90}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot", "y": 90}
         },
         {
             "when": { "AND": [
                 { "part": "foot" },
                 { "facing": "west" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot", "y": 270}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot", "y": 270}
         },
         {
             "when": { "AND": [
                 { "part": "foot" },
                 { "facing": "south" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot", "y": 180}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot", "y": 180}
         },
         {
             "when": { "AND": [
                 { "part": "head" },
                 { "facing": "north" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head"}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head"}
         },
         {
             "when": { "AND": [
                 { "part": "head" },
                 { "facing": "east" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head", "y": 90}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head", "y": 90}
         },
         {
             "when": { "AND": [
                 { "part": "head" },
                 { "facing": "west" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head", "y": 270}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head", "y": 270}
         },
         {
             "when": { "AND": [
                 { "part": "head" },
                 { "facing": "south" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head", "y": 180}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head", "y": 180}
         },
 
 
@@ -121,7 +121,7 @@
                 { "shape": "right" },
                 { "facing": "north" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_right"}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_right"}
         },
         {
             "when": { "AND": [
@@ -129,7 +129,7 @@
                 { "shape": "right" },
                 { "facing": "east" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_right", "y": 90}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_right", "y": 90}
         },
         {
             "when": { "AND": [
@@ -137,7 +137,7 @@
                 { "shape": "right" },
                 { "facing": "west" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_right", "y": 270}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_right", "y": 270}
         },
         {
             "when": { "AND": [
@@ -145,7 +145,7 @@
                 { "shape": "right" },
                 { "facing": "south" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_right", "y": 180}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_right", "y": 180}
         },
         
         {
@@ -154,7 +154,7 @@
                 { "shape": "left" },
                 { "facing": "north" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_left"}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_left"}
         },
         {
             "when": { "AND": [
@@ -162,7 +162,7 @@
                 { "shape": "left" },
                 { "facing": "east" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_left", "y": 90}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_left", "y": 90}
         },
         {
             "when": { "AND": [
@@ -170,7 +170,7 @@
                 { "shape": "left" },
                 { "facing": "west" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_left", "y": 270}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_left", "y": 270}
         },
         {
             "when": { "AND": [
@@ -178,7 +178,7 @@
                 { "shape": "left" },
                 { "facing": "south" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_left", "y": 180}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_left", "y": 180}
         },
 
         {
@@ -187,7 +187,7 @@
                 { "shape": "right" },
                 { "facing": "north" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_right"}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_right"}
         },
         {
             "when": { "AND": [
@@ -195,7 +195,7 @@
                 { "shape": "right" },
                 { "facing": "east" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_right", "y": 90}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_right", "y": 90}
         },
         {
             "when": { "AND": [
@@ -203,7 +203,7 @@
                 { "shape": "right" },
                 { "facing": "west" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_right", "y": 270}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_right", "y": 270}
         },
         {
             "when": { "AND": [
@@ -211,7 +211,7 @@
                 { "shape": "right" },
                 { "facing": "south" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_right", "y": 180}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_right", "y": 180}
         },
         
         {
@@ -220,7 +220,7 @@
                 { "shape": "left" },
                 { "facing": "north" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_left"}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_left"}
         },
         {
             "when": { "AND": [
@@ -228,7 +228,7 @@
                 { "shape": "left" },
                 { "facing": "east" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_left", "y": 90}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_left", "y": 90}
         },
         {
             "when": { "AND": [
@@ -236,7 +236,7 @@
                 { "shape": "left" },
                 { "facing": "west" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_left", "y": 270}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_left", "y": 270}
         },
         {
             "when": { "AND": [
@@ -244,7 +244,7 @@
                 { "shape": "left" },
                 { "facing": "south" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_left", "y": 180}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_left", "y": 180}
         },
 
         
@@ -256,7 +256,7 @@
                 { "shape": "single" },
                 { "facing": "north" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_right"}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_right"}
         },
         {
             "when": { "AND": [
@@ -264,7 +264,7 @@
                 { "shape": "single" },
                 { "facing": "east" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_right", "y": 90}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_right", "y": 90}
         },
         {
             "when": { "AND": [
@@ -272,7 +272,7 @@
                 { "shape": "single" },
                 { "facing": "west" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_right", "y": 270}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_right", "y": 270}
         },
         {
             "when": { "AND": [
@@ -280,7 +280,7 @@
                 { "shape": "single" },
                 { "facing": "south" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_right", "y": 180}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_right", "y": 180}
         },
         
         {
@@ -289,7 +289,7 @@
                 { "shape": "single" },
                 { "facing": "north" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_left"}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_left"}
         },
         {
             "when": { "AND": [
@@ -297,7 +297,7 @@
                 { "shape": "single" },
                 { "facing": "east" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_left", "y": 90}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_left", "y": 90}
         },
         {
             "when": { "AND": [
@@ -305,7 +305,7 @@
                 { "shape": "single" },
                 { "facing": "west" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_left", "y": 270}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_left", "y": 270}
         },
         {
             "when": { "AND": [
@@ -313,7 +313,7 @@
                 { "shape": "single" },
                 { "facing": "south" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/foot/simple_bed_foot_left", "y": 180}
+            "apply": { "model": "pfm:block/simple_bed/oak/foot/simple_bed_foot_left", "y": 180}
         },
 
         {
@@ -322,7 +322,7 @@
                 { "shape": "single" },
                 { "facing": "north" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_right"}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_right"}
         },
         {
             "when": { "AND": [
@@ -330,7 +330,7 @@
                 { "shape": "single" },
                 { "facing": "east" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_right", "y": 90}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_right", "y": 90}
         },
         {
             "when": { "AND": [
@@ -338,7 +338,7 @@
                 { "shape": "single" },
                 { "facing": "west" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_right", "y": 270}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_right", "y": 270}
         },
         {
             "when": { "AND": [
@@ -346,7 +346,7 @@
                 { "shape": "single" },
                 { "facing": "south" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_right", "y": 180}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_right", "y": 180}
         },
         
         {
@@ -355,7 +355,7 @@
                 { "shape": "single" },
                 { "facing": "north" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_left"}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_left"}
         },
         {
             "when": { "AND": [
@@ -363,7 +363,7 @@
                 { "shape": "single" },
                 { "facing": "east" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_left", "y": 90}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_left", "y": 90}
         },
         {
             "when": { "AND": [
@@ -371,7 +371,7 @@
                 { "shape": "single" },
                 { "facing": "west" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_left", "y": 270}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_left", "y": 270}
         },
         {
             "when": { "AND": [
@@ -379,7 +379,7 @@
                 { "shape": "single" },
                 { "facing": "south" }
             ]},
-            "apply": { "model": "pfm:block/simple_bed/head/simple_bed_head_left", "y": 180}
+            "apply": { "model": "pfm:block/simple_bed/oak/head/simple_bed_head_left", "y": 180}
         }
     ]
 }
