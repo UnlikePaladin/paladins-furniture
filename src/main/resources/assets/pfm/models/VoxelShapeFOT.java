@@ -1,0 +1,1 @@
+VoxelShapes.combineAndSimplify(Block.createCuboidShape(13, 0, 13, 16, 2, 16), Block.createCuboidShape(0, 0, 13, 3, 2, 16), BooleanBiFunction.OR)
