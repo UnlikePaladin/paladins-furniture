@@ -561,6 +561,11 @@ public class BlockItemRegistry {
         }
     }
 
+    public static void registerFurniture(String blockName, Block block, int count) {
+        registerBlock(blockName, block, false);
+        registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP).maxCount(count)));
+    }
+
     public static void registerBlock(String blockName, Block block, BlockItem item) {
             registerBlock(blockName, block, false);
             registerItem(blockName, item);
@@ -789,7 +794,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_crimson_classic_nightstand", STRIPPED_CRIMSON_CLASSIC_NIGHTSTAND, true);
         registerFurniture("stripped_warped_classic_nightstand", STRIPPED_WARPED_CLASSIC_NIGHTSTAND, true);
 
-        registerFurniture("oak_red_simple_bed", OAK_RED_SIMPLE_BED, true);
+        registerFurniture("oak_red_simple_bed", OAK_RED_SIMPLE_BED, 1);
 
         registerFurniture("oak_log_stool", OAK_LOG_STOOL, true);
         registerFurniture("birch_log_stool", BIRCH_LOG_STOOL, true);
