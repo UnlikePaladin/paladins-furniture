@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.mixin;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.unlikepaladin.pfm.blocks.SimpleBed;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
@@ -13,6 +12,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -33,7 +33,7 @@ public abstract class PointOfInterestTypeMixin {
     )
     private static void appendBeds(Args args) {
         Set<BlockState> originalBedStates = args.get(1);
-        Set<BlockState> addedBedStates = ImmutableList.of(BlockItemRegistry.OAK_RED_SIMPLE_BED).stream().flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBed.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+        Set<BlockState> addedBedStates = Arrays.stream(BlockItemRegistry.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBed.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
         Set<BlockState> newBedStates = new HashSet<>();
         newBedStates.addAll(originalBedStates);
         newBedStates.addAll(addedBedStates);

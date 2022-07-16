@@ -413,7 +413,22 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_WARPED_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_CRIMSON_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
-    public static final Block OAK_RED_SIMPLE_BED = new SimpleBed(DyeColor.RED, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_RED_SIMPLE_BED = new SimpleBed(DyeColor.RED, FabricBlockSettings.copyOf(Blocks.RED_BED));
+    public static final Block OAK_ORANGE_SIMPLE_BED = new SimpleBed(DyeColor.ORANGE, FabricBlockSettings.copyOf(Blocks.ORANGE_BED));
+    public static final Block OAK_YELLOW_SIMPLE_BED = new SimpleBed(DyeColor.YELLOW, FabricBlockSettings.copyOf(Blocks.YELLOW_BED));
+    public static final Block OAK_GREEN_SIMPLE_BED = new SimpleBed(DyeColor.GREEN, FabricBlockSettings.copyOf(Blocks.GREEN_BED));
+    public static final Block OAK_LIME_SIMPLE_BED = new SimpleBed(DyeColor.LIME, FabricBlockSettings.copyOf(Blocks.LIME_BED));
+    public static final Block OAK_CYAN_SIMPLE_BED = new SimpleBed(DyeColor.CYAN, FabricBlockSettings.copyOf(Blocks.CYAN_BED));
+    public static final Block OAK_BLUE_SIMPLE_BED = new SimpleBed(DyeColor.BLUE, FabricBlockSettings.copyOf(Blocks.BLUE_BED));
+    public static final Block OAK_LIGHT_BLUE_SIMPLE_BED = new SimpleBed(DyeColor.LIGHT_BLUE, FabricBlockSettings.copyOf(Blocks.LIGHT_BLUE_BED));
+    public static final Block OAK_LIGHT_GRAY_SIMPLE_BED = new SimpleBed(DyeColor.LIGHT_GRAY, FabricBlockSettings.copyOf(Blocks.LIGHT_GRAY_BED));
+    public static final Block OAK_MAGENTA_SIMPLE_BED = new SimpleBed(DyeColor.MAGENTA, FabricBlockSettings.copyOf(Blocks.MAGENTA_BED));
+    public static final Block OAK_PINK_SIMPLE_BED = new SimpleBed(DyeColor.PINK, FabricBlockSettings.copyOf(Blocks.PINK_BED));
+    public static final Block OAK_PURPLE_SIMPLE_BED = new SimpleBed(DyeColor.PURPLE, FabricBlockSettings.copyOf(Blocks.PURPLE_BED));
+    public static final Block OAK_WHITE_SIMPLE_BED = new SimpleBed(DyeColor.WHITE, FabricBlockSettings.copyOf(Blocks.WHITE_BED));
+    public static final Block OAK_BROWN_SIMPLE_BED = new SimpleBed(DyeColor.BROWN, FabricBlockSettings.copyOf(Blocks.BROWN_BED));
+    public static final Block OAK_GRAY_SIMPLE_BED = new SimpleBed(DyeColor.GRAY, FabricBlockSettings.copyOf(Blocks.GRAY_BED));
+    public static final Block OAK_BLACK_SIMPLE_BED = new SimpleBed(DyeColor.BLACK, FabricBlockSettings.copyOf(Blocks.BLACK_BED));
 
     public static final Item DYE_KIT_YELLOW = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new FabricItemSettings().group(PaladinFurnitureMod.DYE_KITS).maxCount(16), DyeColor.BLUE);
@@ -552,7 +567,9 @@ public class BlockItemRegistry {
             registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
         }
     }
-
+    public static Block[] getBeds() {
+        return new Block[] {OAK_RED_SIMPLE_BED, OAK_ORANGE_SIMPLE_BED, OAK_YELLOW_SIMPLE_BED, OAK_GREEN_SIMPLE_BED, OAK_LIME_SIMPLE_BED, OAK_CYAN_SIMPLE_BED, OAK_BLUE_SIMPLE_BED, OAK_LIGHT_BLUE_SIMPLE_BED, OAK_LIGHT_GRAY_SIMPLE_BED, OAK_GRAY_SIMPLE_BED, OAK_BLACK_SIMPLE_BED, OAK_PURPLE_SIMPLE_BED, OAK_MAGENTA_SIMPLE_BED, OAK_PINK_SIMPLE_BED, OAK_BROWN_SIMPLE_BED, OAK_WHITE_SIMPLE_BED};
+    }
     public static void registerBlock(String blockName, Block block, boolean registerItem) {
         Registry.register(Registry.BLOCK, new Identifier(MOD_ID, blockName),  block);
         if (registerItem) {
@@ -562,6 +579,7 @@ public class BlockItemRegistry {
     }
 
     public static void registerFurniture(String blockName, Block block, int count) {
+        BLOCKS.add(block);
         registerBlock(blockName, block, false);
         registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP).maxCount(count)));
     }
@@ -795,6 +813,21 @@ public class BlockItemRegistry {
         registerFurniture("stripped_warped_classic_nightstand", STRIPPED_WARPED_CLASSIC_NIGHTSTAND, true);
 
         registerFurniture("oak_red_simple_bed", OAK_RED_SIMPLE_BED, 1);
+        registerFurniture("oak_orange_simple_bed", OAK_ORANGE_SIMPLE_BED, 1);
+        registerFurniture("oak_yellow_simple_bed", OAK_YELLOW_SIMPLE_BED, 1);
+        registerFurniture("oak_green_simple_bed", OAK_GREEN_SIMPLE_BED, 1);
+        registerFurniture("oak_lime_simple_bed", OAK_LIME_SIMPLE_BED, 1);
+        registerFurniture("oak_blue_simple_bed", OAK_BLUE_SIMPLE_BED, 1);
+        registerFurniture("oak_cyan_simple_bed", OAK_CYAN_SIMPLE_BED, 1);
+        registerFurniture("oak_light_blue_simple_bed", OAK_LIGHT_BLUE_SIMPLE_BED, 1);
+        registerFurniture("oak_light_gray_simple_bed", OAK_LIGHT_GRAY_SIMPLE_BED, 1);
+        registerFurniture("oak_purple_simple_bed", OAK_PURPLE_SIMPLE_BED, 1);
+        registerFurniture("oak_magenta_simple_bed", OAK_MAGENTA_SIMPLE_BED, 1);
+        registerFurniture("oak_pink_simple_bed", OAK_PINK_SIMPLE_BED, 1);
+        registerFurniture("oak_brown_simple_bed", OAK_BROWN_SIMPLE_BED, 1);
+        registerFurniture("oak_gray_simple_bed", OAK_GRAY_SIMPLE_BED, 1);
+        registerFurniture("oak_black_simple_bed", OAK_BLACK_SIMPLE_BED, 1);
+        registerFurniture("oak_white_simple_bed", OAK_WHITE_SIMPLE_BED, 1);
 
         registerFurniture("oak_log_stool", OAK_LOG_STOOL, true);
         registerFurniture("birch_log_stool", BIRCH_LOG_STOOL, true);
@@ -1086,4 +1119,5 @@ public class BlockItemRegistry {
         registerItem("dye_kit_light_gray", DYE_KIT_LIGHT_GRAY);
         registerItem("dye_kit_white", DYE_KIT_WHITE);
     }
+
 }

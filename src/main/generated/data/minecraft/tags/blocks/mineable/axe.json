@@ -340,6 +340,21 @@
     "pfm:birch_herringbone_planks",
     "pfm:warped_herringbone_planks",
     "pfm:crimson_herringbone_planks",
-    "pfm:oak_red_simple_bed"
+    "pfm:oak_red_simple_bed",
+    "pfm:oak_orange_simple_bed",
+    "pfm:oak_yellow_simple_bed",
+    "pfm:oak_green_simple_bed",
+    "pfm:oak_lime_simple_bed",
+    "pfm:oak_cyan_simple_bed",
+    "pfm:oak_blue_simple_bed",
+    "pfm:oak_light_blue_simple_bed",
+    "pfm:oak_light_gray_simple_bed",
+    "pfm:oak_magenta_simple_bed",
+    "pfm:oak_pink_simple_bed",
+    "pfm:oak_purple_simple_bed",
+    "pfm:oak_white_simple_bed",
+    "pfm:oak_brown_simple_bed",
+    "pfm:oak_gray_simple_bed",
+    "pfm:oak_black_simple_bed"
   ]
 }
