@@ -13,6 +13,7 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CookingRecipeSerializer;
@@ -27,6 +28,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.Objects;
+import java.util.Set;
 
 public class PaladinFurnitureMod implements ModInitializer {
 
@@ -86,6 +88,7 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static RecipeSerializer<FurnitureRecipe> FURNITURE_SERIALIZER;
 
 	//System.out.println("Hello Fabric world!");
+	private static Set<BlockState> PFM_BED_STATES;
 
 	@Override
 	public void onInitialize() {

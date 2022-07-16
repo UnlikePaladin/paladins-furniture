@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.ItemPlacementContext;
@@ -13,17 +14,36 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.WorldAccess;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 import static com.unlikepaladin.pfm.blocks.LogTable.rotateShape;
 
 public class SimpleBed extends BedBlock {
     public static EnumProperty<MiddleShape> SHAPE = EnumProperty.of("shape", MiddleShape.class);
+    private static final List<FurnitureBlock> SIMPLE_BEDS = new ArrayList<>();
     public SimpleBed(DyeColor color, Settings settings) {
         super(color, settings);
+        if(this.getClass().isAssignableFrom(SimpleBed.class)){
+            String bedColor = color.getName();
+            SIMPLE_BEDS.add(new FurnitureBlock(this, bedColor+"_simple_bed"));
+        }
+    }
+
+    public static Stream<FurnitureBlock> streamSimpleBeds() {
+        return SIMPLE_BEDS.stream();
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
+        Direction direction = ctx.getPlayerFacing();
+        BlockPos blockPos = ctx.getBlockPos();
+        BlockPos blockPos2 = blockPos.offset(direction);
+        if (ctx.getWorld().getBlockState(blockPos2).canReplace(ctx)) {
+            return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
+        }
+        return null;
     }
 
     private static Direction getDirectionTowardsOtherPart(BedPart part, Direction direction) {

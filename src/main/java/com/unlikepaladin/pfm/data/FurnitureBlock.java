@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.data;
 
+import com.unlikepaladin.pfm.blocks.SimpleBed;
 import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -219,5 +220,13 @@ public class FurnitureBlock extends Material {
         baseMaterial = baseMaterial.concat("wool");
         this.baseMaterial =  Registry.BLOCK.get(new Identifier("minecraft:" + baseMaterial));
         return this.baseMaterial;
+    }
+
+    public Block getBed() {
+        if (block instanceof SimpleBed){
+            String color = ((SimpleBed) block).getColor().getName();
+            return Registry.BLOCK.get(new Identifier("minecraft:" + color + "_bed"));
+        }
+        return null;
     }
 }
