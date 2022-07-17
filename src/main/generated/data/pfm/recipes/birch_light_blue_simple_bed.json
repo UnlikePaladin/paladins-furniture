@@ -1,0 +1,18 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XZX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:birch_planks"
+    },
+    "Z": {
+      "item": "minecraft:light_blue_bed"
+    }
+  },
+  "result": {
+    "item": "pfm:birch_light_blue_simple_bed"
+  }
+}
