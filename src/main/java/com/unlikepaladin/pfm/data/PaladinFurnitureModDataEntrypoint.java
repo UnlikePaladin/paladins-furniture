@@ -90,6 +90,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             FroggyChair[] froggyChairs = FroggyChair.streamFroggyChair().map(FurnitureBlock::getBlock).toArray(FroggyChair[]::new);
             Stove[] stove = Stove.streamStoves().map(FurnitureBlock::getBlock).toArray(Stove[]::new);
             SimpleBed[] simpleBeds = SimpleBed.streamSimpleBeds().map(FurnitureBlock::getBlock).toArray(SimpleBed[]::new);
+            ClassicBed[] classicBeds = ClassicBed.streamClassicBeds().map(FurnitureBlock::getBlock).toArray(ClassicBed[]::new);
 
             this.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                     .add(stoneCounters)
@@ -179,13 +180,15 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(woodClassicNightstands)
                     .add(workingTables)
                     .add(herringbonePlanks)
-                    .add(simpleBeds);
+                    .add(simpleBeds)
+                    .add(classicBeds);
 
                 this.getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
                     .add(BlockItemRegistry.RAW_CONCRETE_POWDER);
 
                 this.getOrCreateTagBuilder(BlockTags.BEDS)
-                    .add(simpleBeds);
+                    .add(simpleBeds)
+                    .add(classicBeds);
         }
 
     }
@@ -408,6 +411,11 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock bed : simpleBeds) {
                 offerSimpleBed(bed.block,  Ingredient.ofItems(bed.getBaseMaterial()), Ingredient.ofItems(bed.getBed()), exporter);
             }
+
+            FurnitureBlock[] classicBeds = ClassicBed.streamClassicBeds().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock bed : classicBeds) {
+                offerClassicBed(bed.block,  Ingredient.ofItems(bed.getBaseMaterial()), Ingredient.ofItems(bed.getBed()), Ingredient.ofItems(bed.getFence()), exporter);
+            }
         }
     }
 
@@ -514,5 +522,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
 
     public static void offerSimpleBed(ItemConvertible output, Ingredient legMaterial, Ingredient baseBed, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonBuilder.create(output, 1).input('X', legMaterial).input('Z', baseBed).pattern("XZX").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+
+    public static void offerClassicBed(ItemConvertible output, Ingredient legMaterial, Ingredient baseBed, Ingredient fence, Consumer<RecipeJsonProvider> exporter) {
+        FurnitureRecipeJsonFactory.create(output, 1).input('X', legMaterial).input('Z', baseBed).input('Y', fence).pattern("YZY").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 }
