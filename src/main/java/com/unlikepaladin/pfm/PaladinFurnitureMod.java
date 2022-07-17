@@ -51,7 +51,6 @@ public class PaladinFurnitureMod implements ModInitializer {
 	public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 
 
-	//TODO: Update book to include beds
 	public static Identifier id(String path) {
 		return new Identifier(MOD_ID, path);
 	}
