@@ -229,4 +229,15 @@ public class FurnitureBlock extends Material {
         }
         return null;
     }
+
+    public Block getFence() {
+        String baseMaterial = this.block.getLootTableId().getPath();
+            if (baseMaterial.contains("log") || baseMaterial.contains("stem")) {
+                baseMaterial = baseMaterial.replace("log", "");
+                baseMaterial = baseMaterial.replace("stem", "");
+            }
+        baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "fence");
+        this.baseMaterial =  Registry.BLOCK.get(new Identifier("minecraft:" + baseMaterial));
+        return this.baseMaterial;
+    }
 }

@@ -18,7 +18,7 @@ import java.util.Set;
 
 
 @Mixin(PointOfInterestType.class)
-public abstract class PointOfInterestTypeMixin {
+public abstract class MixinPointOfInterestType {
     @ModifyArgs(
             method = "<clinit>",
             slice = @Slice(from = @At(
