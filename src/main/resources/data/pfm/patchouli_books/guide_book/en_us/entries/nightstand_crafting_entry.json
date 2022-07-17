@@ -1,0 +1,16 @@
+{
+  "name": "Crafting",
+  "icon": "minecraft:oak_planks",
+  "category": "pfm:nightstand_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "To craft a nightstand, you'll need a chest and some planks depending on the wood type you want."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_classic_nightstand",
+      "recipe2": "pfm:stripped_birch_classic_nightstand"
+    }
+  ]
+}
