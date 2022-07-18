@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/table_basic/table_basic_double_corner",
+	"textures": {
+        
+		"particle": "block/stripped_dark_oak_log",
+		"base": "block/quartz_block_bottom",
+		"legs": "block/stripped_dark_oak_log"
+	}
+    
+}

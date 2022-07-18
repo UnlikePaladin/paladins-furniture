@@ -28,6 +28,7 @@ public class LogTable extends HorizontalFacingBlock {
 
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> WOOD_LOG_TABLES = new ArrayList<>();
+    private static final List<FurnitureBlock> STONE_NATURAL_TABLES = new ArrayList<>();
     public LogTable(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(FACING, Direction.NORTH));
@@ -36,10 +37,16 @@ public class LogTable extends HorizontalFacingBlock {
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(LogTable.class)){
             WOOD_LOG_TABLES.add(new FurnitureBlock(this, "table_"));
         }
+        else if (this.getClass().isAssignableFrom(ClassicTable.class)){
+            STONE_NATURAL_TABLES.add(new FurnitureBlock(this, "table_classic"));
+        }
     }
 
     public static Stream<FurnitureBlock> streamWoodLogTables() {
         return WOOD_LOG_TABLES.stream();
+    }
+    public static Stream<FurnitureBlock> streamStoneNaturalTables() {
+        return STONE_NATURAL_TABLES.stream();
     }
 
     @Override

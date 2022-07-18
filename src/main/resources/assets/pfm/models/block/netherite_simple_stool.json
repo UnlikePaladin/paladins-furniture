@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/simple_stool",
+	"textures": {
+        
+		"particle": "block/netherite_block",
+		"base": "block/netherite_block",
+		"legs": "block/netherite_block"
+	}
+    
+}

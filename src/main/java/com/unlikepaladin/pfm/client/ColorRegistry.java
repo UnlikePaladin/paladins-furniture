@@ -40,6 +40,7 @@ public class ColorRegistry {
         addWaterColor(BlockItemRegistry.NETHERITE_KITCHEN_SINK);
         addWaterColor(BlockItemRegistry.CALCITE_KITCHEN_SINK);
         addWaterColor(BlockItemRegistry.ANDESITE_KITCHEN_SINK);
+        addWaterColor(BlockItemRegistry.SMOOTH_STONE_KITCHEN_SINK);
         addWaterColor(BlockItemRegistry.STONE_KITCHEN_SINK);
         addWaterColor(BlockItemRegistry.BLACKSTONE_KITCHEN_SINK);
         addWaterColor(BlockItemRegistry.DEEPSLATE_KITCHEN_SINK);

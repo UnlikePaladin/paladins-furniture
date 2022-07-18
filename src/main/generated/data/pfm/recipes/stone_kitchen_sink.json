@@ -7,10 +7,10 @@
   ],
   "key": {
     "X": {
-      "item": "minecraft:white_concrete"
+      "item": "minecraft:stone"
     },
     "S": {
-      "item": "minecraft:smooth_stone"
+      "item": "minecraft:cobblestone"
     },
     "Z": {
       "item": "minecraft:iron_ingot"

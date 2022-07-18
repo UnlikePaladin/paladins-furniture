@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/diorite_chair_modern","y":90},
+    "facing=east":{"model":"pfm:block/diorite_chair_modern","y":180},
+    "facing=south":{"model":"pfm:block/diorite_chair_modern","y":270},
+    "facing=west":{"model":"pfm:block/diorite_chair_modern","y":0}
+
+}
+
+}

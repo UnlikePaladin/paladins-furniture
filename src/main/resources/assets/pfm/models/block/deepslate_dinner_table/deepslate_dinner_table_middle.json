@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/dinner_table/dinner_table_middle",
+	"textures": {
+        
+		"particle": "block/deepslate",
+		"base": "block/polished_deepslate",
+		"legs": "block/deepslate"
+	}
+    
+}

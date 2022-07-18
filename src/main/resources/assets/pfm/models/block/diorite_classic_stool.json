@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_stool",
+	"textures": {
+        
+		"particle": "block/diorite",
+		"base": "block/polished_diorite",
+		"legs": "block/diorite"
+	}
+    
+}

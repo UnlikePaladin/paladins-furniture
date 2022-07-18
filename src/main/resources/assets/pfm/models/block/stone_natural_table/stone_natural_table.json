@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/log_table/log_table",
+	"textures": {
+        
+		"particle": "block/cobblestone",
+		"base": "block/stone",
+		"legs": "block/cobblestone"
+	}
+    
+}
