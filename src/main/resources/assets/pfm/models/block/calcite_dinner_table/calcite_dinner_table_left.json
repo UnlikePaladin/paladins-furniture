@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/dinner_table/dinner_table_left",
+	"textures": {
+        
+		"particle": "block/stripped_warped_stem",
+		"base": "block/calcite",
+		"legs": "block/stripped_warped_stem"
+	}
+    
+}

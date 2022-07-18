@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/blackstone_chair","y":90},
+    "facing=east":{"model":"pfm:block/blackstone_chair","y":180},
+    "facing=south":{"model":"pfm:block/blackstone_chair","y":270},
+    "facing=west":{"model":"pfm:block/blackstone_chair","y":0}
+
+}
+
+}

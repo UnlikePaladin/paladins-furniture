@@ -77,6 +77,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             ModernStool[] stoneModernStools = ModernStool.streamStoneModernStools().map(FurnitureBlock::getBlock).toArray(ModernStool[]::new);
             ModernDinnerTable[] stoneModernDinnerTables = ModernDinnerTable.streamStoneModernDinnerTables().map(FurnitureBlock::getBlock).toArray(ModernDinnerTable[]::new);
             ClassicNightstand[] stoneClassicNightstands = ClassicNightstand.streamStoneClassicNightstands().map(FurnitureBlock::getBlock).toArray(ClassicNightstand[]::new);
+            LogTable[] stoneNaturalTables = LogTable.streamStoneNaturalTables().map(FurnitureBlock::getBlock).toArray(LogTable[]::new);
 
             SimpleStool[] stoneSimpleStools = SimpleStool.streamStoneSimpleStools().map(FurnitureBlock::getBlock).toArray(SimpleStool[]::new);
             PendantBlock[] pendantLights = PendantBlock.streamPendantLights().toList().toArray(new PendantBlock[0]);
@@ -120,6 +121,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(ironStoves)
                     .add(froggyChairs)
                     .add(stove)
+                    .add(stoneNaturalTables)
                     .add(stoneClassicNightstands)
                     .add(BlockItemRegistry.RAW_CONCRETE)
                     .add(BlockItemRegistry.IRON_CHAIN);
@@ -202,25 +204,51 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
         protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
             FurnitureBlock[] woodClassicChairs = ClassicChair.streamWoodClassicChairs().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock classicChair : woodClassicChairs) {
-                offerClassicChairRecipe(classicChair.block, Ingredient.ofItems(classicChair.getSecondMaterial().asItem()), Ingredient.ofItems(classicChair.getBaseMaterial().asItem()), exporter);
+                offerClassicChairRecipe(classicChair.block, Ingredient.ofItems(classicChair.getSecondaryMaterial().asItem()), Ingredient.ofItems(classicChair.getBaseMaterial().asItem()), exporter);
             }
+
+            FurnitureBlock[] stoneClassicChairs = ClassicChair.streamStoneClassicChairs().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock classicChair : stoneClassicChairs) {
+                offerClassicChairRecipe(classicChair.block, Ingredient.ofItems(classicChair.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(classicChair.getBaseStoneMaterial().asItem()), exporter);
+            }
+
             FurnitureBlock[] woodBasicChairs = BasicChair.streamWoodBasicChairs().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock basicChair : woodBasicChairs) {
-                offerBasicChairRecipe(basicChair.block, Ingredient.ofItems(basicChair.getSecondMaterial().asItem()), Ingredient.ofItems(basicChair.getBaseMaterial().asItem()), exporter);
+                offerBasicChairRecipe(basicChair.block, Ingredient.ofItems(basicChair.getSecondaryMaterial().asItem()), Ingredient.ofItems(basicChair.getBaseMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] stoneBasicChairs = BasicChair.streamStoneBasicChairs().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock basicChair : stoneBasicChairs) {
+                offerBasicChairRecipe(basicChair.block, Ingredient.ofItems(basicChair.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(basicChair.getBaseStoneMaterial().asItem()), exporter);
             }
             FurnitureBlock[] woodDinnerChairs = DinnerChair.streamWoodDinnerChairs().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock dinnerChair : woodDinnerChairs) {
-                offerDinnerChairRecipe(dinnerChair.block, Ingredient.ofItems(dinnerChair.getSecondMaterial().asItem()), Ingredient.ofItems(dinnerChair.getBaseMaterial().asItem()), exporter);
+                offerDinnerChairRecipe(dinnerChair.block, Ingredient.ofItems(dinnerChair.getSecondaryMaterial().asItem()), Ingredient.ofItems(dinnerChair.getBaseMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] stoneDinnerChairs = DinnerChair.streamStoneDinnerChairs().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock dinnerChair : stoneDinnerChairs) {
+                offerDinnerChairRecipe(dinnerChair.block, Ingredient.ofItems(dinnerChair.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(dinnerChair.getBaseStoneMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] woodModernChairs = ModernChair.streamWoodModernChairs().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock modernChair : woodModernChairs) {
-                offerModernChairRecipe(modernChair.block, Ingredient.ofItems(modernChair.getSecondMaterial().asItem()), Ingredient.ofItems(modernChair.getBaseMaterial().asItem()), exporter);
+                offerModernChairRecipe(modernChair.block, Ingredient.ofItems(modernChair.getSecondaryMaterial().asItem()), Ingredient.ofItems(modernChair.getBaseMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] stoneModernChairs = ModernChair.streamStoneModernChairs().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock modernChair : stoneModernChairs) {
+                offerModernChairRecipe(modernChair.block, Ingredient.ofItems(modernChair.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(modernChair.getBaseStoneMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] woodClassicStools = ClassicStool.streamWoodClassicStools().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock classicStool : woodClassicStools) {
-                offerClassicStoolRecipe(classicStool.block, Ingredient.ofItems(classicStool.getSecondMaterial().asItem()), Ingredient.ofItems(classicStool.getBaseMaterial().asItem()), exporter);
+                offerClassicStoolRecipe(classicStool.block, Ingredient.ofItems(classicStool.getSecondaryMaterial().asItem()), Ingredient.ofItems(classicStool.getBaseMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] stoneClassicStools = ClassicStool.streamStoneClassicStools().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock classicStool : stoneClassicStools) {
+                offerClassicStoolRecipe(classicStool.block, Ingredient.ofItems(classicStool.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(classicStool.getBaseStoneMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] herringbonePlanks = HerringbonePlanks.streamPlanks().toList().toArray(new FurnitureBlock[0]);
@@ -236,7 +264,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 } else if (cabinetName.contains("dark_wood")) {
                     offerCabinetRecipe(kitchenCabinet.block, Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else {
-                    offerCabinetRecipe(kitchenCabinet.block, Ingredient.ofItems(kitchenCabinet.getSecondMaterial().asItem()), Ingredient.ofItems(kitchenCabinet.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerCabinetRecipe(kitchenCabinet.block, Ingredient.ofItems(kitchenCabinet.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenCabinet.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
                 }
             }
 
@@ -248,7 +276,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 } else if (cabinetName.contains("dark_wood")) {
                     offerCounterAppliance(kitchenCounterOven.block, Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.FURNACE), exporter);
                 } else {
-                    offerCounterAppliance(kitchenCounterOven.block, Ingredient.ofItems(kitchenCounterOven.getSecondMaterial().asItem()), Ingredient.ofItems(kitchenCounterOven.getBaseMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
+                    offerCounterAppliance(kitchenCounterOven.block, Ingredient.ofItems(kitchenCounterOven.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenCounterOven.getBaseMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
                 }
             }
 
@@ -260,7 +288,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 } else if (cabinetName.contains("dark_wood")) {
                     offerCounterRecipe(kitchenCounter.block, Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), exporter);
                 } else {
-                    offerCounterRecipe(kitchenCounter.block, Ingredient.ofItems(kitchenCounter.getSecondMaterial().asItem()), Ingredient.ofItems(kitchenCounter.getBaseMaterial().asItem()), exporter);
+                    offerCounterRecipe(kitchenCounter.block, Ingredient.ofItems(kitchenCounter.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenCounter.getBaseMaterial().asItem()), exporter);
                 }
             }
 
@@ -272,7 +300,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 } else if (cabinetName.contains("dark_wood")) {
                     offerCounterAppliance(kitchenDrawer.block, Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else {
-                    offerCounterAppliance(kitchenDrawer.block, Ingredient.ofItems(kitchenDrawer.getSecondMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerCounterAppliance(kitchenDrawer.block, Ingredient.ofItems(kitchenDrawer.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
                 }
             }
 
@@ -284,18 +312,23 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 } else if (cabinetName.contains("dark_wood")) {
                     offerSinkRecipe(kitchenSink.block, Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
                 } else {
-                    offerSinkRecipe(kitchenSink.block, Ingredient.ofItems(kitchenSink.getSecondMaterial().asItem()), Ingredient.ofItems(kitchenSink.getBaseMaterial().asItem()), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
+                    offerSinkRecipe(kitchenSink.block, Ingredient.ofItems(kitchenSink.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenSink.getBaseMaterial().asItem()), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
                 }
             }
 
             FurnitureBlock[] logStools = LogStool.streamWoodLogStools().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock logStool : logStools) {
-                offerLogStoolRecipe(logStool.block, Ingredient.ofItems(logStool.getSecondMaterial().asItem()), exporter);
+                offerLogStoolRecipe(logStool.block, Ingredient.ofItems(logStool.getSecondaryMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] woodModernStools = ModernStool.streamWoodModernStools().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock modernStool : woodModernStools) {
-                offerModernStoolRecipe(modernStool.block, Ingredient.ofItems(modernStool.getSecondMaterial().asItem()), Ingredient.ofItems(modernStool.getBaseMaterial().asItem()), exporter);
+                offerModernStoolRecipe(modernStool.block, Ingredient.ofItems(modernStool.getSecondaryMaterial().asItem()), Ingredient.ofItems(modernStool.getBaseMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] stoneModernStools = ModernStool.streamStoneModernStools().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock modernStool : stoneModernStools) {
+                offerModernStoolRecipe(modernStool.block, Ingredient.ofItems(modernStool.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(modernStool.getBaseStoneMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] logTables = LogTable.streamWoodLogTables().toList().toArray(new FurnitureBlock[0]);
@@ -303,63 +336,93 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 if (logTable.block.toString().contains("raw") && logTable.block.toString().contains("stripped")){
                     offerLogTableRecipe(logTable.block, Ingredient.ofItems(logTable.getStrippedBaseMaterial().asItem()), Ingredient.ofItems(logTable.getStrippedBaseMaterial().asItem()), exporter);
                 } else if (logTable.block.toString().contains("stripped")){
-                    offerLogTableRecipe(logTable.block, Ingredient.ofItems(logTable.getSecondMaterial().asItem()), Ingredient.ofItems(logTable.getStrippedBaseMaterial().asItem()), exporter);
+                    offerLogTableRecipe(logTable.block, Ingredient.ofItems(logTable.getSecondaryMaterial().asItem()), Ingredient.ofItems(logTable.getStrippedBaseMaterial().asItem()), exporter);
                 }
                 else if (logTable.block.toString().contains("raw")) {
-                    offerLogTableRecipe(logTable.block, Ingredient.ofItems(logTable.getSecondMaterial().asItem()), Ingredient.ofItems(logTable.getSecondMaterial().asItem()), exporter);
+                    offerLogTableRecipe(logTable.block, Ingredient.ofItems(logTable.getSecondaryMaterial().asItem()), Ingredient.ofItems(logTable.getSecondaryMaterial().asItem()), exporter);
                 } else {
-                    offerLogTableRecipe(logTable.block, Ingredient.ofItems(logTable.getSecondMaterial().asItem()), Ingredient.ofItems(logTable.getBaseMaterial().asItem()), exporter);
+                    offerLogTableRecipe(logTable.block, Ingredient.ofItems(logTable.getSecondaryMaterial().asItem()), Ingredient.ofItems(logTable.getBaseMaterial().asItem()), exporter);
                 }
+            }
+
+            FurnitureBlock[] stoneNaturalTables = LogTable.streamStoneNaturalTables().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock naturalTable : stoneNaturalTables) {
+                offerLogTableRecipe(naturalTable.block, Ingredient.ofItems(naturalTable.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(naturalTable.getBaseStoneMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] woodSimpleStools = SimpleStool.streamWoodSimpleStools().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock simpleStool : woodSimpleStools) {
-                offerSimpleStoolRecipe(simpleStool.block, Ingredient.ofItems(simpleStool.getSecondMaterial().asItem()), Ingredient.ofItems(simpleStool.getBaseMaterial().asItem()), exporter);
+                offerSimpleStoolRecipe(simpleStool.block, Ingredient.ofItems(simpleStool.getSecondaryMaterial().asItem()), Ingredient.ofItems(simpleStool.getBaseMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] stoneSimpleStools = SimpleStool.streamStoneSimpleStools().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock simpleStool : stoneSimpleStools) {
+                offerSimpleStoolRecipe(simpleStool.block, Ingredient.ofItems(simpleStool.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(simpleStool.getBaseStoneMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] woodBasicTables = BasicTable.streamWoodBasicTables().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock basicTable : woodBasicTables) {
-                offerBasicTableRecipe(basicTable.block, Ingredient.ofItems(basicTable.getSecondMaterial().asItem()), Ingredient.ofItems(basicTable.getBaseMaterial().asItem()), exporter);
+                offerBasicTableRecipe(basicTable.block, Ingredient.ofItems(basicTable.getSecondaryMaterial().asItem()), Ingredient.ofItems(basicTable.getBaseMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] stoneBasicTables = BasicTable.streamStoneBasicTables().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock simpleStool : stoneBasicTables) {
+                offerBasicTableRecipe(simpleStool.block, Ingredient.ofItems(simpleStool.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(simpleStool.getBaseStoneMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] woodModernDinnerTables = ModernDinnerTable.streamWoodModernDinnerTables().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock modernDinnerTables : woodModernDinnerTables) {
-                offerModernDinnerTableRecipe(modernDinnerTables.block, Ingredient.ofItems(modernDinnerTables.getSecondMaterial().asItem()), Ingredient.ofItems(modernDinnerTables.getBaseMaterial().asItem()), exporter);
+                offerModernDinnerTableRecipe(modernDinnerTables.block, Ingredient.ofItems(modernDinnerTables.getSecondaryMaterial().asItem()), Ingredient.ofItems(modernDinnerTables.getBaseMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] stoneModernDinnerTables = ModernDinnerTable.streamStoneModernDinnerTables().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock modernDinnerTable : stoneModernDinnerTables) {
+                offerModernDinnerTableRecipe(modernDinnerTable.block, Ingredient.ofItems(modernDinnerTable.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(modernDinnerTable.getBaseStoneMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] woodClassicTables = ClassicTable.streamWoodClassicTables().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock classicTable : woodClassicTables) {
-                offerClassicTableRecipe(classicTable.block, Ingredient.ofItems(classicTable.getSecondMaterial().asItem()), Ingredient.ofItems(classicTable.getBaseMaterial().asItem()), exporter);
+                offerClassicTableRecipe(classicTable.block, Ingredient.ofItems(classicTable.getSecondaryMaterial().asItem()), Ingredient.ofItems(classicTable.getBaseMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] stoneClassicTables = ClassicTable.streamStoneClassicTables().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock classicTable : stoneClassicTables) {
+                offerClassicTableRecipe(classicTable.block, Ingredient.ofItems(classicTable.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(classicTable.getBaseStoneMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] woodDinnerTables = DinnerTable.streamWoodDinnerTables().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock dinnerTable : woodDinnerTables) {
-                offerDinnerTableRecipe(dinnerTable.block, Ingredient.ofItems(dinnerTable.getSecondMaterial().asItem()), Ingredient.ofItems(dinnerTable.getBaseMaterial().asItem()), exporter);
+                offerDinnerTableRecipe(dinnerTable.block, Ingredient.ofItems(dinnerTable.getSecondaryMaterial().asItem()), Ingredient.ofItems(dinnerTable.getBaseMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] stoneDinnerTables = DinnerTable.streamStoneDinnerTables().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock dinnerTable : stoneDinnerTables) {
+                offerDinnerTableRecipe(dinnerTable.block, Ingredient.ofItems(dinnerTable.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(dinnerTable.getBaseStoneMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] stoneKitchenCabinets = KitchenCabinet.streamStoneCabinets().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock kitchenCabinet : stoneKitchenCabinets) {
-                offerCabinetRecipe(kitchenCabinet.block, Ingredient.ofItems(kitchenCabinet.getSecondMaterial().asItem()), Ingredient.ofItems(kitchenCabinet.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
+                offerCabinetRecipe(kitchenCabinet.block, Ingredient.ofItems(kitchenCabinet.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenCabinet.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
             }
 
             FurnitureBlock[] stoneKitchenCounterOvens = KitchenCounterOven.streamStoneCounterOvens().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock kitchenCounterOven : stoneKitchenCounterOvens) {
-                    offerCounterAppliance(kitchenCounterOven.block, Ingredient.ofItems(kitchenCounterOven.getSecondMaterial().asItem()), Ingredient.ofItems(kitchenCounterOven.getBaseMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
+                    offerCounterAppliance(kitchenCounterOven.block, Ingredient.ofItems(kitchenCounterOven.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenCounterOven.getBaseMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
             }
 
             FurnitureBlock[] stoneKitchenCounters = KitchenCounter.streamStoneCounters().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock kitchenCounter : stoneKitchenCounters) {
-                    offerCounterRecipe(kitchenCounter.block, Ingredient.ofItems(kitchenCounter.getSecondMaterial().asItem()), Ingredient.ofItems(kitchenCounter.getBaseMaterial().asItem()), exporter);
+                    offerCounterRecipe(kitchenCounter.block, Ingredient.ofItems(kitchenCounter.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenCounter.getBaseMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] stoneKitchenDrawers = KitchenDrawer.streamStoneDrawers().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock kitchenDrawer : stoneKitchenDrawers) {
-                    offerCounterAppliance(kitchenDrawer.block, Ingredient.ofItems(kitchenDrawer.getSecondMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerCounterAppliance(kitchenDrawer.block, Ingredient.ofItems(kitchenDrawer.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
             }
 
             FurnitureBlock[] stoneKitchenSinks = KitchenSink.streamStoneSinks().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock kitchenSink : stoneKitchenSinks) {
-                    offerSinkRecipe(kitchenSink.block, Ingredient.ofItems(kitchenSink.getSecondMaterial().asItem()), Ingredient.ofItems(kitchenSink.getBaseMaterial().asItem()), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
+                    offerSinkRecipe(kitchenSink.block, Ingredient.ofItems(kitchenSink.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenSink.getBaseMaterial().asItem()), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
             }
 
             FurnitureBlock[] froggyChairs = FroggyChair.streamFroggyChair().toList().toArray(new FurnitureBlock[0]);
@@ -402,9 +465,14 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 offerStoveRecipe(stove.block,  Ingredient.ofItems(stove.getFridgeMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
             }
 
-            FurnitureBlock[] classicNightStands = ClassicNightstand.streamWoodClassicNightstands().toList().toArray(new FurnitureBlock[0]);
-            for (FurnitureBlock nightStand : classicNightStands) {
-                offerClassicNightStandRecipe(nightStand.block,  Ingredient.ofItems(nightStand.getSecondMaterial()), Ingredient.ofItems(nightStand.getBaseMaterial()), exporter);
+            FurnitureBlock[] woodClassicNightStands = ClassicNightstand.streamWoodClassicNightstands().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock nightStand : woodClassicNightStands) {
+                offerClassicNightStandRecipe(nightStand.block,  Ingredient.ofItems(nightStand.getSecondaryMaterial()), Ingredient.ofItems(nightStand.getBaseMaterial()), exporter);
+            }
+
+            FurnitureBlock[] stoneClassicNightStands = ClassicNightstand.streamStoneClassicNightstands().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock nightStand : stoneClassicNightStands) {
+                offerClassicNightStandRecipe(nightStand.block, Ingredient.ofItems(nightStand.getSecondaryStoneMaterial().asItem()), Ingredient.ofItems(nightStand.getBaseStoneMaterial().asItem()), exporter);
             }
 
             FurnitureBlock[] simpleBeds = SimpleBed.streamSimpleBeds().toList().toArray(new FurnitureBlock[0]);

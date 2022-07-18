@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/dinner_table/dinner_table_right",
+	"textures": {
+        
+		"particle": "block/cobblestone",
+		"base": "block/stone",
+		"legs": "block/cobblestone"
+	}
+    
+}

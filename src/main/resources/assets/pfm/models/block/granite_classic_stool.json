@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_stool",
+	"textures": {
+        
+		"particle": "block/granite",
+		"base": "block/polished_granite",
+		"legs": "block/granite"
+	}
+    
+}

@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_sink/kitchen_sink",
+	"textures": {
+        
+		"particle": "block/white_concrete",
+		"base": "block/white_concrete",
+		"legs": "block/smooth_stone"
+	}
+    
+}

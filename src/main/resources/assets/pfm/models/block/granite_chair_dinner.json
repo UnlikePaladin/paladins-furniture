@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/chair_dinner",
+	"textures": {
+        
+		"particle": "block/granite",
+		"base": "block/polished_granite",
+		"legs": "block/granite"
+	}
+    
+}

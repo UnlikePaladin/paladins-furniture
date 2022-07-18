@@ -51,6 +51,24 @@ public class BlockItemRegistry {
     public static final Block QUARTZ_CHAIR = new BasicChair(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
     public static final Block NETHERITE_CHAIR = new BasicChair(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
 
+    public static final Block LIGHT_WOOD_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_CHAIR = new BasicChair(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
+
     //Dinner Chairs
     public static final Block OAK_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block MANGROVE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(MANGROVE_CHAIR));
@@ -71,6 +89,27 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_WARPED_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_CRIMSON_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
 
+    public static final Block QUARTZ_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
+
+    public static final Block NETHERITE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
+
+    public static final Block LIGHT_WOOD_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_CHAIR_DINNER = new DinnerChair(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
 
     //Froggy Chairs
     public static final Block FROGGY_CHAIR = new FroggyChair(FabricBlockSettings.of(Material.METAL).strength(9.0f).resistance(8.0f).nonOpaque().requiresTool().mapColor(MapColor.GREEN));
@@ -101,6 +140,28 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_CRIMSON_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block CHAIR_CLASSIC_WOOL = new ClassicChairDyeable(FabricBlockSettings.copyOf(OAK_CHAIR));
 
+    public static final Block QUARTZ_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block NETHERITE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(NETHERITE_CHAIR));
+
+    public static final Block LIGHT_WOOD_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
+
     //Modern Chair
     public static final Block OAK_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block BIRCH_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(BIRCH_CHAIR));
@@ -120,6 +181,29 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_MANGROVE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(MANGROVE_CHAIR));
     public static final Block STRIPPED_WARPED_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_CRIMSON_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
+
+    public static final Block QUARTZ_CHAIR_MODERN = new ModernChair(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
+
+    public static final Block NETHERITE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
+
+    public static final Block LIGHT_WOOD_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_CHAIR_MODERN = new ModernChair(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
+
 
     //Arm Chairs
     public static final Block ARM_CHAIR_STANDARD = new ArmChairDyeable(FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
@@ -146,6 +230,27 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_MANGROVE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(MANGROVE_CHAIR));
     public static final Block STRIPPED_WARPED_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(WARPED_CHAIR));
 
+    public static final Block QUARTZ_BASIC_TABLE = new BasicTable(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
+
+    public static final Block NETHERITE_BASIC_TABLE = new BasicTable(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
+
+    public static final Block LIGHT_WOOD_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
 
     public static final Block OAK_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block BIRCH_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(BIRCH_CHAIR));
@@ -166,6 +271,28 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_MANGROVE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(MANGROVE_CHAIR));
     public static final Block STRIPPED_WARPED_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(WARPED_CHAIR));
 
+    public static final Block QUARTZ_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
+
+    public static final Block NETHERITE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
+
+    public static final Block LIGHT_WOOD_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_CLASSIC_TABLE = new ClassicTable(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
+
 
     public static final Block OAK_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block BIRCH_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(BIRCH_CHAIR));
@@ -185,6 +312,28 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_MANGROVE_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(MANGROVE_CHAIR));
     public static final Block STRIPPED_CRIMSON_STEM_TABLE = new LogTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_WARPED_STEM_TABLE = new LogTable(FabricBlockSettings.copyOf(WARPED_CHAIR));
+
+    public static final Block QUARTZ_NATURAL_TABLE = new LogTable(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
+
+    public static final Block NETHERITE_NATURAL_TABLE = new LogTable(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
+
+    public static final Block LIGHT_WOOD_NATURAL_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_NATURAL_TABLE = new LogTable(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_NATURAL_TABLE = new LogTable(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_NATURAL_TABLE = new LogTable(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_NATURAL_TABLE = new LogTable(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_NATURAL_TABLE = new LogTable(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_NATURAL_TABLE = new LogTable(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_NATURAL_TABLE = new LogTable(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_NATURAL_TABLE = new LogTable(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
 
     public static final Block OAK_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block BIRCH_RAW_LOG_TABLE = new LogTable(FabricBlockSettings.copyOf(BIRCH_CHAIR));
@@ -224,6 +373,28 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_WARPED_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_MANGROVE_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(MANGROVE_CHAIR));
 
+    public static final Block QUARTZ_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
+
+    public static final Block NETHERITE_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
+
+    public static final Block LIGHT_WOOD_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_MODERN_DINNER_TABLE = new ModernDinnerTable(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
+
     public static final Block OAK_LOG_STOOL = new LogStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block BIRCH_LOG_STOOL = new LogStool(FabricBlockSettings.copyOf(BIRCH_CHAIR));
     public static final Block SPRUCE_LOG_STOOL = new LogStool(FabricBlockSettings.copyOf(SPRUCE_CHAIR));
@@ -252,6 +423,28 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_CRIMSON_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_WARPED_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_MANGROVE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(MANGROVE_CHAIR));
+
+    public static final Block QUARTZ_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
+
+    public static final Block NETHERITE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
+
+    public static final Block LIGHT_WOOD_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_SIMPLE_STOOL = new SimpleStool(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
 
     public static final Block OAK_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block BIRCH_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(BIRCH_CHAIR));
@@ -314,6 +507,28 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_WARPED_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_MANGROVE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(MANGROVE_CHAIR));
 
+    public static final Block QUARTZ_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
+
+    public static final Block NETHERITE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
+
+    public static final Block LIGHT_WOOD_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
+
     public static final Block OAK_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block BIRCH_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(BIRCH_CHAIR));
     public static final Block SPRUCE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(SPRUCE_CHAIR));
@@ -332,6 +547,29 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_CRIMSON_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
     public static final Block STRIPPED_WARPED_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_MANGROVE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block QUARTZ_DINNER_TABLE = new DinnerTable(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
+
+    public static final Block NETHERITE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
+
+    public static final Block LIGHT_WOOD_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_DINNER_TABLE= new DinnerTable(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_DINNER_TABLE = new DinnerTable(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
+
 
     public static final Block OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.of(Material.WOOD).strength(2.0f).resistance(3.0f).nonOpaque().sounds(BlockSoundGroup.WOOD).mapColor(MapColor.OAK_TAN));
     public static final Block OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
@@ -468,6 +706,29 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_DARK_OAK_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
     public static final Block STRIPPED_WARPED_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_CRIMSON_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
+
+    public static final Block QUARTZ_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
+
+    public static final Block NETHERITE_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
+
+    public static final Block LIGHT_WOOD_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(OAK_CHAIR));
+
+    public static final Block DARK_WOOD_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
+
+    public static final Block GRANITE_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_CLASSIC_NIGHTSTAND= new ClassicNightstand(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_CLASSIC_NIGHTSTAND = new ClassicNightstand(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
+
 
     public static final Block OAK_RED_SIMPLE_BED = new SimpleBed(DyeColor.RED, FabricBlockSettings.copyOf(Blocks.RED_BED));
     public static final Block OAK_ORANGE_SIMPLE_BED = new SimpleBed(DyeColor.ORANGE, FabricBlockSettings.copyOf(Blocks.ORANGE_BED));
@@ -841,11 +1102,22 @@ public class BlockItemRegistry {
     public static final Block DIORITE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block DIORITE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
 
+    public static final Block SMOOTH_STONE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
+    public static final Block SMOOTH_STONE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
+    public static final Block SMOOTH_STONE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
+    public static final Block SMOOTH_STONE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block SMOOTH_STONE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
+
+
     public static final Block STONE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
-    public static final Block STONE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
-    public static final Block STONE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
-    public static final Block STONE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block STONE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
+
+    public static final Block STONE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block STONE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block STONE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.STONE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+
+    public static final Block STONE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.STONE));
 
     public static final Block DEEPSLATE_TILE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES));
     public static final Block DEEPSLATE_TILE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES));
@@ -933,6 +1205,15 @@ public class BlockItemRegistry {
         registerFurniture("stripped_crimson_chair", STRIPPED_CRIMSON_CHAIR, true);
         registerFurniture("quartz_chair", QUARTZ_CHAIR, true);
         registerFurniture("netherite_chair", NETHERITE_CHAIR, true);
+        registerFurniture("light_wood_chair", LIGHT_WOOD_CHAIR, true);
+        registerFurniture("dark_wood_chair", DARK_WOOD_CHAIR, true);
+        registerFurniture("granite_chair", GRANITE_CHAIR, true);
+        registerFurniture("calcite_chair", CALCITE_CHAIR, true);
+        registerFurniture("andesite_chair", ANDESITE_CHAIR, true);
+        registerFurniture("diorite_chair", DIORITE_CHAIR, true);
+        registerFurniture("stone_chair", STONE_CHAIR, true);
+        registerFurniture("blackstone_chair", BLACKSTONE_CHAIR, true);
+        registerFurniture("deepslate_chair", DEEPSLATE_CHAIR, true);
 
         //Dinner Chairs
         registerFurniture("oak_chair_dinner", OAK_CHAIR_DINNER, true);
@@ -953,7 +1234,17 @@ public class BlockItemRegistry {
         registerFurniture("stripped_dark_oak_chair_dinner", STRIPPED_DARK_OAK_CHAIR_DINNER, true);
         registerFurniture("stripped_warped_chair_dinner", STRIPPED_WARPED_CHAIR_DINNER, true);
         registerFurniture("stripped_crimson_chair_dinner", STRIPPED_CRIMSON_CHAIR_DINNER, true);
-
+        registerFurniture("quartz_chair_dinner", QUARTZ_CHAIR_DINNER, true);
+        registerFurniture("netherite_chair_dinner", NETHERITE_CHAIR_DINNER, true);
+        registerFurniture("light_wood_chair_dinner", LIGHT_WOOD_CHAIR_DINNER, true);
+        registerFurniture("dark_wood_chair_dinner", DARK_WOOD_CHAIR_DINNER, true);
+        registerFurniture("granite_chair_dinner", GRANITE_CHAIR_DINNER, true);
+        registerFurniture("calcite_chair_dinner", CALCITE_CHAIR_DINNER, true);
+        registerFurniture("andesite_chair_dinner", ANDESITE_CHAIR_DINNER, true);
+        registerFurniture("diorite_chair_dinner", DIORITE_CHAIR_DINNER, true);
+        registerFurniture("stone_chair_dinner", STONE_CHAIR_DINNER, true);
+        registerFurniture("blackstone_chair_dinner", BLACKSTONE_CHAIR_DINNER, true);
+        registerFurniture("deepslate_chair_dinner", DEEPSLATE_CHAIR_DINNER, true);
 
         //Froggy Chairs
         registerFurniture("froggy_chair", FROGGY_CHAIR, true);
@@ -983,6 +1274,17 @@ public class BlockItemRegistry {
         registerFurniture("stripped_mangrove_chair_classic", STRIPPED_MANGROVE_CHAIR_CLASSIC, true);
         registerFurniture("stripped_warped_chair_classic", STRIPPED_WARPED_CHAIR_CLASSIC, true);
         registerFurniture("stripped_crimson_chair_classic", STRIPPED_CRIMSON_CHAIR_CLASSIC, true);
+        registerFurniture("quartz_chair_classic", QUARTZ_CHAIR_CLASSIC, true);
+        registerFurniture("netherite_chair_classic", NETHERITE_CHAIR_CLASSIC, true);
+        registerFurniture("light_wood_chair_classic", LIGHT_WOOD_CHAIR_CLASSIC, true);
+        registerFurniture("dark_wood_chair_classic", DARK_WOOD_CHAIR_CLASSIC, true);
+        registerFurniture("granite_chair_classic", GRANITE_CHAIR_CLASSIC, true);
+        registerFurniture("calcite_chair_classic", CALCITE_CHAIR_CLASSIC, true);
+        registerFurniture("andesite_chair_classic", ANDESITE_CHAIR_CLASSIC, true);
+        registerFurniture("diorite_chair_classic", DIORITE_CHAIR_CLASSIC, true);
+        registerFurniture("stone_chair_classic", STONE_CHAIR_CLASSIC, true);
+        registerFurniture("blackstone_chair_classic", BLACKSTONE_CHAIR_CLASSIC, true);
+        registerFurniture("deepslate_chair_classic", DEEPSLATE_CHAIR_CLASSIC, true);
 
         //Modern Chair
         registerFurniture("oak_chair_modern", OAK_CHAIR_MODERN, true);
@@ -1003,6 +1305,17 @@ public class BlockItemRegistry {
         registerFurniture("stripped_mangrove_chair_modern", STRIPPED_MANGROVE_CHAIR_MODERN, true);
         registerFurniture("stripped_warped_chair_modern", STRIPPED_WARPED_CHAIR_MODERN, true);
         registerFurniture("stripped_crimson_chair_modern", STRIPPED_CRIMSON_CHAIR_MODERN, true);
+        registerFurniture("quartz_chair_modern", QUARTZ_CHAIR_MODERN, true);
+        registerFurniture("netherite_chair_modern", NETHERITE_CHAIR_MODERN, true);
+        registerFurniture("light_wood_chair_modern", LIGHT_WOOD_CHAIR_MODERN, true);
+        registerFurniture("dark_wood_chair_modern", DARK_WOOD_CHAIR_MODERN, true);
+        registerFurniture("granite_chair_modern", GRANITE_CHAIR_MODERN, true);
+        registerFurniture("calcite_chair_modern", CALCITE_CHAIR_MODERN, true);
+        registerFurniture("andesite_chair_modern", ANDESITE_CHAIR_MODERN, true);
+        registerFurniture("diorite_chair_modern", DIORITE_CHAIR_MODERN, true);
+        registerFurniture("stone_chair_modern", STONE_CHAIR_MODERN, true);
+        registerFurniture("blackstone_chair_modern", BLACKSTONE_CHAIR_MODERN, true);
+        registerFurniture("deepslate_chair_modern", DEEPSLATE_CHAIR_MODERN, true);
 
         //Armchairs
         registerFurniture("arm_chair_standard", ARM_CHAIR_STANDARD, true);
@@ -1028,6 +1341,17 @@ public class BlockItemRegistry {
         registerFurniture("stripped_mangrove_table_basic", STRIPPED_MANGROVE_BASIC_TABLE, true);
         registerFurniture("stripped_crimson_table_basic", STRIPPED_CRIMSON_BASIC_TABLE, true);
         registerFurniture("stripped_warped_table_basic", STRIPPED_WARPED_BASIC_TABLE, true);
+        registerFurniture("quartz_table_basic", QUARTZ_BASIC_TABLE, true);
+        registerFurniture("netherite_table_basic", NETHERITE_BASIC_TABLE, true);
+        registerFurniture("light_wood_table_basic", LIGHT_WOOD_BASIC_TABLE, true);
+        registerFurniture("dark_wood_table_basic", DARK_WOOD_BASIC_TABLE, true);
+        registerFurniture("granite_table_basic", GRANITE_BASIC_TABLE, true);
+        registerFurniture("calcite_table_basic", CALCITE_BASIC_TABLE, true);
+        registerFurniture("andesite_table_basic", ANDESITE_BASIC_TABLE, true);
+        registerFurniture("diorite_table_basic", DIORITE_BASIC_TABLE, true);
+        registerFurniture("stone_table_basic", STONE_BASIC_TABLE, true);
+        registerFurniture("blackstone_table_basic", BLACKSTONE_BASIC_TABLE, true);
+        registerFurniture("deepslate_table_basic", DEEPSLATE_BASIC_TABLE, true);
 
         //Classic Table
         registerFurniture("oak_table_classic", OAK_CLASSIC_TABLE, true);
@@ -1048,6 +1372,17 @@ public class BlockItemRegistry {
         registerFurniture("stripped_mangrove_table_classic", STRIPPED_MANGROVE_CLASSIC_TABLE, true);
         registerFurniture("stripped_crimson_table_classic", STRIPPED_CRIMSON_CLASSIC_TABLE, true);
         registerFurniture("stripped_warped_table_classic", STRIPPED_WARPED_CLASSIC_TABLE, true);
+        registerFurniture("quartz_table_classic", QUARTZ_CLASSIC_TABLE, true);
+        registerFurniture("netherite_table_classic", NETHERITE_CLASSIC_TABLE, true);
+        registerFurniture("light_wood_table_classic", LIGHT_WOOD_CLASSIC_TABLE, true);
+        registerFurniture("dark_wood_table_classic", DARK_WOOD_CLASSIC_TABLE, true);
+        registerFurniture("granite_table_classic", GRANITE_CLASSIC_TABLE, true);
+        registerFurniture("calcite_table_classic", CALCITE_CLASSIC_TABLE, true);
+        registerFurniture("andesite_table_classic", ANDESITE_CLASSIC_TABLE, true);
+        registerFurniture("diorite_table_classic", DIORITE_CLASSIC_TABLE, true);
+        registerFurniture("stone_table_classic", STONE_CLASSIC_TABLE, true);
+        registerFurniture("blackstone_table_classic", BLACKSTONE_CLASSIC_TABLE, true);
+        registerFurniture("deepslate_table_classic", DEEPSLATE_CLASSIC_TABLE, true);
 
         //Log Table
         registerFurniture("oak_table_log", OAK_LOG_TABLE, true);
@@ -1068,6 +1403,18 @@ public class BlockItemRegistry {
         registerFurniture("stripped_mangrove_table_log", STRIPPED_MANGROVE_LOG_TABLE, true);
         registerFurniture("stripped_crimson_table_stem", STRIPPED_CRIMSON_STEM_TABLE, true);
         registerFurniture("stripped_warped_table_stem", STRIPPED_WARPED_STEM_TABLE, true);
+        registerFurniture("quartz_table_natural", QUARTZ_NATURAL_TABLE, true);
+        registerFurniture("netherite_table_natural", NETHERITE_NATURAL_TABLE, true);
+        registerFurniture("light_wood_table_natural", LIGHT_WOOD_NATURAL_TABLE, true);
+        registerFurniture("dark_wood_table_natural", DARK_WOOD_NATURAL_TABLE, true);
+        registerFurniture("granite_table_natural", GRANITE_NATURAL_TABLE, true);
+        registerFurniture("calcite_table_natural", CALCITE_NATURAL_TABLE, true);
+        registerFurniture("andesite_table_natural", ANDESITE_NATURAL_TABLE, true);
+        registerFurniture("diorite_table_natural", DIORITE_NATURAL_TABLE, true);
+        registerFurniture("stone_table_natural", STONE_NATURAL_TABLE, true);
+        registerFurniture("blackstone_table_natural", BLACKSTONE_NATURAL_TABLE, true);
+        registerFurniture("deepslate_table_natural", DEEPSLATE_NATURAL_TABLE, true);
+
         //Raw Log Table
         registerFurniture("oak_raw_table_log", OAK_RAW_LOG_TABLE, true);
         registerFurniture("birch_raw_table_log", BIRCH_RAW_LOG_TABLE, true);
@@ -1106,6 +1453,17 @@ public class BlockItemRegistry {
         registerFurniture("stripped_mangrove_table_dinner", STRIPPED_MANGROVE_DINNER_TABLE, true);
         registerFurniture("stripped_crimson_table_dinner", STRIPPED_CRIMSON_DINNER_TABLE, true);
         registerFurniture("stripped_warped_table_dinner", STRIPPED_WARPED_DINNER_TABLE, true);
+        registerFurniture("quartz_table_dinner", QUARTZ_DINNER_TABLE, true);
+        registerFurniture("netherite_table_dinner", NETHERITE_DINNER_TABLE, true);
+        registerFurniture("light_wood_table_dinner", LIGHT_WOOD_DINNER_TABLE, true);
+        registerFurniture("dark_wood_table_dinner", DARK_WOOD_DINNER_TABLE, true);
+        registerFurniture("granite_table_dinner", GRANITE_DINNER_TABLE, true);
+        registerFurniture("calcite_table_dinner", CALCITE_DINNER_TABLE, true);
+        registerFurniture("andesite_table_dinner", ANDESITE_DINNER_TABLE, true);
+        registerFurniture("diorite_table_dinner", DIORITE_DINNER_TABLE, true);
+        registerFurniture("stone_table_dinner", STONE_DINNER_TABLE, true);
+        registerFurniture("blackstone_table_dinner", BLACKSTONE_DINNER_TABLE, true);
+        registerFurniture("deepslate_table_dinner", DEEPSLATE_DINNER_TABLE, true);
 
         registerFurniture("oak_table_modern_dinner", OAK_MODERN_DINNER_TABLE, true);
         registerFurniture("birch_table_modern_dinner", BIRCH_MODERN_DINNER_TABLE, true);
@@ -1123,6 +1481,17 @@ public class BlockItemRegistry {
         registerFurniture("stripped_dark_oak_table_modern_dinner", STRIPPED_DARK_OAK_MODERN_DINNER_TABLE, true);
         registerFurniture("stripped_crimson_table_modern_dinner", STRIPPED_CRIMSON_MODERN_DINNER_TABLE, true);
         registerFurniture("stripped_warped_table_modern_dinner", STRIPPED_WARPED_MODERN_DINNER_TABLE, true);
+        registerFurniture("quartz_table_modern_dinner", QUARTZ_MODERN_DINNER_TABLE, true);
+        registerFurniture("netherite_table_modern_dinner", NETHERITE_MODERN_DINNER_TABLE, true);
+        registerFurniture("light_wood_table_modern_dinner", LIGHT_WOOD_MODERN_DINNER_TABLE, true);
+        registerFurniture("dark_wood_table_modern_dinner", DARK_WOOD_MODERN_DINNER_TABLE, true);
+        registerFurniture("granite_table_modern_dinner", GRANITE_MODERN_DINNER_TABLE, true);
+        registerFurniture("calcite_table_modern_dinner", CALCITE_MODERN_DINNER_TABLE, true);
+        registerFurniture("andesite_table_modern_dinner", ANDESITE_MODERN_DINNER_TABLE, true);
+        registerFurniture("diorite_table_modern_dinner", DIORITE_MODERN_DINNER_TABLE, true);
+        registerFurniture("stone_table_modern_dinner", STONE_MODERN_DINNER_TABLE, true);
+        registerFurniture("blackstone_table_modern_dinner", BLACKSTONE_MODERN_DINNER_TABLE, true);
+        registerFurniture("deepslate_table_modern_dinner", DEEPSLATE_MODERN_DINNER_TABLE, true);
 
         registerFurniture("oak_classic_nightstand", OAK_CLASSIC_NIGHTSTAND, true);
         registerFurniture("birch_classic_nightstand", BIRCH_CLASSIC_NIGHTSTAND, true);
@@ -1140,6 +1509,17 @@ public class BlockItemRegistry {
         registerFurniture("stripped_dark_oak_classic_nightstand", STRIPPED_DARK_OAK_CLASSIC_NIGHTSTAND, true);
         registerFurniture("stripped_crimson_classic_nightstand", STRIPPED_CRIMSON_CLASSIC_NIGHTSTAND, true);
         registerFurniture("stripped_warped_classic_nightstand", STRIPPED_WARPED_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("quartz_classic_nightstand", QUARTZ_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("netherite_classic_nightstand", NETHERITE_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("light_wood_classic_nightstand", LIGHT_WOOD_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("dark_wood_classic_nightstand", DARK_WOOD_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("granite_classic_nightstand", GRANITE_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("calcite_classic_nightstand", CALCITE_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("andesite_classic_nightstand", ANDESITE_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("diorite_classic_nightstand", DIORITE_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("stone_classic_nightstand", STONE_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("blackstone_classic_nightstand", BLACKSTONE_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("deepslate_classic_nightstand", DEEPSLATE_CLASSIC_NIGHTSTAND, true);
 
         registerFurniture("oak_red_simple_bed", OAK_RED_SIMPLE_BED, 1);
         registerFurniture("oak_orange_simple_bed", OAK_ORANGE_SIMPLE_BED, 1);
@@ -1427,6 +1807,17 @@ public class BlockItemRegistry {
         registerFurniture("stripped_mangrove_simple_stool", STRIPPED_MANGROVE_SIMPLE_STOOL, true);
         registerFurniture("stripped_crimson_simple_stool", STRIPPED_CRIMSON_SIMPLE_STOOL, true);
         registerFurniture("stripped_warped_simple_stool", STRIPPED_WARPED_SIMPLE_STOOL, true);
+        registerFurniture("quartz_simple_stool", QUARTZ_SIMPLE_STOOL, true);
+        registerFurniture("netherite_simple_stool", NETHERITE_SIMPLE_STOOL, true);
+        registerFurniture("light_wood_simple_stool", LIGHT_WOOD_SIMPLE_STOOL, true);
+        registerFurniture("dark_wood_simple_stool", DARK_WOOD_SIMPLE_STOOL, true);
+        registerFurniture("granite_simple_stool", GRANITE_SIMPLE_STOOL, true);
+        registerFurniture("calcite_simple_stool", CALCITE_SIMPLE_STOOL, true);
+        registerFurniture("andesite_simple_stool", ANDESITE_SIMPLE_STOOL, true);
+        registerFurniture("diorite_simple_stool", DIORITE_SIMPLE_STOOL, true);
+        registerFurniture("stone_simple_stool", STONE_SIMPLE_STOOL, true);
+        registerFurniture("blackstone_simple_stool", BLACKSTONE_SIMPLE_STOOL, true);
+        registerFurniture("deepslate_simple_stool", DEEPSLATE_SIMPLE_STOOL, true);
 
         registerFurniture("oak_classic_stool", OAK_CLASSIC_STOOL, true);
         registerFurniture("birch_classic_stool", BIRCH_CLASSIC_STOOL, true);
@@ -1446,6 +1837,17 @@ public class BlockItemRegistry {
         registerFurniture("stripped_mangrove_classic_stool", STRIPPED_MANGROVE_CLASSIC_STOOL, true);
         registerFurniture("stripped_crimson_classic_stool", STRIPPED_CRIMSON_CLASSIC_STOOL, true);
         registerFurniture("stripped_warped_classic_stool", STRIPPED_WARPED_CLASSIC_STOOL, true);
+        registerFurniture("quartz_classic_stool", QUARTZ_CLASSIC_STOOL, true);
+        registerFurniture("netherite_classic_stool", NETHERITE_CLASSIC_STOOL, true);
+        registerFurniture("light_wood_classic_stool", LIGHT_WOOD_CLASSIC_STOOL, true);
+        registerFurniture("dark_wood_classic_stool", DARK_WOOD_CLASSIC_STOOL, true);
+        registerFurniture("granite_classic_stool", GRANITE_CLASSIC_STOOL, true);
+        registerFurniture("calcite_classic_stool", CALCITE_CLASSIC_STOOL, true);
+        registerFurniture("andesite_classic_stool", ANDESITE_CLASSIC_STOOL, true);
+        registerFurniture("diorite_classic_stool", DIORITE_CLASSIC_STOOL, true);
+        registerFurniture("stone_classic_stool", STONE_CLASSIC_STOOL, true);
+        registerFurniture("blackstone_classic_stool", BLACKSTONE_CLASSIC_STOOL, true);
+        registerFurniture("deepslate_classic_stool", DEEPSLATE_CLASSIC_STOOL, true);
 
         registerFurniture("oak_modern_stool", OAK_MODERN_STOOL, true);
         registerFurniture("birch_modern_stool", BIRCH_MODERN_STOOL, true);
@@ -1643,6 +2045,12 @@ public class BlockItemRegistry {
         registerFurniture("diorite_kitchen_cabinet", DIORITE_KITCHEN_CABINET, true);
         registerFurniture("diorite_kitchen_sink", DIORITE_KITCHEN_SINK, true);
         registerFurniture("diorite_kitchen_counter_oven", DIORITE_KITCHEN_COUNTER_OVEN, true);
+
+        registerFurniture("smooth_stone_kitchen_counter", SMOOTH_STONE_KITCHEN_COUNTER, true);
+        registerFurniture("smooth_stone_kitchen_drawer", SMOOTH_STONE_KITCHEN_DRAWER, true);
+        registerFurniture("smooth_stone_kitchen_cabinet", SMOOTH_STONE_KITCHEN_CABINET, true);
+        registerFurniture("smooth_stone_kitchen_sink", SMOOTH_STONE_KITCHEN_SINK, true);
+        registerFurniture("smooth_stone_kitchen_counter_oven", SMOOTH_STONE_KITCHEN_COUNTER_OVEN, true);
 
         registerFurniture("stone_kitchen_counter", STONE_KITCHEN_COUNTER, true);
         registerFurniture("stone_kitchen_drawer", STONE_KITCHEN_DRAWER, true);

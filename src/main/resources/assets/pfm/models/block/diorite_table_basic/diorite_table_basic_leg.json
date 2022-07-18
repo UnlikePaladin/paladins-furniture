@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/table_basic/table_basic_leg",
+	"textures": {
+        
+		"particle": "block/diorite",
+		"base": "block/polished_diorite",
+		"legs": "block/diorite"
+	}
+    
+}

@@ -3,9 +3,9 @@
     "parent": "pfm:block/kitchen_drawer/kitchen_drawer_edge_right_open",
 	"textures": {
         
-		"particle": "block/white_concrete",
-		"base": "block/white_concrete",
-		"legs": "block/smooth_stone"
+		"particle": "block/stone",
+		"base": "block/stone",
+		"legs": "block/cobblestone"
 	}
     
 }
