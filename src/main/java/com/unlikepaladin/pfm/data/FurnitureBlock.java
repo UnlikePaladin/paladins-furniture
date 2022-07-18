@@ -24,10 +24,10 @@ public class FurnitureBlock extends Material {
         if (secondMaterial.contains("raw")) {
             secondMaterial = secondMaterial.replace("raw_", "");
         }
-        if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.NETHER_WOOD) && !secondMaterial.contains("stem")) {
+        if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.NETHER_WOOD) && (!secondMaterial.contains("stem"))) {
             secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "stem");
         }
-        else if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.WOOD) && !secondMaterial.contains("log")) {
+        else if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.WOOD) && !secondMaterial.contains("log") && (!secondMaterial.contains("light_wood")  || !secondMaterial.contains("dark_wood"))) {
             secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "log");
         }
         else if(secondMaterial.contains("andesite")){
@@ -64,6 +64,9 @@ public class FurnitureBlock extends Material {
         }
         else if(secondMaterial.contains("netherite")){
             secondMaterial = "netherite_block";
+        }
+        else if(secondMaterial.contains("light_wood") || secondMaterial.contains("dark_wood")){
+            secondMaterial = "smooth_quartz_block";
         }
         if ((secondMaterial.contains("white") || secondMaterial.contains("gray")) && furnitureName.contains("modern_stool")) {
             secondMaterial = secondMaterial.replace("white", "");
@@ -127,6 +130,12 @@ public class FurnitureBlock extends Material {
         }
         else if(baseMaterial.contains("gray")){
             baseMaterial = "gray_concrete";
+        }
+        else if(baseMaterial.contains("light_wood")){
+            baseMaterial = "oak_planks";
+        }
+        else if(baseMaterial.contains("dark_wood")){
+            baseMaterial = "dark_oak_planks";
         }
         else {
             if (baseMaterial.contains("log") || baseMaterial.contains("stem")) {

@@ -74,11 +74,10 @@ public class KitchenStovetop extends HorizontalFacingBlockWEntity {
         }
         else if(blockEntity instanceof StovetopBlockEntity && player.isSneaking()){
             stovetopBlockEntity = (StovetopBlockEntity)blockEntity;
-            if(player.getStackInHand(hand).isEmpty())
             for (int i = 0; i < stovetopBlockEntity.getItemsBeingCooked().size(); i++) {
                 ItemStack stack = stovetopBlockEntity.getItemsBeingCooked().get(i);
                 if (stack.isEmpty()) continue;
-                if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()){
+                if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) {
                     ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stovetopBlockEntity.removeStack(i));
                     world.spawnEntity(itemEntity);
                     player.incrementStat(StatisticsRegistry.STOVETOP_USED);

@@ -144,6 +144,9 @@ public interface SinkBehavior extends CauldronBehavior {
         WATER_SINK_BEHAVIOR.put(Items.BUCKET, (state2, world, pos, player, hand, stack) -> SinkBehavior.emptyCauldron(state2, world, pos, player, hand, stack, new ItemStack(Items.WATER_BUCKET), state -> state.get(KitchenSink.LEVEL_4) == 3, SoundEvents.ITEM_BUCKET_FILL));
         WATER_SINK_BEHAVIOR.put(Items.GLASS_BOTTLE, (state, world, pos, player, hand, stack) -> {
             if (!world.isClient) {
+                if (state.get(KitchenSink.LEVEL_4) == 0) {
+                    return ActionResult.PASS;
+                }
                 Item item = stack.getItem();
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, PotionUtil.setPotion(new ItemStack(Items.POTION), Potions.WATER)));
                 player.incrementStat(StatisticsRegistry.USE_SINK);
