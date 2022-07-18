@@ -1,0 +1,15 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    " S "
+  ],
+  "key": {
+    "S": [],
+    "X": []
+  },
+  "result": {
+    "item": "pfm:white_modern_stool",
+    "count": 4
+  }
+}

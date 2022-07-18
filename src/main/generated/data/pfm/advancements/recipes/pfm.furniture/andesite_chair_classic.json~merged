@@ -1,0 +1,37 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+<<<<<<< HEAD
+<<<<<<< HEAD:src/main/generated/data/pfm/advancements/recipes/pfm.furniture/andesite_chair_classic.json
+      "pfm:andesite_chair_classic"
+=======
+      "pfm:andesite_chair"
+>>>>>>> 01d2ec3 (Stone Variants for a lot of Blocks like Tables, Nightstands, Chairs, Stools.):src/main/generated/data/pfm/advancements/recipes/pfm.furniture/andesite_chair.json
+=======
+      "pfm:andesite_chair_classic"
+>>>>>>> 01d2ec3 (Stone Variants for a lot of Blocks like Tables, Nightstands, Chairs, Stools.)
+    ]
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+<<<<<<< HEAD
+<<<<<<< HEAD:src/main/generated/data/pfm/advancements/recipes/pfm.furniture/andesite_chair_classic.json
+        "recipe": "pfm:andesite_chair_classic"
+=======
+        "recipe": "pfm:andesite_chair"
+>>>>>>> 01d2ec3 (Stone Variants for a lot of Blocks like Tables, Nightstands, Chairs, Stools.):src/main/generated/data/pfm/advancements/recipes/pfm.furniture/andesite_chair.json
+=======
+        "recipe": "pfm:andesite_chair_classic"
+>>>>>>> 01d2ec3 (Stone Variants for a lot of Blocks like Tables, Nightstands, Chairs, Stools.)
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe"
+    ]
+  ]
+}
