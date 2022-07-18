@@ -1,0 +1,16 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "S S",
+    "S S"
+  ],
+  "key": {
+    "S": [],
+    "X": []
+  },
+  "result": {
+    "item": "pfm:quartz_table_classic",
+    "count": 4
+  }
+}

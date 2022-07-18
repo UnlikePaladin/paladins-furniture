@@ -1,0 +1,15 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "S S"
+  ],
+  "key": {
+    "S": [],
+    "X": []
+  },
+  "result": {
+    "item": "pfm:quartz_simple_stool",
+    "count": 4
+  }
+}
