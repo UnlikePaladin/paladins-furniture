@@ -30,13 +30,13 @@ import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 public class BlockItemRegistry {
     private static final List<Block> BLOCKS = new ArrayList<>();
 
-    public static final Block OAK_CHAIR = new BasicChair(FabricBlockSettings.of(Material.WOOD).strength(2.0f).resistance(2.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.WOOD).mapColor(MapColor.OAK_TAN));
+    public static final Block OAK_CHAIR = new BasicChair(FabricBlockSettings.of(Material.WOOD).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOD).mapColor(MapColor.OAK_TAN));
     public static final Block BIRCH_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR).mapColor(MapColor.PALE_YELLOW));
     public static final Block SPRUCE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR).mapColor(MapColor.SPRUCE_BROWN));
     public static final Block ACACIA_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR).mapColor(MapColor.ORANGE));
     public static final Block JUNGLE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR).mapColor(MapColor.DIRT_BROWN));
     public static final Block DARK_OAK_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR).mapColor(MapColor.BROWN));
-    public static final Block CRIMSON_CHAIR = new BasicChair(FabricBlockSettings.of(Material.NETHER_WOOD).strength(2.0f).resistance(2.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.WOOD).mapColor(MapColor.DULL_PINK));
+    public static final Block CRIMSON_CHAIR = new BasicChair(FabricBlockSettings.of(Material.NETHER_WOOD).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOD).mapColor(MapColor.DULL_PINK));
     public static final Block MANGROVE_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR).mapColor(MapColor.DARK_RED));
     public static final Block WARPED_CHAIR = new BasicChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR).mapColor(MapColor.DARK_AQUA));
     public static final Block STRIPPED_OAK_CHAIR = new BasicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -272,10 +272,28 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_MANGROVE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(MANGROVE_CHAIR));
     public static final Block WHITE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
     public static final Block GRAY_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE));
-    public static final Block WHITE_DARK_OAK_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(DARK_OAK_MODERN_STOOL));
+    public static final Block DARK_WOOD_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(DARK_OAK_MODERN_STOOL));
     public static final Block GRAY_DARK_OAK_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(DARK_OAK_MODERN_STOOL));
     public static final Block LIGHT_GRAY_DARK_OAK_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(DARK_OAK_MODERN_STOOL));
-    public static final Block WHITE_OAK_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_MODERN_STOOL));
+    public static final Block LIGHT_WOOD_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(OAK_MODERN_STOOL));
+
+    public static final Block QUARTZ_MODERN_STOOL = new ModernStool(FabricBlockSettings.of(Material.STONE).strength(0.8f).resistance(2.0f).nonOpaque().requiresTool().mapColor(MapColor.OFF_WHITE));
+
+    public static final Block NETHERITE_MODERN_STOOL = new ModernStool(FabricBlockSettings.of(Material.STONE).strength(50.0f).resistance(1200.0f).nonOpaque().requiresTool().sounds(BlockSoundGroup.NETHERITE).mapColor(MapColor.BLACK));
+
+    public static final Block GRANITE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+
+    public static final Block CALCITE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(Blocks.CALCITE));
+
+    public static final Block ANDESITE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+
+    public static final Block DIORITE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+
+    public static final Block STONE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(Blocks.STONE));
+
+    public static final Block DEEPSLATE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
+    public static final Block BLACKSTONE_MODERN_STOOL = new ModernStool(FabricBlockSettings.copyOf(Blocks.BLACKSTONE));
 
     public static final Block OAK_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block BIRCH_CLASSIC_STOOL = new ClassicStool(FabricBlockSettings.copyOf(BIRCH_CHAIR));
@@ -1449,10 +1467,19 @@ public class BlockItemRegistry {
         registerFurniture("stripped_warped_modern_stool", STRIPPED_WARPED_MODERN_STOOL, true);
         registerFurniture("white_modern_stool", WHITE_MODERN_STOOL, true);
         registerFurniture("gray_modern_stool", GRAY_MODERN_STOOL, true);
-        registerFurniture("white_dark_oak_modern_stool", WHITE_DARK_OAK_MODERN_STOOL, true);
+        registerFurniture("dark_wood_modern_stool", DARK_WOOD_MODERN_STOOL, true);
         registerFurniture("gray_dark_oak_modern_stool", GRAY_DARK_OAK_MODERN_STOOL, true);
         registerFurniture("light_gray_dark_oak_modern_stool", LIGHT_GRAY_DARK_OAK_MODERN_STOOL, true);
-        registerFurniture("white_oak_modern_stool", WHITE_OAK_MODERN_STOOL, true);
+        registerFurniture("light_wood_modern_stool", LIGHT_WOOD_MODERN_STOOL, true);
+        registerFurniture("quartz_modern_stool", QUARTZ_MODERN_STOOL, true);
+        registerFurniture("netherite_modern_stool", NETHERITE_MODERN_STOOL, true);
+        registerFurniture("granite_modern_stool", GRANITE_MODERN_STOOL, true);
+        registerFurniture("calcite_modern_stool", CALCITE_MODERN_STOOL, true);
+        registerFurniture("andesite_modern_stool", ANDESITE_MODERN_STOOL, true);
+        registerFurniture("diorite_modern_stool", DIORITE_MODERN_STOOL, true);
+        registerFurniture("stone_modern_stool", STONE_MODERN_STOOL, true);
+        registerFurniture("blackstone_modern_stool", BLACKSTONE_MODERN_STOOL, true);
+        registerFurniture("deepslate_modern_stool", DEEPSLATE_MODERN_STOOL, true);
 
         //Counter time
         registerFurniture("oak_kitchen_counter", OAK_KITCHEN_COUNTER, true);
