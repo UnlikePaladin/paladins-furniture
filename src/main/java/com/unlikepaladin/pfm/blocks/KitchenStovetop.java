@@ -72,7 +72,7 @@ public class KitchenStovetop extends HorizontalFacingBlockWEntity {
             }
             return ActionResult.CONSUME;
         }
-        else if(blockEntity instanceof StovetopBlockEntity && player.isSneaking()){
+        if(blockEntity instanceof StovetopBlockEntity){
             stovetopBlockEntity = (StovetopBlockEntity)blockEntity;
             for (int i = 0; i < stovetopBlockEntity.getItemsBeingCooked().size(); i++) {
                 ItemStack stack = stovetopBlockEntity.getItemsBeingCooked().get(i);

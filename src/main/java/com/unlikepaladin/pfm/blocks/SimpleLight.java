@@ -70,6 +70,21 @@ public class SimpleLight extends PowerableBlock{
         return state;
     }
 
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        if (world.isClient) {
+            return;
+        }
+        boolean bl = (state.get(LIT));
+        if (bl != world.isReceivingRedstonePower(pos)) {
+            if (bl) {
+                world.getBlockTickScheduler().schedule(pos, this, 4);
+            } else {
+                world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_LISTENERS);
+            }
+        }
+        super.neighborUpdate(state, world, pos, block, fromPos, notify);
+    }
 
     private static final VoxelShape SIMPLE_LIGHT = VoxelShapes.union(createCuboidShape(4.5, 13.5, 4.5,11.5, 14.5, 11.5),createCuboidShape(3, 14.5, 3,13, 16, 13));
     @Override
