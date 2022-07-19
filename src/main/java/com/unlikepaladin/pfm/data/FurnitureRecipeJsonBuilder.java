@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.registry.RecipeRegistry;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.CriterionMerger;
 import net.minecraft.advancement.criterion.CriterionConditions;
@@ -20,6 +20,8 @@ import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.util.Iterator;
 import java.util.List;
@@ -33,6 +35,9 @@ public class FurnitureRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     private final List<String> pattern = Lists.newArrayList();
     private final Map<Character, Ingredient> inputs = Maps.newLinkedHashMap();
     private final Advancement.Builder advancementBuilder = Advancement.Builder.create();
+
+    public static final Logger PFM_RECIPE_LOGGER = LogManager.getLogger();
+
     @Nullable
     private String group;
 
@@ -130,6 +135,9 @@ public class FurnitureRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
                 throw new IllegalStateException("Ingredients are defined but not used in pattern for recipe " + recipeId);
             }
         }
+        if (this.inputs.containsValue(Ingredient.EMPTY) || this.inputs.containsValue(Ingredient.ofItems(Items.AIR))) {
+            PFM_RECIPE_LOGGER.warn("Recipe contains empty ingredient: " + recipeId);
+        }
     }
 
     static class FurnitureRecipeJsonProvider implements RecipeJsonProvider {
@@ -186,7 +194,7 @@ public class FurnitureRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
         }
 
         public RecipeSerializer<?> getSerializer() {
-            return PaladinFurnitureMod.FURNITURE_SERIALIZER;
+            return RecipeRegistry.FURNITURE_SERIALIZER;
         }
 
         public Identifier getRecipeId() {

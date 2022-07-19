@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.mixin;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.registry.RecipeRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.recipebook.ClientRecipeBook;
@@ -18,7 +18,7 @@ public abstract class MixinClientRecipeBook {
     @Inject(method = "getGroupForRecipe", at = @At(value = "HEAD"), cancellable = true)
     private static void getGroupForRecipe(Recipe<?> recipe, CallbackInfoReturnable<RecipeBookGroup> callbackInfoReturnable) {
         RecipeType<?> type = recipe.getType();
-        if (type == PaladinFurnitureMod.FREEZING_RECIPE || type == PaladinFurnitureMod.FURNITURE_RECIPE) {
+        if (type == RecipeRegistry.FREEZING_RECIPE || type == RecipeRegistry.FURNITURE_RECIPE) {
             callbackInfoReturnable.setReturnValue(RecipeBookGroup.UNKNOWN);
         }
     }

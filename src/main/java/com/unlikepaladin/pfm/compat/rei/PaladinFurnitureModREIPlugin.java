@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.compat.rei;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
+import com.unlikepaladin.pfm.registry.RecipeRegistry;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
@@ -19,7 +19,7 @@ public class PaladinFurnitureModREIPlugin implements REIClientPlugin {
 
     @Override
     public void registerDisplays(DisplayRegistry registry) {
-        registry.registerRecipeFiller(FurnitureRecipe.class, PaladinFurnitureMod.FURNITURE_RECIPE, FurnitureDisplay::of);
+        registry.registerRecipeFiller(FurnitureRecipe.class, RecipeRegistry.FURNITURE_RECIPE, FurnitureDisplay::of);
         registry.registerFiller(FreezingRecipe.class, FreezingDisplay::new);
     }
 

@@ -69,17 +69,20 @@ public class FurnitureBlock extends Material {
         else if(secondMaterial.contains("dark_wood")){
             secondMaterial = "dark_oak_planks";
         }
-        else if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.NETHER_WOOD) && (!secondMaterial.contains("stem"))) {
-            secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "stem");
+        else if (secondMaterial.contains("quartz")) {
+            secondMaterial = "quartz_block";
         }
-        else if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.WOOD) && !secondMaterial.contains("log") && (!secondMaterial.contains("light_wood")  || !secondMaterial.contains("dark_wood"))) {
-            secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "log");
-        }
-        if ((secondMaterial.contains("white") || secondMaterial.contains("gray")) && furnitureName.contains("modern_stool")) {
+        else if ((secondMaterial.contains("white") || secondMaterial.contains("gray")) && furnitureName.contains("modern_stool")) {
             secondMaterial = secondMaterial.replace("white", "");
             secondMaterial = secondMaterial.replace("light_gray", "");
             secondMaterial = secondMaterial.replace("gray", "");
             secondMaterial = "stripped".concat(secondMaterial);
+        }
+        if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.NETHER_WOOD) && (!secondMaterial.contains("stem"))) {
+            secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "stem");
+        }
+        else if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.WOOD) && !secondMaterial.contains("log")) {
+            secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "log");
         }
         else {
             secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "");
@@ -88,7 +91,7 @@ public class FurnitureBlock extends Material {
             secondMaterial = secondMaterial.replace("stemlog", "stem");
         }
         this.secondMaterial = Registry.BLOCK.get(new Identifier("minecraft:" + secondMaterial));
-            return this.secondMaterial;
+        return this.secondMaterial;
     }
 
     public Block getBaseMaterial() {
@@ -98,6 +101,9 @@ public class FurnitureBlock extends Material {
         String baseMaterial = this.block.getLootTableId().getPath();
         if(baseMaterial.contains("andesite")){
             baseMaterial = "stripped_oak_log";
+        }
+        else if (baseMaterial.contains("quartz")) {
+            baseMaterial = "quartz_block";
         }
         else if(baseMaterial.contains("blackstone")){
             baseMaterial = "stripped_crimson_stem";
@@ -291,6 +297,12 @@ public class FurnitureBlock extends Material {
         else if(secondMaterial.contains("netherite")){
             secondMaterial = "netherite_block";
         }
+        else if (secondMaterial.contains("quartz")) {
+            secondMaterial = "quartz_block";
+        }
+        else if (secondMaterial.contains("gray") || secondMaterial.contains("white")) {
+            secondMaterial = "dark_oak_planks";
+        }
         else {
             secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "");
         }
@@ -299,43 +311,55 @@ public class FurnitureBlock extends Material {
     }
 
     public Block  getBaseStoneMaterial() {
-        String secondMaterial = this.block.getLootTableId().getPath();
-        if(secondMaterial.contains("andesite")){
-            secondMaterial = "polished_andesite";
+        String baseMaterial = this.block.getLootTableId().getPath();
+        if(baseMaterial.contains("andesite")){
+            baseMaterial = "polished_andesite";
         }
-        else if(secondMaterial.contains("blackstone")){
-            secondMaterial = "polished_blackstone";
+        else if(baseMaterial.contains("blackstone")){
+            baseMaterial = "polished_blackstone";
         }
-        else if(secondMaterial.contains("calcite")){
-            secondMaterial = "calcite";
+        else if(baseMaterial.contains("calcite")){
+            baseMaterial = "calcite";
         }
-        else if(secondMaterial.contains("dark_concrete")){
-            secondMaterial = "white_concrete";
+        else if(baseMaterial.contains("dark_concrete")){
+            baseMaterial = "white_concrete";
         }
-        else if(secondMaterial.contains("concrete")){
-            secondMaterial = "raw_concrete";
-            this.secondMaterial = Registry.BLOCK.get(new Identifier("pfm:" + secondMaterial));
-            return this.secondMaterial;
+        else if(baseMaterial.contains("concrete")){
+            baseMaterial = "raw_concrete";
+            this.baseMaterial = Registry.BLOCK.get(new Identifier("pfm:" + baseMaterial));
+            return this.baseMaterial;
         }
-        else if(secondMaterial.contains("deepslate")){
-            secondMaterial = "polished_deepslate";
+        else if(baseMaterial.contains("deepslate")){
+            baseMaterial = "polished_deepslate";
         }
-        else if(secondMaterial.contains("diorite")){
-            secondMaterial = "polished_diorite";
+        else if(baseMaterial.contains("diorite")){
+            baseMaterial = "polished_diorite";
         }
-        else if(secondMaterial.contains("granite")){
-            secondMaterial = "polished_granite";
+        else if(baseMaterial.contains("granite")){
+            baseMaterial = "polished_granite";
         }
-        else if(secondMaterial.contains("stone")){
-            secondMaterial = "stone";
+        else if(baseMaterial.contains("stone")){
+            baseMaterial = "stone";
         }
-        else if(secondMaterial.contains("netherite")){
-            secondMaterial = "netherite_block";
+        else if(baseMaterial.contains("netherite")){
+            baseMaterial = "netherite_block";
+        }
+        else if (baseMaterial.contains("quartz")) {
+            baseMaterial = "quartz_block";
+        }
+        else if(baseMaterial.contains("white")){
+            baseMaterial = "white_concrete";
+        }
+        else if(baseMaterial.contains("light_gray")){
+            baseMaterial = "light_gray_concrete";
+        }
+        else if(baseMaterial.contains("gray")){
+            baseMaterial = "gray_concrete";
         }
         else {
-            secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "");
+            baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "");
         }
-        this.secondMaterial = Registry.BLOCK.get(new Identifier("minecraft:" + secondMaterial));
-        return this.secondMaterial;
+        this.baseMaterial = Registry.BLOCK.get(new Identifier("minecraft:" + baseMaterial));
+        return this.baseMaterial;
     }
 }
