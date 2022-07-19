@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.minecraft.block.*;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -21,7 +22,6 @@ import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class BasicChair extends HorizontalFacingBlock {
@@ -83,34 +83,31 @@ public class BasicChair extends HorizontalFacingBlock {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
-            if (player.hasVehicle() || player.isSpectator() || player.isSneaking())
-                return ActionResult.FAIL;
-
+            if (player.isSpectator() || player.isSneaking()) {
+                return ActionResult.PASS;
+            }
             double px = pos.getX() + 0.5;
             double py = pos.getY() + this.height;
             double pz = pos.getZ() + 0.5;
 
-            List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), new Predicate<ChairEntity>() {
-                @Override
-                public boolean test(ChairEntity entity) {
-                    return entity.hasPlayerRider();
-                }
-            });
+            List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPlayerRider);
             if (!active.isEmpty())
-                return ActionResult.FAIL;
+                return ActionResult.PASS;
 
             float yaw = state.get(FACING).getOpposite().asRotation();
             ChairEntity entity = EntityRegistry.CHAIR.create(world);
             entity.refreshPositionAndAngles(px, py, pz, yaw, 0);
             entity.setNoGravity(true);
             entity.setSilent(true);
-            entity.setInvisible(true);
+            entity.setInvisible(false);
             entity.setInvulnerable(true);
+            entity.setAiDisabled(true);
+            entity.setNoDrag(true);
             entity.setHeadYaw(yaw);
             entity.setYaw(yaw);
             entity.setBodyYaw(yaw);
             if (world.spawnEntity(entity)) {
-                player.startRiding(entity, false);
+                player.startRiding(entity, true);
                 player.setYaw(yaw);
                 player.setHeadYaw(yaw);
                 entity.setYaw(yaw);
@@ -118,11 +115,9 @@ public class BasicChair extends HorizontalFacingBlock {
                 entity.setHeadYaw(yaw);
                 return ActionResult.SUCCESS;
             }
-            return ActionResult.FAIL;
+            return ActionResult.CONSUME;
         }
-        else {
-        return ActionResult.FAIL;
-        }
+        return ActionResult.PASS;
     }
 
 }

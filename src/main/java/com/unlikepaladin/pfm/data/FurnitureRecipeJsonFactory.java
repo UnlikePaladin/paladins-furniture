@@ -5,7 +5,7 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.registry.RecipeRegistry;
 import net.minecraft.advancement.Advancement;
 import net.minecraft.advancement.AdvancementRewards;
 import net.minecraft.advancement.CriterionMerger;
@@ -15,11 +15,14 @@ import net.minecraft.data.server.recipe.CraftingRecipeJsonFactory;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -33,6 +36,9 @@ public class FurnitureRecipeJsonFactory implements CraftingRecipeJsonFactory {
     private final List<String> pattern = Lists.newArrayList();
     private final Map<Character, Ingredient> inputs = Maps.newLinkedHashMap();
     private final Advancement.Task builder = Advancement.Task.create();
+
+    public static final Logger PFM_RECIPE_LOGGER = LogManager.getLogger();
+
     @Nullable
     private String group;
 
@@ -118,6 +124,9 @@ public class FurnitureRecipeJsonFactory implements CraftingRecipeJsonFactory {
         if (!set.isEmpty()) {
             throw new IllegalStateException("Ingredients are defined but not used in pattern for recipe " + recipeId);
         }
+        if (this.inputs.containsValue(Ingredient.EMPTY) || this.inputs.containsValue(Ingredient.ofItems(Items.AIR))) {
+            PFM_RECIPE_LOGGER.warn("Recipe contains empty ingredient: " + recipeId);
+        }
     }
 
     static class FurnitureRecipeJsonProvider implements RecipeJsonProvider {
@@ -166,7 +175,7 @@ public class FurnitureRecipeJsonFactory implements CraftingRecipeJsonFactory {
 
         @Override
         public RecipeSerializer<?> getSerializer() {
-            return PaladinFurnitureMod.FURNITURE_SERIALIZER;
+            return RecipeRegistry.FURNITURE_SERIALIZER;
         }
 
         @Override

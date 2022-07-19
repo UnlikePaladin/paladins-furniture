@@ -6,8 +6,6 @@ import net.minecraft.entity.Dismounting;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.ActionResult;
@@ -19,9 +17,6 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class ChairEntity extends MobEntity {
-
-
-
     public ChairEntity(EntityType<? extends ChairEntity> type, World world) {
         super(type, world);
         this.noClip = true;
@@ -29,14 +24,20 @@ public class ChairEntity extends MobEntity {
 
     @Override
     public void tick() {
-        if (!this.hasPassengers())
-            this.discard();
-        else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicChair)
-            super.tick();
-        else {
-            this.removeAllPassengers();
-           this.discard();
-        }
+            if (!this.hasPassengers()) {
+                if (!this.world.isClient){
+                    this.discard();
+                }
+            }
+            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicChair){
+                super.tick();
+            }
+            else {
+                if (!this.world.isClient){
+                    this.removeAllPassengers();
+                    this.discard();
+                }
+            }
     }
 
     @Override
@@ -52,15 +53,13 @@ public class ChairEntity extends MobEntity {
 
 
     public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
-
         return super.interactAt(player, hitPos, hand);
     }
 
-    public static DefaultAttributeContainer getAttributeContainer() {
-        return ChairEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 0).build();
-
+    @Override
+    public boolean isPushedByFluids() {
+        return false;
     }
-
 
     public Vec3d updatePassengerForDismount(LivingEntity passenger) {
         Direction direction = this.getMovementDirection();
@@ -96,6 +95,8 @@ public class ChairEntity extends MobEntity {
         }
     }
 
-
-
+    @Override
+    public boolean canBeRiddenInWater() {
+        return true;
+    }
 }

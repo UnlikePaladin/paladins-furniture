@@ -1,9 +1,10 @@
 package com.unlikepaladin.pfm.menus;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.menus.slots.FurnitureOutputSlot;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
+import com.unlikepaladin.pfm.registry.RecipeRegistry;
+import com.unlikepaladin.pfm.registry.ScreenHandlersRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingInventory;
@@ -34,7 +35,7 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
     }
 
     public WorkbenchScreenHandler(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
-        super(PaladinFurnitureMod.WORKBENCH_SCREEN_HANDLER, syncId);
+        super(ScreenHandlersRegistry.WORKBENCH_SCREEN_HANDLER, syncId);
         int j;
         int i;
         this.context = context;
@@ -62,7 +63,7 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
         }
         ServerPlayerEntity serverPlayerEntity = (ServerPlayerEntity)player;
         ItemStack itemStack = ItemStack.EMPTY;
-        Optional<FurnitureRecipe> optional = world.getServer().getRecipeManager().getFirstMatch(PaladinFurnitureMod.FURNITURE_RECIPE, craftingInventory, world);
+        Optional<FurnitureRecipe> optional = world.getServer().getRecipeManager().getFirstMatch(RecipeRegistry.FURNITURE_RECIPE, craftingInventory, world);
         if (optional.isPresent() && resultInventory.shouldCraftRecipe(world, serverPlayerEntity, furnitureRecipe = optional.get())) {
             itemStack = furnitureRecipe.craft(craftingInventory);
         }

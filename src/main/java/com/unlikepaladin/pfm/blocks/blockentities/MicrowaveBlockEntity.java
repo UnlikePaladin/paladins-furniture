@@ -1,9 +1,9 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.Microwave;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
+import com.unlikepaladin.pfm.registry.NetworkRegistry;
 import com.unlikepaladin.pfm.registry.SoundRegistry;
 import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -412,7 +412,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         clientData.writeBlockPos(pos);
         // Then we'll send the packet to all the players
         watchingPlayers.forEach(player -> {
-                ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, PaladinFurnitureMod.MICROWAVE_UPDATE_PACKET_ID,clientData);
+                ServerSidePacketRegistry.INSTANCE.sendToPlayer(player, NetworkRegistry.MICROWAVE_UPDATE_PACKET_ID,clientData);
             }
         );
     }

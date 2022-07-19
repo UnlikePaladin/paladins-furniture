@@ -5,8 +5,12 @@
     " S "
   ],
   "key": {
-    "S": [],
-    "X": []
+    "S": {
+      "item": "minecraft:quartz_block"
+    },
+    "X": {
+      "item": "minecraft:quartz_block"
+    }
   },
   "result": {
     "item": "pfm:quartz_modern_stool",

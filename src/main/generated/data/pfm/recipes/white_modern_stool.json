@@ -5,8 +5,12 @@
     " S "
   ],
   "key": {
-    "S": [],
-    "X": []
+    "S": {
+      "item": "minecraft:dark_oak_planks"
+    },
+    "X": {
+      "item": "minecraft:white_concrete"
+    }
   },
   "result": {
     "item": "pfm:white_modern_stool",

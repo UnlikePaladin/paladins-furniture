@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.menus;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.menus.slots.SizeableSlot;
+import com.unlikepaladin.pfm.registry.NetworkRegistry;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.entity.player.PlayerEntity;
@@ -13,7 +13,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.screen.*;
+import net.minecraft.screen.AbstractRecipeScreenHandler;
+import net.minecraft.screen.ArrayPropertyDelegate;
+import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -77,7 +80,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
         passedData.writeBlockPos(pos);
         passedData.writeBoolean(isActive);
         // Send packet to server to change the block for us
-        ClientSidePacketRegistry.INSTANCE.sendToServer(PaladinFurnitureMod.MICROWAVE_PACKET_ID, passedData);
+        ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.MICROWAVE_PACKET_ID, passedData);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.menus.slots;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.registry.RecipeRegistry;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.Inventory;
@@ -60,7 +60,7 @@ public class FurnitureOutputSlot extends Slot {
     @Override
     public void onTakeItem(PlayerEntity player, ItemStack stack) {
         this.onCrafted(stack);
-        DefaultedList<ItemStack> defaultedList = player.world.getRecipeManager().getRemainingStacks(PaladinFurnitureMod.FURNITURE_RECIPE, this.input, player.world);
+        DefaultedList<ItemStack> defaultedList = player.world.getRecipeManager().getRemainingStacks(RecipeRegistry.FURNITURE_RECIPE, this.input, player.world);
         for (int i = 0; i < defaultedList.size(); ++i) {
             ItemStack itemStack = this.input.getStack(i);
             ItemStack itemStack2 = defaultedList.get(i);
