@@ -1,10 +1,11 @@
 package com.unlikepaladin.pfm.compat.emi;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
+import com.unlikepaladin.pfm.registry.RecipeRegistry;
+import com.unlikepaladin.pfm.registry.ScreenHandlersRegistry;
 import dev.emi.emi.EmiRenderHelper;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
@@ -31,13 +32,13 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
         registry.addWorkstation(FURNITURE, WORKBENCH_ICON);
         registry.addCategory(FREEZER);
         registry.addWorkstation(FREEZER, FREEZER_ICON);
-        registry.addRecipeHandler(PaladinFurnitureMod.WORKBENCH_SCREEN_HANDLER, new FurnitureRecipeHandler());
-        registry.addRecipeHandler(PaladinFurnitureMod.FREEZER_SCREEN_HANDLER, new FreezerRecipeHandler(FREEZER));
+        registry.addRecipeHandler(ScreenHandlersRegistry.WORKBENCH_SCREEN_HANDLER, new FurnitureRecipeHandler());
+        registry.addRecipeHandler(ScreenHandlersRegistry.FREEZER_SCREEN_HANDLER, new FreezerRecipeHandler(FREEZER));
 
-        for (FurnitureRecipe recipe : registry.getRecipeManager().listAllOfType(PaladinFurnitureMod.FURNITURE_RECIPE)) {
+        for (FurnitureRecipe recipe : registry.getRecipeManager().listAllOfType(RecipeRegistry.FURNITURE_RECIPE)) {
             registry.addRecipe(new EmiFurnitureRecipe(recipe));
         }
-        for (FreezingRecipe recipe : registry.getRecipeManager().listAllOfType(PaladinFurnitureMod.FREEZING_RECIPE)) {
+        for (FreezingRecipe recipe : registry.getRecipeManager().listAllOfType(RecipeRegistry.FREEZING_RECIPE)) {
             registry.addRecipe(new EmiFreezingRecipe(recipe));
         }
     }

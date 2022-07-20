@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.compat.emi;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
+import com.unlikepaladin.pfm.registry.ScreenHandlersRegistry;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -21,7 +21,7 @@ public class EmiFurnitureRecipe extends EmiCraftingRecipe {
         super(padIngredients(recipe), EmiStack.of(recipe.getOutput()),
                 recipe.getId(), false);
         for (int i = 0; i < input.size(); i++) {
-            CraftingInventory inv = new CraftingInventory(new ScreenHandler(PaladinFurnitureMod.WORKBENCH_SCREEN_HANDLER, -1) {
+            CraftingInventory inv = new CraftingInventory(new ScreenHandler(ScreenHandlersRegistry.WORKBENCH_SCREEN_HANDLER, -1) {
 
                 @Override
                 public boolean canUse(PlayerEntity player) {
