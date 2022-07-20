@@ -36,7 +36,7 @@ public class NetworkRegistry {
                     boolean active = attachedData.readBoolean();
                     packetContext.getTaskQueue().execute(() -> {
                         // Use the pos in the main thread
-                        if (Objects.nonNull(MinecraftClient.getInstance().currentScreen))  {
+                        if (Objects.nonNull(MinecraftClient.getInstance().currentScreen) && MinecraftClient.getInstance().currentScreen instanceof MicrowaveScreen)  {
                             MicrowaveScreen currentScreen = (MicrowaveScreen) MinecraftClient.getInstance().currentScreen;
                             currentScreen.getScreenHandler().setActive(active);}
                     });
