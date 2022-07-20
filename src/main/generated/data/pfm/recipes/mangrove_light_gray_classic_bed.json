@@ -1,0 +1,21 @@
+{
+  "type": "pfm:furniture",
+  "key": {
+    "X": {
+      "item": "minecraft:light_gray_concrete"
+    },
+    "Y": {
+      "item": "minecraft:mangrove_fence"
+    },
+    "Z": {
+      "item": "minecraft:light_gray_bed"
+    }
+  },
+  "pattern": [
+    "YZY",
+    "XXX"
+  ],
+  "result": {
+    "item": "pfm:mangrove_light_gray_classic_bed"
+  }
+}

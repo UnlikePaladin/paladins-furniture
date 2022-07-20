@@ -3,8 +3,8 @@ package com.unlikepaladin.pfm.registry;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.client.screens.MicrowaveScreen;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
-import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -16,12 +16,12 @@ public class NetworkRegistry {
     public static final Identifier MICROWAVE_PACKET_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_activate");
 
     public static void registerPackets() {
-        ServerSidePacketRegistry.INSTANCE.register(MICROWAVE_PACKET_ID, (packetContext, attachedData) -> {
+        ServerPlayNetworking.registerGlobalReceiver(MICROWAVE_PACKET_ID, (server, player, handler, attachedData, responseSender) -> {
             BlockPos pos = attachedData.readBlockPos();
             boolean active = attachedData.readBoolean();
-            packetContext.getTaskQueue().execute(() -> {
-                if(Objects.nonNull(packetContext.getPlayer().world.getBlockEntity(pos))){
-                    MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) packetContext.getPlayer().world.getBlockEntity(pos);
+            server.submitAndJoin(() -> {
+                if(Objects.nonNull(player.world.getBlockEntity(pos))){
+                    MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) player.world.getBlockEntity(pos);
                     microwaveBlockEntity.setActive(active);
                 }
 
@@ -30,16 +30,15 @@ public class NetworkRegistry {
     }
 
     public static void registerClientPackets() {
-        ClientSidePacketRegistry.INSTANCE.register(NetworkRegistry.MICROWAVE_UPDATE_PACKET_ID,
-                (packetContext, attachedData) -> {
-                    // Get the BlockPos we put earlier, in the networking thread
-                    boolean active = attachedData.readBoolean();
-                    packetContext.getTaskQueue().execute(() -> {
-                        // Use the pos in the main thread
-                        if (Objects.nonNull(MinecraftClient.getInstance().currentScreen) && MinecraftClient.getInstance().currentScreen instanceof MicrowaveScreen)  {
-                            MicrowaveScreen currentScreen = (MicrowaveScreen) MinecraftClient.getInstance().currentScreen;
-                            currentScreen.getScreenHandler().setActive(active);}
-                    });
-                });
+        ClientPlayNetworking.registerGlobalReceiver(MICROWAVE_UPDATE_PACKET_ID, (client, handler, buf, responseSender) -> {
+            boolean active = buf.readBoolean();
+            client.execute(() -> {
+                // Everything in this lambda is run on the render thread
+                if (Objects.nonNull(MinecraftClient.getInstance().currentScreen)) {
+                    MicrowaveScreen currentScreen = (MicrowaveScreen) MinecraftClient.getInstance().currentScreen;
+                    currentScreen.getScreenHandler().setActive(active);
+                }
+            });
+        });
     }
 }

@@ -1,20 +1,20 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "YZY",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:white_concrete"
     },
-    "Z": {
-      "item": "minecraft:white_bed"
-    },
     "Y": {
       "item": "minecraft:birch_fence"
+    },
+    "Z": {
+      "item": "minecraft:white_bed"
     }
   },
+  "pattern": [
+    "YZY",
+    "XXX"
+  ],
   "result": {
     "item": "pfm:birch_white_classic_bed"
   }

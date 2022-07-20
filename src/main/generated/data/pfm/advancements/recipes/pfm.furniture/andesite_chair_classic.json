@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "pfm:white_oak_modern_stool"
+        "recipe": "pfm:andesite_chair_classic"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "pfm:white_oak_modern_stool"
+      "pfm:andesite_chair_classic"
     ]
   }
 }

@@ -256,6 +256,22 @@
     "pfm:crimson_white_classic_bed",
     "pfm:crimson_brown_classic_bed",
     "pfm:crimson_gray_classic_bed",
-    "pfm:crimson_black_classic_bed"
+    "pfm:crimson_black_classic_bed",
+    "pfm:mangrove_red_classic_bed",
+    "pfm:mangrove_orange_classic_bed",
+    "pfm:mangrove_yellow_classic_bed",
+    "pfm:mangrove_green_classic_bed",
+    "pfm:mangrove_lime_classic_bed",
+    "pfm:mangrove_cyan_classic_bed",
+    "pfm:mangrove_blue_classic_bed",
+    "pfm:mangrove_light_blue_classic_bed",
+    "pfm:mangrove_light_gray_classic_bed",
+    "pfm:mangrove_magenta_classic_bed",
+    "pfm:mangrove_pink_classic_bed",
+    "pfm:mangrove_purple_classic_bed",
+    "pfm:mangrove_white_classic_bed",
+    "pfm:mangrove_brown_classic_bed",
+    "pfm:mangrove_gray_classic_bed",
+    "pfm:mangrove_black_classic_bed"
   ]
 }

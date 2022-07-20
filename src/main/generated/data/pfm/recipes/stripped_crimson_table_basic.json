@@ -1,12 +1,8 @@
 {
   "type": "pfm:furniture",
   "key": {
-    "S": {
-      "item": "minecraft:crimson_planks"
-    },
-    "X": {
-      "item": "minecraft:stripped_crimson_stem"
-    }
+    "S": [],
+    "X": []
   },
   "pattern": [
     "XXX",

@@ -1,10 +1,5 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    " S ",
-    "S S"
-  ],
   "key": {
     "S": {
       "item": "minecraft:blackstone"
@@ -13,8 +8,13 @@
       "item": "minecraft:polished_blackstone"
     }
   },
+  "pattern": [
+    "XXX",
+    " S ",
+    "S S"
+  ],
   "result": {
-    "item": "pfm:blackstone_table_dinner",
-    "count": 4
+    "count": 4,
+    "item": "pfm:blackstone_table_dinner"
   }
 }

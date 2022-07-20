@@ -1,21 +1,21 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XSX",
-    "XYX",
-    "XSX"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stone"
-    },
     "S": {
       "item": "minecraft:cobblestone"
+    },
+    "X": {
+      "item": "minecraft:stone"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XSX",
+    "XYX",
+    "XSX"
+  ],
   "result": {
     "item": "pfm:stone_kitchen_cabinet"
   }
