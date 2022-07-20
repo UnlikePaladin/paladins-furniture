@@ -37,10 +37,10 @@ public class ClassicTable extends Block implements Waterloggable {
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ClassicTable.class)){
-            WOOD_CLASSIC_TABLES.add(new FurnitureBlock(this, "TABLE_CLASSIC"));
+            WOOD_CLASSIC_TABLES.add(new FurnitureBlock(this, "table_classic"));
         }
         else if (this.getClass().isAssignableFrom(ClassicTable.class)){
-            STONE_CLASSIC_TABLES.add(new FurnitureBlock(this, "TABLE_CLASSIC"));
+            STONE_CLASSIC_TABLES.add(new FurnitureBlock(this, "table_classic"));
         }
     }
 

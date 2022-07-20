@@ -110,21 +110,23 @@ public class SimpleBed extends BedBlock implements Waterloggable {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
-    public boolean isBed(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)
+    public boolean isBed(WorldAccess world, BlockPos pos, Direction direction, Direction bedDirection, BlockState originalState)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
         if(state.getBlock().getClass().isAssignableFrom(SimpleBed.class))
         {
-            Direction sourceDirection = state.get(FACING);
-            return sourceDirection.equals(tableDirection);
+            if (state.get(PART) == originalState.get(PART)) {
+                Direction sourceDirection = state.get(FACING);
+                return sourceDirection.equals(bedDirection);
+            }
         }
         return false;
     }
 
     public BlockState getShape(BlockState state, WorldAccess world, BlockPos pos, Direction dir)
     {
-        boolean left = isBed(world, pos, dir.rotateYCounterclockwise(), dir);
-        boolean right = isBed(world, pos, dir.rotateYClockwise(), dir);
+        boolean left = isBed(world, pos, dir.rotateYCounterclockwise(), dir, state);
+        boolean right = isBed(world, pos, dir.rotateYClockwise(), dir, state);
         if(left && right)
         {
             return state.with(SHAPE, MiddleShape.MIDDLE);
