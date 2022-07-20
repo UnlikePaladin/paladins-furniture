@@ -1,8 +1,12 @@
 {
   "type": "pfm:furniture",
   "key": {
-    "S": [],
-    "X": []
+    "S": {
+      "item": "minecraft:warped_planks"
+    },
+    "X": {
+      "item": "minecraft:stripped_warped_stem"
+    }
   },
   "pattern": [
     "XXX",
