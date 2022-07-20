@@ -3,16 +3,15 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -30,6 +29,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -38,17 +38,18 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.ClassicChair.rotateShape;
 
-public class Microwave extends HorizontalFacingBlockWEntity{
+public class Microwave extends HorizontalFacingBlockWEntity implements Waterloggable {
     public static final BooleanProperty OPEN = Properties.OPEN;
     public static final BooleanProperty POWERED = Properties.POWERED;
 
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> MICROWAVES = new ArrayList<>();
 
     public Microwave(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(OPEN, false).with(POWERED, false).with(FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(OPEN, false).with(FACING, Direction.NORTH).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         MICROWAVES.add(new FurnitureBlock(this, "microwave"));
@@ -62,6 +63,7 @@ public class Microwave extends HorizontalFacingBlockWEntity{
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
         stateManager.add(POWERED);
+        stateManager.add(WATERLOGGED);
     }
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -96,9 +98,12 @@ public class Microwave extends HorizontalFacingBlockWEntity{
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
     }
-
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         BlockEntity blockEntity;
@@ -121,6 +126,13 @@ public class Microwave extends HorizontalFacingBlockWEntity{
         super.onStateReplaced(state, world, pos, newState, moved);
     }
 
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
 
     @Override
     @Nullable

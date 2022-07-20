@@ -44,10 +44,9 @@ public class ClassicChairDyeable extends ClassicChair implements DyeableFurnitur
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(Properties.HORIZONTAL_FACING);
+        super.appendProperties(stateManager);
         stateManager.add(COLORID);
         stateManager.add(DYED);
-
     }
     protected DyeColor getColor (BlockState state){
         return state.get(this.COLORID);

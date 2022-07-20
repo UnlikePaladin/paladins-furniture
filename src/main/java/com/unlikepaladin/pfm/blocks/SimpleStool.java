@@ -4,7 +4,6 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -18,7 +17,6 @@ import java.util.stream.Stream;
 
 public class SimpleStool extends BasicChair {
     public float height;
-
     private static final List<FurnitureBlock> WOOD_SIMPLE_STOOLS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_SIMPLE_STOOLS = new ArrayList<>();
     public SimpleStool(Settings settings) {
@@ -39,12 +37,6 @@ public class SimpleStool extends BasicChair {
     public static Stream<FurnitureBlock> streamStoneSimpleStools() {
         return STONE_SIMPLE_STOOLS.stream();
     }
-
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing().getOpposite());
-    }
-    @SuppressWarnings("deprecated")
 
     /**
      * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/

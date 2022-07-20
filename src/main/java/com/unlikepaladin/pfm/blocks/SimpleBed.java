@@ -5,9 +5,13 @@ import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
@@ -26,11 +30,14 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.LogTable.rotateShape;
 
-public class SimpleBed extends BedBlock {
+public class SimpleBed extends BedBlock implements Waterloggable {
     public static EnumProperty<MiddleShape> SHAPE = EnumProperty.of("shape", MiddleShape.class);
     private static final List<FurnitureBlock> SIMPLE_BEDS = new ArrayList<>();
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+
     public SimpleBed(DyeColor color, Settings settings) {
         super(color, settings);
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false).with(PART, BedPart.FOOT).with(OCCUPIED, false));
         if(this.getClass().isAssignableFrom(SimpleBed.class)){
             String bedColor = color.getName();
             SIMPLE_BEDS.add(new FurnitureBlock(this, bedColor+"_simple_bed"));
@@ -42,7 +49,7 @@ public class SimpleBed extends BedBlock {
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
         Direction direction = ctx.getPlayerFacing();
         BlockPos blockPos = ctx.getBlockPos();
         BlockPos blockPos2 = blockPos.offset(direction);
@@ -58,6 +65,9 @@ public class SimpleBed extends BedBlock {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
         if (direction == getDirectionTowardsOtherPart(state.get(PART), state.get(FACING))) {
             if (neighborState.isOf(this) && neighborState.get(PART) != state.get(PART)) {
                 return state.with(OCCUPIED, neighborState.get(OCCUPIED));
@@ -89,15 +99,21 @@ public class SimpleBed extends BedBlock {
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(SHAPE);
-        super.appendProperties(builder);
+    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
+        stateManager.add(SHAPE);
+        stateManager.add(WATERLOGGED);
+        super.appendProperties(stateManager);
     }
 
-    private boolean isBed(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
+    public boolean isBed(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
-        if(state.getBlock() instanceof SimpleBed)
+        if(state.getBlock().getClass().isAssignableFrom(SimpleBed.class))
         {
             Direction sourceDirection = state.get(FACING);
             return sourceDirection.equals(tableDirection);

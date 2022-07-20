@@ -6,6 +6,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -36,14 +38,16 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.BasicTable.rotateShape;
 
-public class LightSwitch extends HorizontalFacingBlockWEntity {
+public class LightSwitch extends HorizontalFacingBlockWEntity implements Waterloggable {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final BooleanProperty POWERED = Properties.POWERED;
+
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public LightSwitchBlockEntity lightSwitchBlockEntity;
     private static final List<LightSwitch> LIGHT_SWITCHES = new ArrayList<>();
     public LightSwitch(Settings settings) {
         super(settings);
-        this.setDefaultState(stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWERED, false));
+        this.setDefaultState(stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWERED, false).with(WATERLOGGED, false));
         LIGHT_SWITCHES.add(this);
     }
 
@@ -54,7 +58,7 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(POWERED, false);
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(POWERED, false).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
     }
 
     @Override
@@ -86,6 +90,9 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
     }
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
         if (direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos)) {
             return Blocks.AIR.getDefaultState();
         }
@@ -104,7 +111,14 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
         builder.add(POWERED);
+        builder.add(WATERLOGGED);
     }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
     public BlockState togglePower(BlockState state, World world, BlockPos pos, boolean listenTo, boolean toggleTo) {
         if(listenTo) {
             state = state.with(POWERED, toggleTo);

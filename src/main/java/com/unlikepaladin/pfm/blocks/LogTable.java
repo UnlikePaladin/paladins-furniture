@@ -2,8 +2,11 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -19,26 +22,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class LogTable extends HorizontalFacingBlock {
-
+public class LogTable extends HorizontalFacingBlock implements Waterloggable{
     private final Block baseBlock;
     public static final EnumProperty<MiddleShape> SHAPE = EnumProperty.of("table_type", MiddleShape.class);
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> WOOD_LOG_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_NATURAL_TABLES = new ArrayList<>();
     public LogTable(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(FACING, Direction.NORTH).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(LogTable.class)){
             WOOD_LOG_TABLES.add(new FurnitureBlock(this, "table_"));
         }
         else if (this.getClass().isAssignableFrom(ClassicTable.class)){
-            STONE_NATURAL_TABLES.add(new FurnitureBlock(this, "table_classic"));
+            STONE_NATURAL_TABLES.add(new FurnitureBlock(this, "natural_table"));
         }
     }
 
@@ -53,6 +55,12 @@ public class LogTable extends HorizontalFacingBlock {
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(SHAPE);
         stateManager.add(FACING);
+        stateManager.add(WATERLOGGED);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     @Override
@@ -63,16 +71,17 @@ public class LogTable extends HorizontalFacingBlock {
         }
     }
 
-
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        return (BlockState) getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
     }
-
 
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
         return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(FACING)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
@@ -132,13 +141,13 @@ public class LogTable extends HorizontalFacingBlock {
         return state.get(SHAPE);
     }
 
-    final static VoxelShape log_table = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 5, 4.5, 14, 11), createCuboidShape(11.5, 0, 5, 14, 14, 11));
-    final static VoxelShape log_table_middle = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16));
-    final static VoxelShape log_table_one = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(6, 0, 5, 8.5, 14, 11));
-    final static VoxelShape log_table_one_west = rotateShape(Direction.NORTH, Direction.WEST, log_table_one);
-    final static VoxelShape log_table_one_south = rotateShape(Direction.NORTH, Direction.SOUTH, log_table_one);
-    final static VoxelShape log_table_one_east = rotateShape(Direction.NORTH, Direction.EAST, log_table_one);
-    final static VoxelShape log_table_east = rotateShape(Direction.NORTH, Direction.EAST, log_table);
+    final static VoxelShape LOG_TABLE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 5, 4.5, 14, 11), createCuboidShape(11.5, 0, 5, 14, 14, 11));
+    final static VoxelShape LOG_TABLE_MIDDLE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16));
+    final static VoxelShape LOG_TABLE_ONE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(6, 0, 5, 8.5, 14, 11));
+    final static VoxelShape LOG_TABLE_ONE_WEST = rotateShape(Direction.NORTH, Direction.WEST, LOG_TABLE_ONE);
+    final static VoxelShape LOG_TABLE_ONE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, LOG_TABLE_ONE);
+    final static VoxelShape LOG_TABLE_ONE_EAST = rotateShape(Direction.NORTH, Direction.EAST, LOG_TABLE_ONE);
+    final static VoxelShape LOG_TABLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, LOG_TABLE);
     //Cursed I know
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         MiddleShape tableShape = getShape(state);
@@ -149,30 +158,30 @@ public class LogTable extends HorizontalFacingBlock {
         switch (tableShape) {
             case LEFT -> {
                 if (dirNorthOrSouth) {
-                    return log_table_one;}
+                    return LOG_TABLE_ONE;}
                 else if (dirWestOrEast) {
-                    return log_table_one_west;}
+                    return LOG_TABLE_ONE_WEST;}
                 else {
-                    return log_table;
+                    return LOG_TABLE;
                 }
             }
             case RIGHT -> {
                 if (dirNorthOrSouth) {
-                return log_table_one_south;}
+                return LOG_TABLE_ONE_SOUTH;}
                 else if (dirWestOrEast) {
-                    return log_table_one_east;}
+                    return LOG_TABLE_ONE_EAST;}
                 else {
-                    return log_table;
+                    return LOG_TABLE;
                 }
             }
             case MIDDLE -> {
-                return log_table_middle;
+                return LOG_TABLE_MIDDLE;
             }
             default -> {
                 if (dirWestOrEast) {
-                    return log_table_east;}
+                    return LOG_TABLE_EAST;}
                 else {
-                    return log_table;
+                    return LOG_TABLE;
                 }
             }
         }

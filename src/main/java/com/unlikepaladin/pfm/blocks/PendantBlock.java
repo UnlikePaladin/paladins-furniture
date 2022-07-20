@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
 import net.minecraft.block.*;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
@@ -21,16 +23,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class PendantBlock extends PowerableBlock {
+public class PendantBlock extends PowerableBlock implements Waterloggable {
     public static final BooleanProperty UP = Properties.UP;
     public static final BooleanProperty DOWN = Properties.DOWN;
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
     private final BlockState baseBlockState;
     private final Block baseBlock;
+
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     private static final List<PendantBlock> PENDANTS = new ArrayList<>();
     public PendantBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(UP, false).with(DOWN, false).with(LIT,  false).with(POWERLOCKED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(UP, false).with(DOWN, false).with(LIT,  false).with(POWERLOCKED, false).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         PENDANTS.add(this);
@@ -68,10 +72,18 @@ public class PendantBlock extends PowerableBlock {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
         if (!state.canPlaceAt(world, pos)) {
             return Blocks.AIR.getDefaultState();
         }
         return direction.getAxis().isVertical() ? canConnect(state, world, pos) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     @Override
@@ -104,7 +116,7 @@ public class PendantBlock extends PowerableBlock {
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         boolean powered = ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos());
-        BlockState state = this.getDefaultState().with(LIT, powered);
+        BlockState state = this.getDefaultState().with(LIT, powered).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
         return canConnect(state, ctx.getWorld(), ctx.getBlockPos());
     }
 
@@ -145,5 +157,6 @@ public class PendantBlock extends PowerableBlock {
         builder.add(DOWN);
         builder.add(LIT);
         builder.add(POWERLOCKED);
+        builder.add(WATERLOGGED);
     }
 }
