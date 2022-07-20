@@ -4,7 +4,6 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
-import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -17,7 +16,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class LogStool extends BasicChair {
-    
     private static final List<FurnitureBlock> WOOD_LOG_STOOLS = new ArrayList<>();
     public LogStool(Settings settings) {
         super(settings);
@@ -31,10 +29,6 @@ public class LogStool extends BasicChair {
         return WOOD_LOG_STOOLS.stream();
     }
 
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing().getOpposite());
-    }
     protected static final VoxelShape COLLISION = VoxelShapes.union(createCuboidShape(3, 0, 3, 13, 11, 13));
 
     @Override

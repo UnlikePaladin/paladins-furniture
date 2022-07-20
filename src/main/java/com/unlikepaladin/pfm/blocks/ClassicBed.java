@@ -10,6 +10,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldAccess;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,18 @@ public class ClassicBed extends SimpleBed {
     static final VoxelShape FOOT_RIGHT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FOOT_RIGHT);
     static final VoxelShape FOOT_RIGHT_EAST = rotateShape(Direction.NORTH, Direction.EAST, FOOT_RIGHT);
     static final VoxelShape FOOT_RIGHT_WEST = rotateShape(Direction.NORTH, Direction.WEST, FOOT_RIGHT);
+
+    @Override
+    public boolean isBed(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)
+    {
+        BlockState state = world.getBlockState(pos.offset(direction));
+        if(state.getBlock() instanceof ClassicBed)
+        {
+            Direction sourceDirection = state.get(FACING);
+            return sourceDirection.equals(tableDirection);
+        }
+        return false;
+    }
 
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {

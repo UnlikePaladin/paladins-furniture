@@ -8,6 +8,8 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -36,14 +38,17 @@ import java.util.stream.Stream;
 import static com.unlikepaladin.pfm.blocks.KitchenCounter.SHAPE;
 import static com.unlikepaladin.pfm.blocks.KitchenCounter.rotateShape;
 
-public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntityProvider {
+public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntityProvider, Waterloggable {
     private final BlockState baseBlockState;
     private final Block baseBlock;
     private static final List<FurnitureBlock> WOOD_CABINETS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_CABINETS = new ArrayList<>();
+
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+
     public KitchenCabinet(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCabinet.class)){
@@ -97,6 +102,7 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(SHAPE);
         stateManager.add(OPEN);
+        stateManager.add(WATERLOGGED);
     }
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
@@ -269,6 +275,10 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+
         return direction.getAxis().isHorizontal() ? state.with(SHAPE, getShape(state, world, pos)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
     @Override
@@ -281,13 +291,15 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        Direction direction = ctx.getSide();
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
         return blockState.with(SHAPE, this.getShape(blockState, world, blockPos));
     }
-
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
     private CounterShape getShape(BlockState state, BlockView world, BlockPos pos) {
         Direction direction3 = null;
         Object direction2;

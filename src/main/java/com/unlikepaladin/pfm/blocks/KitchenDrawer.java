@@ -42,7 +42,7 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     private static final List<FurnitureBlock> STONE_DRAWERS = new ArrayList<>();
     public KitchenDrawer(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT).with(UP, false).with(DOWN, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT).with(UP, false).with(DOWN, false).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenDrawer.class)){
@@ -84,6 +84,7 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
         stateManager.add(SHAPE);
         stateManager.add(UP);
         stateManager.add(DOWN);
+        stateManager.add(WATERLOGGED);
     }
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));

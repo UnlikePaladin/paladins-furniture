@@ -1,10 +1,13 @@
 package com.unlikepaladin.pfm.blocks;
 
 import net.minecraft.block.*;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -20,12 +23,13 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
-public class SimpleLight extends PowerableBlock{
+public class SimpleLight extends PowerableBlock implements Waterloggable{
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
     private static final List<SimpleLight> SIMPLE_LIGHTS = new ArrayList<>();
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public SimpleLight(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(LIT,  false).with(POWERLOCKED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(LIT,  false).with(POWERLOCKED, false).with(WATERLOGGED, false));
         SIMPLE_LIGHTS.add(this);
     }
     @Override
@@ -42,7 +46,7 @@ public class SimpleLight extends PowerableBlock{
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         boolean powered = ctx.getWorld().isReceivingRedstonePower(ctx.getBlockPos());
-        return this.getDefaultState().with(LIT, powered);
+        return this.getDefaultState().with(LIT, powered).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
     }
 
     @Override
@@ -51,10 +55,16 @@ public class SimpleLight extends PowerableBlock{
             world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_ALL);
         }
     }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(LIT);
         builder.add(POWERLOCKED);
+        builder.add(WATERLOGGED);
     }
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
@@ -64,6 +74,9 @@ public class SimpleLight extends PowerableBlock{
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
         if (!state.canPlaceAt(world, pos)) {
             return Blocks.AIR.getDefaultState();
         }

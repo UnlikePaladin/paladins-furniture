@@ -7,6 +7,8 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -32,15 +34,16 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
-public class ClassicNightstand extends HorizontalFacingBlockWEntity{
+public class ClassicNightstand extends HorizontalFacingBlockWEntity implements Waterloggable{
     public static BooleanProperty OPEN = Properties.OPEN;
     private static final List<FurnitureBlock> WOOD_NIGHTSTAND = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_NIGHTSTAND = new ArrayList<>();
     public static final EnumProperty<MiddleShape> SHAPE = EnumProperty.of("shape", MiddleShape.class);
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     public ClassicNightstand(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, MiddleShape.SINGLE));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, MiddleShape.SINGLE).with(WATERLOGGED, false));
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ClassicNightstand.class)){
             WOOD_NIGHTSTAND.add(new FurnitureBlock(this, "classic_nightstand"));
         }
@@ -62,9 +65,15 @@ public class ClassicNightstand extends HorizontalFacingBlockWEntity{
     }
 
     @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
+    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(OPEN);
         stateManager.add(SHAPE);
+        stateManager.add(WATERLOGGED);
         super.appendProperties(stateManager);
     }
 
@@ -84,14 +93,17 @@ public class ClassicNightstand extends HorizontalFacingBlockWEntity{
 
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
         return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(FACING)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-    }
+            if (state.get(WATERLOGGED)) {
+                world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            }
+            return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(FACING)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        }
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {

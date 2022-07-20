@@ -6,11 +6,13 @@ import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
@@ -23,6 +25,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.biome.Biome;
 
@@ -33,7 +36,7 @@ import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class KitchenSink extends AbstractCauldronBlock {
+public class KitchenSink extends AbstractCauldronBlock implements Waterloggable {
     private final BlockState baseBlockState;
     private final Block baseBlock;
     private final Predicate<Biome.Precipitation> precipitationPredicate;
@@ -41,9 +44,10 @@ public class KitchenSink extends AbstractCauldronBlock {
     private final Map<Item, CauldronBehavior> behaviorMap;
     private static final List<FurnitureBlock> WOOD_SINKS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_SINKS = new ArrayList<>();
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public KitchenSink(Settings settings, Predicate<Biome.Precipitation> precipitationPredicate, Map<Item, CauldronBehavior> map) {
         super(settings, map);
-        this.setDefaultState(this.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_4, 0));
+        this.setDefaultState(this.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_4, 0).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.precipitationPredicate = precipitationPredicate;
         this.behaviorMap = map;
@@ -67,11 +71,11 @@ public class KitchenSink extends AbstractCauldronBlock {
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(LEVEL_4);
-
+        stateManager.add(WATERLOGGED);
     }
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing());
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
     }
 
 
@@ -94,6 +98,21 @@ public class KitchenSink extends AbstractCauldronBlock {
         CauldronBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
         return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
     }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+
+    @Override
+    public FluidState getFluidState(BlockState state) {
+        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+    }
+
     private static final VoxelShape FACING_NORTH = VoxelShapes.combineAndSimplify(VoxelShapes.union(VoxelShapes.fullCube(), createCuboidShape(1.0625, 11.3, 0.296,15.0625, 16.3, 12.296)),VoxelShapes.union(createCuboidShape(2, 11, 2.3,14, 16.3, 11.3),createCuboidShape(0, 0, 13,16, 14, 16),createCuboidShape(0, 0, 12,16, 1, 13)), BooleanBiFunction.ONLY_FIRST);
     private static final VoxelShape FACING_EAST = VoxelShapes.combineAndSimplify(VoxelShapes.union(VoxelShapes.fullCube(), createCuboidShape(3.704, 11.3, 1.0625,15.704, 16.3, 15.0625)), VoxelShapes.union(createCuboidShape(4.7, 11, 2,13.7, 16.3, 14),createCuboidShape(0,0,0,3, 14, 16),createCuboidShape(3, 0, 0,4, 1, 16)), BooleanBiFunction.ONLY_FIRST);
     private static final VoxelShape FACING_SOUTH = VoxelShapes.combineAndSimplify(VoxelShapes.union(VoxelShapes.fullCube(), createCuboidShape(0.9375, 11.3, 3.704,14.9375, 16.3, 15.704)), VoxelShapes.union(createCuboidShape(2, 11, 4.7,14, 16.3, 13.7),createCuboidShape(0, 0, 0,16, 14, 3),createCuboidShape(0, 0, 3,16, 1, 4)), BooleanBiFunction.ONLY_FIRST);
@@ -145,7 +164,6 @@ public class KitchenSink extends AbstractCauldronBlock {
         world.setBlockState(pos, state.with(LEVEL_4, i));
     }
 
-
     @Override
     public boolean isFull(BlockState state) {
         return state.get(LEVEL_4) == 3;
@@ -158,11 +176,8 @@ public class KitchenSink extends AbstractCauldronBlock {
 
     @Override
     protected double getFluidHeight(BlockState state) {
-        return (6.0 + (double)state.get(LEVEL_4).intValue() * 3.0) / 16.0;
+        return (6.0 + (double) state.get(LEVEL_4).intValue() * 3.0) / 16.0;
     }
-
-
-
 
     protected static boolean canFillWithPrecipitation(World world, Biome.Precipitation precipitation) {
         if (precipitation == Biome.Precipitation.RAIN) {
