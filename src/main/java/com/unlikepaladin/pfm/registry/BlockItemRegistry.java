@@ -9,6 +9,8 @@ import com.unlikepaladin.pfm.items.FurnitureGuideBook;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
+import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -1107,7 +1109,7 @@ public class BlockItemRegistry {
     }
 
     public static void registerFurniture(String blockName, Block block, boolean registerItem) {
-        Registry.register(Registry.BLOCK, new Identifier(MOD_ID, blockName),  block);
+        registerBlock(blockName, block, false);
         if (registerItem) {
             BLOCKS.add(block);
             registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
@@ -1121,6 +1123,10 @@ public class BlockItemRegistry {
         if (registerItem) {
             BLOCKS.add(block);
             registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+        }
+        if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
+            FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
+            FuelRegistry.INSTANCE.add(block, 300);
         }
     }
 

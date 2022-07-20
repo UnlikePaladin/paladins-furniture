@@ -79,13 +79,15 @@ public class ClassicBed extends SimpleBed {
     static final VoxelShape FOOT_RIGHT_WEST = rotateShape(Direction.NORTH, Direction.WEST, FOOT_RIGHT);
 
     @Override
-    public boolean isBed(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)
+    public boolean isBed(WorldAccess world, BlockPos pos, Direction direction, Direction bedDirection, BlockState originalState)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
         if(state.getBlock() instanceof ClassicBed)
         {
-            Direction sourceDirection = state.get(FACING);
-            return sourceDirection.equals(tableDirection);
+            if (state.get(PART) == originalState.get(PART)) {
+                Direction sourceDirection = state.get(FACING);
+                return sourceDirection.equals(bedDirection);
+            }
         }
         return false;
     }

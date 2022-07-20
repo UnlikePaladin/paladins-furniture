@@ -44,10 +44,10 @@ public class BasicTable extends HorizontalFacingBlock implements Waterloggable{
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(BasicTable.class)){
-            WOOD_BASIC_TABLES.add(new FurnitureBlock(this, "TABLE_BASIC"));
+            WOOD_BASIC_TABLES.add(new FurnitureBlock(this, "table_basic"));
         }
         else if (this.getClass().isAssignableFrom(BasicTable.class)){
-            STONE_BASIC_TABLES.add(new FurnitureBlock(this, "TABLE_BASIC"));
+            STONE_BASIC_TABLES.add(new FurnitureBlock(this, "table_basic"));
         }
     }
 
