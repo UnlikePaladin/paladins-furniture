@@ -274,4 +274,9 @@ public class FurnitureRecipe implements IFurnitureRecipe {
         }
         return item;
     }
+
+    @Override
+    public boolean isIgnoredInRecipeBook() {
+        return true;
+    }
 }

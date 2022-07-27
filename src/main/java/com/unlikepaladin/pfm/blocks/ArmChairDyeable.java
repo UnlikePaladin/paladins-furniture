@@ -33,7 +33,7 @@ public class ArmChairDyeable extends ArmChair implements DyeableFurniture {
     private static final List<FurnitureBlock> DYEABLE_ARMCHAIRS = new ArrayList<>();
     public ArmChairDyeable(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(COLORID, DyeColor.WHITE).with(DYED, false).with(SHAPE, ArmChairShape.STRAIGHT));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(COLORID, DyeColor.WHITE).with(DYED, false).with(SHAPE, ArmChairShape.STRAIGHT).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
             if (this.getClass().isAssignableFrom(ArmChairDyeable.class)) {

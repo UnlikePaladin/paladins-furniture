@@ -81,7 +81,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Block
             double z = pos.getZ() + 0.5 - ((direction.getOffsetZ() * f) + (direction.rotateYClockwise().getOffsetZ() * f));
             for (int k = 0; k < 4; ++k) {
                 if (!(random.nextFloat() < 0.9f))
-                world.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 5.0E-4, 0.0);
+                    world.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 5.0E-4, 0.0);
             }
         }
     }

@@ -6,9 +6,6 @@
   "mixins": [
     "MixinPointOfInterestType"
   ],
-  "client": [
-    "MixinClientRecipeBook"
-  ],
   "server": [],
   "injectors": {
     "defaultRequire": 1

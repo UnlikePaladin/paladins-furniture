@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
+import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -130,6 +131,7 @@ public class BasicChair extends HorizontalFacingBlock implements Waterloggable {
                 entity.setYaw(yaw);
                 entity.setBodyYaw(yaw);
                 entity.setHeadYaw(yaw);
+                player.incrementStat(StatisticsRegistry.CHAIR_USED);
                 return ActionResult.SUCCESS;
             }
             return ActionResult.CONSUME;

@@ -362,4 +362,28 @@ public class FurnitureBlock extends Material {
         this.baseMaterial = Registry.BLOCK.get(new Identifier("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
+
+    public Block getPlateMaterial() {
+        String baseMaterial = this.block.getLootTableId().getPath();
+        if (baseMaterial.contains("basic")) {
+            baseMaterial = "white_concrete";
+        }
+        else  {
+            baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "block");
+        }
+        this.baseMaterial =  Registry.BLOCK.get(new Identifier("minecraft:" + baseMaterial));
+        return this.baseMaterial;
+    }
+
+    public Block getPlateDecoration() {
+        String baseMaterial = this.block.getLootTableId().getPath();
+        if (baseMaterial.contains("basic")) {
+            baseMaterial = "white_concrete";
+        }
+        else  {
+            baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "block");
+        }
+        this.baseMaterial =  Registry.BLOCK.get(new Identifier("minecraft:" + baseMaterial));
+        return this.baseMaterial;
+    }
 }

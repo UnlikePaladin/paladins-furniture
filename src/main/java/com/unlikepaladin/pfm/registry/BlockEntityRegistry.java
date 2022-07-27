@@ -20,6 +20,7 @@ public class BlockEntityRegistry {
     public static BlockEntityType<LightSwitchBlockEntity> LIGHT_SWITCH_BLOCK_ENTITY;
     public static BlockEntityType<MicrowaveBlockEntity> MICROWAVE_BLOCK_ENTITY;
     public static BlockEntityType<StovetopBlockEntity> STOVE_TOP_BLOCK_ENTITY;
+    public static BlockEntityType<PlateBlockEntity> PLATE_BLOCK_ENTITY;
 
     public static void registerBlockEntities() {
         DRAWER_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":drawer_block_entity", FabricBlockEntityTypeBuilder.create(GenericStorageBlockEntity::new, BlockItemRegistry.OAK_KITCHEN_DRAWER).build(null));
@@ -33,5 +34,6 @@ public class BlockEntityRegistry {
         IRON_STOVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":iron_stove_block_entity", FabricBlockEntityTypeBuilder.create(IronStoveBlockEntity::new, BlockItemRegistry.IRON_STOVE).build(null));
         LIGHT_SWITCH_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":light_switch_block_entity", FabricBlockEntityTypeBuilder.create(LightSwitchBlockEntity::new, BlockItemRegistry.LIGHT_SWITCH).build(null));
         MICROWAVE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":microwave_block_entity", FabricBlockEntityTypeBuilder.create(MicrowaveBlockEntity::new, BlockItemRegistry.IRON_MICROWAVE).build(null));
+        PLATE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, MOD_ID + ":plate_block_entity", FabricBlockEntityTypeBuilder.create(PlateBlockEntity::new, BlockItemRegistry.BASIC_PLATE).build(null));
     }
 }

@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XYX",
+    "YZY",
+    "XYX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:white_concrete"
+    },
+    "Z": {
+      "item": "minecraft:item_frame"
+    },
+    "Y": {
+      "item": "minecraft:white_concrete"
+    }
+  },
+  "result": {
+    "item": "pfm:basic_plate"
+  }
+}

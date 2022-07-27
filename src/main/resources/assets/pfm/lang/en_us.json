@@ -944,9 +944,14 @@
   "stat.pfm.stove_used": "Interactions with Stovetop",
   "stat.pfm.sink_filled": "Sinks Filled",
   "stat.pfm.use_sink": "Water Taken from Sink",
+  "stat.pfm.plate_used": "Interactions with Plate",
+  "stat.pfm.microwave_used": "Interactions with Microwave",
+  "stat.pfm.chair_used": "Times Sat on Chair",
 
   "subtitles.pfm.microwave_running": "Microwave humming",
   "subtitles.pfm.microwave_beep": "Microwave beeping",
+
+  "block.pfm.basic_plate": "Basic Plate",
 
   "rei.pfm.freezer": "Freezing",
   "rei.pfm.furniture": "Workbench",

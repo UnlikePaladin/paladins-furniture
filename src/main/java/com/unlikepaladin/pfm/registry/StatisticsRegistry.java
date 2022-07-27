@@ -15,6 +15,11 @@ public class StatisticsRegistry {
     public static final Identifier STOVETOP_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "stovetop_used");
     public static final Identifier SINK_FILLED = new Identifier(PaladinFurnitureMod.MOD_ID, "sink_filled");
     public static final Identifier USE_SINK = new Identifier(PaladinFurnitureMod.MOD_ID, "use_sink");
+    public static final Identifier PLATE_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "plate_used");
+    public static final Identifier MICROWAVE_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_used");
+
+    public static final Identifier CHAIR_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "chair_used");
+
 
     public static void registerStatistics(){
         Registry.register(Registry.CUSTOM_STAT, "fridge_opened", FRIDGE_OPENED);
@@ -40,5 +45,14 @@ public class StatisticsRegistry {
 
         Registry.register(Registry.CUSTOM_STAT, "stovetop_used", STOVETOP_USED);
         Stats.CUSTOM.getOrCreateStat(STOVETOP_USED, StatFormatter.DEFAULT);
+
+        Registry.register(Registry.CUSTOM_STAT, "plate_used", PLATE_USED);
+        Stats.CUSTOM.getOrCreateStat(PLATE_USED, StatFormatter.DEFAULT);
+
+        Registry.register(Registry.CUSTOM_STAT, "microwave_used", MICROWAVE_USED);
+        Stats.CUSTOM.getOrCreateStat(MICROWAVE_USED, StatFormatter.DEFAULT);
+
+        Registry.register(Registry.CUSTOM_STAT, "chair_used", CHAIR_USED);
+        Stats.CUSTOM.getOrCreateStat(CHAIR_USED, StatFormatter.DEFAULT);
     }
 }

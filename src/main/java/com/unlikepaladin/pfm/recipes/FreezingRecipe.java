@@ -24,5 +24,8 @@ public class FreezingRecipe extends AbstractCookingRecipe {
         return RecipeRegistry.FREEZING_RECIPE_SERIALIZER;
     }
 
-
+    @Override
+    public boolean isIgnoredInRecipeBook() {
+        return true;
+    }
 }
