@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.compat.sandwichable.client.PFMSandwichableClient;
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import com.unlikepaladin.pfm.entity.render.ChairEntityRenderer;
 import com.unlikepaladin.pfm.entity.render.MicrowaveBlockEntityRenderer;
+import com.unlikepaladin.pfm.entity.render.PlateBlockEntityRenderer;
 import com.unlikepaladin.pfm.entity.render.StovetopBlockEntityRenderer;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
@@ -36,6 +37,7 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
         EntityRendererRegistry.register(EntityRegistry.CHAIR, ChairEntityRenderer::new);
         BlockEntityRendererRegistry.register(BlockEntityRegistry.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(BlockEntityRegistry.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.INSTANCE.register(BlockEntityRegistry.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
         NetworkRegistry.registerClientPackets();
 
         EntityModelLayerRegistry.registerModelLayer(MODEL_CUBE_LAYER, ModelEmpty::getTexturedModelData);

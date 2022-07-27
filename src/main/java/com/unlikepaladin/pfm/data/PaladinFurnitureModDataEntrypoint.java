@@ -92,6 +92,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             Stove[] stove = Stove.streamStoves().map(FurnitureBlock::getBlock).toArray(Stove[]::new);
             SimpleBed[] simpleBeds = SimpleBed.streamSimpleBeds().map(FurnitureBlock::getBlock).toArray(SimpleBed[]::new);
             ClassicBed[] classicBeds = ClassicBed.streamClassicBeds().map(FurnitureBlock::getBlock).toArray(ClassicBed[]::new);
+            Plate[] plates = Plate.streamPlates().map(FurnitureBlock::getBlock).toArray(Plate[]::new);
 
             this.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                     .add(stoneCounters)
@@ -123,6 +124,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(stove)
                     .add(stoneNaturalTables)
                     .add(stoneClassicNightstands)
+                    .add(plates)
                     .add(BlockItemRegistry.RAW_CONCRETE)
                     .add(BlockItemRegistry.IRON_CHAIN);
 
@@ -484,6 +486,11 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock bed : classicBeds) {
                 offerClassicBed(bed.block,  Ingredient.ofItems(bed.getBaseMaterial()), Ingredient.ofItems(bed.getBed()), Ingredient.ofItems(bed.getFence()), exporter);
             }
+
+            FurnitureBlock[] plates = Plate.streamPlates().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock plate : plates) {
+                offerPlate(plate.block,  Ingredient.ofItems(plate.getPlateMaterial()), Ingredient.ofItems(Items.ITEM_FRAME), Ingredient.ofItems(plate.getPlateDecoration()), exporter);
+            }
         }
     }
 
@@ -595,4 +602,8 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
     public static void offerClassicBed(ItemConvertible output, Ingredient legMaterial, Ingredient baseBed, Ingredient fence, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonBuilder.create(output, 1).input('X', legMaterial).input('Z', baseBed).input('Y', fence).pattern("YZY").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
+    public static void offerPlate(ItemConvertible output, Ingredient base, Ingredient frame, Ingredient decoration, Consumer<RecipeJsonProvider> exporter) {
+        FurnitureRecipeJsonFactory.create(output, 1).input('X', base).input('Z', frame).input('Y', decoration).pattern("XYX").pattern("YZY").pattern("XYX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
 }
+

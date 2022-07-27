@@ -39,13 +39,8 @@ public class DyeKit extends Item {
         World world = context.getWorld();
         BlockState blockState = world.getBlockState(blockPos);
         if (playerEntity.isSneaking()) {
-            System.out.println("sneaking");
-            System.out.println(stack.getItem());
-            System.out.println(stack.getItem() instanceof DyeKit);
             if(blockState.getBlock() instanceof DyeableFurniture) {
                 if (stack.getItem() instanceof DyeKit && (blockState.get(COLORID) != ((DyeKit) stack.getItem()).getColor())) {
-                    System.out.println("kit");
-
                     world.playSound(null, blockPos, PaladinFurnitureMod.FURNITURE_DYED_EVENT, SoundCategory.BLOCKS, 0.3f, 1f);
                     world.setBlockState(blockPos, blockState.with(COLORID, ((DyeKit) stack.getItem()).getColor()).with(DYED, true), 3);
                     stack.decrement(1);
@@ -70,7 +65,6 @@ public class DyeKit extends Item {
                 return ActionResult.success(user.world.isClient);
             }
         }
-
         return ActionResult.PASS;
     }
 }

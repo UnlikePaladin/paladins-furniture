@@ -169,7 +169,6 @@ public class KitchenStovetop extends HorizontalFacingBlockWEntity implements Wat
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.isOf(newState.getBlock())) {
-            System.out.println("returned");
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);

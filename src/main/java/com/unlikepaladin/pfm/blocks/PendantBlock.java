@@ -142,7 +142,7 @@ public class PendantBlock extends PowerableBlock implements Waterloggable {
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         Direction direction = Direction.UP;
-        return Block.sideCoversSmallSquare(world, pos.offset(direction), direction.getOpposite()) || state.getBlock() instanceof PendantBlock;
+        return Block.sideCoversSmallSquare(world, pos.offset(direction), direction.getOpposite()) || world.getBlockState(pos.offset(direction)).getBlock() instanceof PendantBlock;
     }
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {

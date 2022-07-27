@@ -19,7 +19,6 @@ import net.minecraft.util.math.Vec3f;
 public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
     public MicrowaveBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-
     }
 
     @Override
@@ -54,8 +53,6 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
         }
         matrices.translate(x, y ,z);
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-facing.asRotation()));
-        //MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getLastRecipe(), blockEntity.inventory ,blockEntity.getMaxCountPerStack())
-        //System.out.println(MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getRecipe(), blockEntity.inventory ,blockEntity.getMaxCountPerStack()));
         if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getRecipe(), blockEntity.inventory ,blockEntity.getMaxCountPerStack())) {
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((blockEntity.getWorld().getTime() + tickDelta) * 4));}
         matrices.scale(0.5f, 0.5f, 0.5f);
