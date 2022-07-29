@@ -14,6 +14,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.registry.Registry;
 
 public class PlateBlockEntityRenderer implements BlockEntityRenderer<PlateBlockEntity> {
     public ItemStack itemStack;
@@ -28,22 +29,19 @@ public class PlateBlockEntityRenderer implements BlockEntityRenderer<PlateBlockE
         Direction direction2 = Direction.fromHorizontal((direction.getHorizontal()) % 4);
         float g = -direction2.asRotation();
         Direction dir = plateBlockEntity.getCachedState().get(KitchenStovetop.FACING);
-        switch(dir) {
-            case NORTH:
-                matrices.translate(0.5, 0.09, 0.65);
-                break;
-            case SOUTH:
-                matrices.translate(0.5, 0.09, 0.35);
-                break;
-            case WEST:
-                matrices.translate(0.65, 0.09, 0.5);
-                break;
-            case EAST:
-                matrices.translate(0.35, 0.09, 0.5);
+        switch (dir) {
+            case NORTH -> matrices.translate(0.5, 0.08, 0.65);
+            case SOUTH -> matrices.translate(0.5, 0.08, 0.35);
+            case WEST -> matrices.translate(0.65, 0.08, 0.5);
+            case EAST -> matrices.translate(0.35, 0.08, 0.5);
         }
         int rot = 90;
         matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(g));
         matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(rot));
+        if (Registry.ITEM.getId(itemStack.getItem()).toString().equals("sandwichable:sandwich")) {
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270.0f));
+            matrices.translate(0.0, 0.11, 0.05);
+        }
         int lightAbove = WorldRenderer.getLightmapCoordinates(plateBlockEntity.getWorld(), plateBlockEntity.getPos().up());
         MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumerProvider, 0);
         matrices.pop();

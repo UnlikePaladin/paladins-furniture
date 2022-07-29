@@ -17,6 +17,7 @@
     }
   },
   "result": {
-    "item": "pfm:basic_plate"
+    "item": "pfm:basic_plate",
+    "count": 4
   }
 }
