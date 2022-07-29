@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.unlikepaladin.pfm.blocks.ClassicStool.rotateShape;
+
 public class ModernChair extends BasicChair {
     public float height = 0.36f;
     private static final List<FurnitureBlock> WOOD_MODERN_CHAIRS = new ArrayList<>();
@@ -37,10 +39,10 @@ public class ModernChair extends BasicChair {
         return STONE_MODERN_CHAIRS.stream();
     }
 
-    protected static final VoxelShape FACE_WEST = VoxelShapes.union(createCuboidShape(1, 0, 2.62 ,3, 18, 4.62), createCuboidShape(1, 9, 11.36, 3, 18, 13.36), createCuboidShape(11, 0, 2.62, 13, 9, 4.62), createCuboidShape(11, 0, 11.36, 13, 9, 13.36), createCuboidShape(0.75, 14.4, 1.59, 3.05, 23.4, 14.59 ) ,  createCuboidShape(1.98, 8, 1.6, 14.28, 10.5, 14.6));
-    protected static final VoxelShape FACE_SOUTH = VoxelShapes.union(createCuboidShape(2.62, 0, 13,4.62, 18, 15), createCuboidShape(11.36, 9, 13, 13.36, 18, 15), createCuboidShape(11.36, 0, 3, 13.36, 9, 5), createCuboidShape(2.62, 0, 3, 4.62, 9, 5), createCuboidShape(1.59, 14.4, 12.95, 14.59, 23.4, 15.25 ), createCuboidShape(1.6, 8, 1.72, 14.6, 10.5, 14.02));
-    protected static final VoxelShape FACE_NORTH = VoxelShapes.union(createCuboidShape(11.38, 0, 1,13.38, 18, 3), createCuboidShape(2.64, 0, 1, 4.64, 18, 3), createCuboidShape(2.64, 0, 11, 4.64, 9, 13), createCuboidShape(11.38, 0, 11, 13.38, 9, 13), createCuboidShape(1.41, 14.4, 0.75, 14.41, 23.4, 3.05), createCuboidShape(1.4, 8, 1.98, 14.4, 10.5, 14.28));
-    protected static final VoxelShape FACE_EAST = VoxelShapes.union(createCuboidShape(13, 0, 11.38,15, 18, 13.38),createCuboidShape(13, 0, 2.64,15, 18, 4.64), createCuboidShape(3, 0, 11.38, 5, 9, 13.38), createCuboidShape(3, 0, 2.64, 5, 9, 4.64), createCuboidShape(12.95, 14.4, 1.41, 15.25, 23.4, 14.41), createCuboidShape(1.72, 8, 1.4, 14.02, 10.5, 14.4));
+    protected static final VoxelShape FACE_WEST = VoxelShapes.union(createCuboidShape(0.8, 14.4, 1.6,3, 23.4, 14.6), createCuboidShape(2, 8, 1.6, 14.3, 10.5, 14.6), createCuboidShape(1, 0, 2.6, 3, 14.5, 4.6), createCuboidShape(11, 0, 11.4, 13, 9, 13.4), createCuboidShape(1, 0, 11.4, 3, 14.5, 13.4),  createCuboidShape(11, 0, 2.6, 13, 9, 4.6));
+    protected static final VoxelShape FACE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, FACE_WEST);
+    protected static final VoxelShape FACE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, FACE_WEST);
+    protected static final VoxelShape FACE_EAST = rotateShape(Direction.WEST, Direction.EAST, FACE_WEST);
     @SuppressWarnings("deprecated")
     @Override
 

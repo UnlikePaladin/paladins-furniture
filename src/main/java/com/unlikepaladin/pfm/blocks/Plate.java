@@ -2,7 +2,9 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
+import io.github.foundationgames.sandwichable.items.SandwichBlockItem;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.ItemEntity;
@@ -24,6 +26,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -67,6 +70,10 @@ public class Plate extends HorizontalFacingBlockWEntity implements Waterloggable
             }
             return ActionResult.CONSUME;
         }
+        if(Registry.BLOCK.get(Registry.ITEM.getId(itemStack.getItem())) instanceof Cutlery) {
+            world.setBlockState(pos, state.with(CUTLERY, true));
+            return ActionResult.SUCCESS;
+        }
         if (player.isSneaking() && blockEntity instanceof PlateBlockEntity) {
             plateBlockEntity = (PlateBlockEntity)blockEntity;
             if (!plateBlockEntity.getItemInPlate().isEmpty()) {
@@ -83,14 +90,29 @@ public class Plate extends HorizontalFacingBlockWEntity implements Waterloggable
             plateBlockEntity = (PlateBlockEntity)blockEntity;
                 if (!plateBlockEntity.getItemInPlate().isEmpty()) {
                     ItemStack stack = plateBlockEntity.getItemInPlate();
-                    player.eatFood(world, stack);
                     spawnItemParticles(player, stack, 16);
+                    if (Registry.ITEM.getId(stack.getItem()).toString().equals("sandwichable:sandwich")) {
+                        SandwichBlockItem item = (SandwichBlockItem)stack.getItem();
+                        item.finishUsing(stack, world, player);
+                    }
+                    else {
+                        player.eatFood(world, stack);
+                    }
                     plateBlockEntity.removeItem();
                     player.incrementStat(StatisticsRegistry.PLATE_USED);
-                    return ActionResult.CONSUME;
+                    return ActionResult.SUCCESS;
                 }
         }
         return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
+        if (state.get(CUTLERY)) {
+            ItemEntity itemEntity = new ItemEntity((World) world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(BlockItemRegistry.BASIC_CUTLERY, 1));
+            world.spawnEntity(itemEntity);
+        }
+        super.onBroken(world, pos, state);
     }
 
     @Nullable
@@ -161,6 +183,7 @@ public class Plate extends HorizontalFacingBlockWEntity implements Waterloggable
 
     protected final Random random = new Random();
     private void spawnItemParticles(LivingEntity entity, ItemStack stack, int count) {
+        System.out.println(stack.getItem());
         for (int i = 0; i < count; ++i) {
             Vec3d vec3d = new Vec3d(((double)this.random.nextFloat() - 0.5) * 0.1, Math.random() * 0.1 + 0.1, 0.0);
             vec3d = vec3d.rotateX(-entity.getPitch() * ((float)Math.PI / 180));
@@ -173,7 +196,6 @@ public class Plate extends HorizontalFacingBlockWEntity implements Waterloggable
             entity.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
         }
     }
-
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         Direction direction = Direction.DOWN;

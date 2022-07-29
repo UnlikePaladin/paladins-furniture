@@ -93,6 +93,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             SimpleBed[] simpleBeds = SimpleBed.streamSimpleBeds().map(FurnitureBlock::getBlock).toArray(SimpleBed[]::new);
             ClassicBed[] classicBeds = ClassicBed.streamClassicBeds().map(FurnitureBlock::getBlock).toArray(ClassicBed[]::new);
             Plate[] plates = Plate.streamPlates().map(FurnitureBlock::getBlock).toArray(Plate[]::new);
+            Cutlery[] cutleries = Cutlery.streamCutlery().map(FurnitureBlock::getBlock).toArray(Cutlery[]::new);
 
             this.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                     .add(stoneCounters)
@@ -125,6 +126,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(stoneNaturalTables)
                     .add(stoneClassicNightstands)
                     .add(plates)
+                    .add(cutleries)
                     .add(BlockItemRegistry.RAW_CONCRETE)
                     .add(BlockItemRegistry.IRON_CHAIN);
 
@@ -492,6 +494,11 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock plate : plates) {
                 offerPlate(plate.block,  Ingredient.ofItems(plate.getPlateMaterial()), Ingredient.ofItems(Items.ITEM_FRAME), Ingredient.ofItems(plate.getPlateDecoration()), exporter);
             }
+
+            FurnitureBlock[] cutleries = Cutlery.streamCutlery().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock cutlery : cutleries) {
+                offerCutlery(cutlery.block,  Ingredient.ofItems(cutlery.getCutleryMaterial()), exporter);
+            }
         }
     }
 
@@ -604,7 +611,10 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
         FurnitureRecipeJsonFactory.create(output, 1).input('X', legMaterial).input('Z', baseBed).input('Y', fence).pattern("YZY").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
     public static void offerPlate(ItemConvertible output, Ingredient base, Ingredient frame, Ingredient decoration, Consumer<RecipeJsonProvider> exporter) {
-        FurnitureRecipeJsonFactory.create(output, 1).input('X', base).input('Z', frame).input('Y', decoration).pattern("XYX").pattern("YZY").pattern("XYX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+        FurnitureRecipeJsonFactory.create(output, 4).input('X', base).input('Z', frame).input('Y', decoration).pattern("XYX").pattern("YZY").pattern("XYX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+    public static void offerCutlery(ItemConvertible output, Ingredient base, Consumer<RecipeJsonProvider> exporter) {
+        FurnitureRecipeJsonFactory.create(output, 4).input('X', base).pattern("X X").pattern("X X").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 }
 

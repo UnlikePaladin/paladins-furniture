@@ -1102,8 +1102,8 @@ public class BlockItemRegistry {
     public static final Block DEEPSLATE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.DEEPSLATE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block DEEPSLATE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
     public static final Block WORKING_TABLE = new WorkingTable(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE).sounds(BlockSoundGroup.WOOD));
-
     public static final Block BASIC_PLATE = new Plate(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
+    public static final Block BASIC_CUTLERY = new Cutlery(FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE));
 
     public static Stream<Block> streamBlocks() {
         return BLOCKS.stream();
@@ -2017,6 +2017,7 @@ public class BlockItemRegistry {
         registerFurniture("iron_stove", IRON_STOVE, true);
         registerFurniture("kitchen_stovetop", KITCHEN_STOVETOP, true);
         registerFurniture("basic_plate", BASIC_PLATE, true);
+        registerFurniture("basic_cutlery", BASIC_CUTLERY, true);
 
         registerBlock("oak_herringbone_planks", OAK_HERRINGBONE_PLANKS, true);
         registerBlock("spruce_herringbone_planks", SPRUCE_HERRINGBONE_PLANKS, true);
