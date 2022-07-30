@@ -105,14 +105,13 @@ public class Plate extends HorizontalFacingBlockWEntity implements Waterloggable
         }
         return super.onUse(state, world, pos, player, hand, hit);
     }
-
     @Override
-    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-        if (state.get(CUTLERY)) {
-            ItemEntity itemEntity = new ItemEntity((World) world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(BlockItemRegistry.BASIC_CUTLERY, 1));
+    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+        if (state.get(CUTLERY) && !player.getAbilities().creativeMode) {
+            ItemEntity itemEntity = new ItemEntity( world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(BlockItemRegistry.BASIC_CUTLERY, 1));
             world.spawnEntity(itemEntity);
         }
-        super.onBroken(world, pos, state);
+        super.onBreak(world, pos, state, player);
     }
 
     @Nullable
@@ -148,6 +147,13 @@ public class Plate extends HorizontalFacingBlockWEntity implements Waterloggable
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (state.get(WATERLOGGED)) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+        if (!state.canPlaceAt(world, pos)) {
+            if (state.get(CUTLERY)) {
+                ItemEntity itemEntity = new ItemEntity((World) world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(BlockItemRegistry.BASIC_CUTLERY, 1));
+                world.spawnEntity(itemEntity);
+            }
+            return Blocks.AIR.getDefaultState();
         }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
