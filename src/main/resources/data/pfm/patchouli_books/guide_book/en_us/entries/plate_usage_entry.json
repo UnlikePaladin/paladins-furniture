@@ -1,0 +1,15 @@
+{
+  "name": "Usage",
+  "icon": "pfm:basic_plate",
+  "category": "pfm:plate_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "To use the plate right click with food on it, to eat the food right click again, in case you want to remove the food without eating it, shift right click. To add the cutlery right click the plate while holding it, you could also place the cutlery first and then right click on it with a plate."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

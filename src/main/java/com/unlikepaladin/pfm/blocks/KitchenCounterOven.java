@@ -1,17 +1,17 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
-import net.minecraft.block.ShapeContext;
+import com.unlikepaladin.pfm.registry.StatisticsRegistry;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -31,9 +31,11 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
-public class KitchenCounterOven extends Stove{
+public class KitchenCounterOven extends SmokerBlock implements Waterloggable {
     private static final List<FurnitureBlock> WOOD_COUNTER_OVENS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_COUNTER_OVENS = new ArrayList<>();
+
+    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public KitchenCounterOven(Settings settings) {
         super(settings);
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCounterOven.class)){
@@ -42,6 +44,7 @@ public class KitchenCounterOven extends Stove{
         else if (this.getClass().isAssignableFrom(KitchenCounterOven.class)){
             STONE_COUNTER_OVENS.add(new FurnitureBlock(this, "kitchen_counter_oven"));
         }
+        setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false).with(FACING, Direction.NORTH).with(LIT, false));
     }
 
     public static Stream<FurnitureBlock> streamWoodCounterOvens() {
@@ -56,16 +59,16 @@ public class KitchenCounterOven extends Stove{
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new StoveBlockEntity(BlockEntityRegistry.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, pos, state);
+        return new CounterOvenBlockEntity(pos, state);
     }
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
     }
-
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(UP);
         builder.add(DOWN);
+        builder.add(WATERLOGGED);
         super.appendProperties(builder);
     }
     public static boolean connectsVertical(Block block) {
@@ -100,6 +103,18 @@ public class KitchenCounterOven extends Stove{
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         return checkType(world, type, BlockEntityRegistry.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
+    }
+
+    @Override
+    public void openScreen(World world, BlockPos pos, PlayerEntity player) {
+        //This is called by the onUse method inside AbstractFurnaceBlock so
+        //it is a little bit different of how you open the screen for normal container
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof CounterOvenBlockEntity) {
+            player.openHandledScreen((NamedScreenHandlerFactory)blockEntity);
+            // Optional: increment player's stat
+            player.incrementStat(StatisticsRegistry.STOVE_OPENED);
+        }
     }
 
     protected static final VoxelShape COUNTER_OVEN = VoxelShapes.union(createCuboidShape(0, 1, 0, 16, 14, 14),createCuboidShape(0, 0, 0, 16, 1, 12),createCuboidShape(0, 14, 0, 16, 16, 16),createCuboidShape(1.8, 11.2, 14.54, 14.3, 11.8, 15.14),createCuboidShape(2.5, 11.2, 13.07, 3.1, 11.8, 14.57),createCuboidShape(12.6, 11.2, 13.07, 13.2, 11.8, 14.57),createCuboidShape(1.8, 1.9, 14.44, 14.3, 2.5, 15.04),createCuboidShape(2.5, 1.9, 12.47, 3.1, 2.5, 14.47),createCuboidShape(12.6, 1.9, 12.47, 13.2, 2.5, 14.47));

@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 
-import com.unlikepaladin.pfm.blocks.blockentities.IronStoveBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import net.minecraft.block.BlockState;
@@ -10,7 +10,6 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -69,27 +68,21 @@ public class IronStove extends Stove {
         if (random.nextDouble() < 0.1) {
             world.playSound(x, y, z, SoundEvents.BLOCK_SMOKER_SMOKE, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
         }
-        int min = 0;
-        int max = 3;
-        int griddleChosen = (int)Math.floor(Math.random()*(max-min+1)+min);
-        switch (griddleChosen) {
-            case 0 -> world.addParticle(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
-            case 1 -> world.addParticle(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
-            case 2 -> world.addParticle(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
-            case 3 -> world.addParticle(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
+    }
+
+    @Override
+    @Nullable
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        if (world.isClient) {
+                return checkType(type, BlockEntityRegistry.IRON_STOVE_BLOCK_ENTITY, StoveBlockEntity::clientTick);
+        } else {
+                return checkType(type, BlockEntityRegistry.IRON_STOVE_BLOCK_ENTITY, StoveBlockEntity::litServerTick);
         }
     }
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new IronStoveBlockEntity(pos, state);
-    }
-
-
-    @Override
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(world, type, BlockEntityRegistry.IRON_STOVE_BLOCK_ENTITY);
+        return new StoveBlockEntity(BlockEntityRegistry.IRON_STOVE_BLOCK_ENTITY, pos, state);
     }
 
     @Override
@@ -97,7 +90,7 @@ public class IronStove extends Stove {
         //This is called by the onUse method inside AbstractFurnaceBlock so
         //it is a little bit different of how you open the screen for normal container
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof IronStoveBlockEntity) {
+        if (blockEntity instanceof StoveBlockEntity) {
             player.openHandledScreen((NamedScreenHandlerFactory)blockEntity);
             // Optional: increment player's stat
             player.incrementStat(Stats.INTERACT_WITH_FURNACE);

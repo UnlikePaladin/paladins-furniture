@@ -8,17 +8,25 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -30,6 +38,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
 
@@ -62,6 +71,45 @@ public class Stove extends SmokerBlock implements Waterloggable {
             player.incrementStat(StatisticsRegistry.STOVE_OPENED);
         }
     }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (world.isClient) {
+            return ActionResult.SUCCESS;
+        }
+        if (!player.isSneaking()) {
+            ItemStack itemStack;
+            StoveBlockEntity stoveBlockEntity;
+            Optional<CampfireCookingRecipe> optional;
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            if (blockEntity instanceof StoveBlockEntity && (optional = (stoveBlockEntity = (StoveBlockEntity)blockEntity).getRecipeFor(itemStack = player.getStackInHand(hand))).isPresent()) {
+                if (stoveBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+                    player.incrementStat(StatisticsRegistry.STOVE_OPENED);
+                    return ActionResult.SUCCESS;
+                }
+            }
+            if(blockEntity instanceof StoveBlockEntity){
+                stoveBlockEntity = (StoveBlockEntity)blockEntity;
+                for (int i = 0; i < stoveBlockEntity.getItemsBeingCooked().size(); i++) {
+                    ItemStack stack = stoveBlockEntity.getItemsBeingCooked().get(i);
+                    if (stack.isEmpty()) continue;
+                    if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) {
+                        ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stoveBlockEntity.removeStack(i));
+                        world.spawnEntity(itemEntity);
+                        player.incrementStat(StatisticsRegistry.STOVE_OPENED);
+                        return ActionResult.SUCCESS;
+                    }
+                }
+                return ActionResult.CONSUME;
+            }
+            return ActionResult.PASS;
+        }
+        else{
+            this.openScreen(world, pos, player);
+        }
+        return ActionResult.CONSUME;
+    }
+
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -124,7 +172,11 @@ public class Stove extends SmokerBlock implements Waterloggable {
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return Stove.checkType(world, type, BlockEntityRegistry.STOVE_BLOCK_ENTITY);
+        if (world.isClient) {
+                return checkType(type, BlockEntityRegistry.STOVE_BLOCK_ENTITY, StoveBlockEntity::clientTick);
+        } else {
+                return checkType(type, BlockEntityRegistry.STOVE_BLOCK_ENTITY, StoveBlockEntity::litServerTick);
+        }
     }
 
 }

@@ -11,17 +11,15 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
-public class IronStoveBlockEntity extends AbstractFurnaceBlockEntity {
-    public IronStoveBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntityRegistry.IRON_STOVE_BLOCK_ENTITY, pos, state, RecipeType.SMOKING);
+public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
+    public CounterOvenBlockEntity(BlockPos pos, BlockState state) {
+        super(BlockEntityRegistry.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, pos, state, RecipeType.SMOKING);
     }
      String blockname = this.getCachedState().getBlock().getTranslationKey();
     @Override
     protected Text getContainerName() {
-        blockname = blockname.replace("block.pfm", "");
-        return new TranslatableText("container.pfm" + blockname);
+        return new TranslatableText("container.pfm.kitchen_counter_oven");
     }
-
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {

@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "The stove can be used like a smoker which means any smoker recipes will work."
+      "text": "The stove can be used like a smoker and a campfire which means any smoker or campfire recipes will work."
     },
     {
       "type": "pfm:stoverecipe2template",
