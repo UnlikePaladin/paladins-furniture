@@ -11,6 +11,15 @@
       "type": "pfm:furniturerecipe2template",
       "recipe": "pfm:white_stove",
       "recipe2": "pfm:iron_stove"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "There is also a Built-In Oven and separate Cooktop that can be crafted instead. To change the oven variant just change the ingredients to match the counter material. The Cooktop has the Campfire's functionality, while the Oven the Smoker's."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_kitchen_counter_oven",
+      "recipe2": "pfm:kitchen_stovetop"
     }
   ]
 }

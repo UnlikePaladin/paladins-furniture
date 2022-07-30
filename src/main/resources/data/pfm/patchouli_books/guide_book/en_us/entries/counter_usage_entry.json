@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "The counter is purely decorative, they connect to each other in a similar manner to stairs."
+      "text": "The counter is purely decorative, they connect to each other in a similar manner to stairs, however if you stack them vertically, they will change into wall like cabinets that can also be extended and connected."
     },
     {
       "type": "patchouli:empty",

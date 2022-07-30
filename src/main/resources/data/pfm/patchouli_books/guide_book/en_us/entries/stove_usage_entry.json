@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "The use the stove right click on it. This will open the stove's GUI, on the top slot goes whatever you want to cook while on the bottom you will need to put your fuel, which can be any of the normal furnace or smoker fuels."
+      "text": "The stove works like a campfire and a smoker simultaneously, to use the campfire function right click with food on it and it will start cooking, to remove it, right click again once it's cooked. To use the smoker function shift right click on it with an empty hand. This will open the Stove's GUI, it works just like a furnace or smoker would."
     },
     {
       "type": "pfm:furnitureusagetemplate",

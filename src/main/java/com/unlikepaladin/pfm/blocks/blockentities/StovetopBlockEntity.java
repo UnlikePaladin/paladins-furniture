@@ -69,15 +69,15 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         return createNbt();
     }
 
-    public static void unlitServerTick(World world, BlockPos pos, BlockState state, StovetopBlockEntity campfire) {
+    public static void unlitServerTick(World world, BlockPos pos, BlockState state, StovetopBlockEntity stovetopBlockEntity) {
         boolean bl = false;
-        for (int i = 0; i < campfire.itemsBeingCooked.size(); ++i) {
-            if (campfire.cookingTimes[i] <= 0) continue;
+        for (int i = 0; i < stovetopBlockEntity.itemsBeingCooked.size(); ++i) {
+            if (stovetopBlockEntity.cookingTimes[i] <= 0) continue;
             bl = true;
-            campfire.cookingTimes[i] = MathHelper.clamp(campfire.cookingTimes[i] - 2, 0, campfire.cookingTotalTimes[i]);
+            stovetopBlockEntity.cookingTimes[i] = MathHelper.clamp(stovetopBlockEntity.cookingTimes[i] - 2, 0, stovetopBlockEntity.cookingTotalTimes[i]);
         }
         if (bl) {
-            CampfireBlockEntity.markDirty(world, pos, state);
+            StoveBlockEntity.markDirty(world, pos, state);
         }
     }
 

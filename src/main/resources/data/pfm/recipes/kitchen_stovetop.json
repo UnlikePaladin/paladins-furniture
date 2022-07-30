@@ -2,7 +2,7 @@
   "type": "pfm:furniture",
   "pattern": [
     "SSS",
-    "XSX",
+    "XYX",
     "SSS" 
 ],
    "key": {
@@ -11,6 +11,9 @@
     },
     "S": {
       "item": "minecraft:iron_ingot"
+    },
+    "Y": {
+      "item": "minecraft:flint_and_steel"
     }
   },
   "result": {
