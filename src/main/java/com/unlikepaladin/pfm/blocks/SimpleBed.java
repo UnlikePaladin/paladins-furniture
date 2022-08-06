@@ -34,10 +34,11 @@ public class SimpleBed extends BedBlock implements Waterloggable {
     public static EnumProperty<MiddleShape> SHAPE = EnumProperty.of("shape", MiddleShape.class);
     private static final List<FurnitureBlock> SIMPLE_BEDS = new ArrayList<>();
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final BooleanProperty BUNK = BooleanProperty.of("bunk");
 
     public SimpleBed(DyeColor color, Settings settings) {
         super(color, settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false).with(PART, BedPart.FOOT).with(OCCUPIED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false).with(PART, BedPart.FOOT).with(OCCUPIED, false).with(BUNK, false));
         if(this.getClass().isAssignableFrom(SimpleBed.class)){
             String bedColor = color.getName();
             SIMPLE_BEDS.add(new FurnitureBlock(this, bedColor+"_simple_bed"));
@@ -74,7 +75,7 @@ public class SimpleBed extends BedBlock implements Waterloggable {
             }
             return Blocks.AIR.getDefaultState();
         }
-        return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(FACING)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return getShape(state, world, pos, state.get(FACING));
     }
 
     @Override
@@ -102,6 +103,7 @@ public class SimpleBed extends BedBlock implements Waterloggable {
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(SHAPE);
         stateManager.add(WATERLOGGED);
+        stateManager.add(BUNK);
         super.appendProperties(stateManager);
     }
 
@@ -113,7 +115,7 @@ public class SimpleBed extends BedBlock implements Waterloggable {
     public boolean isBed(WorldAccess world, BlockPos pos, Direction direction, Direction bedDirection, BlockState originalState)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
-        if(state.getBlock().getClass().isAssignableFrom(SimpleBed.class))
+        if(state.getBlock().getClass().isAssignableFrom(SimpleBed.class) && state.getBlock() instanceof SimpleBed)
         {
             if (state.get(PART) == originalState.get(PART)) {
                 Direction sourceDirection = state.get(FACING);
@@ -129,17 +131,27 @@ public class SimpleBed extends BedBlock implements Waterloggable {
         boolean right = isBed(world, pos, dir.rotateYClockwise(), dir, state);
         if(left && right)
         {
-            return state.with(SHAPE, MiddleShape.MIDDLE);
+            state = state.with(SHAPE, MiddleShape.MIDDLE);
         }
         else if(left)
         {
-            return state.with(SHAPE, MiddleShape.RIGHT);
+            state = state.with(SHAPE, MiddleShape.RIGHT);
         }
         else if(right)
         {
-            return state.with(SHAPE, MiddleShape.LEFT);
+            state = state.with(SHAPE, MiddleShape.LEFT);
         }
-        return state.with(SHAPE, MiddleShape.SINGLE);
+        else {
+            state = state.with(SHAPE, MiddleShape.SINGLE);
+        }
+        boolean down = isBed(world, pos, Direction.DOWN, dir, state);
+        if (down) {
+            state = state.with(BUNK, true);
+        }
+        else {
+            state = state.with(BUNK, false);
+        }
+        return state;
     }
 
     static final VoxelShape HEAD = VoxelShapes.union(createCuboidShape(0, 2, 0, 16, 14, 3),createCuboidShape(0, 2, 3, 16, 9, 16),createCuboidShape(1, 9, 3, 15, 10, 11));
@@ -187,121 +199,245 @@ public class SimpleBed extends BedBlock implements Waterloggable {
     static final VoxelShape FOOT_RIGHT_EAST = rotateShape(Direction.NORTH, Direction.EAST, FOOT_RIGHT);
     static final VoxelShape FOOT_RIGHT_WEST = rotateShape(Direction.NORTH, Direction.WEST, FOOT_RIGHT);
 
+    static final VoxelShape HEAD_BUNK = createCuboidShape(0, -2, 0,16, 2, 3);
+    static final VoxelShape HEAD_BUNK_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, HEAD_BUNK);
+    static final VoxelShape HEAD_BUNK_EAST = rotateShape(Direction.NORTH, Direction.EAST, HEAD_BUNK);
+    static final VoxelShape HEAD_BUNK_WEST = rotateShape(Direction.NORTH, Direction.WEST, HEAD_BUNK);
+
+    static final VoxelShape HEAD_SINGLE_BUNK = VoxelShapes.union(HEAD_SINGLE, HEAD_BUNK);
+    static final VoxelShape HEAD_SINGLE_SOUTH_BUNK = VoxelShapes.union(HEAD_SINGLE_SOUTH, HEAD_BUNK_SOUTH);
+    static final VoxelShape HEAD_SINGLE_EAST_BUNK = VoxelShapes.union(HEAD_SINGLE_EAST, HEAD_BUNK_EAST);
+    static final VoxelShape HEAD_SINGLE_WEST_BUNK = VoxelShapes.union(HEAD_SINGLE_WEST, HEAD_BUNK_WEST);
+
+    static final VoxelShape FOOT_BUNK_LEFT = createCuboidShape(0, -6, 13,3, 0, 16);
+    static final VoxelShape FOOT_BUNK_LEFT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FOOT_BUNK_LEFT);
+    static final VoxelShape FOOT_BUNK_LEFT_EAST = rotateShape(Direction.NORTH, Direction.EAST, FOOT_BUNK_LEFT);
+    static final VoxelShape FOOT_BUNK_LEFT_WEST = rotateShape(Direction.NORTH, Direction.WEST, FOOT_BUNK_LEFT);
+
+    static final VoxelShape FOOT_BUNK_RIGHT = createCuboidShape(13, -6, 13,16, 0, 16);
+    static final VoxelShape FOOT_BUNK_RIGHT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FOOT_BUNK_RIGHT);
+    static final VoxelShape FOOT_BUNK_RIGHT_EAST = rotateShape(Direction.NORTH, Direction.EAST, FOOT_BUNK_RIGHT);
+    static final VoxelShape FOOT_BUNK_RIGHT_WEST = rotateShape(Direction.NORTH, Direction.WEST, FOOT_BUNK_RIGHT);
+
+    static final VoxelShape FOOT_SINGLE_BUNK = VoxelShapes.union(FOOT_SINGLE, FOOT_BUNK_LEFT, FOOT_BUNK_RIGHT);
+    static final VoxelShape FOOT_SINGLE_SOUTH_BUNK = VoxelShapes.union(FOOT_SINGLE_SOUTH, FOOT_BUNK_LEFT_SOUTH, FOOT_BUNK_RIGHT_SOUTH);
+    static final VoxelShape FOOT_SINGLE_EAST_BUNK = VoxelShapes.union(FOOT_SINGLE_EAST, FOOT_BUNK_LEFT_EAST, FOOT_BUNK_RIGHT_EAST);
+    static final VoxelShape FOOT_SINGLE_WEST_BUNK = VoxelShapes.union(FOOT_SINGLE_WEST, FOOT_BUNK_LEFT_WEST, FOOT_BUNK_RIGHT_WEST);
+
+    static final VoxelShape FOOT_LEFT_BUNK = VoxelShapes.union(FOOT_LEFT, FOOT_BUNK_LEFT);
+    static final VoxelShape FOOT_LEFT_SOUTH_BUNK = VoxelShapes.union(FOOT_LEFT_SOUTH, FOOT_BUNK_LEFT_SOUTH);
+    static final VoxelShape FOOT_LEFT_EAST_BUNK = VoxelShapes.union(FOOT_LEFT_EAST, FOOT_BUNK_LEFT_EAST);
+    static final VoxelShape FOOT_LEFT_WEST_BUNK = VoxelShapes.union(FOOT_LEFT_WEST, FOOT_BUNK_LEFT_WEST);
+
+    static final VoxelShape FOOT_RIGHT_BUNK = VoxelShapes.union(FOOT_RIGHT, FOOT_BUNK_RIGHT);
+    static final VoxelShape FOOT_RIGHT_SOUTH_BUNK = VoxelShapes.union(FOOT_RIGHT_SOUTH, FOOT_BUNK_RIGHT_SOUTH);
+    static final VoxelShape FOOT_RIGHT_EAST_BUNK = VoxelShapes.union(FOOT_RIGHT_EAST, FOOT_BUNK_RIGHT_EAST);
+    static final VoxelShape FOOT_RIGHT_WEST_BUNK = VoxelShapes.union(FOOT_RIGHT_WEST, FOOT_BUNK_RIGHT_WEST);
+
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         BedPart bedPart = state.get(PART);
         MiddleShape middleShape = state.get(SHAPE);
-        switch (middleShape){
-            case MIDDLE -> {
-                switch (dir){
-                    case NORTH -> {
-                        if(bedPart == BedPart.HEAD){
-                            return HEAD;
+        boolean bunk = state.get(BUNK);
+        if(!bunk){
+            switch (middleShape){
+                case MIDDLE -> {
+                    switch (dir){
+                        case NORTH -> {
+                            if(bedPart == BedPart.HEAD){
+                                return HEAD;
+                            }
+                            return FOOT;
                         }
-                        return FOOT;
-                    }
-                    case EAST -> {
-                        if(bedPart == BedPart.HEAD){
-                            return HEAD_EAST;
+                        case EAST -> {
+                            if(bedPart == BedPart.HEAD){
+                                return HEAD_EAST;
+                            }
+                            return FOOT_EAST;
                         }
-                        return FOOT_EAST;
-                    }
-                    case WEST -> {
-                        if(bedPart == BedPart.HEAD){
-                            return HEAD_WEST;
+                        case WEST -> {
+                            if(bedPart == BedPart.HEAD){
+                                return HEAD_WEST;
+                            }
+                            return FOOT_WEST;
                         }
-                        return FOOT_WEST;
-                    }
-                    default -> {
-                        if(bedPart == BedPart.HEAD){
-                            return HEAD_SOUTH;
+                        default -> {
+                            if(bedPart == BedPart.HEAD){
+                                return HEAD_SOUTH;
+                            }
+                            return FOOT_SOUTH;
                         }
-                        return FOOT_SOUTH;
                     }
                 }
-            }
-            case SINGLE -> {
-                switch (dir){
-                    case NORTH -> {
-                        if(bedPart == BedPart.HEAD){
-                            return HEAD_SINGLE;
+                case SINGLE -> {
+                    switch (dir){
+                        case NORTH -> {
+                            if(bedPart == BedPart.HEAD){
+                                return HEAD_SINGLE;
+                            }
+                            return FOOT_SINGLE;
                         }
-                        return FOOT_SINGLE;
-                    }
-                    case EAST -> {
-                        if(bedPart == BedPart.HEAD){
-                            return HEAD_SINGLE_EAST;
+                        case EAST -> {
+                            if(bedPart == BedPart.HEAD){
+                                return HEAD_SINGLE_EAST;
+                            }
+                            return FOOT_SINGLE_EAST;
                         }
-                        return FOOT_SINGLE_EAST;
-                    }
-                    case WEST -> {
-                        if(bedPart == BedPart.HEAD){
-                            return HEAD_SINGLE_WEST;
+                        case WEST -> {
+                            if(bedPart == BedPart.HEAD){
+                                return HEAD_SINGLE_WEST;
+                            }
+                            return FOOT_SINGLE_WEST;
                         }
-                        return FOOT_SINGLE_WEST;
-                    }
-                    default -> {
-                        if(bedPart == BedPart.HEAD){
-                            return HEAD_SINGLE_SOUTH;
+                        default -> {
+                            if(bedPart == BedPart.HEAD){
+                                return HEAD_SINGLE_SOUTH;
+                            }
+                            return FOOT_SINGLE_SOUTH;
                         }
-                        return FOOT_SINGLE_SOUTH;
                     }
                 }
-            }
-        case RIGHT -> {
-            switch (dir) {
-                case NORTH -> {
-                    if (bedPart == BedPart.HEAD) {
-                        return HEAD_RIGHT;
+                case RIGHT -> {
+                    switch (dir) {
+                        case NORTH -> {
+                            if (bedPart == BedPart.HEAD) {
+                                return HEAD_RIGHT;
+                            }
+                            return FOOT_RIGHT;
+                        }
+                        case EAST -> {
+                            if (bedPart == BedPart.HEAD) {
+                                return HEAD_RIGHT_EAST;
+                            }
+                            return FOOT_RIGHT_EAST;
+                        }
+                        case WEST -> {
+                            if (bedPart == BedPart.HEAD) {
+                                return HEAD_RIGHT_WEST;
+                            }
+                            return FOOT_RIGHT_WEST;
+                        }
+                        default -> {
+                            if (bedPart == BedPart.HEAD) {
+                                return HEAD_RIGHT_SOUTH;
+                            }
+                            return FOOT_RIGHT_SOUTH;
+                        }
                     }
-                    return FOOT_RIGHT;
-                }
-                case EAST -> {
-                    if (bedPart == BedPart.HEAD) {
-                        return HEAD_RIGHT_EAST;
-                    }
-                    return FOOT_RIGHT_EAST;
-                }
-                case WEST -> {
-                    if (bedPart == BedPart.HEAD) {
-                        return HEAD_RIGHT_WEST;
-                    }
-                    return FOOT_RIGHT_WEST;
                 }
                 default -> {
-                    if (bedPart == BedPart.HEAD) {
-                        return HEAD_RIGHT_SOUTH;
-                    }
-                    return FOOT_RIGHT_SOUTH;
+                    switch (dir) {
+                        case NORTH -> {
+                            if (bedPart == BedPart.HEAD) {
+                                return HEAD_LEFT;
+                            }
+                            return FOOT_LEFT;
+                        }
+                        case EAST -> {
+                            if (bedPart == BedPart.HEAD) {
+                                return HEAD_LEFT_EAST;
+                            }
+                            return FOOT_LEFT_EAST;
+                        }
+                        case WEST -> {
+                            if (bedPart == BedPart.HEAD) {
+                                return HEAD_LEFT_WEST;
+                            }
+                            return FOOT_LEFT_WEST;
+                        }
+                        default -> {
+                            if (bedPart == BedPart.HEAD) {
+                                return HEAD_LEFT_SOUTH;
+                            }
+                            return FOOT_LEFT_SOUTH;
+                        }
                     }
                 }
             }
-            default -> {
+        }
+        else {
+            if (bedPart == BedPart.HEAD) {
                 switch (dir) {
                     case NORTH -> {
-                        if (bedPart == BedPart.HEAD) {
-                            return HEAD_LEFT;
-                        }
-                        return FOOT_LEFT;
+                        return HEAD_SINGLE_BUNK;
                     }
                     case EAST -> {
-                        if (bedPart == BedPart.HEAD) {
-                            return HEAD_LEFT_EAST;
-                        }
-                        return FOOT_LEFT_EAST;
+                        return HEAD_SINGLE_EAST_BUNK;
                     }
                     case WEST -> {
-                        if (bedPart == BedPart.HEAD) {
-                            return HEAD_LEFT_WEST;
-                        }
-                        return FOOT_LEFT_WEST;
+                        return HEAD_SINGLE_WEST_BUNK;
                     }
                     default -> {
-                        if (bedPart == BedPart.HEAD) {
-                            return HEAD_LEFT_SOUTH;
+                        return HEAD_SINGLE_SOUTH_BUNK;
+                    }
+                }
+            }
+            else{
+                switch (middleShape) {
+                    case SINGLE -> {
+                        switch (dir){
+                            case NORTH -> {
+                                return FOOT_SINGLE_BUNK;
+                            }
+                            case EAST -> {
+                                return FOOT_SINGLE_EAST_BUNK;
+                            }
+                            case WEST -> {
+                                return FOOT_SINGLE_WEST_BUNK;
+                            }
+                            default -> {
+                                return FOOT_SINGLE_SOUTH_BUNK;
+                            }
                         }
-                        return FOOT_LEFT_SOUTH;
+                    }
+                    case MIDDLE -> {
+                        switch (dir){
+                            case NORTH -> {
+                                return FOOT;
+                            }
+                            case EAST -> {
+                                return FOOT_EAST;
+                            }
+                            case WEST -> {
+                                return FOOT_WEST;
+                            }
+                            default -> {
+                                return FOOT_SOUTH;
+                            }
+                        }
+                    }
+                    case RIGHT ->{
+                        switch (dir) {
+                            case NORTH -> {
+                                return FOOT_RIGHT_BUNK;
+                            }
+                            case EAST -> {
+                                return FOOT_RIGHT_EAST_BUNK;
+                            }
+                            case WEST -> {
+                                return FOOT_RIGHT_WEST_BUNK;
+                            }
+                            default -> {
+                                return FOOT_RIGHT_SOUTH_BUNK;
+                            }
+                        }
+                    }
+                    default -> {
+                        switch (dir) {
+                            case NORTH -> {
+                                return FOOT_LEFT_BUNK;
+                            }
+                            case EAST -> {
+                                return FOOT_LEFT_EAST_BUNK;
+                            }
+                            case WEST -> {
+                                return FOOT_LEFT_WEST_BUNK;
+                            }
+                            default -> {
+                                return FOOT_LEFT_SOUTH_BUNK;
+                            }
+                        }
                     }
                 }
             }

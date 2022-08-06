@@ -38,7 +38,7 @@ public class ClassicBed extends SimpleBed {
     static final VoxelShape HEAD_EAST = rotateShape(Direction.NORTH, Direction.EAST, HEAD);
     static final VoxelShape HEAD_WEST = rotateShape(Direction.NORTH, Direction.WEST, HEAD);
 
-    static final VoxelShape FOOT = VoxelShapes.union(createCuboidShape(0, 2, 0, 16, 5, 13),createCuboidShape(0, 2, 13, 16, 10, 15));
+    static final VoxelShape FOOT = VoxelShapes.union(createCuboidShape(0, 2, 0, 16, 9, 13),createCuboidShape(0, 2, 13, 16, 10, 15));
     static final VoxelShape FOOT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FOOT);
     static final VoxelShape FOOT_EAST = rotateShape(Direction.NORTH, Direction.EAST, FOOT);
     static final VoxelShape FOOT_WEST = rotateShape(Direction.NORTH, Direction.WEST, FOOT);
@@ -78,11 +78,36 @@ public class ClassicBed extends SimpleBed {
     static final VoxelShape FOOT_RIGHT_EAST = rotateShape(Direction.NORTH, Direction.EAST, FOOT_RIGHT);
     static final VoxelShape FOOT_RIGHT_WEST = rotateShape(Direction.NORTH, Direction.WEST, FOOT_RIGHT);
 
+    static final VoxelShape FOOT_BUNK_LEFT = createCuboidShape(0, -5, 13,3, 0, 16);
+    static final VoxelShape FOOT_BUNK_LEFT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FOOT_BUNK_LEFT);
+    static final VoxelShape FOOT_BUNK_LEFT_EAST = rotateShape(Direction.NORTH, Direction.EAST, FOOT_BUNK_LEFT);
+    static final VoxelShape FOOT_BUNK_LEFT_WEST = rotateShape(Direction.NORTH, Direction.WEST, FOOT_BUNK_LEFT);
+
+    static final VoxelShape FOOT_BUNK_RIGHT = createCuboidShape(13, -5, 13,16, 0, 16);
+    static final VoxelShape FOOT_BUNK_RIGHT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FOOT_BUNK_RIGHT);
+    static final VoxelShape FOOT_BUNK_RIGHT_EAST = rotateShape(Direction.NORTH, Direction.EAST, FOOT_BUNK_RIGHT);
+    static final VoxelShape FOOT_BUNK_RIGHT_WEST = rotateShape(Direction.NORTH, Direction.WEST, FOOT_BUNK_RIGHT);
+
+    static final VoxelShape FOOT_SINGLE_BUNK = VoxelShapes.union(FOOT_SINGLE, FOOT_BUNK_LEFT, FOOT_BUNK_RIGHT);
+    static final VoxelShape FOOT_SINGLE_SOUTH_BUNK = VoxelShapes.union(FOOT_SINGLE_SOUTH, FOOT_BUNK_LEFT_SOUTH, FOOT_BUNK_RIGHT_SOUTH);
+    static final VoxelShape FOOT_SINGLE_EAST_BUNK = VoxelShapes.union(FOOT_SINGLE_EAST, FOOT_BUNK_LEFT_EAST, FOOT_BUNK_RIGHT_EAST);
+    static final VoxelShape FOOT_SINGLE_WEST_BUNK = VoxelShapes.union(FOOT_SINGLE_WEST, FOOT_BUNK_LEFT_WEST, FOOT_BUNK_RIGHT_WEST);
+
+    static final VoxelShape FOOT_LEFT_BUNK = VoxelShapes.union(FOOT_LEFT, FOOT_BUNK_LEFT);
+    static final VoxelShape FOOT_LEFT_SOUTH_BUNK = VoxelShapes.union(FOOT_LEFT_SOUTH, FOOT_BUNK_LEFT_SOUTH);
+    static final VoxelShape FOOT_LEFT_EAST_BUNK = VoxelShapes.union(FOOT_LEFT_EAST, FOOT_BUNK_LEFT_EAST);
+    static final VoxelShape FOOT_LEFT_WEST_BUNK = VoxelShapes.union(FOOT_LEFT_WEST, FOOT_BUNK_LEFT_WEST);
+
+    static final VoxelShape FOOT_RIGHT_BUNK = VoxelShapes.union(FOOT_RIGHT, FOOT_BUNK_RIGHT);
+    static final VoxelShape FOOT_RIGHT_SOUTH_BUNK = VoxelShapes.union(FOOT_RIGHT_SOUTH, FOOT_BUNK_RIGHT_SOUTH);
+    static final VoxelShape FOOT_RIGHT_EAST_BUNK = VoxelShapes.union(FOOT_RIGHT_EAST, FOOT_BUNK_RIGHT_EAST);
+    static final VoxelShape FOOT_RIGHT_WEST_BUNK = VoxelShapes.union(FOOT_RIGHT_WEST, FOOT_BUNK_RIGHT_WEST);
+
     @Override
     public boolean isBed(WorldAccess world, BlockPos pos, Direction direction, Direction bedDirection, BlockState originalState)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
-        if(state.getBlock() instanceof ClassicBed)
+        if(state.getBlock().getClass().isAssignableFrom(ClassicBed.class) && state.getBlock() instanceof ClassicBed)
         {
             if (state.get(PART) == originalState.get(PART)) {
                 Direction sourceDirection = state.get(FACING);
@@ -97,6 +122,75 @@ public class ClassicBed extends SimpleBed {
         Direction dir = state.get(FACING);
         BedPart bedPart = state.get(PART);
         MiddleShape middleShape = state.get(SHAPE);
+        boolean bunk = state.get(BUNK);
+        if (bedPart == BedPart.FOOT && bunk) {
+            switch (middleShape) {
+                case SINGLE -> {
+                    switch (dir) {
+                        case NORTH -> {
+                            return FOOT_SINGLE_BUNK;
+                        }
+                        case EAST -> {
+                            return FOOT_SINGLE_EAST_BUNK;
+                        }
+                        case WEST -> {
+                            return FOOT_SINGLE_WEST_BUNK;
+                        }
+                        default -> {
+                            return FOOT_SINGLE_SOUTH_BUNK;
+                        }
+                    }
+                }
+                case MIDDLE -> {
+                    switch (dir) {
+                        case NORTH -> {
+                            return FOOT;
+                        }
+                        case EAST -> {
+                            return FOOT_EAST;
+                        }
+                        case WEST -> {
+                            return FOOT_WEST;
+                        }
+                        default -> {
+                            return FOOT_SOUTH;
+                        }
+                    }
+                }
+                case RIGHT -> {
+                    switch (dir) {
+                        case NORTH -> {
+                            return FOOT_RIGHT_BUNK;
+                        }
+                        case EAST -> {
+                            return FOOT_RIGHT_EAST_BUNK;
+                        }
+                        case WEST -> {
+                            return FOOT_RIGHT_WEST_BUNK;
+                        }
+                        default -> {
+                            return FOOT_RIGHT_SOUTH_BUNK;
+                        }
+                    }
+                }
+                default -> {
+                    switch (dir) {
+                        case NORTH -> {
+                            return FOOT_LEFT_BUNK;
+                        }
+                        case EAST -> {
+                            return FOOT_LEFT_EAST_BUNK;
+                        }
+                        case WEST -> {
+                            return FOOT_LEFT_WEST_BUNK;
+                        }
+                        default -> {
+                            return FOOT_LEFT_SOUTH_BUNK;
+                        }
+                    }
+                }
+            }
+        }
         switch (middleShape){
             case MIDDLE -> {
                 switch (dir){

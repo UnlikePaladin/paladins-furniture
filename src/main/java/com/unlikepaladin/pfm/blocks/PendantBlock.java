@@ -63,11 +63,12 @@ public class PendantBlock extends PowerableBlock implements Waterloggable {
     public static BlockState canConnect(BlockState state, WorldAccess world, BlockPos pos) {
         boolean up = world.getBlockState(pos.up()).getBlock() instanceof PendantBlock;
         boolean down = world.getBlockState(pos.down()).getBlock() instanceof PendantBlock;
-
-        if (world.getBlockState(pos.up()).getBlock() instanceof PendantBlock) {
-         return state.with(UP, up).with(DOWN, down).with(LIT, (world.getBlockState(pos.up()).get(LIT)));
+        if (up) {
+            return state.with(UP, true).with(DOWN, down).with(LIT, (world.getBlockState(pos.up()).get(LIT)));
         }
-        else { return state.with(UP, up).with(DOWN, down);}
+        else {
+            return state.with(UP, false).with(DOWN, down);
+        }
     }
 
     @Override

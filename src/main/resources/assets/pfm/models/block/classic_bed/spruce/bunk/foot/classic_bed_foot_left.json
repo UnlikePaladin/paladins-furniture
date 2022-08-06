@@ -1,0 +1,9 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_bed/oak/bunk/foot/classic_bed_foot_left",
+	"textures": {
+		"0": "block/spruce_planks",
+		"particle": "block/spruce_planks"
+	}
+    
+}
