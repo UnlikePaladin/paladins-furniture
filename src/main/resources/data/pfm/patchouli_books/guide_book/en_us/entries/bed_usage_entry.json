@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "To use the bed just right click on it, it will let you sleep until the next day. If you place two or more beds they will connect. Villagers can also sleep on it."
+      "text": "To use the bed just right click on it, it will let you sleep until the next day. If you place two or more beds they will connect. Beds can also be stacked to create a bunk, there is no height or length limit. Villagers can also sleep on it."
     },
     {
       "type": "patchouli:empty",

@@ -380,6 +380,150 @@
                 { "facing": "south" }
             ]},
             "apply": { "model": "pfm:block/classic_bed/acacia/head/classic_bed_head_left", "y": 180}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "north" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_left"}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "north" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_right"}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "south" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_left","y":180}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "south" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_right","y":180}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "west" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_left","y":270}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "west" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_right","y":270}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "east" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_left","y":90}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "east" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_right","y":90}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "left" },
+                { "facing": "north" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_left"}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "right" },
+                { "facing": "north" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_right"}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "left" },
+                { "facing": "south" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_left","y":180}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "right" },
+                { "facing": "south" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_right","y":180}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "left" },
+                { "facing": "west" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_left","y":270}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "right" },
+                { "facing": "west" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_right","y":270}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "left" },
+                { "facing": "east" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_left","y":90}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "right" },
+                { "facing": "east" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/classic_bed/acacia/bunk/foot/classic_bed_foot_right","y":90}
         }
     ]
 }

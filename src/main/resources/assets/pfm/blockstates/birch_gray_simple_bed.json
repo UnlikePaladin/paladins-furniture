@@ -380,6 +380,185 @@
                 { "facing": "south" }
             ]},
             "apply": { "model": "pfm:block/simple_bed/birch/head/simple_bed_head_left", "y": 180}
+        },
+
+        {
+            "when": { "AND": [
+                { "part": "head" },
+               { "facing": "north" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/head/simple_bed_head"}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "north" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_right"}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "north" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_left"}
+        }, 
+        {
+            "when": { "AND": [
+                { "part": "head" },
+                { "facing": "south" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/head/simple_bed_head", "y":180}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "south" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_right", "y":180}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "south" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_left", "y":180}
+        }, 
+        {
+            "when": { "AND": [
+                { "part": "head" },
+                { "facing": "east" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/head/simple_bed_head", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "east" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_right", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "east" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_left", "y":90}
+        }, 
+        {
+            "when": { "AND": [
+                { "part": "head" },
+                { "facing": "west" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/head/simple_bed_head", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "west" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_right", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "single" },
+                { "facing": "west" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_left", "y":270}
+        },
+
+       
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "right" },
+                { "facing": "north" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_right"}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "left" },
+                { "facing": "north" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_left"}
+        }, 
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "right" },
+                { "facing": "south" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_right", "y":180}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "left" },
+                { "facing": "south" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_left", "y":180}
+        }, 
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "right" },
+                { "facing": "east" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_right", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "left" },
+                { "facing": "east" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_left", "y":90}
+        }, 
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "right" },
+                { "facing": "west" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_right", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "shape": "left" },
+                { "facing": "west" },
+                { "bunk": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bed/birch/bunk/foot/simple_bed_foot_left", "y":270}
         }
     ]
 }
