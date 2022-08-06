@@ -714,6 +714,15 @@
   "block.pfm.warped_black_classic_bed": "Warped Black Classic Bed",
   "block.pfm.warped_white_classic_bed": "Warped White Classic Bed",
 
+  "block.pfm.oak_simple_bunk_ladder": "Oak Simple Bunk Ladder",
+  "block.pfm.birch_simple_bunk_ladder": "Birch Simple Bunk Ladder",
+  "block.pfm.spruce_simple_bunk_ladder": "Spruce Simple Bunk Ladder",
+  "block.pfm.acacia_simple_bunk_ladder": "Acacia Simple Bunk Ladder",
+  "block.pfm.dark_oak_simple_bunk_ladder": "Dark Oak Simple Bunk Ladder",
+  "block.pfm.jungle_simple_bunk_ladder": "Jungle Simple Bunk Ladder",
+  "block.pfm.crimson_simple_bunk_ladder": "Crimson Simple Bunk Ladder",
+  "block.pfm.warped_simple_bunk_ladder": "Warped Simple Bunk Ladder",
+
   "container.pfm.nightstand": "Nightstand",
   "container.pfm.drawer": "Kitchen Drawer",
   "container.pfm.working_table": "Wood Working Table",

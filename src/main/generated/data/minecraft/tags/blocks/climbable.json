@@ -1,0 +1,13 @@
+{
+  "replace": false,
+  "values": [
+    "pfm:oak_simple_bunk_ladder",
+    "pfm:spruce_simple_bunk_ladder",
+    "pfm:birch_simple_bunk_ladder",
+    "pfm:dark_oak_simple_bunk_ladder",
+    "pfm:acacia_simple_bunk_ladder",
+    "pfm:jungle_simple_bunk_ladder",
+    "pfm:crimson_simple_bunk_ladder",
+    "pfm:warped_simple_bunk_ladder"
+  ]
+}

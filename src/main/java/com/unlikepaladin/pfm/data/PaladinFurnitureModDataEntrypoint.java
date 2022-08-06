@@ -94,6 +94,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             ClassicBed[] classicBeds = ClassicBed.streamClassicBeds().map(FurnitureBlock::getBlock).toArray(ClassicBed[]::new);
             Plate[] plates = Plate.streamPlates().map(FurnitureBlock::getBlock).toArray(Plate[]::new);
             Cutlery[] cutleries = Cutlery.streamCutlery().map(FurnitureBlock::getBlock).toArray(Cutlery[]::new);
+            SimpleBunkLadder[] simpleBunkLadders = SimpleBunkLadder.streamSimpleBunkLadder().map(FurnitureBlock::getBlock).toArray(SimpleBunkLadder[]::new);
 
             this.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                     .add(stoneCounters)
@@ -187,6 +188,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(workingTables)
                     .add(herringbonePlanks)
                     .add(simpleBeds)
+                    .add(simpleBunkLadders)
                     .add(classicBeds);
 
                 this.getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
@@ -195,6 +197,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 this.getOrCreateTagBuilder(BlockTags.BEDS)
                     .add(simpleBeds)
                     .add(classicBeds);
+
+                this.getOrCreateTagBuilder(BlockTags.CLIMBABLE)
+                        .add(simpleBunkLadders);
         }
 
     }

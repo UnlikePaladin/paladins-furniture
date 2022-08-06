@@ -1105,6 +1105,15 @@ public class BlockItemRegistry {
     public static final Block BASIC_PLATE = new Plate(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
     public static final Block BASIC_CUTLERY = new Cutlery(FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE));
 
+    public static final Block OAK_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
+    public static final Block SPRUCE_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
+    public static final Block BIRCH_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
+    public static final Block DARK_OAK_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
+    public static final Block ACACIA_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
+    public static final Block JUNGLE_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
+    public static final Block CRIMSON_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
+    public static final Block WARPED_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
+
     public static Stream<Block> streamBlocks() {
         return BLOCKS.stream();
     }
@@ -1728,6 +1737,15 @@ public class BlockItemRegistry {
         registerFurniture("crimson_gray_classic_bed", CRIMSON_GRAY_CLASSIC_BED, 1);
         registerFurniture("crimson_black_classic_bed", CRIMSON_BLACK_CLASSIC_BED, 1);
         registerFurniture("crimson_white_classic_bed", CRIMSON_WHITE_CLASSIC_BED, 1);
+
+        registerFurniture("oak_simple_bunk_ladder", OAK_SIMPLE_BUNK_LADDER, true);
+        registerFurniture("birch_simple_bunk_ladder", BIRCH_SIMPLE_BUNK_LADDER, true);
+        registerFurniture("spruce_simple_bunk_ladder", SPRUCE_SIMPLE_BUNK_LADDER, true);
+        registerFurniture("acacia_simple_bunk_ladder", ACACIA_SIMPLE_BUNK_LADDER, true);
+        registerFurniture("jungle_simple_bunk_ladder", JUNGLE_SIMPLE_BUNK_LADDER, true);
+        registerFurniture("dark_oak_simple_bunk_ladder", DARK_OAK_SIMPLE_BUNK_LADDER, true);
+        registerFurniture("crimson_simple_bunk_ladder", CRIMSON_SIMPLE_BUNK_LADDER, true);
+        registerFurniture("warped_simple_bunk_ladder", WARPED_SIMPLE_BUNK_LADDER, true);
 
         registerFurniture("oak_log_stool", OAK_LOG_STOOL, true);
         registerFurniture("birch_log_stool", BIRCH_LOG_STOOL, true);
