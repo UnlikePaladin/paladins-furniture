@@ -504,6 +504,11 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock cutlery : cutleries) {
                 offerCutlery(cutlery.block,  Ingredient.ofItems(cutlery.getCutleryMaterial()), exporter);
             }
+
+            FurnitureBlock[] simpleBunkLadders = SimpleBunkLadder.streamSimpleBunkLadder().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock simpleBunkLadder : simpleBunkLadders) {
+                offerSimpleBunkLadderRecipe(simpleBunkLadder.block,  Ingredient.ofItems(simpleBunkLadder.getBaseMaterial()), exporter);
+            }
         }
     }
 
@@ -620,6 +625,10 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
     }
     public static void offerCutlery(ItemConvertible output, Ingredient base, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonFactory.create(output, 4).input('X', base).pattern("X X").pattern("X X").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+
+    public static void offerSimpleBunkLadderRecipe(ItemConvertible output, Ingredient base, Consumer<RecipeJsonProvider> exporter) {
+        FurnitureRecipeJsonFactory.create(output, 4).input('Y', base).input('X', Ingredient.ofItems(Items.STICK)).pattern("X X").pattern("XYX").pattern("X X").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 }
 
