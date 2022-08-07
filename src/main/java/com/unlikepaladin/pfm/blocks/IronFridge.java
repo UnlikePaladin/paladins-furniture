@@ -95,9 +95,7 @@ public class IronFridge extends Fridge{
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
 
-        if (!(direction.getAxis() != Direction.Axis.Y != (direction == Direction.DOWN) || neighborState.getBlock() == this.freezer.get())) {
-            return Blocks.AIR.getDefaultState();
-        }
+
         if (direction == Direction.DOWN && !state.canPlaceAt(world, pos)) {
             return Blocks.AIR.getDefaultState();
         }

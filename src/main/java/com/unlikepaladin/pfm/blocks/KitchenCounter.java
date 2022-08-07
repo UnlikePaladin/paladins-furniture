@@ -91,7 +91,7 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
     private static CounterShape getShape(BlockState state, BlockView world, BlockPos pos) {
         Direction direction = state.get(FACING);
         BlockState blockState = world.getBlockState(pos.offset(direction));
-        if (isCounter(blockState)) {
+        if (canConnectToCounter(blockState)) {
             Direction direction2 = blockState.get(FACING);
 
             if (direction2.getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
@@ -104,13 +104,12 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
         }
 
         BlockState direction2 = world.getBlockState(pos.offset(direction.getOpposite()));
-        if (isCounter(direction2)) {
+        if (canConnectToCounter(direction2)) {
             Direction direction3 = direction2.get(FACING);
             if (direction3.getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3)) {
                 if (direction3 == direction.rotateYCounterclockwise()) {
                     return CounterShape.INNER_LEFT;
                 }
-
                 return CounterShape.INNER_RIGHT;
             }
         }
