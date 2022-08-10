@@ -1,0 +1,108 @@
+{
+    "multipart": [
+        {
+            "when": { 
+                "facing": "north" },
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet", "y":90}
+        },
+        {
+            "when": {
+                "facing": "south" },
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet", "y":270}
+        },
+        {
+            "when": {
+                "facing": "east" },
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet", "y":180}
+        },
+        {
+            "when": {
+                "facing": "west" },
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet"}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "north" },
+                { "toilet": "dirty" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_still_water", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "south" },
+                { "toilet": "dirty" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_still_water", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "east" },
+                { "toilet": "dirty" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_still_water", "y":180}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "west" },
+                { "toilet": "dirty" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_still_water"}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "north" },
+                { "toilet": "flushing" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_flowing_water", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "south" },
+                { "toilet": "flushing" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_flowing_water", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "east" },
+                { "toilet": "flushing" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_flowing_water", "y":180}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "west" },
+                { "toilet": "flushing" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_flowing_water"}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "north" },
+                { "toilet": "clean" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_still_water", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "south" },
+                { "toilet": "clean" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_still_water", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "east" },
+                { "toilet": "clean" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_still_water", "y":180}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "west" },
+                { "toilet": "clean" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_still_water"}
+        }
+    ]
+}

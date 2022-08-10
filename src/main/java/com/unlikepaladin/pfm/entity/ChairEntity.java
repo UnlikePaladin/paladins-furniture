@@ -2,12 +2,18 @@ package com.unlikepaladin.pfm.entity;
 
 import com.google.common.collect.UnmodifiableIterator;
 import com.unlikepaladin.pfm.blocks.BasicChair;
+import com.unlikepaladin.pfm.blocks.BasicToilet;
+import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
+import com.unlikepaladin.pfm.registry.NetworkRegistry;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.minecraft.entity.Dismounting;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -28,6 +34,15 @@ public class ChairEntity extends MobEntity {
                 if (!this.world.isClient){
                     this.discard();
                 }
+            }
+            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicToilet && world.isClient()){
+                if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed()) {
+                    PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
+                    passedData.writeBlockPos(this.getBlockPos());
+                    // Send packet to server to change the block for us
+                    ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.TOILET_USE_ID, passedData);
+                }
+                super.tick();
             }
             else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicChair){
                 super.tick();

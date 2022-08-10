@@ -1,7 +1,9 @@
 package com.unlikepaladin.pfm.client;
 
 import com.unlikepaladin.pfm.blocks.ArmChairDyeable;
+import com.unlikepaladin.pfm.blocks.BasicToilet;
 import com.unlikepaladin.pfm.blocks.ClassicChairDyeable;
+import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -46,6 +48,7 @@ public class ColorRegistry {
         addWaterColor(BlockItemRegistry.DEEPSLATE_KITCHEN_SINK);
         addWaterColor(BlockItemRegistry.DEEPSLATE_TILE_KITCHEN_SINK);
 
+        ColorProviderRegistry.BLOCK.register((state, view, pos, index) -> state.get(BasicToilet.TOILET_STATE) !=  ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : 0x534230, BlockItemRegistry.BASIC_TOILET);
 
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.WHITE_FRIDGE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.XBOX_FRIDGE, RenderLayer.getCutout());

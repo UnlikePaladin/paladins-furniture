@@ -508,6 +508,11 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock simpleBunkLadder : simpleBunkLadders) {
                 offerSimpleBunkLadderRecipe(simpleBunkLadder.block,  Ingredient.ofItems(simpleBunkLadder.getBaseMaterial()), exporter);
             }
+
+            FurnitureBlock[] basicToilets = BasicToilet.streamBasicToilet().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock toilet : basicToilets) {
+
+            }
         }
     }
 
