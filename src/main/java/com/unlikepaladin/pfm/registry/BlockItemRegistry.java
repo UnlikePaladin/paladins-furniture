@@ -1102,8 +1102,10 @@ public class BlockItemRegistry {
     public static final Block DEEPSLATE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.DEEPSLATE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block DEEPSLATE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
     public static final Block WORKING_TABLE = new WorkingTable(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE).sounds(BlockSoundGroup.WOOD));
-    public static final Block BASIC_PLATE = new Plate(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE));
-    public static final Block BASIC_CUTLERY = new Cutlery(FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE));
+    public static final Block BASIC_PLATE = new Plate(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE).nonOpaque());
+    public static final Block BASIC_CUTLERY = new Cutlery(FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE).nonOpaque());
+
+    public static final Block BASIC_TOILET = new BasicToilet(FabricBlockSettings.copyOf(Blocks.SMOOTH_QUARTZ).nonOpaque());
 
     public static final Block OAK_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
     public static final Block SPRUCE_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
@@ -2056,6 +2058,7 @@ public class BlockItemRegistry {
         registerFurniture("glass_modern_pendant", GLASS_MODERN_PENDANT, true);
         registerFurniture("simple_light", SIMPLE_LIGHT, true);
         registerBlock("light_switch", LIGHT_SWITCH, LIGHT_SWITCH_ITEM);
+        registerFurniture("basic_toilet", BASIC_TOILET, true);
 
 
         //Dye Kits
