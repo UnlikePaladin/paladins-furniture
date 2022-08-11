@@ -10,8 +10,14 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.Fluids;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.potion.PotionUtil;
+import net.minecraft.potion.Potions;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -38,7 +44,7 @@ public class BasicToilet extends BasicChair implements BlockEntityProvider {
     public static final EnumProperty<ToiletState> TOILET_STATE = EnumProperty.of("toilet", ToiletState.class);
     public BasicToilet(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(TOILET_STATE, ToiletState.CLEAN));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(TOILET_STATE, ToiletState.EMPTY));
         if(this.getClass().isAssignableFrom(BasicToilet.class)){
             BASIC_TOILET.add(new FurnitureBlock(this, "basic_toilet"));
         }
@@ -59,7 +65,27 @@ public class BasicToilet extends BasicChair implements BlockEntityProvider {
         if (!world.isClient) {
             player.incrementStat(StatisticsRegistry.TOILET_USED);
         }
-        if (player.isSneaking() && !world.isClient) {
+        if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY && (player.getStackInHand(hand).getItem() == Items.POTION) && PotionUtil.getPotion(player.getStackInHand(hand)) == Potions.WATER) {
+            world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
+            if (!player.getAbilities().creativeMode)
+                player.setStackInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
+             world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            return ActionResult.SUCCESS;
+        }
+        if (player.isSneaking() && !world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY) {
+            BlockPos sourcePos = pos.down().down();
+            BlockState sourceState = world.getBlockState(sourcePos);
+            if (sourceState.getFluidState().getFluid() == Fluids.WATER && !sourceState.getFluidState().isEmpty()) {
+                if (sourceState.getProperties().contains(Properties.WATERLOGGED)) {
+                    world.setBlockState(sourcePos, sourceState.with(Properties.WATERLOGGED, false)); }
+                else {
+                    world.setBlockState(sourcePos, Blocks.AIR.getDefaultState());
+                }
+                world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
+                return ActionResult.SUCCESS;
+            }
+        }
+        else if (player.isSneaking() && !world.isClient && (state.get(TOILET_STATE) == ToiletState.DIRTY || state.get(TOILET_STATE) == ToiletState.CLEAN)) {
             world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.FLUSHING));
             world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundRegistry.TOILET_FLUSHING_EVENT, SoundCategory.BLOCKS, 0.3f, 1.0f);
             ToiletBlockEntity blockEntity = (ToiletBlockEntity) world.getBlockEntity(pos);
@@ -103,7 +129,18 @@ public class BasicToilet extends BasicChair implements BlockEntityProvider {
     }
 
     public static void setClean(BlockState state, World world, BlockPos pos) {
-        world.setBlockState(pos, state.with(BasicToilet.TOILET_STATE, ToiletState.CLEAN), NOTIFY_ALL);
+        BlockPos sourcePos = pos.down().down();
+        BlockState sourceState = world.getBlockState(sourcePos);
+        if (sourceState.getFluidState().getFluid() == Fluids.WATER && !sourceState.getFluidState().isEmpty()) {
+            if (sourceState.getProperties().contains(Properties.WATERLOGGED)) {
+                world.setBlockState(sourcePos, sourceState.with(Properties.WATERLOGGED, false)); }
+            else {
+                world.setBlockState(sourcePos, Blocks.AIR.getDefaultState());
+            }
+            world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
+            return;
+        }
+        world.setBlockState(pos, state.with(BasicToilet.TOILET_STATE, ToiletState.EMPTY), NOTIFY_ALL);
     }
     protected static final VoxelShape TOILET_WEST = VoxelShapes.union(createCuboidShape(2, 1, 4.2,14, 6, 11.7),createCuboidShape(1, 0, 3.2,15, 1, 12.7),createCuboidShape(5, 5, 2.5,16, 10, 13.5),createCuboidShape(0, 6, 2.5,5, 20, 13.5),createCuboidShape(5, 8, 3.5,6, 21, 12.5));
     protected static final VoxelShape TOILET_NORTH = rotateShape(Direction.WEST, Direction.NORTH, TOILET_WEST);

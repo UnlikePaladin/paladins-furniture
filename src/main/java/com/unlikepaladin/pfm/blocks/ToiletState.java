@@ -5,7 +5,8 @@ import net.minecraft.util.StringIdentifiable;
 public enum ToiletState implements StringIdentifiable {
     CLEAN("clean"),
     DIRTY("dirty"),
-    FLUSHING("flushing");
+    FLUSHING("flushing"),
+    EMPTY("empty");
 
     private final String name;
 
