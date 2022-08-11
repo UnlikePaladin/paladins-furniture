@@ -74,15 +74,15 @@ public class IronStove extends Stove {
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         if (world.isClient) {
-                return checkType(type, BlockEntityRegistry.IRON_STOVE_BLOCK_ENTITY, StoveBlockEntity::clientTick);
+                return checkType(type, BlockEntityRegistry.STOVE_BLOCK_ENTITY, StoveBlockEntity::clientTick);
         } else {
-                return checkType(type, BlockEntityRegistry.IRON_STOVE_BLOCK_ENTITY, StoveBlockEntity::litServerTick);
+                return checkType(type, BlockEntityRegistry.STOVE_BLOCK_ENTITY, StoveBlockEntity::litServerTick);
         }
     }
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new StoveBlockEntity(BlockEntityRegistry.IRON_STOVE_BLOCK_ENTITY, pos, state);
+        return new StoveBlockEntity(BlockEntityRegistry.STOVE_BLOCK_ENTITY, pos, state);
     }
 
     @Override

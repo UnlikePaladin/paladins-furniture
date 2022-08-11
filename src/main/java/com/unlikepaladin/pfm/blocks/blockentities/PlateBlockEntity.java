@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -10,11 +9,16 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.Clearable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
-public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSerializable, Clearable {
+import javax.annotation.Nullable;
+
+public class PlateBlockEntity extends BlockEntity implements Clearable {
     private final DefaultedList<ItemStack> itemInPlate = DefaultedList.ofSize(1, ItemStack.EMPTY);
     public PlateBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntityRegistry.PLATE_BLOCK_ENTITY, blockPos, blockState);
@@ -27,20 +31,15 @@ public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSe
         Inventories.readNbt(nbt, this.itemInPlate);
     }
 
+    @Nullable
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    @Override
+    public void writeNbt(NbtCompound nbt) {
         this.saveInitialChunkData(nbt);
-        return nbt;
-    }
-
-    @Override
-    public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return writeNbt(tag);
     }
 
     @Override

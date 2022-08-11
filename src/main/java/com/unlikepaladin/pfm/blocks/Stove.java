@@ -15,7 +15,6 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -152,15 +151,6 @@ public class Stove extends SmokerBlock implements Waterloggable {
         double z = (double)pos.getZ() + 0.5;
         if (random.nextDouble() < 0.1) {
             world.playSound(x, y, z, SoundEvents.BLOCK_SMOKER_SMOKE, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
-        }
-        int min = 0;
-        int max = 3;
-        int griddleChosen = (int)Math.floor(Math.random()*(max-min+1)+min);
-        switch (griddleChosen) {
-            case 0 -> world.addParticle(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
-            case 1 -> world.addParticle(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
-            case 2 -> world.addParticle(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
-            case 3 -> world.addParticle(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
         }
     }
 

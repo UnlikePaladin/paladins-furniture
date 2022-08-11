@@ -4,7 +4,6 @@ import com.unlikepaladin.pfm.blocks.KitchenCounterOven;
 import com.unlikepaladin.pfm.blocks.Stove;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
@@ -15,6 +14,9 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
@@ -25,11 +27,12 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Random;
 
-public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements BlockEntityClientSerializable {
+public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     public StoveBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntityRegistry.STOVE_BLOCK_ENTITY, pos, state, RecipeType.SMOKING);
     }
@@ -83,12 +86,11 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Bloc
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         this.saveInitialChunkData(nbt);
         nbt.putIntArray("CookingTimes", this.cookingTimes);
         nbt.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
-        return nbt;
     }
 
     private NbtCompound saveInitialChunkData(NbtCompound nbt) {
@@ -145,14 +147,12 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Bloc
         this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
     }
 
-    public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
-    @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return writeNbt(tag);
-    }
 
     public static void litServerTick(World world, BlockPos pos, BlockState state, StoveBlockEntity stoveBlockEntity) {
         boolean bl = false;
