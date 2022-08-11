@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.entity;
 import com.google.common.collect.UnmodifiableIterator;
 import com.unlikepaladin.pfm.blocks.BasicChair;
 import com.unlikepaladin.pfm.blocks.BasicToilet;
+import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.registry.NetworkRegistry;
 import io.netty.buffer.Unpooled;
@@ -36,7 +37,7 @@ public class ChairEntity extends MobEntity {
                 }
             }
             else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicToilet && world.isClient()){
-                if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed()) {
+                if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed() && this.world.getBlockState(this.getBlockPos()).get(BasicToilet.TOILET_STATE) == ToiletState.CLEAN) {
                     PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
                     BlockPos pos = this.getBlockPos();
                     passedData.writeBlockPos(pos);
