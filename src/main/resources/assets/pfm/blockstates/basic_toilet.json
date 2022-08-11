@@ -103,6 +103,34 @@
                 { "toilet": "clean" }
             ]},
             "apply": { "model": "pfm:block/basic_toilet/basic_toilet_still_water"}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "north" },
+                { "toilet": "empty" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_empty", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "south" },
+                { "toilet": "empty" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_empty", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "east" },
+                { "toilet": "empty" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_empty", "y":180}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "west" },
+                { "toilet": "empty" }
+            ]},
+            "apply": { "model": "pfm:block/basic_toilet/basic_toilet_empty"}
         }
     ]
 }
