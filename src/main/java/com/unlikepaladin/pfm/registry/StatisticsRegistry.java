@@ -17,8 +17,8 @@ public class StatisticsRegistry {
     public static final Identifier USE_SINK = new Identifier(PaladinFurnitureMod.MOD_ID, "use_sink");
     public static final Identifier PLATE_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "plate_used");
     public static final Identifier MICROWAVE_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_used");
-
     public static final Identifier CHAIR_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "chair_used");
+    public static final Identifier TOILET_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "toilet_used");
 
 
     public static void registerStatistics(){
@@ -54,5 +54,8 @@ public class StatisticsRegistry {
 
         Registry.register(Registry.CUSTOM_STAT, "chair_used", CHAIR_USED);
         Stats.CUSTOM.getOrCreateStat(CHAIR_USED, StatFormatter.DEFAULT);
+
+        Registry.register(Registry.CUSTOM_STAT, "toilet_used", TOILET_USED);
+        Stats.CUSTOM.getOrCreateStat(TOILET_USED, StatFormatter.DEFAULT);
     }
 }

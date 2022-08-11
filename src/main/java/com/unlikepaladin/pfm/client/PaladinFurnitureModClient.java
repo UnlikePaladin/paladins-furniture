@@ -41,7 +41,7 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
                 "key.pfm.toiletUse", // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 GLFW.GLFW_KEY_U, // The keycode of the key
-                "category.pfm.useBlock" // The translation key of the keybinding's category.
+                "keybindings.category.pfm" // The translation key of the keybinding's category.
         ));
         EntityRendererRegistry.INSTANCE.register(EntityRegistry.CHAIR, ChairEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(BlockEntityRegistry.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);

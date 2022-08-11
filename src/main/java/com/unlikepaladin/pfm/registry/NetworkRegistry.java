@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.client.screens.MicrowaveScreen;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -40,6 +41,7 @@ public class NetworkRegistry {
                         // Use the pos in the main thread
                         World world = player.world;
                         world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToilet.TOILET_STATE, ToiletState.DIRTY));
+                        world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundRegistry.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
                     });
                 });
     }

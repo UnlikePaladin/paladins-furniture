@@ -38,8 +38,8 @@ public class ChairEntity extends MobEntity {
             else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicToilet && world.isClient()){
                 if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed()) {
                     PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-                    passedData.writeBlockPos(this.getBlockPos());
-                    // Send packet to server to change the block for us
+                    BlockPos pos = this.getBlockPos();
+                    passedData.writeBlockPos(pos);
                     ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.TOILET_USE_ID, passedData);
                 }
                 super.tick();

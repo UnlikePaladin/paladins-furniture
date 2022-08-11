@@ -131,7 +131,8 @@ public class BasicChair extends HorizontalFacingBlock implements Waterloggable {
                 entity.setYaw(yaw);
                 entity.setBodyYaw(yaw);
                 entity.setHeadYaw(yaw);
-                player.incrementStat(StatisticsRegistry.CHAIR_USED);
+                if (!(state.getBlock() instanceof BasicToilet))
+                    player.incrementStat(StatisticsRegistry.CHAIR_USED);
                 return ActionResult.SUCCESS;
             }
             return ActionResult.CONSUME;
