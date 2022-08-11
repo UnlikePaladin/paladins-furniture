@@ -54,7 +54,7 @@ public class PlateBlockEntity extends BlockEntity implements BlockEntityClientSe
     }
 
     public boolean addItem(ItemStack item) {
-        if (!itemInPlate.isEmpty()) {
+        if (itemInPlate.get(0).isEmpty()) {
             this.itemInPlate.set(0, item.split(1));
             this.updateListeners();
             return true;

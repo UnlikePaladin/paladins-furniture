@@ -48,7 +48,6 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
         BlockEntityRendererRegistry.INSTANCE.register(BlockEntityRegistry.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(BlockEntityRegistry.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
         BlockEntityRendererRegistry.INSTANCE.register(BlockEntityRegistry.STOVE_BLOCK_ENTITY, StoveBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(BlockEntityRegistry.IRON_STOVE_BLOCK_ENTITY, StoveBlockEntityRenderer::new);
 
         EntityModelLayerRegistry.registerModelLayer(MODEL_CUBE_LAYER, ModelEmpty::getTexturedModelData);
 
