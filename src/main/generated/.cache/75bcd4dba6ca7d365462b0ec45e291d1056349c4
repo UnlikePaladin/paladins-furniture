@@ -1,3 +1,6 @@
-// 1.19	2022-07-14T14:19:03.693475	Tags for minecraft:block
-3ba6b2987ad71a4ea1841b6a778f09ba318a0bd9 data/minecraft/tags/blocks/mineable/pickaxe.json
-88c6ae49be71184ee74af6d9b35b7b5d6c2a4096 data/minecraft/tags/blocks/mineable/axe.json
+// 1.19	2022-08-11T01:23:27.459018	Tags for minecraft:block
+cdc969863693e0b5ef0fb4686ddb67c2533e5d27 data/minecraft/tags/blocks/mineable/pickaxe.json
+6a13ff42b64648193e86ec886711e7c7c7219733 data/minecraft/tags/blocks/mineable/shovel.json
+fb64c122bbe731999fb2b1ba30172fab936ef431 data/minecraft/tags/blocks/mineable/axe.json
+4b0b94b9114a5ae35b2a500e6f8876febf03dc6a data/minecraft/tags/blocks/beds.json
+48f90e6c738641ecce243e0d85246714e2a6f97d data/minecraft/tags/blocks/climbable.json

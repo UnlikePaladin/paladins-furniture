@@ -1194,6 +1194,7 @@ public class BlockItemRegistry {
     public static final Block JUNGLE_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
     public static final Block CRIMSON_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
     public static final Block WARPED_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
+    public static final Block MANGROVE_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(FabricBlockSettings.copyOf(Blocks.LADDER));
 
     public static Stream<Block> streamBlocks() {
         return BLOCKS.stream();
@@ -1881,6 +1882,7 @@ public class BlockItemRegistry {
         registerFurniture("dark_oak_simple_bunk_ladder", DARK_OAK_SIMPLE_BUNK_LADDER, true);
         registerFurniture("crimson_simple_bunk_ladder", CRIMSON_SIMPLE_BUNK_LADDER, true);
         registerFurniture("warped_simple_bunk_ladder", WARPED_SIMPLE_BUNK_LADDER, true);
+        registerFurniture("mangrove_simple_bunk_ladder", MANGROVE_SIMPLE_BUNK_LADDER, true);
 
         registerFurniture("oak_log_stool", OAK_LOG_STOOL, true);
         registerFurniture("birch_log_stool", BIRCH_LOG_STOOL, true);

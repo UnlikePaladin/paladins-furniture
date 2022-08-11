@@ -1,0 +1,9 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/simple_bed/oak/bunk/head/simple_bed_head",
+	"textures": {
+		"0": "block/mangrove_planks",
+		"particle": "block/mangrove_planks"
+	}
+    
+}
