@@ -11,7 +11,7 @@ import com.unlikepaladin.pfm.registry.ScreenHandlersRegistry;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -43,11 +43,11 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
                 GLFW.GLFW_KEY_U, // The keycode of the key
                 "keybindings.category.pfm" // The translation key of the keybinding's category.
         ));
-        EntityRendererRegistry.INSTANCE.register(EntityRegistry.CHAIR, ChairEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(BlockEntityRegistry.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(BlockEntityRegistry.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(BlockEntityRegistry.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.INSTANCE.register(BlockEntityRegistry.STOVE_BLOCK_ENTITY, StoveBlockEntityRenderer::new);
+        EntityRendererRegistry.register(EntityRegistry.CHAIR, ChairEntityRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntityRegistry.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntityRegistry.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntityRegistry.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
+        BlockEntityRendererRegistry.register(BlockEntityRegistry.STOVE_BLOCK_ENTITY, StoveBlockEntityRenderer::new);
         NetworkRegistry.registerClientPackets();
 
         EntityModelLayerRegistry.registerModelLayer(MODEL_CUBE_LAYER, ModelEmpty::getTexturedModelData);
