@@ -11,6 +11,15 @@
       "type": "pfm:furniturerecipe2template",
       "recipe": "pfm:oak_red_simple_bed",
       "recipe2": "pfm:spruce_cyan_classic_bed"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Optionally you can craft bunk ladders and place them on the bunk bed, they can also be used as normal ladders elsewhere."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_simple_bunk_ladder",
+      "recipe2": "pfm:warped_simple_bunk_ladder"
     }
   ]
 }
