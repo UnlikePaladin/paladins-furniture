@@ -189,7 +189,6 @@ public class Plate extends HorizontalFacingBlockWEntity implements Waterloggable
 
     protected final Random random = new Random();
     private void spawnItemParticles(LivingEntity entity, ItemStack stack, int count) {
-        System.out.println(stack.getItem());
         for (int i = 0; i < count; ++i) {
             Vec3d vec3d = new Vec3d(((double)this.random.nextFloat() - 0.5) * 0.1, Math.random() * 0.1 + 0.1, 0.0);
             vec3d = vec3d.rotateX(-entity.getPitch() * ((float)Math.PI / 180));
