@@ -26,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
@@ -60,9 +59,6 @@ public class KitchenCounterOven extends SmokerBlock implements Waterloggable {
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return new CounterOvenBlockEntity(pos, state);
-    }
-    @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
     }
 
     @Override

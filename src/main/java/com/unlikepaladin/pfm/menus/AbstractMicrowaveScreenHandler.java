@@ -80,7 +80,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
         passedData.writeBlockPos(pos);
         passedData.writeBoolean(isActive);
         // Send packet to server to change the block for us
-        ClientPlayNetworking.send(NetworkRegistry.MICROWAVE_PACKET_ID, passedData);
+        ClientPlayNetworking.send(NetworkRegistry.MICROWAVE_ACTIVATE_PACKET_ID, passedData);
     }
 
     @Override

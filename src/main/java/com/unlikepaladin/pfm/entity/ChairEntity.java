@@ -7,7 +7,7 @@ import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.registry.NetworkRegistry;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.entity.Dismounting;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
@@ -41,7 +41,7 @@ public class ChairEntity extends MobEntity {
                     PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
                     BlockPos pos = this.getBlockPos();
                     passedData.writeBlockPos(pos);
-                    ClientSidePacketRegistry.INSTANCE.sendToServer(NetworkRegistry.TOILET_USE_ID, passedData);
+                    ClientPlayNetworking.send(NetworkRegistry.TOILET_USE_ID, passedData);
                 }
                 super.tick();
             }

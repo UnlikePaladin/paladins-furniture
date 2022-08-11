@@ -43,7 +43,7 @@ public class NetworkRegistry {
                         world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToilet.TOILET_STATE, ToiletState.DIRTY));
                         world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundRegistry.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
                     });
-                });
+                }));
     }
 
     public static void registerClientPackets() {
