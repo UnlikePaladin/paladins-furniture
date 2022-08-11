@@ -2,13 +2,25 @@
   "microwave_beep": {
     "subtitle": "subtitles.pfm.microwave_beep",
     "sounds": [
-      "pfm:microwave_beep"
+      "pfm:block/microwave/microwave_beep"
     ]
   },
   "microwave_running": {
     "subtitle": "subtitles.pfm.microwave_running",
     "sounds": [
-      "pfm:microwave_running"
+      "pfm:block/microwave/microwave_running"
+    ]
+  },
+  "toilet_flushing": {
+    "subtitle": "subtitles.pfm.toilet_flushing",
+    "sounds": [
+      "pfm:block/toilet/toilet_flushing"
+    ]
+  },
+  "toilet_used": {
+    "subtitle": "subtitles.pfm.toilet_used",
+    "sounds": [
+      "pfm:block/toilet/toilet_used"
     ]
   }
 }

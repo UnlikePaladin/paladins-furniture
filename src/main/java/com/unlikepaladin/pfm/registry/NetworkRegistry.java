@@ -8,6 +8,8 @@ import com.unlikepaladin.pfm.client.screens.MicrowaveScreen;
 import net.fabricmc.fabric.api.network.ClientSidePacketRegistry;
 import net.fabricmc.fabric.api.network.ServerSidePacketRegistry;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -35,12 +37,13 @@ public class NetworkRegistry {
 
         ServerSidePacketRegistry.INSTANCE.register(NetworkRegistry.TOILET_USE_ID,
                 (packetContext, attachedData) -> {
-                    // Get the BlockPos we put earlier, in the networking thread
+                    PlayerEntity playerEntity = packetContext.getPlayer();
                     BlockPos blockPos = attachedData.readBlockPos();
                     packetContext.getTaskQueue().execute(() -> {
-                        // Use the pos in the main thread
+                        playerEntity.incrementStat(StatisticsRegistry.TOILET_USED);
                         World world = packetContext.getPlayer().world;
                         world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToilet.TOILET_STATE, ToiletState.DIRTY));
+                        world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundRegistry.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
                     });
                 });
     }

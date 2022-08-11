@@ -3,12 +3,15 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.blocks.blockentities.ToiletBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
+import com.unlikepaladin.pfm.registry.SoundRegistry;
+import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
@@ -36,7 +39,7 @@ public class BasicToilet extends BasicChair implements BlockEntityProvider {
     public BasicToilet(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(TOILET_STATE, ToiletState.CLEAN));
-        if(this.getClass().isAssignableFrom(BasicChair.class)){
+        if(this.getClass().isAssignableFrom(BasicToilet.class)){
             BASIC_TOILET.add(new FurnitureBlock(this, "basic_toilet"));
         }
     }
@@ -53,8 +56,14 @@ public class BasicToilet extends BasicChair implements BlockEntityProvider {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (player.isSneaking()) {
+        if (!world.isClient) {
+            player.incrementStat(StatisticsRegistry.TOILET_USED);
+        }
+        if (player.isSneaking() && !world.isClient) {
             world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.FLUSHING));
+            world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundRegistry.TOILET_FLUSHING_EVENT, SoundCategory.BLOCKS, 0.3f, 1.0f);
+            ToiletBlockEntity blockEntity = (ToiletBlockEntity) world.getBlockEntity(pos);
+            blockEntity.setFlushTimer(0);
             return ActionResult.SUCCESS;
         }
         return super.onUse(state, world, pos, player, hand, hit);
@@ -68,7 +77,6 @@ public class BasicToilet extends BasicChair implements BlockEntityProvider {
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         super.randomDisplayTick(state, world, pos, random);
-        //TODO: Particle effects with potion, brown
         if(state.get(TOILET_STATE) != ToiletState.DIRTY) {
             return;
         }
@@ -97,7 +105,7 @@ public class BasicToilet extends BasicChair implements BlockEntityProvider {
     public static void setClean(BlockState state, World world, BlockPos pos) {
         world.setBlockState(pos, state.with(BasicToilet.TOILET_STATE, ToiletState.CLEAN), NOTIFY_ALL);
     }
-    protected static final VoxelShape TOILET_WEST = VoxelShapes.union(createCuboidShape(2, 1, 4.2,14, 6, 11.7),createCuboidShape(1, 0, 3.2,15, 1, 12.7),createCuboidShape(5, 5, 2.5,16, 10, 13.5),createCuboidShape(0, 6, 2.5,5, 20, 13.5),createCuboidShape(5, 10, 3.5,6, 21, 12.5));
+    protected static final VoxelShape TOILET_WEST = VoxelShapes.union(createCuboidShape(2, 1, 4.2,14, 6, 11.7),createCuboidShape(1, 0, 3.2,15, 1, 12.7),createCuboidShape(5, 5, 2.5,16, 10, 13.5),createCuboidShape(0, 6, 2.5,5, 20, 13.5),createCuboidShape(5, 8, 3.5,6, 21, 12.5));
     protected static final VoxelShape TOILET_NORTH = rotateShape(Direction.WEST, Direction.NORTH, TOILET_WEST);
     protected static final VoxelShape TOILET_EAST = rotateShape(Direction.WEST, Direction.EAST, TOILET_WEST);
     protected static final VoxelShape TOILET_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, TOILET_WEST);

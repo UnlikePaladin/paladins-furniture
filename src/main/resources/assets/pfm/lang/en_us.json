@@ -956,12 +956,19 @@
   "stat.pfm.plate_used": "Interactions with Plate",
   "stat.pfm.microwave_used": "Interactions with Microwave",
   "stat.pfm.chair_used": "Times Sat on Chair",
+  "stat.pfm.toilet_used": "Interactions with Toilet",
 
   "subtitles.pfm.microwave_running": "Microwave humming",
   "subtitles.pfm.microwave_beep": "Microwave beeping",
+  "subtitles.pfm.toilet_flushing": "Toilet flushing",
+  "subtitles.pfm.toilet_used": "Fart",
 
   "block.pfm.basic_plate": "Basic Plate",
   "block.pfm.basic_cutlery": "Basic Cutlery",
+  "block.pfm.basic_toilet": "Basic Toilet",
+
+  "keybindings.category.pfm": "Paladin's Furniture",
+  "key.pfm.toiletUse": "Use Toilet",
 
   "rei.pfm.freezer": "Freezing",
   "rei.pfm.furniture": "Workbench",
