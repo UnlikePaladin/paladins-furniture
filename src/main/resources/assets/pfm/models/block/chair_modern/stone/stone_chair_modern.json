@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/chair_modern/chair_modern",
+	"textures": {
+        
+		"particle": "block/cobblestone",
+		"base": "block/smooth_stone",
+		"legs": "block/cobblestone"
+	}
+    
+}

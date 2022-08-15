@@ -38,7 +38,7 @@ public class SimpleBed extends BedBlock implements Waterloggable {
 
     public SimpleBed(DyeColor color, Settings settings) {
         super(color, settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false).with(PART, BedPart.FOOT).with(OCCUPIED, false).with(BUNK, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false).with(PART, BedPart.FOOT).with(OCCUPIED, false).with(BUNK, false).with(SHAPE, MiddleShape.SINGLE));
         if(this.getClass().isAssignableFrom(SimpleBed.class)){
             String bedColor = color.getName();
             SIMPLE_BEDS.add(new FurnitureBlock(this, bedColor+"_simple_bed"));

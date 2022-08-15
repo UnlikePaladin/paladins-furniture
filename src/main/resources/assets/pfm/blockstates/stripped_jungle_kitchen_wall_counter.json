@@ -1,0 +1,128 @@
+{
+   "variants":{
+      "facing=north,shape=straight":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":0,"uvlock":"true"
+      },
+      "facing=east,shape=straight":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":90,"uvlock":"true"
+      },
+      "facing=south,shape=straight":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":180,"uvlock":"true"
+      },
+      "facing=west,shape=straight":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":270,"uvlock":"true"
+      },
+      
+      "facing=north,shape=right_edge":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":0,"uvlock":"true"
+      },
+      "facing=east,shape=right_edge":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":90,"uvlock":"true"
+      },
+      "facing=south,shape=right_edge":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":180,"uvlock":"true"
+      },
+      "facing=west,shape=right_edge":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":270,"uvlock":"true"
+      },
+      
+      
+      "facing=north,shape=left_edge":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":0,"uvlock":"true"
+      },
+      "facing=east,shape=left_edge":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":90,"uvlock":"true"
+      },
+      "facing=south,shape=left_edge":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":180,"uvlock":"true"
+      },
+      "facing=west,shape=left_edge":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle",
+         "y":270,"uvlock":"true"
+      },
+      
+      
+      "facing=north,shape=outer_left":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_outer_corner_mirrored",
+         "y":0,"uvlock":"true"
+      },
+      "facing=east,shape=outer_left":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_outer_corner",
+         "y":90,"uvlock":"true"
+      },
+      "facing=south,shape=outer_left":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_outer_corner_mirrored",
+         "y":180,"uvlock":"true"
+      },
+      "facing=west,shape=outer_left":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_outer_corner",
+         "y":270,"uvlock":"true"
+      },
+      
+      
+      "facing=north,shape=outer_right":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_outer_corner",
+         "y":90,"uvlock":"true"
+      },
+      "facing=east,shape=outer_right":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_outer_corner_mirrored",
+         "y":180,"uvlock":"true"
+      },
+      "facing=south,shape=outer_right":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_outer_corner",
+         "y":270,"uvlock":"true"
+      },
+      "facing=west,shape=outer_right":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_outer_corner_mirrored",
+         "y":0, "uvlock":"true"
+      },
+      
+      
+      
+      "facing=north,shape=inner_left":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_inner_corner",
+         "y":270,"uvlock":"true"
+      },
+      "facing=east,shape=inner_left":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_inner_corner",
+         "y":0,"uvlock":"true"
+      },
+      "facing=south,shape=inner_left":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_inner_corner",
+         "y":90,"uvlock":"true"
+      },
+      "facing=west,shape=inner_left":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_inner_corner",
+         "y":180,"uvlock":"true"
+      },
+      
+      
+      "facing=north,shape=inner_right":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_inner_corner",
+         "y":0,"uvlock":"true"
+      },
+      "facing=east,shape=inner_right":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_inner_corner",
+         "y":90,"uvlock":"true"
+      },
+      "facing=south,shape=inner_right":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_inner_corner",
+         "y":180,"uvlock":"true"
+      },
+      "facing=west,shape=inner_right":{
+         "model":"pfm:block/stripped_jungle_kitchen_counter/stripped_jungle_kitchen_counter_middle_inner_corner",
+         "y":270, "uvlock":"true"
+      }
+   }
+}

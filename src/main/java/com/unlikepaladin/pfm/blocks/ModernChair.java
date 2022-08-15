@@ -23,7 +23,7 @@ public class ModernChair extends BasicChair {
     private static final List<FurnitureBlock> STONE_MODERN_CHAIRS = new ArrayList<>();
     public ModernChair(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(TUCKED, false));
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ModernChair.class)){
             WOOD_MODERN_CHAIRS.add(new FurnitureBlock(this, "chair_modern"));
         }

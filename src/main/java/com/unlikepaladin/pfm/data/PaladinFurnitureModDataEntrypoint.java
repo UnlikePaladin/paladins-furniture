@@ -7,6 +7,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTablesProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipesProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -19,8 +20,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.ItemTags;
+import net.minecraft.tag.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -50,8 +50,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> BlockLootTableGenerator.dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
         }
     }
+    public static final Tag<Block> TUCKABLE_BLOCKS = TagFactory.BLOCK.create(new Identifier("pfm", "tuckable_blocks"));
 
-    private static class PFMBlockTagProvider extends FabricTagProvider.BlockTagProvider {
+    public static class PFMBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         private PFMBlockTagProvider(FabricDataGenerator dataGenerator) {
             super(dataGenerator);
         }
@@ -156,8 +157,8 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             ClassicNightstand[] woodClassicNightstands = ClassicNightstand.streamWoodClassicNightstands().map(FurnitureBlock::getBlock).toArray(ClassicNightstand[]::new);
             ModernStool[] woodModernStools = ModernStool.streamWoodModernStools().map(FurnitureBlock::getBlock).toArray(ModernStool[]::new);
             SimpleStool[] woodSimpleStools = SimpleStool.streamWoodSimpleStools().map(FurnitureBlock::getBlock).toArray(SimpleStool[]::new);
-            SimpleSofa[] simpleSofas = SimpleSofa.streamSimpleSofas().toList().toArray(new SimpleSofa[0]);
-            ArmChairDyeable[] armChairDyeables = ArmChairDyeable.streamArmChairDyeable().map(FurnitureBlock::getBlock).toArray(ArmChairDyeable[]::new);
+            SimpleSofa[] simpleSofas = SimpleSofa.streamSimpleSofas().map(FurnitureBlock::getBlock).toArray(SimpleSofa[]::new);
+            ArmChairColored[] armChairDyeables = ArmChairColored.streamArmChairColored().map(FurnitureBlock::getBlock).toArray(ArmChairColored[]::new);
             ArmChair[] armChairs = ArmChair.streamArmChairs().map(FurnitureBlock::getBlock).toArray(ArmChair[]::new);
             WorkingTable[] workingTables = WorkingTable.streamWorkingTables().toList().toArray(new WorkingTable[0]);
             HerringbonePlanks[] herringbonePlanks = HerringbonePlanks.streamPlanks().map(FurnitureBlock::getBlock).toArray(HerringbonePlanks[]::new);
@@ -202,6 +203,18 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
 
                 this.getOrCreateTagBuilder(BlockTags.CLIMBABLE)
                         .add(simpleBunkLadders);
+
+            this.getOrCreateTagBuilder((Tag.Identified<Block>) TUCKABLE_BLOCKS)
+                    .add(woodBasicTables)
+                    .add(stoneBasicTables)
+                    .add(woodClassicTables)
+                    .add(stoneClassicTables)
+                    .add(woodDinnerTables)
+                    .add(stoneDinnerTables)
+                    .add(woodModernDinnerTables)
+                    .add(stoneModernDinnerTables)
+                    .add(woodLogTables)
+                    .add(stoneNaturalTables);
         }
 
     }
@@ -447,12 +460,17 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 offerFridgeRecipe(fridge.block, Ingredient.ofItems(fridge.getFridgeMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
             }
 
-            FurnitureBlock[] armChairs = ArmChair.streamArmChairs().toList().toArray(new FurnitureBlock[0]);
+            FurnitureBlock[] armChairs = ArmChairColored.streamArmChairColored().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock armChair : armChairs) {
                 offerArmChair(armChair.block, Ingredient.ofItems(Items.OAK_LOG), Ingredient.ofItems(armChair.getArmChairMaterial().asItem()), exporter);
             }
 
-            FurnitureBlock[] leatherArmChairs = ArmChairDyeable.streamArmChairDyeable().toList().toArray(new FurnitureBlock[0]);
+            FurnitureBlock[] simpleSofas = SimpleSofa.streamSimpleSofas().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock sofa : simpleSofas) {
+                offerSimpleSofa(sofa.block, Ingredient.ofItems(Items.OAK_LOG), Ingredient.ofItems(sofa.getArmChairMaterial().asItem()), exporter);
+            }
+
+            FurnitureBlock[] leatherArmChairs =  ArmChair.streamArmChairs().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock armChair : leatherArmChairs) {
                 offerArmChair(armChair.block, Ingredient.ofItems(Items.OAK_LOG), Ingredient.ofItems(armChair.getArmChairMaterial().asItem()), exporter);
             }
@@ -537,6 +555,10 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
 
     public static void offerFroggyChairRecipe(ItemConvertible output, Ingredient legMaterial, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonFactory.create(output, 4).input('X', legMaterial).pattern("X  ").pattern("XXX").pattern("X X").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+
+    public static void offerSimpleSofa(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Consumer<RecipeJsonProvider> exporter) {
+        FurnitureRecipeJsonFactory.create(output, 2).input('X', legMaterial).input('S', baseMaterial).pattern("X  ").pattern("SXS").pattern("S S").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerArmChair(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Consumer<RecipeJsonProvider> exporter) {

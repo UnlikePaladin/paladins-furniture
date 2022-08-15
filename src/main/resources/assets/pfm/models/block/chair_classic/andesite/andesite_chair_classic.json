@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/chair_classic/chair_classic",
+	"textures": {
+        
+		"particle": "block/andesite",
+		"base": "block/polished_andesite",
+		"legs": "block/andesite"
+	}
+    
+}

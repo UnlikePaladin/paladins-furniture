@@ -58,6 +58,7 @@ public class BasicTable extends HorizontalFacingBlock implements Waterloggable{
         return STONE_BASIC_TABLES.stream();
     }
 
+    //TODO: Optimize the shit out of this
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);

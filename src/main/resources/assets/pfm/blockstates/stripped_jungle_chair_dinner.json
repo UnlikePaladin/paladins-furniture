@@ -1,10 +1,12 @@
 {"variants":
-{
-    "facing=north":{"model":"pfm:block/stripped_jungle_chair_dinner","y":90},
-    "facing=east":{"model":"pfm:block/stripped_jungle_chair_dinner","y":180},
-    "facing=south":{"model":"pfm:block/stripped_jungle_chair_dinner","y":270},
-    "facing=west":{"model":"pfm:block/stripped_jungle_chair_dinner","y":0}
-
-}
-
+    {
+        "facing=north,tucked=false":{"model":"pfm:block/chair_dinner/stripped_jungle/stripped_jungle_chair_dinner","y":90},
+        "facing=east,tucked=false":{"model":"pfm:block/chair_dinner/stripped_jungle/stripped_jungle_chair_dinner","y":180},
+        "facing=south,tucked=false":{"model":"pfm:block/chair_dinner/stripped_jungle/stripped_jungle_chair_dinner","y":270},
+        "facing=west,tucked=false":{"model":"pfm:block/chair_dinner/stripped_jungle/stripped_jungle_chair_dinner","y":0},
+        "facing=north,tucked=true":{"model":"pfm:block/chair_dinner/stripped_jungle/stripped_jungle_chair_dinner_tucked","y":90},
+        "facing=east,tucked=true":{"model":"pfm:block/chair_dinner/stripped_jungle/stripped_jungle_chair_dinner_tucked","y":180},
+        "facing=south,tucked=true":{"model":"pfm:block/chair_dinner/stripped_jungle/stripped_jungle_chair_dinner_tucked","y":270},
+        "facing=west,tucked=true":{"model":"pfm:block/chair_dinner/stripped_jungle/stripped_jungle_chair_dinner_tucked","y":0}
+    }
 }

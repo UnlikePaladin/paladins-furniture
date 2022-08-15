@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "X  ",
+    "XXX",
+    "S S"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:lime_wool"
+    },
+    "S": {
+      "item": "minecraft:oak_log"
+    }
+  },
+  "result": {
+    "item": "pfm:lime_arm_chair",
+    "count": 2
+  }
+}

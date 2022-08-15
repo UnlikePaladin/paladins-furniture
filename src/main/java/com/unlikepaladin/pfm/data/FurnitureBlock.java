@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.data;
 
+import com.unlikepaladin.pfm.blocks.DyeableFurniture;
 import com.unlikepaladin.pfm.blocks.SimpleBed;
 import net.minecraft.block.Block;
 import net.minecraft.util.Identifier;
@@ -236,7 +237,12 @@ public class FurnitureBlock extends Material {
             return this.baseMaterial;
         }
         else if (baseMaterial.contains("standard")) {
-            this.baseMaterial =  Registry.BLOCK.get(new Identifier("minecraft:" + "white_wool"));
+            this.baseMaterial = Registry.BLOCK.get(new Identifier("minecraft:" + "white_wool"));
+            return this.baseMaterial;
+        }
+        if (this.block instanceof DyeableFurniture) {
+            String color = ((DyeableFurniture) this.block).getColor().toString();
+            this.baseMaterial = Registry.BLOCK.get(new Identifier("minecraft:" + color + "_wool"));
             return this.baseMaterial;
         }
         baseMaterial = baseMaterial.concat("wool");

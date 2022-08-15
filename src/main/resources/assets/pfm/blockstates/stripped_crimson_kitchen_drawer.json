@@ -1,783 +1,126 @@
 {
     "variants":{
-       "facing=north,up=true,down=true,shape=straight,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":0,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=straight,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":90,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=straight,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":180,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=straight,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":270,"uvlock":"true"
-       },
-       
-       "facing=north,up=true,down=true,shape=right_edge,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":0,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=right_edge,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":90,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=right_edge,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":180,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=right_edge,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":270,"uvlock":"true"
-       },
-       
-       
-       "facing=north,up=true,down=true,shape=left_edge,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":0,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=left_edge,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":90,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=left_edge,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":180,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=left_edge,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-          "y":270,"uvlock":"true"
-       },
-       
-       
-       "facing=north,up=true,down=true,shape=outer_left,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-          "y":0,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=outer_left,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-          "y":90,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=outer_left,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-          "y":180,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=outer_left,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-          "y":270,"uvlock":"true"
-       },
-       
-       
-       "facing=north,up=true,down=true,shape=outer_right,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-          "y":90,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=outer_right,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-          "y":180,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=outer_right,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-          "y":270,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=outer_right,open=false":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-          "y":0, "uvlock":"true"
-       },
-       
-       
-       
-       "facing=north,up=true,down=true,shape=inner_left":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-          "y":270,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=inner_left":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-          "y":0,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=inner_left":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-          "y":90,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=inner_left":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-          "y":180,"uvlock":"true"
-       },
-       
-       
-       "facing=north,up=true,down=true,shape=inner_right":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-          "y":0,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=inner_right":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-          "y":90,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=inner_right":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-          "y":180,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=inner_right":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-          "y":270, "uvlock":"true"
-       },
- 
- 
- 
- 
-
-
-     "facing=north,up=true,down=true,shape=straight,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":0,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=straight,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":90,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=straight,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":180,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=straight,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":270,"uvlock":"true"
-       },
-       
-       "facing=north,up=true,down=true,shape=right_edge,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":0,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=right_edge,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":90,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=right_edge,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":180,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=right_edge,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":270,"uvlock":"true"
-       },
-       
-       
-       "facing=north,up=true,down=true,shape=left_edge,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":0,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=left_edge,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":90,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=left_edge,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":180,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=left_edge,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-          "y":270,"uvlock":"true"
-       },
-       
-       
-       "facing=north,up=true,down=true,shape=outer_left,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-          "y":0,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=outer_left,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-          "y":90,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=outer_left,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-          "y":180,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=outer_left,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-          "y":270,"uvlock":"true"
-       },
-       
-       
-       "facing=north,up=true,down=true,shape=outer_right,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-          "y":90,"uvlock":"true"
-       },
-       "facing=east,up=true,down=true,shape=outer_right,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-          "y":180,"uvlock":"true"
-       },
-       "facing=south,up=true,down=true,shape=outer_right,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-          "y":270,"uvlock":"true"
-       },
-       "facing=west,up=true,down=true,shape=outer_right,open=true":{
-          "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-          "y":0, "uvlock":"true"
-       },
-
-
-
-
-       "facing=north,up=false,down=true,shape=straight,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=straight,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=straight,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=straight,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":270,"uvlock":"true"
-      },
-      
-      "facing=north,up=false,down=true,shape=right_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=right_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=right_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=right_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=false,down=true,shape=left_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=left_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=left_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=left_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=false,down=true,shape=outer_left,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_mirrored",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=outer_left,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=outer_left,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_mirrored",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=outer_left,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=false,down=true,shape=outer_right,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-         "y":90,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=outer_right,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_mirrored",
-         "y":180,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=outer_right,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner",
-         "y":270,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=outer_right,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_mirrored",
-         "y":0, "uvlock":"true"
-      },
-      
-      
-      
-      "facing=north,up=false,down=true,shape=inner_left":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-         "y":270,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=inner_left":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-         "y":0,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=inner_left":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-         "y":90,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=inner_left":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-         "y":180,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=false,down=true,shape=inner_right":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=inner_right":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=inner_right":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=inner_right":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_inner_corner",
-         "y":270, "uvlock":"true"
-      },
-
-
-
-
-    "facing=north,up=false,down=true,shape=straight,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=straight,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=straight,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=straight,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":270,"uvlock":"true"
-      },
-      
-      "facing=north,up=false,down=true,shape=right_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=right_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=right_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=right_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=false,down=true,shape=left_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=left_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=left_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=left_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_open",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=false,down=true,shape=outer_left,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open_mirrored",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=outer_left,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=outer_left,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open_mirrored",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=outer_left,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=false,down=true,shape=outer_right,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-         "y":90,"uvlock":"true"
-      },
-      "facing=east,up=false,down=true,shape=outer_right,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open_mirrored",
-         "y":180,"uvlock":"true"
-      },
-      "facing=south,up=false,down=true,shape=outer_right,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open",
-         "y":270,"uvlock":"true"
-      },
-      "facing=west,up=false,down=true,shape=outer_right,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_middle_outer_corner_open_mirrored",
-         "y":0, "uvlock":"true"
-      },
-
-      
-      "facing=north,up=true,down=false,shape=straight,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=straight,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=straight,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=straight,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":270,"uvlock":"true"
-      },
-      
-      "facing=north,up=true,down=false,shape=right_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=right_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=right_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=right_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=true,down=false,shape=left_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=left_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=left_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=left_edge,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=true,down=false,shape=outer_left,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=outer_left,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=outer_left,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=outer_left,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=true,down=false,shape=outer_right,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner",
-         "y":90,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=outer_right,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner",
-         "y":180,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=outer_right,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner",
-         "y":270,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=outer_right,open=false":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner",
-         "y":0, "uvlock":"true"
-      },
-      
-      
-      
-      "facing=north,up=true,down=false,shape=inner_left":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_inner_corner",
-         "y":270,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=inner_left":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_inner_corner",
-         "y":0,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=inner_left":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_inner_corner",
-         "y":90,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=inner_left":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_inner_corner",
-         "y":180,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=true,down=false,shape=inner_right":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_inner_corner",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=inner_right":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_inner_corner",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=inner_right":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_inner_corner",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=inner_right":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_inner_corner",
-         "y":270, "uvlock":"true"
-      },
-
-
-
-
-    "facing=north,up=true,down=false,shape=straight,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=straight,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=straight,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=straight,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":270,"uvlock":"true"
-      },
-      
-      "facing=north,up=true,down=false,shape=right_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=right_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=right_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=right_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=true,down=false,shape=left_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=left_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=left_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=left_edge,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_open",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=true,down=false,shape=outer_left,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner_open",
-         "y":0,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=outer_left,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner_open",
-         "y":90,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=outer_left,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner_open",
-         "y":180,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=outer_left,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner_open",
-         "y":270,"uvlock":"true"
-      },
-      
-      
-      "facing=north,up=true,down=false,shape=outer_right,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner_open",
-         "y":90,"uvlock":"true"
-      },
-      "facing=east,up=true,down=false,shape=outer_right,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner_open",
-         "y":180,"uvlock":"true"
-      },
-      "facing=south,up=true,down=false,shape=outer_right,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner_open",
-         "y":270,"uvlock":"true"
-      },
-      "facing=west,up=true,down=false,shape=outer_right,open=true":{
-         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_bottom_outer_corner_open",
-         "y":0, "uvlock":"true"
-      },
-
-      
-
-
-      "facing=north,up=false,down=false,shape=straight,open=false":{
+      "facing=north,shape=straight,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer",
         "y":0,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=straight,open=false":{
+     "facing=east,shape=straight,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer",
         "y":90,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=straight,open=false":{
+     "facing=south,shape=straight,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer",
         "y":180,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=straight,open=false":{
+     "facing=west,shape=straight,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer",
         "y":270,"uvlock":"true"
      },
      
-     "facing=north,up=false,down=false,shape=right_edge,open=false":{
+     "facing=north,shape=right_edge,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_right",
         "y":0,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=right_edge,open=false":{
+     "facing=east,shape=right_edge,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_right",
         "y":90,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=right_edge,open=false":{
+     "facing=south,shape=right_edge,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_right",
         "y":180,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=right_edge,open=false":{
+     "facing=west,shape=right_edge,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_right",
         "y":270,"uvlock":"true"
      },
      
      
-     "facing=north,up=false,down=false,shape=left_edge,open=false":{
+     "facing=north,shape=left_edge,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_left",
         "y":0,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=left_edge,open=false":{
+     "facing=east,shape=left_edge,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_left",
         "y":90,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=left_edge,open=false":{
+     "facing=south,shape=left_edge,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_left",
         "y":180,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=left_edge,open=false":{
+     "facing=west,shape=left_edge,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_left",
         "y":270,"uvlock":"true"
      },
      
      
-     "facing=north,up=false,down=false,shape=outer_left,open=false":{
+     "facing=north,shape=outer_left,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner",
         "y":0,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=outer_left,open=false":{
+     "facing=east,shape=outer_left,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner",
         "y":90,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=outer_left,open=false":{
+     "facing=south,shape=outer_left,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner",
         "y":180,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=outer_left,open=false":{
+     "facing=west,shape=outer_left,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner",
         "y":270,"uvlock":"true"
      },
      
      
-     "facing=north,up=false,down=false,shape=outer_right,open=false":{
+     "facing=north,shape=outer_right,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner",
         "y":90,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=outer_right,open=false":{
+     "facing=east,shape=outer_right,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner",
         "y":180,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=outer_right,open=false":{
+     "facing=south,shape=outer_right,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner",
         "y":270,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=outer_right,open=false":{
+     "facing=west,shape=outer_right,open=false":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner",
         "y":0, "uvlock":"true"
      },
      
      
      
-     "facing=north,up=false,down=false,shape=inner_left":{
+     "facing=north,shape=inner_left":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_inner_corner",
         "y":270,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=inner_left":{
+     "facing=east,shape=inner_left":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_inner_corner",
         "y":0,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=inner_left":{
+     "facing=south,shape=inner_left":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_inner_corner",
         "y":90,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=inner_left":{
+     "facing=west,shape=inner_left":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_inner_corner",
         "y":180,"uvlock":"true"
      },
      
      
-     "facing=north,up=false,down=false,shape=inner_right":{
+     "facing=north,shape=inner_right":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_inner_corner",
         "y":0,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=inner_right":{
+     "facing=east,shape=inner_right":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_inner_corner",
         "y":90,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=inner_right":{
+     "facing=south,shape=inner_right":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_inner_corner",
         "y":180,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=inner_right":{
+     "facing=west,shape=inner_right":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_inner_corner",
         "y":270, "uvlock":"true"
      },
@@ -785,90 +128,90 @@
 
 
 
-   "facing=north,up=false,down=false,shape=straight,open=true":{
+   "facing=north,shape=straight,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_open",
         "y":0,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=straight,open=true":{
+     "facing=east,shape=straight,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_open",
         "y":90,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=straight,open=true":{
+     "facing=south,shape=straight,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_open",
         "y":180,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=straight,open=true":{
+     "facing=west,shape=straight,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_open",
         "y":270,"uvlock":"true"
      },
      
-     "facing=north,up=false,down=false,shape=right_edge,open=true":{
+     "facing=north,shape=right_edge,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_right_open",
         "y":0,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=right_edge,open=true":{
+     "facing=east,shape=right_edge,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_right_open",
         "y":90,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=right_edge,open=true":{
+     "facing=south,shape=right_edge,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_right_open",
         "y":180,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=right_edge,open=true":{
+     "facing=west,shape=right_edge,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_right_open",
         "y":270,"uvlock":"true"
      },
      
      
-     "facing=north,up=false,down=false,shape=left_edge,open=true":{
+     "facing=north,shape=left_edge,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_left_open",
         "y":0,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=left_edge,open=true":{
+     "facing=east,shape=left_edge,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_left_open",
         "y":90,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=left_edge,open=true":{
+     "facing=south,shape=left_edge,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_left_open",
         "y":180,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=left_edge,open=true":{
+     "facing=west,shape=left_edge,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_edge_left_open",
         "y":270,"uvlock":"true"
      },
      
      
-     "facing=north,up=false,down=false,shape=outer_left,open=true":{
+     "facing=north,shape=outer_left,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner_open",
         "y":0,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=outer_left,open=true":{
+     "facing=east,shape=outer_left,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner_open",
         "y":90,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=outer_left,open=true":{
+     "facing=south,shape=outer_left,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner_open",
         "y":180,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=outer_left,open=true":{
+     "facing=west,shape=outer_left,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner_open",
         "y":270,"uvlock":"true"
      },
      
      
-     "facing=north,up=false,down=false,shape=outer_right,open=true":{
+     "facing=north,shape=outer_right,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner_open",
         "y":90,"uvlock":"true"
      },
-     "facing=east,up=false,down=false,shape=outer_right,open=true":{
+     "facing=east,shape=outer_right,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner_open",
         "y":180,"uvlock":"true"
      },
-     "facing=south,up=false,down=false,shape=outer_right,open=true":{
+     "facing=south,shape=outer_right,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner_open",
         "y":270,"uvlock":"true"
      },
-     "facing=west,up=false,down=false,shape=outer_right,open=true":{
+     "facing=west,shape=outer_right,open=true":{
         "model":"pfm:block/stripped_crimson_kitchen_drawer/stripped_crimson_kitchen_drawer_outer_corner_open",
         "y":0, "uvlock":"true"
      }

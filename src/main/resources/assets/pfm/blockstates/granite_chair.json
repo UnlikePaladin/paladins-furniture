@@ -1,10 +1,12 @@
 {"variants":
-{
-    "facing=north":{"model":"pfm:block/granite_chair","y":90},
-    "facing=east":{"model":"pfm:block/granite_chair","y":180},
-    "facing=south":{"model":"pfm:block/granite_chair","y":270},
-    "facing=west":{"model":"pfm:block/granite_chair","y":0}
-
-}
-
+    {
+        "facing=north,tucked=false":{"model":"pfm:block/chair/granite/granite_chair","y":90},
+        "facing=east,tucked=false":{"model":"pfm:block/chair/granite/granite_chair","y":180},
+        "facing=south,tucked=false":{"model":"pfm:block/chair/granite/granite_chair","y":270},
+        "facing=west,tucked=false":{"model":"pfm:block/chair/granite/granite_chair","y":0},
+        "facing=north,tucked=true":{"model":"pfm:block/chair/granite/granite_chair_tucked","y":90},
+        "facing=east,tucked=true":{"model":"pfm:block/chair/granite/granite_chair_tucked","y":180},
+        "facing=south,tucked=true":{"model":"pfm:block/chair/granite/granite_chair_tucked","y":270},
+        "facing=west,tucked=true":{"model":"pfm:block/chair/granite/granite_chair_tucked","y":0}
+    }
 }

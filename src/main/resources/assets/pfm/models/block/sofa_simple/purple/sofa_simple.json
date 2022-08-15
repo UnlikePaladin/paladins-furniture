@@ -1,0 +1,9 @@
+{
+	"cpurpleit": "By UnlikePaladin",
+    "parent": "pfm:block/sofa_simple/white/sofa_simple",
+	"textures": {
+		"particle": "block/purple_wool",
+		"base": "block/purple_wool"
+	}
+    
+}

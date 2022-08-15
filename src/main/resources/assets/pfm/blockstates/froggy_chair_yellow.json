@@ -1,10 +1,14 @@
-{"variants":
 {
-    "facing=north":{"model":"pfm:block/froggy_chair_yellow","y":90},
-    "facing=east":{"model":"pfm:block/froggy_chair_yellow","y":180},
-    "facing=south":{"model":"pfm:block/froggy_chair_yellow","y":270},
-    "facing=west":{"model":"pfm:block/froggy_chair_yellow","y":0}
-
-}
+    "variants":
+        {
+            "tucked=true,facing=north":{"model":"pfm:block/froggy_chair/froggy_chair_yellow_tucked","y":90},
+            "tucked=true,facing=east":{"model":"pfm:block/froggy_chair/froggy_chair_yellow_tucked","y":180},
+            "tucked=true,facing=south":{"model":"pfm:block/froggy_chair/froggy_chair_yellow_tucked","y":270},
+            "tucked=true,facing=west":{"model":"pfm:block/froggy_chair/froggy_chair_yellow_tucked","y":0},
+            "tucked=false,facing=north":{"model":"pfm:block/froggy_chair/froggy_chair_yellow","y":90},
+            "tucked=false,facing=east":{"model":"pfm:block/froggy_chair/froggy_chair_yellow","y":180},
+            "tucked=false,facing=south":{"model":"pfm:block/froggy_chair/froggy_chair_yellow","y":270},
+            "tucked=false,facing=west":{"model":"pfm:block/froggy_chair/froggy_chair_yellow","y":0}
+    }
 
 }

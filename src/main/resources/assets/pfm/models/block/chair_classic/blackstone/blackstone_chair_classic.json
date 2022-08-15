@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/chair_classic/chair_classic",
+	"textures": {
+        
+		"particle": "block/blackstone",
+		"base": "block/polished_blackstone",
+		"legs": "block/blackstone"
+	}
+    
+}
