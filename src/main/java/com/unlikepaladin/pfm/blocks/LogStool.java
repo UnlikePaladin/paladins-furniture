@@ -19,7 +19,7 @@ public class LogStool extends BasicChair {
     private static final List<FurnitureBlock> WOOD_LOG_STOOLS = new ArrayList<>();
     public LogStool(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(TUCKED, false));
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(LogStool.class)){
             WOOD_LOG_STOOLS.add(new FurnitureBlock(this, "_stool"));
         }

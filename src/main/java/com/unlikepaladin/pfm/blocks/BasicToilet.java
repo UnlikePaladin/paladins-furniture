@@ -39,7 +39,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.DinnerTable.rotateShape;
 
-public class BasicToilet extends BasicChair implements BlockEntityProvider {
+public class BasicToilet extends AbstractSittableBlock implements BlockEntityProvider {
     private static final List<FurnitureBlock> BASIC_TOILET = new ArrayList<>();
     public static final EnumProperty<ToiletState> TOILET_STATE = EnumProperty.of("toilet", ToiletState.class);
     public BasicToilet(Settings settings) {

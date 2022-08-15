@@ -21,7 +21,7 @@ public class SimpleStool extends BasicChair {
     private static final List<FurnitureBlock> STONE_SIMPLE_STOOLS = new ArrayList<>();
     public SimpleStool(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(TUCKED, false));
         this.height = 0.5f;
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(SimpleStool.class)){
             WOOD_SIMPLE_STOOLS.add(new FurnitureBlock(this, "simple_stool"));

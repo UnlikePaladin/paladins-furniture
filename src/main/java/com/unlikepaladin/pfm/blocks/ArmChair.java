@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ArmChair extends BasicChair {
+public class ArmChair extends AbstractSittableBlock {
     private static final List<FurnitureBlock> ARM_CHAIRS = new ArrayList<>();
     public ArmChair(Settings settings) {
         super(settings);

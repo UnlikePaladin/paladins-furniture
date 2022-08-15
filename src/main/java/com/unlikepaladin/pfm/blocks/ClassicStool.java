@@ -23,7 +23,7 @@ public class ClassicStool extends BasicChair {
     private static final List<FurnitureBlock> STONE_CLASSIC_STOOLS = new ArrayList<>();
     public ClassicStool(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(TUCKED, false));
         this.height = 0.5f;
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ClassicStool.class)){
             WOOD_CLASSIC_STOOLS.add(new FurnitureBlock(this, "classic_stool"));

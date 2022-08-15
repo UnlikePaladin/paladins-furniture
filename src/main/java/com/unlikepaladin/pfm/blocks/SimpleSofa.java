@@ -1,7 +1,9 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -14,13 +16,13 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
-public class SimpleSofa extends ArmChairDyeable{
-    private static final List<SimpleSofa> SIMPLE_SOFAS = new ArrayList<>();
-    public SimpleSofa(Settings settings) {
-        super(settings);
-        SIMPLE_SOFAS.add(this);
+public class SimpleSofa extends ArmChairColored {
+    private static final List<FurnitureBlock> SIMPLE_SOFAS = new ArrayList<>();
+    public SimpleSofa(DyeColor color, Settings settings) {
+        super(color, settings);
+        SIMPLE_SOFAS.add(new FurnitureBlock(this, "arm_chair"));
     }
-    public static Stream<SimpleSofa> streamSimpleSofas() {
+    public static Stream<FurnitureBlock> streamSimpleSofas() {
         return SIMPLE_SOFAS.stream();
     }
     @Override

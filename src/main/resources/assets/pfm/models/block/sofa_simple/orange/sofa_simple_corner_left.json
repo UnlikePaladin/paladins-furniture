@@ -1,0 +1,9 @@
+{
+	"corangeit": "By UnlikePaladin",
+    "parent": "pfm:block/sofa_simple/white/sofa_simple_corner_left",
+	"textures": {
+		"particle": "block/orange_wool",
+		"base": "block/orange_wool"
+	}
+    
+}

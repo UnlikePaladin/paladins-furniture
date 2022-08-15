@@ -22,7 +22,7 @@ public class FroggyChair extends BasicChair {
     private static final List<FurnitureBlock> FROGGY_CHAIRS = new ArrayList<>();
     public FroggyChair(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(TUCKED, false));
         if (this.getClass().isAssignableFrom(FroggyChair.class)){
             FROGGY_CHAIRS.add(new FurnitureBlock(this, "froggy_chair_"));
         }

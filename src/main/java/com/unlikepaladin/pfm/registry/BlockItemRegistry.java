@@ -140,7 +140,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_WARPED_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_MANGROVE_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(MANGROVE_CHAIR));
     public static final Block STRIPPED_CRIMSON_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
-    public static final Block CHAIR_CLASSIC_WOOL = new ClassicChairDyeable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_WOOL = new ClassicChairDyeable(FabricBlockSettings.copyOf(OAK_CHAIR));
 
     public static final Block QUARTZ_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
 
@@ -208,9 +208,41 @@ public class BlockItemRegistry {
 
 
     //Arm Chairs
-    public static final Block ARM_CHAIR_STANDARD = new ArmChairDyeable(FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block WHITE_ARM_CHAIR= new ArmChairColored(DyeColor.WHITE, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block BLUE_ARM_CHAIR= new ArmChairColored(DyeColor.BLUE, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block GREEN_ARM_CHAIR= new ArmChairColored(DyeColor.GREEN, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block GRAY_ARM_CHAIR= new ArmChairColored(DyeColor.GRAY, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block PINK_ARM_CHAIR= new ArmChairColored(DyeColor.PINK, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block BROWN_ARM_CHAIR= new ArmChairColored(DyeColor.BROWN, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block ORANGE_ARM_CHAIR= new ArmChairColored(DyeColor.ORANGE, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block YELLOW_ARM_CHAIR= new ArmChairColored(DyeColor.YELLOW, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block PURPLE_ARM_CHAIR= new ArmChairColored(DyeColor.PURPLE, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block CYAN_ARM_CHAIR= new ArmChairColored(DyeColor.CYAN, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block LIME_ARM_CHAIR= new ArmChairColored(DyeColor.LIME, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block MAGENTA_ARM_CHAIR= new ArmChairColored(DyeColor.MAGENTA, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block LIGHT_BLUE_ARM_CHAIR= new ArmChairColored(DyeColor.LIGHT_BLUE, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block LIGHT_GRAY_ARM_CHAIR= new ArmChairColored(DyeColor.LIGHT_GRAY, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block RED_ARM_CHAIR= new ArmChairColored(DyeColor.RED, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block BLACK_ARM_CHAIR= new ArmChairColored(DyeColor.BLACK, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+
     public static final Block ARM_CHAIR_LEATHER = new ArmChair(FabricBlockSettings.of(Material.ORGANIC_PRODUCT).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
-    public static final Block SOFA_SIMPLE = new SimpleSofa(FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+
+    public static final Block WHITE_SIMPLE_SOFA= new SimpleSofa(DyeColor.WHITE, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block BLUE_SIMPLE_SOFA= new SimpleSofa(DyeColor.BLUE, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block GREEN_SIMPLE_SOFA= new SimpleSofa(DyeColor.GREEN, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block GRAY_SIMPLE_SOFA= new SimpleSofa(DyeColor.GRAY, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block PINK_SIMPLE_SOFA= new SimpleSofa(DyeColor.PINK, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block BROWN_SIMPLE_SOFA= new SimpleSofa(DyeColor.BROWN, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block ORANGE_SIMPLE_SOFA= new SimpleSofa(DyeColor.ORANGE, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block YELLOW_SIMPLE_SOFA= new SimpleSofa(DyeColor.YELLOW, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block PURPLE_SIMPLE_SOFA= new SimpleSofa(DyeColor.PURPLE, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block CYAN_SIMPLE_SOFA= new SimpleSofa(DyeColor.CYAN, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block LIME_SIMPLE_SOFA= new SimpleSofa(DyeColor.LIME, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block MAGENTA_SIMPLE_SOFA= new SimpleSofa(DyeColor.MAGENTA, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block LIGHT_BLUE_SIMPLE_SOFA= new SimpleSofa(DyeColor.LIGHT_BLUE, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block LIGHT_GRAY_SIMPLE_SOFA= new SimpleSofa(DyeColor.LIGHT_GRAY, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block RED_SIMPLE_SOFA= new SimpleSofa(DyeColor.RED, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
+    public static final Block BLACK_SIMPLE_SOFA= new SimpleSofa(DyeColor.BLACK, FabricBlockSettings.of(Material.WOOL).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL));
 
     //tables
     public static final Block OAK_BASIC_TABLE = new BasicTable(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -582,42 +614,56 @@ public class BlockItemRegistry {
     public static final Block OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
     public static final Block OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
+    public static final Block OAK_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
+    public static final Block OAK_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
 
     public static final Block BIRCH_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER).mapColor(MapColor.PALE_YELLOW));
     public static final Block BIRCH_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
     public static final Block BIRCH_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
     public static final Block BIRCH_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block BIRCH_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
+    public static final Block BIRCH_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
+    public static final Block BIRCH_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
 
     public static final Block SPRUCE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER).mapColor(MapColor.SPRUCE_BROWN));
     public static final Block SPRUCE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
     public static final Block SPRUCE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
     public static final Block SPRUCE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block SPRUCE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
+    public static final Block SPRUCE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
+    public static final Block SPRUCE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
 
     public static final Block JUNGLE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER).mapColor(MapColor.DIRT_BROWN));
-    public static final Block JUNGLE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block JUNGLE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_CHAIR));
-    public static final Block JUNGLE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_CHAIR),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block JUNGLE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block JUNGLE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
+    public static final Block JUNGLE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
+    public static final Block JUNGLE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final Block JUNGLE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
+    public static final Block JUNGLE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
+    public static final Block JUNGLE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
 
     public static final Block ACACIA_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER).mapColor(MapColor.ORANGE));
     public static final Block ACACIA_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
     public static final Block ACACIA_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
     public static final Block ACACIA_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block ACACIA_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
+    public static final Block ACACIA_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
+    public static final Block ACACIA_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
 
     public static final Block DARK_OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER).mapColor(MapColor.BROWN));
     public static final Block DARK_OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
     public static final Block DARK_OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
     public static final Block DARK_OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block DARK_OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
+    public static final Block DARK_OAK_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
+    public static final Block DARK_OAK_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
 
     public static final Block CRIMSON_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.of(Material.NETHER_WOOD).strength(2.0f).resistance(3.0f).nonOpaque().sounds(BlockSoundGroup.NETHER_STEM).mapColor(MapColor.DULL_PINK));
     public static final Block CRIMSON_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
     public static final Block CRIMSON_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
     public static final Block CRIMSON_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block CRIMSON_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
+    public static final Block CRIMSON_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
+    public static final Block CRIMSON_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
 
     public static final Block MANGROVE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block MANGROVE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -630,42 +676,56 @@ public class BlockItemRegistry {
     public static final Block WARPED_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
     public static final Block WARPED_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block WARPED_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
+    public static final Block WARPED_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
+    public static final Block WARPED_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
     public static final Block STRIPPED_OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
     public static final Block STRIPPED_OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
     public static final Block STRIPPED_OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block STRIPPED_OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
+    public static final Block STRIPPED_OAK_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
+    public static final Block STRIPPED_OAK_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_BIRCH_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
     public static final Block STRIPPED_BIRCH_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
     public static final Block STRIPPED_BIRCH_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
     public static final Block STRIPPED_BIRCH_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block STRIPPED_BIRCH_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
+    public static final Block STRIPPED_BIRCH_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
+    public static final Block STRIPPED_BIRCH_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(BIRCH_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_SPRUCE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
     public static final Block STRIPPED_SPRUCE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
     public static final Block STRIPPED_SPRUCE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
     public static final Block STRIPPED_SPRUCE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block STRIPPED_SPRUCE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
+    public static final Block STRIPPED_SPRUCE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
+    public static final Block STRIPPED_SPRUCE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(SPRUCE_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_JUNGLE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
     public static final Block STRIPPED_JUNGLE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
     public static final Block STRIPPED_JUNGLE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
     public static final Block STRIPPED_JUNGLE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block STRIPPED_JUNGLE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
+    public static final Block STRIPPED_JUNGLE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
+    public static final Block STRIPPED_JUNGLE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(JUNGLE_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_ACACIA_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
     public static final Block STRIPPED_ACACIA_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
     public static final Block STRIPPED_ACACIA_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
     public static final Block STRIPPED_ACACIA_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block STRIPPED_ACACIA_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
+    public static final Block STRIPPED_ACACIA_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
+    public static final Block STRIPPED_ACACIA_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(ACACIA_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_DARK_OAK_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
     public static final Block STRIPPED_DARK_OAK_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
     public static final Block STRIPPED_DARK_OAK_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
     public static final Block STRIPPED_DARK_OAK_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block STRIPPED_DARK_OAK_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
+    public static final Block STRIPPED_DARK_OAK_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
+    public static final Block STRIPPED_DARK_OAK_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_MANGROVE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_CHAIR));
     public static final Block STRIPPED_MANGROVE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_CHAIR));
@@ -678,12 +738,16 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_CRIMSON_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
     public static final Block STRIPPED_CRIMSON_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block STRIPPED_CRIMSON_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
+    public static final Block STRIPPED_CRIMSON_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
+    public static final Block STRIPPED_CRIMSON_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
 
     public static final Block STRIPPED_WARPED_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
     public static final Block STRIPPED_WARPED_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
     public static final Block STRIPPED_WARPED_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
     public static final Block STRIPPED_WARPED_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block STRIPPED_WARPED_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
+    public static final Block STRIPPED_WARPED_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
+    public static final Block STRIPPED_WARPED_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
 
     public static final Block WHITE_FREEZER = new Freezer(FabricBlockSettings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE).mapColor(MapColor.WHITE),() -> BlockItemRegistry.WHITE_FRIDGE);
     public static final Block WHITE_FRIDGE = new Fridge(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque(), () -> BlockItemRegistry.WHITE_FREEZER);
@@ -1095,83 +1159,104 @@ public class BlockItemRegistry {
     public static final Block CONCRETE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(CONCRETE_KITCHEN_COUNTER));
     public static final Block CONCRETE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(CONCRETE_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block CONCRETE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(CONCRETE_KITCHEN_COUNTER));
+    public static final Block CONCRETE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(CONCRETE_KITCHEN_COUNTER));
+    public static final Block CONCRETE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(CONCRETE_KITCHEN_COUNTER));
 
     public static final Block DARK_CONCRETE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(RAW_CONCRETE).mapColor(MapColor.GRAY));
     public static final Block DARK_CONCRETE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(DARK_CONCRETE_KITCHEN_COUNTER));
     public static final Block DARK_CONCRETE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(DARK_CONCRETE_KITCHEN_COUNTER));
     public static final Block DARK_CONCRETE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(DARK_CONCRETE_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block DARK_CONCRETE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(DARK_CONCRETE_KITCHEN_COUNTER));
+    public static final Block DARK_CONCRETE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(DARK_CONCRETE_KITCHEN_COUNTER));
+    public static final Block DARK_CONCRETE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(DARK_CONCRETE_KITCHEN_COUNTER));
 
     public static final Block LIGHT_WOOD_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
     public static final Block LIGHT_WOOD_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
     public static final Block LIGHT_WOOD_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
     public static final Block LIGHT_WOOD_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block LIGHT_WOOD_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
+    public static final Block LIGHT_WOOD_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
+    public static final Block LIGHT_WOOD_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(OAK_KITCHEN_COUNTER));
 
     public static final Block DARK_WOOD_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
     public static final Block DARK_WOOD_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
     public static final Block DARK_WOOD_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
     public static final Block DARK_WOOD_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-    public static final Block DARK_WOOD_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block DARK_WOOD_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
+    public static final Block DARK_WOOD_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
+    public static final Block DARK_WOOD_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(DARK_OAK_KITCHEN_COUNTER));
 
     public static final Block GRANITE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
     public static final Block GRANITE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
     public static final Block GRANITE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
     public static final Block GRANITE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block GRANITE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+    public static final Block GRANITE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
+    public static final Block GRANITE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(Blocks.POLISHED_GRANITE));
 
     public static final Block CALCITE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.CALCITE));
     public static final Block CALCITE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.CALCITE));
     public static final Block CALCITE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.CALCITE));
     public static final Block CALCITE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.CALCITE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block CALCITE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.CALCITE));
+    public static final Block CALCITE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(Blocks.CALCITE));
+    public static final Block CALCITE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(Blocks.CALCITE));
 
     public static final Block NETHERITE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK));
     public static final Block NETHERITE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK));
     public static final Block NETHERITE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK));
     public static final Block NETHERITE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block NETHERITE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK));
+    public static final Block NETHERITE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK));
+    public static final Block NETHERITE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(Blocks.NETHERITE_BLOCK));
 
     public static final Block ANDESITE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
     public static final Block ANDESITE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
     public static final Block ANDESITE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
     public static final Block ANDESITE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block ANDESITE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+    public static final Block ANDESITE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
+    public static final Block ANDESITE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(Blocks.POLISHED_ANDESITE));
 
     public static final Block DIORITE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
     public static final Block DIORITE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
     public static final Block DIORITE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
     public static final Block DIORITE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block DIORITE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+    public static final Block DIORITE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
+    public static final Block DIORITE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(Blocks.POLISHED_DIORITE));
 
     public static final Block SMOOTH_STONE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
     public static final Block SMOOTH_STONE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
     public static final Block SMOOTH_STONE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
     public static final Block SMOOTH_STONE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block SMOOTH_STONE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
+    public static final Block SMOOTH_STONE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
+    public static final Block SMOOTH_STONE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
 
-
-    public static final Block STONE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.SMOOTH_STONE));
-
+    public static final Block STONE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.STONE));
     public static final Block STONE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.STONE));
-
     public static final Block STONE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.STONE));
-
     public static final Block STONE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.STONE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
-
     public static final Block STONE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.STONE));
+    public static final Block STONE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(Blocks.STONE));
+    public static final Block STONE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(Blocks.STONE));
 
     public static final Block DEEPSLATE_TILE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES));
     public static final Block DEEPSLATE_TILE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES));
     public static final Block DEEPSLATE_TILE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES));
     public static final Block DEEPSLATE_TILE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block DEEPSLATE_TILE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES));
+    public static final Block DEEPSLATE_TILE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES));
+    public static final Block DEEPSLATE_TILE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(Blocks.DEEPSLATE_TILES));
 
     public static final Block BLACKSTONE_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE));
     public static final Block BLACKSTONE_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE));
     public static final Block BLACKSTONE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE));
     public static final Block BLACKSTONE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block BLACKSTONE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE));
+    public static final Block BLACKSTONE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE));
+    public static final Block BLACKSTONE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(Blocks.POLISHED_BLACKSTONE));
 
     public static final Block KITCHEN_STOVETOP = new KitchenStovetop(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
 
@@ -1180,6 +1265,9 @@ public class BlockItemRegistry {
     public static final Block DEEPSLATE_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
     public static final Block DEEPSLATE_KITCHEN_SINK = new KitchenSink(FabricBlockSettings.copyOf(Blocks.DEEPSLATE),  LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final Block DEEPSLATE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+    public static final Block DEEPSLATE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+    public static final Block DEEPSLATE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(Blocks.DEEPSLATE));
+
     public static final Block WORKING_TABLE = new WorkingTable(FabricBlockSettings.copyOf(Blocks.CRAFTING_TABLE).sounds(BlockSoundGroup.WOOD));
     public static final Block BASIC_PLATE = new Plate(FabricBlockSettings.copyOf(Blocks.WHITE_CONCRETE).nonOpaque());
     public static final Block BASIC_CUTLERY = new Cutlery(FabricBlockSettings.copyOf(Blocks.GRAY_CONCRETE).nonOpaque());
@@ -1314,7 +1402,7 @@ public class BlockItemRegistry {
         registerFurniture("froggy_chair_yellow", FROGGY_CHAIR_YELLOW, true);
 
         //Classic Chairs
-        registerFurniture("chair_classic_wool", CHAIR_CLASSIC_WOOL, true);
+        registerFurniture("oak_chair_classic_wool", OAK_CHAIR_CLASSIC_WOOL, true);
         registerFurniture("oak_chair_classic", OAK_CHAIR_CLASSIC, true);
         registerFurniture("birch_chair_classic", BIRCH_CHAIR_CLASSIC, true);
         registerFurniture("spruce_chair_classic", SPRUCE_CHAIR_CLASSIC, true);
@@ -1377,9 +1465,41 @@ public class BlockItemRegistry {
         registerFurniture("deepslate_chair_modern", DEEPSLATE_CHAIR_MODERN, true);
 
         //Armchairs
-        registerFurniture("arm_chair_standard", ARM_CHAIR_STANDARD, true);
+        registerFurniture("white_simple_sofa", WHITE_SIMPLE_SOFA, true);
+        registerFurniture("orange_simple_sofa", ORANGE_SIMPLE_SOFA, true);
+        registerFurniture("magenta_simple_sofa", MAGENTA_SIMPLE_SOFA, true);
+        registerFurniture("light_blue_simple_sofa", LIGHT_BLUE_SIMPLE_SOFA, true);
+        registerFurniture("yellow_simple_sofa", YELLOW_SIMPLE_SOFA, true);
+        registerFurniture("lime_simple_sofa", LIME_SIMPLE_SOFA, true);
+        registerFurniture("pink_simple_sofa", PINK_SIMPLE_SOFA, true);
+        registerFurniture("gray_simple_sofa", GRAY_SIMPLE_SOFA, true);
+        registerFurniture("light_gray_simple_sofa", LIGHT_GRAY_SIMPLE_SOFA, true);
+        registerFurniture("cyan_simple_sofa", CYAN_SIMPLE_SOFA, true);
+        registerFurniture("purple_simple_sofa", PURPLE_SIMPLE_SOFA, true);
+        registerFurniture("blue_simple_sofa", BLUE_SIMPLE_SOFA, true);
+        registerFurniture("brown_simple_sofa", BROWN_SIMPLE_SOFA, true);
+        registerFurniture("green_simple_sofa", GREEN_SIMPLE_SOFA, true);
+        registerFurniture("red_simple_sofa", RED_SIMPLE_SOFA, true);
+        registerFurniture("black_simple_sofa", BLACK_SIMPLE_SOFA, true);
+
         registerFurniture("arm_chair_leather", ARM_CHAIR_LEATHER, true);
-        registerFurniture("sofa_simple", SOFA_SIMPLE, true);
+
+        registerFurniture("white_arm_chair", WHITE_ARM_CHAIR, true);
+        registerFurniture("orange_arm_chair", ORANGE_ARM_CHAIR, true);
+        registerFurniture("magenta_arm_chair", MAGENTA_ARM_CHAIR, true);
+        registerFurniture("light_blue_arm_chair", LIGHT_BLUE_ARM_CHAIR, true);
+        registerFurniture("yellow_arm_chair", YELLOW_ARM_CHAIR, true);
+        registerFurniture("lime_arm_chair", LIME_ARM_CHAIR, true);
+        registerFurniture("pink_arm_chair", PINK_ARM_CHAIR, true);
+        registerFurniture("gray_arm_chair", GRAY_ARM_CHAIR, true);
+        registerFurniture("light_gray_arm_chair", LIGHT_GRAY_ARM_CHAIR, true);
+        registerFurniture("cyan_arm_chair", CYAN_ARM_CHAIR, true);
+        registerFurniture("purple_arm_chair", PURPLE_ARM_CHAIR, true);
+        registerFurniture("blue_arm_chair", BLUE_ARM_CHAIR, true);
+        registerFurniture("brown_arm_chair", BROWN_ARM_CHAIR, true);
+        registerFurniture("green_arm_chair", GREEN_ARM_CHAIR, true);
+        registerFurniture("red_arm_chair", RED_ARM_CHAIR, true);
+        registerFurniture("black_arm_chair", BLACK_ARM_CHAIR, true);
 
         //Tables
         registerFurniture("oak_table_basic", OAK_BASIC_TABLE, true);
@@ -1994,36 +2114,48 @@ public class BlockItemRegistry {
         registerFurniture("oak_kitchen_cabinet", OAK_KITCHEN_CABINET, true);
         registerFurniture("oak_kitchen_sink", OAK_KITCHEN_SINK, true);
         registerFurniture("oak_kitchen_counter_oven", OAK_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("oak_kitchen_wall_counter", OAK_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("oak_kitchen_wall_drawer", OAK_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("spruce_kitchen_counter", SPRUCE_KITCHEN_COUNTER, true);
         registerFurniture("spruce_kitchen_drawer", SPRUCE_KITCHEN_DRAWER, true);
         registerFurniture("spruce_kitchen_cabinet", SPRUCE_KITCHEN_CABINET, true);
         registerFurniture("spruce_kitchen_sink", SPRUCE_KITCHEN_SINK, true);
         registerFurniture("spruce_kitchen_counter_oven", SPRUCE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("spruce_kitchen_wall_counter", SPRUCE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("spruce_kitchen_wall_drawer", SPRUCE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("birch_kitchen_counter", BIRCH_KITCHEN_COUNTER, true);
         registerFurniture("birch_kitchen_drawer", BIRCH_KITCHEN_DRAWER, true);
         registerFurniture("birch_kitchen_cabinet", BIRCH_KITCHEN_CABINET, true);
         registerFurniture("birch_kitchen_sink", BIRCH_KITCHEN_SINK, true);
         registerFurniture("birch_kitchen_counter_oven", BIRCH_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("birch_kitchen_wall_counter", BIRCH_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("birch_kitchen_wall_drawer", BIRCH_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("acacia_kitchen_counter", ACACIA_KITCHEN_COUNTER, true);
         registerFurniture("acacia_kitchen_drawer", ACACIA_KITCHEN_DRAWER, true);
         registerFurniture("acacia_kitchen_cabinet", ACACIA_KITCHEN_CABINET, true);
         registerFurniture("acacia_kitchen_sink", ACACIA_KITCHEN_SINK, true);
         registerFurniture("acacia_kitchen_counter_oven", ACACIA_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("acacia_kitchen_wall_counter", ACACIA_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("acacia_kitchen_wall_drawer", ACACIA_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("jungle_kitchen_counter", JUNGLE_KITCHEN_COUNTER, true);
         registerFurniture("jungle_kitchen_drawer", JUNGLE_KITCHEN_DRAWER, true);
         registerFurniture("jungle_kitchen_cabinet", JUNGLE_KITCHEN_CABINET, true);
         registerFurniture("jungle_kitchen_sink", JUNGLE_KITCHEN_SINK, true);
         registerFurniture("jungle_kitchen_counter_oven", JUNGLE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("jungle_kitchen_wall_counter", JUNGLE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("jungle_kitchen_wall_drawer", JUNGLE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("dark_oak_kitchen_counter", DARK_OAK_KITCHEN_COUNTER, true);
         registerFurniture("dark_oak_kitchen_drawer", DARK_OAK_KITCHEN_DRAWER, true);
         registerFurniture("dark_oak_kitchen_cabinet", DARK_OAK_KITCHEN_CABINET, true);
         registerFurniture("dark_oak_kitchen_sink", DARK_OAK_KITCHEN_SINK, true);
         registerFurniture("dark_oak_kitchen_counter_oven", DARK_OAK_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("dark_oak_kitchen_wall_counter", DARK_OAK_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("dark_oak_kitchen_wall_drawer", DARK_OAK_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("mangrove_kitchen_counter", MANGROVE_KITCHEN_COUNTER, true);
         registerFurniture("mangrove_kitchen_drawer", MANGROVE_KITCHEN_DRAWER, true);
@@ -2036,48 +2168,64 @@ public class BlockItemRegistry {
         registerFurniture("crimson_kitchen_cabinet", CRIMSON_KITCHEN_CABINET, true);
         registerFurniture("crimson_kitchen_sink", CRIMSON_KITCHEN_SINK, true);
         registerFurniture("crimson_kitchen_counter_oven", CRIMSON_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("crimson_kitchen_wall_counter", CRIMSON_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("crimson_kitchen_wall_drawer", CRIMSON_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("warped_kitchen_counter", WARPED_KITCHEN_COUNTER, true);
         registerFurniture("warped_kitchen_drawer", WARPED_KITCHEN_DRAWER, true);
         registerFurniture("warped_kitchen_cabinet", WARPED_KITCHEN_CABINET, true);
         registerFurniture("warped_kitchen_sink", WARPED_KITCHEN_SINK, true);
         registerFurniture("warped_kitchen_counter_oven", WARPED_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("warped_kitchen_wall_counter", WARPED_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("warped_kitchen_wall_drawer", WARPED_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("stripped_oak_kitchen_counter", STRIPPED_OAK_KITCHEN_COUNTER, true);
         registerFurniture("stripped_oak_kitchen_drawer", STRIPPED_OAK_KITCHEN_DRAWER, true);
         registerFurniture("stripped_oak_kitchen_cabinet", STRIPPED_OAK_KITCHEN_CABINET, true);
         registerFurniture("stripped_oak_kitchen_sink", STRIPPED_OAK_KITCHEN_SINK, true);
         registerFurniture("stripped_oak_kitchen_counter_oven", STRIPPED_OAK_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("stripped_oak_kitchen_wall_counter", STRIPPED_OAK_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("stripped_oak_kitchen_wall_drawer", STRIPPED_OAK_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("stripped_spruce_kitchen_counter", STRIPPED_SPRUCE_KITCHEN_COUNTER, true);
         registerFurniture("stripped_spruce_kitchen_drawer", STRIPPED_SPRUCE_KITCHEN_DRAWER, true);
         registerFurniture("stripped_spruce_kitchen_cabinet", STRIPPED_SPRUCE_KITCHEN_CABINET, true);
         registerFurniture("stripped_spruce_kitchen_sink", STRIPPED_SPRUCE_KITCHEN_SINK, true);
         registerFurniture("stripped_spruce_kitchen_counter_oven", STRIPPED_SPRUCE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("stripped_spruce_kitchen_wall_counter", STRIPPED_SPRUCE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("stripped_spruce_kitchen_wall_drawer", STRIPPED_SPRUCE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("stripped_birch_kitchen_counter", STRIPPED_BIRCH_KITCHEN_COUNTER, true);
         registerFurniture("stripped_birch_kitchen_drawer", STRIPPED_BIRCH_KITCHEN_DRAWER, true);
         registerFurniture("stripped_birch_kitchen_cabinet", STRIPPED_BIRCH_KITCHEN_CABINET, true);
         registerFurniture("stripped_birch_kitchen_sink", STRIPPED_BIRCH_KITCHEN_SINK, true);
         registerFurniture("stripped_birch_kitchen_counter_oven", STRIPPED_BIRCH_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("stripped_birch_kitchen_wall_counter", STRIPPED_BIRCH_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("stripped_birch_kitchen_wall_drawer", STRIPPED_BIRCH_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("stripped_acacia_kitchen_counter", STRIPPED_ACACIA_KITCHEN_COUNTER, true);
         registerFurniture("stripped_acacia_kitchen_drawer", STRIPPED_ACACIA_KITCHEN_DRAWER, true);
         registerFurniture("stripped_acacia_kitchen_cabinet", STRIPPED_ACACIA_KITCHEN_CABINET, true);
         registerFurniture("stripped_acacia_kitchen_sink", STRIPPED_ACACIA_KITCHEN_SINK, true);
         registerFurniture("stripped_acacia_kitchen_counter_oven", STRIPPED_ACACIA_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("stripped_acacia_kitchen_wall_counter", STRIPPED_ACACIA_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("stripped_acacia_kitchen_wall_drawer", STRIPPED_ACACIA_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("stripped_jungle_kitchen_counter", STRIPPED_JUNGLE_KITCHEN_COUNTER, true);
         registerFurniture("stripped_jungle_kitchen_drawer", STRIPPED_JUNGLE_KITCHEN_DRAWER, true);
         registerFurniture("stripped_jungle_kitchen_cabinet", STRIPPED_JUNGLE_KITCHEN_CABINET, true);
         registerFurniture("stripped_jungle_kitchen_sink", STRIPPED_JUNGLE_KITCHEN_SINK, true);
         registerFurniture("stripped_jungle_kitchen_counter_oven", STRIPPED_JUNGLE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("stripped_jungle_kitchen_wall_counter", STRIPPED_JUNGLE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("stripped_jungle_kitchen_wall_drawer", STRIPPED_JUNGLE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("stripped_dark_oak_kitchen_counter", STRIPPED_DARK_OAK_KITCHEN_COUNTER, true);
         registerFurniture("stripped_dark_oak_kitchen_drawer", STRIPPED_DARK_OAK_KITCHEN_DRAWER, true);
         registerFurniture("stripped_dark_oak_kitchen_cabinet", STRIPPED_DARK_OAK_KITCHEN_CABINET, true);
         registerFurniture("stripped_dark_oak_kitchen_sink", STRIPPED_DARK_OAK_KITCHEN_SINK, true);
         registerFurniture("stripped_dark_oak_kitchen_counter_oven", STRIPPED_DARK_OAK_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("stripped_dark_oak_kitchen_wall_counter", STRIPPED_DARK_OAK_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("stripped_dark_oak_kitchen_wall_drawer", STRIPPED_DARK_OAK_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("stripped_mangrove_kitchen_counter", STRIPPED_MANGROVE_KITCHEN_COUNTER, true);
         registerFurniture("stripped_mangrove_kitchen_drawer", STRIPPED_MANGROVE_KITCHEN_DRAWER, true);
@@ -2090,96 +2238,128 @@ public class BlockItemRegistry {
         registerFurniture("stripped_crimson_kitchen_cabinet", STRIPPED_CRIMSON_KITCHEN_CABINET, true);
         registerFurniture("stripped_crimson_kitchen_sink", STRIPPED_CRIMSON_KITCHEN_SINK, true);
         registerFurniture("stripped_crimson_kitchen_counter_oven", STRIPPED_CRIMSON_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("stripped_crimson_kitchen_wall_counter", STRIPPED_CRIMSON_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("stripped_crimson_kitchen_wall_drawer", STRIPPED_CRIMSON_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("stripped_warped_kitchen_counter", STRIPPED_WARPED_KITCHEN_COUNTER, true);
         registerFurniture("stripped_warped_kitchen_drawer", STRIPPED_WARPED_KITCHEN_DRAWER, true);
         registerFurniture("stripped_warped_kitchen_cabinet", STRIPPED_WARPED_KITCHEN_CABINET, true);
         registerFurniture("stripped_warped_kitchen_sink", STRIPPED_WARPED_KITCHEN_SINK, true);
         registerFurniture("stripped_warped_kitchen_counter_oven", STRIPPED_WARPED_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("stripped_warped_kitchen_wall_counter", STRIPPED_WARPED_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("stripped_warped_kitchen_wall_drawer", STRIPPED_WARPED_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("concrete_kitchen_counter", CONCRETE_KITCHEN_COUNTER, true);
         registerFurniture("concrete_kitchen_drawer", CONCRETE_KITCHEN_DRAWER, true);
         registerFurniture("concrete_kitchen_cabinet", CONCRETE_KITCHEN_CABINET, true);
         registerFurniture("concrete_kitchen_sink", CONCRETE_KITCHEN_SINK, true);
         registerFurniture("concrete_kitchen_counter_oven", CONCRETE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("concrete_kitchen_wall_counter", CONCRETE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("concrete_kitchen_wall_drawer", CONCRETE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("dark_concrete_kitchen_counter", DARK_CONCRETE_KITCHEN_COUNTER, true);
         registerFurniture("dark_concrete_kitchen_drawer", DARK_CONCRETE_KITCHEN_DRAWER, true);
         registerFurniture("dark_concrete_kitchen_cabinet", DARK_CONCRETE_KITCHEN_CABINET, true);
         registerFurniture("dark_concrete_kitchen_sink", DARK_CONCRETE_KITCHEN_SINK, true);
         registerFurniture("dark_concrete_kitchen_counter_oven", DARK_CONCRETE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("dark_concrete_kitchen_wall_counter", DARK_CONCRETE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("dark_concrete_kitchen_wall_drawer", DARK_CONCRETE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("light_wood_kitchen_counter", LIGHT_WOOD_KITCHEN_COUNTER, true);
         registerFurniture("light_wood_kitchen_drawer", LIGHT_WOOD_KITCHEN_DRAWER, true);
         registerFurniture("light_wood_kitchen_cabinet", LIGHT_WOOD_KITCHEN_CABINET, true);
         registerFurniture("light_wood_kitchen_sink", LIGHT_WOOD_KITCHEN_SINK, true);
         registerFurniture("light_wood_kitchen_counter_oven", LIGHT_WOOD_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("light_wood_kitchen_wall_counter", LIGHT_WOOD_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("light_wood_kitchen_wall_drawer", LIGHT_WOOD_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("dark_wood_kitchen_counter", DARK_WOOD_KITCHEN_COUNTER, true);
         registerFurniture("dark_wood_kitchen_drawer", DARK_WOOD_KITCHEN_DRAWER, true);
         registerFurniture("dark_wood_kitchen_cabinet", DARK_WOOD_KITCHEN_CABINET, true);
         registerFurniture("dark_wood_kitchen_sink", DARK_WOOD_KITCHEN_SINK, true);
         registerFurniture("dark_wood_kitchen_counter_oven", DARK_WOOD_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("dark_wood_kitchen_wall_counter", DARK_WOOD_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("dark_wood_kitchen_wall_drawer", DARK_WOOD_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("granite_kitchen_counter", GRANITE_KITCHEN_COUNTER, true);
         registerFurniture("granite_kitchen_drawer", GRANITE_KITCHEN_DRAWER, true);
         registerFurniture("granite_kitchen_cabinet", GRANITE_KITCHEN_CABINET, true);
         registerFurniture("granite_kitchen_sink", GRANITE_KITCHEN_SINK, true);
         registerFurniture("granite_kitchen_counter_oven", GRANITE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("granite_kitchen_wall_counter", GRANITE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("granite_kitchen_wall_drawer", GRANITE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("calcite_kitchen_counter", CALCITE_KITCHEN_COUNTER, true);
         registerFurniture("calcite_kitchen_drawer", CALCITE_KITCHEN_DRAWER, true);
         registerFurniture("calcite_kitchen_cabinet", CALCITE_KITCHEN_CABINET, true);
         registerFurniture("calcite_kitchen_sink", CALCITE_KITCHEN_SINK, true);
         registerFurniture("calcite_kitchen_counter_oven", CALCITE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("calcite_kitchen_wall_counter", CALCITE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("calcite_kitchen_wall_drawer", CALCITE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("netherite_kitchen_counter", NETHERITE_KITCHEN_COUNTER, true);
         registerFurniture("netherite_kitchen_drawer", NETHERITE_KITCHEN_DRAWER, true);
         registerFurniture("netherite_kitchen_cabinet", NETHERITE_KITCHEN_CABINET, true);
         registerFurniture("netherite_kitchen_sink", NETHERITE_KITCHEN_SINK, true);
         registerFurniture("netherite_kitchen_counter_oven", NETHERITE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("netherite_kitchen_wall_counter", NETHERITE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("netherite_kitchen_wall_drawer", NETHERITE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("andesite_kitchen_counter", ANDESITE_KITCHEN_COUNTER, true);
         registerFurniture("andesite_kitchen_drawer", ANDESITE_KITCHEN_DRAWER, true);
         registerFurniture("andesite_kitchen_cabinet", ANDESITE_KITCHEN_CABINET, true);
         registerFurniture("andesite_kitchen_sink", ANDESITE_KITCHEN_SINK, true);
         registerFurniture("andesite_kitchen_counter_oven", ANDESITE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("andesite_kitchen_wall_counter", ANDESITE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("andesite_kitchen_wall_drawer", ANDESITE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("diorite_kitchen_counter", DIORITE_KITCHEN_COUNTER, true);
         registerFurniture("diorite_kitchen_drawer", DIORITE_KITCHEN_DRAWER, true);
         registerFurniture("diorite_kitchen_cabinet", DIORITE_KITCHEN_CABINET, true);
         registerFurniture("diorite_kitchen_sink", DIORITE_KITCHEN_SINK, true);
         registerFurniture("diorite_kitchen_counter_oven", DIORITE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("diorite_kitchen_wall_counter", DIORITE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("diorite_kitchen_wall_drawer", DIORITE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("smooth_stone_kitchen_counter", SMOOTH_STONE_KITCHEN_COUNTER, true);
         registerFurniture("smooth_stone_kitchen_drawer", SMOOTH_STONE_KITCHEN_DRAWER, true);
         registerFurniture("smooth_stone_kitchen_cabinet", SMOOTH_STONE_KITCHEN_CABINET, true);
         registerFurniture("smooth_stone_kitchen_sink", SMOOTH_STONE_KITCHEN_SINK, true);
         registerFurniture("smooth_stone_kitchen_counter_oven", SMOOTH_STONE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("smooth_stone_kitchen_wall_counter", SMOOTH_STONE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("smooth_stone_kitchen_wall_drawer", SMOOTH_STONE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("stone_kitchen_counter", STONE_KITCHEN_COUNTER, true);
         registerFurniture("stone_kitchen_drawer", STONE_KITCHEN_DRAWER, true);
         registerFurniture("stone_kitchen_cabinet", STONE_KITCHEN_CABINET, true);
         registerFurniture("stone_kitchen_sink", STONE_KITCHEN_SINK, true);
         registerFurniture("stone_kitchen_counter_oven", STONE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("stone_kitchen_wall_counter", STONE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("stone_kitchen_wall_drawer", STONE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("deepslate_tile_kitchen_counter", DEEPSLATE_TILE_KITCHEN_COUNTER, true);
         registerFurniture("deepslate_tile_kitchen_drawer", DEEPSLATE_TILE_KITCHEN_DRAWER, true);
         registerFurniture("deepslate_tile_kitchen_cabinet", DEEPSLATE_TILE_KITCHEN_CABINET, true);
         registerFurniture("deepslate_tile_kitchen_sink", DEEPSLATE_TILE_KITCHEN_SINK, true);
         registerFurniture("deepslate_tile_kitchen_counter_oven", DEEPSLATE_TILE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("deepslate_tile_kitchen_wall_counter", DEEPSLATE_TILE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("deepslate_tile_kitchen_wall_drawer", DEEPSLATE_TILE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("blackstone_kitchen_counter", BLACKSTONE_KITCHEN_COUNTER, true);
         registerFurniture("blackstone_kitchen_drawer", BLACKSTONE_KITCHEN_DRAWER, true);
         registerFurniture("blackstone_kitchen_cabinet", BLACKSTONE_KITCHEN_CABINET, true);
         registerFurniture("blackstone_kitchen_sink", BLACKSTONE_KITCHEN_SINK, true);
         registerFurniture("blackstone_kitchen_counter_oven", BLACKSTONE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("blackstone_kitchen_wall_counter", BLACKSTONE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("blackstone_kitchen_wall_drawer", BLACKSTONE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("deepslate_kitchen_counter", DEEPSLATE_KITCHEN_COUNTER, true);
         registerFurniture("deepslate_kitchen_drawer", DEEPSLATE_KITCHEN_DRAWER, true);
         registerFurniture("deepslate_kitchen_cabinet", DEEPSLATE_KITCHEN_CABINET, true);
         registerFurniture("deepslate_kitchen_sink", DEEPSLATE_KITCHEN_SINK, true);
         registerFurniture("deepslate_kitchen_counter_oven", DEEPSLATE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("deepslate_kitchen_wall_counter", DEEPSLATE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("deepslate_kitchen_wall_drawer", DEEPSLATE_KITCHEN_WALL_DRAWER, true);
 
         registerFurniture("white_fridge", WHITE_FRIDGE, true);
         registerFurniture("white_freezer", WHITE_FREEZER, false);

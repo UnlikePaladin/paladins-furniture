@@ -1,0 +1,9 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/sofa_simple/white/sofa_simple_corner_right",
+	"textures": {
+		"particle": "block/red_wool",
+		"base": "block/red_wool"
+	}
+    
+}

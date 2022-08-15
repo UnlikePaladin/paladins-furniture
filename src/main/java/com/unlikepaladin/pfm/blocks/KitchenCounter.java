@@ -27,8 +27,6 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
     private float height = 0.36f;
     private final Block baseBlock;
     public static final EnumProperty<CounterShape> SHAPE = EnumProperty.of("shape", CounterShape.class);
-    public static final BooleanProperty UP = Properties.UP;
-    public static final BooleanProperty DOWN = Properties.DOWN;
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     private final BlockState baseBlockState;
@@ -36,7 +34,7 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
     private static final List<FurnitureBlock> STONE_COUNTERS = new ArrayList<>();
     public KitchenCounter(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(UP, false).with(DOWN,false).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCounter.class)){
@@ -63,8 +61,6 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(SHAPE);
-        stateManager.add(UP);
-        stateManager.add(DOWN);
         stateManager.add(WATERLOGGED);
     }
 
@@ -81,28 +77,21 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
         BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
-        boolean up = connectsVertical(world.getBlockState(blockPos.up()).getBlock());
-        boolean down = connectsVertical(world.getBlockState(blockPos.down()).getBlock());
-        return blockState.with(SHAPE, getShape(blockState, world, blockPos)).with(UP, up).with(DOWN, down);
+        return blockState.with(SHAPE, getShape(blockState, world, blockPos));
     }
-    public static boolean connectsVertical(Block block) {
-        return block instanceof KitchenCounter || block instanceof KitchenCounterOven || block instanceof Fridge || block instanceof Freezer;
-    }
+
     private static CounterShape getShape(BlockState state, BlockView world, BlockPos pos) {
         Direction direction = state.get(FACING);
         BlockState blockState = world.getBlockState(pos.offset(direction));
         if (canConnectToCounter(blockState)) {
             Direction direction2 = blockState.get(FACING);
-
             if (direction2.getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
                 if (direction2 == direction.rotateYCounterclockwise()) {
                     return CounterShape.OUTER_LEFT;
                 }
-
                 return CounterShape.OUTER_RIGHT;
             }
         }
-
         BlockState direction2 = world.getBlockState(pos.offset(direction.getOpposite()));
         if (canConnectToCounter(direction2)) {
             Direction direction3 = direction2.get(FACING);
@@ -153,11 +142,6 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
         }
        if ( direction.getAxis().isHorizontal()) {
            return state.with(SHAPE, getShape(state, world, pos));
-       }
-       else if (direction.getAxis().isVertical()) {
-           boolean up = connectsVertical(world.getBlockState(pos.up()).getBlock());
-           boolean down = connectsVertical(world.getBlockState(pos.down()).getBlock());
-           return state.with(UP, up).with(DOWN, down);
        }
        else{
             return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
@@ -246,76 +230,6 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         CounterShape shape = state.get(SHAPE);
-        boolean up = state.get(UP);
-        boolean down = state.get(DOWN);
-        if (down) {
-            return switch (shape) {
-                case INNER_LEFT -> switch (dir) {
-                    case NORTH -> INNER_MIDDLE_WEST;
-                    case SOUTH -> INNER_MIDDLE_EAST;
-                    case WEST -> INNER_MIDDLE_SOUTH;
-                    default -> INNER_MIDDLE;
-                };
-                case INNER_RIGHT -> switch (dir) {
-                    case NORTH -> INNER_MIDDLE;
-                    case SOUTH -> INNER_MIDDLE_SOUTH;
-                    case WEST -> INNER_MIDDLE_WEST;
-                    default -> INNER_MIDDLE_EAST;
-                };
-                case OUTER_RIGHT -> switch (dir) {
-                    case NORTH -> OUTER_MIDDLE_EAST;
-                    case SOUTH -> OUTER_MIDDLE_WEST;
-                    case WEST -> OUTER_MIDDLE;
-                    default -> OUTER_MIDDLE_SOUTH;
-                };
-                case OUTER_LEFT -> switch (dir) {
-                    case NORTH -> OUTER_MIDDLE;
-                    case SOUTH -> OUTER_MIDDLE_SOUTH;
-                    case WEST -> OUTER_MIDDLE_WEST;
-                    default -> OUTER_MIDDLE_EAST;
-                };
-                default -> switch (dir) {
-                    case NORTH -> MIDDLE;
-                    case SOUTH -> MIDDLE_SOUTH;
-                    case WEST -> MIDDLE_WEST;
-                    default -> MIDDLE_EAST;
-                };
-            };
-        } else if (up) {
-            return switch (shape) {
-                case OUTER_RIGHT -> switch (dir) {
-                    case NORTH -> OUTER_BOTTOM_EAST;
-                    case SOUTH -> OUTER_BOTTOM_WEST;
-                    case WEST -> OUTER_BOTTOM;
-                    default -> OUTER_BOTTOM_SOUTH;
-                };
-                case OUTER_LEFT -> switch (dir) {
-                    case NORTH -> OUTER_BOTTOM;
-                    case SOUTH -> OUTER_BOTTOM_SOUTH;
-                    case WEST -> OUTER_BOTTOM_WEST;
-                    default -> OUTER_BOTTOM_EAST;
-                };
-                case INNER_LEFT -> switch (dir) {
-                    case NORTH -> INNER_BOTTOM_WEST;
-                    case SOUTH -> INNER_BOTTOM_EAST;
-                    case WEST -> INNER_BOTTOM_SOUTH;
-                    default -> INNER_BOTTOM;
-                };
-                case INNER_RIGHT -> switch (dir) {
-                    case NORTH -> INNER_BOTTOM;
-                    case SOUTH -> INNER_BOTTOM_SOUTH;
-                    case WEST -> INNER_BOTTOM_WEST;
-                    default -> INNER_BOTTOM_EAST;
-                };
-                default -> switch (dir) {
-                    case NORTH -> BOTTOM;
-                    case SOUTH -> BOTTOM_SOUTH;
-                    case WEST -> BOTTOM_WEST;
-                    default -> BOTTOM_EAST;
-                };
-            };
-        }
-
             return switch (shape) {
                 case STRAIGHT -> switch (dir) {
                     case NORTH -> STRAIGHT;

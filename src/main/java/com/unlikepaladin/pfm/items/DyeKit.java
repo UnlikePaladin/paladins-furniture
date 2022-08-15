@@ -14,11 +14,10 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
-
-import static com.unlikepaladin.pfm.blocks.DyeableFurniture.COLORID;
-import static com.unlikepaladin.pfm.blocks.DyeableFurniture.DYED;
 
 public class DyeKit extends Item {
     private final DyeColor color;
@@ -40,9 +39,12 @@ public class DyeKit extends Item {
         BlockState blockState = world.getBlockState(blockPos);
         if (playerEntity.isSneaking()) {
             if(blockState.getBlock() instanceof DyeableFurniture) {
-                if (stack.getItem() instanceof DyeKit && (blockState.get(COLORID) != ((DyeKit) stack.getItem()).getColor())) {
+                if (stack.getItem() instanceof DyeKit) {
                     world.playSound(null, blockPos, PaladinFurnitureMod.FURNITURE_DYED_EVENT, SoundCategory.BLOCKS, 0.3f, 1f);
-                    world.setBlockState(blockPos, blockState.with(COLORID, ((DyeKit) stack.getItem()).getColor()).with(DYED, true), 3);
+                    String newBlock= blockState.getBlock().getName().getString();
+                    newBlock = newBlock.replace(((DyeableFurniture) blockState.getBlock()).getColor().toString(), getColor().toString()).replace("block.pfm.","");
+                    BlockState blockState1 = Registry.BLOCK.get(new Identifier("pfm", newBlock)).getStateWithProperties(blockState);
+                    world.setBlockState(blockPos, blockState1, 3);
                     stack.decrement(1);
                     return ActionResult.CONSUME;
                 }

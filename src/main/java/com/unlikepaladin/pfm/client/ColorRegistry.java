@@ -1,8 +1,6 @@
 package com.unlikepaladin.pfm.client;
 
-import com.unlikepaladin.pfm.blocks.ArmChairDyeable;
 import com.unlikepaladin.pfm.blocks.BasicToilet;
-import com.unlikepaladin.pfm.blocks.ClassicChairDyeable;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -13,9 +11,6 @@ import net.minecraft.client.render.RenderLayer;
 
 public class ColorRegistry {
     public static void registerAll(){
-        ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> state.get(ClassicChairDyeable.COLORID).getFireworkColor(), BlockItemRegistry.CHAIR_CLASSIC_WOOL);
-        ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> state.get(ArmChairDyeable.COLORID).getFireworkColor(), BlockItemRegistry.ARM_CHAIR_STANDARD);
-        ColorProviderRegistry.BLOCK.register((state, view, pos, tintIndex) -> state.get(ClassicChairDyeable.COLORID).getFireworkColor(), BlockItemRegistry.SOFA_SIMPLE);
 
         addWaterColor(BlockItemRegistry.OAK_KITCHEN_SINK);
         addWaterColor(BlockItemRegistry.SPRUCE_KITCHEN_SINK);
