@@ -232,13 +232,8 @@ public class BasicTable extends Block implements Waterloggable{
     final static VoxelShape TABLE_BASIC_MIDDLE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16));
     final static VoxelShape TABLE_BASIC_NORTH_SOUTH = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 0, 4, 2, 16), createCuboidShape(12, 0, 0, 14, 2, 16));
     final static VoxelShape TABLE_BASIC_LEG = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(0, 0, 11, 16, 2, 13));
-    final static VoxelShape TABLE_BASIC_DOUBLE_CORNER = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 14, 4, 14, 16), createCuboidShape(12, 0, 14, 14, 14, 16), createCuboidShape(12, 0, 0, 14, 14, 2), createCuboidShape(2, 0, 0, 4, 14, 2));
     final static VoxelShape TABLE_BASIC_CORNER_NORTH_WEST = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(12, 0, 12, 14, 14, 14), createCuboidShape(12, 0, 0, 14, 2, 12), createCuboidShape(2, 0, 0, 4, 14, 2));
     final static VoxelShape TABLE_BASIC_CORNER_NORTH_EAST = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 12, 4, 14, 14), createCuboidShape(2, 0, 0, 4, 2, 12), createCuboidShape(12, 0, 0, 14, 14, 2));
-    final static VoxelShape TABLE_BASIC_CORNER = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 0, 4, 14, 2), createCuboidShape(12, 0, 0, 14, 14, 2));
-    final static VoxelShape TABLE_BASIC_CORNER_M = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 3, 4, 14, 5), createCuboidShape(12, 0, 3, 14, 14, 5), createCuboidShape(14, 0, 3, 16, 2, 5), createCuboidShape(0, 0, 3, 2, 2, 5));
-    final static VoxelShape TABLE_BASIC_CORNER_TRI = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 14, 4, 14, 16), createCuboidShape(12, 0, 14, 14, 14, 16), createCuboidShape(11, 0, 0, 13, 14, 2));
-    final static VoxelShape TABLE_BASIC_CORNER_TRI_WEST = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 14, 4, 14, 16), createCuboidShape(12, 0, 14, 14, 14, 16), createCuboidShape(3, 0, 0, 5, 14, 2));
 
     final static VoxelShape TABLE_BASIC_FACING_EAST = rotateShape(Direction.NORTH, Direction.EAST, TABLE_BASIC);
     final static VoxelShape TABLE_BASIC_EAST_FACING_EAST = rotateShape(Direction.NORTH, Direction.EAST, TABLE_BASIC_EAST);
@@ -257,25 +252,16 @@ public class BasicTable extends Block implements Waterloggable{
     final static VoxelShape TABLE_BASIC_LEG_FACING_WEST = rotateShape(Direction.NORTH, Direction.WEST, TABLE_BASIC_LEG);
     final static VoxelShape TABLE_BASIC_LEG_FACING_EAST = rotateShape(Direction.NORTH, Direction.EAST, TABLE_BASIC_LEG);
     final static VoxelShape TABLE_BASIC_LEG_FACING_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, TABLE_BASIC_LEG);
-    final static VoxelShape TABLE_BASIC_DOUBLE_CORNER_FACING_EAST = rotateShape(Direction.NORTH, Direction.EAST, TABLE_BASIC_DOUBLE_CORNER);
     final static VoxelShape TABLE_BASIC_CORNER_NORTH_EAST_FACING_WEST = rotateShape(Direction.NORTH, Direction.WEST, TABLE_BASIC_CORNER_NORTH_EAST);
     final static VoxelShape TABLE_BASIC_CORNER_NORTH_WEST_FACING_EAST = rotateShape(Direction.NORTH, Direction.EAST, TABLE_BASIC_CORNER_NORTH_WEST);
     final static VoxelShape TABLE_BASIC_CORNER_NORTH_WEST_FACING_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, TABLE_BASIC_CORNER_NORTH_WEST);
     final static VoxelShape TABLE_BASIC_CORNER_NORTH_EAST_FACING_EAST = rotateShape(Direction.NORTH, Direction.EAST, TABLE_BASIC_CORNER_NORTH_EAST);
     final static VoxelShape TABLE_BASIC_CORNER_NORTH_EAST_FACING_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, TABLE_BASIC_CORNER_NORTH_EAST);
     final static VoxelShape TABLE_BASIC_CORNER_NORTH_WEST_FACING_WEST = rotateShape(Direction.NORTH, Direction.WEST, TABLE_BASIC_CORNER_NORTH_WEST);
-    final static VoxelShape TABLE_BASIC_CORNER_FACING_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, TABLE_BASIC_CORNER);
-    final static VoxelShape TABLE_BASIC_CORNER_M_FACING_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, TABLE_BASIC_CORNER_M);
-    final static VoxelShape TABLE_BASIC_CORNER_M_FACING_EAST = rotateShape(Direction.NORTH, Direction.EAST, TABLE_BASIC_CORNER_M);
-    final static VoxelShape TABLE_BASIC_CORNER_FACING_EAST = rotateShape(Direction.NORTH, Direction.EAST, TABLE_BASIC_CORNER);
-    final static VoxelShape TABLE_BASIC_CORNER_M_FACING_WEST = rotateShape(Direction.NORTH, Direction.WEST, TABLE_BASIC_CORNER_M);
-    final static VoxelShape TABLE_BASIC_CORNER_FACING_WEST = rotateShape(Direction.NORTH, Direction.WEST, TABLE_BASIC_CORNER);
-    final static VoxelShape TABLE_BASIC_CORNER_TRI_WEST_FACING_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, TABLE_BASIC_CORNER_TRI_WEST);
 
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction.Axis dir = state.get(AXIS);
         boolean dirNorthOrSouth = dir.equals(Direction.Axis.X);
-        boolean dirWestOrEast = dir.equals(Direction.Axis.Y);
         BasicTableShape blockShape = state.get(SHAPE);
         if (dirNorthOrSouth) {
             return switch (blockShape) {
