@@ -3,7 +3,10 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.BedPart;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PiglinBrain;
+import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -13,8 +16,13 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.tag.BlockTags;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -23,6 +31,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.explosion.Explosion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +39,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.LogTable.rotateShape;
 
-public class SimpleBed extends BedBlock implements Waterloggable {
+public class SimpleBed extends BedBlock implements Waterloggable, DyeableFurniture {
     public static EnumProperty<MiddleShape> SHAPE = EnumProperty.of("shape", MiddleShape.class);
     private static final List<FurnitureBlock> SIMPLE_BEDS = new ArrayList<>();
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
@@ -65,12 +74,52 @@ public class SimpleBed extends BedBlock implements Waterloggable {
     }
 
     @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (world.isClient) {
+            return ActionResult.CONSUME;
+        }
+        if (state.get(PART) != BedPart.HEAD && !((state = world.getBlockState(pos = pos.offset(state.get(FACING)))).getBlock() instanceof SimpleBed)) {
+            return ActionResult.CONSUME;
+        }
+        if (!BedBlock.isBedWorking(world)) {
+            world.removeBlock(pos, false);
+            BlockPos blockPos = pos.offset(state.get(FACING).getOpposite());
+            if (world.getBlockState(blockPos).isOf(this)) {
+                world.removeBlock(blockPos, false);
+            }
+            world.createExplosion(null, DamageSource.badRespawnPoint(), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0f, true, Explosion.DestructionType.DESTROY);
+            return ActionResult.SUCCESS;
+        }
+        if (state.get(OCCUPIED)) {
+            if (!this.isFree(world, pos)) {
+                player.sendMessage(new TranslatableText("block.minecraft.bed.occupied"), true);
+            }
+            return ActionResult.SUCCESS;
+        }
+        player.trySleep(pos).ifLeft(reason -> {
+            if (reason != null) {
+                player.sendMessage(reason.toText(), true);
+            }
+        });
+        return ActionResult.SUCCESS;
+    }
+
+    private boolean isFree(World world, BlockPos pos) {
+        List<VillagerEntity> list = world.getEntitiesByClass(VillagerEntity.class, new Box(pos), LivingEntity::isSleeping);
+        if (list.isEmpty()) {
+            return false;
+        }
+        list.get(0).wakeUp();
+        return true;
+    }
+
+    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (state.get(WATERLOGGED)) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         if (direction == getDirectionTowardsOtherPart(state.get(PART), state.get(FACING))) {
-            if (neighborState.isOf(this) && neighborState.get(PART) != state.get(PART)) {
+            if (neighborState.getBlock() instanceof SimpleBed && neighborState.get(PART) != state.get(PART)) {
                 return state.with(OCCUPIED, neighborState.get(OCCUPIED));
             }
             return Blocks.AIR.getDefaultState();

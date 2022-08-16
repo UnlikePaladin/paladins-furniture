@@ -2,14 +2,14 @@
   "parent": "minecraft:recipes/root",
   "rewards": {
     "recipes": [
-      "pfm:oak_chair_classic_wool"
+      "pfm:oak_chair_classic_gray"
     ]
   },
   "criteria": {
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "pfm:oak_chair_classic_wool"
+        "recipe": "pfm:oak_chair_classic_gray"
       }
     }
   },
