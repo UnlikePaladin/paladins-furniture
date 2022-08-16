@@ -134,7 +134,22 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_DARK_OAK_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(DARK_OAK_CHAIR));
     public static final Block STRIPPED_WARPED_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(WARPED_CHAIR));
     public static final Block STRIPPED_CRIMSON_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(CRIMSON_CHAIR));
-    public static final Block OAK_CHAIR_CLASSIC_WOOL = new ClassicChairDyeable(FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_WHITE = new ClassicChairDyeable(DyeColor.WHITE, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_ORANGE = new ClassicChairDyeable(DyeColor.ORANGE, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_MAGENTA = new ClassicChairDyeable(DyeColor.MAGENTA, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_LIGHT_BLUE = new ClassicChairDyeable(DyeColor.LIGHT_BLUE, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_YELLOW = new ClassicChairDyeable(DyeColor.YELLOW, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_LIME = new ClassicChairDyeable(DyeColor.LIME, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_PINK = new ClassicChairDyeable(DyeColor.PINK, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_GRAY = new ClassicChairDyeable(DyeColor.GRAY, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_LIGHT_GRAY = new ClassicChairDyeable(DyeColor.LIGHT_GRAY, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_CYAN = new ClassicChairDyeable(DyeColor.CYAN, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_PURPLE = new ClassicChairDyeable(DyeColor.PURPLE, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_BLUE = new ClassicChairDyeable(DyeColor.BLUE, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_BROWN = new ClassicChairDyeable(DyeColor.BROWN, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_GREEN = new ClassicChairDyeable(DyeColor.GREEN, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_RED = new ClassicChairDyeable(DyeColor.RED, FabricBlockSettings.copyOf(OAK_CHAIR));
+    public static final Block OAK_CHAIR_CLASSIC_BLACK = new ClassicChairDyeable(DyeColor.BLACK, FabricBlockSettings.copyOf(OAK_CHAIR));
 
     public static final Block QUARTZ_CHAIR_CLASSIC = new ClassicChair(FabricBlockSettings.copyOf(OAK_CHAIR));
 
@@ -1318,7 +1333,23 @@ public class BlockItemRegistry {
         registerFurniture("froggy_chair_yellow", FROGGY_CHAIR_YELLOW, true);
 
         //Classic Chairs
-        registerFurniture("oak_chair_classic_wool", OAK_CHAIR_CLASSIC_WOOL, true);
+        registerFurniture("oak_chair_classic_white", OAK_CHAIR_CLASSIC_WHITE, true);
+        registerFurniture("oak_chair_classic_orange", OAK_CHAIR_CLASSIC_ORANGE, true);
+        registerFurniture("oak_chair_classic_magenta", OAK_CHAIR_CLASSIC_MAGENTA, true);
+        registerFurniture("oak_chair_classic_light_blue", OAK_CHAIR_CLASSIC_LIGHT_BLUE, true);
+        registerFurniture("oak_chair_classic_yellow", OAK_CHAIR_CLASSIC_YELLOW, true);
+        registerFurniture("oak_chair_classic_lime", OAK_CHAIR_CLASSIC_LIME, true);
+        registerFurniture("oak_chair_classic_pink", OAK_CHAIR_CLASSIC_PINK, true);
+        registerFurniture("oak_chair_classic_gray", OAK_CHAIR_CLASSIC_GRAY, true);
+        registerFurniture("oak_chair_classic_light_gray", OAK_CHAIR_CLASSIC_LIGHT_GRAY, true);
+        registerFurniture("oak_chair_classic_cyan", OAK_CHAIR_CLASSIC_CYAN, true);
+        registerFurniture("oak_chair_classic_purple", OAK_CHAIR_CLASSIC_PURPLE, true);
+        registerFurniture("oak_chair_classic_blue", OAK_CHAIR_CLASSIC_BLUE, true);
+        registerFurniture("oak_chair_classic_brown", OAK_CHAIR_CLASSIC_BROWN, true);
+        registerFurniture("oak_chair_classic_green", OAK_CHAIR_CLASSIC_GREEN, true);
+        registerFurniture("oak_chair_classic_red", OAK_CHAIR_CLASSIC_RED, true);
+        registerFurniture("oak_chair_classic_black", OAK_CHAIR_CLASSIC_BLACK, true);
+
         registerFurniture("oak_chair_classic", OAK_CHAIR_CLASSIC, true);
         registerFurniture("birch_chair_classic", BIRCH_CHAIR_CLASSIC, true);
         registerFurniture("spruce_chair_classic", SPRUCE_CHAIR_CLASSIC, true);
