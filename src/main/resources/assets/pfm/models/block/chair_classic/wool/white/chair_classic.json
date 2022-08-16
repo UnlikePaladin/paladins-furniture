@@ -2,13 +2,14 @@
 	"credit": "By UnlikePaladin",
 	"parent": "block/block",
 	"textures": {
+		"particle": "block/oak_log",
 		"legs": "block/oak_log",
 		"base": "block/white_wool"
 	},
 	"elements": [
 		{
-			"from": [1, 9, 2.05],
-			"to": [3, 24, 4.05],
+			"from": [2, 9, 2.05],
+			"to": [4, 24, 4.05],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [5, 0, 7, 15], "texture": "#legs"},
@@ -20,8 +21,8 @@
 			}
 		},
 		{
-			"from": [1, 9, 11.9],
-			"to": [3, 24, 13.9],
+			"from": [2, 9, 11.9],
+			"to": [4, 24, 13.9],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [7, 0, 9, 15], "texture": "#legs"},
@@ -34,8 +35,8 @@
 		},
 		{
 			"name": "Backrest",
-			"from": [1.2, 18.32, 3.9],
-			"to": [2.6, 19.32, 12.9],
+			"from": [2.2, 18.32, 3.9],
+			"to": [3.6, 19.32, 12.9],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"east": {"uv": [0, 2, 9, 3], "texture": "#legs", "cullface": "up"},
@@ -46,8 +47,8 @@
 		},
 		{
 			"name": "Backrest",
-			"from": [1, 7.85, 4.05],
-			"to": [3, 10.15, 12],
+			"from": [2, 7.85, 4.05],
+			"to": [4, 10.15, 12],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"east": {"uv": [0, 2, 8, 4.3], "texture": "#legs"},
@@ -58,8 +59,8 @@
 		},
 		{
 			"name": "Backrest",
-			"from": [1.28, 10.14, 9.8],
-			"to": [2.58, 19.14, 10.8],
+			"from": [2.28, 10.14, 9.8],
+			"to": [3.58, 19.14, 10.8],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [0, 3, 9, 4], "rotation": 270, "texture": "#legs"},
@@ -70,8 +71,8 @@
 		},
 		{
 			"name": "Backrest",
-			"from": [1.28, 10.14, 7.5],
-			"to": [2.58, 19.14, 8.5],
+			"from": [2.28, 10.14, 7.5],
+			"to": [3.58, 19.14, 8.5],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [0, 3, 9, 4], "rotation": 270, "texture": "#legs"},
@@ -82,8 +83,8 @@
 		},
 		{
 			"name": "Backrest",
-			"from": [1.28, 10.14, 5],
-			"to": [2.58, 19.14, 6],
+			"from": [2.28, 10.14, 5],
+			"to": [3.58, 19.14, 6],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [0, 3, 9, 4], "rotation": 270, "texture": "#legs"},
@@ -94,8 +95,8 @@
 		},
 		{
 			"name": "Backrest",
-			"from": [1, 21, 4.02],
-			"to": [3, 24, 11.92],
+			"from": [2, 21, 4.02],
+			"to": [4, 24, 11.92],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"east": {"uv": [0, 0, 8, 4], "texture": "#legs", "cullface": "up"},
@@ -106,8 +107,8 @@
 		},
 		{
 			"name": "Seat",
-			"from": [2.85, 8.75, 1.99563],
-			"to": [13.95, 10.25, 13.96],
+			"from": [3.85, 8.75, 1.99563],
+			"to": [14.95, 10.25, 13.96],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [1, 10, 12, 11], "rotation": 180, "texture": "#base", "tintindex": 0},
@@ -119,8 +120,8 @@
 		},
 		{
 			"name": "Seat",
-			"from": [2.8, 7.86, 1.97],
-			"to": [14, 9.26, 13.97],
+			"from": [3.8, 7.86, 1.97],
+			"to": [15, 9.26, 13.97],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [2, 11, 13.1, 12], "rotation": 180, "texture": "#legs"},
@@ -132,8 +133,8 @@
 			}
 		},
 		{
-			"from": [1, 0, 11.9],
-			"to": [3, 9, 13.9],
+			"from": [2, 0, 11.9],
+			"to": [4, 9, 13.9],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 9], "texture": "#legs"},
@@ -144,8 +145,8 @@
 			}
 		},
 		{
-			"from": [11, 0, 11.9],
-			"to": [13, 9, 13.9],
+			"from": [12, 0, 11.9],
+			"to": [14, 9, 13.9],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 9], "texture": "#legs"},
@@ -156,8 +157,8 @@
 			}
 		},
 		{
-			"from": [1, 0, 2.05],
-			"to": [3, 9, 4.05],
+			"from": [2, 0, 2.05],
+			"to": [4, 9, 4.05],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 9], "texture": "#legs"},
@@ -168,8 +169,8 @@
 			}
 		},
 		{
-			"from": [11, 0, 2.05],
-			"to": [13, 9, 4.05],
+			"from": [12, 0, 2.05],
+			"to": [14, 9, 4.05],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
 				"north": {"uv": [0, 0, 2, 9], "texture": "#legs"},

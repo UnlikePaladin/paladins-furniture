@@ -476,7 +476,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
 
             FurnitureBlock[] woolClassicChairs = ClassicChairDyeable.streamWoodDyeableChair().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock classicChair : woolClassicChairs) {
-                offerClassicChairRecipe(classicChair.block,  Ingredient.ofItems(Items.OAK_LOG), Ingredient.fromTag(ItemTags.WOOL), exporter);
+                offerClassicChairRecipe(classicChair.block,  Ingredient.ofItems(Items.OAK_LOG), Ingredient.ofItems(classicChair.getArmChairMaterial()), exporter);
             }
 
             FurnitureBlock[] microwaves = Microwave.streamMicrowaves().toList().toArray(new FurnitureBlock[0]);

@@ -25,8 +25,6 @@ import java.util.stream.Stream;
 
 public class BasicTable extends Block implements Waterloggable{
     //TODO: Change all tables to use Direction.Axis instead of Facing, cuts the amount of states in half
-    //TODO: FINISH FIXING THIS TABLE, 1. Finish matching Blockstate for Oak, 2. Collision, 3. Add missing Blockstates for all the variations
-    //TODO: FIX THE CLASSIC DYEABLE ARM_CHAIR
     //TODO: ADD IN TUCKABLE COLLISION FOR CHAIRS, try exploring something like the rotateshape() method
     //TODO: FINISH FIXING CHAIR ENTITY SEATING WHEN TUCKED
 

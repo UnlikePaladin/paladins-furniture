@@ -41,9 +41,9 @@ public class DyeKit extends Item {
             if(blockState.getBlock() instanceof DyeableFurniture) {
                 if (stack.getItem() instanceof DyeKit) {
                     world.playSound(null, blockPos, PaladinFurnitureMod.FURNITURE_DYED_EVENT, SoundCategory.BLOCKS, 0.3f, 1f);
-                    String newBlock= blockState.getBlock().getName().getString();
-                    newBlock = newBlock.replace(((DyeableFurniture) blockState.getBlock()).getColor().toString(), getColor().toString()).replace("block.pfm.","");
-                    BlockState blockState1 = Registry.BLOCK.get(new Identifier("pfm", newBlock)).getStateWithProperties(blockState);
+                    String newBlock= blockState.getBlock().toString();
+                    newBlock = newBlock.replace(((DyeableFurniture) blockState.getBlock()).getColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
+                    BlockState blockState1 = Registry.BLOCK.get(new Identifier(newBlock)).getStateWithProperties(blockState);
                     world.setBlockState(blockPos, blockState1, 3);
                     stack.decrement(1);
                     return ActionResult.CONSUME;
