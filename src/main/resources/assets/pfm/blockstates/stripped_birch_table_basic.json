@@ -2,1918 +2,283 @@
     "multipart": [
         {
             "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "east" }
-
+                { "shape": "single" },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic", "y": 90}
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic"}
         },
         {
             "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "north" }
+                { "shape": "corner_north_east" },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic" }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_east"}
         },
         {
             "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "west" }
-
+                { "shape": "corner_north_west" },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic", "y": 90}
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_west"}
         },
         {
             "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "south" }
+                { "shape": "corner_south_east" },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic" }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_east"}
         },
-
-
-
         {
             "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "east" }
+                { "shape": "corner_south_west" },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east", "y":270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_west"}
         },
         {
             "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "north" }
+                { "shape": "north_south"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north" }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_south"}
         },
-
         {
             "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "west" }
+                { "shape": "east_west"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east_west"}
         },
         {
             "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "south" }
+                { "shape": "north_east"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north" }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_east"}
         },
-
-
-
-
         {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "east" }
+                { "shape": "north_west"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north", "y": 90}
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_west"}
         },
-       {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east" }
-        },
-
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north", "y": 90}
-        },
-       {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "false" },
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east" }
-        },
-
-
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "east" }
-
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "north" }
-
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south" }
-        },
-     {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "west" }
-
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south" }
-        },
-
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_west" }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_west" }
-        },
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "false" },
-	        {"corner_north_east": "false"},
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_west", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "false" },
-	        {"corner_north_east": "false"},
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_east" }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "false" },
-	        {"corner_north_east": "false"},
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_west", "y": 90  }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "false" },
-	        {"corner_north_east": "false"},
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_east" }
-        },
-
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-	        {"corner_north_west": "false"},
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_east", "y":270 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-	        {"corner_north_west": "false"},
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_west" }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-	        {"corner_north_west": "false"},
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_east", "y":270 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-	        {"corner_north_west": "false"},
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_west" }
-        },
-
-
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "false" },
-	        {"corner_south_east": "false"},
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_west", "y": 270}
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "false" },
-	        {"corner_south_east": "false"},
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_east" }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "false" },
-	        {"corner_south_east": "false"},
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_west", "y": 270}
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "false" },
-	        {"corner_south_east": "false"},
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_east" }
-        },
-
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-	        {"corner_south_west": "false"},
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_east", "y": 90}
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-	        {"corner_south_west": "false"},
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_west" }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-	        {"corner_south_west": "false"},
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_east", "y": 90}
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-	        {"corner_south_west": "false"},
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_west" }
-        },
-
-
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east_west", "y":90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_south" }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east_west", "y":90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_south" }
-        },
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_south", "y":90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east_west" }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_south", "y":90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east_west" }
-        },
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg", "y": 270 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg", "y":270 }
-        },
-	{
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg", "y": 270 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg", "y":270 }
-        },
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "east" }
-
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "north" }
-
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg", "y": 90 }
-        },
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg", "y": 0 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg", "y": 0 }
-        },
-	{
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg", "y": 0 }
-        },
         {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
+                { "shape": "south_east"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg", "y": 0 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_east"}
         },
-
-
-
         {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
+                { "shape": "south_west"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 90 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_west"}
         },
         {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
+                { "shape": "north"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 0 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north"}
         },
-	{
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "false" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 0 }
-        },
-
-
-
-
-
-
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 180 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 180 }
-        },
-
-
-
-
-
-
-
-
-  {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg", "y": 180 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg", "y": 180 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg", "y": 180 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "false" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg", "y": 180 }
-        },
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "east" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "north" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 180 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "west" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "false" },
-                { "facing": "south" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 180 }
-        },
-
-
-
-
-  
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 180 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "false" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 180 }
-        },
-
-  
-
-
-
-
-
-
-
-
-
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg", "y":90 }
-        },
-        {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg" }
-        },
-	{
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg", "y":90 }
-        },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_noleg" }
-        },
-
-
-
-
-
-      {
-            "when": { "AND": [
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_east", "y":270 }
-        },
-      {
-            "when": { "AND": [
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_west" }
-        },
-	{
             "when": { "AND": [
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "west" }
+                { "shape": "south"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_east", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south"}
         },
         {
             "when": { "AND": [
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "south" }
+                { "shape": "east"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_west" }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east"}
         },
-
-
-
-
-
-
- {
-            "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_west", "y":90 }
-        },
-      {
-            "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_east" }
-        },
-	{
-            "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_west", "y": 90 }
-        },
         {
-            "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"},
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_east" }
-        },
-
-
-
-
-
-
-
- {
-            "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"},
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_west", "y":270 }
-        },
-      {
-            "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"},
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_east" }
-        },
-	{
             "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"},
-                { "facing": "west" }
+                { "shape": "west"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_west", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_west"}
         },
         {
             "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"},
-                { "facing": "south" }
+                { "shape": "all"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_east" }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_all"}
         },
-
-
-
-
-
-
         {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
+                { "shape": "north_edge"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 90 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_all"}
         },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 0 }
-        },
-	{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
+                { "shape": "south_edge"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 90 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_all"}
         },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_double_corner", "y": 0 }
-        },
-
-    {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
+                { "shape": "east_edge"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_m", "y": 0 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg", "y":180}
         },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 0 }
-        },
-	{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
+                { "shape": "west_edge"  },
+                { "axis": "x" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_m", "y": 0 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg"}
         },
         {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "false"}
+                { "shape": "single" },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 0 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic", "y":90}
         },
-
-    {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_m", "y": 180 }
-        },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 180 }
-        },
-	{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
+                { "shape": "corner_north_east" },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_m", "y": 180 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_west", "y":90}
         },
         {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
+                { "shape": "corner_north_west"},
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 180 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_west", "y":90}
         },
-
-
-
-     
-
-
-
-
-
-
-    {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 90 }
-        },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_m", "y": 90 }
-        },
-	{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
+                { "shape": "corner_south_east"},
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 90 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_north_east", "y":90}
         },
         {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
+                { "shape": "corner_south_west" },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_m", "y": 90 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_east", "y":90}
         },
-
- {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
-        },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_m", "y": 270 }
-        },
-	{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
+                { "shape": "north_south"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east_west", "y":90}
         },
         {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
+                { "shape": "east_west"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_m", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_south", "y":90}
         },
-
- {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
-        },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri", "y": 0 }
-        },
-	{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
+                { "shape": "north_east"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_west", "y":90}
         },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri", "y": 0 }
-        },
-
-
-
-
-
-{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
+                { "shape": "north_west"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_west", "y":90}
         },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri_west", "y": 180 }
-        },
-	{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
+                { "shape": "south_east"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north_east", "y":90}
         },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri_west", "y": 180 }
-        },
-
-{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
+                { "shape": "south_west"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south_east", "y":90}
         },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri_west", "y": 180 }
-        },
-	{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
+                { "shape": "north"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_west", "y":90}
         },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "false"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri_west", "y": 180 }
-        },
-{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
+                { "shape": "south"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_east", "y":90}
         },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri_west", "y": 180 }
-        },
-	{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
+                { "shape": "east"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_north", "y":90}
         },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "true"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri_west", "y": 180 }
-        },
-{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
+                { "shape": "west"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_south", "y":90}
         },
         {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
+                { "shape": "all"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri_west", "y": 180 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_all", "y":90}
         },
-	{
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
-        },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "true"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri_west", "y": 180 }
-        },
-{
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "east" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
+                { "shape": "north_edge"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg", "y":90}
         },
         {
             "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "north" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
+                { "shape": "south_edge"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri_west", "y": 180 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_leg", "y":270}
         },
-	{
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "west" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner", "y": 270 }
-        },
         {
-            "when": { "AND": [
-                { "east": "true" },
-                { "north": "true" },
-                { "south": "true" },
-                { "west": "true" },
-                { "facing": "south" },
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "true"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"}
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_tri_west", "y": 180 }
-        },
-
-       
- {
-            "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"},
-                { "facing": "east" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_east", "y":90 }
-        },
-      {
-            "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"},
-                { "facing": "north" }
-            ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_west" }
-        },
-	{
             "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"},
-                { "facing": "west" }
+                { "shape": "east_edge"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_east", "y": 90 }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_all", "y":90}
         },
         {
             "when": { "AND": [
-	       {"corner_north_west": "false"},
-	       {"corner_north_east": "false"},
-	        {"corner_south_west": "true"},
-	       {"corner_south_east": "false"},
-                { "facing": "south" }
+                { "shape": "west_edge"  },
+                { "axis": "z" }
             ]},
-            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_corner_south_west" }
+            "apply": { "model": "pfm:block/stripped_birch_table_basic/stripped_birch_table_basic_all", "y":90}
         }
     ]
 }
