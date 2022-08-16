@@ -7,7 +7,6 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -22,10 +21,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ModernDinnerTable extends HorizontalFacingBlock implements Waterloggable{
+public class ModernDinnerTable extends Block implements Waterloggable{
     private final Block baseBlock;
     public static final EnumProperty<MiddleShape> SHAPE = EnumProperty.of("table_type", MiddleShape.class);
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
+
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     private static final List<FurnitureBlock> WOOD_DINNER_MODERN_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DINNER_MODERN_TABLES = new ArrayList<>();
@@ -34,7 +34,7 @@ public class ModernDinnerTable extends HorizontalFacingBlock implements Waterlog
 
     public ModernDinnerTable(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(AXIS, Direction.Axis.X).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ModernDinnerTable.class)){
@@ -55,7 +55,7 @@ public class ModernDinnerTable extends HorizontalFacingBlock implements Waterlog
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(SHAPE);
-        stateManager.add(FACING);
+        stateManager.add(AXIS);
         stateManager.add(WATERLOGGED);
     }
 
@@ -73,8 +73,8 @@ public class ModernDinnerTable extends HorizontalFacingBlock implements Waterlog
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
-        return (BlockState) getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
+        BlockState blockState = this.getDefaultState().with(AXIS, ctx.getPlayerFacing().rotateYClockwise().getAxis()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(AXIS));
     }
 
     @Override
@@ -82,24 +82,24 @@ public class ModernDinnerTable extends HorizontalFacingBlock implements Waterlog
         if (state.get(WATERLOGGED)) {
             world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
-        return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(FACING)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(AXIS)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    private boolean isTable(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)
+    private boolean isTable(WorldAccess world, BlockPos pos, Direction.Axis direction, int i)
     {
-        BlockState state = world.getBlockState(pos.offset(direction));
+        BlockState state = world.getBlockState(pos.offset(direction, i));
         if(state.getBlock() == this)
         {
-            Direction sourceDirection = state.get(FACING);
-            return sourceDirection.equals(tableDirection);
+            Direction.Axis sourceDirection = state.get(AXIS);
+            return sourceDirection.equals(direction);
         }
         return false;
     }
 
-    public BlockState getShape(BlockState state, WorldAccess world, BlockPos pos, Direction dir)
+    public BlockState getShape(BlockState state, WorldAccess world, BlockPos pos, Direction.Axis dir)
     {
-        boolean left = isTable(world, pos, dir.rotateYCounterclockwise(), dir);
-        boolean right = isTable(world, pos, dir.rotateYClockwise(), dir);
+        boolean left = isTable(world, pos, dir, -1);
+        boolean right = isTable(world, pos, dir, 1);
         if(left && right)
         {
             return state.with(SHAPE, MiddleShape.MIDDLE);
@@ -150,30 +150,22 @@ public class ModernDinnerTable extends HorizontalFacingBlock implements Waterlog
     //Cursed I know
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         MiddleShape tableShape = getShape(state);
-        Direction dir = state.get(FACING);
-        boolean dirNorthOrSouth = dir.equals(Direction.NORTH) || dir.equals(Direction.SOUTH);
-        boolean dirWestOrEast = dir.equals(Direction.WEST) || dir.equals(Direction.EAST);
+        Direction.Axis dir = state.get(AXIS);
+        boolean dirNorthOrSouth = dir.equals(Direction.Axis.X);
+        boolean dirWestOrEast = dir.equals(Direction.Axis.Z);
 
         switch (tableShape) {
             case LEFT -> {
-                if (dir.equals(Direction.NORTH)) {
+                if (dirNorthOrSouth) {
                     return MODERN_DINNER_TABLE_ONE_SOUTH;}
-                else if (dir.equals(Direction.SOUTH)) {
-                    return MODERN_DINNER_TABLE_ONE;}
-                else if (dir.equals(Direction.EAST)) {
-                    return MODERN_DINNER_TABLE_ONE_WEST;}
                 else {
-                    return MODERN_DINNER_TABLE_ONE_EAST;}
+                    return MODERN_DINNER_TABLE_ONE_WEST;}
             }
             case RIGHT -> {
-                if (dir.equals(Direction.NORTH)) {
+                if (dirNorthOrSouth) {
                     return MODERN_DINNER_TABLE_ONE;}
-                else if (dir.equals(Direction.SOUTH)) {
-                    return MODERN_DINNER_TABLE_ONE_SOUTH;}
-                else if (dir.equals(Direction.EAST)) {
-                    return MODERN_DINNER_TABLE_ONE_EAST;}
                 else {
-                    return MODERN_DINNER_TABLE_ONE_WEST;}
+                    return MODERN_DINNER_TABLE_ONE_EAST;}
             }
             case MIDDLE -> {
                 if (dirNorthOrSouth) {

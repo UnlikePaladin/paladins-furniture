@@ -3,127 +3,62 @@
         {
             "when": { "AND": [
                 { "table_type": "single" },
-                { "facing": "north" }
+                { "axis":"x" }
             ]},
             "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner"}
         },
         {
             "when": { "AND": [
                 { "table_type": "single" },
-                { "facing": "south" }
-            ]},
-            "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner"}
-        },
-        
-        {
-            "when": { "AND": [
-                { "table_type": "single" },
-                { "facing": "east" }
+                { "axis":"z" }
             ]},
             "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner","y":90}
         },
-        {
-            "when": { "AND": [
-                { "table_type": "single" },
-                { "facing": "west" }
-            ]},
-            "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner","y":90}
-        },
-        
-      
-      
       
         {
             "when": { "AND": [
                 { "table_type": "middle" },
-                {"facing":"north"}
+                {"axis":"x"}
             ]},
             "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_middle" }
         },
         {
             "when": { "AND": [
                 { "table_type": "middle" },
-                {"facing":"east"}
+                {"axis":"z"}
             ]},
             "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_middle", "y":90 }
         },
-        {
-            "when": { "AND": [
-                { "table_type": "middle" },
-                {"facing":"west"}
-            ]},
-            "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_middle","y":90 }
-        },
-        {
-            "when": { "AND": [
-                { "table_type": "middle" },
-                {"facing":"south"}
-            ]},
-            "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_middle" }
-        },
-        
-        
     
         {
         "when": { "AND": [
             { "table_type": "left" },
-            {"facing":"north"}
+            {"axis":"x"}
         ]},
         "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_right"  }
     },
         {
         "when": { "AND": [
             { "table_type": "left" },
-            {"facing":"west"}
-        ]},
-        "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_left", "y":90  }
-    },
-        {
-        "when": { "AND": [
-            { "table_type": "left" },
-            {"facing":"east"}
+            {"axis":"z"}
         ]},
         "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_right", "y":90 }
     },
-        {
-        "when": { "AND": [
-            { "table_type": "left" },
-            {"facing":"south"}
-        ]},
-        "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_left"  }
-    },
-        
-        
+
     {
     "when": { "AND": [
         { "table_type": "right" },
-        {"facing":"north"}
+        {"axis":"x"}
     ]},
     "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_left", "y":0  }
 },
     {
     "when": { "AND": [
         { "table_type": "right" },
-        {"facing":"west"}
-    ]},
-    "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_left", "y":270  }
-},
-    {
-    "when": { "AND": [
-        { "table_type": "right" },
-        {"facing":"east"}
+        {"axis":"z"}
     ]},
     "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_right", "y":270  }
-},
-    {
-    "when": { "AND": [
-        { "table_type": "right" },
-        {"facing":"south"}
-    ]},
-    "apply": { "model": "pfm:block/calcite_table_modern_dinner/calcite_table_modern_dinner_right", "y":0  }
 }
-   
-   
         
     ]
 }
