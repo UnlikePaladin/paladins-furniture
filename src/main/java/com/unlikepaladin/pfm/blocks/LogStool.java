@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.data.PaladinFurnitureModDataEntrypoint;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
@@ -31,10 +32,28 @@ public class LogStool extends BasicChair {
 
     protected static final VoxelShape COLLISION = VoxelShapes.union(createCuboidShape(3, 0, 3, 13, 11, 13));
 
-    @Override
-        public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-                return COLLISION;
-        }
+    protected static final VoxelShape FACE_NORTH_TUCKED = tuckShape(Direction.NORTH, COLLISION);
+    protected static final VoxelShape FACE_SOUTH_TUCKED = tuckShape(Direction.SOUTH, COLLISION);
+    protected static final VoxelShape FACE_EAST_TUCKED = tuckShape(Direction.EAST, COLLISION);
+    protected static final VoxelShape FACE_WEST_TUCKED = tuckShape(Direction.WEST, COLLISION);
 
+    @Override
+    public boolean canTuck(BlockState state) {
+        return state.isIn(PaladinFurnitureModDataEntrypoint.TUCKABLE_BLOCKS) || state.getBlock() instanceof KitchenCounter;
+    }
+
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+        Direction dir = state.get(FACING);
+        if (state.get(TUCKED)) {
+            return switch (dir) {
+                case WEST -> FACE_WEST_TUCKED;
+                case NORTH -> FACE_NORTH_TUCKED;
+                case SOUTH -> FACE_SOUTH_TUCKED;
+                default -> FACE_EAST_TUCKED;
+            };
+        }
+        return COLLISION;
+    }
 }
 

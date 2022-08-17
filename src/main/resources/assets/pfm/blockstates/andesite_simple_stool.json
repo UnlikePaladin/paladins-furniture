@@ -1,10 +1,12 @@
 {"variants":
-{
-    "facing=north":{"model":"pfm:block/andesite_simple_stool","y":90},
-    "facing=east":{"model":"pfm:block/andesite_simple_stool","y":180},
-    "facing=south":{"model":"pfm:block/andesite_simple_stool","y":270},
-    "facing=west":{"model":"pfm:block/andesite_simple_stool","y":0}
-
-}
-
+    {
+        "tucked=true,facing=west":{"model":"pfm:block/simple_stool/andesite/andesite_simple_stool_tucked","y":90},
+        "tucked=true,facing=north":{"model":"pfm:block/simple_stool/andesite/andesite_simple_stool_tucked","y":180},
+        "tucked=true,facing=east":{"model":"pfm:block/simple_stool/andesite/andesite_simple_stool_tucked","y":270},
+        "tucked=true,facing=south":{"model":"pfm:block/simple_stool/andesite/andesite_simple_stool_tucked","y":0},
+        "tucked=false,facing=west":{"model":"pfm:block/simple_stool/andesite/andesite_simple_stool","y":90},
+        "tucked=false,facing=north":{"model":"pfm:block/simple_stool/andesite/andesite_simple_stool","y":180},
+        "tucked=false,facing=east":{"model":"pfm:block/simple_stool/andesite/andesite_simple_stool","y":270},
+        "tucked=false,facing=south":{"model":"pfm:block/simple_stool/andesite/andesite_simple_stool","y":0}
+    }
 }

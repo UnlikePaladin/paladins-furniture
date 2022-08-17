@@ -1,4 +1,3 @@
 {
-    "parent":"pfm:block/diorite_classic_stool"
-    
+    "parent":"pfm:block/classic_stool/diorite/diorite_classic_stool"
 }

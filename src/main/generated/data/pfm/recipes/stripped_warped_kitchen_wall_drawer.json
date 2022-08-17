@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "SYS",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_warped_stem"
+    },
+    "S": {
+      "item": "minecraft:warped_planks"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_warped_kitchen_wall_drawer"
+  }
+}

@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/modern_stool/modern_stool_tucked",
+	"textures": {
+        
+		"particle": "block/blackstone",
+		"base": "block/polished_blackstone",
+		"legs": "block/blackstone"
+	}
+    
+}

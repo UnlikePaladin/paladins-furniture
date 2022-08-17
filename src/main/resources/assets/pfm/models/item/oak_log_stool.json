@@ -1,4 +1,3 @@
 {
-    "parent":"pfm:block/log_stool"
-    
+    "parent":"pfm:block/log_stool/log_stool"
 }

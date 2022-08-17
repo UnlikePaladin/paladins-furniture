@@ -15,8 +15,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.unlikepaladin.pfm.blocks.ClassicStool.rotateShape;
-
 public class DinnerChair extends BasicChair {
     public float height = 0.36f;
 
@@ -44,23 +42,28 @@ public class DinnerChair extends BasicChair {
     protected static final VoxelShape FACE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, FACE_WEST);
     protected static final VoxelShape FACE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, FACE_WEST);
     protected static final VoxelShape FACE_EAST = rotateShape(Direction.WEST, Direction.EAST, FACE_WEST);
-    @SuppressWarnings("deprecated")
+    protected static final VoxelShape FACE_NORTH_TUCKED = tuckShape(Direction.NORTH, FACE_NORTH);
+    protected static final VoxelShape FACE_SOUTH_TUCKED = tuckShape(Direction.SOUTH, FACE_SOUTH);
+    protected static final VoxelShape FACE_EAST_TUCKED = tuckShape(Direction.EAST, FACE_EAST);
+    protected static final VoxelShape FACE_WEST_TUCKED = tuckShape(Direction.WEST, FACE_WEST);
     @Override
-        public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        switch(dir) {
-            case WEST:
-                return FACE_WEST;
-            case NORTH:
-                return FACE_NORTH;
-            case SOUTH:
-                return FACE_SOUTH;
-            case EAST:
-            default:
-                return FACE_EAST;
+        if (state.get(TUCKED)) {
+            return switch (dir) {
+                case WEST -> FACE_WEST_TUCKED;
+                case NORTH -> FACE_NORTH_TUCKED;
+                case SOUTH -> FACE_SOUTH_TUCKED;
+                default -> FACE_EAST_TUCKED;
+            };
         }
+        return switch (dir) {
+            case WEST -> FACE_WEST;
+            case NORTH -> FACE_NORTH;
+            case SOUTH -> FACE_SOUTH;
+            default -> FACE_EAST;
+        };
     }
-
 
 }
 

@@ -1,6 +1,5 @@
 {
 	"credit": "By UnlikePaladin",
-	"parent": "pfm:block/chair",
 	"textures": {
 		"2": "block/stone",
 		"4": "block/water_still",

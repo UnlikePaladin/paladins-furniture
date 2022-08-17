@@ -24,10 +24,6 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class BasicTable extends Block implements Waterloggable{
-    //TODO: Change all tables to use Direction.Axis instead of Facing, cuts the amount of states in half
-    //TODO: ADD IN TUCKABLE COLLISION FOR CHAIRS, try exploring something like the rotateshape() method
-    //TODO: FINISH FIXING CHAIR ENTITY SEATING WHEN TUCKED
-
     private final Block baseBlock;
     public static final EnumProperty<BasicTableShape> SHAPE = EnumProperty.of("shape", BasicTableShape.class);
 
