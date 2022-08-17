@@ -1,10 +1,12 @@
 {"variants":
-{
-    "facing=north":{"model":"pfm:block/mangrove_chair_modern","y":90},
-    "facing=east":{"model":"pfm:block/mangrove_chair_modern","y":180},
-    "facing=south":{"model":"pfm:block/mangrove_chair_modern","y":270},
-    "facing=west":{"model":"pfm:block/mangrove_chair_modern","y":0}
-
-}
-
+    {
+        "facing=north,tucked=false":{"model":"pfm:block/chair_modern/mangrove/mangrove_chair_modern","y":90},
+        "facing=east,tucked=false":{"model":"pfm:block/chair_modern/mangrove/mangrove_chair_modern","y":180},
+        "facing=south,tucked=false":{"model":"pfm:block/chair_modern/mangrove/mangrove_chair_modern","y":270},
+        "facing=west,tucked=false":{"model":"pfm:block/chair_modern/mangrove/mangrove_chair_modern","y":0},
+        "facing=north,tucked=true":{"model":"pfm:block/chair_modern/mangrove/mangrove_chair_modern_tucked","y":90},
+        "facing=east,tucked=true":{"model":"pfm:block/chair_modern/mangrove/mangrove_chair_modern_tucked","y":180},
+        "facing=south,tucked=true":{"model":"pfm:block/chair_modern/mangrove/mangrove_chair_modern_tucked","y":270},
+        "facing=west,tucked=true":{"model":"pfm:block/chair_modern/mangrove/mangrove_chair_modern_tucked","y":0}
+    }
 }

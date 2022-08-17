@@ -1,20 +1,20 @@
 {
   "type": "pfm:furniture",
+  "key": {
+    "S": {
+      "item": "minecraft:stripped_crimson_stem"
+    },
+    "X": {
+      "item": "minecraft:stripped_crimson_stem"
+    }
+  },
   "pattern": [
     "SSS",
     "XXX",
     "XXX"
   ],
-  "key": {
-    "X": {
-      "item": "minecraft:stripped_crimson_stem"
-    },
-    "S": {
-      "item": "minecraft:stripped_crimson_stem"
-    }
-  },
   "result": {
-    "item": "pfm:blackstone_kitchen_wall_counter",
-    "count": 6
+    "count": 6,
+    "item": "pfm:blackstone_kitchen_wall_counter"
   }
 }
