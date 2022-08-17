@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "To sit on a chair just left click on it, to get off press shift."
+      "text": "To sit on a chair just left click on it, to get off press shift. If you shift click it with an empty hand and it's in front of a table, it will tuck into it"
     },
     {
       "type": "patchouli:empty",
