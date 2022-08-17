@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "The dye kits can be used to change the wool color on the furniture by shift right clicking, they can also be used on sheep."
+      "text": "The dye kits can be used to change the wool color on some of the furniture by shift right clicking, they can also be used on sheep."
     },
     {
       "type": "patchouli:empty",

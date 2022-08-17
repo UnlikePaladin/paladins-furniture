@@ -19,18 +19,18 @@ public class KitchenWallCounter extends KitchenCounter{
     private static final List<FurnitureBlock> STONE_COUNTERS = new ArrayList<>();
     public KitchenWallCounter(Settings settings) {
         super(settings);
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCounter.class)){
-            WOOD_COUNTERS.add(new FurnitureBlock(this, "kitchen_counter"));
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenWallCounter.class)){
+            WOOD_COUNTERS.add(new FurnitureBlock(this, "kitchen_wall_counter"));
         }
-        else if (this.getClass().isAssignableFrom(KitchenCounter.class)){
-            STONE_COUNTERS.add(new FurnitureBlock(this, "kitchen_counter"));
+        else if (this.getClass().isAssignableFrom(KitchenWallCounter.class)){
+            STONE_COUNTERS.add(new FurnitureBlock(this, "kitchen_wall_counter"));
         }
     }
 
-    public static Stream<FurnitureBlock> streamWoodCounters() {
+    public static Stream<FurnitureBlock> streamWallWoodCounters() {
         return WOOD_COUNTERS.stream();
     }
-    public static Stream<FurnitureBlock> streamStoneCounters() {
+    public static Stream<FurnitureBlock> streamWallStoneCounters() {
         return STONE_COUNTERS.stream();
     }
 

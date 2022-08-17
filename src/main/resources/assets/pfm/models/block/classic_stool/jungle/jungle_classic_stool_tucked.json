@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_stool/classic_stool_tucked",
+	"textures": {
+        
+		"particle": "block/jungle_planks",
+		"base": "block/jungle_planks",
+		"legs": "block/jungle_log"
+	}
+    
+}

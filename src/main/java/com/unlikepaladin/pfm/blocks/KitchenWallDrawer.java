@@ -19,10 +19,10 @@ public class KitchenWallDrawer extends KitchenDrawer{
     private static final List<FurnitureBlock> STONE_DRAWERS = new ArrayList<>();
     public KitchenWallDrawer(Settings settings) {
         super(settings);
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenDrawer.class)){
+        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenWallDrawer.class)){
             WOOD_DRAWERS.add(new FurnitureBlock(this, "kitchen_wall_drawer"));
         }
-        else if (this.getClass().isAssignableFrom(KitchenDrawer.class)){
+        else if (this.getClass().isAssignableFrom(KitchenWallDrawer.class)){
             STONE_DRAWERS.add(new FurnitureBlock(this, "kitchen_wall_drawer"));
         }
     }

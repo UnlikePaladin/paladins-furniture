@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/simple_stool/simple_stool",
+	"textures": {
+        
+		"particle": "block/deepslate",
+		"base": "block/polished_deepslate",
+		"legs": "block/deepslate"
+	}
+    
+}

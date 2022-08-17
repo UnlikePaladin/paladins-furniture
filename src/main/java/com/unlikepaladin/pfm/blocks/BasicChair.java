@@ -59,35 +59,81 @@ public class BasicChair extends AbstractSittableBlock {
     protected static final VoxelShape FACE_EAST = VoxelShapes.union(createCuboidShape(2.5, 0, 2.5 ,5 ,8 ,5), createCuboidShape(2.5, 0, 11.5, 5, 8, 14), createCuboidShape(12.5, 0, 2.5, 15, 8, 5), createCuboidShape(12.5, 0, 11.5, 15, 8, 14), createCuboidShape(1.65, 8,1.4, 15.66, 10.49, 14.4 ), createCuboidShape(13.33, 8, 1.4, 15.66, 24.49,14.4 ) );
     protected static final VoxelShape FACE_NORTH = VoxelShapes.union(createCuboidShape(2.5, 0, 1 ,5 ,8 ,3.5), createCuboidShape(2.5, 0, 11, 5, 8, 13.5), createCuboidShape(11.5, 0, 1, 14, 8, 3.5), createCuboidShape(11.5, 0, 11, 14, 8, 13.5), createCuboidShape(1.39, 8,0.32, 14.4, 10.49, 14.32 ), createCuboidShape(1.39, 8, 0.32, 14.4, 24.49,2.65 ));
     protected static final VoxelShape FACE_SOUTH = VoxelShapes.union(createCuboidShape(2, 0, 2.5 ,4.5 ,8 ,5), createCuboidShape(2, 0, 12.5, 4.5, 8, 15), createCuboidShape(11, 0, 2.5, 13.5, 8, 5), createCuboidShape(11, 0, 12.5, 13.5, 8, 15), createCuboidShape(1.61, 8,1.65, 14.66, 10.49, 15.67 ), createCuboidShape(1.61, 8, 13.4, 14.66, 24.49,15.67 ) );
-    @SuppressWarnings("deprecated")
-    @Override
+    protected static final VoxelShape FACE_NORTH_TUCKED = tuckShape(Direction.NORTH, FACE_NORTH);
+    protected static final VoxelShape FACE_SOUTH_TUCKED = tuckShape(Direction.SOUTH, FACE_SOUTH);
+    protected static final VoxelShape FACE_EAST_TUCKED = tuckShape(Direction.EAST, FACE_EAST);
+    protected static final VoxelShape FACE_WEST_TUCKED = tuckShape(Direction.WEST, FACE_WEST);
 
+    @Override
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        switch (dir) {
-            case WEST:
-                return FACE_WEST;
-            case NORTH:
-                return FACE_NORTH;
-            case SOUTH:
-                return FACE_SOUTH;
-            case EAST:
-            default:
-                return FACE_EAST;
+        if (state.get(TUCKED)) {
+            return switch (dir) {
+                case WEST -> FACE_WEST_TUCKED;
+                case NORTH -> FACE_NORTH_TUCKED;
+                case SOUTH -> FACE_SOUTH_TUCKED;
+                default -> FACE_EAST_TUCKED;
+            };
         }
+        return switch (dir) {
+            case WEST -> FACE_WEST;
+            case NORTH -> FACE_NORTH;
+            case SOUTH -> FACE_SOUTH;
+            default -> FACE_EAST;
+        };
     }
 
+    /**
+     * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/
+     */
+    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+
+        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
+        for (int i = 0; i < times; i++) {
+            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
+            buffer[0] = buffer[1];
+            buffer[1] = VoxelShapes.empty();
+        }
+
+        return buffer[0];
+    }
+
+    /** Method to tuck the Chair's Voxel Shapes */
+    public static VoxelShape tuckShape(Direction from, VoxelShape shape) {
+        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+
+        switch (from) {
+            case NORTH -> { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX, minY, minZ + 0.5, maxX, maxY, maxZ + 0.5)));
+                buffer[0] = buffer[1];
+                buffer[1] = VoxelShapes.empty();}
+            case SOUTH -> { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX, minY, minZ - 0.5, maxX, maxY, maxZ - 0.5)));
+                buffer[0] = buffer[1];
+                buffer[1] = VoxelShapes.empty();}
+            case WEST -> { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX + 0.5, minY, minZ, maxX + 0.5, maxY, maxZ)));
+                buffer[0] = buffer[1];
+                buffer[1] = VoxelShapes.empty();}
+            default -> { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX - 0.5, minY, minZ, maxX - 0.5, maxY, maxZ)));
+                buffer[0] = buffer[1];
+                buffer[1] = VoxelShapes.empty();}
+        }
+        return buffer[0];
+    }
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!world.getBlockState(pos.offset(state.get(FACING).getOpposite())).isIn(PaladinFurnitureModDataEntrypoint.TUCKABLE_BLOCKS) && state.get(TUCKED)){
+        if (!canTuck(world.getBlockState(pos.offset(state.get(FACING).getOpposite()))) && state.get(TUCKED)){
             return state.with(TUCKED, false);
         }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
+    public boolean canTuck(BlockState state) {
+        return state.isIn(PaladinFurnitureModDataEntrypoint.TUCKABLE_BLOCKS);
+    }
+
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (player.isSneaking() && world.getBlockState(pos.offset(state.get(FACING).getOpposite())).isIn(PaladinFurnitureModDataEntrypoint.TUCKABLE_BLOCKS)) {
+        if (player.isSneaking() && this.canTuck(world.getBlockState(pos.offset(state.get(FACING).getOpposite())))) {
             if (state.get(TUCKED)) {
                 world.setBlockState(pos, state.with(TUCKED, false));
             }

@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "To open the drawer just right click on it, you can store anything you want in it. Like the Counter they will connect and change shape, if you stack them vertically, they will change into wall like cabinets that can also be extended and connected."
+      "text": "To open a drawer just right click on it, you can store anything you want in it. Like the Counter they will connect and change shape."
     },
     {
       "type": "patchouli:empty",

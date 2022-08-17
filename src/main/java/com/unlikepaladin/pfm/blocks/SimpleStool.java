@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.data.PaladinFurnitureModDataEntrypoint;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
@@ -54,11 +55,30 @@ public class SimpleStool extends BasicChair {
         return buffer[0];
     }
 
-    protected static VoxelShape SIMPLE_STOOL = VoxelShapes.union(createCuboidShape(3.5, 0, 3.5,5.5, 10, 5.5),createCuboidShape(10.5, 0, 3.5,12.5, 10, 5.5),createCuboidShape(10.5, 0, 10.5,12.5, 10, 12.5),createCuboidShape(3.5, 10, 3.5,12.5, 12, 12.5),createCuboidShape(3.5, 0, 10.5,5.5, 10, 12.5));
     @Override
-        public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+    public boolean canTuck(BlockState state) {
+        return state.isIn(PaladinFurnitureModDataEntrypoint.TUCKABLE_BLOCKS) || state.getBlock() instanceof KitchenCounter;
+    }
+
+    protected static VoxelShape SIMPLE_STOOL = VoxelShapes.union(createCuboidShape(3.5, 0, 3.5,5.5, 10, 5.5),createCuboidShape(10.5, 0, 3.5,12.5, 10, 5.5),createCuboidShape(10.5, 0, 10.5,12.5, 10, 12.5),createCuboidShape(3.5, 10, 3.5,12.5, 12, 12.5),createCuboidShape(3.5, 0, 10.5,5.5, 10, 12.5));
+    protected static final VoxelShape FACE_NORTH_TUCKED = tuckShape(Direction.NORTH, SIMPLE_STOOL);
+    protected static final VoxelShape FACE_SOUTH_TUCKED = tuckShape(Direction.SOUTH, SIMPLE_STOOL);
+    protected static final VoxelShape FACE_EAST_TUCKED = tuckShape(Direction.EAST, SIMPLE_STOOL);
+    protected static final VoxelShape FACE_WEST_TUCKED = tuckShape(Direction.WEST, SIMPLE_STOOL);
+    @Override
+    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
+        Direction dir = state.get(FACING);
+        if (state.get(TUCKED)) {
+            return switch (dir) {
+                case WEST -> FACE_WEST_TUCKED;
+                case NORTH -> FACE_NORTH_TUCKED;
+                case SOUTH -> FACE_SOUTH_TUCKED;
+                default -> FACE_EAST_TUCKED;
+            };
+        }
         return SIMPLE_STOOL;
     }
+
 
 
 }
