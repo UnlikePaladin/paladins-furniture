@@ -7,7 +7,6 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -50,7 +49,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> BlockLootTableGenerator.dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
         }
     }
-    public static final Tag<Block> TUCKABLE_BLOCKS = TagFactory.BLOCK.create(new Identifier("pfm", "tuckable_blocks"));
+    public static final TagKey<Block> TUCKABLE_BLOCKS = TagKey.of(Registry.BLOCK_KEY, new Identifier("pfm", "tuckable_blocks"));
 
     public static class PFMBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         private PFMBlockTagProvider(FabricDataGenerator dataGenerator) {
@@ -212,7 +211,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 this.getOrCreateTagBuilder(BlockTags.CLIMBABLE)
                         .add(simpleBunkLadders);
 
-            this.getOrCreateTagBuilder((Tag.Identified<Block>) TUCKABLE_BLOCKS)
+            this.getOrCreateTagBuilder(TUCKABLE_BLOCKS)
                     .add(woodBasicTables)
                     .add(stoneBasicTables)
                     .add(woodClassicTables)
@@ -599,7 +598,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
     }
 
     public static void offerSimpleSofa(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Consumer<RecipeJsonProvider> exporter) {
-        FurnitureRecipeJsonFactory.create(output, 2).input('X', legMaterial).input('S', baseMaterial).pattern("X  ").pattern("SXS").pattern("S S").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+        FurnitureRecipeJsonBuilder.create(output, 2).input('X', legMaterial).input('S', baseMaterial).pattern("X  ").pattern("SXS").pattern("S S").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerArmChair(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Consumer<RecipeJsonProvider> exporter) {
@@ -631,7 +630,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
     }
 
     public static void offerWallDrawer(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Ingredient stove, Consumer<RecipeJsonProvider> exporter) {
-        FurnitureRecipeJsonFactory.create(output, 1).input('X', legMaterial).input('S', baseMaterial).input('Y', stove).pattern("XXX").pattern("SYS").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+        FurnitureRecipeJsonBuilder.create(output, 1).input('X', legMaterial).input('S', baseMaterial).input('Y', stove).pattern("XXX").pattern("SYS").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerCounterRecipe(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Consumer<RecipeJsonProvider> exporter) {
@@ -639,7 +638,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
     }
 
     public static void offerWallCounterRecipe(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Consumer<RecipeJsonProvider> exporter) {
-        FurnitureRecipeJsonFactory.create(output, 6).input('X', legMaterial).input('S', baseMaterial).pattern("SSS").pattern("XXX").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+        FurnitureRecipeJsonBuilder.create(output, 6).input('X', legMaterial).input('S', baseMaterial).pattern("SSS").pattern("XXX").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerSinkRecipe(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Ingredient center, Ingredient ingot, Consumer<RecipeJsonProvider> exporter) {
