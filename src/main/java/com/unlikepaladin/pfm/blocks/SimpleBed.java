@@ -98,7 +98,7 @@ public class SimpleBed extends BedBlock implements Waterloggable, DyeableFurnitu
         }
         player.trySleep(pos).ifLeft(reason -> {
             if (reason != null) {
-                player.sendMessage(reason.toText(), true);
+                player.sendMessage(reason.getMessage(), true);
             }
         });
         return ActionResult.SUCCESS;
