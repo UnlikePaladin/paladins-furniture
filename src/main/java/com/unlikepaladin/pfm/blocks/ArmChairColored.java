@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -164,7 +165,7 @@ public class ArmChairColored extends ArmChair implements DyeableFurniture {
 
 
     public static boolean isArmChair(BlockState state) {
-        return state.getBlock() instanceof ArmChairColored;
+        return(state.getBlock().getClass().isAssignableFrom(ArmChairColored.class) && state.getBlock() instanceof ArmChairColored);
     }
 
 
@@ -203,7 +204,7 @@ public class ArmChairColored extends ArmChair implements DyeableFurniture {
     public boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
-        return (state.getBlock().getClass().isAssignableFrom(ArmChairColored.class));
+        return (state.getBlock().getClass().isAssignableFrom(ArmChairColored.class) && state.getBlock() instanceof ArmChairColored);
     }
 
     private static boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
@@ -221,7 +222,8 @@ public class ArmChairColored extends ArmChair implements DyeableFurniture {
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        return baseBlockState.with(SHAPE, getShape(blockState, ctx.getWorld(), ctx.getBlockPos())).with(FACING, ctx.getPlayerFacing());
+        Direction facing = PaladinFurnitureMod.getPFMConfig().chairsFacePlayer ? ctx.getPlayerFacing() : ctx.getPlayerFacing().getOpposite();
+        return baseBlockState.with(SHAPE, getShape(blockState, ctx.getWorld(), ctx.getBlockPos())).with(FACING, facing);
     }
 
     @Override

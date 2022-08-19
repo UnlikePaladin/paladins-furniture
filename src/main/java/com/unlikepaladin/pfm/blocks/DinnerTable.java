@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
@@ -90,10 +91,15 @@ public class DinnerTable extends HorizontalFacingBlock implements Waterloggable 
         return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(FACING)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
+    boolean canConnect(BlockState blockState)
+    {
+        return PaladinFurnitureMod.getPFMConfig().tablesOfDifferentMaterialsConnect ? blockState.getBlock() instanceof DinnerTable : blockState.getBlock() == this;
+    }
+
     private boolean isTable(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
-        if(state.getBlock() == this)
+        if(canConnect(state))
         {
             Direction sourceDirection = state.get(FACING);
             return sourceDirection.equals(tableDirection);

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.KitchenCounterOven;
 import com.unlikepaladin.pfm.blocks.Stove;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
@@ -22,6 +23,7 @@ import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -167,7 +169,13 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
             if (stoveBlockEntity.cookingTimes[i] < stoveBlockEntity.cookingTotalTimes[i]) continue;
             SimpleInventory inventory = new SimpleInventory(itemStack);
             ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.craft(inventory)).orElse(itemStack);
-            stoveBlockEntity.itemsBeingCooked.set(i, itemStack2);
+                if (PaladinFurnitureMod.getPFMConfig().foodPopsOffStove) {
+                    ItemScatterer.spawn(world, pos.getX(), pos.up().getY(), pos.getZ(), itemStack2);
+                    stoveBlockEntity.itemsBeingCooked.set(i, ItemStack.EMPTY);
+                }
+                else {
+                    stoveBlockEntity.itemsBeingCooked.set(i, itemStack2);
+                }
             world.updateListeners(pos, state, state, Block.NOTIFY_ALL);
         }
         if (bl) {

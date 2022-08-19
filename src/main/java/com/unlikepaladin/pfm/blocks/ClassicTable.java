@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
@@ -90,26 +91,29 @@ public class ClassicTable extends Block implements Waterloggable {
         return getShape(blockState, world, blockPos);
     }
 
+    boolean canConnect(BlockState blockState)
+    {
+        return PaladinFurnitureMod.getPFMConfig().tablesOfDifferentMaterialsConnect ? blockState.getBlock() instanceof ClassicTable : blockState.getBlock() == this;
+    }
 
     private BlockState getShape(BlockState state, BlockView world, BlockPos pos) {
         boolean north = false;
         boolean east = false;
         boolean west = false;
         boolean south = false;
-      if (world.getBlockState(pos.north()).getBlock() == this){
-          north = world.getBlockState(pos.north()).getBlock() == this;}
+          if (canConnect(world.getBlockState(pos.north()))){
+              north = canConnect(world.getBlockState(pos.north()));}
 
-      if (world.getBlockState(pos.east()).getBlock() == this){
-          east = world.getBlockState(pos.east()).getBlock() == this;}
+          if (canConnect(world.getBlockState(pos.east()))){
+              east = canConnect(world.getBlockState(pos.east()));}
 
-      if (world.getBlockState(pos.west()).getBlock() == this){
-            west = world.getBlockState(pos.west()).getBlock() == this;}
+          if (canConnect(world.getBlockState(pos.west()))){
+              west = canConnect(world.getBlockState(pos.west()));}
 
-      if (world.getBlockState(pos.south()).getBlock() == this){
-            south = world.getBlockState(pos.south()).getBlock() == this;}
+          if (canConnect(world.getBlockState(pos.south()))){
+              south = canConnect(world.getBlockState(pos.south()));}
 
         return state.with(NORTH, north).with(EAST, east).with(SOUTH, south).with(WEST, west);
-
     }
 
     @Override

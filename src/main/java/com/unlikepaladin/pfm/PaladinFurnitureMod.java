@@ -1,8 +1,12 @@
 package com.unlikepaladin.pfm;
 
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
+import com.unlikepaladin.pfm.compat.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.compat.sandwichable.PFMSandwichableRegistry;
 import com.unlikepaladin.pfm.registry.*;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.ConfigHolder;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.loader.api.FabricLoader;
@@ -50,6 +54,8 @@ public class PaladinFurnitureMod implements ModInitializer {
 
 
 	//System.out.println("Hello Fabric world!");
+
+	static ConfigHolder<PaladinFurnitureModConfig> pfmConfig;
 	@Override
 	public void onInitialize() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -61,6 +67,9 @@ public class PaladinFurnitureMod implements ModInitializer {
 		if (FabricLoader.getInstance().isModLoaded("sandwichable")) {
 			PFMSandwichableRegistry.register();
 		}
+		if (FabricLoader.getInstance().isModLoaded("cloth-config2")) {
+			pfmConfig = AutoConfig.register(PaladinFurnitureModConfig.class, GsonConfigSerializer::new);
+		}
 		StatisticsRegistry.registerStatistics();
 		SoundRegistry.registerSounds();
 		BlockEntityRegistry.registerBlockEntities();
@@ -68,4 +77,11 @@ public class PaladinFurnitureMod implements ModInitializer {
 		ScreenHandlersRegistry.registerScreenHandlers();
 		RecipeRegistry.registerRecipes();
 	}
+
+	public static PaladinFurnitureModConfig getPFMConfig() {
+		return pfmConfig.getConfig();
+	}
+
+
+
 }

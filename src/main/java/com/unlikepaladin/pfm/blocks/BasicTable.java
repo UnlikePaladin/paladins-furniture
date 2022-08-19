@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
@@ -108,6 +109,11 @@ public class BasicTable extends Block implements Waterloggable{
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
+    boolean canConnect(BlockState blockState)
+    {
+        return PaladinFurnitureMod.getPFMConfig().tablesOfDifferentMaterialsConnect ? blockState.getBlock() instanceof BasicTable : blockState.getBlock() == this;
+    }
+
     /**Done this way to keep the number of states low*/
     private BlockState getShape(BlockState state, BlockView world, BlockPos pos) {
         Direction.Axis dir = state.get(AXIS);
@@ -115,23 +121,23 @@ public class BasicTable extends Block implements Waterloggable{
         boolean east = false;
         boolean west = false;
         boolean south = false;
-        if (world.getBlockState(pos.north()).getBlock() == this && world.getBlockState(pos.north()).get(AXIS) == dir) {
-            north = world.getBlockState(pos.north()).getBlock() == this;
+        if (canConnect(world.getBlockState(pos.north())) && world.getBlockState(pos.north()).get(AXIS) == dir) {
+            north = canConnect(world.getBlockState(pos.north()));
         }
-        if (world.getBlockState(pos.east()).getBlock() == this && world.getBlockState(pos.east()).get(AXIS) == dir) {
-            east = world.getBlockState(pos.east()).getBlock() == this;
+        if (canConnect(world.getBlockState(pos.east())) && world.getBlockState(pos.east()).get(AXIS) == dir) {
+            east =  canConnect(world.getBlockState(pos.east()));
         }
 
-        if (world.getBlockState(pos.west()).getBlock() == this && world.getBlockState(pos.west()).get(AXIS) == dir) {
-            west = world.getBlockState(pos.west()).getBlock() == this;
+        if (canConnect(world.getBlockState(pos.west())) && world.getBlockState(pos.west()).get(AXIS) == dir) {
+            west =  canConnect(world.getBlockState(pos.west()));
         }
-        if (world.getBlockState(pos.south()).getBlock() == this && world.getBlockState(pos.south()).get(AXIS) == dir) {
-            south = world.getBlockState(pos.south()).getBlock() == this;
+        if (canConnect(world.getBlockState(pos.south())) && world.getBlockState(pos.south()).get(AXIS) == dir) {
+            south =  canConnect(world.getBlockState(pos.south()));
         }
-        boolean cornerNorthWest = north && west && world.getBlockState(pos.north().west()).getBlock() != this;
-        boolean cornerNorthEast = north && east && world.getBlockState(pos.north().east()).getBlock() != this;
-        boolean cornerSouthEast = south && east && world.getBlockState(pos.south().east()).getBlock() != this;
-        boolean cornerSouthWest = south && west && world.getBlockState(pos.south().west()).getBlock() != this;
+        boolean cornerNorthWest = north && west && !canConnect(world.getBlockState(pos.north().west()));
+        boolean cornerNorthEast = north && east && !canConnect(world.getBlockState(pos.north().east()));
+        boolean cornerSouthEast = south && east && !canConnect(world.getBlockState(pos.south().east()));
+        boolean cornerSouthWest = south && west && !canConnect(world.getBlockState(pos.south().west()));
 
         if (north && south && east && west && ((cornerNorthEast && cornerSouthEast) || (cornerSouthWest && cornerNorthWest))){
             return state.with(SHAPE, BasicTableShape.NORTH_SOUTH);

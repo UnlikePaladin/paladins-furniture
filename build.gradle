@@ -37,6 +37,7 @@ repositories {
 		name 'Gegy'
 		url 'https://maven.gegy.dev'
 	}
+	maven { url "https://maven.terraformersmc.com/releases/" }
 	maven {
 		name = "Modrinth"
 		url = "https://api.modrinth.com/maven"
@@ -60,6 +61,21 @@ else {
 	dependencies {
 		modCompileOnly("maven.modrinth:sandwichable:${project.sandwichable_version}")
 		modCompileOnly("dev.lambdaurora:spruceui:${project.spruceui_version}")
+	}
+}
+
+if (project.cloth_config_compatibility == "true") {
+	dependencies {
+		modApi("me.shedaniel.cloth:cloth-config-fabric:5.3.63") {
+			exclude(group: "net.fabricmc.fabric-api")
+		}
+	}
+}
+else {
+	dependencies {
+		modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
+			exclude(group: "net.fabricmc.fabric-api")
+		}
 	}
 }
 
@@ -106,6 +122,10 @@ dependencies {
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
+		transitive = false
+	}
 }
 
 processResources {
