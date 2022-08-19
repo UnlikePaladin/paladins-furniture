@@ -23,8 +23,6 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        // EntityPaladinClient.registerClientEntity();
-      //  EntityRenderRegistry.registerRender();
         ColorRegistry.registerAll();
         NetworkRegistry.registerClientPackets();
 

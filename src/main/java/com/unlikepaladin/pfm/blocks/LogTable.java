@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.fluid.FluidState;
@@ -88,12 +89,17 @@ public class LogTable extends HorizontalFacingBlock implements Waterloggable{
     private boolean isTable(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
-        if(state.getBlock() == this)
+        if(canConnect(state))
         {
             Direction sourceDirection = state.get(FACING);
             return sourceDirection.equals(tableDirection);
         }
         return false;
+    }
+
+    boolean canConnect(BlockState blockState)
+    {
+        return PaladinFurnitureMod.getPFMConfig().tablesOfDifferentMaterialsConnect ? blockState.getBlock() instanceof LogTable : blockState.getBlock() == this;
     }
 
     public BlockState getShape(BlockState state, WorldAccess world, BlockPos pos, Direction dir)

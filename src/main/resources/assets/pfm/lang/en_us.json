@@ -1083,6 +1083,14 @@
   "rei.pfm.furniture": "Workbench",
   "pfm.patchouli.guide_book.name": "Paladin's Furniture",
   "pfm.patchouli.guide_book.landing_text": "This is a guide for everything related to the furniture in this mod. It will show you how to use and craft the furniture and appliances in it.",
-  "pfm.patchouli.guide_book.subtitle": "  Your Guide to the Mod"
-
+  "pfm.patchouli.guide_book.subtitle": "  Your Guide to the Mod",
+  "text.autoconfig.pfm.option.tablesOfDifferentMaterialsConnect": "Connect Tables of Different Materials",
+  "text.autoconfig.pfm.option.tablesOfDifferentMaterialsConnect.@Tooltip": "Tables of different materials connect when they're adjacent to each other.",
+  "text.autoconfig.pfm.option.chairsFacePlayer": "Chairs Face Player",
+  "text.autoconfig.pfm.option.chairsFacePlayer.@Tooltip": "Chairs will face the player when placed if true.",
+  "text.autoconfig.pfm.option.countersOfDifferentMaterialsConnect": "Connect Counters of Different Materials",
+  "text.autoconfig.pfm.option.countersOfDifferentMaterialsConnect.@Tooltip": "Counters and similar blocks of different materials connect when they're adjacent to each other.",
+  "text.autoconfig.pfm.option.foodPopsOffStove": "Food pops off stove",
+  "text.autoconfig.pfm.option.foodPopsOffStove.@Tooltip": "If true, when the stove is done cooking, the food will be ejected like with a campfire.",
+  "text.autoconfig.pfm.title": "Paladin's Furniture Mod Config"
 }

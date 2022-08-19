@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
@@ -43,7 +44,8 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock implem
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing().getOpposite()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        Direction facing = PaladinFurnitureMod.getPFMConfig().chairsFacePlayer ? ctx.getPlayerFacing() : ctx.getPlayerFacing().getOpposite();
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, facing).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
     }
 
     @Override

@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.items;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.DyeableFurniture;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -40,7 +39,7 @@ public class DyeKit extends Item {
         if (playerEntity.isSneaking()) {
             if(blockState.getBlock() instanceof DyeableFurniture) {
                 if (stack.getItem() instanceof DyeKit) {
-                    world.playSound(null, blockPos, PaladinFurnitureMod.FURNITURE_DYED_EVENT, SoundCategory.BLOCKS, 0.3f, 1f);
+                    world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     String newBlock= blockState.getBlock().toString();
                     newBlock = newBlock.replace(((DyeableFurniture) blockState.getBlock()).getColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
                     BlockState blockState1 = Registry.BLOCK.get(new Identifier(newBlock)).getStateWithProperties(blockState);
