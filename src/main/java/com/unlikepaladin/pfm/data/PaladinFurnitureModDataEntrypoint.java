@@ -65,6 +65,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             KitchenCounterOven[] stoneCounterOvens = KitchenCounterOven.streamStoneCounterOvens().map(FurnitureBlock::getBlock).toArray(KitchenCounterOven[]::new);
             KitchenWallCounter[] stoneWallCounters = KitchenWallCounter.streamWallStoneCounters().map(FurnitureBlock::getBlock).toArray(KitchenWallCounter[]::new);
             KitchenWallDrawer[] stoneWallDrawers = KitchenWallDrawer.streamWallStoneDrawers().map(FurnitureBlock::getBlock).toArray(KitchenWallDrawer[]::new);
+            KitchenWallDrawerSmall[] stoneWallSmallDrawers = KitchenWallDrawerSmall.streamStoneWallSmallDrawers().map(FurnitureBlock::getBlock).toArray(KitchenWallDrawerSmall[]::new);
 
             KitchenSink[] stoneSinks = KitchenSink.streamStoneSinks().map(FurnitureBlock::getBlock).toArray(KitchenSink[]::new);
             BasicChair[] stoneBasicChairs = BasicChair.streamStoneBasicChairs().map(FurnitureBlock::getBlock).toArray(BasicChair[]::new);
@@ -98,6 +99,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             Plate[] plates = Plate.streamPlates().map(FurnitureBlock::getBlock).toArray(Plate[]::new);
             Cutlery[] cutleries = Cutlery.streamCutlery().map(FurnitureBlock::getBlock).toArray(Cutlery[]::new);
             BasicToilet[] basicToilets = BasicToilet.streamBasicToilet().map(FurnitureBlock::getBlock).toArray(BasicToilet[]::new);
+            KitchenRangeHood[] rangeHoods = KitchenRangeHood.streamOvenRangeHoods().map(FurnitureBlock::getBlock).toArray(KitchenRangeHood[]::new);
 
             this.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                     .add(stoneCounters)
@@ -129,11 +131,13 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(stove)
                     .add(stoneWallCounters)
                     .add(stoneWallDrawers)
+                    .add(stoneWallSmallDrawers)
                     .add(stoneNaturalTables)
                     .add(stoneClassicNightstands)
                     .add(plates)
                     .add(cutleries)
                     .add(basicToilets)
+                    .add(rangeHoods)
                     .add(BlockItemRegistry.RAW_CONCRETE)
                     .add(BlockItemRegistry.IRON_CHAIN);
 
@@ -142,6 +146,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             KitchenWallDrawer[] woodWallDrawers = KitchenWallDrawer.streamWallWoodDrawers().map(FurnitureBlock::getBlock).toArray(KitchenWallDrawer[]::new);
             KitchenCabinet[] woodCabinets = KitchenCabinet.streamWoodCabinets().map(FurnitureBlock::getBlock).toArray(KitchenCabinet[]::new);
             KitchenDrawer[] woodDrawers = KitchenDrawer.streamWoodDrawers().map(FurnitureBlock::getBlock).toArray(KitchenDrawer[]::new);
+            KitchenWallDrawerSmall[] woodWallSmallDrawers = KitchenWallDrawerSmall.streamWoodWallSmallDrawers().map(FurnitureBlock::getBlock).toArray(KitchenWallDrawerSmall[]::new);
             KitchenCounterOven[] woodCounterOvens = KitchenCounterOven.streamWoodCounterOvens().map(FurnitureBlock::getBlock).toArray(KitchenCounterOven[]::new);
 
             KitchenSink[] woodSinks = KitchenSink.streamWoodSinks().map(FurnitureBlock::getBlock).toArray(KitchenSink[]::new);
@@ -199,6 +204,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(simpleBeds)
                     .add(woodWallDrawers)
                     .add(woodWallCounters)
+                    .add(woodWallSmallDrawers)
                     .add(simpleBunkLadders)
                     .add(classicBeds);
 
@@ -361,6 +367,18 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 }
             }
 
+            FurnitureBlock[] woodWallSmallKitchenDrawers = KitchenWallDrawerSmall.streamWoodWallSmallDrawers().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock kitchenDrawer : woodWallSmallKitchenDrawers) {
+                String cabinetName = kitchenDrawer.block.toString();
+                if (cabinetName.contains("light_wood")) {
+                    offerWallDrawerSmall(kitchenDrawer.block, Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
+                } else if (cabinetName.contains("dark_wood")) {
+                    offerWallDrawerSmall(kitchenDrawer.block, Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
+                } else {
+                    offerWallDrawerSmall(kitchenDrawer.block, Ingredient.ofItems(kitchenDrawer.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
+                }
+            }
+
             FurnitureBlock[] woodKitchenSinks = KitchenSink.streamWoodSinks().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock kitchenSink : woodKitchenSinks) {
                 String cabinetName = kitchenSink.block.toString();
@@ -487,6 +505,12 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                 offerWallDrawer(kitchenDrawer.block, Ingredient.ofItems(kitchenDrawer.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
             }
 
+            FurnitureBlock[] stoneWallSmallKitchenDrawers = KitchenWallDrawerSmall.streamStoneWallSmallDrawers().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock kitchenDrawer : stoneWallSmallKitchenDrawers) {
+                offerWallDrawerSmall(kitchenDrawer.block, Ingredient.ofItems(kitchenDrawer.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
+            }
+
+
             FurnitureBlock[] stoneKitchenSinks = KitchenSink.streamStoneSinks().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock kitchenSink : stoneKitchenSinks) {
                     offerSinkRecipe(kitchenSink.block, Ingredient.ofItems(kitchenSink.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenSink.getBaseMaterial().asItem()), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
@@ -535,6 +559,11 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             FurnitureBlock[] ironStove = IronStove.streamIronStoves().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock stove : ironStove) {
                 offerStoveRecipe(stove.block,  Ingredient.ofItems(stove.getFridgeMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
+            }
+
+            FurnitureBlock[] rangeHoods = KitchenRangeHood.streamOvenRangeHoods().toList().toArray(new FurnitureBlock[0]);
+            for (FurnitureBlock rangeHood : rangeHoods) {
+                offerRangeHood(rangeHood.block,  Ingredient.ofItems(rangeHood.getFridgeMaterial().asItem()), Ingredient.ofItems(Items.REDSTONE_LAMP), exporter);
             }
 
             FurnitureBlock[] woodClassicNightStands = ClassicNightstand.streamWoodClassicNightstands().toList().toArray(new FurnitureBlock[0]);
@@ -635,6 +664,10 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
         FurnitureRecipeJsonFactory.create(output, 1).input('X', legMaterial).input('S', baseMaterial).input('Y', stove).pattern("XXX").pattern("SYS").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
+    public static void offerWallDrawerSmall(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Ingredient stove, Consumer<RecipeJsonProvider> exporter) {
+        FurnitureRecipeJsonFactory.create(output, 3).input('X', legMaterial).input('S', baseMaterial).input('Y', stove).pattern("XXX").pattern("SYS").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+
     public static void offerCounterRecipe(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonFactory.create(output, 6).input('X', legMaterial).input('S', baseMaterial).pattern("SSS").pattern("XXX").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
@@ -691,6 +724,11 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
     public static void offerStoveRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient storage, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonFactory.create(output, 1).input('X', legMaterial).input('Y', storage).pattern("XXX").pattern("XYX").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
+
+    public static void offerRangeHood(ItemConvertible output, Ingredient legMaterial, Ingredient secondMaterial, Consumer<RecipeJsonProvider> exporter) {
+        FurnitureRecipeJsonFactory.create(output, 1).input('X', legMaterial).input('Y', secondMaterial).pattern(" X ").pattern(" X ").pattern("XYX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+
 
     public static void offerSimpleBed(ItemConvertible output, Ingredient legMaterial, Ingredient baseBed, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonFactory.create(output, 1).input('X', legMaterial).input('Z', baseBed).pattern("XZX").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));

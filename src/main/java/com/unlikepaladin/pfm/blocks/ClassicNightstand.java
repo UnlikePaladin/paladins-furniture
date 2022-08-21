@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
@@ -83,8 +83,8 @@ public class ClassicNightstand extends HorizontalFacingBlockWEntity implements W
             return ActionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof GenericStorageBlockEntity) {
-            player.openHandledScreen((GenericStorageBlockEntity)blockEntity);
+        if (blockEntity instanceof GenericStorageBlockEntity9x3) {
+            player.openHandledScreen((GenericStorageBlockEntity9x3)blockEntity);
             player.incrementStat(StatisticsRegistry.CABINET_SEARCHED);
             PiglinBrain.onGuardedBlockInteracted(player, true);
         }
@@ -121,7 +121,7 @@ public class ClassicNightstand extends HorizontalFacingBlockWEntity implements W
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new GenericStorageBlockEntity(pos, state);
+        return new GenericStorageBlockEntity9x3(pos, state);
     }
 
     private boolean isTable(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)

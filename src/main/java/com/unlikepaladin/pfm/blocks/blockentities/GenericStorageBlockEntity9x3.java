@@ -28,30 +28,29 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 
-public class GenericStorageBlockEntity extends LootableContainerBlockEntity {
-    public GenericStorageBlockEntity(BlockPos pos, BlockState state) {
+public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
+    public GenericStorageBlockEntity9x3(BlockPos pos, BlockState state) {
         super(BlockEntityRegistry.DRAWER_BLOCK_ENTITY, pos, state);
     }
+
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
     private final ViewerCountManager stateManager = new ViewerCountManager() {
-
 
         @Override
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand){
-                GenericStorageBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
-                GenericStorageBlockEntity.this.setOpen(state, true);
+                GenericStorageBlockEntity9x3.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
+                GenericStorageBlockEntity9x3.this.setOpen(state, true);
             }
         }
 
         @Override
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand) {
-                GenericStorageBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
-                GenericStorageBlockEntity.this.setOpen(state, false);
+                GenericStorageBlockEntity9x3.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
+                GenericStorageBlockEntity9x3.this.setOpen(state, false);
             }
         }
-
 
         @Override
         protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
@@ -62,29 +61,16 @@ public class GenericStorageBlockEntity extends LootableContainerBlockEntity {
         protected boolean isPlayerViewing(PlayerEntity player) {
             if (player.currentScreenHandler instanceof GenericContainerScreenHandler) {
                 Inventory inventory = ((GenericContainerScreenHandler)player.currentScreenHandler).getInventory();
-                return inventory == GenericStorageBlockEntity.this;
+                return inventory == GenericStorageBlockEntity9x3.this;
             }
             return false;
         }
     };
 
-
-
-        @Override
-        public int size() {
-            return 27;
-        }
-
-
-
-
-
-    public static void copyInventory(GenericStorageBlockEntity from, GenericStorageBlockEntity to) {
-        DefaultedList<ItemStack> defaultedList = from.getInvStackList();
-        from.setInvStackList(to.getInvStackList());
-        to.setInvStackList(defaultedList);
+    @Override
+    public int size() {
+        return 27;
     }
-
 
 
     @Override

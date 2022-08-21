@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
@@ -330,8 +330,8 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
             return ActionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof GenericStorageBlockEntity) {
-            player.openHandledScreen((GenericStorageBlockEntity)blockEntity);
+        if (blockEntity instanceof GenericStorageBlockEntity9x3) {
+            player.openHandledScreen((GenericStorageBlockEntity9x3)blockEntity);
             player.incrementStat(StatisticsRegistry.CABINET_SEARCHED);
             PiglinBrain.onGuardedBlockInteracted(player, true);
         }
@@ -351,14 +351,14 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         BlockEntity blockEntity;
-        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof GenericStorageBlockEntity) {
-            ((GenericStorageBlockEntity)blockEntity).setCustomName(itemStack.getName());
+        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof GenericStorageBlockEntity9x3) {
+            ((GenericStorageBlockEntity9x3)blockEntity).setCustomName(itemStack.getName());
         }
     }
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new GenericStorageBlockEntity(pos,state);
+        return new GenericStorageBlockEntity9x3(pos,state);
     }
 
     @Override

@@ -772,6 +772,8 @@
 
   "container.pfm.nightstand": "Nightstand",
   "container.pfm.drawer": "Kitchen Drawer",
+  "container.pfm.drawer_small": "Small Kitchen Drawer",
+  "container.pfm.small_storage": "Small Container",
   "container.pfm.working_table": "Wood Working Table",
   "container.pfm.cabinet": "Kitchen Cabinet",
   "container.pfm.white_fridge": "Fridge",
@@ -787,6 +789,7 @@
   "block.pfm.iron_stove": "Iron Stove",
   "block.pfm.iron_toaster": "Iron Toaster",
   "container.pfm.microwave": "Microwave",
+  "block.pfm.iron_oven_range_hood": "Iron Oven Range Hood",
   "block.pfm.iron_microwave": "Iron Microwave",
   "gui.pfm.microwave.start_button": "Start",
   "block.pfm.white_fridge": "White Fridge",
@@ -800,6 +803,7 @@
   "block.pfm.oak_kitchen_counter_oven": "Oak Kitchen Oven",
   "block.pfm.oak_kitchen_wall_counter": "Oak Kitchen Wall Counter",
   "block.pfm.oak_kitchen_wall_drawer": "Oak Kitchen Wall Drawer",
+  "block.pfm.oak_kitchen_wall_small_drawer": "Oak Kitchen Small Wall Drawer",
 
   "block.pfm.dark_oak_kitchen_counter": "Dark Oak Kitchen Counter",
   "block.pfm.dark_oak_kitchen_drawer": "Dark Oak Kitchen Drawer",
@@ -808,6 +812,7 @@
   "block.pfm.dark_oak_kitchen_counter_oven": "Dark Oak Kitchen Oven",
   "block.pfm.dark_oak_kitchen_wall_counter": "Dark Oak Kitchen Wall Counter",
   "block.pfm.dark_oak_kitchen_wall_drawer": "Dark Oak Kitchen Wall Drawer",
+  "block.pfm.dark_oak_kitchen_wall_small_drawer": "Dark Oak Kitchen Small Wall Drawer",
 
   "block.pfm.spruce_kitchen_counter": "Spruce Kitchen Counter",
   "block.pfm.spruce_kitchen_drawer": "Spruce Kitchen Drawer",
@@ -816,6 +821,7 @@
   "block.pfm.spruce_kitchen_counter_oven": "Spruce Kitchen Oven",
   "block.pfm.spruce_kitchen_wall_counter": "Spruce Kitchen Wall Counter",
   "block.pfm.spruce_kitchen_wall_drawer": "Spruce Kitchen Wall Drawer",
+  "block.pfm.spruce_kitchen_wall_small_drawer": "Spruce Kitchen Small Wall Drawer",
 
   "block.pfm.acacia_kitchen_counter": "Acacia Kitchen Counter",
   "block.pfm.acacia_kitchen_drawer": "Acacia Kitchen Drawer",
@@ -824,6 +830,7 @@
   "block.pfm.acacia_kitchen_counter_oven": "Acacia Kitchen Oven",
   "block.pfm.acacia_kitchen_wall_counter": "Acacia Kitchen Wall Counter",
   "block.pfm.acacia_kitchen_wall_drawer": "Acacia Kitchen Wall Drawer",
+  "block.pfm.acacia_kitchen_wall_small_drawer": "Acacia Kitchen Small Wall Drawer",
 
   "block.pfm.birch_kitchen_counter": "Birch Kitchen Counter",
   "block.pfm.birch_kitchen_drawer": "Birch Kitchen Drawer",
@@ -832,6 +839,7 @@
   "block.pfm.birch_kitchen_counter_oven": "Birch Kitchen Oven",
   "block.pfm.birch_kitchen_wall_counter": "Birch Kitchen Wall Counter",
   "block.pfm.birch_kitchen_wall_drawer": "Birch Kitchen Wall Drawer",
+  "block.pfm.birch_kitchen_wall_small_drawer": "Birch Kitchen Small Wall Drawer",
 
   "block.pfm.jungle_kitchen_counter": "Jungle Kitchen Counter",
   "block.pfm.jungle_kitchen_drawer": "Jungle Kitchen Drawer",
@@ -840,6 +848,7 @@
   "block.pfm.jungle_kitchen_counter_oven": "Jungle Kitchen Oven",
   "block.pfm.jungle_kitchen_wall_counter": "Jungle Kitchen Wall Counter",
   "block.pfm.jungle_kitchen_wall_drawer": "Jungle Kitchen Wall Drawer",
+  "block.pfm.jungle_kitchen_wall_small_drawer": "Jungle Kitchen Small Wall Drawer",
 
   "block.pfm.crimson_kitchen_counter": "Crimson Kitchen Counter",
   "block.pfm.crimson_kitchen_drawer": "Crimson Kitchen Drawer",
@@ -848,6 +857,7 @@
   "block.pfm.crimson_kitchen_counter_oven": "Crimson Kitchen Oven",
   "block.pfm.crimson_kitchen_wall_counter": "Crimson Kitchen Wall Counter",
   "block.pfm.crimson_kitchen_wall_drawer": "Crimson Kitchen Wall Drawer",
+  "block.pfm.crimson_kitchen_wall_small_drawer": "Crimson Kitchen Small Wall Drawer",
 
   "block.pfm.warped_kitchen_counter": "Warped Kitchen Counter",
   "block.pfm.warped_kitchen_drawer": "Warped Kitchen Drawer",
@@ -856,6 +866,7 @@
   "block.pfm.warped_kitchen_counter_oven": "Warped Kitchen Oven",
   "block.pfm.warped_kitchen_wall_counter": "Warped Kitchen Wall Counter",
   "block.pfm.warped_kitchen_wall_drawer": "Warped Kitchen Wall Drawer",
+  "block.pfm.warped_kitchen_wall_small_drawer": "Warped Kitchen Small Wall Drawer",
 
   "block.pfm.stripped_oak_kitchen_counter": "Stripped Oak Kitchen Counter",
   "block.pfm.stripped_oak_kitchen_drawer": "Stripped Oak Kitchen Drawer",
@@ -864,6 +875,7 @@
   "block.pfm.stripped_oak_kitchen_counter_oven": "Stripped Oak Kitchen Oven",
   "block.pfm.stripped_oak_kitchen_wall_counter": "Stripped Oak Kitchen Wall Counter",
   "block.pfm.stripped_oak_kitchen_wall_drawer": "Stripped Oak Kitchen Wall Drawer",
+  "block.pfm.stripped_oak_kitchen_wall_small_drawer": "Stripped Oak Kitchen Small Wall Drawer",
 
   "block.pfm.stripped_dark_oak_kitchen_counter": "Stripped Dark Oak Kitchen Counter",
   "block.pfm.stripped_dark_oak_kitchen_drawer": "Stripped Dark Oak Kitchen Drawer",
@@ -872,6 +884,7 @@
   "block.pfm.stripped_dark_oak_kitchen_counter_oven": "Stripped Dark Oak Kitchen Oven",
   "block.pfm.stripped_dark_oak_kitchen_wall_counter": "Stripped Dark Oak Kitchen Wall Counter",
   "block.pfm.stripped_dark_oak_kitchen_wall_drawer": "Stripped Dark Oak Kitchen Wall Drawer",
+  "block.pfm.stripped_dark_oak_kitchen_wall_small_drawer": "Stripped Dark Oak Kitchen Small Wall Drawer",
 
   "block.pfm.stripped_spruce_kitchen_counter": "Stripped Spruce Kitchen Counter",
   "block.pfm.stripped_spruce_kitchen_drawer": "Stripped Spruce Kitchen Drawer",
@@ -880,6 +893,7 @@
   "block.pfm.stripped_spruce_kitchen_counter_oven": "Stripped Spruce Kitchen Oven",
   "block.pfm.stripped_spruce_kitchen_wall_counter": "Stripped Spruce Kitchen Wall Counter",
   "block.pfm.stripped_spruce_kitchen_wall_drawer": "Stripped Spruce Kitchen Wall Drawer",
+  "block.pfm.stripped_spruce_kitchen_wall_small_drawer": "Stripped Spruce Kitchen Small Wall Drawer",
 
   "block.pfm.stripped_acacia_kitchen_counter": "Stripped Acacia Kitchen Counter",
   "block.pfm.stripped_acacia_kitchen_drawer": "Stripped Acacia Kitchen Drawer",
@@ -888,6 +902,7 @@
   "block.pfm.stripped_acacia_kitchen_counter_oven": "Stripped Acacia Kitchen Oven",
   "block.pfm.stripped_acacia_kitchen_wall_counter": "Stripped Acacia Kitchen Wall Counter",
   "block.pfm.stripped_acacia_kitchen_wall_drawer": "Stripped Acacia Kitchen Wall Drawer",
+  "block.pfm.stripped_acacia_kitchen_wall_small_drawer": "Stripped Acacia Kitchen Small Wall Drawer",
 
   "block.pfm.stripped_birch_kitchen_counter": "Stripped Birch Kitchen Counter",
   "block.pfm.stripped_birch_kitchen_drawer": "Stripped Birch Kitchen Drawer",
@@ -896,6 +911,7 @@
   "block.pfm.stripped_birch_kitchen_counter_oven": "Stripped Birch Kitchen Oven",
   "block.pfm.stripped_birch_kitchen_wall_counter": "Stripped Birch Kitchen Wall Counter",
   "block.pfm.stripped_birch_kitchen_wall_drawer": "Stripped Birch Kitchen Wall Drawer",
+  "block.pfm.stripped_birch_kitchen_wall_small_drawer": "Stripped Birch Kitchen Small Wall Drawer",
 
   "block.pfm.stripped_jungle_kitchen_counter": "Stripped Jungle Kitchen Counter",
   "block.pfm.stripped_jungle_kitchen_drawer": "Stripped Jungle Kitchen Drawer",
@@ -904,6 +920,7 @@
   "block.pfm.stripped_jungle_kitchen_counter_oven": "Stripped Jungle Kitchen Oven",
   "block.pfm.stripped_jungle_kitchen_wall_counter": "Stripped Jungle Kitchen Wall Counter",
   "block.pfm.stripped_jungle_kitchen_wall_drawer": "Stripped Jungle Kitchen Wall Drawer",
+  "block.pfm.stripped_jungle_kitchen_wall_small_drawer": "Stripped Jungle Kitchen Small Wall Drawer",
 
   "block.pfm.stripped_crimson_kitchen_counter": "Stripped Crimson Kitchen Counter",
   "block.pfm.stripped_crimson_kitchen_drawer": "Stripped Crimson Kitchen Drawer",
@@ -912,6 +929,7 @@
   "block.pfm.stripped_crimson_kitchen_counter_oven": "Stripped Crimson Kitchen Oven",
   "block.pfm.stripped_crimson_kitchen_wall_counter": "Stripped Crimson Kitchen Wall Counter",
   "block.pfm.stripped_crimson_kitchen_wall_drawer": "Stripped Crimson Kitchen Wall Drawer",
+  "block.pfm.stripped_crimson_kitchen_wall_small_drawer": "Stripped Crimson Kitchen Small Wall Drawer",
 
   "block.pfm.stripped_warped_kitchen_counter": "Stripped Warped Kitchen Counter",
   "block.pfm.stripped_warped_kitchen_drawer": "Stripped Warped Kitchen Drawer",
@@ -920,6 +938,7 @@
   "block.pfm.stripped_warped_kitchen_counter_oven": "Stripped Warped Kitchen Oven",
   "block.pfm.stripped_warped_kitchen_wall_counter": "Stripped Warped Kitchen Wall Counter",
   "block.pfm.stripped_warped_kitchen_wall_drawer": "Stripped Warped Kitchen Wall Drawer",
+  "block.pfm.stripped_warped_kitchen_wall_small_drawer": "Stripped Warped Kitchen Small Wall Drawer",
 
   "block.pfm.oak_herringbone_planks": "Oak Herringbone Planks",
   "block.pfm.dark_oak_herringbone_planks": "Dark Oak Herringbone Planks",
@@ -947,6 +966,7 @@
   "block.pfm.concrete_kitchen_counter_oven": "Concrete Kitchen Oven",
   "block.pfm.concrete_kitchen_wall_counter": "Concrete Kitchen Wall Counter",
   "block.pfm.concrete_kitchen_wall_drawer": "Concrete Kitchen Wall Drawer",
+  "block.pfm.concrete_kitchen_wall_small_drawer": "Concrete Kitchen Small Wall Drawer",
 
   "block.pfm.dark_concrete_kitchen_counter": "Dark Concrete Kitchen Counter",
   "block.pfm.dark_concrete_kitchen_drawer": "Dark Concrete Kitchen Drawer",
@@ -955,6 +975,7 @@
   "block.pfm.dark_concrete_kitchen_counter_oven": "Dark Concrete Kitchen Oven",
   "block.pfm.dark_concrete_kitchen_wall_counter": "Dark Concrete Kitchen Wall Counter",
   "block.pfm.dark_concrete_kitchen_wall_drawer": "Dark Concrete Kitchen Wall Drawer",
+  "block.pfm.dark_concrete_kitchen_wall_small_drawer": "Dark Concrete Kitchen Small Wall Drawer",
 
   "block.pfm.light_wood_kitchen_counter": "Light Wooden Kitchen Counter",
   "block.pfm.light_wood_kitchen_drawer": "Light Wooden Kitchen Drawer",
@@ -963,6 +984,7 @@
   "block.pfm.light_wood_kitchen_counter_oven": "Light Wooden Kitchen Oven",
   "block.pfm.light_wood_kitchen_wall_counter": "Light Wooden Kitchen Wall Counter",
   "block.pfm.light_wood_kitchen_wall_drawer": "Light Wooden Kitchen Wall Drawer",
+  "block.pfm.light_wood_kitchen_wall_small_drawer": "Light Wood Kitchen Small Wall Drawer",
 
   "block.pfm.dark_wood_kitchen_counter": "Dark Wooden Kitchen Counter",
   "block.pfm.dark_wood_kitchen_drawer": "Dark Wooden Kitchen Drawer",
@@ -971,6 +993,7 @@
   "block.pfm.dark_wood_kitchen_counter_oven": "Dark Wooden Kitchen Oven",
   "block.pfm.dark_wood_kitchen_wall_counter": "Dark Wooden Kitchen Wall Counter",
   "block.pfm.dark_wood_kitchen_wall_drawer": "Dark Wooden Kitchen Wall Drawer",
+  "block.pfm.dark_wood_kitchen_wall_small_drawer": "Dark Wood Kitchen Small Wall Drawer",
 
   "block.pfm.granite_kitchen_counter": "Granite Kitchen Counter",
   "block.pfm.granite_kitchen_drawer": "Granite Kitchen Drawer",
@@ -979,6 +1002,7 @@
   "block.pfm.granite_kitchen_counter_oven": "Granite Kitchen Oven",
   "block.pfm.granite_kitchen_wall_counter": "Granite Kitchen Wall Counter",
   "block.pfm.granite_kitchen_wall_drawer": "Granite Kitchen Wall Drawer",
+  "block.pfm.granite_kitchen_wall_small_drawer": "Granite Kitchen Small Wall Drawer",
 
   "block.pfm.calcite_kitchen_counter": "Calcite Kitchen Counter",
   "block.pfm.calcite_kitchen_drawer": "Calcite Kitchen Drawer",
@@ -987,6 +1011,7 @@
   "block.pfm.calcite_kitchen_counter_oven": "Calcite Kitchen Oven",
   "block.pfm.calcite_kitchen_wall_counter": "Calcite Kitchen Wall Counter",
   "block.pfm.calcite_kitchen_wall_drawer": "Calcite Kitchen Wall Drawer",
+  "block.pfm.calcite_kitchen_wall_small_drawer": "Calcite Kitchen Small Wall Drawer",
 
   "block.pfm.netherite_kitchen_counter": "Netherite Kitchen Counter",
   "block.pfm.netherite_kitchen_drawer": "Netherite Kitchen Drawer",
@@ -995,6 +1020,7 @@
   "block.pfm.netherite_kitchen_counter_oven": "Netherite Kitchen Oven",
   "block.pfm.netherite_kitchen_wall_counter": "Netherite Kitchen Wall Counter",
   "block.pfm.netherite_kitchen_wall_drawer": "Netherite Kitchen Wall Drawer",
+  "block.pfm.netherite_kitchen_wall_small_drawer": "Netherite Kitchen Small Wall Drawer",
 
   "block.pfm.andesite_kitchen_counter": "Andesite Kitchen Counter",
   "block.pfm.andesite_kitchen_drawer": "Andesite Kitchen Drawer",
@@ -1003,6 +1029,7 @@
   "block.pfm.andesite_kitchen_counter_oven": "Andesite Kitchen Oven",
   "block.pfm.andesite_kitchen_wall_counter": "Andesite Kitchen Wall Counter",
   "block.pfm.andesite_kitchen_wall_drawer": "Andesite Kitchen Wall Drawer",
+  "block.pfm.andesite_kitchen_wall_small_drawer": "Andesite Kitchen Small Wall Drawer",
 
   "block.pfm.diorite_kitchen_counter": "Diorite Kitchen Counter",
   "block.pfm.diorite_kitchen_drawer": "Diorite Kitchen Drawer",
@@ -1011,6 +1038,7 @@
   "block.pfm.diorite_kitchen_counter_oven": "Diorite Kitchen Oven",
   "block.pfm.diorite_kitchen_wall_counter": "Diorite Kitchen Wall Counter",
   "block.pfm.diorite_kitchen_wall_drawer": "Diorite Kitchen Wall Drawer",
+  "block.pfm.diorite_kitchen_wall_small_drawer": "Diorite Kitchen Small Wall Drawer",
 
   "block.pfm.stone_kitchen_counter": "Stone Kitchen Counter",
   "block.pfm.stone_kitchen_drawer": "Stone Kitchen Drawer",
@@ -1019,6 +1047,7 @@
   "block.pfm.stone_kitchen_counter_oven": "Stone Kitchen Oven",
   "block.pfm.stone_kitchen_wall_counter": "Stone Kitchen Wall Counter",
   "block.pfm.stone_kitchen_wall_drawer": "Stone Kitchen Wall Drawer",
+  "block.pfm.stone_kitchen_wall_small_drawer": "Stone Kitchen Small Wall Drawer",
 
   "block.pfm.smooth_stone_kitchen_counter": "Smooth Stone Kitchen Counter",
   "block.pfm.smooth_stone_kitchen_drawer": "Smooth Stone Kitchen Drawer",
@@ -1027,6 +1056,7 @@
   "block.pfm.smooth_stone_kitchen_counter_oven": "Smooth Stone Kitchen Oven",
   "block.pfm.smooth_stone_kitchen_wall_counter": "Smooth Stone Kitchen Wall Counter",
   "block.pfm.smooth_stone_kitchen_wall_drawer": "Smooth Stone Kitchen Wall Drawer",
+  "block.pfm.smooth_stone_kitchen_wall_small_drawer": "Smooth Stone Kitchen Small Wall Drawer",
 
   "block.pfm.deepslate_tile_kitchen_counter": "Deepslate Tile Kitchen Counter",
   "block.pfm.deepslate_tile_kitchen_drawer": "Deepslate Tile Kitchen Drawer",
@@ -1035,6 +1065,7 @@
   "block.pfm.deepslate_tile_kitchen_counter_oven": "Deepslate Tile Kitchen Oven",
   "block.pfm.deepslate_tile_kitchen_wall_counter": "Deepslate Tile Kitchen Wall Counter",
   "block.pfm.deepslate_tile_kitchen_wall_drawer": "Deepslate Tile Kitchen Wall Drawer",
+  "block.pfm.deepslate_tile_kitchen_wall_small_drawer": "Deepslate Tile Kitchen Small Wall Drawer",
 
   "block.pfm.blackstone_kitchen_counter": "Blackstone Kitchen Counter",
   "block.pfm.blackstone_kitchen_drawer": "Blackstone Kitchen Drawer",
@@ -1043,6 +1074,7 @@
   "block.pfm.blackstone_kitchen_counter_oven": "Blackstone Kitchen Oven",
   "block.pfm.blackstone_kitchen_wall_counter": "Blackstone Kitchen Wall Counter",
   "block.pfm.blackstone_kitchen_wall_drawer": "Blackstone Kitchen Wall Drawer",
+  "block.pfm.blackstone_kitchen_wall_small_drawer": "Blackstone Kitchen Small Wall Drawer",
 
   "block.pfm.deepslate_kitchen_counter": "Deepslate Kitchen Counter",
   "block.pfm.deepslate_kitchen_drawer": "Deepslate Kitchen Drawer",
@@ -1051,6 +1083,7 @@
   "block.pfm.deepslate_kitchen_counter_oven": "Deepslate Kitchen Oven",
   "block.pfm.deepslate_kitchen_wall_counter": "Deepslate Kitchen Wall Counter",
   "block.pfm.deepslate_kitchen_wall_drawer": "Deepslate Kitchen Wall Drawer",
+  "block.pfm.deepslate_kitchen_wall_small_drawer": "Deepslate Kitchen Small Wall Drawer",
 
   "stat.pfm.fridge_opened": "Interactions with Fridge",
   "stat.pfm.freezer_opened": "Interactions with Freezer",
