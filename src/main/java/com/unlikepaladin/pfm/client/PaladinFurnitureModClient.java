@@ -8,9 +8,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
-import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.option.KeyBinding;
@@ -38,7 +35,6 @@ public class PaladinFurnitureModClient implements ClientModInitializer {
                 "keybindings.category.pfm" // The translation key of the keybinding's category.
         ));
         EntityRenderRegistry.registerRender();
-        NetworkRegistry.registerClientPackets();
 
 
         ScreenRegistry.register(ScreenHandlersRegistry.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
