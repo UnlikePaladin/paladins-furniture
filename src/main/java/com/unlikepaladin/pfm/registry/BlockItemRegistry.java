@@ -784,12 +784,17 @@ public class BlockItemRegistry {
 
     public static final Block WHITE_FREEZER = new Freezer(FabricBlockSettings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE).mapColor(MapColor.WHITE),() -> BlockItemRegistry.WHITE_FRIDGE);
     public static final Block WHITE_FRIDGE = new Fridge(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque(), () -> BlockItemRegistry.WHITE_FREEZER);
+    public static final Block GRAY_FREEZER = new Freezer(FabricBlockSettings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE).mapColor(MapColor.GRAY),() -> BlockItemRegistry.GRAY_FRIDGE);
+    public static final Block GRAY_FRIDGE = new Fridge(FabricBlockSettings.copyOf(GRAY_FREEZER).nonOpaque(), () -> BlockItemRegistry.GRAY_FREEZER);
     public static final Block IRON_FREEZER = new IronFreezer(FabricBlockSettings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.METAL).mapColor(MapColor.IRON_GRAY),() -> BlockItemRegistry.IRON_FRIDGE);
     public static final Block IRON_FRIDGE = new IronFridge(FabricBlockSettings.copyOf(IRON_FREEZER).nonOpaque(), () -> BlockItemRegistry.IRON_FREEZER);
 
     public static final Block XBOX_FRIDGE = new XboxFridge(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque().mapColor(MapColor.BLACK), null);
 
     public static final Block WHITE_STOVE = new Stove(FabricBlockSettings.copyOf(WHITE_FREEZER));
+    public static final Block WHITE_OVEN_RANGEHOOD = new KitchenRangeHood(FabricBlockSettings.copyOf(WHITE_FREEZER).nonOpaque());
+    public static final Block GRAY_STOVE = new Stove(FabricBlockSettings.copyOf(GRAY_FREEZER));
+    public static final Block GRAY_OVEN_RANGEHOOD = new KitchenRangeHood(FabricBlockSettings.copyOf(GRAY_FREEZER).nonOpaque());
     public static final Block IRON_STOVE = new IronStove(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
     public static final Block IRON_MICROWAVE = new Microwave(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK));
     public static final Block IRON_OVEN_RANGEHOOD = new KitchenRangeHood(FabricBlockSettings.copyOf(Blocks.IRON_BLOCK).nonOpaque());
@@ -2461,11 +2466,16 @@ public class BlockItemRegistry {
 
         registerFurniture("white_fridge", WHITE_FRIDGE, true);
         registerFurniture("white_freezer", WHITE_FREEZER, false);
+        registerFurniture("gray_fridge", GRAY_FRIDGE, true);
+        registerFurniture("gray_freezer", GRAY_FREEZER, false);
         registerFurniture("iron_fridge", IRON_FRIDGE, true);
         registerFurniture("iron_freezer", IRON_FREEZER, false);
         registerFurniture("xbox_fridge", XBOX_FRIDGE, true);
         registerFurniture("iron_microwave", IRON_MICROWAVE, true);
         registerFurniture("white_stove", WHITE_STOVE, true);
+        registerFurniture("white_oven_range_hood", WHITE_OVEN_RANGEHOOD, true);
+        registerFurniture("gray_stove", GRAY_STOVE, true);
+        registerFurniture("gray_oven_range_hood", GRAY_OVEN_RANGEHOOD, true);
         registerFurniture("iron_stove", IRON_STOVE, true);
         registerFurniture("iron_oven_range_hood", IRON_OVEN_RANGEHOOD, true);
         registerFurniture("kitchen_stovetop", KITCHEN_STOVETOP, true);

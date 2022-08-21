@@ -46,8 +46,10 @@ public class ColorRegistry {
         ColorProviderRegistry.BLOCK.register((state, view, pos, index) -> state.get(BasicToilet.TOILET_STATE) !=  ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : 0x534230, BlockItemRegistry.BASIC_TOILET);
 
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.WHITE_FRIDGE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.GRAY_FRIDGE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.XBOX_FRIDGE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.WHITE_STOVE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.GRAY_STOVE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.IRON_CHAIN, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.GRAY_MODERN_PENDANT, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(BlockItemRegistry.WHITE_MODERN_PENDANT, RenderLayer.getTranslucent());
