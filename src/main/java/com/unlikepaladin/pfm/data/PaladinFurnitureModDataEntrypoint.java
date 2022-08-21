@@ -663,7 +663,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
     }
 
     public static void offerWallDrawerSmall(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Ingredient stove, Consumer<RecipeJsonProvider> exporter) {
-        FurnitureRecipeJsonFactory.create(output, 3).input('X', legMaterial).input('S', baseMaterial).input('Y', stove).pattern("XXX").pattern("SYS").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+        FurnitureRecipeJsonBuilder.create(output, 3).input('X', legMaterial).input('S', baseMaterial).input('Y', stove).pattern("XXX").pattern("SYS").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerCounterRecipe(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Consumer<RecipeJsonProvider> exporter) {
@@ -724,7 +724,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
     }
 
     public static void offerRangeHood(ItemConvertible output, Ingredient legMaterial, Ingredient secondMaterial, Consumer<RecipeJsonProvider> exporter) {
-        FurnitureRecipeJsonFactory.create(output, 1).input('X', legMaterial).input('Y', secondMaterial).pattern(" X ").pattern(" X ").pattern("XYX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+        FurnitureRecipeJsonBuilder.create(output, 1).input('X', legMaterial).input('Y', secondMaterial).pattern(" X ").pattern(" X ").pattern("XYX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
 
