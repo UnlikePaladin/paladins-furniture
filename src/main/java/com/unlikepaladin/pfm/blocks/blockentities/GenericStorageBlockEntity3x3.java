@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.blocks.ClassicNightstand;
 import com.unlikepaladin.pfm.blocks.KitchenCabinet;
 import com.unlikepaladin.pfm.blocks.KitchenDrawer;
+import com.unlikepaladin.pfm.blocks.KitchenWallDrawerSmall;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -14,6 +15,7 @@ import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.screen.Generic3x3ContainerScreenHandler;
 import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
@@ -21,36 +23,33 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
-
-public class GenericStorageBlockEntity extends LootableContainerBlockEntity {
-    public GenericStorageBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntityRegistry.DRAWER_BLOCK_ENTITY, pos, state);
+public class GenericStorageBlockEntity3x3 extends LootableContainerBlockEntity {
+    public GenericStorageBlockEntity3x3(BlockPos pos, BlockState state) {
+        super(BlockEntityRegistry.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, pos, state);
     }
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
+    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
     private final ViewerCountManager stateManager = new ViewerCountManager() {
-
-
         @Override
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand){
-                GenericStorageBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
-                GenericStorageBlockEntity.this.setOpen(state, true);
+                GenericStorageBlockEntity3x3.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
+                GenericStorageBlockEntity3x3.this.setOpen(state, true);
             }
         }
 
         @Override
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand) {
-                GenericStorageBlockEntity.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
-                GenericStorageBlockEntity.this.setOpen(state, false);
+                GenericStorageBlockEntity3x3.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
+                GenericStorageBlockEntity3x3.this.setOpen(state, false);
             }
         }
-
 
         @Override
         protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
@@ -61,30 +60,16 @@ public class GenericStorageBlockEntity extends LootableContainerBlockEntity {
         protected boolean isPlayerViewing(PlayerEntity player) {
             if (player.currentScreenHandler instanceof GenericContainerScreenHandler) {
                 Inventory inventory = ((GenericContainerScreenHandler)player.currentScreenHandler).getInventory();
-                return inventory == GenericStorageBlockEntity.this;
+                return inventory == GenericStorageBlockEntity3x3.this;
             }
             return false;
         }
     };
 
-
-
-        @Override
-        public int size() {
-            return 27;
-        }
-
-
-
-
-
-    public static void copyInventory(GenericStorageBlockEntity from, GenericStorageBlockEntity to) {
-        DefaultedList<ItemStack> defaultedList = from.getInvStackList();
-        from.setInvStackList(to.getInvStackList());
-        to.setInvStackList(defaultedList);
+    @Override
+    public int size() {
+        return 9;
     }
-
-
 
     @Override
     protected DefaultedList<ItemStack> getInvStackList() {
@@ -96,14 +81,12 @@ public class GenericStorageBlockEntity extends LootableContainerBlockEntity {
         this.inventory = list;
     }
 
-
     @Override
-        public void onOpen(PlayerEntity player) {
-            if (!this.removed && !player.isSpectator()) {
-
-                this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
-            }
+    public void onOpen(PlayerEntity player) {
+        if (!this.removed && !player.isSpectator()) {
+            this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
         }
+    }
 
     @Override
     public void onClose(PlayerEntity player) {
@@ -123,21 +106,19 @@ public class GenericStorageBlockEntity extends LootableContainerBlockEntity {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
+    public NbtCompound writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         if (!this.serializeLootTable(nbt)) {
             Inventories.writeNbt(nbt, this.inventory);
         }
+        return nbt;
     }
 
-    String blockname = this.getCachedState().getBlock().getTranslationKey();
     protected Text getContainerName() {
-    if (this.getCachedState().getBlock() instanceof KitchenDrawer)
-        return Text.translatable("container.pfm.drawer");
-    else if (this.getCachedState().getBlock() instanceof ClassicNightstand)
-        return Text.translatable("container.pfm.nightstand");
-    else
-        return Text.translatable("container.pfm.cabinet");
+        if (this.getCachedState().getBlock() instanceof KitchenWallDrawerSmall)
+            return new TranslatableText("container.pfm.drawer_small");
+        else
+            return new TranslatableText("container.pfm.small_storage");
     }
 
     void setOpen(BlockState state, boolean open) {
@@ -146,8 +127,10 @@ public class GenericStorageBlockEntity extends LootableContainerBlockEntity {
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return GenericContainerScreenHandler.createGeneric9x3(syncId, playerInventory, this);
+        return new Generic3x3ContainerScreenHandler(syncId, playerInventory, this);
     }
+
+
 
     void playSound(BlockState state, SoundEvent soundEvent) {
         Vec3i vec3i = state.get(Properties.HORIZONTAL_FACING).getVector();

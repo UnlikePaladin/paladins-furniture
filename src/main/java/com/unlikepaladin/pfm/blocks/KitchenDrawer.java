@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
 import net.minecraft.block.*;
@@ -42,9 +42,11 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     private static final List<FurnitureBlock> STONE_DRAWERS = new ArrayList<>();
     public KitchenDrawer(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        if (!(this.baseBlock instanceof KitchenWallDrawerSmall)) {
+            setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT).with(WATERLOGGED, false));
+        }
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenDrawer.class)){
             WOOD_DRAWERS.add(new FurnitureBlock(this, "kitchen_drawer"));
         }
@@ -94,8 +96,8 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
             return ActionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof GenericStorageBlockEntity) {
-            player.openHandledScreen((GenericStorageBlockEntity)blockEntity);
+        if (blockEntity instanceof GenericStorageBlockEntity9x3) {
+            player.openHandledScreen((GenericStorageBlockEntity9x3)blockEntity);
             player.incrementStat(StatisticsRegistry.DRAWER_SEARCHED);
             PiglinBrain.onGuardedBlockInteracted(player, true);
         }
@@ -376,14 +378,14 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         BlockEntity blockEntity;
-        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof GenericStorageBlockEntity) {
-            ((GenericStorageBlockEntity)blockEntity).setCustomName(itemStack.getName());
+        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof GenericStorageBlockEntity9x3) {
+            ((GenericStorageBlockEntity9x3)blockEntity).setCustomName(itemStack.getName());
         }
     }
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new GenericStorageBlockEntity(pos,state);
+        return new GenericStorageBlockEntity9x3(pos,state);
     }
 
     @Override

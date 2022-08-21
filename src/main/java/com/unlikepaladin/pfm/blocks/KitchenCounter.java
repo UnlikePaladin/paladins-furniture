@@ -179,9 +179,6 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
     protected static final VoxelShape MIDDLE = VoxelShapes.union(createCuboidShape(0, 0, 0, 16, 16, 13));
     protected static final VoxelShape INNER_MIDDLE = VoxelShapes.union(createCuboidShape(0, 0, 0, 16, 16, 13), createCuboidShape(3, 0, 13,16, 16, 16));
     protected static final VoxelShape OUTER_MIDDLE = VoxelShapes.union(createCuboidShape(0, 0, 0,13, 16, 13));
-    protected static final VoxelShape BOTTOM = VoxelShapes.union(createCuboidShape(0, 1, 0, 16, 16, 13),createCuboidShape(0, 0, 0,16, 1, 12));
-    protected static final VoxelShape OUTER_BOTTOM = VoxelShapes.union(createCuboidShape(0, 0, 0, 12, 1, 12),createCuboidShape(0, 1, 0,13, 16, 13));
-    protected static final VoxelShape INNER_BOTTOM = VoxelShapes.union(createCuboidShape(0, 1, 0, 16, 16, 13),createCuboidShape(3, 1, 13,16, 16, 16),createCuboidShape(0, 0, 0,16, 1, 12),createCuboidShape(4, 0, 12,16, 1, 16));
 
     protected static final VoxelShape MIDDLE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE);
     protected static final VoxelShape MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MIDDLE);
@@ -195,17 +192,6 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
     protected static final VoxelShape OUTER_MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, OUTER_MIDDLE);
     protected static final VoxelShape OUTER_MIDDLE_WEST = rotateShape(Direction.NORTH, Direction.WEST, OUTER_MIDDLE);
 
-    protected static final VoxelShape OUTER_BOTTOM_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, OUTER_BOTTOM);
-    protected static final VoxelShape OUTER_BOTTOM_EAST = rotateShape(Direction.NORTH, Direction.EAST, OUTER_BOTTOM);
-    protected static final VoxelShape OUTER_BOTTOM_WEST = rotateShape(Direction.NORTH, Direction.WEST, OUTER_BOTTOM);
-
-    protected static final VoxelShape INNER_BOTTOM_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, INNER_BOTTOM);
-    protected static final VoxelShape INNER_BOTTOM_EAST = rotateShape(Direction.NORTH, Direction.EAST, INNER_BOTTOM);
-    protected static final VoxelShape INNER_BOTTOM_WEST = rotateShape(Direction.NORTH, Direction.WEST, INNER_BOTTOM);
-
-    protected static final VoxelShape BOTTOM_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM);
-    protected static final VoxelShape BOTTOM_EAST = rotateShape(Direction.NORTH, Direction.EAST, BOTTOM);
-    protected static final VoxelShape BOTTOM_WEST = rotateShape(Direction.NORTH, Direction.WEST, BOTTOM);
 
     protected static final VoxelShape STRAIGHT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT);
     protected static final VoxelShape STRAIGHT_EAST = rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT);
