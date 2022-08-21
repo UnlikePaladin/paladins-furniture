@@ -1,10 +1,5 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    " X ",
-    " X ",
-    "XYX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:white_concrete"
@@ -13,6 +8,11 @@
       "item": "minecraft:redstone_lamp"
     }
   },
+  "pattern": [
+    " X ",
+    " X ",
+    "XYX"
+  ],
   "result": {
     "item": "pfm:white_oven_range_hood"
   }

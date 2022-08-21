@@ -1,22 +1,22 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SYS"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:birch_planks"
-    },
     "S": {
       "item": "minecraft:birch_log"
+    },
+    "X": {
+      "item": "minecraft:birch_planks"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XXX",
+    "SYS"
+  ],
   "result": {
-    "item": "pfm:birch_kitchen_wall_small_drawer",
-    "count": 3
+    "count": 3,
+    "item": "pfm:birch_kitchen_wall_small_drawer"
   }
 }

@@ -694,6 +694,7 @@ public class BlockItemRegistry {
     public static final Block MANGROVE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(MANGROVE_KITCHEN_COUNTER));
     public static final Block MANGROVE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(MANGROVE_KITCHEN_COUNTER));
     public static final Block MANGROVE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(MANGROVE_KITCHEN_COUNTER));
+    public static final Block MANGROVE_KITCHEN_WALL_SMALL_DRAWER = new KitchenWallDrawerSmall(FabricBlockSettings.copyOf(MANGROVE_KITCHEN_COUNTER));
     public static final Block WARPED_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER).mapColor(MapColor.DARK_AQUA));
     public static final Block WARPED_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
     public static final Block WARPED_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(WARPED_KITCHEN_COUNTER));
@@ -764,6 +765,7 @@ public class BlockItemRegistry {
     public static final Block STRIPPED_MANGROVE_KITCHEN_COUNTER_OVEN = new KitchenCounterOven(FabricBlockSettings.copyOf(MANGROVE_KITCHEN_COUNTER));
     public static final Block STRIPPED_MANGROVE_KITCHEN_WALL_COUNTER = new KitchenWallCounter(FabricBlockSettings.copyOf(MANGROVE_KITCHEN_COUNTER));
     public static final Block STRIPPED_MANGROVE_KITCHEN_WALL_DRAWER = new KitchenWallDrawer(FabricBlockSettings.copyOf(MANGROVE_KITCHEN_COUNTER));
+    public static final Block STRIPPED_MANGROVE_KITCHEN_WALL_SMALL_DRAWER = new KitchenWallDrawerSmall(FabricBlockSettings.copyOf(MANGROVE_KITCHEN_COUNTER));
     public static final Block STRIPPED_CRIMSON_KITCHEN_COUNTER = new KitchenCounter(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
     public static final Block STRIPPED_CRIMSON_KITCHEN_DRAWER = new KitchenDrawer(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
     public static final Block STRIPPED_CRIMSON_KITCHEN_CABINET = new KitchenCabinet(FabricBlockSettings.copyOf(CRIMSON_KITCHEN_COUNTER));
@@ -2239,6 +2241,7 @@ public class BlockItemRegistry {
         registerFurniture("mangrove_kitchen_counter_oven", MANGROVE_KITCHEN_COUNTER_OVEN, true);
         registerFurniture("mangrove_kitchen_wall_counter", MANGROVE_KITCHEN_WALL_COUNTER, true);
         registerFurniture("mangrove_kitchen_wall_drawer", MANGROVE_KITCHEN_WALL_DRAWER, true);
+        registerFurniture("mangrove_kitchen_wall_small_drawer", MANGROVE_KITCHEN_WALL_SMALL_DRAWER, true);
 
         registerFurniture("crimson_kitchen_counter", CRIMSON_KITCHEN_COUNTER, true);
         registerFurniture("crimson_kitchen_drawer", CRIMSON_KITCHEN_DRAWER, true);
@@ -2319,6 +2322,7 @@ public class BlockItemRegistry {
         registerFurniture("stripped_mangrove_kitchen_counter_oven", STRIPPED_MANGROVE_KITCHEN_COUNTER_OVEN, true);
         registerFurniture("stripped_mangrove_kitchen_wall_counter", STRIPPED_MANGROVE_KITCHEN_WALL_COUNTER, true);
         registerFurniture("stripped_mangrove_kitchen_wall_drawer", STRIPPED_MANGROVE_KITCHEN_WALL_DRAWER, true);
+        registerFurniture("stripped_mangrove_kitchen_wall_small_drawer", STRIPPED_MANGROVE_KITCHEN_WALL_SMALL_DRAWER, true);
 
         registerFurniture("stripped_crimson_kitchen_counter", STRIPPED_CRIMSON_KITCHEN_COUNTER, true);
         registerFurniture("stripped_crimson_kitchen_drawer", STRIPPED_CRIMSON_KITCHEN_DRAWER, true);
