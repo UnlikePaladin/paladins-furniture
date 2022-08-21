@@ -158,7 +158,7 @@ public class ArmChairColored extends ArmChair implements DyeableFurniture {
     }
 
 
-    public static boolean isArmChair(BlockState state) {
+    public boolean isArmChair(BlockState state) {
         return(state.getBlock().getClass().isAssignableFrom(ArmChairColored.class) && state.getBlock() instanceof ArmChairColored);
     }
 
@@ -170,14 +170,14 @@ public class ArmChairColored extends ArmChair implements DyeableFurniture {
         BlockState blockState = world.getBlockState(pos.offset(direction));
         boolean right = this.canConnect(world, pos, state.get(FACING).rotateYCounterclockwise(), state.get(FACING));
         boolean left = this.canConnect(world, pos, state.get(FACING).rotateYClockwise(), state.get(FACING));
-        if (ArmChairColored.isArmChair(blockState) && ((Direction)(direction2 = blockState.get(FACING))).getAxis() != state.get(FACING).getAxis() && ArmChairColored.isDifferentOrientation(state, world, pos, ((Direction)direction2).getOpposite())) {
+        if (this.isArmChair(blockState) && ((Direction)(direction2 = blockState.get(FACING))).getAxis() != state.get(FACING).getAxis() && this.isDifferentOrientation(state, world, pos, ((Direction)direction2).getOpposite())) {
             if (direction2 == direction.rotateYCounterclockwise()) {
                 return ArmChairShape.OUTER_LEFT;
             }
             return ArmChairShape.OUTER_RIGHT;
         }
         direction2 = world.getBlockState(pos.offset(direction.getOpposite()));
-        if (ArmChairColored.isArmChair((BlockState)direction2) && (direction3 = (Direction) ((State)direction2).get(FACING)).getAxis() != state.get(FACING).getAxis() && ArmChairColored.isDifferentOrientation(state, world, pos, direction3)) {
+        if (this.isArmChair((BlockState)direction2) && (direction3 = (Direction) ((State)direction2).get(FACING)).getAxis() != state.get(FACING).getAxis() && this.isDifferentOrientation(state, world, pos, direction3)) {
             if (direction3 == direction.rotateYCounterclockwise()) {
                 return ArmChairShape.INNER_LEFT;
             }
@@ -201,9 +201,9 @@ public class ArmChairColored extends ArmChair implements DyeableFurniture {
         return (state.getBlock().getClass().isAssignableFrom(ArmChairColored.class) && state.getBlock() instanceof ArmChairColored);
     }
 
-    private static boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
+    private boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
         BlockState blockState = world.getBlockState(pos.offset(dir));
-        return !ArmChairColored.isArmChair(blockState) || blockState.get(FACING) != state.get(FACING);
+        return !this.isArmChair(blockState) || blockState.get(FACING) != state.get(FACING);
     }
 
     @Override

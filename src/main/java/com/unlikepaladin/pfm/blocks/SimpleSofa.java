@@ -32,6 +32,10 @@ public class SimpleSofa extends ArmChairColored {
         boolean canConnect = (state.getBlock() instanceof SimpleSofa);
         return canConnect;
     }
+    @Override
+    public boolean isArmChair(BlockState state) {
+        return(state.getBlock().getClass().isAssignableFrom(SimpleSofa.class) && state.getBlock() instanceof SimpleSofa);
+    }
 
     public static final VoxelShape STANDARD = VoxelShapes.union(createCuboidShape(11.7, 0, 12,14.2, 3, 14.5),createCuboidShape(11.7, 0, 1.5,14.2, 3, 4),createCuboidShape(0.7, 0, 1.5,3.2, 3, 4),createCuboidShape(0.7, 0, 12,3.2, 3, 14.5),createCuboidShape(5, 9.5, 13,16, 13.71, 16),createCuboidShape(5, 9.5, 0,16, 13.71, 3),createCuboidShape(0, 2, 0,16, 9.51, 16),createCuboidShape(0, 9.5, 0,5, 19.51, 16));
     public static final VoxelShape OUTER = VoxelShapes.union(createCuboidShape(0, 2, 0,16, 9.51, 16),createCuboidShape(0, 9.5, 0,5, 19.51, 5),createCuboidShape(11.7, 0, 12,14.2, 3, 14.5),createCuboidShape(0.7, 0, 1.5,3.2, 3, 4));
