@@ -31,7 +31,7 @@ public class KitchenRangeHood extends HorizontalFacingBlock implements Waterlogg
     public KitchenRangeHood(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(DOWN, false).with(WATERLOGGED, false).with(DRAWER, false));
-        OVEN_RANGE_HOOD.add(new FurnitureBlock(this, "kitchen_wall_small_drawer"));
+        OVEN_RANGE_HOOD.add(new FurnitureBlock(this, "oven_range_hood"));
     }
 
     public static Stream<FurnitureBlock> streamOvenRangeHoods() {
