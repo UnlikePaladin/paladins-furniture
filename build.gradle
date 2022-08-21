@@ -66,7 +66,7 @@ else {
 
 if (project.cloth_config_compatibility == "true") {
 	dependencies {
-		modApi("me.shedaniel.cloth:cloth-config-fabric:5.3.63") {
+		modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
 			exclude(group: "net.fabricmc.fabric-api")
 		}
 	}
