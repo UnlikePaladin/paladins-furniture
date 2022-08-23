@@ -1,9 +1,0 @@
-{
-	"credit": "By UnlikePaladin",
-    "parent": "pfm:block/arm_chair/white/arm_chair_right",
-	"textures": {
-		"particle": "block/red_wool",
-		"base": "block/red_wool"
-	}
-    
-}

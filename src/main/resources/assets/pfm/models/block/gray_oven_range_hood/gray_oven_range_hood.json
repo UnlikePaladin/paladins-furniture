@@ -1,9 +1,0 @@
-{
-	"credit": "By UnlikePaladin",
-    "parent": "pfm:block/iron_oven_range_hood/iron_oven_range_hood",
-	"textures": {
-		"particle": "block/gray_concrete",
-		"base": "block/gray_concrete",
-		"legs": "pfm:block/raw_concrete"
-	}    
-}

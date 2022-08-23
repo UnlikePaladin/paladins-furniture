@@ -1,9 +1,0 @@
-{
-	"cbrownit": "By UnlikePaladin",
-    "parent": "pfm:block/sofa_simple/white/sofa_simple_left",
-	"textures": {
-		"particle": "block/brown_wool",
-		"base": "block/brown_wool"
-	}
-    
-}

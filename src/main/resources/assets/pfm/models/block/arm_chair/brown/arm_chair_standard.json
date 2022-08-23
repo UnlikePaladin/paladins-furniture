@@ -1,9 +1,0 @@
-{
-	"cbrownit": "By UnlikePaladin",
-    "parent": "pfm:block/arm_chair/white/arm_chair_standard",
-	"textures": {
-		"particle": "block/brown_wool",
-		"base": "block/brown_wool"
-	}
-    
-}

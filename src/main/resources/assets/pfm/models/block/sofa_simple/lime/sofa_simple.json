@@ -1,9 +1,0 @@
-{
-	"climeit": "By UnlikePaladin",
-    "parent": "pfm:block/sofa_simple/white/sofa_simple",
-	"textures": {
-		"particle": "block/lime_wool",
-		"base": "block/lime_wool"
-	}
-    
-}

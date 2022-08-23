@@ -1,9 +1,0 @@
-{
-	"ccyanit": "By UnlikePaladin",
-    "parent": "pfm:block/sofa_simple/white/sofa_simple",
-	"textures": {
-		"particle": "block/cyan_wool",
-		"base": "block/cyan_wool"
-	}
-    
-}

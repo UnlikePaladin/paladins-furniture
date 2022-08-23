@@ -1,9 +1,0 @@
-{
-	"cgreenit": "By UnlikePaladin",
-    "parent": "pfm:block/arm_chair/white/arm_chair_corner_left",
-	"textures": {
-		"particle": "block/green_wool",
-		"base": "block/green_wool"
-	}
-    
-}

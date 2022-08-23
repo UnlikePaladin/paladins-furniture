@@ -1,9 +1,0 @@
-{
-	"cyellowit": "By UnlikePaladin",
-    "parent": "pfm:block/arm_chair/white/arm_chair_right",
-	"textures": {
-		"particle": "block/yellow_wool",
-		"base": "block/yellow_wool"
-	}
-    
-}

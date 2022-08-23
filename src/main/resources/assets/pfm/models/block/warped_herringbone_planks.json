@@ -1,6 +1,0 @@
-{
-  "parent": "minecraft:block/cube_all",
-  "textures": {
-    "all": "pfm:block/warped_herringbone_planks"
-  }
-}

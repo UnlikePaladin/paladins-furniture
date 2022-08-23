@@ -1,9 +1,0 @@
-{
-	"corangeit": "By UnlikePaladin",
-    "parent": "pfm:block/arm_chair/white/arm_chair_right",
-	"textures": {
-		"particle": "block/orange_wool",
-		"base": "block/orange_wool"
-	}
-    
-}

@@ -1,9 +1,0 @@
-{
-	"cpinkit": "By UnlikePaladin",
-    "parent": "pfm:block/arm_chair/white/arm_chair_middle",
-	"textures": {
-		"particle": "block/pink_wool",
-		"base": "block/pink_wool"
-	}
-    
-}

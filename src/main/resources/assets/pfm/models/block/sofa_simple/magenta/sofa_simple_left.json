@@ -1,9 +1,0 @@
-{
-	"cmagentait": "By UnlikePaladin",
-    "parent": "pfm:block/sofa_simple/white/sofa_simple_left",
-	"textures": {
-		"particle": "block/magenta_wool",
-		"base": "block/magenta_wool"
-	}
-    
-}

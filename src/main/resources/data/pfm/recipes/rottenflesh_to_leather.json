@@ -1,7 +1,0 @@
-{
-  "type": "pfm:freezing",
-  "ingredient": {
-    "item": "minecraft:rotten_flesh"
-  },
-  "result": "minecraft:leather"
-}

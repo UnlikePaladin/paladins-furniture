@@ -1,8 +1,0 @@
-{
-	"credit": "By UnlikePaladin",
-    "parent": "pfm:block/simple_bed/oak/full/simple_bed",
-	"textures": {
-		"1": "entity/bed/lime"
-	}
-    
-}

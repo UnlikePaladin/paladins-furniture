@@ -1,9 +1,0 @@
-{
-	"cpinkit": "By UnlikePaladin",
-    "parent": "pfm:block/sofa_simple/white/sofa_simple_middle",
-	"textures": {
-		"particle": "block/pink_wool",
-		"base": "block/pink_wool"
-	}
-    
-}

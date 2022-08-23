@@ -1,9 +1,0 @@
-{
-	"cblueit": "By UnlikePaladin",
-    "parent": "pfm:block/sofa_simple/white/sofa_simple_middle",
-	"textures": {
-		"particle": "block/blue_wool",
-		"base": "block/blue_wool"
-	}
-    
-}

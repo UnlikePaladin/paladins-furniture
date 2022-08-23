@@ -1,181 +1,51 @@
 plugins {
-	id 'fabric-loom' version '0.10-SNAPSHOT'
-	id 'maven-publish'
+    id "architectury-plugin" version "3.4-SNAPSHOT"
+    id "dev.architectury.loom" version "0.12.0-SNAPSHOT" apply false
 }
 
-sourceCompatibility = JavaVersion.VERSION_16
-targetCompatibility = JavaVersion.VERSION_16
-
-archivesBaseName = project.archives_base_name
-version = project.mod_version
-group = project.maven_group
-
-loom {
-    accessWidenerPath = file("src/main/resources/pfm.accesswidener")
-
-	runs {
-		datagen {
-			server()
-
-			name "Data Generation"
-			vmArg "-Dfabric-api.datagen"
-			vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
-
-			runDir "build/datagen"
-		}
-	}
+architectury {
+    minecraft = rootProject.minecraft_version
 }
 
-repositories {
-	// Add repositories to retrieve artifacts from in here.
-	// You should only use this when depending on other mods because
-	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
-	// for more information about repositories.
-}
-repositories {
-	maven { url "https://maven.shedaniel.me" }
-	maven { url 'https://maven.blamejared.com' }
-	maven {
-		name 'Gegy'
-		url 'https://maven.gegy.dev'
-	}
-	maven { url "https://maven.terraformersmc.com/releases/" }
-	maven {
-		name = "Modrinth"
-		url = "https://api.modrinth.com/maven"
-		content {
-			includeGroup "maven.modrinth"
-		}
-	}
-	maven {
-		url = uri("https://storage.googleapis.com/devan-maven/")
-	}
-	mavenLocal()
+subprojects {
+    apply plugin: "dev.architectury.loom"
+
+    loom {
+        silentMojangMappingsLicense()
+    }
+
+    dependencies {
+        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        // The following line declares the mojmap mappings, you may use other mappings as well
+        // mappings loom.officialMojangMappings()
+        // The following line declares the yarn mappings you may select this one as well.
+           mappings "net.fabricmc:yarn:1.17.1+build.65:v2"
+    }
 }
 
-if (project.sandwichable_compatibility == "true") {
-	dependencies {
-		modImplementation("maven.modrinth:sandwichable:${project.sandwichable_version}")
-		modImplementation("dev.lambdaurora:spruceui:${project.spruceui_version}")
-	}
-}
-else {
-	dependencies {
-		modCompileOnly("maven.modrinth:sandwichable:${project.sandwichable_version}")
-		modCompileOnly("dev.lambdaurora:spruceui:${project.spruceui_version}")
-	}
-}
+allprojects {
+    apply plugin: "java"
+    apply plugin: "architectury-plugin"
+    apply plugin: "maven-publish"
 
-if (project.cloth_config_compatibility == "true") {
-	dependencies {
-		modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-			exclude(group: "net.fabricmc.fabric-api")
-		}
-	}
-}
-else {
-	dependencies {
-		modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-			exclude(group: "net.fabricmc.fabric-api")
-		}
-	}
-}
+    archivesBaseName = rootProject.archives_base_name
+    version = rootProject.mod_version
+    group = rootProject.maven_group
 
-if (project.rei_compatibility == "true"){
-	dependencies {
-		modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
-		modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
-	}
-}
-else {
-	dependencies {
-		modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
-	}
-}
+    repositories {
+        // Add repositories to retrieve artifacts from in here.
+        // You should only use this when depending on other mods because
+        // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+        // See https://docs.gradle.org/current/userguide/declaring_repositories.html
+        // for more information about repositories.
+    }
 
-if (project.patchouli_compatibility == "true") {
-	dependencies {
-		modImplementation("vazkii.patchouli:Patchouli:${project.patchouli_version}")
-	}
-}
-else {
-	dependencies {
-		modCompileOnly("vazkii.patchouli:Patchouli:${project.patchouli_version}")
-	}
-}
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+        options.release = 16
+    }
 
-dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-	modImplementation("net.devtech:arrp:${project.arrp_version}")
-
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
-
-	modImplementation("com.terraformersmc:modmenu:${project.modmenu_version}") {
-		transitive = false
-	}
-}
-
-processResources {
-	inputs.property "version", project.version
-
-	filesMatching("fabric.mod.json") {
-		expand "version": project.version
-	}
-}
-
-tasks.withType(JavaCompile).configureEach {
-	// Minecraft 1.17 (21w19a) upwards uses Java 16.
-	it.options.release = 16
-}
-
-assemble.dependsOn runDatagen
-
-sourceSets {
-	main {
-		resources {
-			srcDirs += [
-					"src/main/generated"
-			]
-		}
-	}
-}
-
-java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
-}
-
-
-
-jar {
-	from("LICENSE") {
-		rename { "${it}_${project.archivesBaseName}"}
-	}
-}
-
-
-
-
-// configure the maven publication
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-		}
-	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-	}
+    java {
+        withSourcesJar()
+    }
 }

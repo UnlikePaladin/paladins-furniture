@@ -1,8 +1,0 @@
-{
-    "variants":
-    {
-        "lit=true":{"model":"pfm:block/simple_light/simple_light_on"},
-        "lit=false":{"model":"pfm:block/simple_light/simple_light"}
-    }
-
-}

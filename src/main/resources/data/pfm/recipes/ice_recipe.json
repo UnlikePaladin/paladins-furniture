@@ -1,7 +1,0 @@
-{
-  "type": "pfm:freezing",
-  "ingredient": {
-    "item": "minecraft:water_bucket"
-  },
-  "result": "minecraft:ice"
-}

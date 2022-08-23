@@ -1,8 +1,0 @@
-{
-	"credit": "By UnlikePaladin",
-    "parent": "pfm:block/simple_bed/mattresses/red_foot_mattress",
-	"textures": {
-		"1": "entity/bed/yellow"
-	}
-    
-}
