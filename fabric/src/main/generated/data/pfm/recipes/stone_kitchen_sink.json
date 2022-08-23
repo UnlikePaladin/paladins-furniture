@@ -1,0 +1,25 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SZS",
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stone"
+    },
+    "S": {
+      "item": "minecraft:cobblestone"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "pfm:stone_kitchen_sink"
+  }
+}

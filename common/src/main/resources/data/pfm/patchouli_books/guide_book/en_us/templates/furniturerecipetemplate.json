@@ -1,0 +1,59 @@
+{
+  "processor": "com.unlikepaladin.pfm.compat.fabric.patchouli.FurnitureRecipeProcessor",
+  "include": [
+    {
+      "template": "pfm:namenumber",
+      "as": "nn",
+      "using": {
+        "iname": "#iname",
+        "icount": "#icount"
+      }
+    },
+    {
+      "template": "pfm:craftinggridimage",
+      "as": "bb",
+      "x": 0,
+      "y": 5
+    }
+  ],
+  "components": [
+    {
+      "type": "patchouli:item", "item": "#item1", "x": 5, "y": 10
+    },
+    {
+      "type": "patchouli:item", "item": "#item2", "x": 24, "y": 10
+    },
+    {
+      "type": "patchouli:item", "item": "#item3", "x": 43, "y": 10
+    },
+    {
+      "type": "patchouli:item", "item": "#item4", "x": 5, "y": 29
+    },
+    {
+      "type": "patchouli:item", "item": "#item5", "x": 24, "y": 29
+    },
+    {
+      "type": "patchouli:item", "item": "#item6", "x": 43, "y": 29
+    },
+    {
+      "type": "patchouli:item", "item": "#item7", "x": 5, "y": 48
+    },
+    {
+      "type": "patchouli:item", "item": "#item8", "x": 24, "y": 48
+    },
+    {
+      "type": "patchouli:item", "item": "#item9", "x": 43, "y": 48
+    },
+    {
+      "type": "patchouli:item", "item": "#resultitem", "x": 81, "y": 29
+    },
+    {
+      "type": "patchouli:item", "item": "#icon", "x": 81, "y": 48
+    },
+    {
+      "type": "patchouli:text",
+      "text": "#custom_text",
+      "y": 70
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_drawer/kitchen_drawer",
+	"textures": {
+        
+		"particle": "block/crimson_planks",
+		"base": "block/stripped_crimson_stem",
+		"legs": "block/crimson_planks"
+	}
+    
+}

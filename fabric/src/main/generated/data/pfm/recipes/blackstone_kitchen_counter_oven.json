@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_crimson_stem"
+    },
+    "S": {
+      "item": "minecraft:polished_blackstone"
+    },
+    "Y": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "result": {
+    "item": "pfm:blackstone_kitchen_counter_oven"
+  }
+}

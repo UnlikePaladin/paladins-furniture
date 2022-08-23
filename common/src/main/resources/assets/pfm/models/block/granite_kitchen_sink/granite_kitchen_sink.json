@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_sink/kitchen_sink",
+	"textures": {
+        
+		"particle": "block/polished_granite",
+		"base": "block/white_terracotta",
+		"legs": "block/polished_granite"
+	}
+    
+}

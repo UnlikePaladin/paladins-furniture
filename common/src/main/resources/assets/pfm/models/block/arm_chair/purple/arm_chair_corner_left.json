@@ -1,0 +1,9 @@
+{
+	"cpurpleit": "By UnlikePaladin",
+    "parent": "pfm:block/arm_chair/white/arm_chair_corner_left",
+	"textures": {
+		"particle": "block/purple_wool",
+		"base": "block/purple_wool"
+	}
+    
+}

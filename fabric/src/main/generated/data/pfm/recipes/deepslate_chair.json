@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "X  ",
+    "XXX",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:deepslate"
+    },
+    "X": {
+      "item": "minecraft:polished_deepslate"
+    }
+  },
+  "result": {
+    "item": "pfm:deepslate_chair",
+    "count": 4
+  }
+}

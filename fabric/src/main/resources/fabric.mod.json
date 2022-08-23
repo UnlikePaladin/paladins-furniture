@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "pfm",
+  "version": "${version}",
+  "name": "Paladin's Furniture",
+  "description": "This is a Fabric mod that adds lots of new furniture to the game!",
+  "authors": [
+    "UnlikePaladin"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/paladins-furniture",
+    "sources": "https://github.com/UnlikePaladin/paladins-furniture"
+  },
+
+  "license": "LGPL-3.0-only",
+  "icon": "assets/pfm/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric"
+    ],
+    "client": [
+      "com.unlikepaladin.pfm.client.fabric.PaladinFurnitureModClientFabric"
+    ],
+    "fabric-datagen": [
+      "com.unlikepaladin.pfm.data.fabric.PaladinFurnitureModDataEntrypoint"
+    ],
+    "rei": [
+      "com.unlikepaladin.pfm.compat.fabric.rei.PaladinFurnitureModREIPlugin"
+    ],
+    "modmenu": [
+      "com.unlikepaladin.pfm.compat.fabric.PaladinFurnitureModMenu"
+    ]
+  },
+  "mixins": [
+      "pfm-common.mixins.json"
+  ],
+  "depends": {
+    "fabric": "*",
+    "minecraft": ">=1.17.1"
+    }
+}

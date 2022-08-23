@@ -1,0 +1,15 @@
+{
+  "name": "Crafting",
+  "icon": "minecraft:iron_block",
+  "category": "pfm:microwave_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "To craft the microwave you will need redstone dust, a chest, and the microwave's material, put these in the Wood Working Table in the order shown to craft one."
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:iron_microwave"
+    }
+  ]
+}

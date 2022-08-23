@@ -1,0 +1,19 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SXX",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:diorite"
+    },
+    "X": {
+      "item": "minecraft:polished_diorite"
+    }
+  },
+  "result": {
+    "item": "pfm:diorite_classic_stool",
+    "count": 4
+  }
+}

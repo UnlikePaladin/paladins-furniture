@@ -1,0 +1,9 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/simple_bunk_ladder/oak/simple_ladder",
+	"textures": {
+		"particle": "block/acacia_planks",
+		"0": "block/acacia_planks"
+	}
+    
+}

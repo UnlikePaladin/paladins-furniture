@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_cabinet/kitchen_cabinet_open",
+	"textures": {
+		
+		"particle": "block/polished_granite",
+		"base": "block/white_terracotta",
+		"legs": "block/polished_granite"
+	}
+    
+}

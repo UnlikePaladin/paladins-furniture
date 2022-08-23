@@ -1,0 +1,60 @@
+{
+    "multipart": [
+        {
+            "when": { "AND": [
+                { "facing": "north" },
+                { "up": "false" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bunk_ladder/warped/simple_ladder"}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "north" },
+                { "up": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bunk_ladder/warped/simple_ladder_top"}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "east" },
+                { "up": "false" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bunk_ladder/warped/simple_ladder", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "east" },
+                { "up": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bunk_ladder/warped/simple_ladder_top", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "west" },
+                { "up": "false" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bunk_ladder/warped/simple_ladder", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "west" },
+                { "up": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bunk_ladder/warped/simple_ladder_top", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "south" },
+                { "up": "false" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bunk_ladder/warped/simple_ladder","y":180}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "south" },
+                { "up": "true" }
+            ]},
+            "apply": { "model": "pfm:block/simple_bunk_ladder/warped/simple_ladder_top", "y":180}
+        }
+    ]
+}

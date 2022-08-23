@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/chair_classic/chair_classic_tucked",
+	"textures": {
+        
+		"particle": "block/oak_planks",
+		"base": "block/stripped_oak_log",
+		"legs": "block/oak_planks"
+	}
+    
+}

@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SSS",
+    "XXX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:crimson_planks"
+    },
+    "S": {
+      "item": "minecraft:crimson_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:crimson_kitchen_wall_counter",
+    "count": 6
+  }
+}

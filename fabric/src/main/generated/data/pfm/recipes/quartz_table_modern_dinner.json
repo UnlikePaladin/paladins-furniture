@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "SSS",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:quartz_block"
+    },
+    "X": {
+      "item": "minecraft:quartz_block"
+    }
+  },
+  "result": {
+    "item": "pfm:quartz_table_modern_dinner",
+    "count": 4
+  }
+}

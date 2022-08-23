@@ -1,0 +1,9 @@
+{
+	"cyellowit": "By UnlikePaladin",
+    "parent": "pfm:block/sofa_simple/white/sofa_simple_left",
+	"textures": {
+		"particle": "block/yellow_wool",
+		"base": "block/yellow_wool"
+	}
+    
+}

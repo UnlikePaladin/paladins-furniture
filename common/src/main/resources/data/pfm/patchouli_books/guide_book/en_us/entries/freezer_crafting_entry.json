@@ -1,0 +1,25 @@
+{
+  "name": "Crafting",
+  "icon": "minecraft:white_concrete",
+  "category": "pfm:freezing_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The freezer comes built into the fridge, except for the Xbox Series X Fridge which does not have one. To craft a freezer you will need redstone dust, a chest, and the fridge's material, put these in the Wood Working Table in the order shown to craft one."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:white_fridge",
+      "recipe2": "pfm:iron_fridge"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:gray_fridge",
+      "recipe2": "pfm:xbox_fridge"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

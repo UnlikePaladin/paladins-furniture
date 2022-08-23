@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/chair_classic/chair_classic_tucked",
+	"textures": {
+        
+		"particle": "block/stripped_warped_stem",
+		"base": "block/calcite",
+		"legs": "block/stripped_warped_stem"
+	}
+    
+}

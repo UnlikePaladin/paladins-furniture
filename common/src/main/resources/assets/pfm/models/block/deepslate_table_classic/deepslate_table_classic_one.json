@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/table_classic/table_classic_one",
+	"textures": {
+        
+		"particle": "block/deepslate_top",
+		"base": "block/polished_deepslate",
+		"legs": "block/deepslate_top"
+	}
+    
+}

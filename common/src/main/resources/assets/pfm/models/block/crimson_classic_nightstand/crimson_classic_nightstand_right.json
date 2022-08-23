@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_nightstand/classic_nightstand_right",
+	"textures": {
+        
+		"particle": "block/crimson_planks",
+		"base": "block/crimson_planks",
+		"support": "block/crimson_stem"
+	}
+    
+}

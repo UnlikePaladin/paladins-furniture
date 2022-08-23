@@ -1,0 +1,9 @@
+{
+	"climeit": "By UnlikePaladin",
+    "parent": "pfm:block/arm_chair/white/arm_chair_standard",
+	"textures": {
+		"particle": "block/lime_wool",
+		"base": "block/lime_wool"
+	}
+    
+}

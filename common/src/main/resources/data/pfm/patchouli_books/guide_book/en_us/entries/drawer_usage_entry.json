@@ -1,0 +1,15 @@
+{
+  "name": "Usage",
+  "icon": "pfm:oak_kitchen_drawer",
+  "category": "pfm:drawer_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "To open a drawer just right click on it, you can store anything you want in it. Like the Counter they will connect and change shape."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

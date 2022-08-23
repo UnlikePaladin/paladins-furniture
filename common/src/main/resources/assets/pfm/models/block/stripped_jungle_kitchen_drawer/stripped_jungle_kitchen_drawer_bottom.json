@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_drawer/kitchen_drawer_bottom",
+	"textures": {
+        
+		"particle": "block/stripped_jungle_log",
+		"base": "block/stripped_jungle_log",
+		"legs": "block/jungle_planks"
+	}
+    
+}

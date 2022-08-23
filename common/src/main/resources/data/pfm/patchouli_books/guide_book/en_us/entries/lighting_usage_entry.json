@@ -1,0 +1,15 @@
+{
+  "name": "Usage",
+  "icon": "pfm:light_switch",
+  "category": "pfm:lighting_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The Light Fixtures can be powered on with redstone or with the Light Switch. Shift click with the light switch on the light you wish to connect to it to, shift click with it on the air to clear any connections, once placed if within range, the lights will sync to the switch's state."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

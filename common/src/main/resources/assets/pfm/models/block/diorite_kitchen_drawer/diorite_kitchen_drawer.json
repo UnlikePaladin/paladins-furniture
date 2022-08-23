@@ -1,0 +1,12 @@
+
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_drawer/kitchen_drawer",
+	"textures": {
+        
+		"particle": "block/stripped_birch_log",
+		"base": "block/stripped_birch_log",
+		"legs": "block/polished_diorite"
+	}
+    
+}

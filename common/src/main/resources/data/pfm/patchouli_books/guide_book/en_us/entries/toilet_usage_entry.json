@@ -1,0 +1,15 @@
+{
+  "name": "Usage",
+  "icon": "pfm:basic_toilet",
+  "category": "pfm:toilet_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "To use the toilet first sit on it, then you can press the keybinding (U by default) to use it. After you're done you can leave it, and then you may shift click it with an empty hand to flush it."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Like the Sink, it needs Water to function, a Water Source two blocks under will supply it with what it needs. However, it can only be filled like that or with a water bottle because a bucket is too much."
+    }
+  ]
+}

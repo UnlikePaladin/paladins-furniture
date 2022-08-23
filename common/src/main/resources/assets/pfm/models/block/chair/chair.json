@@ -1,0 +1,142 @@
+{
+	"credit": "By UnlikePaladin",
+	"textures": {
+		"particle": "block/oak_planks",
+		"base": "block/oak_planks",
+		"legs": "block/oak_log"
+	},
+	"elements": [
+		{
+			"name": "Backrest",
+			"from": [0.3282, 10.46875, 1.5939],
+			"to": [2.6282, 24.46875, 14.5939],
+			"faces": {
+				"north": {"uv": [0, 0, 14, 2], "rotation": 90, "texture": "#base"},
+				"east": {"uv": [0, 1, 14, 14], "rotation": 270, "texture": "#base"},
+				"south": {"uv": [0, 0, 14, 2], "rotation": 270, "texture": "#base"},
+				"west": {"uv": [0, 1, 14, 14], "rotation": 270, "texture": "#base"},
+				"up": {"uv": [5, 1, 7, 14], "texture": "#base"},
+				"down": {"uv": [4, 0, 6, 13], "rotation": 90, "texture": "#base"}
+			}
+		},
+		{
+			"name": "Seat",
+			"from": [0.32813, 8, 1.59375],
+			"to": [14.32813, 10.5, 14.59375],
+			"faces": {
+				"north": {"uv": [0, 0, 14, 2], "texture": "#base"},
+				"east": {"uv": [5, 1, 7, 14], "rotation": 90, "texture": "#base"},
+				"south": {"uv": [1, 1, 15, 3], "texture": "#base"},
+				"west": {"uv": [5, 1, 7, 14], "rotation": 90, "texture": "#base"},
+				"up": {"uv": [1, 1, 15, 14], "texture": "#base"},
+				"down": {"uv": [0, 1, 14, 14], "texture": "#base"}
+			}
+		},
+		{
+			"from": [1, 0, 2],
+			"to": [3.5, 9, 4.5],
+			"faces": {
+				"north": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"east": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"south": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"west": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"up": {"uv": [0, 0, 2.5, 2.5], "texture": "#legs"},
+				"down": {"uv": [0, 0, 2, 2], "texture": "#legs"}
+			}
+		},
+		{
+			"from": [11, 0, 11],
+			"to": [13.5, 9, 13.5],
+			"faces": {
+				"north": {"uv": [0, 0, 2.5, 9], "texture": "#legs"},
+				"east": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"south": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"west": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"up": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"down": {"uv": [3, 3, 5, 5], "texture": "#legs"}
+			}
+		},
+		{
+			"from": [1, 0, 11],
+			"to": [3.5, 9, 13.5],
+			"faces": {
+				"north": {"uv": [0, 0, 2.5, 9], "texture": "#legs"},
+				"east": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"south": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"west": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"up": {"uv": [0, 0, 2.5, 2.5], "texture": "#legs"},
+				"down": {"uv": [3, 2, 5, 4], "rotation": 90, "texture": "#legs"}
+			}
+		},
+		{
+			"from": [11, 0, 2],
+			"to": [13.5, 9, 4.5],
+			"faces": {
+				"north": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"east": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"south": {"uv": [0, 0, 2, 9], "texture": "#legs"},
+				"west": {"uv": [3, 0, 5, 9], "texture": "#legs"},
+				"up": {"uv": [0, 0, 2.5, 2.5], "texture": "#legs"},
+				"down": {"uv": [2, 2, 4, 4], "texture": "#legs"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [54, -132, -5],
+			"translation": [0, 1, -1.25],
+			"scale": [0.34, 0.34, 0.34]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [59, 39, -5],
+			"translation": [0.5, 1, -1.25],
+			"scale": [0.34, 0.34, 0.34]
+		},
+		"firstperson_righthand": {
+			"rotation": [-1, -150, 0],
+			"translation": [1.25, 0, -1.25],
+			"scale": [0.46, 0.46, 0.46]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-1, 33, 0],
+			"translation": [1.25, 0, -1.25],
+			"scale": [0.46, 0.46, 0.46]
+		},
+		"ground": {
+			"translation": [0, -1, 0],
+			"scale": [0.39, 0.39, 0.39]
+		},
+		"gui": {
+			"rotation": [30, -45, 0],
+			"translation": [0.5, -2, 0],
+			"scale": [0.5, 0.5, 0.5]
+		},
+		"head": {
+			"rotation": [0, 90, 0],
+			"translation": [0, 6.25, 0],
+			"scale": [0.78, 0.78, 0.78]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"translation": [0, -3.25, -5.75],
+			"scale": [0.9, 0.9, 0.9]
+		}
+	},
+	"groups": [
+		{
+			"name": "chair",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [
+				0,
+				1,
+				{
+					"name": "legs",
+					"origin": [0, 0, 0],
+					"color": 0,
+					"children": [2, 3, 4, 5]
+				}
+			]
+		}
+	]
+}

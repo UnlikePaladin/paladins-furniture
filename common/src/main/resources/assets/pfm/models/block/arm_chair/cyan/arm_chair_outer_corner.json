@@ -1,0 +1,9 @@
+{
+	"ccyanit": "By UnlikePaladin",
+    "parent": "pfm:block/arm_chair/white/arm_chair_outer_corner",
+	"textures": {
+		"particle": "block/cyan_wool",
+		"base": "block/cyan_wool"
+	}
+    
+}

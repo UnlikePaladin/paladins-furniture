@@ -1,0 +1,12 @@
+{
+    "variants":
+    {
+        "up=false,down=false,lit=false":{"model":"pfm:block/white_modern_pendant/white_modern_pendant"},
+        "up=false,down=false,lit=true":{"model":"pfm:block/white_modern_pendant/white_modern_pendant_on"},
+        "up=true,down=false,lit=false":{"model":"pfm:block/white_modern_pendant/white_modern_pendant_bottom"},
+        "up=true,down=false,lit=true":{"model":"pfm:block/white_modern_pendant/white_modern_pendant_bottom_on"},
+        "up=false,down=true":{"model":"pfm:block/white_modern_pendant/white_modern_pendant_top"},
+        "up=true,down=true":{"model":"pfm:block/white_modern_pendant/white_modern_pendant_middle"}
+    }
+
+}

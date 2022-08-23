@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/dinner_table/dinner_table_right",
+	"textures": {
+        
+		"particle": "block/acacia_planks",
+		"base": "block/stripped_acacia_log",
+		"legs": "block/acacia_planks"
+	}
+    
+}

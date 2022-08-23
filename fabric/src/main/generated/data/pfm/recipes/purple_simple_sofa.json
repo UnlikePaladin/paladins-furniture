@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "X  ",
+    "SXS",
+    "S S"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:purple_wool"
+    },
+    "S": {
+      "item": "minecraft:oak_log"
+    }
+  },
+  "result": {
+    "item": "pfm:purple_simple_sofa",
+    "count": 2
+  }
+}

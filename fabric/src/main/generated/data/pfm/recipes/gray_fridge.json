@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "XYX",
+    "XZX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:gray_concrete"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    },
+    "Z": {
+      "item": "minecraft:redstone"
+    }
+  },
+  "result": {
+    "item": "pfm:gray_fridge"
+  }
+}

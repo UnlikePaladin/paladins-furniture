@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.unlikepaladin.pfm.mixin",
+  "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "com.unlikepaladin.pfm.fabric.mixin.MixinPointOfInterestType"
+  ],
+  "server": [],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

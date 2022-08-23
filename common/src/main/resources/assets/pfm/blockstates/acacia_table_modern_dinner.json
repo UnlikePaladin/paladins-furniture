@@ -1,0 +1,64 @@
+{
+    "multipart": [
+        {
+            "when": { "AND": [
+                { "table_type": "single" },
+                { "axis":"x" }
+            ]},
+            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner"}
+        },
+        {
+            "when": { "AND": [
+                { "table_type": "single" },
+                { "axis":"z" }
+            ]},
+            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner","y":90}
+        },
+      
+        {
+            "when": { "AND": [
+                { "table_type": "middle" },
+                {"axis":"x"}
+            ]},
+            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_middle" }
+        },
+        {
+            "when": { "AND": [
+                { "table_type": "middle" },
+                {"axis":"z"}
+            ]},
+            "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_middle", "y":90 }
+        },
+    
+        {
+        "when": { "AND": [
+            { "table_type": "left" },
+            {"axis":"x"}
+        ]},
+        "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_right"  }
+    },
+        {
+        "when": { "AND": [
+            { "table_type": "left" },
+            {"axis":"z"}
+        ]},
+        "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_right", "y":90 }
+    },
+        
+    {
+    "when": { "AND": [
+        { "table_type": "right" },
+        {"axis":"x"}
+    ]},
+    "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_left", "y":0  }
+},
+    {
+    "when": { "AND": [
+        { "table_type": "right" },
+        {"axis":"z"}
+    ]},
+    "apply": { "model": "pfm:block/acacia_table_modern_dinner/acacia_table_modern_dinner_right", "y":270  }
+}
+        
+    ]
+}

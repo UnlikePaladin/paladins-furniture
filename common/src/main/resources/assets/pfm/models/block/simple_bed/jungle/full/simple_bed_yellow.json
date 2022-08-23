@@ -1,0 +1,9 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/simple_bed/oak/full/simple_bed",
+	"textures": {
+		"0": "block/jungle_planks",
+		"1": "entity/bed/yellow"
+	}
+    
+}

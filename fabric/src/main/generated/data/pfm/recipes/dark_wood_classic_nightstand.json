@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SXS",
+    "SZS",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:dark_oak_planks"
+    },
+    "X": {
+      "item": "minecraft:smooth_quartz"
+    },
+    "Z": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "pfm:dark_wood_classic_nightstand",
+    "count": 4
+  }
+}

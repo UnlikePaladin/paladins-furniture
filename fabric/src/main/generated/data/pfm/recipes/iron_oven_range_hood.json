@@ -1,0 +1,19 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    " X ",
+    " X ",
+    "XYX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Y": {
+      "item": "minecraft:redstone_lamp"
+    }
+  },
+  "result": {
+    "item": "pfm:iron_oven_range_hood"
+  }
+}

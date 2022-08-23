@@ -1,0 +1,28 @@
+{
+    "multipart": [
+        {
+            "when": { "AND": [
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/basic_plate/cutlery", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "south" }
+            ]},
+            "apply": { "model": "pfm:block/basic_plate/cutlery", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "west" }
+            ]},
+            "apply": { "model": "pfm:block/basic_plate/cutlery", "y":180}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "east" }
+            ]},
+            "apply": { "model": "pfm:block/basic_plate/cutlery"}
+        }
+    ]
+}

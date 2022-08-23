@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_cabinet/kitchen_cabinet_edge_right_open",
+	"textures": {
+        
+		"particle": "block/crimson_planks",
+		"base": "block/crimson_planks",
+		"legs": "block/crimson_stem"
+	}
+    
+}

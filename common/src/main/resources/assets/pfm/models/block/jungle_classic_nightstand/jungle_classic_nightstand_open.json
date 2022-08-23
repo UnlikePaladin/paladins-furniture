@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_nightstand/classic_nightstand_open",
+	"textures": {
+        
+		"particle": "block/jungle_planks",
+		"base": "block/jungle_planks",
+		"support": "block/jungle_log"
+	}
+    
+}
