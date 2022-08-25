@@ -7,6 +7,7 @@ import net.minecraft.util.math.BlockPos;
 
 public class AbstractMicrowaveScreenHandlerImpl {
     public static void setActive(MicrowaveBlockEntity microwaveBlockEntity, boolean isActive) {
+        microwaveBlockEntity.isActive = isActive;
         System.out.println("Setting Active from Handler");
         BlockPos pos = microwaveBlockEntity.getPos();
         MicrowaveActivePacket activePacket = new MicrowaveActivePacket(pos, isActive);

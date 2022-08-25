@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.client.screens;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
+import com.unlikepaladin.pfm.menus.AbstractMicrowaveScreenHandler;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -42,7 +43,7 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
         this.narrow = this.width < 379;
         this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
         this.startButton = this.addDrawableChild(new ButtonWidget(this.x + 8, this.y + 40, 40, 20, startButtonText, button -> {
-            handler.setActive(microwaveBlockEntity,true);
+            AbstractMicrowaveScreenHandler.setActive(microwaveBlockEntity,true);
         }));
     }
 
@@ -86,7 +87,7 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
         this.isActive = handler.isActive;
         DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1,handler.getInventory().getStack(0));
         Recipe<?> recipe = getRecipe(Objects.requireNonNull(handler.microwaveBlockEntity.getWorld()), handler.getInventory());
-        if(!MicrowaveBlockEntity.canAcceptRecipeOutput(recipe, inventory ,microwaveBlockEntity.getMaxCountPerStack())) {
+        if(!MicrowaveBlockEntity.canAcceptRecipeOutput(recipe, inventory ,microwaveBlockEntity.getMaxCountPerStack()) && !this.handler.isActive()) {
             this.startButton.active = false;
         }
         else {

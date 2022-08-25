@@ -98,6 +98,11 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     public DefaultedList<ItemStack> inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY);
     int cookTime;
     int cookTimeTotal;
+
+    public PropertyDelegate getPropertyDelegate() {
+        return propertyDelegate;
+    }
+
     protected final PropertyDelegate propertyDelegate = new PropertyDelegate() {
 
         @Override

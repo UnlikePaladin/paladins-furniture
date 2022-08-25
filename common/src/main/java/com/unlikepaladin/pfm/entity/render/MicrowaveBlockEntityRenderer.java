@@ -15,7 +15,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 
-@Environment(value= EnvType.CLIENT)
 public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
     public MicrowaveBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {

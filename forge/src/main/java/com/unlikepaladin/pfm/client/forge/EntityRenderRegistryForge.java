@@ -3,7 +3,8 @@ package com.unlikepaladin.pfm.client.forge;
 
 import com.unlikepaladin.pfm.client.EntityRenderIDs;
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
-import com.unlikepaladin.pfm.entity.render.ChairEntityRenderer;
+import com.unlikepaladin.pfm.entity.render.*;
+import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Entities;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.EntityRenderersEvent;
@@ -17,6 +18,15 @@ public class EntityRenderRegistryForge {
     public static void registerRender(EntityRenderersEvent.RegisterRenderers renderersEvent){
         renderersEvent.registerEntityRenderer(Entities.CHAIR, ChairEntityRenderer::new);
     }
+
+    @SubscribeEvent
+    public static void registerBlockEntityRender(EntityRenderersEvent.RegisterRenderers renderersEvent){
+        renderersEvent.registerBlockEntityRenderer(BlockEntities.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);
+        renderersEvent.registerBlockEntityRenderer(BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntityRenderer::new);
+        renderersEvent.registerBlockEntityRenderer(BlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
+        renderersEvent.registerBlockEntityRenderer(BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityRenderer::new);
+    }
+
 
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions registerLayerDefinitions){

@@ -26,6 +26,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     private final RecipeBookCategory category;
     public boolean isActive;
     public MicrowaveBlockEntity microwaveBlockEntity;
+    //Client Constructor
     protected AbstractMicrowaveScreenHandler(MicrowaveBlockEntity microwaveBlockEntity, ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
         this(microwaveBlockEntity, type, recipeType, category, syncId, playerInventory, new SimpleInventory(1), new ArrayPropertyDelegate(2));
         this.isActive = buf.readBoolean();
@@ -33,6 +34,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
         this.microwaveBlockEntity = microwaveBlockEntity;
     }
 
+    //Server Constructor
     protected AbstractMicrowaveScreenHandler(MicrowaveBlockEntity microwaveBlockEntity, ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(type, syncId);
         this.microwaveBlockEntity = microwaveBlockEntity;

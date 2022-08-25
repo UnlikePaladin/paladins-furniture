@@ -18,6 +18,7 @@ import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ScreenHandlerRegistryForge {
+
     @SubscribeEvent
     public static void registerScreenHandlers(RegistryEvent.Register<ScreenHandlerType<?>> event) {
         ScreenHandlerIDs.FREEZER_SCREEN_HANDLER = IForgeContainerType.create(FreezerScreenHandler::new);
@@ -27,10 +28,11 @@ public class ScreenHandlerRegistryForge {
         ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = IForgeContainerType.create(MicrowaveScreenHandler::new);
 
         event.getRegistry().registerAll(
+
                 ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER.setRegistryName("furniture"),
                 ScreenHandlerIDs.STOVE_SCREEN_HANDLER.setRegistryName("stove_block_entity"),
                 ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER.setRegistryName("iron_stove_block_entity"),
-                ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER.setRegistryName("microwave_block_entity"),
+                ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER .setRegistryName("microwave_block_entity"),
                 ScreenHandlerIDs.FREEZER_SCREEN_HANDLER.setRegistryName("freezer_block_entity")
             );
 

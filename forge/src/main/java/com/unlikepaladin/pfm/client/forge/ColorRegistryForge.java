@@ -25,7 +25,7 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ColorRegistryForge {
     @SubscribeEvent
-    public void registerBlockColors(ColorHandlerEvent.Block event){
+    public static void registerBlockColors(ColorHandlerEvent.Block event){
         List<Block> sinks = new ArrayList<>();
         KitchenSink.streamStoneSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
         KitchenSink.streamWoodSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
