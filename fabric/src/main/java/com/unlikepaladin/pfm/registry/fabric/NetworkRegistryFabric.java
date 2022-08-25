@@ -14,6 +14,7 @@ import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
+import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -21,16 +22,23 @@ import java.util.Objects;
 
 public class NetworkRegistryFabric {
 
+    //TODO: Fix JEI
+    //TODO: Add Sandwichable + ARRP warning Screen
+    //TODO: Invisible Counter with Stove, potential model and connecting issues
     public static void registerPackets() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkIDs.MICROWAVE_ACTIVATE_PACKET_ID, (server, player, handler, attachedData, responseSender) -> {
             BlockPos pos = attachedData.readBlockPos();
             boolean active = attachedData.readBoolean();
             server.submitAndJoin(() -> {
                 if(Objects.nonNull(player.world.getBlockEntity(pos))){
-                    MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) player.world.getBlockEntity(pos);
-                    microwaveBlockEntity.setActive(active);
+                    World world = player.world;
+                    if (world.isChunkLoaded(pos)) {
+                        MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) player.world.getBlockEntity(pos);
+                        microwaveBlockEntity.setActive(active);
+                    } else {
+                        player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+                    }
                 }
-
             });
         });
 
@@ -41,23 +49,33 @@ public class NetworkRegistryFabric {
                     server.submitAndJoin(() -> {
                         // Use the pos in the main thread
                         World world = player.world;
-                        world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToilet.TOILET_STATE, ToiletState.DIRTY));
-                        world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
+                        if (world.isChunkLoaded(blockPos)) {
+                            world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToilet.TOILET_STATE, ToiletState.DIRTY));
+                            world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
+                        } else {
+                            player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+                        }
                     });
                 }));
     }
 
     public static void registerClientPackets() {
-            ClientPlayNetworking.registerGlobalReceiver(NetworkIDs.MICROWAVE_UPDATE_PACKET_ID,
-                (client, handler, buf, responseSender) -> {
-                    boolean active = buf.readBoolean();
-                    MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) handler.getWorld().getBlockEntity(buf.readBlockPos());
+        ClientPlayNetworking.registerGlobalReceiver(NetworkIDs.MICROWAVE_UPDATE_PACKET_ID,
+            (client, handler, buf, responseSender) -> {
+                boolean active = buf.readBoolean();
+                BlockPos blockPos = buf.readBlockPos();
+                if (handler.getWorld().isChunkLoaded(blockPos)) {
+                    MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) handler.getWorld().getBlockEntity(blockPos);
                     client.execute(() -> {
-                        if (Objects.nonNull(MinecraftClient.getInstance().currentScreen) && MinecraftClient.getInstance().currentScreen instanceof MicrowaveScreen)  {
-                            MicrowaveScreen currentScreen = (MicrowaveScreen) MinecraftClient.getInstance().currentScreen;
+                        if (Objects.nonNull(client.currentScreen) && client.currentScreen instanceof MicrowaveScreen currentScreen)  {
                             currentScreen.getScreenHandler().setActive(blockEntity, active);}
                     });
-                });
+                }
+                else {
+                    client.player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+                }
             }
+        );
+    }
 
 }

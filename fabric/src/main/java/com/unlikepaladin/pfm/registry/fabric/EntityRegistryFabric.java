@@ -17,6 +17,6 @@ public class EntityRegistryFabric {
     public static void registerEntities()
     {
         registerEntity("chair", Entities.CHAIR);
-        FabricDefaultAttributeRegistry.register(Entities.CHAIR, ChairEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 0));
+        FabricDefaultAttributeRegistry.register(Entities.CHAIR, ChairEntity.createMobAttributes());
     }
 }

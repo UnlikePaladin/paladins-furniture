@@ -29,29 +29,6 @@ public class PaladinFurnitureModFabric  implements ModInitializer {
     public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 
 
-    public static final ItemGroup DYE_KITS = FabricItemGroupBuilder.create(
-                    new Identifier(MOD_ID, "dye_kits"))
-            .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
-            .appendItems(stacks -> {
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_GREEN));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIME));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_CYAN));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLUE));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_BLUE));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_PURPLE));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_MAGENTA));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_PINK));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BROWN));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_WHITE));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_GRAY));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY));
-                stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLACK));
-            })
-            .build();
-
 
     //System.out.println("Hello Fabric world!");
 
@@ -61,6 +38,30 @@ public class PaladinFurnitureModFabric  implements ModInitializer {
         // This code runs as soon as Minecraft is in a mod-load-ready state.
         // However, some things (like resources) may still be uninitialized.
         // Proceed with mild caution.
+
+        PaladinFurnitureMod.DYE_KITS = FabricItemGroupBuilder.create(
+                        new Identifier(MOD_ID, "dye_kits"))
+                .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
+                .appendItems(stacks -> {
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_GREEN));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIME));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_CYAN));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLUE));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_BLUE));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_PURPLE));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_MAGENTA));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_PINK));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BROWN));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_WHITE));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_GRAY));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY));
+                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLACK));
+                })
+                .build();
+
         PaladinFurnitureMod.FURNITURE_GROUP = FabricItemGroupBuilder.build(
                 new Identifier(MOD_ID, "furniture"),
                 () -> new ItemStack(PaladinFurnitureModBlocksItems.OAK_CHAIR));

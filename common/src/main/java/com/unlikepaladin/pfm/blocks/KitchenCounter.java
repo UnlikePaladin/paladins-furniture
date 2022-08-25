@@ -30,7 +30,7 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
     private final Block baseBlock;
     public static final EnumProperty<CounterShape> SHAPE = EnumProperty.of("shape", CounterShape.class);
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-
+    protected FurnitureBlock counterFurnitureBlock;
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> WOOD_COUNTERS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_COUNTERS = new ArrayList<>();
@@ -39,11 +39,12 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
+        counterFurnitureBlock = new FurnitureBlock(this, "kitchen_counter");
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCounter.class)){
-            WOOD_COUNTERS.add(new FurnitureBlock(this, "kitchen_counter"));
+            WOOD_COUNTERS.add(counterFurnitureBlock);
         }
         else if (this.getClass().isAssignableFrom(KitchenCounter.class)){
-            STONE_COUNTERS.add(new FurnitureBlock(this, "kitchen_counter"));
+            STONE_COUNTERS.add(counterFurnitureBlock);
         }
     }
 
@@ -120,8 +121,7 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
     public boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
-        boolean canConnect = (isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock);
-        return canConnect;
+        return (isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock);
     }
 
     private boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
@@ -138,8 +138,11 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
         if (PaladinFurnitureMod.getPFMConfig().doCountersOfDifferentMaterialsConnect()) {
             doDifferentCountersConnect = state.getBlock() instanceof KitchenCounter;
         }
+        else if (state.getBlock() instanceof KitchenCounter){
+            doDifferentCountersConnect = (this.counterFurnitureBlock.getBaseMaterial() == ((KitchenCounter)state.getBlock()).counterFurnitureBlock.getBaseMaterial());
+        }
         else {
-            doDifferentCountersConnect = state.getBlock() == this;
+            doDifferentCountersConnect = false;
         }
         return (doDifferentCountersConnect || state.getBlock() instanceof KitchenWallCounter || state.getBlock() instanceof KitchenWallDrawer);
     }

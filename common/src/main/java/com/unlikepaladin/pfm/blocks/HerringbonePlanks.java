@@ -5,7 +5,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.Material;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +24,12 @@ public class HerringbonePlanks extends HorizontalFacingBlock {
 
     public static Stream<FurnitureBlock> streamPlanks() {
         return PLANKS.stream();
+    }
+
+    @Nullable
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
 
     @Override

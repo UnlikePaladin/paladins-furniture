@@ -12,6 +12,9 @@ import net.minecraft.util.collection.DefaultedList;
 import java.util.Map;
 
 public class FurnitureSerializer implements RecipeSerializer<FurnitureRecipe> {
+    public FurnitureSerializer() {
+    }
+
     @Override
     public FurnitureRecipe read(Identifier identifier, JsonObject jsonObject) {
         String string = JsonHelper.getString(jsonObject, "group", "");

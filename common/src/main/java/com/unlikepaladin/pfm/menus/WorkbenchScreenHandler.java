@@ -11,6 +11,7 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.inventory.CraftingResultInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeMatcher;
@@ -31,6 +32,10 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
     private final PlayerEntity player;
 
     public WorkbenchScreenHandler(int syncId, PlayerInventory playerInventory) {
+        this(syncId, playerInventory, ScreenHandlerContext.EMPTY);
+    }
+
+    public WorkbenchScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf packetByteBuf) {
         this(syncId, playerInventory, ScreenHandlerContext.EMPTY);
     }
 
@@ -55,6 +60,8 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
     }
+
+
 
     protected static void updateResult(ScreenHandler handler, World world, PlayerEntity player, CraftingInventory craftingInventory, CraftingResultInventory resultInventory) {
         FurnitureRecipe furnitureRecipe;

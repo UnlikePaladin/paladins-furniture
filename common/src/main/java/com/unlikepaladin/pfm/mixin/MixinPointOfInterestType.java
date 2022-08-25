@@ -8,9 +8,8 @@ import net.minecraft.block.enums.BedPart;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.Slice;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -19,7 +18,7 @@ import java.util.Set;
 
 @Mixin(PointOfInterestType.class)
 public abstract class MixinPointOfInterestType {
-    @ModifyArgs(
+    @ModifyArg(
             method = "<clinit>",
             slice = @Slice(from = @At(
                     value = "CONSTANT",
@@ -29,19 +28,17 @@ public abstract class MixinPointOfInterestType {
                     value = "INVOKE",
                     target = "Lnet/minecraft/world/poi/PointOfInterestType;register(Ljava/lang/String;Ljava/util/Set;II)Lnet/minecraft/world/poi/PointOfInterestType;",
                     ordinal = 0
-            )
+            ),
+            index = 1
     )
-    private static void appendBeds(Args args) {
-        Set<BlockState> originalBedStates = args.get(1);
+
+    private static Set<BlockState> appendBeds(Set<BlockState> workStationStates) {
         Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBed.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
         Set<BlockState> newBedStates = new HashSet<>();
-        newBedStates.addAll(originalBedStates);
+        newBedStates.addAll(workStationStates);
         newBedStates.addAll(addedBedStates);
         newBedStates = newBedStates.stream().collect(ImmutableSet.toImmutableSet());
-        // Add new blockStates
-        args.set(1, newBedStates);
-        // Set ticketCount
-        args.set(2, 1);
 
+        return newBedStates;
     }
 }

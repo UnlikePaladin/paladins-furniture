@@ -121,7 +121,7 @@ public class FurnitureRecipe implements IFurnitureRecipe {
      * Compiles a pattern and series of symbols into a list of ingredients (the matrix) suitable for matching
      * against a crafting grid.
      */
-    static DefaultedList<Ingredient> createPatternMatrix(String[] pattern, Map<String, Ingredient> symbols, int width, int height) {
+    public static DefaultedList<Ingredient> createPatternMatrix(String[] pattern, Map<String, Ingredient> symbols, int width, int height) {
         DefaultedList<Ingredient> defaultedList = DefaultedList.ofSize(width * height, Ingredient.EMPTY);
         HashSet<String> set = Sets.newHashSet(symbols.keySet());
         set.remove(" ");
@@ -164,7 +164,7 @@ public class FurnitureRecipe implements IFurnitureRecipe {
      * @return a new recipe pattern with all leading and trailing empty rows/columns removed
      */
     @VisibleForTesting
-    static String[] removePadding(String... pattern) {
+    public static String[] removePadding(String... pattern) {
         int i = Integer.MAX_VALUE;
         int j = 0;
         int k = 0;
@@ -213,7 +213,7 @@ public class FurnitureRecipe implements IFurnitureRecipe {
         return i;
     }
 
-    static String[] getPattern(JsonArray json) {
+    public static String[] getPattern(JsonArray json) {
         String[] strings = new String[json.size()];
         if (strings.length > 3) {
             throw new JsonSyntaxException("Invalid pattern: too many rows, 3 is maximum");
@@ -239,7 +239,7 @@ public class FurnitureRecipe implements IFurnitureRecipe {
      *
      * @return a mapping from a symbol to the ingredient it represents
      */
-    static Map<String, Ingredient> readSymbols(JsonObject json) {
+    public static Map<String, Ingredient> readSymbols(JsonObject json) {
         HashMap<String, Ingredient> map = Maps.newHashMap();
         for (Map.Entry<String, JsonElement> entry : json.entrySet()) {
             if (entry.getKey().length() != 1) {

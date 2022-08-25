@@ -140,15 +140,51 @@ public class BasicTable extends Block implements Waterloggable{
         boolean cornerSouthWest = south && west && !canConnect(world.getBlockState(pos.south().west()));
 
         if (north && south && east && west && ((cornerNorthEast && cornerSouthEast) || (cornerSouthWest && cornerNorthWest))){
+            if (north && south && east && west && cornerSouthWest && cornerNorthWest) {
+                return state.with(SHAPE, BasicTableShape.EAST_EDGE);
+            }
+            else if (north && south && east && west && cornerNorthEast && cornerSouthEast) {
+                return state.with(SHAPE, BasicTableShape.WEST_EDGE);
+            }
             return state.with(SHAPE, BasicTableShape.NORTH_SOUTH);
         }
-        else if (north && south && east && west){
+        else if (north && south && east && west && !cornerNorthEast && !cornerSouthEast && !cornerNorthWest && !cornerSouthWest){
             return state.with(SHAPE, BasicTableShape.ALL);
         }
+        else if (north && south && east && west && !cornerNorthEast && !cornerSouthEast && cornerNorthWest && !cornerSouthWest){
+            if (dir.equals(Direction.Axis.X)) {
+                return state.with(SHAPE, BasicTableShape.NORTH_EAST);
+            }
+            return state.with(SHAPE, BasicTableShape.SOUTH_WEST);
+        }
+        else if (north && south && east && west && cornerNorthEast && !cornerSouthEast && !cornerNorthWest && !cornerSouthWest){
+            if (dir.equals(Direction.Axis.X)) {
+                return state.with(SHAPE, BasicTableShape.NORTH_WEST);
+            }
+            return state.with(SHAPE, BasicTableShape.SOUTH_EAST);
+        }
+        else if (north && south && east && west && !cornerNorthEast && !cornerSouthEast && !cornerNorthWest && cornerSouthWest){
+            if (dir.equals(Direction.Axis.X)) {
+                return state.with(SHAPE, BasicTableShape.SOUTH_EAST);
+            }
+            return state.with(SHAPE, BasicTableShape.NORTH_WEST);
+        }
+        else if (north && south && east && west && !cornerNorthEast && cornerSouthEast && !cornerNorthWest && !cornerSouthWest){
+            if (dir.equals(Direction.Axis.X)) {
+                return state.with(SHAPE, BasicTableShape.SOUTH_WEST);
+            }
+            return state.with(SHAPE, BasicTableShape.NORTH_EAST);
+        }
         else if (cornerNorthEast && cornerSouthEast) {
+            if (north && south && east && west) {
+                return state.with(SHAPE, BasicTableShape.EAST_EDGE);
+            }
             return state.with(SHAPE, BasicTableShape.NORTH_SOUTH);
         }
         else if (cornerNorthWest && cornerSouthWest) {
+            if (north && south && east && west) {
+                return state.with(SHAPE, BasicTableShape.EAST_EDGE);
+            }
             return state.with(SHAPE, BasicTableShape.NORTH_SOUTH);
         }
         else if (cornerNorthEast && cornerNorthWest) {
@@ -170,6 +206,9 @@ public class BasicTable extends Block implements Waterloggable{
             return state.with(SHAPE, BasicTableShape.CORNER_SOUTH_WEST);
         }
         else if (north && south && !east && !west) {
+            if (north && south && east && west) {
+                return state.with(SHAPE, BasicTableShape.EAST_EDGE);
+            }
             return state.with(SHAPE, BasicTableShape.NORTH_SOUTH);
         }
         else if (!north && !south && east && west) {

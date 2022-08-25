@@ -20,6 +20,8 @@ public class PaladinFurnitureMod {
 	public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 	public static ItemGroup FURNITURE_GROUP;
 
+	public static ItemGroup DYE_KITS;
+
 	public static void commonInit() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.

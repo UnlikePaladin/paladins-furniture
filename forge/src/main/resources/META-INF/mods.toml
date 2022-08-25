@@ -9,7 +9,8 @@ version = "${version}"
 displayName = "Paladin's Furniture"
 authors = "UnlikePaladin"
 description = '''
-This is a Fabric mod that adds lots of new furniture to the game!'''
+A Brand-New Furniture mod for Modern Minecraft where things are functional!
+'''
 logoFile = "icon.png"
 
 [[dependencies.pfm]]

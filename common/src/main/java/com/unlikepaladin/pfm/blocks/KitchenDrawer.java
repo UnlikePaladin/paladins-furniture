@@ -47,11 +47,12 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
         if (!(this.baseBlock instanceof KitchenWallDrawerSmall)) {
             setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT).with(WATERLOGGED, false));
         }
+        counterFurnitureBlock = new FurnitureBlock(this, "kitchen_drawer");
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenDrawer.class)){
-            WOOD_DRAWERS.add(new FurnitureBlock(this, "kitchen_drawer"));
+            WOOD_DRAWERS.add(counterFurnitureBlock);
         }
         else if (this.getClass().isAssignableFrom(KitchenDrawer.class)){
-            STONE_DRAWERS.add(new FurnitureBlock(this, "kitchen_drawer"));
+            STONE_DRAWERS.add(counterFurnitureBlock);
         }
     }
 
