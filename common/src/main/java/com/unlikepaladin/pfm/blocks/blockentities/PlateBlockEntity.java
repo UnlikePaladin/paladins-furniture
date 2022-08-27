@@ -9,12 +9,14 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.Clearable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.Nullable;
 
 public class PlateBlockEntity extends BlockEntity implements Clearable {
-    private final DefaultedList<ItemStack> itemInPlate = DefaultedList.ofSize(1, ItemStack.EMPTY);
+    protected final DefaultedList<ItemStack> itemInPlate = DefaultedList.ofSize(1, ItemStack.EMPTY);
     public PlateBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntities.PLATE_BLOCK_ENTITY, blockPos, blockState);
     }
@@ -31,7 +33,6 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
         this.saveInitialChunkData(nbt);
         return nbt;
     }
-
 
     @Override
     public void clear() {
@@ -71,6 +72,12 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
         this.itemInPlate.set(0, ItemStack.EMPTY);
         updateListeners();
         return stack;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
     }
 
     public Inventory getInventory(){

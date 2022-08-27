@@ -3,8 +3,13 @@ package com.unlikepaladin.pfm.blocks.blockentities.forge;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.ClientConnection;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class StoveBlockEntityImpl extends StoveBlockEntity {
 
@@ -12,9 +17,33 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
         super(pos, state);
     }
 
-    //TODO: Sync Inventory Data to Client for Render
     public StoveBlockEntityImpl(BlockEntityType<?> entity, BlockPos pos, BlockState state) {
         super(entity, pos, state);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return super.toUpdatePacket();
+    }
+
+    @Override
+    public @NotNull NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbt = super.toInitialChunkDataNbt();
+        Inventories.writeNbt(nbt, this.itemsBeingCooked, true);
+        return nbt;
+    }
+
+    @Override
+    public void handleUpdateTag(NbtCompound tag) {
+        this.readNbt(tag);
+    }
+
+    @Override
+    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
+        super.onDataPacket(net, pkt);
+        this.itemsBeingCooked.clear();
+        Inventories.readNbt(pkt.getNbt(), this.itemsBeingCooked);
     }
 
 }

@@ -6,15 +6,23 @@ import com.unlikepaladin.pfm.networking.forge.MicrowaveUpdatePacket;
 import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.ClientConnection;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -29,6 +37,33 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
         BlockPos pos = microwaveBlockEntity.getPos();
         WorldChunk chunk = Objects.requireNonNull(microwaveBlockEntity.getWorld()).getWorldChunk(pos);
         NetworkRegistryForge.PFM_SERVER_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new MicrowaveUpdatePacket(pos, active));
+    }
+
+    @Nullable
+    @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return super.toUpdatePacket();
+    }
+
+    @Override
+    public @NotNull NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbt = super.toInitialChunkDataNbt();
+        nbt.putBoolean("isActive", this.isActive);
+        Inventories.writeNbt(nbt, this.inventory);
+        return nbt;
+    }
+
+    @Override
+    public void handleUpdateTag(NbtCompound tag) {
+        this.readNbt(tag);
+    }
+
+    @Override
+    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
+        super.onDataPacket(net, pkt);
+        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
+        this.isActive = pkt.getNbt().getBoolean("isActive");
+        Inventories.readNbt(pkt.getNbt(), this.inventory);
     }
 
 }

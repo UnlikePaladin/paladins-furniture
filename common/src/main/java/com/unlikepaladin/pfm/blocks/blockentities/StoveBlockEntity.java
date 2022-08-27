@@ -11,10 +11,12 @@ import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
@@ -27,6 +29,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Random;
@@ -54,7 +57,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         return new StoveScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
     }
 
-    private final DefaultedList<ItemStack> itemsBeingCooked = DefaultedList.ofSize(4, ItemStack.EMPTY);
+    protected final DefaultedList<ItemStack> itemsBeingCooked = DefaultedList.ofSize(4, ItemStack.EMPTY);
     private final int[] cookingTimes = new int[4];
     private final int[] cookingTotalTimes = new int[4];
 
@@ -147,8 +150,6 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
     }
 
-
-
     public static void litServerTick(World world, BlockPos pos, BlockState state, StoveBlockEntity stoveBlockEntity) {
         boolean bl = false;
         for (int i = 0; i < stoveBlockEntity.itemsBeingCooked.size(); ++i) {
@@ -220,6 +221,12 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
             return true;
         }
         return false;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
     }
 
 }

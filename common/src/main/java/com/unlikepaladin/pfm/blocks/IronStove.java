@@ -81,11 +81,6 @@ public class IronStove extends Stove {
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new StoveBlockEntity(BlockEntities.STOVE_BLOCK_ENTITY, pos, state);
-    }
-
-    @Override
     public void openScreen(World world, BlockPos pos, PlayerEntity player) {
         //This is called by the onUse method inside AbstractFurnaceBlock so
         //it is a little bit different of how you open the screen for normal container

@@ -8,11 +8,15 @@ import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,7 +27,7 @@ public class BlockItemRegistryForge {
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
         event.getRegistry().registerAll(
-                //registerFurniture("working_table", PaladinFurnitureModBlocksItems.WORKING_TABLE, true),
+                registerFurniture("working_table", PaladinFurnitureModBlocksItems.WORKING_TABLE, true),
                 registerFurniture("oak_chair", PaladinFurnitureModBlocksItems.OAK_CHAIR, true),
                 registerFurniture("birch_chair", PaladinFurnitureModBlocksItems.BIRCH_CHAIR, true),
                 registerFurniture("spruce_chair", PaladinFurnitureModBlocksItems.SPRUCE_CHAIR, true),
@@ -1114,12 +1118,8 @@ public class BlockItemRegistryForge {
     public static Block registerBlock(String blockName, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            //registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         }
-        if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
-            /*FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
-            FuelRegistry.PFM_SERVER_CHANNEL.add(block, 300);*/
-        }
+
         return block.setRegistryName(blockName);
     }
 
@@ -1128,8 +1128,23 @@ public class BlockItemRegistryForge {
     }
 
     public static Item registerBlockItem(String itemName, Block block) {
+        if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
+            /*FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);*/
+            return registerItem(itemName, new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP)) {
+                @Override
+                public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
+                    return 300;
+                }
+
+            });
+        }
         return registerItem(itemName, new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
     }
 
+    @SubscribeEvent
+    public static void addFlammableBlocks(FMLCommonSetupEvent event) {
+        event.enqueueWork(() -> {
+        });
+    }
 
 }

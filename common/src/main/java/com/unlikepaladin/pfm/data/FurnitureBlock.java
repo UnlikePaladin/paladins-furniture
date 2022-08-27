@@ -141,7 +141,7 @@ public class FurnitureBlock extends Material {
         else if(baseMaterial.contains("netherite")){
             baseMaterial = "ancient_debris";
         }
-        else if(baseMaterial.contains("white")){
+        else if(baseMaterial.contains("white") && !baseMaterial.contains("bed")){
             baseMaterial = "white_concrete";
         }
         else if(baseMaterial.contains("light_gray")){

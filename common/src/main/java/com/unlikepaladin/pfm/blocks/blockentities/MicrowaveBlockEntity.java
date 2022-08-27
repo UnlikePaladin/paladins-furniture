@@ -21,6 +21,7 @@ import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.recipe.*;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
@@ -248,12 +249,16 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public ItemStack removeStack(int slot, int amount) {
-        return Inventories.splitStack(this.inventory, slot, amount);
+        ItemStack stack =  Inventories.splitStack(this.inventory, slot, amount);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+        return stack;
     }
 
     @Override
     public ItemStack removeStack(int slot) {
-        return Inventories.removeStack(this.inventory, slot);
+        ItemStack stack =  Inventories.removeStack(this.inventory, slot);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+        return stack;
     }
 
     public void provideRecipeInputs(RecipeMatcher finder) {
@@ -274,6 +279,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
             this.cookTimeTotal = MicrowaveBlockEntity.getCookTime(this.world, this.recipeType, this);
             this.cookTime = 0;
             this.markDirty();
+            world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
         }
     }
 
@@ -312,6 +318,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     @Override
     public void clear() {
         this.inventory.clear();
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
     }
 
     @Override
@@ -333,6 +340,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     void setOpen(BlockState state, boolean open) {
         this.world.setBlockState(this.getPos(), state.with(Microwave.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
     }
 
 
@@ -350,9 +358,10 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
                     blockEntity.cookTimeTotal = getCookTime(world, blockEntity.recipeType, blockEntity);
                     if (craftRecipe(recipe, blockEntity.inventory, i)) {
                         blockEntity.setLastRecipe(recipe);
-                        blockEntity.world.setBlockState(pos, state.with(Microwave.POWERED, false), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+                        blockEntity.world.setBlockState(pos, state = state.with(Microwave.POWERED, false), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
                         blockEntity.playSound(state, SoundIDs.MICROWAVE_BEEP_EVENT, 1);
                         blockEntity.setActiveonClient(blockEntity, false);
+                        world.updateListeners(pos, state, state, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                     }
                     bl2 = true;
                 }
@@ -363,6 +372,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
                 blockEntity.cookTime = 0;
                 if(itemStack.isEmpty()) {
                     blockEntity.setActiveonClient(blockEntity,false);
+                    world.updateListeners(pos, state, state, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
                 }
             }
         } else if (!blockEntity.isActive && blockEntity.cookTime > 0) {
@@ -387,13 +397,28 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         nbtCompound.putBoolean("isActive", active);
         this.writeNbt(nbtCompound);
         this.markDirty();
-        world.setBlockState(pos, this.getCachedState().with(Microwave.POWERED, true), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+        world.setBlockState(pos, this.getCachedState().with(Microwave.POWERED, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
     }
 
     @ExpectPlatform
     public static void setActiveonClient(MicrowaveBlockEntity microwaveBlockEntity, boolean active) {
         throw new AssertionError();
     }
+
+    @Nullable
+    @Override
+    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
+    }
+
+    @Override
+    public NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbt = super.toInitialChunkDataNbt();
+        nbt.putBoolean("isActive", this.isActive);
+        Inventories.writeNbt(nbt, this.inventory);
+        return nbt;
+    }
+
 }
 
 

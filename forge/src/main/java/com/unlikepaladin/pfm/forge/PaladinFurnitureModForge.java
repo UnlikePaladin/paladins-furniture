@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.forge.TagsImpl;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.forge.*;
+import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tag.BlockTags;
@@ -19,9 +20,6 @@ import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 @Mod(PaladinFurnitureMod.MOD_ID)
 public class PaladinFurnitureModForge {
     public PaladinFurnitureModForge() {
-        // Submit our event bus to let architectury register our content on the right time
-        //EventBuses.registerModEventBus(ExampleMod.MOD_ID, FMLJavaModLoadingContext.get().getModEventBus());
-        //ExampleMod.init();
         ItemGroupRegistry.registerItemGroups();
         TagsImpl.TUCKABLE_BLOCKS = BlockTags.createOptional(new Identifier("pfm", "tuckable_blocks"));
         MinecraftForge.EVENT_BUS.register(EntityRegistryForge.class);
@@ -33,7 +31,6 @@ public class PaladinFurnitureModForge {
         MinecraftForge.EVENT_BUS.register(BlockEntityRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(SoundRegistryForge.class);
         NetworkRegistryForge.registerPackets();
-        System.out.println("Finishing registry");
     }
 
 }
