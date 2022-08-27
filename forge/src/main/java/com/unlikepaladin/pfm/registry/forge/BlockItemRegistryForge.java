@@ -1129,7 +1129,6 @@ public class BlockItemRegistryForge {
 
     public static Item registerBlockItem(String itemName, Block block) {
         if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
-            /*FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);*/
             return registerItem(itemName, new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP)) {
                 @Override
                 public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {

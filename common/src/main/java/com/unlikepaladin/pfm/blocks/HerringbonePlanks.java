@@ -7,6 +7,9 @@ import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.block.Material;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.world.BlockView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -35,5 +38,12 @@ public class HerringbonePlanks extends HorizontalFacingBlock {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
+    }
+
+    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+            return 20;
+        }
+        return 0;
     }
 }

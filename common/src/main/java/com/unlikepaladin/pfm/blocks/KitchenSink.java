@@ -202,7 +202,6 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable 
         return state.get(LEVEL_4);
     }
 
-
     @Override
     protected void fillFromDripstone(BlockState state, World world, BlockPos pos, Fluid fluid) {
         if (this.isFull(state)) {
@@ -210,5 +209,12 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable 
         }
         world.setBlockState(pos, (BlockState)state.with(LEVEL_4, state.get(LEVEL_4) + 1));
         world.syncWorldEvent(WorldEvents.POINTED_DRIPSTONE_DRIPS_WATER_INTO_CAULDRON, pos, 0);
+    }
+
+    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+            return 20;
+        }
+        return 0;
     }
 }

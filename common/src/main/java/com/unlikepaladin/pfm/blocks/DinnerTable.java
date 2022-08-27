@@ -126,7 +126,12 @@ public class DinnerTable extends HorizontalFacingBlock implements Waterloggable 
         return state.with(SHAPE, MiddleShape.SINGLE);
     }
 
-
+    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+            return 20;
+        }
+        return 0;
+    }
 
     /**
      * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/

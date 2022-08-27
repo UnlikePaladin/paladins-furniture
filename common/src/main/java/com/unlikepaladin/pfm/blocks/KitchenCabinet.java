@@ -361,6 +361,13 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
         return new GenericStorageBlockEntity9x3(pos,state);
     }
 
+    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+            return 20;
+        }
+        return 0;
+    }
+
     @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));

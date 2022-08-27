@@ -156,6 +156,13 @@ public class SimpleBed extends BedBlock implements Waterloggable, DyeableFurnitu
         super.appendProperties(stateManager);
     }
 
+    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+            return 20;
+        }
+        return 0;
+    }
+
     @Override
     public FluidState getFluidState(BlockState state) {
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);

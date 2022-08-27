@@ -75,6 +75,13 @@ public class KitchenCounterOven extends SmokerBlock implements Waterloggable {
         return block instanceof KitchenCounter || block instanceof KitchenCounterOven;
     }
 
+    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+            return 20;
+        }
+        return 0;
+    }
+
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         World world = ctx.getWorld();

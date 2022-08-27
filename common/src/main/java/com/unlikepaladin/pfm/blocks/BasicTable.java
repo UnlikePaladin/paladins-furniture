@@ -114,6 +114,13 @@ public class BasicTable extends Block implements Waterloggable{
         return PaladinFurnitureMod.getPFMConfig().doTablesOfDifferentMaterialsConnect() ? blockState.getBlock() instanceof BasicTable : blockState.getBlock() == this;
     }
 
+    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+            return 20;
+        }
+        return 0;
+    }
+
     /**Done this way to keep the number of states low*/
     private BlockState getShape(BlockState state, BlockView world, BlockPos pos) {
         Direction.Axis dir = state.get(AXIS);

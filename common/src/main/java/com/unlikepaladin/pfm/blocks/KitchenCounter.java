@@ -299,5 +299,12 @@ enum CounterShape implements StringIdentifiable
     public String asString() {
         return this.name;
     }
+
+    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+            return 20;
+        }
+        return 0;
+    }
 }
 

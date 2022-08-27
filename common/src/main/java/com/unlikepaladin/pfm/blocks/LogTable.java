@@ -97,6 +97,13 @@ public class LogTable extends HorizontalFacingBlock implements Waterloggable{
         return false;
     }
 
+    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+            return 20;
+        }
+        return 0;
+    }
+
     boolean canConnect(BlockState blockState)
     {
         return PaladinFurnitureMod.getPFMConfig().doTablesOfDifferentMaterialsConnect() ? blockState.getBlock() instanceof LogTable : blockState.getBlock() == this;

@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.forge.TagsImpl;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.forge.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.ItemGroup;
@@ -17,6 +16,9 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.FURNITURE_GROUP;
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 
+
+//TODO: Add Recipes and Data gen for tags on Forge
+//TODO: Patchouli Book Item
 @Mod(PaladinFurnitureMod.MOD_ID)
 public class PaladinFurnitureModForge {
     public PaladinFurnitureModForge() {
