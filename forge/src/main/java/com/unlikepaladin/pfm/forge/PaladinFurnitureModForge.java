@@ -30,7 +30,6 @@ import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 
 
 //TODO: Add Recipes and Data gen for tags on Forge
-//TODO: Patchouli Book Item
 @Mod(PaladinFurnitureMod.MOD_ID)
 public class PaladinFurnitureModForge {
     public static ConfigHolder<PaladinFurnitureModConfigImpl> pfmConfig;

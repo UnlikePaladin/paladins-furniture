@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.PaladinFurnitureModConfig;
+import com.unlikepaladin.pfm.compat.fabric.MissingDependencyScreen;
 import com.unlikepaladin.pfm.compat.fabric.PaladinFurnitureModConfigImpl;
 import com.unlikepaladin.pfm.compat.fabric.sandwichable.PFMSandwichableRegistry;
 import com.unlikepaladin.pfm.registry.*;
@@ -12,10 +13,14 @@ import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.server.ServerStartCallback;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +40,22 @@ public class PaladinFurnitureModFabric  implements ModInitializer {
         // This code runs as soon as Minecraft is in a mod-load-ready state.
         // However, some things (like resources) may still be uninitialized.
         // Proceed with mild caution.
+
+        ServerLifecycleEvents.SERVER_STARTED.register((server) ->
+        {
+            String reason;
+            String missingMod;
+            if (FabricLoader.getInstance().isModLoaded("sandwichable") && !FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
+                reason = "To use Sandwichable and Paladin's Furniture Mod together you will need to install ARRP. Please download it, place it on your mods folder, then re-launch the game.";
+                missingMod = "ARRP";
+            } else {
+                return;
+            }
+            String url = "https://www.curseforge.com/minecraft/mc-mods/arrp/files/3529149";
+            MissingDependencyScreen.Screen(reason, url);
+            server.shutdown();
+            throw new RuntimeException("Missing Dependency for Paladin's furniture mod:" + missingMod);
+        });
 
         PaladinFurnitureMod.DYE_KITS = FabricItemGroupBuilder.create(
                         new Identifier(MOD_ID, "dye_kits"))
@@ -66,7 +87,7 @@ public class PaladinFurnitureModFabric  implements ModInitializer {
         EntityRegistryFabric.registerEntities();
         PaladinFurnitureMod.commonInit();
         BlockItemRegistryFabric.registerBlocks();
-        if (FabricLoader.getInstance().isModLoaded("sandwichable")) {
+        if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
             PFMSandwichableRegistry.register();
         }
         if (FabricLoader.getInstance().isModLoaded("cloth-config2")) {
@@ -79,5 +100,6 @@ public class PaladinFurnitureModFabric  implements ModInitializer {
         ScreenHandlerRegistryFabric.registerScreenHandlers();
         RecipeRegistryFabric.registerRecipes();
     }
+
 
 }

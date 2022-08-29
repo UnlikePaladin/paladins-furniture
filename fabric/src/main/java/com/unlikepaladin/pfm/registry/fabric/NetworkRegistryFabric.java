@@ -22,7 +22,6 @@ import java.util.Objects;
 
 public class NetworkRegistryFabric {
 
-    //TODO: Fix JEI
     //TODO: Add Sandwichable + ARRP warning Screen
     //TODO: Invisible Counter with Stove, potential model and connecting issues
     public static void registerPackets() {

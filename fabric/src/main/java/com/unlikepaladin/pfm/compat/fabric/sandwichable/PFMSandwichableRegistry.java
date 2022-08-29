@@ -33,6 +33,7 @@ import static net.devtech.arrp.json.loot.JLootTable.*;
 
 public class PFMSandwichableRegistry {
     public static BlockEntityType<PFMToasterBlockEntity> IRON_TOASTER_BLOCKENTITY;
+
     public static final RuntimeResourcePack SANDWICHABLE_RESOURCE_PACK = RuntimeResourcePack.create("pfm:sandiwchable_data");
 
     public static void registerFurniture(String blockName, Block block, Boolean registerItem) {

@@ -33,7 +33,8 @@
     ]
   },
   "mixins": [
-      "pfm-common.mixins.json"
+      "pfm-common.mixins.json",
+      "pfm.mixins.json"
   ],
   "depends": {
     "fabric": "*",

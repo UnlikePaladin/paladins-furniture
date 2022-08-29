@@ -108,9 +108,18 @@ else {
     }
 }
 
+if (rootProject.arrp_compatibility == "true") {
+    dependencies {
+        modImplementation("net.devtech:arrp:${rootProject.arrp_version}")
+    }
+}
+else {
+    dependencies {
+        modCompileOnly("net.devtech:arrp:${rootProject.arrp_version}")
+    }
+}
 dependencies {
     // To change the versions see the gradle.properties file
-    modImplementation("net.devtech:arrp:${rootProject.arrp_version}")
 
     // Fabric API. This is technically optional, but you probably want it anyway.
 

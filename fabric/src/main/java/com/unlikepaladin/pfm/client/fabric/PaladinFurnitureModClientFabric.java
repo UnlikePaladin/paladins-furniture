@@ -41,7 +41,7 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         ScreenRegistry.register(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
         ScreenRegistry.register(ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
 
-        if (FabricLoader.getInstance().isModLoaded("sandwichable")) {
+        if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
             PFMSandwichableClient.register();
         }
 
