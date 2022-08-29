@@ -23,18 +23,10 @@ public class FurnitureGuideBook extends Item {
     }
     @Override
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        if (!world.isClient() && FabricLoader.getInstance().isModLoaded("patchouli")) {
-            openBook((ServerPlayerEntity) user);
-            return TypedActionResult.success(user.getStackInHand(hand));
-        }
-        else if (world.isClient && !FabricLoader.getInstance().isModLoaded("patchouli"))
-        {
-            user.sendMessage(new TranslatableText("message.pfm.patchouli_not_installed"),false);
-        }
-        return TypedActionResult.pass(user.getStackInHand(hand));
+        return openBook(world, user, hand);
     }
     @ExpectPlatform
-    public static void openBook(ServerPlayerEntity user) {
+    public static TypedActionResult<ItemStack> openBook(World world,PlayerEntity user, Hand hand) {
         throw new AssertionError();
     }
     @Override
