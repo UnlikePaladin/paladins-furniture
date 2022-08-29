@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SXS",
+    "SZS",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:quartz_block"
+    },
+    "X": {
+      "item": "minecraft:quartz_block"
+    },
+    "Z": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "pfm:quartz_classic_nightstand",
+    "count": 4
+  }
+}

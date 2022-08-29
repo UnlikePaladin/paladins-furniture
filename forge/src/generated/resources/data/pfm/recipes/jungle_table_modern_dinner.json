@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "SSS",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:jungle_log"
+    },
+    "X": {
+      "item": "minecraft:jungle_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:jungle_table_modern_dinner",
+    "count": 4
+  }
+}

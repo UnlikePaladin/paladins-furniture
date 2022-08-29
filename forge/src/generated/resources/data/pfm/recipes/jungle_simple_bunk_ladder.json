@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "X X",
+    "XYX",
+    "X X"
+  ],
+  "key": {
+    "Y": {
+      "item": "minecraft:jungle_planks"
+    },
+    "X": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "pfm:jungle_simple_bunk_ladder",
+    "count": 4
+  }
+}

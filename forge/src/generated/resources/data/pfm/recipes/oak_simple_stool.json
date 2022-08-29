@@ -1,0 +1,19 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:oak_log"
+    },
+    "X": {
+      "item": "minecraft:oak_planks"
+    }
+  },
+  "result": {
+    "item": "pfm:oak_simple_stool",
+    "count": 4
+  }
+}

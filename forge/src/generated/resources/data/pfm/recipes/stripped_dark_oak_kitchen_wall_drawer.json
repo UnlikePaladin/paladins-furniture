@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "SYS",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_dark_oak_log"
+    },
+    "S": {
+      "item": "minecraft:dark_oak_planks"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "pfm:stripped_dark_oak_kitchen_wall_drawer"
+  }
+}

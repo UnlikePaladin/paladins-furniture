@@ -15,6 +15,16 @@ loom {
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
         mixinConfig "pfm-common.mixins.json"
+
+        dataGen {
+            mod "pfm"
+        }
+    }
+
+    launches {
+        data {
+            arg "--existing", file("src/main/resources").absolutePath
+        }
     }
 }
 
@@ -50,12 +60,15 @@ dependencies {
 }
 
 processResources {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     inputs.property "version", project.version
 
     filesMatching("META-INF/mods.toml") {
         expand "version": project.version
     }
 }
+sourceSets.main.resources { srcDir 'src/generated/resources' }
+
 
 shadowJar {
     exclude "fabric.mod.json"

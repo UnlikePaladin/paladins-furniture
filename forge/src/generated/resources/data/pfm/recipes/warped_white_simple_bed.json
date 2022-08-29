@@ -1,0 +1,18 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XZX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:warped_planks"
+    },
+    "Z": {
+      "item": "minecraft:white_bed"
+    }
+  },
+  "result": {
+    "item": "pfm:warped_white_simple_bed"
+  }
+}

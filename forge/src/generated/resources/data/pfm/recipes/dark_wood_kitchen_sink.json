@@ -1,0 +1,25 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SZS",
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:stripped_dark_oak_log"
+    },
+    "S": {
+      "item": "minecraft:smooth_quartz"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "pfm:dark_wood_kitchen_sink"
+  }
+}

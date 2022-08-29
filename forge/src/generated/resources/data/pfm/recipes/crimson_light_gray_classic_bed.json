@@ -1,0 +1,21 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "YZY",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:light_gray_concrete"
+    },
+    "Z": {
+      "item": "minecraft:light_gray_bed"
+    },
+    "Y": {
+      "item": "minecraft:crimson_fence"
+    }
+  },
+  "result": {
+    "item": "pfm:crimson_light_gray_classic_bed"
+  }
+}

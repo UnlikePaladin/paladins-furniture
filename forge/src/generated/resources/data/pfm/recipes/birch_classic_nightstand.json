@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SXS",
+    "SZS",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:birch_log"
+    },
+    "X": {
+      "item": "minecraft:birch_planks"
+    },
+    "Z": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "pfm:birch_classic_nightstand",
+    "count": 4
+  }
+}

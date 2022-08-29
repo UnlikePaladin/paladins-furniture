@@ -1,0 +1,23 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SXS",
+    "SZS",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:andesite"
+    },
+    "X": {
+      "item": "minecraft:polished_andesite"
+    },
+    "Z": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "pfm:andesite_classic_nightstand",
+    "count": 4
+  }
+}

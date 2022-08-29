@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "SYS"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:white_terracotta"
+    },
+    "S": {
+      "item": "minecraft:polished_granite"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    }
+  },
+  "result": {
+    "item": "pfm:granite_kitchen_wall_small_drawer",
+    "count": 3
+  }
+}

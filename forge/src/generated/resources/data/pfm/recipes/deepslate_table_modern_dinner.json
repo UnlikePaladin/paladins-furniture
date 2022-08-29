@@ -1,0 +1,20 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XXX",
+    "SSS",
+    "S S"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:deepslate"
+    },
+    "X": {
+      "item": "minecraft:polished_deepslate"
+    }
+  },
+  "result": {
+    "item": "pfm:deepslate_table_modern_dinner",
+    "count": 4
+  }
+}
