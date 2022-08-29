@@ -6,6 +6,6 @@ public class PaladinFurnitureModImpl {
 
     //TODO: Config
     public static PaladinFurnitureModConfig getPFMConfig() {
-        return new PaladinFurnitureModConfig();
+        return PaladinFurnitureModForge.pfmConfig.getConfig();
     }
 }

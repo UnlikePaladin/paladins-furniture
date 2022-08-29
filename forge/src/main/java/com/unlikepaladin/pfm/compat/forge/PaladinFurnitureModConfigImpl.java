@@ -1,19 +1,41 @@
 package com.unlikepaladin.pfm.compat.forge;
 
-public class PaladinFurnitureModConfigImpl {
+import com.unlikepaladin.pfm.compat.PaladinFurnitureModConfig;
+import me.shedaniel.autoconfig.ConfigData;
+import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.config.IConfigSpec;
+
+@Config(name = "pfm")
+public class PaladinFurnitureModConfigImpl extends PaladinFurnitureModConfig implements ConfigData {
+
+    @ConfigEntry.Gui.Tooltip
+    public static boolean tablesOfDifferentMaterialsConnect = false;
+
     public static boolean doTablesOfDifferentMaterialsConnect() {
-        return false;
+        return tablesOfDifferentMaterialsConnect;
     }
+
+    @ConfigEntry.Gui.Tooltip
+    public static boolean chairsFacePlayer = true;
 
     public static boolean doChairsFacePlayer() {
-        return true;
+        return chairsFacePlayer;
     }
+
+    @ConfigEntry.Gui.Tooltip
+    public static boolean countersOfDifferentMaterialsConnect = false;
 
     public static boolean doCountersOfDifferentMaterialsConnect() {
-        return false;
+        return countersOfDifferentMaterialsConnect;
     }
 
+
+    @ConfigEntry.Gui.Tooltip
+    public static boolean foodPopsOffStove = false;
+
     public static boolean doesFoodPopOffStove() {
-        return true;
+        return foodPopsOffStove;
     }
 }

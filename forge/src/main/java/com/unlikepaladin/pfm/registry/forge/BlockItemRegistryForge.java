@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.registry.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
+import com.unlikepaladin.pfm.items.forge.FurnitureGuideBookImpl;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
@@ -11,6 +12,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -1080,7 +1082,9 @@ public class BlockItemRegistryForge {
         });
         event.getRegistry().registerAll(items.toArray(Item[]::new));
         PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+        PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).maxCount(1));
         event.getRegistry().registerAll(
+                registerItem("furniture_book", PaladinFurnitureModBlocksItems.FURNITURE_BOOK),
                 registerItem("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM),
                 registerItem("dye_kit_red", PaladinFurnitureModBlocksItems.DYE_KIT_RED),
                 registerItem("dye_kit_orange", PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE),

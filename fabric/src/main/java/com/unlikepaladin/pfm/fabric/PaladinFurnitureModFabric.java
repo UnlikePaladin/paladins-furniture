@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.registry.fabric.*;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
+import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.loader.api.FabricLoader;
@@ -27,10 +28,6 @@ public class PaladinFurnitureModFabric  implements ModInitializer {
     public static SoundEvent FURNITURE_DYED_EVENT = new SoundEvent(FURNITURE_DYED_ID);
 
     public static final Logger GENERAL_LOGGER = LogManager.getLogger();
-
-
-
-    //System.out.println("Hello Fabric world!");
 
     public static ConfigHolder<PaladinFurnitureModConfigImpl> pfmConfig;
     @Override
@@ -73,7 +70,7 @@ public class PaladinFurnitureModFabric  implements ModInitializer {
             PFMSandwichableRegistry.register();
         }
         if (FabricLoader.getInstance().isModLoaded("cloth-config2")) {
-            pfmConfig = AutoConfig.register(PaladinFurnitureModConfigImpl.class, GsonConfigSerializer::new);
+            pfmConfig = AutoConfig.register(PaladinFurnitureModConfigImpl.class, Toml4jConfigSerializer::new);
         }
         StatisticsRegistryFabric.registerStatistics();
         SoundRegistryFabric.registerSounds();

@@ -26,8 +26,24 @@ configurations {
     developmentForge.extendsFrom common
 }
 
+repositories {
+    maven { url 'https://maven.blamejared.com' }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+}
+
+
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
+
+    modImplementation("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}")
+    modCompileOnly(("mezz.jei:jei-${rootProject.minecraft_version}:${rootProject.jei_version}:api"))
+    modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}:${rootProject.jei_version}")
+
+    modApi("me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_config_version}")
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
