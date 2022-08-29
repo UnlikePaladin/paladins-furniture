@@ -49,6 +49,11 @@ repositories {
     maven {
         url = uri("https://storage.googleapis.com/devan-maven/")
     }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
     mavenLocal()
 }
 
@@ -94,12 +99,12 @@ else {
 
 if (rootProject.patchouli_compatibility == "true") {
     dependencies {
-        modImplementation("vazkii.patchouli:Patchouli:${rootProject.patchouli_version}")
+        modImplementation("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_fabric}")
     }
 }
 else {
     dependencies {
-        modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version}")
+        modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_fabric}")
     }
 }
 
