@@ -23,7 +23,6 @@ public class FurnitureGuideBookImpl extends FurnitureGuideBook {
     public static TypedActionResult<ItemStack> openBook(World world, PlayerEntity user, Hand hand) {
         if (!world.isClient() && ModList.get().isLoaded("patchouli")) {
             PatchouliAPI.get().openBookGUI((ServerPlayerEntity) user, new Identifier("pfm:guide_book"));
-            System.out.println("Book not working, wtf?");
             return TypedActionResult.success(user.getStackInHand(hand));
         }
         else if (world.isClient && !ModList.get().isLoaded("patchouli"))
