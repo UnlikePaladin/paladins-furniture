@@ -145,7 +145,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     }
 
     public boolean hasMetalInside() {
-        return Sandwichable.METAL_ITEMS.contains(items.get(0).getItem()) || Sandwichable.METAL_ITEMS.contains(items.get(1).getItem());
+        return this.items.get(0).isIn(Sandwichable.METAL_ITEMS) || this.items.get(1).isIn(Sandwichable.METAL_ITEMS);
     }
 
     private void toastItems() {
@@ -159,7 +159,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
                 changed = true;
             } else {
                 if(items.get(i).isFood()) {
-                    Item item = Sandwichable.SMALL_FOODS.contains(items.get(i).getItem()) ? ItemsRegistry.BURNT_MORSEL : ItemsRegistry.BURNT_FOOD;
+                    Item item = this.items.get(i).isIn(Sandwichable.SMALL_FOODS) ? ItemsRegistry.BURNT_MORSEL : ItemsRegistry.BURNT_FOOD;
                     items.set(i, new ItemStack(item, 1));
                     changed = true;
                 }

@@ -81,14 +81,14 @@ public class LightSwitchItem extends BlockItem {
         if (getLights(context.getStack()) != null) {
             NbtList lights = getLights(context.getStack());
             Direction facing = context.getPlayerFacing();
-                for(int i = 0; i < lights.size(); i++)
-                {
-                    NbtElement nbtElement = lights.get(i);
-                    BlockPos lightPos = BlockPos.fromLong(((NbtLong) nbtElement).longValue());
-                    BlockPos placedPos = pos.offset(facing);
-                    double distance = Math.sqrt(lightPos.getSquaredDistance(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5, true));
-                    return !(distance > 16) && state.getBlock().canPlaceAt(state, world, pos);
-                }
+            for(int i = 0; i < lights.size(); i++)
+            {
+                NbtElement nbtElement = lights.get(i);
+                BlockPos lightPos = BlockPos.fromLong(((NbtLong) nbtElement).longValue());
+                BlockPos placedPos = pos.offset(facing);
+                double distance = Math.sqrt(lightPos.getSquaredDistance(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5));
+                return !(distance > 16) && state.getBlock().canPlaceAt(state, world, pos);
+            }
 
         }
         return state.getBlock().canPlaceAt(state, world, pos);

@@ -42,7 +42,6 @@ public class PFMSandwichableRegistry {
             Registry.register(Registry.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), new BlockItem(block, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
         }
     }
-    //protected static JTag iron_toaster_tag = JTag.tag();
     public static final PFMToaster IRON_TOASTER = new PFMToaster(FabricBlockSettings.copy(Blocks.STONECUTTER).requiresTool());
     public static void register() {
             RuntimeResourcePack pack = SANDWICHABLE_RESOURCE_PACK;
