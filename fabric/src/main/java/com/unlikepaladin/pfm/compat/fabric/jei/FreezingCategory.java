@@ -5,15 +5,17 @@ import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
+import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
+import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -22,6 +24,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+
+import java.util.List;
+
+import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
+import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     public static final TranslatableText TITLE = new TranslatableText("rei.pfm.freezer");
@@ -35,7 +42,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
 
     public FreezingCategory(IGuiHelper guiHelper) {
-        ICON = guiHelper.createDrawableIngredient(new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FRIDGE));
+        ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FRIDGE));
         this.BACKGROUND = guiHelper.createDrawable(FREEZE_GUI,55, 16, 82, 54);
         staticFreezeIcon = guiHelper.createDrawable(FREEZE_GUI, 176, 0, 12, 12);
         animatedFreezeIcon = guiHelper.createAnimatedDrawable(staticFreezeIcon, 300, IDrawableAnimated.StartDirection.TOP, true);
@@ -52,13 +59,13 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     }
 
     @Override
-    public Identifier getUid() {
-        return IDENTIFIER;
+    public Class<? extends FreezingRecipe> getRecipeClass() {
+        return getRecipeType().getRecipeClass();
     }
 
     @Override
-    public Class getRecipeClass() {
-        return FreezingRecipe.class;
+    public RecipeType<FreezingRecipe> getRecipeType() {
+        return PaladinFurnitureModJEIPlugin.FREEZING_RECIPE;
     }
 
     @Override
@@ -76,24 +83,17 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
         return ICON;
     }
 
-    @Override
-    public void setIngredients(FreezingRecipe recipe, IIngredients ingredients) {
-        ingredients.setInputIngredients(recipe.getIngredients());
-        ingredients.setOutput(VanillaTypes.ITEM, recipe.getOutput());
-    }
-
     protected static final int inputSlot = 0;
     protected static final int fuelSlot = 1;
     protected static final int outputSlot = 2;
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, FreezingRecipe recipe, IIngredients ingredients) {
-        IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
+    public void setRecipe(IRecipeLayoutBuilder builder, FreezingRecipe recipe, IFocusGroup focuses) {
+        builder.addSlot(INPUT, 1, 1)
+                .addIngredients(recipe.getIngredients().get(inputSlot));
 
-        guiItemStacks.init(inputSlot, true, 0, 0);
-        guiItemStacks.init(outputSlot, false, 60, 18);
-
-        guiItemStacks.set(ingredients);
+        builder.addSlot(OUTPUT, 61, 19)
+                .addItemStack(recipe.getOutput());
     }
 
     protected IDrawableAnimated getArrow(FreezingRecipe recipe) {
@@ -129,7 +129,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
 
 
     @Override
-    public void draw(FreezingRecipe recipe, MatrixStack poseStack, double mouseX, double mouseY) {
+    public void draw(FreezingRecipe recipe, IRecipeSlotsView recipeSlotsView, MatrixStack poseStack, double mouseX, double mouseY) {
         animatedFreezeIcon.draw(poseStack, 1, 20);
 
         IDrawableAnimated arrow = getArrow(recipe);
@@ -137,5 +137,10 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
 
         drawExperience(recipe, poseStack, 0);
         drawFreezeTime(recipe, poseStack, 45);
+    }
+
+    @Override
+    public Identifier getUid() {
+        return getRecipeType().getUid();
     }
 }

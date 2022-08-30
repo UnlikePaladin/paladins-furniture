@@ -1,15 +1,16 @@
 package com.unlikepaladin.pfm.data.fabric;
 
-import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.Block;
 import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 public class TagsImpl {
 
-    public static Tag.Identified<Block> TUCKABLE_BLOCKS = TagFactory.BLOCK.create(new Identifier("pfm", "tuckable_blocks"));
+    public static TagKey<Block> TUCKABLE_BLOCKS = TagKey.of(Registry.BLOCK_KEY, new Identifier("pfm", "tuckable_blocks"));
 
-    public static Tag.Identified<Block> getTuckableBlocks() {
+    public static TagKey<Block> getTuckableBlocks() {
         return TUCKABLE_BLOCKS;
     }
 }
