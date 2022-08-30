@@ -10,12 +10,15 @@ import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
+import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.category.extensions.IExtendableRecipeCategory;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
@@ -44,7 +47,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private static final int craftInputSlot1 = 1;
 
     public FurnitureCategory(IGuiHelper guiHelper) {
-        ICON = guiHelper.createDrawableIngredient(new ItemStack(PaladinFurnitureModBlocksItems.WORKING_TABLE));
+        ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(PaladinFurnitureModBlocksItems.WORKING_TABLE));
         this.BACKGROUND = guiHelper.createDrawable(TEXTURE_GUI_VANILLA, 0, 60, 116, 54);
         craftingGridHelper = guiHelper.createCraftingGridHelper(craftInputSlot1);
     }
@@ -52,12 +55,17 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
 
     @Override
     public Identifier getUid() {
-        return IDENTIFIER;
+        return getRecipeType().getUid();
     }
 
     @Override
-    public Class getRecipeClass() {
-        return FurnitureRecipe.class;
+    public Class<? extends FurnitureRecipe> getRecipeClass() {
+        return getRecipeType().getRecipeClass();
+    }
+
+    @Override
+    public RecipeType<FurnitureRecipe> getRecipeType() {
+        return PaladinFurnitureModJEIPlugin.FURNITURE_RECIPE;
     }
 
     @Override
@@ -75,37 +83,18 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         return ICON;
     }
 
-    @Override
-    public void setIngredients(FurnitureRecipe recipe, IIngredients ingredients) {
-        ingredients.setInputIngredients(recipe.getIngredients());
-        ingredients.setOutput(VanillaTypes.ITEM, recipe.getOutput());
-    }
 
     @Override
-    public void setRecipe(IRecipeLayout recipeLayout, FurnitureRecipe recipe, IIngredients ingredients) {
-        IGuiItemStackGroup guiItemStacks = recipeLayout.getItemStacks();
+    public void setRecipe(IRecipeLayoutBuilder builder, FurnitureRecipe recipe, IFocusGroup focuses) {
+        List<List<ItemStack>> inputs = recipe.getIngredients().stream()
+                .map(ingredient -> List.of(ingredient.getMatchingStacks()))
+                .toList();
+        ItemStack resultItem = recipe.getOutput();
 
-        guiItemStacks.init(craftOutputSlot, false, 94, 18);
-
-        for (int y = 0; y < 3; ++y) {
-            for (int x = 0; x < 3; ++x) {
-                int index = craftInputSlot1 + x + (y * 3);
-                guiItemStacks.init(index, true, x * 18, y * 18);
-            }
-        }
-
-
-        List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
-        List<List<ItemStack>> outputs = ingredients.getOutputs(VanillaTypes.ITEM);
-
-        Size2i size = new Size2i(recipe.getWidth(), recipe.getHeight());
-        if (size != null && size.width > 0 && size.height > 0) {
-            craftingGridHelper.setInputs(guiItemStacks, inputs, size.width, size.height);
-        } else {
-            craftingGridHelper.setInputs(guiItemStacks, inputs);
-            recipeLayout.setShapeless();
-        }
-        guiItemStacks.set(craftOutputSlot, outputs.get(0));
+        int width = recipe.getWidth();
+        int height = recipe.getHeight();
+        craftingGridHelper.createAndSetOutputs(builder, VanillaTypes.ITEM_STACK, List.of(resultItem));
+        craftingGridHelper.createAndSetInputs(builder, VanillaTypes.ITEM_STACK, inputs, width, height);
     }
 
 }

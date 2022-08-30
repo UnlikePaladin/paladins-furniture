@@ -22,7 +22,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
     public static ConfigHolder<PaladinFurnitureModConfigImpl> pfmConfig;
     public PaladinFurnitureModForge() {
         ItemGroupRegistry.registerItemGroups();
-        TagsImpl.TUCKABLE_BLOCKS = BlockTags.createOptional(new Identifier("pfm", "tuckable_blocks"));
+        TagsImpl.TUCKABLE_BLOCKS = BlockTags.create(new Identifier("pfm", "tuckable_blocks"));
         MinecraftForge.EVENT_BUS.register(EntityRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(BlockItemRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(StatisticsRegistryForge.class);
