@@ -96,7 +96,7 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
             }
         }
         BlockState direction2 = world.getBlockState(pos.offset(direction.getOpposite()));
-        if (canConnectToCounter(direction2)) {
+        if (canConnectToCounter(direction2) && direction2.getProperties().contains(FACING)) {
             Direction direction3 = direction2.get(FACING);
             if (direction3.getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3)) {
                 if (direction3 == direction.rotateYCounterclockwise()) {
