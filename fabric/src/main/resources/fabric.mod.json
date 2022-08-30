@@ -37,6 +37,9 @@
     ],
     "emi": [
       "com.unlikepaladin.pfm.compat.fabric.emi.PaladinFurnitureModEMIPlugin"
+    ],
+    "jei_mod_plugin": [
+      "com.unlikepaladin.pfm.compat.fabric.jei.PaladinFurnitureModJEIPlugin"
     ]
   },
   "mixins": [
@@ -45,7 +48,7 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": "1.18.x",
+    "minecraft": "1.18.2",
     "cloth-config2": ">=6.2.57"
   },
   "suggests": {
