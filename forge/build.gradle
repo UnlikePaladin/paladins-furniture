@@ -59,10 +59,6 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
 
-sourceSets.main.resources {
-    srcDir 'src/generated/resources'
-}
-
 processResources {
     inputs.property "version", project.version
 
@@ -80,10 +76,15 @@ shadowJar {
     classifier "dev-shadow"
 }
 
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
+
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     classifier null
+    archiveClassifier = "forge-mc${rootProject.minecraft_version}"
 }
 
 jar {
