@@ -54,7 +54,6 @@ repositories {
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
-    mavenLocal()
 }
 
 if (rootProject.sandwichable_compatibility == "true") {
@@ -130,15 +129,15 @@ else {
 }
 if (rootProject.jei_compatibility == "true") {
     dependencies {
-        modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-common-api:${rootProject.jei_version_fabric}")
-        modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-fabric-api:${rootProject.jei_version_fabric}")
-        modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version_fabric}")
+ //       modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}")
     }
 }
 else{
     dependencies {
         // compile against the JEI API but do not include it at runtime
-        modImplementation("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version_fabric}")
+        modImplementation("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version_fabric}") {
+            exclude group: "mezz.jei"
+        }
     }
 }
 
