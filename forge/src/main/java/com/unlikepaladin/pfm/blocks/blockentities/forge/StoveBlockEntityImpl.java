@@ -24,12 +24,12 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
     @Nullable
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return super.toUpdatePacket();
+        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
     }
 
     @Override
     public @NotNull NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt = super.toInitialChunkDataNbt();
+        NbtCompound nbt =  this.saveInitialChunkData(new NbtCompound());
         Inventories.writeNbt(nbt, this.itemsBeingCooked, true);
         return nbt;
     }

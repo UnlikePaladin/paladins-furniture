@@ -86,7 +86,7 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
     private CounterShape getShape(BlockState state, BlockView world, BlockPos pos) {
         Direction direction = state.get(FACING);
         BlockState blockState = world.getBlockState(pos.offset(direction));
-        if (canConnectToCounter(blockState)) {
+        if (canConnectToCounter(blockState) && blockState.getProperties().contains(FACING)) {
             Direction direction2 = blockState.get(FACING);
             if (direction2.getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
                 if (direction2 == direction.rotateYCounterclockwise()) {
@@ -105,8 +105,8 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
                 return CounterShape.INNER_RIGHT;
             }
         }
-        boolean right = canConnect(world, pos, state.get(FACING).rotateYCounterclockwise(), state.get(FACING));
-        boolean left = canConnect(world, pos, state.get(FACING).rotateYClockwise(), state.get(FACING));
+        boolean right = canConnect(world, pos, state.get(FACING).rotateYCounterclockwise());
+        boolean left = canConnect(world, pos, state.get(FACING).rotateYClockwise());
         if (left && right) {
             return CounterShape.STRAIGHT;
         } else if (left) {
@@ -118,7 +118,7 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
 
     }
 
-    public boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
+    public boolean canConnect(BlockView world, BlockPos pos, Direction direction)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
         return (isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock);

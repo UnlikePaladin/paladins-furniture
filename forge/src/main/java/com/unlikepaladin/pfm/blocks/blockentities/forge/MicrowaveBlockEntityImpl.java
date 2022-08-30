@@ -42,16 +42,17 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
     @Nullable
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return super.toUpdatePacket();
+        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
     }
 
     @Override
-    public @NotNull NbtCompound toInitialChunkDataNbt() {
+    public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbt = super.toInitialChunkDataNbt();
         nbt.putBoolean("isActive", this.isActive);
         Inventories.writeNbt(nbt, this.inventory);
         return nbt;
     }
+
 
     @Override
     public void handleUpdateTag(NbtCompound tag) {

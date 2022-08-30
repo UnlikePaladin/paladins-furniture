@@ -72,7 +72,6 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
         @Override
         protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
-
         }
 
         @Override
@@ -250,14 +249,16 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     @Override
     public ItemStack removeStack(int slot, int amount) {
         ItemStack stack =  Inventories.splitStack(this.inventory, slot, amount);
-        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        this.markDirty();
         return stack;
     }
 
     @Override
     public ItemStack removeStack(int slot) {
         ItemStack stack =  Inventories.removeStack(this.inventory, slot);
-        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        this.markDirty();
         return stack;
     }
 
@@ -279,7 +280,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
             this.cookTimeTotal = MicrowaveBlockEntity.getCookTime(this.world, this.recipeType, this);
             this.cookTime = 0;
             this.markDirty();
-            world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+            world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
         }
     }
 
@@ -318,7 +319,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     @Override
     public void clear() {
         this.inventory.clear();
-        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
     }
 
     @Override
@@ -340,7 +341,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     void setOpen(BlockState state, boolean open) {
         this.world.setBlockState(this.getPos(), state.with(Microwave.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
-        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
     }
 
 
@@ -361,7 +362,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
                         blockEntity.world.setBlockState(pos, state = state.with(Microwave.POWERED, false), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
                         blockEntity.playSound(state, SoundIDs.MICROWAVE_BEEP_EVENT, 1);
                         blockEntity.setActiveonClient(blockEntity, false);
-                        world.updateListeners(pos, state, state, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                        world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
                     }
                     bl2 = true;
                 }
@@ -372,7 +373,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
                 blockEntity.cookTime = 0;
                 if(itemStack.isEmpty()) {
                     blockEntity.setActiveonClient(blockEntity,false);
-                    world.updateListeners(pos, state, state, Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+                    world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
                 }
             }
         } else if (!blockEntity.isActive && blockEntity.cookTime > 0) {
@@ -397,28 +398,13 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         nbtCompound.putBoolean("isActive", active);
         this.writeNbt(nbtCompound);
         this.markDirty();
-        world.setBlockState(pos, this.getCachedState().with(Microwave.POWERED, true), Block.NOTIFY_ALL | Block.REDRAW_ON_MAIN_THREAD);
+        world.setBlockState(pos, this.getCachedState().with(Microwave.POWERED, true), Block.NOTIFY_LISTENERS);
     }
 
     @ExpectPlatform
     public static void setActiveonClient(MicrowaveBlockEntity microwaveBlockEntity, boolean active) {
         throw new AssertionError();
     }
-
-    @Nullable
-    @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
-    }
-
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt = super.toInitialChunkDataNbt();
-        nbt.putBoolean("isActive", this.isActive);
-        Inventories.writeNbt(nbt, this.inventory);
-        return nbt;
-    }
-
 }
 
 

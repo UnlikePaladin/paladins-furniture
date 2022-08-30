@@ -133,15 +133,10 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         return nbt;
     }
 
-    private NbtCompound saveInitialChunkData(NbtCompound nbt) {
+    protected NbtCompound saveInitialChunkData(NbtCompound nbt) {
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, this.itemsBeingCooked, true);
         return nbt;
-    }
-
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return this.saveInitialChunkData(new NbtCompound());
     }
 
     public ItemStack removeStack(int slot) {
@@ -179,12 +174,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
     @Override
     public void clear() {
         this.itemsBeingCooked.clear();
-    }
-
-    @Nullable
-    @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
+        updateListeners();
     }
 
 }

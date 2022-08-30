@@ -37,11 +37,12 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
     @Override
     public void clear() {
         this.itemInPlate.clear();
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
     }
 
     private void updateListeners() {
         this.markDirty();
-        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
+        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
     }
 
     public boolean addItem(ItemStack item) {
@@ -53,14 +54,10 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
         return false;
     }
 
-    private NbtCompound saveInitialChunkData(NbtCompound nbt) {
+    protected NbtCompound saveInitialChunkData(NbtCompound nbt) {
         super.writeNbt(nbt);
         Inventories.writeNbt(nbt, this.itemInPlate, true);
         return nbt;
-    }
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return this.saveInitialChunkData(new NbtCompound());
     }
 
     public ItemStack getItemInPlate() {
@@ -72,12 +69,6 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
         this.itemInPlate.set(0, ItemStack.EMPTY);
         updateListeners();
         return stack;
-    }
-
-    @Nullable
-    @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
     }
 
     public Inventory getInventory(){

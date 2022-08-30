@@ -15,17 +15,17 @@ public class StovetopBlockEntityImpl extends StovetopBlockEntity {
         super(pos, state);
     }
 
+    @Override
+    public @NotNull NbtCompound toInitialChunkDataNbt() {
+        NbtCompound nbt = this.saveInitialChunkData(new NbtCompound());
+        Inventories.writeNbt(nbt, this.itemsBeingCooked, true);
+        return nbt;
+    }
+
     @Nullable
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return super.toUpdatePacket();
-    }
-
-    @Override
-    public @NotNull NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt = super.toInitialChunkDataNbt();
-        Inventories.writeNbt(nbt, this.itemsBeingCooked, true);
-        return nbt;
+        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
     }
 
     @Override

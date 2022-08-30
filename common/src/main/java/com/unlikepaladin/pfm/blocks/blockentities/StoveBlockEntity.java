@@ -96,7 +96,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         return nbt;
     }
 
-    private NbtCompound saveInitialChunkData(NbtCompound nbt) {
+    protected NbtCompound saveInitialChunkData(NbtCompound nbt) {
         super.writeNbt(nbt);
         writeNbt(nbt, this.itemsBeingCooked, true);
         return nbt;
@@ -140,10 +140,6 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         this.itemsBeingCooked.clear();
     }
 
-    @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return this.saveInitialChunkData(new NbtCompound());
-    }
 
     private void updateListeners() {
         this.markDirty();
@@ -221,12 +217,6 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
             return true;
         }
         return false;
-    }
-
-    @Nullable
-    @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
     }
 
 }
