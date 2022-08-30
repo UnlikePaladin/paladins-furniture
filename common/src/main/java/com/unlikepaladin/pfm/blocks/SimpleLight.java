@@ -72,6 +72,9 @@ public class SimpleLight extends PowerableBlock {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
         if (!state.canPlaceAt(world, pos)) {
             return Blocks.AIR.getDefaultState();
         }
@@ -86,7 +89,7 @@ public class SimpleLight extends PowerableBlock {
         boolean bl = (state.get(LIT));
         if (bl != world.isReceivingRedstonePower(pos)) {
             if (bl) {
-                world.getBlockTickScheduler().schedule(pos, this, 4);
+                world.createAndScheduleBlockTick(pos, this, 4);
             } else {
                 world.setBlockState(pos, state.cycle(LIT), NOTIFY_LISTENERS);
             }

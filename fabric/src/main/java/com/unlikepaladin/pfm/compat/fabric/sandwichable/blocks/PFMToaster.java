@@ -115,7 +115,7 @@ public class PFMToaster extends ToasterBlock {
                     }
                 }
 
-                Util.sync(blockEntity, world);
+                Util.sync(blockEntity);
             } else if (!blockEntity.isToasting()) {
                 blockEntity.startToasting(player);
             } else {

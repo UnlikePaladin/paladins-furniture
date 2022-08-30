@@ -328,7 +328,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putShort("FuelTimeLeft", (short)this.fuelTime);
         nbt.putShort("FreezeTime", (short)this.freezeTime);
@@ -337,7 +337,6 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         NbtCompound nbtCompound = new NbtCompound();
         this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), (int)integer));
         nbt.put("RecipesUsed", nbtCompound);
-        return nbt;
     }
 
 

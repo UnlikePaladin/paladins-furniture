@@ -22,10 +22,9 @@ public class ToiletBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putInt("flushTimer", flushTimer);
-        return nbt;
     }
 
     @Override

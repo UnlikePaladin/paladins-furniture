@@ -80,6 +80,10 @@ public class XboxFridge extends Fridge
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
+
         DoubleBlockHalf doubleBlockHalf = state.get(HALF);
         if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP)) {
             if (neighborState.isOf(this) && neighborState.get(HALF) != doubleBlockHalf) {

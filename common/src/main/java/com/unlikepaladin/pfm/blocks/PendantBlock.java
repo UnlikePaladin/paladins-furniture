@@ -127,7 +127,7 @@ public class PendantBlock extends PowerableBlock  {
         boolean bl = (state.get(LIT));
         if (bl != world.isReceivingRedstonePower(pos)) {
             if (bl) {
-                world.getBlockTickScheduler().schedule(pos, this, 4);
+                world.createAndScheduleBlockTick(pos, this, 4);
             } else {
                 world.setBlockState(pos, state.cycle(LIT), Block.NOTIFY_LISTENERS);
             }

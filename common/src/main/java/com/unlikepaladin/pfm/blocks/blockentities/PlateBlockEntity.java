@@ -29,9 +29,8 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         this.saveInitialChunkData(nbt);
-        return nbt;
     }
 
     @Override

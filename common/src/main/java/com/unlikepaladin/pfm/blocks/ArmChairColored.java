@@ -35,7 +35,7 @@ public class ArmChairColored extends ArmChair implements DyeableFurniture {
 
     public ArmChairColored(DyeColor color, Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(SHAPE, ArmChairShape.STRAIGHT));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(SHAPE, ArmChairShape.STRAIGHT).with(WATERLOGGED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
             if (this.getClass().isAssignableFrom(ArmChairColored.class)) {
@@ -208,6 +208,9 @@ public class ArmChairColored extends ArmChair implements DyeableFurniture {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (state.get(WATERLOGGED)) {
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        }
         return direction.getAxis().isHorizontal() ? state.with(FACING, state.get(FACING)).with(SHAPE, getShape(state, world, pos)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 

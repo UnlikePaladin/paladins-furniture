@@ -4,7 +4,6 @@ import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -14,16 +13,20 @@ import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
+import javax.annotation.Nullable;
 import java.util.Collection;
 import java.util.stream.Stream;
 
-public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory {
+public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity implements ExtendedScreenHandlerFactory {
     public MicrowaveBlockEntityImpl(BlockPos pos, BlockState state) {
         super(pos, state);
     }
@@ -43,14 +46,15 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity implements Bl
         );
     }
 
+    @Nullable
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
     @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return writeNbt(tag);
+    public NbtCompound toInitialChunkDataNbt() {
+        return createNbt();
     }
     @Override
     public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {

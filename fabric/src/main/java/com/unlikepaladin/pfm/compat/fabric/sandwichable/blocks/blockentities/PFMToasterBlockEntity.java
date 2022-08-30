@@ -1,13 +1,13 @@
 package com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.blockentities;
 
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.PFMToaster;
 import com.unlikepaladin.pfm.compat.fabric.sandwichable.PFMSandwichableRegistry;
+import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.PFMToaster;
 import io.github.foundationgames.sandwichable.Sandwichable;
 import io.github.foundationgames.sandwichable.blocks.ToasterBlock;
+import io.github.foundationgames.sandwichable.blocks.entity.SyncedBlockEntity;
 import io.github.foundationgames.sandwichable.items.ItemsRegistry;
 import io.github.foundationgames.sandwichable.recipe.ToastingRecipe;
 import io.github.foundationgames.sandwichable.util.Util;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,6 +17,9 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.Packet;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
@@ -33,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory, BlockEntityClientSerializable {
+public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory, SyncedBlockEntity {
     private DefaultedList<ItemStack> items = DefaultedList.ofSize(2, ItemStack.EMPTY);
     private @Nullable UUID lastUser;
     private static int toastTime = 240;
@@ -65,7 +68,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         nbt.putInt("toastProgress", toastProgress);
         nbt.putBoolean("toasting", toasting);
         nbt.putInt("smokeProgress", smokeProgress);
@@ -75,17 +78,17 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         } else nbt.putUuid("lastUser", this.lastUser);
         Inventories.writeNbt(nbt, items);
         super.writeNbt(nbt);
-        return nbt;
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientPlayPacketListener> toUpdatePacket() {
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
     @Override
-    public void fromClientTag(NbtCompound NbtCompound) {
-        this.readNbt(NbtCompound);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound NbtCompound) {
-        return this.writeNbt(NbtCompound);
+    public NbtCompound toInitialChunkDataNbt() {
+        return createNbt();
     }
 
     private void explode() {
@@ -288,7 +291,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         ItemStack stack = items.get(slot).copy();
         items.set(slot, ItemStack.EMPTY);
         setLastUser(null);
-        Util.sync(this, world);
+        Util.sync(this);
         return stack;
     }
 
@@ -296,7 +299,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     public void setStack(int slot, ItemStack stack) {
         items.set(slot, stack);
         setLastUser(null);
-        Util.sync(this, world);
+        Util.sync(this);
     }
 
     @Override
@@ -307,6 +310,6 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     @Override
     public void clear() {
         items.clear();
-        Util.sync(this, world);
+        Util.sync(this);
     }
 }
