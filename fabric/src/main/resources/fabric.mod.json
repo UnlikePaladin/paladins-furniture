@@ -30,6 +30,9 @@
     ],
     "modmenu": [
       "com.unlikepaladin.pfm.compat.fabric.PaladinFurnitureModMenu"
+    ],
+    "emi": [
+      "com.unlikepaladin.pfm.compat.fabric.emi.PaladinFurnitureModEMIPlugin"
     ]
   },
   "mixins": [

@@ -118,6 +118,30 @@ else {
         modCompileOnly("net.devtech:arrp:${rootProject.arrp_version}")
     }
 }
+if (rootProject.emi_compatibility == "true"){
+    dependencies {
+        modImplementation "dev.emi:emi:${rootProject.emi_version}"
+    }
+}
+else {
+    dependencies {
+        modCompileOnly "dev.emi:emi:${rootProject.emi_version}"
+    }
+}
+if (rootProject.jei_compatibility == "true") {
+    dependencies {
+        modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-common-api:${rootProject.jei_version_fabric}")
+        modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-fabric-api:${rootProject.jei_version_fabric}")
+        modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version_fabric}")
+    }
+}
+else{
+    dependencies {
+        // compile against the JEI API but do not include it at runtime
+        modImplementation("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version_fabric}")
+    }
+}
+
 dependencies {
     // To change the versions see the gradle.properties file
 
