@@ -110,12 +110,11 @@ public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         if (!this.serializeLootTable(nbt)) {
             Inventories.writeNbt(nbt, this.inventory);
         }
-        return nbt;
     }
 
     String blockname = this.getCachedState().getBlock().getTranslationKey();

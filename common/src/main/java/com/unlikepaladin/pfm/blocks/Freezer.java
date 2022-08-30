@@ -100,7 +100,7 @@ public class Freezer extends HorizontalFacingBlockWEntity implements Waterloggab
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         if (!(direction.getAxis() == Direction.Axis.Y == (direction == Direction.UP) || neighborState.getBlock() instanceof Fridge)) {
             return Blocks.AIR.getDefaultState();

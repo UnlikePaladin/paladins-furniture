@@ -5,8 +5,8 @@ import com.unlikepaladin.pfm.networking.forge.MicrowaveActivePacket;
 import com.unlikepaladin.pfm.networking.forge.MicrowaveUpdatePacket;
 import com.unlikepaladin.pfm.networking.forge.ToiletUsePacket;
 import net.minecraft.util.Identifier;
-import net.minecraftforge.fmllegacy.network.NetworkRegistry;
-import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
 
 public class ClientPacketsForge {
     private static final String PROTOCOL_VERSION = "1";

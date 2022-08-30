@@ -98,7 +98,7 @@ public class SimpleBed extends BedBlock implements Waterloggable, DyeableFurnitu
         }
         player.trySleep(pos).ifLeft(reason -> {
             if (reason != null) {
-                player.sendMessage(reason.toText(), true);
+                player.sendMessage(reason.getMessage(), true);
             }
         });
         return ActionResult.SUCCESS;
@@ -116,7 +116,7 @@ public class SimpleBed extends BedBlock implements Waterloggable, DyeableFurnitu
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
         if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+            world.createAndScheduleFluidTick(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         if (direction == getDirectionTowardsOtherPart(state.get(PART), state.get(FACING))) {
             if (neighborState.getBlock() instanceof SimpleBed && neighborState.get(PART) != state.get(PART)) {

@@ -178,7 +178,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putShort("CookTime", (short)this.cookTime);
         nbt.putShort("CookTimeTotal", (short)this.cookTimeTotal);
@@ -187,7 +187,6 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         nbt.putBoolean("isActive", this.isActive);
         this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), (int)integer));
         nbt.put("RecipesUsed", nbtCompound);
-        return nbt;
     }
 
     @Override

@@ -9,11 +9,10 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.stat.StatType;
 import net.minecraft.util.Identifier;
-import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -21,14 +20,13 @@ public class ScreenHandlerRegistryForge {
 
     @SubscribeEvent
     public static void registerScreenHandlers(RegistryEvent.Register<ScreenHandlerType<?>> event) {
-        ScreenHandlerIDs.FREEZER_SCREEN_HANDLER = IForgeContainerType.create(FreezerScreenHandler::new);
-        ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER = IForgeContainerType.create(WorkbenchScreenHandler::new);
-        ScreenHandlerIDs.STOVE_SCREEN_HANDLER = IForgeContainerType.create(StoveScreenHandler::new);
-        ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER = IForgeContainerType.create(IronStoveScreenHandler::new);
-        ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = IForgeContainerType.create(MicrowaveScreenHandler::new);
+        ScreenHandlerIDs.FREEZER_SCREEN_HANDLER = IForgeMenuType.create(FreezerScreenHandler::new);
+        ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER = IForgeMenuType.create(WorkbenchScreenHandler::new);
+        ScreenHandlerIDs.STOVE_SCREEN_HANDLER = IForgeMenuType.create(StoveScreenHandler::new);
+        ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER = IForgeMenuType.create(IronStoveScreenHandler::new);
+        ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = IForgeMenuType.create(MicrowaveScreenHandler::new);
 
         event.getRegistry().registerAll(
-
                 ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER.setRegistryName("furniture"),
                 ScreenHandlerIDs.STOVE_SCREEN_HANDLER.setRegistryName("stove_block_entity"),
                 ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER.setRegistryName("iron_stove_block_entity"),
