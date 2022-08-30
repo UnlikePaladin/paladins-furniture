@@ -24,4 +24,9 @@ public class PaladinFurnitureModConfig {
         return false;
     }
 
+    @ExpectPlatform
+    public static boolean shouldCheckForUpdates() {
+        return true;
+    }
+
 }

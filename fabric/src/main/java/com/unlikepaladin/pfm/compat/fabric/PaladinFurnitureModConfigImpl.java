@@ -37,4 +37,11 @@ public class PaladinFurnitureModConfigImpl extends PaladinFurnitureModConfig imp
     public static boolean doesFoodPopOffStove() {
         return foodPopsOffStove;
     }
+
+    @ConfigEntry.Gui.Tooltip
+    public static boolean checkForUpdates = true;
+
+    public static boolean shouldCheckForUpdates() {
+        return checkForUpdates;
+    }
 }

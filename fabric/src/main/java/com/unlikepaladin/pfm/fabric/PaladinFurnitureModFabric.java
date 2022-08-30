@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
 
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 
-public class PaladinFurnitureModFabric  implements ModInitializer {
+public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer {
 
     public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
     public static SoundEvent FURNITURE_DYED_EVENT = new SoundEvent(FURNITURE_DYED_ID);
@@ -85,7 +85,6 @@ public class PaladinFurnitureModFabric  implements ModInitializer {
                 () -> new ItemStack(PaladinFurnitureModBlocksItems.OAK_CHAIR));
 
         EntityRegistryFabric.registerEntities();
-        PaladinFurnitureMod.commonInit();
         BlockItemRegistryFabric.registerBlocks();
         if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
             PFMSandwichableRegistry.register();
@@ -93,6 +92,7 @@ public class PaladinFurnitureModFabric  implements ModInitializer {
         if (FabricLoader.getInstance().isModLoaded("cloth-config2")) {
             pfmConfig = AutoConfig.register(PaladinFurnitureModConfigImpl.class, Toml4jConfigSerializer::new);
         }
+        this.commonInit();
         StatisticsRegistryFabric.registerStatistics();
         SoundRegistryFabric.registerSounds();
         BlockEntityRegistryFabric.registerBlockEntities();

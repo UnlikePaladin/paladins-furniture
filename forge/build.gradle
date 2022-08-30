@@ -59,16 +59,18 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
 
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
+
 processResources {
-    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     inputs.property "version", project.version
 
     filesMatching("META-INF/mods.toml") {
         expand "version": project.version
     }
+    duplicatesStrategy = 'include'
 }
-sourceSets.main.resources { srcDir 'src/generated/resources' }
-
 
 shadowJar {
     exclude "fabric.mod.json"
@@ -92,6 +94,7 @@ sourcesJar {
     def commonSources = project(":common").sourcesJar
     dependsOn commonSources
     from commonSources.archiveFile.map { zipTree(it) }
+    duplicatesStrategy = 'include'
 }
 
 components.java {

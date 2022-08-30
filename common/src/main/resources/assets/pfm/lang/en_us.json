@@ -1135,5 +1135,7 @@
   "text.autoconfig.pfm.option.countersOfDifferentMaterialsConnect.@Tooltip": "Counters and similar blocks of different materials connect when they're adjacent to each other.",
   "text.autoconfig.pfm.option.foodPopsOffStove": "Food pops off stove",
   "text.autoconfig.pfm.option.foodPopsOffStove.@Tooltip": "If true, when the stove is done cooking, the food will be ejected like with a campfire.",
+  "text.autoconfig.pfm.option.checkForUpdates": "Check for Updates",
+  "text.autoconfig.pfm.option.checkForUpdates.@Tooltip": "If true, the mod will check for updates and notify you when a new release is available.",
   "text.autoconfig.pfm.title": "Paladin's Furniture Mod Config"
 }

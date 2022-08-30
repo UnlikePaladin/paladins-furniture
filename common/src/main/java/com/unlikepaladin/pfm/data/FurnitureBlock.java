@@ -144,10 +144,10 @@ public class FurnitureBlock extends Material {
         else if(baseMaterial.contains("white") && !baseMaterial.contains("bed")){
             baseMaterial = "white_concrete";
         }
-        else if(baseMaterial.contains("light_gray")){
+        else if(baseMaterial.contains("light_gray") && !baseMaterial.contains("bed")){
             baseMaterial = "light_gray_concrete";
         }
-        else if(baseMaterial.contains("gray")){
+        else if(baseMaterial.contains("gray") && !baseMaterial.contains("bed")){
             baseMaterial = "gray_concrete";
         }
         else if(baseMaterial.contains("light_wood") || baseMaterial.contains("dark_wood")){

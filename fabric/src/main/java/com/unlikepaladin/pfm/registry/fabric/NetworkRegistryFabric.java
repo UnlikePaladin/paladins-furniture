@@ -21,8 +21,6 @@ import net.minecraft.world.World;
 import java.util.Objects;
 
 public class NetworkRegistryFabric {
-
-    //TODO: Invisible Counter with Stove, potential model and connecting issues
     public static void registerPackets() {
         ServerPlayNetworking.registerGlobalReceiver(NetworkIDs.MICROWAVE_ACTIVATE_PACKET_ID, (server, player, handler, attachedData, responseSender) -> {
             BlockPos pos = attachedData.readBlockPos();

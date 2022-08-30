@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.compat.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.registry.*;
 
+import com.unlikepaladin.pfm.utilities.Version;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.sound.SoundEvent;
@@ -21,16 +22,24 @@ public class PaladinFurnitureMod {
 	public static ItemGroup FURNITURE_GROUP;
 
 	public static ItemGroup DYE_KITS;
+	private static PaladinFurnitureModUpdateChecker updateChecker;
 
-	public static void commonInit() {
+	public void commonInit() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		SinkBehavior.registerBehavior();
+		updateChecker = new PaladinFurnitureModUpdateChecker();
+		updateChecker.checkForUpdates(getPFMConfig());
 	}
+
 
 	@ExpectPlatform
     public static PaladinFurnitureModConfig getPFMConfig() {
 		throw new AssertionError();
     }
+
+	public static PaladinFurnitureModUpdateChecker getUpdateChecker() {
+		return updateChecker;
+	}
 }

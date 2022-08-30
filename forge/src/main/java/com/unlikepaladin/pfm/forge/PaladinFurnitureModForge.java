@@ -18,13 +18,12 @@ import net.minecraftforge.fmlclient.ConfigGuiHandler;
 
 
 @Mod(PaladinFurnitureMod.MOD_ID)
-public class PaladinFurnitureModForge {
+public class PaladinFurnitureModForge extends PaladinFurnitureMod {
     public static ConfigHolder<PaladinFurnitureModConfigImpl> pfmConfig;
     public PaladinFurnitureModForge() {
         ItemGroupRegistry.registerItemGroups();
         TagsImpl.TUCKABLE_BLOCKS = BlockTags.createOptional(new Identifier("pfm", "tuckable_blocks"));
         MinecraftForge.EVENT_BUS.register(EntityRegistryForge.class);
-        PaladinFurnitureMod.commonInit();
         MinecraftForge.EVENT_BUS.register(BlockItemRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(StatisticsRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(ScreenHandlerRegistryForge.class);
@@ -39,6 +38,7 @@ public class PaladinFurnitureModForge {
                     () -> new ConfigGuiHandler.ConfigGuiFactory(
                             (client, parent) -> AutoConfig.getConfigScreen(PaladinFurnitureModConfigImpl.class, parent).get()));
         }
+        this.commonInit();
     }
 
 }
