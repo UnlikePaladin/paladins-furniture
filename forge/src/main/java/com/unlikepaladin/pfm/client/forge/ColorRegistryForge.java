@@ -30,7 +30,7 @@ public class ColorRegistryForge {
         KitchenSink.streamStoneSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
         KitchenSink.streamWoodSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
         event.getBlockColors().registerColorProvider(addWaterColor(), sinks.toArray(new Block[0]));
-        event.getBlockColors().registerColorProvider(addToiletColor(), PaladinFurnitureModBlocksItems.BASIC_TOILET);
+        //event.getBlockColors().registerColorProvider(addToiletColor(), PaladinFurnitureModBlocksItems.BASIC_TOILET);
     }
 
     private static BlockColorProvider addToiletColor() {
@@ -42,7 +42,7 @@ public class ColorRegistryForge {
     }
 
     public static void registerBlockRenderLayers() {
-        RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.IRON_MICROWAVE, RenderLayer.getTranslucent());
+      /*  RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.IRON_MICROWAVE, RenderLayer.getTranslucent());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.GLASS_MODERN_PENDANT, RenderLayer.getTranslucent());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.WHITE_MODERN_PENDANT, RenderLayer.getTranslucent());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.GRAY_MODERN_PENDANT, RenderLayer.getTranslucent());
@@ -51,6 +51,6 @@ public class ColorRegistryForge {
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.WHITE_STOVE, RenderLayer.getCutout());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.XBOX_FRIDGE, RenderLayer.getCutout());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.GRAY_FRIDGE, RenderLayer.getCutout());
-        RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, RenderLayer.getCutout());
+        RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, RenderLayer.getCutout());*/
     }
 }

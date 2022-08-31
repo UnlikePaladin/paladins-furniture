@@ -112,8 +112,8 @@ public class Plate extends HorizontalFacingBlockWEntity implements Waterloggable
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (state.get(CUTLERY) && !player.getAbilities().creativeMode) {
-            ItemEntity itemEntity = new ItemEntity( world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
-            world.spawnEntity(itemEntity);
+            //ItemEntity itemEntity = new ItemEntity( world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
+          //  world.spawnEntity(itemEntity);
         }
         super.onBreak(world, pos, state, player);
     }
@@ -159,8 +159,8 @@ public class Plate extends HorizontalFacingBlockWEntity implements Waterloggable
         }
         if (!state.canPlaceAt(world, pos)) {
             if (state.get(CUTLERY)) {
-                ItemEntity itemEntity = new ItemEntity((World) world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
-                world.spawnEntity(itemEntity);
+               // ItemEntity itemEntity = new ItemEntity((World) world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
+              //  world.spawnEntity(itemEntity);
             }
             return Blocks.AIR.getDefaultState();
         }

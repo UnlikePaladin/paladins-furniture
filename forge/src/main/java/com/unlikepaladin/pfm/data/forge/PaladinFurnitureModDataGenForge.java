@@ -93,10 +93,10 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
         @Override
         protected void addTables() {
             PaladinFurnitureMod.GENERAL_LOGGER.info("Running Loot Tables");
-            Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
-            blocks.forEach(this::addDrop);
-            Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
-            Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
+           // Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
+           // blocks.forEach(this::addDrop);
+         //   Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
+          //  Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
         }
 
         @Override
@@ -190,9 +190,9 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
                     .add(plates)
                     .add(cutleries)
                     .add(basicToilets)
-                    .add(rangeHoods)
-                    .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE)
-                    .add(PaladinFurnitureModBlocksItems.IRON_CHAIN);
+                    .add(rangeHoods);
+                    //.add(PaladinFurnitureModBlocksItems.RAW_CONCRETE)
+                  //  .add(PaladinFurnitureModBlocksItems.IRON_CHAIN);
 
             KitchenCounter[] woodCounters = KitchenCounter.streamWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounter[]::new);
             KitchenWallCounter[] woodWallCounters = KitchenWallCounter.streamWallWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenWallCounter[]::new);
@@ -261,8 +261,8 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
                     .add(simpleBunkLadders)
                     .add(classicBeds);
 
-                this.getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
-                    .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
+                this.getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE);
+                   // .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
 
                 this.getOrCreateTagBuilder(BlockTags.BEDS)
                     .add(simpleBeds)
