@@ -23,7 +23,7 @@ public class ItemGroupRegistry {
         PaladinFurnitureMod.DYE_KITS = new ItemGroup(MOD_ID + ".dye_kits") {
             @Override
             public ItemStack createIcon() {
-                return  new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED);
+                return new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED);
             }
             @Override
             public void appendStacks(DefaultedList<ItemStack> stacks) {

@@ -48,9 +48,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
         @Override
         protected void generateBlockLootTables() {
             Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
-            blocks.forEach(this::addDrop);
-            Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
-            Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
+            //blocks.forEach(this::addDrop);
+            //Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
+            //Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
         }
     }
     

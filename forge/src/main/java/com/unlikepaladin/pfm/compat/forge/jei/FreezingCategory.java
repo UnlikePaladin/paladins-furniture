@@ -19,6 +19,7 @@ import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
@@ -42,7 +43,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
 
     public FreezingCategory(IGuiHelper guiHelper) {
-        ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FRIDGE));
+        ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(Blocks.ACACIA_LEAVES));//new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FRIDGE));
         this.BACKGROUND = guiHelper.createDrawable(FREEZE_GUI,55, 16, 82, 54);
         staticFreezeIcon = guiHelper.createDrawable(FREEZE_GUI, 176, 0, 12, 12);
         animatedFreezeIcon = guiHelper.createAnimatedDrawable(staticFreezeIcon, 300, IDrawableAnimated.StartDirection.TOP, true);

@@ -21,17 +21,18 @@ import net.minecraftforge.fml.common.Mod;
 public class PaladinFurnitureModForge extends PaladinFurnitureMod {
     public static ConfigHolder<PaladinFurnitureModConfigImpl> pfmConfig;
     public PaladinFurnitureModForge() {
-        ItemGroupRegistry.registerItemGroups();
         TagsImpl.TUCKABLE_BLOCKS = BlockTags.create(new Identifier("pfm", "tuckable_blocks"));
-        MinecraftForge.EVENT_BUS.register(EntityRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(BlockItemRegistryForge.class);
-        MinecraftForge.EVENT_BUS.register(StatisticsRegistryForge.class);
-        MinecraftForge.EVENT_BUS.register(ScreenHandlerRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(RecipeRegistryForge.class);
-        MinecraftForge.EVENT_BUS.register(BlockEntityRegistryForge.class);
+        MinecraftForge.EVENT_BUS.register(ScreenHandlerRegistryForge.class);
+        MinecraftForge.EVENT_BUS.register(StatisticsRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(SoundRegistryForge.class);
+        MinecraftForge.EVENT_BUS.register(BlockEntityRegistryForge.class);
+       /*
         MinecraftForge.EVENT_BUS.register(PaladinFurnitureModDataGenForge.class);
+        */
         NetworkRegistryForge.registerPackets();
+        MinecraftForge.EVENT_BUS.register(EntityRegistryForge.class);
         if (ModList.get().isLoaded("cloth_config")) {
             pfmConfig = AutoConfig.register(PaladinFurnitureModConfigImpl.class, Toml4jConfigSerializer::new);
             ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
@@ -39,6 +40,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
                             (client, parent) -> AutoConfig.getConfigScreen(PaladinFurnitureModConfigImpl.class, parent).get()));
         }
         this.commonInit();
+        ItemGroupRegistry.registerItemGroups();
     }
 
 }

@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.registry.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.SimpleBed;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.forge.FurnitureGuideBookImpl;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -28,7 +29,7 @@ import java.util.stream.Stream;
 public class BlockItemRegistryForge {
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        event.getRegistry().registerAll(
+            event.getRegistry().registerAll(
                 registerFurniture("working_table", PaladinFurnitureModBlocksItems.WORKING_TABLE, true),
                 registerFurniture("oak_chair", PaladinFurnitureModBlocksItems.OAK_CHAIR, true),
                 registerFurniture("birch_chair", PaladinFurnitureModBlocksItems.BIRCH_CHAIR, true),
@@ -1113,23 +1114,25 @@ public class BlockItemRegistryForge {
 
 
     public static Block registerFurniture(String blockName, Block block, boolean registerItem) {
+        block = registerBlock(blockName, block, false);
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
         }
-        return registerBlock(blockName, block, false);
+        return block;
     }
 
     public static Block registerFurniture(String blockName, Block block, int count) {
+        block = registerBlock(blockName, block, false);
         PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-        return registerBlock(blockName, block, false);
+        return block;
     }
 
     public static Block registerBlock(String blockName, Block block, boolean registerItem) {
+        block = block.setRegistryName(blockName);
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
         }
-
-        return block.setRegistryName(blockName);
+        return block;
     }
 
     public static Item registerItem(String itemName, Item item) {
@@ -1148,11 +1151,4 @@ public class BlockItemRegistryForge {
         }
         return registerItem(itemName, new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
     }
-
-    @SubscribeEvent
-    public static void addFlammableBlocks(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-        });
-    }
-
 }

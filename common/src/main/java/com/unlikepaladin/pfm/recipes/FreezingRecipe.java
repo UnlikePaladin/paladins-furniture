@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.recipes;
 
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.AbstractCookingRecipe;
 import net.minecraft.recipe.Ingredient;
@@ -14,9 +15,10 @@ public class FreezingRecipe extends AbstractCookingRecipe {
         super(RecipeTypes.FREEZING_RECIPE, id, group, input, output, experience, cookTime);
     }
 
+    //TODO: Change me back to a fridge
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+        return new ItemStack(Blocks.DIRT);//PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
     }
 
     @Override

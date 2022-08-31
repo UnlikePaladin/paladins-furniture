@@ -17,7 +17,7 @@ public class EntityRenderRegistryForge {
     public static void registerRender(EntityRenderersEvent.RegisterRenderers renderersEvent){
         renderersEvent.registerEntityRenderer(Entities.CHAIR, ChairEntityRenderer::new);
     }
-
+/*
     @SubscribeEvent
     public static void registerBlockEntityRender(EntityRenderersEvent.RegisterRenderers renderersEvent){
         renderersEvent.registerBlockEntityRenderer(BlockEntities.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);
@@ -26,7 +26,7 @@ public class EntityRenderRegistryForge {
         renderersEvent.registerBlockEntityRenderer(BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityRenderer::new);
         renderersEvent.registerBlockEntityRenderer(BlockEntities.TRASHCAN_BLOCK_ENTITY, TrashcanBlockEntityRenderer::new);
     }
-
+*/
 
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions registerLayerDefinitions){
