@@ -72,7 +72,7 @@ public class LightSwitch extends HorizontalFacingBlockWEntity implements Waterlo
         BlockState blockState = this.togglePower(state, world, pos, false, false);
         float f = blockState.get(POWERED) ? 0.9f : 0.8f;
         world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3f, f);
-        world.emitGameEvent(player, blockState.get(POWERED) ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
+        world.emitGameEvent(player, blockState.get(POWERED) ? GameEvent.BLOCK_ACTIVATE : GameEvent.BLOCK_DEACTIVATE, pos);
         return ActionResult.CONSUME;
     }
 

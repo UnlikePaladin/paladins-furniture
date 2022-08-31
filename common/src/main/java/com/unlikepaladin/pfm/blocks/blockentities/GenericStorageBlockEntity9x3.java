@@ -21,7 +21,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -120,11 +119,11 @@ public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
     String blockname = this.getCachedState().getBlock().getTranslationKey();
     protected Text getContainerName() {
     if (this.getCachedState().getBlock() instanceof KitchenDrawer)
-        return new TranslatableText("container.pfm.drawer");
+        return Text.translatable("container.pfm.drawer");
     else if (this.getCachedState().getBlock() instanceof ClassicNightstand)
-        return new TranslatableText("container.pfm.nightstand");
+        return Text.translatable("container.pfm.nightstand");
     else
-        return new TranslatableText("container.pfm.cabinet");
+        return Text.translatable("container.pfm.cabinet");
     }
 
     void setOpen(BlockState state, boolean open) {

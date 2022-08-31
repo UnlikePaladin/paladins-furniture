@@ -8,7 +8,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 
 public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
@@ -18,7 +17,7 @@ public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
      String blockname = this.getCachedState().getBlock().getTranslationKey();
     @Override
     protected Text getContainerName() {
-        return new TranslatableText("container.pfm.kitchen_counter_oven");
+        return Text.translatable("container.pfm.kitchen_counter_oven");
     }
 
     @Override

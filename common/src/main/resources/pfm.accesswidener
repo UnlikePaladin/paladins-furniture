@@ -1,4 +1,5 @@
 accessWidener v1 named
 
 accessible class net/minecraft/recipe/CookingRecipeSerializer$RecipeFactory
-mutable field net/minecraft/world/poi/PointOfInterestType HOME Lnet/minecraft/world/poi/PointOfInterestType;
+accessible field net/minecraft/world/poi/PointOfInterestTypes BED_HEADS Ljava/util/Set;
+mutable field net/minecraft/world/poi/PointOfInterestTypes HOME Lnet/minecraft/util/registry/RegistryKey;

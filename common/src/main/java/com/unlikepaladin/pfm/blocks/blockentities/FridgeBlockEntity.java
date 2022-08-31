@@ -18,7 +18,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
@@ -28,8 +27,8 @@ import net.minecraft.world.World;
 public class FridgeBlockEntity extends LootableContainerBlockEntity {
     @Override
     public int size() {
-            return 54;
-        }
+        return 54;
+    }
 
     public FridgeBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.FRIDGE_BLOCK_ENTITY, pos, state);
@@ -81,11 +80,11 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
     }
 
     @Override
-        public void onOpen(PlayerEntity player) {
-            if (!this.removed && !player.isSpectator()) {
-                this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
-            }
+    public void onOpen(PlayerEntity player) {
+        if (!this.removed && !player.isSpectator()) {
+            this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
         }
+    }
 
     @Override
     public void onClose(PlayerEntity player) {
@@ -114,7 +113,7 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
 
     protected Text getContainerName() {
         blockname = blockname.replace("block.pfm", "");
-        return new TranslatableText("container.pfm" + blockname);
+        return Text.translatable("container.pfm" + blockname);
     }
 
     void setOpen(BlockState state, boolean open) {
@@ -134,4 +133,3 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
         this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
     }
 }
-

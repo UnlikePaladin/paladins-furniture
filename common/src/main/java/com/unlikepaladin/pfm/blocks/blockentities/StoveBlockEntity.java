@@ -22,17 +22,16 @@ import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
-import java.util.Random;
 
 public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     public StoveBlockEntity(BlockPos pos, BlockState state) {
@@ -47,9 +46,9 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     protected Text getContainerName() {
         blockname = blockname.replace("block.pfm", "");
         if (this.getCachedState().getBlock() instanceof KitchenCounterOven) {
-            return new TranslatableText("container.pfm.kitchen_counter_oven");
+            return Text.translatable("container.pfm.kitchen_counter_oven");
         }
-        return new TranslatableText("container.pfm" + blockname);
+        return Text.translatable("container.pfm" + blockname);
     }
 
     @Override
