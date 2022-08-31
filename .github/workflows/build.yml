@@ -35,11 +35,11 @@ jobs:
         if: ${{ runner.os == 'Linux' && matrix.java == '16' }} # Only upload artifacts built from latest java on one OS
         uses: actions/upload-artifact@v2
         with:
-          name: Artifacts
+          name: Fabric-Artifacts
           path: fabric/build/libs/
-  - name: capture forge build artifacts
+      - name: capture forge build artifacts
         if: ${{ runner.os == 'Linux' && matrix.java == '16' }} # Only upload artifacts built from latest java on one OS
         uses: actions/upload-artifact@v2
         with:
-          name: Artifacts
+          name: Forge-Artifacts
           path: forge/build/libs/
