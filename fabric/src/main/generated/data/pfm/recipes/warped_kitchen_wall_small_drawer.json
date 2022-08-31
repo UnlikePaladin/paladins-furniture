@@ -1,22 +1,22 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SYS"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:warped_planks"
-    },
     "S": {
       "item": "minecraft:warped_stem"
+    },
+    "X": {
+      "item": "minecraft:warped_planks"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XXX",
+    "SYS"
+  ],
   "result": {
-    "item": "pfm:warped_kitchen_wall_small_drawer",
-    "count": 3
+    "count": 3,
+    "item": "pfm:warped_kitchen_wall_small_drawer"
   }
 }

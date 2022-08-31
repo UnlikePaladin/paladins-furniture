@@ -22,6 +22,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallback;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -44,10 +46,6 @@ public class BlockItemRegistryFabric {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         }
-        if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
-            FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
-            FuelRegistry.INSTANCE.add(block, 300);
-        }
     }
 
     public static void registerFurniture(String blockName, Block block, int count) {
@@ -64,6 +62,13 @@ public class BlockItemRegistryFabric {
 
     public static void registerItem(String itemName, Item item) {
         Registry.register(Registry.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
+        if (item instanceof BlockItem blockItem) {
+            Block block = Block.getBlockFromItem(blockItem);
+            if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
+                FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
+                FuelRegistry.INSTANCE.add(blockItem, 300);
+            }
+        }
     }
 
     public static void registerBlocks(){
@@ -72,13 +77,13 @@ public class BlockItemRegistryFabric {
         registerItem("furniture_book", PaladinFurnitureModBlocksItems.FURNITURE_BOOK);
         registerFurniture("working_table", PaladinFurnitureModBlocksItems.WORKING_TABLE, true);
 
-        //Basic Chairs
         registerFurniture("oak_chair", PaladinFurnitureModBlocksItems.OAK_CHAIR, true);
         registerFurniture("birch_chair", PaladinFurnitureModBlocksItems.BIRCH_CHAIR, true);
         registerFurniture("spruce_chair", PaladinFurnitureModBlocksItems.SPRUCE_CHAIR, true);
         registerFurniture("acacia_chair", PaladinFurnitureModBlocksItems.ACACIA_CHAIR, true);
         registerFurniture("jungle_chair", PaladinFurnitureModBlocksItems.JUNGLE_CHAIR, true);
         registerFurniture("dark_oak_chair", PaladinFurnitureModBlocksItems.DARK_OAK_CHAIR, true);
+        registerFurniture("mangrove_chair", PaladinFurnitureModBlocksItems.MANGROVE_CHAIR, true);
         registerFurniture("warped_chair", PaladinFurnitureModBlocksItems.WARPED_CHAIR, true);
         registerFurniture("crimson_chair", PaladinFurnitureModBlocksItems.CRIMSON_CHAIR, true);
         registerFurniture("stripped_oak_chair", PaladinFurnitureModBlocksItems.STRIPPED_OAK_CHAIR, true);
@@ -87,6 +92,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_chair", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_CHAIR, true);
         registerFurniture("stripped_jungle_chair", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_CHAIR, true);
         registerFurniture("stripped_dark_oak_chair", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CHAIR, true);
+        registerFurniture("stripped_mangrove_chair", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CHAIR, true);
         registerFurniture("stripped_warped_chair", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CHAIR, true);
         registerFurniture("stripped_crimson_chair", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CHAIR, true);
         registerFurniture("quartz_chair", PaladinFurnitureModBlocksItems.QUARTZ_CHAIR, true);
@@ -108,6 +114,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_chair_dinner", PaladinFurnitureModBlocksItems.ACACIA_CHAIR_DINNER, true);
         registerFurniture("jungle_chair_dinner", PaladinFurnitureModBlocksItems.JUNGLE_CHAIR_DINNER, true);
         registerFurniture("dark_oak_chair_dinner", PaladinFurnitureModBlocksItems.DARK_OAK_CHAIR_DINNER, true);
+        registerFurniture("mangrove_chair_dinner", PaladinFurnitureModBlocksItems.MANGROVE_CHAIR_DINNER, true);
         registerFurniture("warped_chair_dinner", PaladinFurnitureModBlocksItems.WARPED_CHAIR_DINNER, true);
         registerFurniture("crimson_chair_dinner", PaladinFurnitureModBlocksItems.CRIMSON_CHAIR_DINNER, true);
         registerFurniture("stripped_oak_chair_dinner", PaladinFurnitureModBlocksItems.STRIPPED_OAK_CHAIR_DINNER, true);
@@ -115,6 +122,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_spruce_chair_dinner", PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_CHAIR_DINNER, true);
         registerFurniture("stripped_acacia_chair_dinner", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_CHAIR_DINNER, true);
         registerFurniture("stripped_jungle_chair_dinner", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_CHAIR_DINNER, true);
+        registerFurniture("stripped_mangrove_chair_dinner", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CHAIR_DINNER, true);
         registerFurniture("stripped_dark_oak_chair_dinner", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CHAIR_DINNER, true);
         registerFurniture("stripped_warped_chair_dinner", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CHAIR_DINNER, true);
         registerFurniture("stripped_crimson_chair_dinner", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CHAIR_DINNER, true);
@@ -162,6 +170,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_chair_classic", PaladinFurnitureModBlocksItems.ACACIA_CHAIR_CLASSIC, true);
         registerFurniture("jungle_chair_classic", PaladinFurnitureModBlocksItems.JUNGLE_CHAIR_CLASSIC, true);
         registerFurniture("dark_oak_chair_classic", PaladinFurnitureModBlocksItems.DARK_OAK_CHAIR_CLASSIC, true);
+        registerFurniture("mangrove_chair_classic", PaladinFurnitureModBlocksItems.MANGROVE_CHAIR_CLASSIC, true);
         registerFurniture("warped_chair_classic", PaladinFurnitureModBlocksItems.WARPED_CHAIR_CLASSIC, true);
         registerFurniture("crimson_chair_classic", PaladinFurnitureModBlocksItems.CRIMSON_CHAIR_CLASSIC, true);
         registerFurniture("stripped_oak_chair_classic", PaladinFurnitureModBlocksItems.STRIPPED_OAK_CHAIR_CLASSIC, true);
@@ -170,6 +179,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_chair_classic", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_CHAIR_CLASSIC, true);
         registerFurniture("stripped_jungle_chair_classic", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_CHAIR_CLASSIC, true);
         registerFurniture("stripped_dark_oak_chair_classic", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CHAIR_CLASSIC, true);
+        registerFurniture("stripped_mangrove_chair_classic", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CHAIR_CLASSIC, true);
         registerFurniture("stripped_warped_chair_classic", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CHAIR_CLASSIC, true);
         registerFurniture("stripped_crimson_chair_classic", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CHAIR_CLASSIC, true);
         registerFurniture("quartz_chair_classic", PaladinFurnitureModBlocksItems.QUARTZ_CHAIR_CLASSIC, true);
@@ -191,6 +201,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_chair_modern", PaladinFurnitureModBlocksItems.ACACIA_CHAIR_MODERN, true);
         registerFurniture("jungle_chair_modern", PaladinFurnitureModBlocksItems.JUNGLE_CHAIR_MODERN, true);
         registerFurniture("dark_oak_chair_modern", PaladinFurnitureModBlocksItems.DARK_OAK_CHAIR_MODERN , true);
+        registerFurniture("mangrove_chair_modern", PaladinFurnitureModBlocksItems.MANGROVE_CHAIR_MODERN, true);
         registerFurniture("warped_chair_modern", PaladinFurnitureModBlocksItems.WARPED_CHAIR_MODERN, true);
         registerFurniture("crimson_chair_modern", PaladinFurnitureModBlocksItems.CRIMSON_CHAIR_MODERN, true);
         registerFurniture("stripped_oak_chair_modern", PaladinFurnitureModBlocksItems.STRIPPED_OAK_CHAIR_MODERN, true);
@@ -199,6 +210,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_chair_modern", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_CHAIR_MODERN, true);
         registerFurniture("stripped_jungle_chair_modern", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_CHAIR_MODERN, true);
         registerFurniture("stripped_dark_oak_chair_modern", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CHAIR_MODERN, true);
+        registerFurniture("stripped_mangrove_chair_modern", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CHAIR_MODERN, true);
         registerFurniture("stripped_warped_chair_modern", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CHAIR_MODERN, true);
         registerFurniture("stripped_crimson_chair_modern", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CHAIR_MODERN, true);
         registerFurniture("quartz_chair_modern", PaladinFurnitureModBlocksItems.QUARTZ_CHAIR_MODERN, true);
@@ -257,6 +269,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_table_basic", PaladinFurnitureModBlocksItems.ACACIA_BASIC_TABLE, true);
         registerFurniture("jungle_table_basic", PaladinFurnitureModBlocksItems.JUNGLE_BASIC_TABLE, true);
         registerFurniture("dark_oak_table_basic", PaladinFurnitureModBlocksItems.DARK_OAK_BASIC_TABLE, true);
+        registerFurniture("mangrove_table_basic", PaladinFurnitureModBlocksItems.MANGROVE_BASIC_TABLE, true);
         registerFurniture("crimson_table_basic", PaladinFurnitureModBlocksItems.CRIMSON_BASIC_TABLE, true);
         registerFurniture("warped_table_basic", PaladinFurnitureModBlocksItems.WARPED_BASIC_TABLE, true);
         registerFurniture("stripped_oak_table_basic", PaladinFurnitureModBlocksItems.STRIPPED_OAK_BASIC_TABLE, true);
@@ -265,6 +278,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_table_basic", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_BASIC_TABLE, true);
         registerFurniture("stripped_jungle_table_basic", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_BASIC_TABLE, true);
         registerFurniture("stripped_dark_oak_table_basic", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_BASIC_TABLE, true);
+        registerFurniture("stripped_mangrove_table_basic", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_BASIC_TABLE, true);
         registerFurniture("stripped_crimson_table_basic", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_BASIC_TABLE, true);
         registerFurniture("stripped_warped_table_basic", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_BASIC_TABLE, true);
         registerFurniture("quartz_table_basic", PaladinFurnitureModBlocksItems.QUARTZ_BASIC_TABLE, true);
@@ -286,6 +300,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_table_classic", PaladinFurnitureModBlocksItems.ACACIA_CLASSIC_TABLE, true);
         registerFurniture("jungle_table_classic", PaladinFurnitureModBlocksItems.JUNGLE_CLASSIC_TABLE, true);
         registerFurniture("dark_oak_table_classic", PaladinFurnitureModBlocksItems.DARK_OAK_CLASSIC_TABLE, true);
+        registerFurniture("mangrove_table_classic", PaladinFurnitureModBlocksItems.MANGROVE_CLASSIC_TABLE, true);
         registerFurniture("crimson_table_classic", PaladinFurnitureModBlocksItems.CRIMSON_CLASSIC_TABLE, true);
         registerFurniture("warped_table_classic", PaladinFurnitureModBlocksItems.WARPED_CLASSIC_TABLE, true);
         registerFurniture("stripped_oak_table_classic", PaladinFurnitureModBlocksItems.STRIPPED_OAK_CLASSIC_TABLE, true);
@@ -294,6 +309,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_table_classic", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_CLASSIC_TABLE, true);
         registerFurniture("stripped_jungle_table_classic", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_CLASSIC_TABLE, true);
         registerFurniture("stripped_dark_oak_table_classic", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CLASSIC_TABLE, true);
+        registerFurniture("stripped_mangrove_table_classic", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CLASSIC_TABLE, true);
         registerFurniture("stripped_crimson_table_classic", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CLASSIC_TABLE, true);
         registerFurniture("stripped_warped_table_classic", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CLASSIC_TABLE, true);
         registerFurniture("quartz_table_classic", PaladinFurnitureModBlocksItems.QUARTZ_CLASSIC_TABLE, true);
@@ -315,6 +331,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_table_log", PaladinFurnitureModBlocksItems.ACACIA_LOG_TABLE, true);
         registerFurniture("jungle_table_log", PaladinFurnitureModBlocksItems.JUNGLE_LOG_TABLE, true);
         registerFurniture("dark_oak_table_log", PaladinFurnitureModBlocksItems.DARK_OAK_LOG_TABLE, true);
+        registerFurniture("mangrove_table_log", PaladinFurnitureModBlocksItems.MANGROVE_LOG_TABLE, true);
         registerFurniture("crimson_table_stem", PaladinFurnitureModBlocksItems.CRIMSON_STEM_TABLE, true);
         registerFurniture("warped_table_stem", PaladinFurnitureModBlocksItems.WARPED_STEM_TABLE, true);
         registerFurniture("stripped_oak_table_log", PaladinFurnitureModBlocksItems.STRIPPED_OAK_LOG_TABLE, true);
@@ -323,6 +340,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_table_log", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_LOG_TABLE, true);
         registerFurniture("stripped_jungle_table_log", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_LOG_TABLE, true);
         registerFurniture("stripped_dark_oak_table_log", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_LOG_TABLE, true);
+        registerFurniture("stripped_mangrove_table_log", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_LOG_TABLE, true);
         registerFurniture("stripped_crimson_table_stem", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_STEM_TABLE, true);
         registerFurniture("stripped_warped_table_stem", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_STEM_TABLE, true);
         registerFurniture("quartz_table_natural", PaladinFurnitureModBlocksItems.QUARTZ_NATURAL_TABLE, true);
@@ -344,6 +362,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("spruce_raw_table_log", PaladinFurnitureModBlocksItems.SPRUCE_RAW_LOG_TABLE, true);
         registerFurniture("jungle_raw_table_log", PaladinFurnitureModBlocksItems.JUNGLE_RAW_LOG_TABLE, true);
         registerFurniture("dark_oak_raw_table_log", PaladinFurnitureModBlocksItems.DARK_OAK_RAW_LOG_TABLE, true);
+        registerFurniture("mangrove_raw_table_log", PaladinFurnitureModBlocksItems.MANGROVE_RAW_LOG_TABLE, true);
         registerFurniture("warped_raw_table_stem", PaladinFurnitureModBlocksItems.WARPED_RAW_STEM_TABLE, true);
         registerFurniture("crimson_raw_table_stem", PaladinFurnitureModBlocksItems.CRIMSON_RAW_STEM_TABLE, true);
         registerFurniture("stripped_oak_raw_table_log", PaladinFurnitureModBlocksItems.STRIPPED_OAK_RAW_LOG_TABLE, true);
@@ -352,6 +371,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_spruce_raw_table_log", PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_RAW_LOG_TABLE, true);
         registerFurniture("stripped_jungle_raw_table_log", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_RAW_LOG_TABLE, true);
         registerFurniture("stripped_dark_oak_raw_table_log", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_RAW_LOG_TABLE, true);
+        registerFurniture("stripped_mangrove_raw_table_log", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_RAW_LOG_TABLE, true);
         registerFurniture("stripped_warped_raw_table_stem", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_RAW_STEM_TABLE, true);
         registerFurniture("stripped_crimson_raw_table_stem", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_RAW_STEM_TABLE, true);
 
@@ -361,6 +381,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_table_dinner", PaladinFurnitureModBlocksItems.ACACIA_DINNER_TABLE, true);
         registerFurniture("jungle_table_dinner", PaladinFurnitureModBlocksItems.JUNGLE_DINNER_TABLE, true);
         registerFurniture("dark_oak_table_dinner", PaladinFurnitureModBlocksItems.DARK_OAK_DINNER_TABLE, true);
+        registerFurniture("mangrove_table_dinner", PaladinFurnitureModBlocksItems.MANGROVE_DINNER_TABLE, true);
         registerFurniture("crimson_table_dinner", PaladinFurnitureModBlocksItems.CRIMSON_DINNER_TABLE, true);
         registerFurniture("warped_table_dinner", PaladinFurnitureModBlocksItems.WARPED_DINNER_TABLE, true);
         registerFurniture("stripped_oak_table_dinner", PaladinFurnitureModBlocksItems.STRIPPED_OAK_DINNER_TABLE, true);
@@ -369,6 +390,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_table_dinner", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_DINNER_TABLE, true);
         registerFurniture("stripped_jungle_table_dinner", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_DINNER_TABLE, true);
         registerFurniture("stripped_dark_oak_table_dinner", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_DINNER_TABLE, true);
+        registerFurniture("stripped_mangrove_table_dinner", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_DINNER_TABLE, true);
         registerFurniture("stripped_crimson_table_dinner", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_DINNER_TABLE, true);
         registerFurniture("stripped_warped_table_dinner", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_DINNER_TABLE, true);
         registerFurniture("quartz_table_dinner", PaladinFurnitureModBlocksItems.QUARTZ_DINNER_TABLE, true);
@@ -389,6 +411,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_table_modern_dinner", PaladinFurnitureModBlocksItems.ACACIA_MODERN_DINNER_TABLE, true);
         registerFurniture("jungle_table_modern_dinner", PaladinFurnitureModBlocksItems.JUNGLE_MODERN_DINNER_TABLE, true);
         registerFurniture("dark_oak_table_modern_dinner", PaladinFurnitureModBlocksItems.DARK_OAK_MODERN_DINNER_TABLE, true);
+        registerFurniture("mangrove_table_modern_dinner", PaladinFurnitureModBlocksItems.MANGROVE_MODERN_DINNER_TABLE, true);
         registerFurniture("crimson_table_modern_dinner", PaladinFurnitureModBlocksItems.CRIMSON_MODERN_DINNER_TABLE, true);
         registerFurniture("warped_table_modern_dinner", PaladinFurnitureModBlocksItems.WARPED_MODERN_DINNER_TABLE, true);
         registerFurniture("stripped_oak_table_modern_dinner", PaladinFurnitureModBlocksItems.STRIPPED_OAK_MODERN_DINNER_TABLE, true);
@@ -397,6 +420,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_table_modern_dinner", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_MODERN_DINNER_TABLE, true);
         registerFurniture("stripped_jungle_table_modern_dinner", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_MODERN_DINNER_TABLE, true);
         registerFurniture("stripped_dark_oak_table_modern_dinner", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_MODERN_DINNER_TABLE, true);
+        registerFurniture("stripped_mangrove_table_modern_dinner", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_MODERN_DINNER_TABLE, true);
         registerFurniture("stripped_crimson_table_modern_dinner", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_MODERN_DINNER_TABLE, true);
         registerFurniture("stripped_warped_table_modern_dinner", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_MODERN_DINNER_TABLE, true);
         registerFurniture("quartz_table_modern_dinner", PaladinFurnitureModBlocksItems.QUARTZ_MODERN_DINNER_TABLE, true);
@@ -417,6 +441,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_classic_nightstand", PaladinFurnitureModBlocksItems.ACACIA_CLASSIC_NIGHTSTAND, true);
         registerFurniture("jungle_classic_nightstand", PaladinFurnitureModBlocksItems.JUNGLE_CLASSIC_NIGHTSTAND, true);
         registerFurniture("dark_oak_classic_nightstand", PaladinFurnitureModBlocksItems.DARK_OAK_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("mangrove_classic_nightstand", PaladinFurnitureModBlocksItems.MANGROVE_CLASSIC_NIGHTSTAND, true);
         registerFurniture("crimson_classic_nightstand", PaladinFurnitureModBlocksItems.CRIMSON_CLASSIC_NIGHTSTAND, true);
         registerFurniture("warped_classic_nightstand", PaladinFurnitureModBlocksItems.WARPED_CLASSIC_NIGHTSTAND, true);
         registerFurniture("stripped_oak_classic_nightstand", PaladinFurnitureModBlocksItems.STRIPPED_OAK_CLASSIC_NIGHTSTAND, true);
@@ -425,6 +450,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_classic_nightstand", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_CLASSIC_NIGHTSTAND, true);
         registerFurniture("stripped_jungle_classic_nightstand", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_CLASSIC_NIGHTSTAND, true);
         registerFurniture("stripped_dark_oak_classic_nightstand", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CLASSIC_NIGHTSTAND, true);
+        registerFurniture("stripped_mangrove_classic_nightstand", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CLASSIC_NIGHTSTAND, true);
         registerFurniture("stripped_crimson_classic_nightstand", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CLASSIC_NIGHTSTAND, true);
         registerFurniture("stripped_warped_classic_nightstand", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CLASSIC_NIGHTSTAND, true);
         registerFurniture("quartz_classic_nightstand", PaladinFurnitureModBlocksItems.QUARTZ_CLASSIC_NIGHTSTAND, true);
@@ -535,6 +561,22 @@ public class BlockItemRegistryFabric {
         registerFurniture("jungle_gray_simple_bed", PaladinFurnitureModBlocksItems.JUNGLE_GRAY_SIMPLE_BED, 1);
         registerFurniture("jungle_black_simple_bed", PaladinFurnitureModBlocksItems.JUNGLE_BLACK_SIMPLE_BED, 1);
         registerFurniture("jungle_white_simple_bed", PaladinFurnitureModBlocksItems.JUNGLE_WHITE_SIMPLE_BED, 1);
+        registerFurniture("mangrove_red_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_RED_SIMPLE_BED, 1);
+        registerFurniture("mangrove_orange_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_ORANGE_SIMPLE_BED, 1);
+        registerFurniture("mangrove_yellow_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_YELLOW_SIMPLE_BED, 1);
+        registerFurniture("mangrove_green_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_GREEN_SIMPLE_BED, 1);
+        registerFurniture("mangrove_lime_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_LIME_SIMPLE_BED, 1);
+        registerFurniture("mangrove_blue_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_BLUE_SIMPLE_BED, 1);
+        registerFurniture("mangrove_cyan_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_CYAN_SIMPLE_BED, 1);
+        registerFurniture("mangrove_light_blue_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_LIGHT_BLUE_SIMPLE_BED, 1);
+        registerFurniture("mangrove_light_gray_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_LIGHT_GRAY_SIMPLE_BED, 1);
+        registerFurniture("mangrove_purple_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_PURPLE_SIMPLE_BED, 1);
+        registerFurniture("mangrove_magenta_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_MAGENTA_SIMPLE_BED, 1);
+        registerFurniture("mangrove_pink_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_PINK_SIMPLE_BED, 1);
+        registerFurniture("mangrove_brown_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_BROWN_SIMPLE_BED, 1);
+        registerFurniture("mangrove_gray_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_GRAY_SIMPLE_BED, 1);
+        registerFurniture("mangrove_black_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_BLACK_SIMPLE_BED, 1);
+        registerFurniture("mangrove_white_simple_bed", PaladinFurnitureModBlocksItems.MANGROVE_WHITE_SIMPLE_BED, 1);
         registerFurniture("warped_red_simple_bed", PaladinFurnitureModBlocksItems.WARPED_RED_SIMPLE_BED, 1);
         registerFurniture("warped_orange_simple_bed", PaladinFurnitureModBlocksItems.WARPED_ORANGE_SIMPLE_BED, 1);
         registerFurniture("warped_yellow_simple_bed", PaladinFurnitureModBlocksItems.WARPED_YELLOW_SIMPLE_BED, 1);
@@ -664,6 +706,22 @@ public class BlockItemRegistryFabric {
         registerFurniture("jungle_gray_classic_bed", PaladinFurnitureModBlocksItems.JUNGLE_GRAY_CLASSIC_BED, 1);
         registerFurniture("jungle_black_classic_bed", PaladinFurnitureModBlocksItems.JUNGLE_BLACK_CLASSIC_BED, 1);
         registerFurniture("jungle_white_classic_bed", PaladinFurnitureModBlocksItems.JUNGLE_WHITE_CLASSIC_BED, 1);
+        registerFurniture("mangrove_red_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_RED_CLASSIC_BED, 1);
+        registerFurniture("mangrove_orange_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_ORANGE_CLASSIC_BED, 1);
+        registerFurniture("mangrove_yellow_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_YELLOW_CLASSIC_BED, 1);
+        registerFurniture("mangrove_green_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_GREEN_CLASSIC_BED, 1);
+        registerFurniture("mangrove_lime_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_LIME_CLASSIC_BED, 1);
+        registerFurniture("mangrove_blue_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_BLUE_CLASSIC_BED, 1);
+        registerFurniture("mangrove_cyan_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_CYAN_CLASSIC_BED, 1);
+        registerFurniture("mangrove_light_blue_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_LIGHT_BLUE_CLASSIC_BED, 1);
+        registerFurniture("mangrove_light_gray_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_LIGHT_GRAY_CLASSIC_BED, 1);
+        registerFurniture("mangrove_purple_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_PURPLE_CLASSIC_BED, 1);
+        registerFurniture("mangrove_magenta_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_MAGENTA_CLASSIC_BED, 1);
+        registerFurniture("mangrove_pink_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_PINK_CLASSIC_BED, 1);
+        registerFurniture("mangrove_brown_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_BROWN_CLASSIC_BED, 1);
+        registerFurniture("mangrove_gray_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_GRAY_CLASSIC_BED, 1);
+        registerFurniture("mangrove_black_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_BLACK_CLASSIC_BED, 1);
+        registerFurniture("mangrove_white_classic_bed", PaladinFurnitureModBlocksItems.MANGROVE_WHITE_CLASSIC_BED, 1);
         registerFurniture("warped_red_classic_bed", PaladinFurnitureModBlocksItems.WARPED_RED_CLASSIC_BED, 1);
         registerFurniture("warped_orange_classic_bed", PaladinFurnitureModBlocksItems.WARPED_ORANGE_CLASSIC_BED, 1);
         registerFurniture("warped_yellow_classic_bed", PaladinFurnitureModBlocksItems.WARPED_YELLOW_CLASSIC_BED, 1);
@@ -705,6 +763,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("dark_oak_simple_bunk_ladder", PaladinFurnitureModBlocksItems.DARK_OAK_SIMPLE_BUNK_LADDER, true);
         registerFurniture("crimson_simple_bunk_ladder", PaladinFurnitureModBlocksItems.CRIMSON_SIMPLE_BUNK_LADDER, true);
         registerFurniture("warped_simple_bunk_ladder", PaladinFurnitureModBlocksItems.WARPED_SIMPLE_BUNK_LADDER, true);
+        registerFurniture("mangrove_simple_bunk_ladder", PaladinFurnitureModBlocksItems.MANGROVE_SIMPLE_BUNK_LADDER, true);
 
         registerFurniture("oak_log_stool", PaladinFurnitureModBlocksItems.OAK_LOG_STOOL, true);
         registerFurniture("birch_log_stool", PaladinFurnitureModBlocksItems.BIRCH_LOG_STOOL, true);
@@ -712,6 +771,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_log_stool", PaladinFurnitureModBlocksItems.ACACIA_LOG_STOOL, true);
         registerFurniture("jungle_log_stool", PaladinFurnitureModBlocksItems.JUNGLE_LOG_STOOL, true);
         registerFurniture("dark_oak_log_stool", PaladinFurnitureModBlocksItems.DARK_OAK_LOG_STOOL, true);
+        registerFurniture("mangrove_log_stool", PaladinFurnitureModBlocksItems.MANGROVE_LOG_STOOL, true);
         registerFurniture("crimson_stem_stool", PaladinFurnitureModBlocksItems.CRIMSON_STEM_STOOL, true);
         registerFurniture("warped_stem_stool", PaladinFurnitureModBlocksItems.WARPED_STEM_STOOL, true);
 
@@ -721,6 +781,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_simple_stool", PaladinFurnitureModBlocksItems.ACACIA_SIMPLE_STOOL, true);
         registerFurniture("jungle_simple_stool", PaladinFurnitureModBlocksItems.JUNGLE_SIMPLE_STOOL, true);
         registerFurniture("dark_oak_simple_stool", PaladinFurnitureModBlocksItems.DARK_OAK_SIMPLE_STOOL, true);
+        registerFurniture("mangrove_simple_stool", PaladinFurnitureModBlocksItems.MANGROVE_SIMPLE_STOOL, true);
         registerFurniture("crimson_simple_stool", PaladinFurnitureModBlocksItems.CRIMSON_SIMPLE_STOOL, true);
         registerFurniture("warped_simple_stool", PaladinFurnitureModBlocksItems.WARPED_SIMPLE_STOOL, true);
         registerFurniture("stripped_oak_simple_stool", PaladinFurnitureModBlocksItems.STRIPPED_OAK_SIMPLE_STOOL, true);
@@ -729,6 +790,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_simple_stool", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_SIMPLE_STOOL, true);
         registerFurniture("stripped_jungle_simple_stool", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_SIMPLE_STOOL, true);
         registerFurniture("stripped_dark_oak_simple_stool", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_SIMPLE_STOOL, true);
+        registerFurniture("stripped_mangrove_simple_stool", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_SIMPLE_STOOL, true);
         registerFurniture("stripped_crimson_simple_stool", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_SIMPLE_STOOL, true);
         registerFurniture("stripped_warped_simple_stool", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_SIMPLE_STOOL, true);
         registerFurniture("quartz_simple_stool", PaladinFurnitureModBlocksItems.QUARTZ_SIMPLE_STOOL, true);
@@ -749,6 +811,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_classic_stool", PaladinFurnitureModBlocksItems.ACACIA_CLASSIC_STOOL, true);
         registerFurniture("jungle_classic_stool", PaladinFurnitureModBlocksItems.JUNGLE_CLASSIC_STOOL, true);
         registerFurniture("dark_oak_classic_stool", PaladinFurnitureModBlocksItems.DARK_OAK_CLASSIC_STOOL, true);
+        registerFurniture("mangrove_classic_stool", PaladinFurnitureModBlocksItems.MANGROVE_CLASSIC_STOOL, true);
         registerFurniture("crimson_classic_stool", PaladinFurnitureModBlocksItems.CRIMSON_CLASSIC_STOOL, true);
         registerFurniture("warped_classic_stool", PaladinFurnitureModBlocksItems.WARPED_CLASSIC_STOOL, true);
         registerFurniture("stripped_oak_classic_stool", PaladinFurnitureModBlocksItems.STRIPPED_OAK_CLASSIC_STOOL, true);
@@ -757,6 +820,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_classic_stool", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_CLASSIC_STOOL, true);
         registerFurniture("stripped_jungle_classic_stool", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_CLASSIC_STOOL, true);
         registerFurniture("stripped_dark_oak_classic_stool", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CLASSIC_STOOL, true);
+        registerFurniture("stripped_mangrove_classic_stool", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CLASSIC_STOOL, true);
         registerFurniture("stripped_crimson_classic_stool", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CLASSIC_STOOL, true);
         registerFurniture("stripped_warped_classic_stool", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CLASSIC_STOOL, true);
         registerFurniture("quartz_classic_stool", PaladinFurnitureModBlocksItems.QUARTZ_CLASSIC_STOOL, true);
@@ -777,6 +841,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("acacia_modern_stool", PaladinFurnitureModBlocksItems.ACACIA_MODERN_STOOL, true);
         registerFurniture("jungle_modern_stool", PaladinFurnitureModBlocksItems.JUNGLE_MODERN_STOOL, true);
         registerFurniture("dark_oak_modern_stool", PaladinFurnitureModBlocksItems.DARK_OAK_MODERN_STOOL, true);
+        registerFurniture("mangrove_modern_stool", PaladinFurnitureModBlocksItems.MANGROVE_MODERN_STOOL, true);
         registerFurniture("crimson_modern_stool", PaladinFurnitureModBlocksItems.CRIMSON_MODERN_STOOL, true);
         registerFurniture("warped_modern_stool", PaladinFurnitureModBlocksItems.WARPED_MODERN_STOOL, true);
         registerFurniture("stripped_oak_modern_stool", PaladinFurnitureModBlocksItems.STRIPPED_OAK_MODERN_STOOL, true);
@@ -785,6 +850,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_acacia_modern_stool", PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_MODERN_STOOL, true);
         registerFurniture("stripped_jungle_modern_stool", PaladinFurnitureModBlocksItems.STRIPPED_JUNGLE_MODERN_STOOL, true);
         registerFurniture("stripped_dark_oak_modern_stool", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_MODERN_STOOL, true);
+        registerFurniture("stripped_mangrove_modern_stool", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_MODERN_STOOL, true);
         registerFurniture("stripped_crimson_modern_stool", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_MODERN_STOOL, true);
         registerFurniture("stripped_warped_modern_stool", PaladinFurnitureModBlocksItems.STRIPPED_WARPED_MODERN_STOOL, true);
         registerFurniture("white_modern_stool", PaladinFurnitureModBlocksItems.WHITE_MODERN_STOOL, true);
@@ -858,6 +924,15 @@ public class BlockItemRegistryFabric {
         registerFurniture("dark_oak_kitchen_wall_drawer", PaladinFurnitureModBlocksItems.DARK_OAK_KITCHEN_WALL_DRAWER, true);
         registerFurniture("dark_oak_kitchen_wall_small_drawer", PaladinFurnitureModBlocksItems.DARK_OAK_KITCHEN_WALL_SMALL_DRAWER, true);
 
+        registerFurniture("mangrove_kitchen_counter", PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_COUNTER, true);
+        registerFurniture("mangrove_kitchen_drawer", PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_DRAWER, true);
+        registerFurniture("mangrove_kitchen_cabinet", PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_CABINET, true);
+        registerFurniture("mangrove_kitchen_sink", PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_SINK, true);
+        registerFurniture("mangrove_kitchen_counter_oven", PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("mangrove_kitchen_wall_counter", PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("mangrove_kitchen_wall_drawer", PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_WALL_DRAWER, true);
+        registerFurniture("mangrove_kitchen_wall_small_drawer", PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_WALL_SMALL_DRAWER, true);
+
         registerFurniture("crimson_kitchen_counter", PaladinFurnitureModBlocksItems.CRIMSON_KITCHEN_COUNTER, true);
         registerFurniture("crimson_kitchen_drawer", PaladinFurnitureModBlocksItems.CRIMSON_KITCHEN_DRAWER, true);
         registerFurniture("crimson_kitchen_cabinet", PaladinFurnitureModBlocksItems.CRIMSON_KITCHEN_CABINET, true);
@@ -929,6 +1004,15 @@ public class BlockItemRegistryFabric {
         registerFurniture("stripped_dark_oak_kitchen_wall_counter", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_KITCHEN_WALL_COUNTER, true);
         registerFurniture("stripped_dark_oak_kitchen_wall_drawer", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_KITCHEN_WALL_DRAWER, true);
         registerFurniture("stripped_dark_oak_kitchen_wall_small_drawer", PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_KITCHEN_WALL_SMALL_DRAWER, true);
+
+        registerFurniture("stripped_mangrove_kitchen_counter", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_COUNTER, true);
+        registerFurniture("stripped_mangrove_kitchen_drawer", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_DRAWER, true);
+        registerFurniture("stripped_mangrove_kitchen_cabinet", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_CABINET, true);
+        registerFurniture("stripped_mangrove_kitchen_sink", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_SINK, true);
+        registerFurniture("stripped_mangrove_kitchen_counter_oven", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_COUNTER_OVEN, true);
+        registerFurniture("stripped_mangrove_kitchen_wall_counter", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_WALL_COUNTER, true);
+        registerFurniture("stripped_mangrove_kitchen_wall_drawer", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_WALL_DRAWER, true);
+        registerFurniture("stripped_mangrove_kitchen_wall_small_drawer", PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_WALL_SMALL_DRAWER, true);
 
         registerFurniture("stripped_crimson_kitchen_counter", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_KITCHEN_COUNTER, true);
         registerFurniture("stripped_crimson_kitchen_drawer", PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_KITCHEN_DRAWER, true);
@@ -1098,6 +1182,7 @@ public class BlockItemRegistryFabric {
         registerBlock("jungle_herringbone_planks", PaladinFurnitureModBlocksItems.JUNGLE_HERRINGBONE_PLANKS, true);
         registerBlock("acacia_herringbone_planks", PaladinFurnitureModBlocksItems.ACACIA_HERRINGBONE_PLANKS, true);
         registerBlock("dark_oak_herringbone_planks", PaladinFurnitureModBlocksItems.DARK_OAK_HERRINGBONE_PLANKS, true);
+        registerBlock("mangrove_herringbone_planks", PaladinFurnitureModBlocksItems.MANGROVE_HERRINGBONE_PLANKS, true);
         registerBlock("crimson_herringbone_planks", PaladinFurnitureModBlocksItems.CRIMSON_HERRINGBONE_PLANKS, true);
         registerBlock("warped_herringbone_planks", PaladinFurnitureModBlocksItems.WARPED_HERRINGBONE_PLANKS, true);
 

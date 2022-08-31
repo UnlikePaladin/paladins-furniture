@@ -31,7 +31,6 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -156,7 +155,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public Text getDisplayName() {
-        return new TranslatableText("container.pfm.microwave");
+        return Text.translatable("container.pfm.microwave");
     }
 
     private static int getCookTime(World world, RecipeType<? extends AbstractCookingRecipe> recipeType, Inventory inventory) {

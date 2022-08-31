@@ -22,7 +22,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -31,7 +30,7 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
-    public static final TranslatableText TITLE = new TranslatableText("rei.pfm.freezer");
+    public static final Text TITLE = Text.translatable("rei.pfm.freezer");
     public final IDrawable ICON;
     public static final Identifier IDENTIFIER = new Identifier(PaladinFurnitureMod.MOD_ID, "freezing");
     private final IDrawable BACKGROUND;
@@ -56,11 +55,6 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
                                 .buildAnimated(freezeTime, IDrawableAnimated.StartDirection.LEFT, false);
                     }
                 });
-    }
-
-    @Override
-    public Class<? extends FreezingRecipe> getRecipeClass() {
-        return getRecipeType().getRecipeClass();
     }
 
     @Override
@@ -137,10 +131,5 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
 
         drawExperience(recipe, poseStack, 0);
         drawFreezeTime(recipe, poseStack, 45);
-    }
-
-    @Override
-    public Identifier getUid() {
-        return getRecipeType().getUid();
     }
 }

@@ -1,22 +1,22 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SYS"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stone"
-    },
     "S": {
       "item": "minecraft:cobblestone"
+    },
+    "X": {
+      "item": "minecraft:stone"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XXX",
+    "SYS"
+  ],
   "result": {
-    "item": "pfm:stone_kitchen_wall_small_drawer",
-    "count": 3
+    "count": 3,
+    "item": "pfm:stone_kitchen_wall_small_drawer"
   }
 }

@@ -1,10 +1,5 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "SXS",
-    "SZS",
-    "S S"
-  ],
   "key": {
     "S": {
       "item": "minecraft:spruce_log"
@@ -16,8 +11,13 @@
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "SXS",
+    "SZS",
+    "S S"
+  ],
   "result": {
-    "item": "pfm:spruce_classic_nightstand",
-    "count": 4
+    "count": 4,
+    "item": "pfm:spruce_classic_nightstand"
   }
 }

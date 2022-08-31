@@ -15,7 +15,7 @@ import net.minecraft.client.render.RenderLayers;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.ColorHandlerEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.jetbrains.annotations.Nullable;
@@ -26,7 +26,7 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ColorRegistryForge {
     @SubscribeEvent
-    public static void registerBlockColors(ColorHandlerEvent.Block event){
+    public static void registerBlockColors(RegisterColorHandlersEvent.Block event){
         List<Block> sinks = new ArrayList<>();
         KitchenSink.streamStoneSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
         KitchenSink.streamWoodSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
@@ -36,7 +36,7 @@ public class ColorRegistryForge {
     }
 
     @SubscribeEvent
-    public static void registerItemColors(ColorHandlerEvent.Item event){
+    public static void registerItemColors(RegisterColorHandlersEvent.Item event){
         event.getItemColors().register((stack, index) -> index == 1 ?  0x3c44a9 : 0xFFFFFF, PaladinFurnitureModBlocksItems.BASIC_BATHTUB.asItem());
     }
 

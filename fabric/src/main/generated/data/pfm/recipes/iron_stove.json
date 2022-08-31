@@ -1,10 +1,5 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "XYX",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:iron_ingot"
@@ -13,6 +8,11 @@
       "item": "minecraft:furnace"
     }
   },
+  "pattern": [
+    "XXX",
+    "XYX",
+    "XXX"
+  ],
   "result": {
     "item": "pfm:iron_stove"
   }

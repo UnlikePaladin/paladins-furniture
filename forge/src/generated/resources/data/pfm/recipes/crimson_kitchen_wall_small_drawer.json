@@ -1,22 +1,22 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SYS"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:crimson_planks"
-    },
     "S": {
       "item": "minecraft:crimson_stem"
+    },
+    "X": {
+      "item": "minecraft:crimson_planks"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XXX",
+    "SYS"
+  ],
   "result": {
-    "item": "pfm:crimson_kitchen_wall_small_drawer",
-    "count": 3
+    "count": 3,
+    "item": "pfm:crimson_kitchen_wall_small_drawer"
   }
 }

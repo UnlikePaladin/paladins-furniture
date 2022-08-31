@@ -11,7 +11,6 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 public class TrashcanScreen extends HandledScreen<TrashcanScreenHandler> {
@@ -23,7 +22,7 @@ public class TrashcanScreen extends HandledScreen<TrashcanScreenHandler> {
     public TrashcanScreen(TrashcanScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);
     }
-    private final TranslatableText startButtonText = new TranslatableText("gui.pfm.trashcan.clear_button");
+    private static final Text startButtonText = Text.translatable("gui.pfm.trashcan.clear_button");
 
     @Override
     public void init() {

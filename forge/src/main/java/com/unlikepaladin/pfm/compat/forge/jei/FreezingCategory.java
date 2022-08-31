@@ -7,15 +7,12 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -25,14 +22,13 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
-    public static final TranslatableText TITLE = new TranslatableText("rei.pfm.freezer");
+    public static final Text TITLE = Text.translatable("rei.pfm.freezer");
     public final IDrawable ICON;
     public static final Identifier IDENTIFIER = new Identifier(PaladinFurnitureMod.MOD_ID, "freezing");
     private final IDrawable BACKGROUND;
@@ -43,7 +39,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
 
     public FreezingCategory(IGuiHelper guiHelper) {
-        ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FRIDGE));
+        ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(Blocks.DIRT));// new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FRIDGE));
         this.BACKGROUND = guiHelper.createDrawable(FREEZE_GUI,55, 16, 82, 54);
         staticFreezeIcon = guiHelper.createDrawable(FREEZE_GUI, 176, 0, 12, 12);
         animatedFreezeIcon = guiHelper.createAnimatedDrawable(staticFreezeIcon, 300, IDrawableAnimated.StartDirection.TOP, true);
@@ -57,16 +53,6 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
                                 .buildAnimated(freezeTime, IDrawableAnimated.StartDirection.LEFT, false);
                     }
                 });
-    }
-
-    @Override
-    public Identifier getUid() {
-        return IDENTIFIER;
-    }
-
-    @Override
-    public Class<? extends FreezingRecipe> getRecipeClass() {
-        return getRecipeType().getRecipeClass();
     }
 
     @Override

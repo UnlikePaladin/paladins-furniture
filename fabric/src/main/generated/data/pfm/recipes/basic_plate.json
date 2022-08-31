@@ -1,23 +1,23 @@
 {
   "type": "pfm:furniture",
+  "key": {
+    "X": {
+      "item": "minecraft:white_concrete"
+    },
+    "Y": {
+      "item": "minecraft:white_concrete"
+    },
+    "Z": {
+      "item": "minecraft:item_frame"
+    }
+  },
   "pattern": [
     "XYX",
     "YZY",
     "XYX"
   ],
-  "key": {
-    "X": {
-      "item": "minecraft:white_concrete"
-    },
-    "Z": {
-      "item": "minecraft:item_frame"
-    },
-    "Y": {
-      "item": "minecraft:white_concrete"
-    }
-  },
   "result": {
-    "item": "pfm:basic_plate",
-    "count": 4
+    "count": 4,
+    "item": "pfm:basic_plate"
   }
 }

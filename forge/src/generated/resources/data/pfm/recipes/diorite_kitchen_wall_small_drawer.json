@@ -1,22 +1,22 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SYS"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stripped_birch_log"
-    },
     "S": {
       "item": "minecraft:polished_diorite"
+    },
+    "X": {
+      "item": "minecraft:stripped_birch_log"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XXX",
+    "SYS"
+  ],
   "result": {
-    "item": "pfm:diorite_kitchen_wall_small_drawer",
-    "count": 3
+    "count": 3,
+    "item": "pfm:diorite_kitchen_wall_small_drawer"
   }
 }

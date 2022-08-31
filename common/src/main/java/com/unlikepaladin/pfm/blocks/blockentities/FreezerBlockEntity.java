@@ -28,21 +28,22 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.tag.Tag;
+import net.minecraft.tag.TagKey;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryEntry;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 
 public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker,
         RecipeInputProvider {
@@ -179,9 +180,12 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         return this.fuelTime > 0;
     }
 
-    private static void addFuel(Map<Item, Integer> fuelTimes, Tag<Item> tag, int fuelTime) {
-        for (Item item : tag.values()) {
-            fuelTimes.put(item, fuelTime);
+    private static void addFuel(Map<Item, Integer> fuelTimes, TagKey<Item> tag, int fuelTime) {
+        Iterator var3 = Registry.ITEM.iterateEntries(tag).iterator();
+
+        while(var3.hasNext()) {
+            RegistryEntry<Item> registryEntry = (RegistryEntry)var3.next();
+            fuelTimes.put(registryEntry.value(), fuelTime);
         }
     }
 
@@ -299,9 +303,9 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
 
     @Override
-        public int size() {
-            return 3;
-        }
+    public int size() {
+        return 3;
+    }
 
 
     protected int getFuelTime(ItemStack fuel) {
@@ -355,7 +359,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
     @Override
     public Text getDisplayName() {
-        return new TranslatableText("container.pfm.freezer");
+        return Text.translatable("container.pfm.freezer");
     }
 
     @Override
@@ -471,4 +475,3 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
 }
-

@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.data;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
-import net.minecraft.tag.Tag;
 import net.minecraft.tag.TagKey;
 
 public class Tags {

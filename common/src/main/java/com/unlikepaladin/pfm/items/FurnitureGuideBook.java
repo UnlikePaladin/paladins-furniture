@@ -8,7 +8,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
@@ -31,7 +30,7 @@ public class FurnitureGuideBook extends Item {
     }
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        tooltip.add(new TranslatableText("pfm.patchouli.guide_book.subtitle"));
+        tooltip.add(Text.translatable("pfm.patchouli.guide_book.subtitle"));
         super.appendTooltip(stack, world, tooltip, context);
     }
 }

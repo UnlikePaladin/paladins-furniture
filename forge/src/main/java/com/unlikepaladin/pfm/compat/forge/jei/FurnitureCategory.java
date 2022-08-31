@@ -9,26 +9,21 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import mezz.jei.api.constants.VanillaTypes;
-import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
-import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.category.extensions.IExtendableRecipeCategory;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
-import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICustomCraftingCategoryExtension;
 import net.minecraft.block.Block;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.common.util.Size2i;
 import org.jetbrains.annotations.Nullable;
@@ -41,7 +36,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private final IDrawable BACKGROUND;
     public static final Identifier TEXTURE_GUI_VANILLA = new Identifier("jei:textures/gui/gui_vanilla.png");
     public final IDrawable ICON;
-    public static final TranslatableText TITLE = new TranslatableText("rei.pfm.furniture");
+    public static final Text TITLE = Text.translatable("rei.pfm.furniture");
     private final ICraftingGridHelper craftingGridHelper;
     private static final int craftOutputSlot = 0;
     private static final int craftInputSlot1 = 1;
@@ -49,19 +44,9 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     public FurnitureCategory(IGuiHelper guiHelper) {
         ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(PaladinFurnitureModBlocksItems.WORKING_TABLE));
         this.BACKGROUND = guiHelper.createDrawable(TEXTURE_GUI_VANILLA, 0, 60, 116, 54);
-        craftingGridHelper = guiHelper.createCraftingGridHelper(craftInputSlot1);
+        craftingGridHelper = guiHelper.createCraftingGridHelper();
     }
     public static final Identifier IDENTIFIER = new Identifier(PaladinFurnitureMod.MOD_ID, "crafting");
-
-    @Override
-    public Identifier getUid() {
-        return getRecipeType().getUid();
-    }
-
-    @Override
-    public Class<? extends FurnitureRecipe> getRecipeClass() {
-        return getRecipeType().getRecipeClass();
-    }
 
     @Override
     public RecipeType<FurnitureRecipe> getRecipeType() {

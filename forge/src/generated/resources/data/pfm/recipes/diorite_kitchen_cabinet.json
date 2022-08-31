@@ -1,21 +1,21 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XSX",
-    "XYX",
-    "XSX"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stripped_birch_log"
-    },
     "S": {
       "item": "minecraft:polished_diorite"
+    },
+    "X": {
+      "item": "minecraft:stripped_birch_log"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XSX",
+    "XYX",
+    "XSX"
+  ],
   "result": {
     "item": "pfm:diorite_kitchen_cabinet"
   }

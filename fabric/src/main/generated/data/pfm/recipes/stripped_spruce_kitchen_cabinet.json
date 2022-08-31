@@ -1,21 +1,21 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XSX",
-    "XYX",
-    "XSX"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stripped_spruce_log"
-    },
     "S": {
       "item": "minecraft:spruce_planks"
+    },
+    "X": {
+      "item": "minecraft:stripped_spruce_log"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XSX",
+    "XYX",
+    "XSX"
+  ],
   "result": {
     "item": "pfm:stripped_spruce_kitchen_cabinet"
   }

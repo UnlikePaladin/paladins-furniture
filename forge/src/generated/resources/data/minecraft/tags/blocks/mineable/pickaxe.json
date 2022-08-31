@@ -1,5 +1,4 @@
 {
-  "replace": false,
   "values": [
     "pfm:concrete_kitchen_counter",
     "pfm:dark_concrete_kitchen_counter",
@@ -87,6 +86,7 @@
     "pfm:dark_oak_chair_classic",
     "pfm:crimson_chair_classic",
     "pfm:warped_chair_classic",
+    "pfm:mangrove_chair_classic",
     "pfm:stripped_oak_chair_classic",
     "pfm:stripped_birch_chair_classic",
     "pfm:stripped_spruce_chair_classic",
@@ -95,6 +95,7 @@
     "pfm:stripped_dark_oak_chair_classic",
     "pfm:stripped_warped_chair_classic",
     "pfm:stripped_crimson_chair_classic",
+    "pfm:stripped_mangrove_chair_classic",
     "pfm:quartz_chair_classic",
     "pfm:light_wood_chair_classic",
     "pfm:dark_wood_chair_classic",

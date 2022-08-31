@@ -1,21 +1,21 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XY ",
-    "XZX",
-    " X "
-  ],
   "key": {
-    "Y": {
-      "item": "minecraft:stone_button"
-    },
     "X": {
       "item": "minecraft:quartz_block"
+    },
+    "Y": {
+      "item": "minecraft:stone_button"
     },
     "Z": {
       "item": "minecraft:bucket"
     }
   },
+  "pattern": [
+    "XY ",
+    "XZX",
+    " X "
+  ],
   "result": {
     "item": "pfm:basic_toilet"
   }

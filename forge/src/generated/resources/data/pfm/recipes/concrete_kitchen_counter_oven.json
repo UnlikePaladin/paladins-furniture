@@ -1,21 +1,21 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "SSS",
-    "XYX",
-    "XXX"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:white_concrete"
-    },
     "S": {
       "item": "pfm:raw_concrete"
+    },
+    "X": {
+      "item": "minecraft:white_concrete"
     },
     "Y": {
       "item": "minecraft:furnace"
     }
   },
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX"
+  ],
   "result": {
     "item": "pfm:concrete_kitchen_counter_oven"
   }

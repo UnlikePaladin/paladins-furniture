@@ -1,22 +1,22 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SYS"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stripped_acacia_log"
-    },
     "S": {
       "item": "minecraft:acacia_planks"
+    },
+    "X": {
+      "item": "minecraft:stripped_acacia_log"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XXX",
+    "SYS"
+  ],
   "result": {
-    "item": "pfm:stripped_acacia_kitchen_wall_small_drawer",
-    "count": 3
+    "count": 3,
+    "item": "pfm:stripped_acacia_kitchen_wall_small_drawer"
   }
 }

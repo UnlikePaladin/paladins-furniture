@@ -16,7 +16,6 @@ import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -29,7 +28,7 @@ public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
      String blockname = this.getCachedState().getBlock().getTranslationKey();
     @Override
     protected Text getContainerName() {
-        return new TranslatableText("container.pfm.kitchen_counter_oven");
+        return Text.translatable("container.pfm.kitchen_counter_oven");
     }
 
     @Override

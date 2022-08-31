@@ -176,7 +176,7 @@ public class BasicBathtub extends BedBlock {
             bathtubBehavior.interact(state, world, pos, player, hand, itemStack);
             return ActionResult.SUCCESS;
         }
-        if (world.isNight() && world.getDimension().isBedWorking()) {
+        if (world.isNight() && world.getDimension().bedWorks()) {
             super.onUse(state, world, pos, player, hand, hit);
             return ActionResult.SUCCESS;
         }

@@ -1,22 +1,22 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SYS"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stripped_spruce_log"
-    },
     "S": {
       "item": "minecraft:spruce_planks"
+    },
+    "X": {
+      "item": "minecraft:stripped_spruce_log"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XXX",
+    "SYS"
+  ],
   "result": {
-    "item": "pfm:stripped_spruce_kitchen_wall_small_drawer",
-    "count": 3
+    "count": 3,
+    "item": "pfm:stripped_spruce_kitchen_wall_small_drawer"
   }
 }

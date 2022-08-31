@@ -1,22 +1,22 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SYS"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:white_concrete"
-    },
     "S": {
       "item": "minecraft:smooth_stone"
+    },
+    "X": {
+      "item": "minecraft:white_concrete"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XXX",
+    "SYS"
+  ],
   "result": {
-    "item": "pfm:smooth_stone_kitchen_wall_small_drawer",
-    "count": 3
+    "count": 3,
+    "item": "pfm:smooth_stone_kitchen_wall_small_drawer"
   }
 }

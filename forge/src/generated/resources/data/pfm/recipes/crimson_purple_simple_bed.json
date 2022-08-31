@@ -1,9 +1,5 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XZX",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:crimson_planks"
@@ -12,6 +8,10 @@
       "item": "minecraft:purple_bed"
     }
   },
+  "pattern": [
+    "XZX",
+    "XXX"
+  ],
   "result": {
     "item": "pfm:crimson_purple_simple_bed"
   }

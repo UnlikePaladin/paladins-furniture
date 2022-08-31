@@ -1,21 +1,21 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "SSS",
-    "XYX",
-    "XXX"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stripped_crimson_stem"
-    },
     "S": {
       "item": "minecraft:crimson_planks"
+    },
+    "X": {
+      "item": "minecraft:stripped_crimson_stem"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX"
+  ],
   "result": {
     "item": "pfm:stripped_crimson_kitchen_drawer"
   }

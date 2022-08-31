@@ -1,20 +1,20 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "YZY",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:dark_oak_planks"
     },
-    "Z": {
-      "item": "minecraft:green_bed"
-    },
     "Y": {
       "item": "minecraft:dark_oak_fence"
+    },
+    "Z": {
+      "item": "minecraft:green_bed"
     }
   },
+  "pattern": [
+    "YZY",
+    "XXX"
+  ],
   "result": {
     "item": "pfm:dark_oak_green_classic_bed"
   }

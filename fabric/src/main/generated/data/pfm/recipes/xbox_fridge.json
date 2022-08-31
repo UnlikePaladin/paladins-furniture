@@ -1,11 +1,9 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XPX",
-    "XYX",
-    "XZX"
-  ],
   "key": {
+    "P": {
+      "item": "minecraft:white_concrete"
+    },
     "X": {
       "item": "minecraft:black_concrete"
     },
@@ -14,11 +12,13 @@
     },
     "Z": {
       "item": "minecraft:redstone"
-    },
-    "P": {
-      "item": "minecraft:white_concrete"
     }
   },
+  "pattern": [
+    "XPX",
+    "XYX",
+    "XZX"
+  ],
   "result": {
     "item": "pfm:xbox_fridge"
   }

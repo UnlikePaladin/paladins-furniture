@@ -1,16 +1,16 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "X X",
-    "X X"
-  ],
   "key": {
     "X": {
       "item": "minecraft:light_gray_concrete"
     }
   },
+  "pattern": [
+    "X X",
+    "X X"
+  ],
   "result": {
-    "item": "pfm:basic_cutlery",
-    "count": 4
+    "count": 4,
+    "item": "pfm:basic_cutlery"
   }
 }

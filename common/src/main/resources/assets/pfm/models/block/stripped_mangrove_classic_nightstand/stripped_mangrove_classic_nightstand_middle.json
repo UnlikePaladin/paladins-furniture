@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/classic_nightstand/classic_nightstand_middle",
+	"textures": {
+        
+		"particle": "block/stripped_mangrove_log",
+		"base": "block/stripped_mangrove_log",
+		"support": "block/mangrove_planks"
+	}
+    
+}

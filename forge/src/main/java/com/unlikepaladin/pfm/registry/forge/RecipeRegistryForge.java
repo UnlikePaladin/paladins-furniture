@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.recipes.FurnitureSerializer;
 import com.unlikepaladin.pfm.recipes.forge.FurnitureRecipeSerializerForge;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.recipe.CookingRecipeSerializer;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
@@ -14,33 +15,35 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
-import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class RecipeRegistryForge {
 
-    @SubscribeEvent
-    public static void registerRecipeSerializers(RegistryEvent.Register<RecipeSerializer<?>> event) {
-        event.getRegistry().register(
-                (RecipeTypes.FREEZING_RECIPE_SERIALIZER = new CookingRecipeSerializer<>(FreezingRecipe::new, 200)).setRegistryName(new Identifier(PaladinFurnitureMod.MOD_ID, "freezing"))
-        );
-        event.getRegistry().register(
-                (RecipeTypes.FURNITURE_SERIALIZER = new FurnitureRecipeSerializerForge()).setRegistryName(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"))
-        );
+   @SubscribeEvent
+    public static void registerRecipeSerializers(RegisterEvent event){
+        event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, recipeSerializerRegisterHelper -> {
+            recipeSerializerRegisterHelper.register( new Identifier(PaladinFurnitureMod.MOD_ID, "freezing"), RecipeTypes.FREEZING_RECIPE_SERIALIZER = new CookingRecipeSerializer<>(FreezingRecipe::new, 200));
+            recipeSerializerRegisterHelper.register( new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"), RecipeTypes.FURNITURE_SERIALIZER = new FurnitureRecipeSerializerForge());
+        });
     }
 
 
     @SubscribeEvent
-    public static void registerRecipeTypes(RegistryEvent.Register<RecipeSerializer<?>> event) {
-        RecipeTypes.FREEZING_RECIPE = Registry.register(Registry.RECIPE_TYPE, PaladinFurnitureMod.MOD_ID + ":freezing",  new RecipeType<FreezingRecipe>() {
-            @Override
-            public String toString() {return "freezing";}
-        });
-        RecipeTypes.FURNITURE_RECIPE = Registry.register(Registry.RECIPE_TYPE, RecipeTypes.FURNITURE_ID,  new RecipeType<FurnitureRecipe>() {
-            @Override
-            public String toString() {return "furniture";}
+    public static void registerRecipeTypes(RegisterEvent event){
+        event.register(ForgeRegistries.Keys.RECIPE_TYPES, recipeTypeRegisterHelper -> {
+            recipeTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "freezing"), RecipeTypes.FREEZING_RECIPE = new RecipeType<FreezingRecipe>() {
+                @Override
+                public String toString() {return "freezing";}
+            });
+            recipeTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"), RecipeTypes.FURNITURE_RECIPE = new RecipeType<FurnitureRecipe>() {
+                @Override
+                public String toString() {return "furniture";}
+            });
         });
     }
 

@@ -9,6 +9,7 @@
   "block.pfm.dark_oak_chair": "Basic Dark Oak Chair",
   "block.pfm.warped_chair": "Basic Warped Chair",
   "block.pfm.crimson_chair": "Basic Crimson Chair",
+  "block.pfm.mangrove_chair": "Basic Mangrove Chair",
 
   "block.pfm.stripped_oak_chair": "Basic Stripped Oak Chair",
   "block.pfm.stripped_birch_chair": "Basic Stripped Birch Chair",
@@ -18,6 +19,8 @@
   "block.pfm.stripped_dark_oak_chair": "Basic Stripped Dark Oak Chair",
   "block.pfm.stripped_warped_chair": "Basic Stripped Warped Chair",
   "block.pfm.stripped_crimson_chair": "Basic Stripped Crimson Chair",
+  "block.pfm.stripped_mangrove_chair": "Basic Stripped Mangrove Chair",
+
   "block.pfm.quartz_chair": "Basic Quartz Chair",
   "block.pfm.netherite_chair": "The Swaggiest Basic Chair Ever",
   "block.pfm.light_wood_chair": "Basic Light Wood Chair",
@@ -38,6 +41,7 @@
   "block.pfm.dark_oak_chair_dinner": "Dining Dark Oak Chair",
   "block.pfm.warped_chair_dinner": "Dining Warped Chair",
   "block.pfm.crimson_chair_dinner": "Dining Crimson Chair",
+  "block.pfm.mangrove_chair_dinner": "Dining Mangrove Chair",
 
   "block.pfm.stripped_oak_chair_dinner": "Dining Stripped Oak Chair",
   "block.pfm.stripped_birch_chair_dinner": "Dining Stripped Birch Chair",
@@ -47,6 +51,8 @@
   "block.pfm.stripped_dark_oak_chair_dinner": "Dining Stripped Dark Oak Chair",
   "block.pfm.stripped_warped_chair_dinner": "Dining Stripped Warped Chair",
   "block.pfm.stripped_crimson_chair_dinner": "Dining Stripped Crimson Chair",
+  "block.pfm.stripped_mangrove_chair_dinner": "Dining Stripped Mangrove Chair",
+
   "block.pfm.quartz_chair_dinner": "Dining Quartz Chair",
   "block.pfm.netherite_chair_dinner": "The Swaggiest Dining Chair Ever",
   "block.pfm.light_wood_chair_dinner": "Dining Light Wood Chair",
@@ -74,6 +80,7 @@
   "block.pfm.dark_oak_chair_classic": "Classic Dark Oak Chair",
   "block.pfm.warped_chair_classic": "Classic Warped Chair",
   "block.pfm.crimson_chair_classic": "Classic Crimson Chair",
+  "block.pfm.mangrove_chair_classic": "Classic Mangrove Chair",
 
   "block.pfm.stripped_oak_chair_classic": "Classic Stripped Oak Chair",
   "block.pfm.stripped_birch_chair_classic": "Classic Stripped Birch Chair",
@@ -83,6 +90,7 @@
   "block.pfm.stripped_dark_oak_chair_classic": "Classic Stripped Dark Oak Chair",
   "block.pfm.stripped_warped_chair_classic": "Classic Stripped Warped Chair",
   "block.pfm.stripped_crimson_chair_classic": "Classic Stripped Crimson Chair",
+  "block.pfm.stripped_mangrove_chair_classic": "Classic Stripped Mangrove Chair",
   "block.pfm.chair_classic_wool": "Wool Classic Chair",
   "block.pfm.quartz_chair_classic": "Classic Quartz Chair",
   "block.pfm.netherite_chair_classic": "The Swaggiest Classic Chair Ever",
@@ -107,6 +115,7 @@
   "block.pfm.dark_oak_chair_modern": "Modern Dark Oak Chair",
   "block.pfm.warped_chair_modern": "Modern Warped Chair",
   "block.pfm.crimson_chair_modern": "Modern Crimson Chair",
+  "block.pfm.mangrove_chair_modern": "Modern Mangrove Chair",
 
   "block.pfm.stripped_oak_chair_modern": "Modern Stripped Oak Chair",
   "block.pfm.stripped_birch_chair_modern": "Modern Stripped Birch Chair",
@@ -116,6 +125,8 @@
   "block.pfm.stripped_dark_oak_chair_modern": "Modern Stripped Dark Oak Chair",
   "block.pfm.stripped_warped_chair_modern": "Modern Stripped Warped Chair",
   "block.pfm.stripped_crimson_chair_modern": "Modern Stripped Crimson Chair",
+  "block.pfm.stripped_mangrove_chair_modern": "Modern Stripped Mangrove Chair",
+
   "block.pfm.quartz_chair_modern": "Modern Quartz Chair",
   "block.pfm.netherite_chair_modern": "The Swaggiest Modern Chair Ever",
   "block.pfm.light_wood_chair_modern": "Modern Light Wood Chair",
@@ -209,6 +220,7 @@
   "block.pfm.dark_oak_table_basic": "Basic Dark Oak Table",
   "block.pfm.crimson_table_basic": "Basic Crimson Table",
   "block.pfm.warped_table_basic": "Basic Warped Table",
+  "block.pfm.mangrove_table_basic": "Basic Mangrove Table",
 
   "block.pfm.stripped_oak_table_basic": "Basic Stripped Oak Table",
   "block.pfm.stripped_birch_table_basic": "Basic Stripped Birch Table",
@@ -218,6 +230,7 @@
   "block.pfm.stripped_dark_oak_table_basic": "Basic Stripped Dark Oak Table",
   "block.pfm.stripped_crimson_table_basic": "Basic Stripped Crimson Table",
   "block.pfm.stripped_warped_table_basic": "Basic Stripped Warped Table",
+  "block.pfm.stripped_mangrove_table_basic": "Basic Stripped Mangrove Table",
 
   "block.pfm.quartz_table_basic": "Basic Quartz Table",
   "block.pfm.netherite_table_basic": "The Swaggiest Basic Table Ever",
@@ -239,6 +252,7 @@
   "block.pfm.dark_oak_table_classic": "Classic Dark Oak Table",
   "block.pfm.crimson_table_classic": "Classic Crimson Table",
   "block.pfm.warped_table_classic": "Classic Warped Table",
+  "block.pfm.mangrove_table_classic": "Classic Mangrove Table",
 
   "block.pfm.stripped_oak_table_classic": "Classic Stripped Oak Table",
   "block.pfm.stripped_birch_table_classic": "Classic Stripped Birch Table",
@@ -248,6 +262,7 @@
   "block.pfm.stripped_dark_oak_table_classic": "Classic Stripped Dark Oak Table",
   "block.pfm.stripped_crimson_table_classic": "Classic Stripped Crimson Table",
   "block.pfm.stripped_warped_table_classic": "Classic Stripped Warped Table",
+  "block.pfm.stripped_mangrove_table_classic": "Classic Stripped Mangrove Table",
 
   "block.pfm.quartz_table_classic": "Classic Quartz Table",
   "block.pfm.netherite_table_classic": "The Swaggiest Classic Table Ever",
@@ -269,6 +284,7 @@
   "block.pfm.dark_oak_table_log": "Dark Oak Log Table",
   "block.pfm.crimson_table_stem": "Crimson Stem Table",
   "block.pfm.warped_table_stem": "Warped Stem Table",
+  "block.pfm.mangrove_table_log": "Mangrove Log Table",
 
   "block.pfm.stripped_oak_table_log": "Stripped Oak Log Table",
   "block.pfm.stripped_birch_table_log": "Stripped Birch Log Table",
@@ -278,6 +294,7 @@
   "block.pfm.stripped_dark_oak_table_log": "Stripped Dark Oak Log Table",
   "block.pfm.stripped_crimson_table_stem": "Stripped Crimson Stem Table",
   "block.pfm.stripped_warped_table_stem": "Stripped Warped Stem Table",
+  "block.pfm.stripped_mangrove_table_log": "Stripped Mangrove Log Table",
 
   "block.pfm.quartz_table_natural": "Natural Quartz Table",
   "block.pfm.netherite_table_natural": "The Swaggiest Natural Table Ever",
@@ -299,6 +316,8 @@
   "block.pfm.dark_oak_raw_table_log": "Raw Dark Oak Log Table",
   "block.pfm.warped_raw_table_stem": "Raw Warped Stem Table",
   "block.pfm.crimson_raw_table_stem": "Raw Crimson Stem Table",
+  "block.pfm.mangrove_raw_table_log": "Raw Mangrove Log Table",
+
   "block.pfm.stripped_oak_raw_table_log": "Raw Stripped Oak Log Table",
   "block.pfm.stripped_birch_raw_table_log": "Raw Stripped Birch Log Table",
   "block.pfm.stripped_spruce_raw_table_log": "Raw Stripped Spruce Log Table",
@@ -307,6 +326,7 @@
   "block.pfm.stripped_dark_oak_raw_table_log": "Raw Stripped Dark Oak Log Table",
   "block.pfm.stripped_warped_raw_table_stem": "Raw Stripped Warped Stem Table",
   "block.pfm.stripped_crimson_raw_table_stem": "Raw Stripped Crimson Stem Table",
+  "block.pfm.stripped_mangrove_raw_table_log": "Raw Stripped Mangrove Log Table",
 
   "block.pfm.oak_log_stool": "Oak Log Stool",
   "block.pfm.birch_log_stool": "Birch Log Stool",
@@ -316,6 +336,7 @@
   "block.pfm.dark_oak_log_stool": "Dark Oak Log Stool",
   "block.pfm.crimson_stem_stool": "Crimson Stem Stool",
   "block.pfm.warped_stem_stool": "Warped Stem Stool",
+  "block.pfm.mangrove_log_stool": "Mangrove Log Stool",
 
   "block.pfm.oak_classic_stool": "Oak Classic Stool",
   "block.pfm.birch_classic_stool": "Birch Classic Stool",
@@ -325,6 +346,8 @@
   "block.pfm.dark_oak_classic_stool": "Dark Oak Classic Stool",
   "block.pfm.crimson_classic_stool": "Crimson Classic Stool",
   "block.pfm.warped_classic_stool": "Warped Classic Stool",
+  "block.pfm.mangrove_classic_stool": "Mangrove Classic Stool",
+
   "block.pfm.stripped_oak_classic_stool": "Stripped Oak Classic Stool",
   "block.pfm.stripped_birch_classic_stool": "Stripped Birch Classic Stool",
   "block.pfm.stripped_spruce_classic_stool": "Stripped Spruce Classic Stool",
@@ -333,6 +356,8 @@
   "block.pfm.stripped_dark_oak_classic_stool": "Stripped Dark Oak Classic Stool",
   "block.pfm.stripped_crimson_classic_stool": "Stripped Crimson Classic Stool",
   "block.pfm.stripped_warped_classic_stool": "Stripped Warped Classic Stool",
+  "block.pfm.stripped_mangrove_classic_stool": "Stripped Mangrove Classic Stool",
+
   "block.pfm.quartz_classic_stool": "Quartz Classic Stool",
   "block.pfm.netherite_classic_stool": "The Swaggiest Classic Stool Ever",
   "block.pfm.light_wood_classic_stool": "Light Wood Classic Stool",
@@ -353,6 +378,8 @@
   "block.pfm.dark_oak_modern_stool": "Dark Oak Modern Stool",
   "block.pfm.crimson_modern_stool": "Crimson Modern Stool",
   "block.pfm.warped_modern_stool": "Warped Modern Stool",
+  "block.pfm.mangrove_modern_stool": "Mangrove Modern Stool",
+
   "block.pfm.stripped_oak_modern_stool": "Stripped Oak Modern Stool",
   "block.pfm.stripped_birch_modern_stool": "Stripped Birch Modern Stool",
   "block.pfm.stripped_spruce_modern_stool": "Stripped Spruce Modern Stool",
@@ -361,6 +388,8 @@
   "block.pfm.stripped_dark_oak_modern_stool": "Stripped Dark Oak Modern Stool",
   "block.pfm.stripped_crimson_modern_stool": "Stripped Crimson Modern Stool",
   "block.pfm.stripped_warped_modern_stool": "Stripped Warped Modern Stool",
+  "block.pfm.stripped_mangrove_modern_stool": "Stripped Mangrove Modern Stool",
+
   "block.pfm.white_modern_stool": "White Modern Concrete Stool",
   "block.pfm.gray_modern_stool": "Gray Modern Concrete Stool",
   "block.pfm.dark_wood_modern_stool": "Dark Wood Modern Stool",
@@ -385,6 +414,8 @@
   "block.pfm.dark_oak_simple_stool": "Dark Oak Simple Stool",
   "block.pfm.crimson_simple_stool": "Crimson Simple Stool",
   "block.pfm.warped_simple_stool": "Warped Simple Stool",
+  "block.pfm.mangrove_simple_stool": "Mangrove Simple Stool",
+
   "block.pfm.stripped_oak_simple_stool": "Stripped Oak Simple Stool",
   "block.pfm.stripped_birch_simple_stool": "Stripped Birch Simple Stool",
   "block.pfm.stripped_spruce_simple_stool": "Stripped Spruce Simple Stool",
@@ -393,6 +424,8 @@
   "block.pfm.stripped_dark_oak_simple_stool": "Stripped Dark Oak Simple Stool",
   "block.pfm.stripped_crimson_simple_stool": "Stripped Crimson Simple Stool",
   "block.pfm.stripped_warped_simple_stool": "Stripped Warped Simple Stool",
+  "block.pfm.stripped_mangrove_simple_stool": "Stripped Mangrove Simple Stool",
+
   "block.pfm.quartz_simple_stool": "Quartz Simple Stool",
   "block.pfm.netherite_simple_stool": "The Swaggiest Simple Stool Ever",
   "block.pfm.light_wood_simple_stool": "Light Wood Simple Stool",
@@ -413,6 +446,8 @@
   "block.pfm.dark_oak_table_dinner": "Dark Oak Dining Table",
   "block.pfm.crimson_table_dinner": "Crimson Dining Table",
   "block.pfm.warped_table_dinner": "Warped Dining Table",
+  "block.pfm.mangrove_table_dinner": "Mangrove Dining Table",
+
   "block.pfm.stripped_oak_table_dinner": "Stripped Oak Dining Table",
   "block.pfm.stripped_birch_table_dinner": "Stripped Birch Dining Table",
   "block.pfm.stripped_spruce_table_dinner": "Stripped Spruce Dining Table",
@@ -421,6 +456,8 @@
   "block.pfm.stripped_dark_oak_table_dinner": "Stripped Dark Oak Dining Table",
   "block.pfm.stripped_crimson_table_dinner": "Stripped Crimson Dining Table",
   "block.pfm.stripped_warped_table_dinner": "Stripped Warped Dining Table",
+  "block.pfm.stripped_mangrove_table_dinner": "Stripped Mangrove Dining Table",
+
   "block.pfm.quartz_table_dinner": "Quartz Dining Table",
   "block.pfm.netherite_table_dinner": "The Swaggiest Dining Table Ever",
   "block.pfm.light_wood_table_dinner": "Light Wood Dining Table",
@@ -441,6 +478,8 @@
   "block.pfm.dark_oak_table_modern_dinner": "Dark Oak Modern Dining Table",
   "block.pfm.crimson_table_modern_dinner": "Crimson Modern Dining Table",
   "block.pfm.warped_table_modern_dinner": "Warped Modern Dining Table",
+  "block.pfm.mangrove_table_modern_dinner": "Mangrove Modern Dining Table",
+
   "block.pfm.stripped_oak_table_modern_dinner": "Stripped Modern Oak Dining Table",
   "block.pfm.stripped_birch_table_modern_dinner": "Stripped Modern Birch Dining Table",
   "block.pfm.stripped_spruce_table_modern_dinner": "Stripped Modern Spruce Dining Table",
@@ -449,6 +488,8 @@
   "block.pfm.stripped_dark_oak_table_modern_dinner": "Stripped Modern Dark Oak Dining Table",
   "block.pfm.stripped_crimson_table_modern_dinner": "Stripped Modern Crimson Dining Table",
   "block.pfm.stripped_warped_table_modern_dinner": "Stripped Modern Warped Dining Table",
+  "block.pfm.stripped_mangrove_table_modern_dinner": "Stripped Mangrove Modern Dining Table",
+
   "block.pfm.quartz_table_modern_dinner": "Quartz Modern Dining Table",
   "block.pfm.netherite_table_modern_dinner": "The Swaggiest Modern Dining Table Ever",
   "block.pfm.light_wood_table_modern_dinner": "Light Wood Modern Dining Table",
@@ -469,6 +510,7 @@
   "block.pfm.dark_oak_classic_nightstand": "Dark Oak Classic Nightstand",
   "block.pfm.crimson_classic_nightstand": "Crimson Classic Nightstand",
   "block.pfm.warped_classic_nightstand": "Warped Classic Nightstand",
+  "block.pfm.mangrove_classic_nightstand": "Mangrove Classic Nightstand",
   "block.pfm.stripped_oak_classic_nightstand": "Stripped Oak Classic Nightstand",
   "block.pfm.stripped_birch_classic_nightstand": "Stripped Birch Classic Nightstand",
   "block.pfm.stripped_spruce_classic_nightstand": "Stripped Spruce Classic Nightstand",
@@ -477,6 +519,8 @@
   "block.pfm.stripped_dark_oak_classic_nightstand": "Stripped Dark Oak Classic Nightstand",
   "block.pfm.stripped_crimson_classic_nightstand": "Stripped Crimson Classic Nightstand",
   "block.pfm.stripped_warped_classic_nightstand": "Stripped Warped Classic Nightstand",
+  "block.pfm.stripped_mangrove_classic_nightstand": "Stripped Mangrove Classic Nightstand",
+
   "block.pfm.quartz_classic_nightstand": "Quartz Classic Nightstand",
   "block.pfm.netherite_classic_nightstand": "The Swaggiest Classic Nightstand Ever",
   "block.pfm.light_wood_classic_nightstand": "Light Wood Classic Nightstand",
@@ -625,6 +669,23 @@
   "block.pfm.warped_black_simple_bed": "Warped Black Simple Bed",
   "block.pfm.warped_white_simple_bed": "Warped White Simple Bed",
 
+  "block.pfm.mangrove_red_simple_bed": "Mangrove Red Simple Bed",
+  "block.pfm.mangrove_orange_simple_bed": "Mangrove Orange Simple Bed",
+  "block.pfm.mangrove_yellow_simple_bed": "Mangrove Yellow Simple Bed",
+  "block.pfm.mangrove_green_simple_bed": "Mangrove Green Simple Bed",
+  "block.pfm.mangrove_lime_simple_bed": "Mangrove Lime Simple Bed",
+  "block.pfm.mangrove_light_blue_simple_bed": "Mangrove Light Blue Simple Bed",
+  "block.pfm.mangrove_blue_simple_bed": "Mangrove Blue Simple Bed",
+  "block.pfm.mangrove_brown_simple_bed": "Mangrove Brown Simple Bed",
+  "block.pfm.mangrove_cyan_simple_bed": "Mangrove Cyan Simple Bed",
+  "block.pfm.mangrove_light_gray_simple_bed": "Mangrove Light Gray Simple Bed",
+  "block.pfm.mangrove_gray_simple_bed": "Mangrove Gray Simple Bed",
+  "block.pfm.mangrove_purple_simple_bed": "Mangrove Purple Simple Bed",
+  "block.pfm.mangrove_magenta_simple_bed": "Mangrove Magenta Simple Bed",
+  "block.pfm.mangrove_pink_simple_bed": "Mangrove Pink Simple Bed",
+  "block.pfm.mangrove_black_simple_bed": "Mangrove Black Simple Bed",
+  "block.pfm.mangrove_white_simple_bed": "Mangrove White Simple Bed",
+
   "block.pfm.oak_red_classic_bed": "Oak Red Classic Bed",
   "block.pfm.oak_orange_classic_bed": "Oak Orange Classic Bed",
   "block.pfm.oak_yellow_classic_bed": "Oak Yellow Classic Bed",
@@ -761,6 +822,23 @@
   "block.pfm.warped_black_classic_bed": "Warped Black Classic Bed",
   "block.pfm.warped_white_classic_bed": "Warped White Classic Bed",
 
+  "block.pfm.mangrove_red_classic_bed": "Mangrove Red Classic Bed",
+  "block.pfm.mangrove_orange_classic_bed": "Mangrove Orange Classic Bed",
+  "block.pfm.mangrove_yellow_classic_bed": "Mangrove Yellow Classic Bed",
+  "block.pfm.mangrove_green_classic_bed": "Mangrove Green Classic Bed",
+  "block.pfm.mangrove_lime_classic_bed": "Mangrove Lime Classic Bed",
+  "block.pfm.mangrove_light_blue_classic_bed": "Mangrove Light Blue Classic Bed",
+  "block.pfm.mangrove_blue_classic_bed": "Mangrove Blue Classic Bed",
+  "block.pfm.mangrove_brown_classic_bed": "Mangrove Brown Classic Bed",
+  "block.pfm.mangrove_cyan_classic_bed": "Mangrove Cyan Classic Bed",
+  "block.pfm.mangrove_light_gray_classic_bed": "Mangrove Light Gray Classic Bed",
+  "block.pfm.mangrove_gray_classic_bed": "Mangrove Gray Classic Bed",
+  "block.pfm.mangrove_purple_classic_bed": "Mangrove Purple Classic Bed",
+  "block.pfm.mangrove_magenta_classic_bed": "Mangrove Magenta Classic Bed",
+  "block.pfm.mangrove_pink_classic_bed": "Mangrove Pink Classic Bed",
+  "block.pfm.mangrove_black_classic_bed": "Mangrove Black Classic Bed",
+  "block.pfm.mangrove_white_classic_bed": "Mangrove White Classic Bed",
+
   "block.pfm.oak_simple_bunk_ladder": "Oak Simple Bunk Ladder",
   "block.pfm.birch_simple_bunk_ladder": "Birch Simple Bunk Ladder",
   "block.pfm.spruce_simple_bunk_ladder": "Spruce Simple Bunk Ladder",
@@ -769,6 +847,7 @@
   "block.pfm.jungle_simple_bunk_ladder": "Jungle Simple Bunk Ladder",
   "block.pfm.crimson_simple_bunk_ladder": "Crimson Simple Bunk Ladder",
   "block.pfm.warped_simple_bunk_ladder": "Warped Simple Bunk Ladder",
+  "block.pfm.mangrove_simple_bunk_ladder": "Mangrove Simple Bunk Ladder",
 
   "container.pfm.nightstand": "Nightstand",
   "container.pfm.drawer": "Kitchen Drawer",
@@ -878,6 +957,15 @@
   "block.pfm.warped_kitchen_wall_drawer": "Warped Kitchen Wall Drawer",
   "block.pfm.warped_kitchen_wall_small_drawer": "Warped Kitchen Small Wall Drawer",
 
+  "block.pfm.mangrove_kitchen_counter": "Mangrove Kitchen Counter",
+  "block.pfm.mangrove_kitchen_drawer": "Mangrove Kitchen Drawer",
+  "block.pfm.mangrove_kitchen_cabinet": "Mangrove Kitchen Cabinet",
+  "block.pfm.mangrove_kitchen_sink": "Mangrove Kitchen Sink",
+  "block.pfm.mangrove_kitchen_counter_oven": "Mangrove Kitchen Oven",
+  "block.pfm.mangrove_kitchen_wall_counter": "Mangrove Kitchen Wall Counter",
+  "block.pfm.mangrove_kitchen_wall_drawer": "Mangrove Kitchen Wall Drawer",
+  "block.pfm.mangrove_kitchen_wall_small_drawer": "Mangrove Kitchen Small Wall Drawer",
+
   "block.pfm.stripped_oak_kitchen_counter": "Stripped Oak Kitchen Counter",
   "block.pfm.stripped_oak_kitchen_drawer": "Stripped Oak Kitchen Drawer",
   "block.pfm.stripped_oak_kitchen_cabinet": "Stripped Oak Kitchen Cabinet",
@@ -950,6 +1038,15 @@
   "block.pfm.stripped_warped_kitchen_wall_drawer": "Stripped Warped Kitchen Wall Drawer",
   "block.pfm.stripped_warped_kitchen_wall_small_drawer": "Stripped Warped Kitchen Small Wall Drawer",
 
+  "block.pfm.stripped_mangrove_kitchen_counter": "Stripped Mangrove Kitchen Counter",
+  "block.pfm.stripped_mangrove_kitchen_drawer": "Stripped Mangrove Kitchen Drawer",
+  "block.pfm.stripped_mangrove_kitchen_cabinet": "Stripped Mangrove Kitchen Cabinet",
+  "block.pfm.stripped_mangrove_kitchen_sink": "Stripped Mangrove Kitchen Sink",
+  "block.pfm.stripped_mangrove_kitchen_counter_oven": "Stripped Mangrove Kitchen Oven",
+  "block.pfm.stripped_mangrove_kitchen_wall_counter": "Stripped Mangrove Kitchen Wall Counter",
+  "block.pfm.stripped_mangrove_kitchen_wall_drawer": "Stripped Mangrove Kitchen Wall Drawer",
+  "block.pfm.stripped_mangrove_kitchen_wall_small_drawer": "Stripped Mangrove Kitchen Small Wall Drawer",
+
   "block.pfm.oak_herringbone_planks": "Oak Herringbone Planks",
   "block.pfm.dark_oak_herringbone_planks": "Dark Oak Herringbone Planks",
   "block.pfm.jungle_herringbone_planks": "Jungle Herringbone Planks",
@@ -958,6 +1055,7 @@
   "block.pfm.spruce_herringbone_planks": "Spruce Herringbone Planks",
   "block.pfm.warped_herringbone_planks": "Warped Herringbone Planks",
   "block.pfm.crimson_herringbone_planks": "Crimson Herringbone Planks",
+  "block.pfm.mangrove_herringbone_planks": "Mangrove Herringbone Planks",
 
   "block.pfm.raw_concrete": "Raw Concrete",
   "block.pfm.raw_concrete_powder": "Raw Concrete Powder",

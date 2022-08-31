@@ -3,7 +3,8 @@ package com.unlikepaladin.pfm.menus.fabric;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.util.math.BlockPos;
 
@@ -15,6 +16,6 @@ public class AbstractMicrowaveScreenHandlerImpl {
             passedData.writeBlockPos(pos);
             passedData.writeBoolean(isActive);
             // Send packet to server to change the block for us
-            ClientSidePacketRegistryImpl.INSTANCE.sendToServer(NetworkIDs.MICROWAVE_ACTIVATE_PACKET_ID, passedData);
+            ClientPlayNetworking.send(NetworkIDs.MICROWAVE_ACTIVATE_PACKET_ID, passedData);
         }
 }

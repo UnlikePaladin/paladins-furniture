@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "key": {
+    "S": {
+      "item": "minecraft:mangrove_planks"
+    },
+    "X": {
+      "item": "minecraft:stripped_mangrove_log"
+    },
+    "Y": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX"
+  ],
+  "result": {
+    "item": "pfm:stripped_mangrove_kitchen_drawer"
+  }
+}

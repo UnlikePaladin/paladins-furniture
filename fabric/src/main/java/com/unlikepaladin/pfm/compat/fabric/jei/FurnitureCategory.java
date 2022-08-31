@@ -13,7 +13,6 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 import java.util.List;
@@ -22,7 +21,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private final IDrawable BACKGROUND;
     public static final Identifier TEXTURE_GUI_VANILLA = new Identifier("jei:textures/gui/gui_vanilla.png");
     public final IDrawable ICON;
-    public static final TranslatableText TITLE = new TranslatableText("rei.pfm.furniture");
+    public static final Text TITLE = Text.translatable("rei.pfm.furniture");
     private final ICraftingGridHelper craftingGridHelper;
     private static final int craftOutputSlot = 0;
     private static final int craftInputSlot1 = 1;
@@ -30,19 +29,9 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     public FurnitureCategory(IGuiHelper guiHelper) {
         ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(PaladinFurnitureModBlocksItems.WORKING_TABLE));
         this.BACKGROUND = guiHelper.createDrawable(TEXTURE_GUI_VANILLA, 0, 60, 116, 54);
-        craftingGridHelper = guiHelper.createCraftingGridHelper(craftInputSlot1);
+        craftingGridHelper = guiHelper.createCraftingGridHelper();
     }
     public static final Identifier IDENTIFIER = new Identifier(PaladinFurnitureMod.MOD_ID, "crafting");
-
-    @Override
-    public Identifier getUid() {
-        return IDENTIFIER;
-    }
-
-    @Override
-    public Class<? extends FurnitureRecipe> getRecipeClass() {
-        return getRecipeType().getRecipeClass();
-    }
 
     @Override
     public RecipeType<FurnitureRecipe> getRecipeType() {

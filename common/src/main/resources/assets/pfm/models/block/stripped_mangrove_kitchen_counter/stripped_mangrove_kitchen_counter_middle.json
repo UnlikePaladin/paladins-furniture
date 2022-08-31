@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_counter/kitchen_counter_middle",
+	"textures": {
+        
+		"particle": "block/mangrove_planks",
+		"base": "block/stripped_mangrove_log",
+		"legs": "block/mangrove_planks"
+	}
+    
+}
