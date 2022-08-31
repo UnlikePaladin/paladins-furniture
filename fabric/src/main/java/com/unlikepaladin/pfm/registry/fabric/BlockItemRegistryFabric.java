@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.blocks.SimpleBed;
 import com.unlikepaladin.pfm.items.FurnitureGuideBook;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.fabric.FurnitureGuideBookImpl;
+import com.unlikepaladin.pfm.mixin.fabric.MixinPointOfInterestType;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
@@ -1113,7 +1114,6 @@ public class BlockItemRegistryFabric {
         registerBlock("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH, PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM);
         registerFurniture("basic_toilet", PaladinFurnitureModBlocksItems.BASIC_TOILET, true);
 
-
         //Dye Kits
         registerItem("dye_kit_red", PaladinFurnitureModBlocksItems.DYE_KIT_RED);
         registerItem("dye_kit_orange", PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE);
@@ -1131,14 +1131,6 @@ public class BlockItemRegistryFabric {
         registerItem("dye_kit_gray", PaladinFurnitureModBlocksItems.DYE_KIT_GRAY);
         registerItem("dye_kit_light_gray", PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY);
         registerItem("dye_kit_white", PaladinFurnitureModBlocksItems.DYE_KIT_WHITE);
-
-        Set<BlockState> originalBedStates = PointOfInterestType.HOME.getBlockStates();
-        Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBed.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
-        Set<BlockState> newBedStates = new HashSet<>();
-        newBedStates.addAll(originalBedStates);
-        newBedStates.addAll(addedBedStates);
-        PointOfInterestType.HOME = new PointOfInterestType("home", newBedStates, 1, 1);
-        Registry.register(Registry.POINT_OF_INTEREST_TYPE, new Identifier("minecraft:home"),PointOfInterestType.HOME);
     }
 
 }
