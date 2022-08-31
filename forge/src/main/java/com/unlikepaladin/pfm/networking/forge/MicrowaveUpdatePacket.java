@@ -16,13 +16,6 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 public class MicrowaveUpdatePacket {
-
-    /*         boolean active = buf.readBoolean();
-                    MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) handler.getWorld().getBlockEntity(buf.readBlockPos());
-                    client.execute(() -> {
-
-                    });*/
-
     private final BlockPos entityPos;
     private final boolean active;
 
@@ -46,10 +39,8 @@ public class MicrowaveUpdatePacket {
         boolean active = msg.active;
         World world = MinecraftClient.getInstance().world;
         if (world.isChunkLoaded(blockPos)) {
-            System.out.println("Running on the client");
             MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) world.getBlockEntity(blockPos);
                 if (Objects.nonNull(MinecraftClient.getInstance().currentScreen) && MinecraftClient.getInstance().currentScreen instanceof MicrowaveScreen microwaveScreen)  {
-                    System.out.println(microwaveScreen.isActive + " on the screen, " + blockEntity.isActive + " on the entity, " + active + " on the packet");
                     microwaveScreen.getScreenHandler().setActive(blockEntity, active);
                 }
         }

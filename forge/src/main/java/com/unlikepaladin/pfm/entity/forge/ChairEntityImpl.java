@@ -7,7 +7,6 @@ import net.minecraft.util.math.BlockPos;
 
 public class ChairEntityImpl {
     public static void fart(BlockPos pos) {
-        System.out.println("You just farted");
         ToiletUsePacket usePacket = new ToiletUsePacket(pos);
         ClientPacketsForge.PFM_CLIENT_CHANNEL.sendToServer(usePacket);
     }

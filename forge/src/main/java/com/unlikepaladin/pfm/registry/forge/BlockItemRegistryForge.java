@@ -1,12 +1,15 @@
 package com.unlikepaladin.pfm.registry.forge;
 
+import com.google.common.collect.ImmutableSet;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.SimpleBed;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.forge.FurnitureGuideBookImpl;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
+import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -15,22 +18,22 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockItemRegistryForge {
     @SubscribeEvent
     public static void registerBlocks(RegistryEvent.Register<Block> event) {
-        PaladinFurnitureMod.GENERAL_LOGGER.info("Registering Beds");
-                event.getRegistry().registerAll(
+            event.getRegistry().registerAll(
                 registerFurniture("working_table", PaladinFurnitureModBlocksItems.WORKING_TABLE, true),
                 registerFurniture("oak_chair", PaladinFurnitureModBlocksItems.OAK_CHAIR, true),
                 registerFurniture("birch_chair", PaladinFurnitureModBlocksItems.BIRCH_CHAIR, true),
@@ -653,8 +656,8 @@ public class BlockItemRegistryForge {
                 registerFurniture("crimson_brown_classic_bed", PaladinFurnitureModBlocksItems.CRIMSON_BROWN_CLASSIC_BED, 1),
                 registerFurniture("crimson_gray_classic_bed", PaladinFurnitureModBlocksItems.CRIMSON_GRAY_CLASSIC_BED, 1),
                 registerFurniture("crimson_black_classic_bed", PaladinFurnitureModBlocksItems.CRIMSON_BLACK_CLASSIC_BED, 1),
-                registerFurniture("crimson_white_classic_bed", PaladinFurnitureModBlocksItems.CRIMSON_WHITE_CLASSIC_BED, 1)
-                /*
+                registerFurniture("crimson_white_classic_bed", PaladinFurnitureModBlocksItems.CRIMSON_WHITE_CLASSIC_BED, 1),
+
                 registerFurniture("oak_simple_bunk_ladder", PaladinFurnitureModBlocksItems.OAK_SIMPLE_BUNK_LADDER, true),
                 registerFurniture("birch_simple_bunk_ladder", PaladinFurnitureModBlocksItems.BIRCH_SIMPLE_BUNK_LADDER, true),
                 registerFurniture("spruce_simple_bunk_ladder", PaladinFurnitureModBlocksItems.SPRUCE_SIMPLE_BUNK_LADDER, true),
@@ -1069,8 +1072,16 @@ public class BlockItemRegistryForge {
                 registerFurniture("glass_modern_pendant", PaladinFurnitureModBlocksItems.GLASS_MODERN_PENDANT, true),
                 registerFurniture("simple_light", PaladinFurnitureModBlocksItems.SIMPLE_LIGHT, true),
                 registerBlock("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH, false),
-                registerFurniture("basic_toilet", PaladinFurnitureModBlocksItems.BASIC_TOILET, true)*/
+                registerFurniture("basic_toilet", PaladinFurnitureModBlocksItems.BASIC_TOILET, true)
         );
+
+        Set<BlockState> originalBedStates = PointOfInterestType.HOME.getBlockStates();
+        Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBed.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+        Set<BlockState> newBedStates = new HashSet<>();
+        newBedStates.addAll(originalBedStates);
+        newBedStates.addAll(addedBedStates);
+        PointOfInterestType.HOME = new PointOfInterestType("home", newBedStates, 1, 1);
+        ForgeRegistries.POI_TYPES.register(PointOfInterestType.HOME.setRegistryName("minecraft:home"));
     }
 
     @SubscribeEvent
@@ -1082,11 +1093,11 @@ public class BlockItemRegistryForge {
             items.add(registerBlockItem(name, block));
         });
         event.getRegistry().registerAll(items.toArray(Item[]::new));
-        //PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
-       // PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).maxCount(1));
+        PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+        PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).maxCount(1));
         event.getRegistry().registerAll(
-               // registerItem("furniture_book", PaladinFurnitureModBlocksItems.FURNITURE_BOOK),
-                //registerItem("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM),
+                registerItem("furniture_book", PaladinFurnitureModBlocksItems.FURNITURE_BOOK),
+                registerItem("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM),
                 registerItem("dye_kit_red", PaladinFurnitureModBlocksItems.DYE_KIT_RED),
                 registerItem("dye_kit_orange", PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE),
                 registerItem("dye_kit_yellow", PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW),
