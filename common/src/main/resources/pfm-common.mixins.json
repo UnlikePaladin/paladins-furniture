@@ -3,9 +3,6 @@
   "minVersion": "0.8",
   "package": "com.unlikepaladin.pfm.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
-    "MixinPointOfInterestType"
-  ],
   "server": [
     "MixinDedicatedServer"
   ],

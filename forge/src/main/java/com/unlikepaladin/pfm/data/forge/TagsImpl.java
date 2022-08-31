@@ -10,7 +10,6 @@ import net.minecraftforge.event.RegistryEvent;
 public class TagsImpl {
     public static TagKey<Block> TUCKABLE_BLOCKS;
 
-
     public static TagKey<Block> getTuckableBlocks() {
         return TUCKABLE_BLOCKS;
     }

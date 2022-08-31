@@ -15,10 +15,9 @@ public class FreezingRecipe extends AbstractCookingRecipe {
         super(RecipeTypes.FREEZING_RECIPE, id, group, input, output, experience, cookTime);
     }
 
-    //TODO: Change me back to a fridge
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(Blocks.DIRT);//PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+        return new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
     }
 
     @Override

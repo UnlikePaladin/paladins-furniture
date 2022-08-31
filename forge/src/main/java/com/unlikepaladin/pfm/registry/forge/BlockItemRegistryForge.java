@@ -1,12 +1,15 @@
 package com.unlikepaladin.pfm.registry.forge;
 
+import com.google.common.collect.ImmutableSet;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.SimpleBed;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.forge.FurnitureGuideBookImpl;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
+import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -15,10 +18,12 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -1076,6 +1081,14 @@ public class BlockItemRegistryForge {
                 registerFurniture("mesh_trashcan", PaladinFurnitureModBlocksItems.MESH_TRASHCAN, true)
 
         );
+
+        Set<BlockState> originalBedStates = PointOfInterestType.HOME.getBlockStates();
+        Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBed.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+        Set<BlockState> newBedStates = new HashSet<>();
+        newBedStates.addAll(originalBedStates);
+        newBedStates.addAll(addedBedStates);
+        PointOfInterestType.HOME = new PointOfInterestType("home", newBedStates, 1, 1);
+        ForgeRegistries.POI_TYPES.register(PointOfInterestType.HOME.setRegistryName("minecraft:home"));
     }
 
     @SubscribeEvent

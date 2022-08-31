@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.registry.fabric;
 
+import com.google.common.collect.ImmutableSet;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.SimpleBed;
 import com.unlikepaladin.pfm.items.FurnitureGuideBook;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.fabric.FurnitureGuideBookImpl;
@@ -9,13 +11,20 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
+import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.world.poi.PointOfInterestType;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 public class BlockItemRegistryFabric {
 
@@ -1126,6 +1135,14 @@ public class BlockItemRegistryFabric {
         registerItem("dye_kit_gray", PaladinFurnitureModBlocksItems.DYE_KIT_GRAY);
         registerItem("dye_kit_light_gray", PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY);
         registerItem("dye_kit_white", PaladinFurnitureModBlocksItems.DYE_KIT_WHITE);
+
+        Set<BlockState> originalBedStates = PointOfInterestType.HOME.getBlockStates();
+        Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBed.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+        Set<BlockState> newBedStates = new HashSet<>();
+        newBedStates.addAll(originalBedStates);
+        newBedStates.addAll(addedBedStates);
+        PointOfInterestType.HOME = new PointOfInterestType("home", newBedStates, 1, 1);
+        Registry.register(Registry.POINT_OF_INTEREST_TYPE, new Identifier("minecraft:home"),PointOfInterestType.HOME);
     }
 
 }
