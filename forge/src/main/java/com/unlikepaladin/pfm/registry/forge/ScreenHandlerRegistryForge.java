@@ -28,7 +28,6 @@ public class ScreenHandlerRegistryForge {
         ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = IForgeContainerType.create(MicrowaveScreenHandler::new);
 
         event.getRegistry().registerAll(
-
                 ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER.setRegistryName("furniture"),
                 ScreenHandlerIDs.STOVE_SCREEN_HANDLER.setRegistryName("stove_block_entity"),
                 ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER.setRegistryName("iron_stove_block_entity"),
