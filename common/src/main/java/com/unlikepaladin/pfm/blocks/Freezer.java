@@ -61,20 +61,15 @@ public class Freezer extends HorizontalFacingBlockWEntity implements Waterloggab
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
          if (!world.isClient) {
-                //This will call the createScreenHandlerFactory method from BlockWithEntity, which will return our blockEntity casted to
-                //a namedScreenHandlerFactory. If your block class does not extend BlockWithEntity, it needs to implement createScreenHandlerFactory.
                 NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
                 if (screenHandlerFactory != null) {
                     player.incrementStat(Statistics.FREEZER_OPENED);
-                    //With this call the server will request the client to open the appropriate Screenhandler
                     player.openHandledScreen(screenHandlerFactory);
                     PiglinBrain.onGuardedBlockInteracted(player, true);
                 }
             }
             return ActionResult.SUCCESS;
     }
-
-
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
@@ -215,17 +210,22 @@ public class Freezer extends HorizontalFacingBlockWEntity implements Waterloggab
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        if (state.getBlock() instanceof IronFreezer) {
+            return new FreezerBlockEntity(BlockEntities.IRON_FREEZER_BLOCK_ENTITY, pos,state);
+        }
         return new FreezerBlockEntity(BlockEntities.FREEZER_BLOCK_ENTITY, pos,state);
     }
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        if (state.getBlock() instanceof IronFreezer) {
+            return checkType(world, type, BlockEntities.IRON_FREEZER_BLOCK_ENTITY);
+        }
         return checkType(world, type, BlockEntities.FREEZER_BLOCK_ENTITY);
     }
 
     @Nullable
     protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends FreezerBlockEntity> expectedType) {
-        givenType = (BlockEntityType<T>) expectedType;
         return world.isClient ? null : Freezer.checkType(givenType, expectedType, FreezerBlockEntity::tick);
     }
 }
