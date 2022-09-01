@@ -50,7 +50,7 @@
     "fabric": "*",
     "minecraft": "1.18.2",
     "cloth-config2": ">=6.2.57"
-  },
+    },
   "suggests": {
     "patchouli": "*"
   }
