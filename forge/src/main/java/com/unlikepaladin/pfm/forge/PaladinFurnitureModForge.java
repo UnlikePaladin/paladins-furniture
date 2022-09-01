@@ -29,8 +29,6 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         MinecraftForge.EVENT_BUS.register(BlockEntityRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(RecipeRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(ScreenHandlerRegistryForge.class);
-
-
         MinecraftForge.EVENT_BUS.register(StatisticsRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(SoundRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(PaladinFurnitureModDataGenForge.class);

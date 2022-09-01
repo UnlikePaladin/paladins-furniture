@@ -20,8 +20,4 @@ public class SoundRegistryForge {
              soundEventRegisterHelper.register(SoundIDs.TOILET_USED_ID, SoundIDs.TOILET_USED_EVENT);
          });
     }
-
-    private static SoundEvent registerSound(SoundEvent soundEvent, String name) {
-        return soundEvent;
-    }
 }

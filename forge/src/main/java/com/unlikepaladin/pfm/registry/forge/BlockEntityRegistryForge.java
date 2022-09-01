@@ -26,38 +26,20 @@ public class BlockEntityRegistryForge {
 
     @SubscribeEvent
     public static void registerBlockEntities(RegisterEvent event){
-        BlockEntities.DRAWER_BLOCK_ENTITY = BlockEntityType.Builder.create(GenericStorageBlockEntity9x3::new, PaladinFurnitureModBlocksItems.OAK_CLASSIC_NIGHTSTAND).build(null);
-        BlockEntities.FRIDGE_BLOCK_ENTITY = BlockEntityType.Builder.create(FridgeBlockEntity::new, PaladinFurnitureModBlocksItems.WHITE_FRIDGE).build(null);
-        BlockEntities.IRON_FREEZER_BLOCK_ENTITY = BlockEntityType.Builder.create(FreezerBlockEntity::new, PaladinFurnitureModBlocksItems.IRON_FREEZER).build(null);
-        BlockEntities.FREEZER_BLOCK_ENTITY = BlockEntityType.Builder.create(FreezerBlockEntity::new, PaladinFurnitureModBlocksItems.WHITE_FREEZER, PaladinFurnitureModBlocksItems.GRAY_FREEZER).build(null);
-        BlockEntities.STOVE_BLOCK_ENTITY = BlockEntityType.Builder.create(StoveBlockEntityImpl::new, PaladinFurnitureModBlocksItems.WHITE_STOVE, PaladinFurnitureModBlocksItems.GRAY_STOVE, PaladinFurnitureModBlocksItems.IRON_STOVE).build(null);
-        BlockEntities.STOVE_TOP_BLOCK_ENTITY = BlockEntityType.Builder.create(StovetopBlockEntityImpl::new, PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP).build(null);
         Block[] counterOvens = Stream.concat(KitchenCounterOven.streamStoneCounterOvens(), KitchenCounterOven.streamWoodCounterOvens()).map(FurnitureBlock::getBlock).toArray(Block[]::new);
-        BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY = BlockEntityType.Builder.create(CounterOvenBlockEntity::new, counterOvens).build(null);
-        BlockEntities.LIGHT_SWITCH_BLOCK_ENTITY = BlockEntityType.Builder.create(LightSwitchBlockEntity::new, PaladinFurnitureModBlocksItems.LIGHT_SWITCH).build(null);
-        BlockEntities.MICROWAVE_BLOCK_ENTITY = BlockEntityType.Builder.create(MicrowaveBlockEntityImpl::new, PaladinFurnitureModBlocksItems.IRON_MICROWAVE).build(null);
-        BlockEntities.PLATE_BLOCK_ENTITY = BlockEntityType.Builder.create(PlateBlockEntityImpl::new, PaladinFurnitureModBlocksItems.BASIC_PLATE).build(null);
-        BlockEntities.TOILET_BLOCK_ENTITY = BlockEntityType.Builder.create(ToiletBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_TOILET).build(null);
-        BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY = BlockEntityType.Builder.create(GenericStorageBlockEntity3x3::new, PaladinFurnitureModBlocksItems.OAK_KITCHEN_WALL_SMALL_DRAWER).build(null);
-
-        registerBlockEntity(event, "drawer_block_entity", BlockEntities.DRAWER_BLOCK_ENTITY);
-        registerBlockEntity(event, "fridge_block_entity", BlockEntities.FRIDGE_BLOCK_ENTITY);
-        registerBlockEntity(event, "iron_freezer_block_entity", BlockEntities.IRON_FREEZER_BLOCK_ENTITY);
-        registerBlockEntity(event, "freezer_block_entity", BlockEntities.FREEZER_BLOCK_ENTITY);
-        registerBlockEntity(event, "stove_block_entity", BlockEntities.STOVE_BLOCK_ENTITY);
-        registerBlockEntity(event, "stovetop_block_entity", BlockEntities.STOVE_TOP_BLOCK_ENTITY);
-        registerBlockEntity(event, "kitchen_counter_oven_block_entity", BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
-        registerBlockEntity(event, "light_switch_block_entity", BlockEntities.LIGHT_SWITCH_BLOCK_ENTITY);
-        registerBlockEntity(event, "microwave_block_entity", BlockEntities.MICROWAVE_BLOCK_ENTITY);
-        registerBlockEntity(event, "plate_block_entity", BlockEntities.PLATE_BLOCK_ENTITY);
-        registerBlockEntity(event, "toilet_block_entity", BlockEntities.TOILET_BLOCK_ENTITY);
-        registerBlockEntity(event, "small_storage_block_entity", BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY);
-    }
-
-    private static BlockEntityType<?> registerBlockEntity(RegisterEvent event, String name, BlockEntityType<?> entity) {
         event.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, blockEntityTypeRegisterHelper -> {
-            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, name), entity);
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "drawer_block_entity"),BlockEntities.DRAWER_BLOCK_ENTITY = BlockEntityType.Builder.create(GenericStorageBlockEntity9x3::new, PaladinFurnitureModBlocksItems.OAK_CLASSIC_NIGHTSTAND).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "fridge_block_entity"), BlockEntities.FRIDGE_BLOCK_ENTITY = BlockEntityType.Builder.create(FridgeBlockEntity::new, PaladinFurnitureModBlocksItems.WHITE_FRIDGE).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "iron_freezer_block_entity"), BlockEntities.IRON_FREEZER_BLOCK_ENTITY = BlockEntityType.Builder.create(FreezerBlockEntity::new, PaladinFurnitureModBlocksItems.IRON_FREEZER).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "freezer_block_entity"), BlockEntities.FREEZER_BLOCK_ENTITY = BlockEntityType.Builder.create(FreezerBlockEntity::new, PaladinFurnitureModBlocksItems.WHITE_FREEZER, PaladinFurnitureModBlocksItems.GRAY_FREEZER).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stove_block_entity"), BlockEntities.STOVE_BLOCK_ENTITY = BlockEntityType.Builder.create(StoveBlockEntityImpl::new, PaladinFurnitureModBlocksItems.WHITE_STOVE, PaladinFurnitureModBlocksItems.GRAY_STOVE, PaladinFurnitureModBlocksItems.IRON_STOVE).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stovetop_block_entity"), BlockEntities.STOVE_TOP_BLOCK_ENTITY = BlockEntityType.Builder.create(StovetopBlockEntityImpl::new, PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "kitchen_counter_oven_block_entity"), BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY = BlockEntityType.Builder.create(CounterOvenBlockEntity::new, counterOvens).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_switch_block_entity"), BlockEntities.LIGHT_SWITCH_BLOCK_ENTITY = BlockEntityType.Builder.create(LightSwitchBlockEntity::new, PaladinFurnitureModBlocksItems.LIGHT_SWITCH).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_block_entity"), BlockEntities.MICROWAVE_BLOCK_ENTITY = BlockEntityType.Builder.create(MicrowaveBlockEntityImpl::new, PaladinFurnitureModBlocksItems.IRON_MICROWAVE).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "plate_block_entity"), BlockEntities.PLATE_BLOCK_ENTITY = BlockEntityType.Builder.create(PlateBlockEntityImpl::new, PaladinFurnitureModBlocksItems.BASIC_PLATE).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "toilet_block_entity"), BlockEntities.TOILET_BLOCK_ENTITY = BlockEntityType.Builder.create(ToiletBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_TOILET).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "small_storage_block_entity"),BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY = BlockEntityType.Builder.create(GenericStorageBlockEntity3x3::new, PaladinFurnitureModBlocksItems.OAK_KITCHEN_WALL_SMALL_DRAWER).build(null));
         });
-        return entity;
     }
 }

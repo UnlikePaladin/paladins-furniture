@@ -27,7 +27,7 @@ public class EntityRegistryForge {
     @SubscribeEvent
     public static void registerEntity(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.ENTITY_TYPES, entityTypeRegisterHelper -> {
-            entityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "name"), Entities.CHAIR);
+            entityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "chair"), Entities.CHAIR);
         });
     }
 
