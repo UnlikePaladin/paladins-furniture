@@ -38,7 +38,6 @@ import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -95,10 +94,10 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
         @Override
         protected void addTables() {
             PaladinFurnitureMod.GENERAL_LOGGER.info("Running Loot Tables");
-            Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
-            blocks.forEach(this::addDrop);
-            Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
-            Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
+            //Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
+            //blocks.forEach(this::addDrop);
+            //Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
+            //Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
         }
 
         @Override
