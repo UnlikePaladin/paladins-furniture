@@ -26,21 +26,24 @@ public class RecipeRegistryForge {
 
    @SubscribeEvent
     public static void registerRecipeSerializers(RegisterEvent event){
-        event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, new Identifier(PaladinFurnitureMod.MOD_ID, "freezing"), () -> RecipeTypes.FREEZING_RECIPE_SERIALIZER = new CookingRecipeSerializer<>(FreezingRecipe::new, 200));
-        event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"),  () -> RecipeTypes.FURNITURE_SERIALIZER = new FurnitureRecipeSerializerForge());
+        event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, recipeSerializerRegisterHelper -> {
+            recipeSerializerRegisterHelper.register( new Identifier(PaladinFurnitureMod.MOD_ID, "freezing"), RecipeTypes.FREEZING_RECIPE_SERIALIZER = new CookingRecipeSerializer<>(FreezingRecipe::new, 200));
+            recipeSerializerRegisterHelper.register( new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"), RecipeTypes.FURNITURE_SERIALIZER = new FurnitureRecipeSerializerForge());
+        });
     }
 
 
     @SubscribeEvent
     public static void registerRecipeTypes(RegisterEvent event){
-        event.register(ForgeRegistries.Keys.RECIPE_TYPES, new Identifier(PaladinFurnitureMod.MOD_ID, "freezing"), () -> RecipeTypes.FREEZING_RECIPE = new RecipeType<FreezingRecipe>() {
-            @Override
-            public String toString() {return "freezing";}
-        });
-
-        event.register(ForgeRegistries.Keys.RECIPE_TYPES, new Identifier(PaladinFurnitureMod.MOD_ID, "freezing"), () -> RecipeTypes.FURNITURE_RECIPE = new RecipeType<FurnitureRecipe>() {
-            @Override
-            public String toString() {return "furniture";}
+        event.register(ForgeRegistries.Keys.RECIPE_TYPES, recipeTypeRegisterHelper -> {
+            recipeTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "freezing"), RecipeTypes.FREEZING_RECIPE = new RecipeType<FreezingRecipe>() {
+                @Override
+                public String toString() {return "freezing";}
+            });
+            recipeTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"), RecipeTypes.FURNITURE_RECIPE = new RecipeType<FurnitureRecipe>() {
+                @Override
+                public String toString() {return "furniture";}
+            });
         });
     }
 

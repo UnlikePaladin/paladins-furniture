@@ -1252,8 +1252,8 @@ public class PaladinFurnitureModBlocksItems {
    /* public static Block[] getBeds() {
         return BEDS.get();
     }
-
+*/
     public static Stream<Block> streamBlocks() {
         return BLOCKS.stream();
-    }*/
+    }
 }

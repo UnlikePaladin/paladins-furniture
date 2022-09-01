@@ -55,7 +55,9 @@ public class BlockEntityRegistryForge {
     }
 
     private static BlockEntityType<?> registerBlockEntity(RegisterEvent event, String name, BlockEntityType<?> entity) {
-        event.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, new Identifier(PaladinFurnitureMod.MOD_ID), () -> entity);
+        event.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, blockEntityTypeRegisterHelper -> {
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, name), entity);
+        });
         return entity;
     }
 }

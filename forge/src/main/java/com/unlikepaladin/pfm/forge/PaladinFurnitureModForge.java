@@ -4,7 +4,6 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.forge.PaladinFurnitureModConfigImpl;
 import com.unlikepaladin.pfm.data.forge.PaladinFurnitureModDataGenForge;
 import com.unlikepaladin.pfm.data.forge.TagsImpl;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.forge.*;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
@@ -26,9 +25,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
     public PaladinFurnitureModForge() {
         TagsImpl.TUCKABLE_BLOCKS = BlockTags.create(new Identifier("pfm", "tuckable_blocks"));
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
-        BlockItemRegistryForge.BLOCKS.register(bus);
-        BlockItemRegistryForge.ITEMS.register(bus);
-
+        MinecraftForge.EVENT_BUS.register(BlockItemRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(BlockEntityRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(RecipeRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(ScreenHandlerRegistryForge.class);

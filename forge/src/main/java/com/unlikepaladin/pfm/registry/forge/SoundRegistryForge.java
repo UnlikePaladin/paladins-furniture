@@ -18,7 +18,6 @@ public class SoundRegistryForge {
              soundEventRegisterHelper.register(SoundIDs.MICROWAVE_RUNNING_ID, SoundIDs.MICROWAVE_RUNNING_EVENT);
              soundEventRegisterHelper.register(SoundIDs.TOILET_FLUSHING_ID, SoundIDs.TOILET_FLUSHING_EVENT);
              soundEventRegisterHelper.register(SoundIDs.TOILET_USED_ID, SoundIDs.TOILET_USED_EVENT);
-
          });
     }
 
