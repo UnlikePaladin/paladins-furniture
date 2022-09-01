@@ -94,10 +94,10 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
         @Override
         protected void addTables() {
             PaladinFurnitureMod.GENERAL_LOGGER.info("Running Loot Tables");
-            //Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
-            //blocks.forEach(this::addDrop);
-            //Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
-            //Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
+            Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
+            blocks.forEach(this::addDrop);
+            Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
+            Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
         }
 
         @Override
@@ -264,15 +264,15 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
                     .add(simpleBunkLadders)
                     .add(classicBeds);
 
-                this.getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE);
-                   // .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
+                this.getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
+                    .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
 
                 this.getOrCreateTagBuilder(BlockTags.BEDS)
                     .add(simpleBeds)
                     .add(classicBeds);
 
                 this.getOrCreateTagBuilder(BlockTags.CLIMBABLE)
-                        .add(simpleBunkLadders);
+                    .add(simpleBunkLadders);
 
             this.getOrCreateTagBuilder(Tags.getTuckableBlocks())
                     .add(woodBasicTables)

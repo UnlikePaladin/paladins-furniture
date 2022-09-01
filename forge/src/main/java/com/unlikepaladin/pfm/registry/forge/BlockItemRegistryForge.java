@@ -44,6 +44,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_chair"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_CHAIR));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_chair"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_CHAIR));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_chair"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_CHAIR));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_chair"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_CHAIR));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_chair"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_CHAIR));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_chair"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_CHAIR));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_chair"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_CHAIR));
@@ -52,6 +53,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_chair"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CHAIR));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_chair"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CHAIR));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_chair"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CHAIR));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_chair"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CHAIR));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_chair"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_CHAIR));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_chair"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_CHAIR));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_chair"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_CHAIR));
@@ -73,6 +75,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_CHAIR_DINNER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_CHAIR_DINNER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_CHAIR_DINNER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_CHAIR_DINNER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_CHAIR_DINNER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_CHAIR_DINNER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_CHAIR_DINNER));
@@ -81,6 +84,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CHAIR_DINNER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CHAIR_DINNER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CHAIR_DINNER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CHAIR_DINNER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_CHAIR_DINNER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_CHAIR_DINNER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_chair_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_CHAIR_DINNER));
@@ -127,6 +131,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_CHAIR_CLASSIC));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_CHAIR_CLASSIC));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_CHAIR_CLASSIC));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_CHAIR_CLASSIC));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_CHAIR_CLASSIC));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_CHAIR_CLASSIC));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_CHAIR_CLASSIC));
@@ -135,6 +140,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CHAIR_CLASSIC));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CHAIR_CLASSIC));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CHAIR_CLASSIC));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CHAIR_CLASSIC));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_CHAIR_CLASSIC));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_CHAIR_CLASSIC));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_chair_classic"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_CHAIR_CLASSIC));
@@ -156,6 +162,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_CHAIR_MODERN));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_CHAIR_MODERN));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_CHAIR_MODERN));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_CHAIR_MODERN));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_CHAIR_MODERN));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_CHAIR_MODERN));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_CHAIR_MODERN));
@@ -164,6 +171,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CHAIR_MODERN));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CHAIR_MODERN));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CHAIR_MODERN));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CHAIR_MODERN));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_CHAIR_MODERN));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_CHAIR_MODERN));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_chair_modern"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_CHAIR_MODERN));
@@ -222,6 +230,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_BASIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_BASIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_BASIC_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_BASIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_BASIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_BASIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_BASIC_TABLE));
@@ -230,6 +239,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_BASIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_BASIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_BASIC_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_BASIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_BASIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_BASIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_table_basic"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_BASIC_TABLE));
@@ -251,6 +261,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_CLASSIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_CLASSIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_CLASSIC_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_CLASSIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_CLASSIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_CLASSIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_CLASSIC_TABLE));
@@ -259,6 +270,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CLASSIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CLASSIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CLASSIC_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CLASSIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_CLASSIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_CLASSIC_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_table_classic"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_CLASSIC_TABLE));
@@ -280,6 +292,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_LOG_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_table_stem"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_STEM_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_table_stem"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_STEM_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_LOG_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_LOG_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_LOG_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_LOG_TABLE));
@@ -288,6 +301,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_LOG_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_table_stem"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_STEM_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_table_stem"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_STEM_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_LOG_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_table_natural"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_NATURAL_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_table_natural"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_NATURAL_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_table_natural"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_NATURAL_TABLE));
@@ -309,6 +323,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_raw_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_RAW_LOG_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_raw_table_stem"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_RAW_STEM_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_raw_table_stem"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_RAW_STEM_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_raw_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_RAW_LOG_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_raw_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_RAW_LOG_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_raw_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_RAW_LOG_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_acacia_raw_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_ACACIA_RAW_LOG_TABLE));
@@ -317,6 +332,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_raw_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_RAW_LOG_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_raw_table_stem"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_RAW_STEM_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_raw_table_stem"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_RAW_STEM_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_raw_table_log"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_RAW_LOG_TABLE));
 
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "oak_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.OAK_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "birch_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.BIRCH_DINNER_TABLE));
@@ -326,6 +342,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_DINNER_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_DINNER_TABLE));
@@ -334,6 +351,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_DINNER_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_table_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_DINNER_TABLE));
@@ -354,6 +372,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_MODERN_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_MODERN_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_MODERN_DINNER_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_MODERN_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_MODERN_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_MODERN_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_MODERN_DINNER_TABLE));
@@ -362,6 +381,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_MODERN_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_MODERN_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_MODERN_DINNER_TABLE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_MODERN_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_MODERN_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_MODERN_DINNER_TABLE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_table_modern_dinner"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_MODERN_DINNER_TABLE));
@@ -382,6 +402,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_CLASSIC_NIGHTSTAND));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_CLASSIC_NIGHTSTAND));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_CLASSIC_NIGHTSTAND));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_CLASSIC_NIGHTSTAND));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_CLASSIC_NIGHTSTAND));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_CLASSIC_NIGHTSTAND));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_CLASSIC_NIGHTSTAND));
@@ -390,6 +411,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CLASSIC_NIGHTSTAND));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CLASSIC_NIGHTSTAND));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CLASSIC_NIGHTSTAND));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CLASSIC_NIGHTSTAND));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_CLASSIC_NIGHTSTAND));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_CLASSIC_NIGHTSTAND));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_classic_nightstand"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_CLASSIC_NIGHTSTAND));
@@ -529,6 +551,22 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_gray_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_GRAY_SIMPLE_BED));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_black_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_BLACK_SIMPLE_BED));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_white_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_WHITE_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_red_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_RED_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_orange_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_ORANGE_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_yellow_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_YELLOW_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_green_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_GREEN_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_lime_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_LIME_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_blue_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_BLUE_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_cyan_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_CYAN_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_light_blue_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_LIGHT_BLUE_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_light_gray_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_LIGHT_GRAY_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_purple_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_PURPLE_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_magenta_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_MAGENTA_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_pink_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_PINK_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_brown_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_BROWN_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_gray_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_GRAY_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_black_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_BLACK_SIMPLE_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_white_simple_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_WHITE_SIMPLE_BED));
 
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "oak_red_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.OAK_RED_CLASSIC_BED));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "oak_orange_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.OAK_ORANGE_CLASSIC_BED));
@@ -658,6 +696,22 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_gray_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_GRAY_CLASSIC_BED));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_black_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_BLACK_CLASSIC_BED));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_white_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_WHITE_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_red_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_RED_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_orange_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_ORANGE_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_yellow_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_YELLOW_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_green_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_GREEN_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_lime_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_LIME_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_blue_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_BLUE_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_cyan_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_CYAN_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_light_blue_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_LIGHT_BLUE_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_light_gray_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_LIGHT_GRAY_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_purple_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_PURPLE_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_magenta_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_MAGENTA_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_pink_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_PINK_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_brown_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_BROWN_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_gray_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_GRAY_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_black_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_BLACK_CLASSIC_BED));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_white_classic_bed"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_WHITE_CLASSIC_BED));
 
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "oak_simple_bunk_ladder"), addBlockItem(PaladinFurnitureModBlocksItems.OAK_SIMPLE_BUNK_LADDER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "birch_simple_bunk_ladder"), addBlockItem(PaladinFurnitureModBlocksItems.BIRCH_SIMPLE_BUNK_LADDER));
@@ -667,6 +721,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_simple_bunk_ladder"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_SIMPLE_BUNK_LADDER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_simple_bunk_ladder"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_SIMPLE_BUNK_LADDER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_simple_bunk_ladder"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_SIMPLE_BUNK_LADDER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_simple_bunk_ladder"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_SIMPLE_BUNK_LADDER));
 
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "oak_log_stool"), addBlockItem(PaladinFurnitureModBlocksItems.OAK_LOG_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "birch_log_stool"), addBlockItem(PaladinFurnitureModBlocksItems.BIRCH_LOG_STOOL));
@@ -676,6 +731,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_log_stool"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_LOG_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_stem_stool"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_STEM_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_stem_stool"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_STEM_STOOL));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_log_stool"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_LOG_STOOL));
 
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "oak_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.OAK_SIMPLE_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "birch_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.BIRCH_SIMPLE_STOOL));
@@ -685,6 +741,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_SIMPLE_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_SIMPLE_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_SIMPLE_STOOL));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_SIMPLE_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_SIMPLE_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_SIMPLE_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_SIMPLE_STOOL));
@@ -693,6 +750,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_SIMPLE_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_SIMPLE_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_SIMPLE_STOOL));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_SIMPLE_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_SIMPLE_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_SIMPLE_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_simple_stool"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_SIMPLE_STOOL));
@@ -713,6 +771,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_CLASSIC_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_CLASSIC_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_CLASSIC_STOOL));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_CLASSIC_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_CLASSIC_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_CLASSIC_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_CLASSIC_STOOL));
@@ -721,6 +780,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_CLASSIC_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_CLASSIC_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_CLASSIC_STOOL));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_CLASSIC_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "quartz_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.QUARTZ_CLASSIC_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "netherite_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.NETHERITE_CLASSIC_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_wood_classic_stool"), addBlockItem(PaladinFurnitureModBlocksItems.LIGHT_WOOD_CLASSIC_STOOL));
@@ -741,6 +801,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_MODERN_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_MODERN_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_MODERN_STOOL));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_MODERN_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_MODERN_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_birch_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_BIRCH_MODERN_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_spruce_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_SPRUCE_MODERN_STOOL));
@@ -749,6 +810,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_dark_oak_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_DARK_OAK_MODERN_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_crimson_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_CRIMSON_MODERN_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_MODERN_STOOL));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_MODERN_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "white_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.WHITE_MODERN_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "gray_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.GRAY_MODERN_STOOL));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_wood_modern_stool"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_WOOD_MODERN_STOOL));
@@ -838,6 +900,15 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_kitchen_wall_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_KITCHEN_WALL_DRAWER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_kitchen_wall_small_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_KITCHEN_WALL_SMALL_DRAWER));
 
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_kitchen_counter"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_COUNTER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_kitchen_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_DRAWER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_kitchen_cabinet"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_CABINET));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_kitchen_sink"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_SINK));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_kitchen_counter_oven"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_COUNTER_OVEN));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_kitchen_wall_counter"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_WALL_COUNTER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_kitchen_wall_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_WALL_DRAWER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_kitchen_wall_small_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_KITCHEN_WALL_SMALL_DRAWER));
+
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_kitchen_counter"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_KITCHEN_COUNTER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_kitchen_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_KITCHEN_DRAWER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_oak_kitchen_cabinet"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_OAK_KITCHEN_CABINET));
@@ -909,6 +980,15 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_kitchen_wall_counter"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_KITCHEN_WALL_COUNTER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_kitchen_wall_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_KITCHEN_WALL_DRAWER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_warped_kitchen_wall_small_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_WARPED_KITCHEN_WALL_SMALL_DRAWER));
+
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_kitchen_counter"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_COUNTER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_kitchen_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_DRAWER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_kitchen_cabinet"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_CABINET));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_kitchen_sink"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_SINK));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_kitchen_counter_oven"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_COUNTER_OVEN));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_kitchen_wall_counter"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_WALL_COUNTER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_kitchen_wall_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_WALL_DRAWER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "stripped_mangrove_kitchen_wall_small_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.STRIPPED_MANGROVE_KITCHEN_WALL_SMALL_DRAWER));
 
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "concrete_kitchen_counter"), addBlockItem(PaladinFurnitureModBlocksItems.CONCRETE_KITCHEN_COUNTER));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "concrete_kitchen_drawer"), addBlockItem(PaladinFurnitureModBlocksItems.CONCRETE_KITCHEN_DRAWER));
@@ -1062,6 +1142,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_HERRINGBONE_PLANKS));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_HERRINGBONE_PLANKS));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_HERRINGBONE_PLANKS));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_HERRINGBONE_PLANKS));
 
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "raw_concrete"), addBlockItem(PaladinFurnitureModBlocksItems.RAW_CONCRETE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "raw_concrete_powder"), addBlockItem(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER));
@@ -1075,20 +1156,12 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_switch"), PaladinFurnitureModBlocksItems.LIGHT_SWITCH);
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "basic_toilet"), addBlockItem(PaladinFurnitureModBlocksItems.BASIC_TOILET));
                 });
-       /* Set<BlockState> originalBedStates = PointOfInterestType.HOME.getBlockStates());
-        Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBed.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet()));
-        Set<BlockState> newBedStates = new HashSet<>());
-        newBedStates.addAll(originalBedStates));
-        newBedStates.addAll(addedBedStates));
-        PointOfInterestType.HOME = new PointOfInterestType("home"), addBlockItem(newBedStates, 1));
-        ForgeRegistries.POI_TYPES.register(PointOfInterestType.HOME.setRegistryName("minecraft:home")));*/
     }
 
     @SubscribeEvent
     public static void registerItems(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.ITEMS, itemRegisterHelper -> {
             itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture_book"), PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).maxCount(1)));
-            itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_switch"), PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
             itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dye_kit_red"), PaladinFurnitureModBlocksItems.DYE_KIT_RED);
             itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dye_kit_orange"), PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE);
             itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dye_kit_yellow"), PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW);
@@ -1111,6 +1184,7 @@ public class BlockItemRegistryForge {
                         Item item = registerBlockItem(name, block);
                         itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, name), item);
                 });
+            itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_switch"), PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
         });
     }
 
