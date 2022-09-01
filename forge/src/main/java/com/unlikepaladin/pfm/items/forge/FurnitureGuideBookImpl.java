@@ -6,7 +6,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
@@ -27,7 +26,7 @@ public class FurnitureGuideBookImpl extends FurnitureGuideBook {
         }
         else if (world.isClient && !ModList.get().isLoaded("patchouli"))
         {
-            user.sendMessage(new TranslatableText("message.pfm.patchouli_not_installed"),false);
+            user.sendMessage(Text.translatable("message.pfm.patchouli_not_installed"),false);
         }
         return TypedActionResult.pass(user.getStackInHand(hand));
     }

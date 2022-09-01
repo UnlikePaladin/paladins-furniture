@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.FurnitureRecipeJsonBuilder;
 import com.unlikepaladin.pfm.data.Tags;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import net.minecraft.GameVersion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
@@ -34,6 +35,7 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
@@ -53,8 +55,8 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
     private final Collection<Path> inputs;
     private final Path output;
 
-    public PaladinFurnitureModDataGenForge(Path output, Collection<Path> inputs) {
-        super(output, inputs);
+    public PaladinFurnitureModDataGenForge(Path output, Collection<Path> inputs, GameVersion gameVersion, boolean ignoreCache){
+        super(output, inputs, gameVersion, ignoreCache);
         this.output = output;
         this.inputs = Lists.newArrayList(inputs);
     }
@@ -64,9 +66,9 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
         DataGenerator generator = dataEvent.getGenerator();
         String modID = dataEvent.getModContainer().getModId();
         ExistingFileHelper fileHelper = dataEvent.getExistingFileHelper();
-        generator.addProvider(new PaladinFurnitureModDataGenForge.PFMLootTableProvider(generator));
-        generator.addProvider(new PaladinFurnitureModDataGenForge.PFMRecipeProvider(generator));
-        generator.addProvider(new PaladinFurnitureModDataGenForge.PFMBlockTagProvider(generator, modID, fileHelper));
+        generator.addProvider(true, new PaladinFurnitureModDataGenForge.PFMLootTableProvider(generator));
+        generator.addProvider(true, new PaladinFurnitureModDataGenForge.PFMRecipeProvider(generator));
+        generator.addProvider(true, new PaladinFurnitureModDataGenForge.PFMBlockTagProvider(generator, modID, fileHelper));
     }
 
     public static class PFMLootTableProvider extends LootTableProvider {
@@ -93,10 +95,10 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
         @Override
         protected void addTables() {
             PaladinFurnitureMod.GENERAL_LOGGER.info("Running Loot Tables");
-           // Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
-           // blocks.forEach(this::addDrop);
-         //   Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
-          //  Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
+            Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
+            blocks.forEach(this::addDrop);
+            Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
+            Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
         }
 
         @Override
@@ -107,7 +109,9 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
     public static class PFMBlockTagProvider extends AbstractTagProvider<Block> {
         public PFMBlockTagProvider(DataGenerator root, String modId, @Nullable ExistingFileHelper existingFileHelper) {
             super(root, Registry.BLOCK, modId, existingFileHelper);
+            this.root = root;
         }
+        DataGenerator root;
 
         @Override
         protected void configure() {
@@ -190,9 +194,9 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
                     .add(plates)
                     .add(cutleries)
                     .add(basicToilets)
-                    .add(rangeHoods);
-                    //.add(PaladinFurnitureModBlocksItems.RAW_CONCRETE)
-                  //  .add(PaladinFurnitureModBlocksItems.IRON_CHAIN);
+                    .add(rangeHoods)
+                    .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE)
+                    .add(PaladinFurnitureModBlocksItems.IRON_CHAIN);
 
             KitchenCounter[] woodCounters = KitchenCounter.streamWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounter[]::new);
             KitchenWallCounter[] woodWallCounters = KitchenWallCounter.streamWallWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenWallCounter[]::new);
@@ -285,7 +289,7 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
         }
 
         @Override
-        protected Path getOutput(Identifier id) {
+        protected @org.jetbrains.annotations.Nullable Path getPath(Identifier id) {
             return this.root.getOutput().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
         }
 
