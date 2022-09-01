@@ -25,7 +25,7 @@
     "fabric-datagen": [
       "com.unlikepaladin.pfm.data.fabric.PaladinFurnitureModDataEntrypoint"
     ],
-    "rei": [
+    "rei_client": [
       "com.unlikepaladin.pfm.compat.fabric.rei.PaladinFurnitureModREIPlugin"
     ],
     "modmenu": [
@@ -45,6 +45,6 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": "1.18.2"
+    "minecraft": "1.19.x"
     }
 }

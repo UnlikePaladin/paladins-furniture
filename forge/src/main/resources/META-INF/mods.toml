@@ -1,5 +1,5 @@
 modLoader = "javafml"
-loaderVersion = "[37,)"
+loaderVersion = "[41,)"
 issueTrackerURL = "https://github.com/UnlikePaladin/paladins-furniture/issues"
 license = "LGPL-3.0-only"
 
@@ -16,14 +16,14 @@ logoFile = "icon.png"
 [[dependencies.pfm]]
 modId = "forge"
 mandatory = true
-versionRange = "[37,)"
+versionRange = "[41,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.pfm]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.18.2,)"
+versionRange = "[1.19,)"
 ordering = "NONE"
 side = "BOTH"
 
@@ -31,6 +31,6 @@ side = "BOTH"
 [[dependencies.pfm]]
 modId = "cloth_config"
 mandatory = true
-versionRange = "[5.3.63,)"
+versionRange = "[8.0.75,)"
 ordering = "NONE"
 side = "BOTH"

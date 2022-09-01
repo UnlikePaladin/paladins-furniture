@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.data.fabric;
 
 import net.minecraft.block.Block;
-import net.minecraft.tag.Tag;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;

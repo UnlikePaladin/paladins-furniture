@@ -8,7 +8,7 @@ import com.unlikepaladin.pfm.data.Tags;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTablesProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.block.BedBlock;
@@ -40,7 +40,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
         dataGenerator.addProvider(PFMRecipeProvider::new);
     }
 
-    private static class PFMLootTableProvider extends FabricBlockLootTablesProvider {
+    private static class PFMLootTableProvider extends FabricBlockLootTableProvider {
         private PFMLootTableProvider(FabricDataGenerator dataGenerator) {
             super(dataGenerator);
         }
@@ -48,12 +48,11 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
         @Override
         protected void generateBlockLootTables() {
             Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
-            //blocks.forEach(this::addDrop);
-            //Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
-            //Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
+            blocks.forEach(this::addDrop);
+            Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
+            Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> BlockLootTableGenerator.dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
         }
     }
-    
 
     public static class PFMBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         private PFMBlockTagProvider(FabricDataGenerator dataGenerator) {
