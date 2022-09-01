@@ -1,4 +1,4 @@
-// 1.19	2022-09-01T18:25:59.602209	Paladin's Furniture Loot Tables
+// 1.19	2022-09-01T18:37:43.133574	Paladin's Furniture Loot Tables
 3aa3b0ab26af605bce840355855c6c4bba3a86b4 data/pfm/loot_tables/blocks/acacia_black_classic_bed.json
 b301b35cefb51b512a13324160d0ddf94b6e4431 data/pfm/loot_tables/blocks/acacia_black_simple_bed.json
 d7cb1e91a0c0d5a6287ab0ed71d392e6ba4bc4b6 data/pfm/loot_tables/blocks/acacia_blue_classic_bed.json
@@ -564,7 +564,7 @@ fbac10dfd1f1a44444ff2f7a0f895e4cf2df1c54 data/pfm/loot_tables/blocks/mangrove_pi
 6dd36c1a042fae9b3b7ec8cdf6216006488f2464 data/pfm/loot_tables/blocks/mangrove_pink_simple_bed.json
 01635712aea7881a1c42474e95b95610296a2578 data/pfm/loot_tables/blocks/mangrove_purple_classic_bed.json
 b55484f974fdf69ac41bb9cf67c1bb6257e089f9 data/pfm/loot_tables/blocks/mangrove_purple_simple_bed.json
-8d7142a477058a6a90cc88503f1769ce8989e293 data/pfm/loot_tables/blocks/mangrove_raw_table_stem.json
+2111396ff69f2b29cf68d7fec31b3d4c6f45136e data/pfm/loot_tables/blocks/mangrove_raw_table_log.json
 a6e1afe1e153e97e82d382765fb2f2e003599473 data/pfm/loot_tables/blocks/mangrove_red_classic_bed.json
 c433208682e876f0e357ff973059a496b67e70af data/pfm/loot_tables/blocks/mangrove_red_simple_bed.json
 78935fa224aa41dd847acd83b22f4d25db521161 data/pfm/loot_tables/blocks/mangrove_simple_bunk_ladder.json
@@ -907,7 +907,7 @@ b8f0e984f654951f58a5ec3746130d8f697c6915 data/pfm/loot_tables/blocks/stripped_ma
 bbba829f900217115d861d7e8866f8e791802dc1 data/pfm/loot_tables/blocks/stripped_mangrove_kitchen_wall_drawer.json
 89692723140705ad1c0fa7e83f2491109e683801 data/pfm/loot_tables/blocks/stripped_mangrove_kitchen_wall_small_drawer.json
 543cf9708f2b988851682fa4252dc46887e85e7a data/pfm/loot_tables/blocks/stripped_mangrove_modern_stool.json
-4a0c199ffbdc25f64579cb01a8e9e57b866a47b4 data/pfm/loot_tables/blocks/stripped_mangrove_raw_table_stem.json
+7b65c5323dd68540dcf42a866244315542402f01 data/pfm/loot_tables/blocks/stripped_mangrove_raw_table_log.json
 a769e5cec081f0da2d158fb126262a0fa110966b data/pfm/loot_tables/blocks/stripped_mangrove_simple_stool.json
 4fe2f6cde19c142294bc08d38b313e593a63b6e8 data/pfm/loot_tables/blocks/stripped_mangrove_table_basic.json
 2f576abc60fd3c8305b37d4f66e8236889e0ee5f data/pfm/loot_tables/blocks/stripped_mangrove_table_classic.json
