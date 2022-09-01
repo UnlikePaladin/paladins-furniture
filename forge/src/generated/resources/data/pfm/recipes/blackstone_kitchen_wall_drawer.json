@@ -1,21 +1,21 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SYS",
-    "XXX"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stripped_crimson_stem"
-    },
     "S": {
       "item": "minecraft:polished_blackstone"
+    },
+    "X": {
+      "item": "minecraft:stripped_crimson_stem"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XXX",
+    "SYS",
+    "XXX"
+  ],
   "result": {
     "item": "pfm:blackstone_kitchen_wall_drawer"
   }

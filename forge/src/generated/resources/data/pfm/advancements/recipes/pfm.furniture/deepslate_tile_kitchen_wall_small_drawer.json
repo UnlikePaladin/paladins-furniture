@@ -1,21 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "pfm:deepslate_tile_kitchen_wall_small_drawer"
-    ]
-  },
   "criteria": {
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "pfm:deepslate_tile_kitchen_wall_small_drawer"
-      }
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
       "has_the_recipe"
     ]
-  ]
+  ],
+  "rewards": {
+    "recipes": [
+      "pfm:deepslate_tile_kitchen_wall_small_drawer"
+    ]
+  }
 }

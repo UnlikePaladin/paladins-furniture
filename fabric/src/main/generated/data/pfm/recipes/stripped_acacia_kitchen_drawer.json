@@ -1,21 +1,21 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "SSS",
-    "XYX",
-    "XXX"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stripped_acacia_log"
-    },
     "S": {
       "item": "minecraft:acacia_planks"
+    },
+    "X": {
+      "item": "minecraft:stripped_acacia_log"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX"
+  ],
   "result": {
     "item": "pfm:stripped_acacia_kitchen_drawer"
   }

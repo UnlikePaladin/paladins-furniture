@@ -1,10 +1,5 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "S S",
-    "SSS"
-  ],
   "key": {
     "S": {
       "item": "minecraft:birch_log"
@@ -13,8 +8,13 @@
       "item": "minecraft:birch_planks"
     }
   },
+  "pattern": [
+    "XXX",
+    "S S",
+    "SSS"
+  ],
   "result": {
-    "item": "pfm:birch_table_basic",
-    "count": 4
+    "count": 4,
+    "item": "pfm:birch_table_basic"
   }
 }

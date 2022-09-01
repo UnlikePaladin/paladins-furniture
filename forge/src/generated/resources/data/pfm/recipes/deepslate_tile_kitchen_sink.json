@@ -1,24 +1,24 @@
 {
   "type": "pfm:furniture",
+  "key": {
+    "S": {
+      "item": "minecraft:deepslate_tiles"
+    },
+    "X": {
+      "item": "minecraft:smooth_quartz"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
   "pattern": [
     "SZS",
     "XYX",
     "XXX"
   ],
-  "key": {
-    "X": {
-      "item": "minecraft:smooth_quartz"
-    },
-    "S": {
-      "item": "minecraft:deepslate_tiles"
-    },
-    "Z": {
-      "item": "minecraft:iron_ingot"
-    },
-    "Y": {
-      "item": "minecraft:bucket"
-    }
-  },
   "result": {
     "item": "pfm:deepslate_tile_kitchen_sink"
   }

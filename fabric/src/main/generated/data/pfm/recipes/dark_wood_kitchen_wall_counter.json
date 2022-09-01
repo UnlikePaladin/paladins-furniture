@@ -1,20 +1,20 @@
 {
   "type": "pfm:furniture",
+  "key": {
+    "S": {
+      "item": "minecraft:smooth_quartz"
+    },
+    "X": {
+      "item": "minecraft:stripped_dark_oak_log"
+    }
+  },
   "pattern": [
     "SSS",
     "XXX",
     "XXX"
   ],
-  "key": {
-    "X": {
-      "item": "minecraft:stripped_dark_oak_log"
-    },
-    "S": {
-      "item": "minecraft:smooth_quartz"
-    }
-  },
   "result": {
-    "item": "pfm:dark_wood_kitchen_wall_counter",
-    "count": 6
+    "count": 6,
+    "item": "pfm:dark_wood_kitchen_wall_counter"
   }
 }

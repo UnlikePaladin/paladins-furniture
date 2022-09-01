@@ -1,20 +1,20 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "YZY",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:warped_planks"
     },
-    "Z": {
-      "item": "minecraft:purple_bed"
-    },
     "Y": {
       "item": "minecraft:warped_fence"
+    },
+    "Z": {
+      "item": "minecraft:purple_bed"
     }
   },
+  "pattern": [
+    "YZY",
+    "XXX"
+  ],
   "result": {
     "item": "pfm:warped_purple_classic_bed"
   }

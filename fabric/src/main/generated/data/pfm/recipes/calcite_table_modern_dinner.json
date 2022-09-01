@@ -1,10 +1,5 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SSS",
-    "S S"
-  ],
   "key": {
     "S": {
       "item": "minecraft:stripped_warped_stem"
@@ -13,8 +8,13 @@
       "item": "minecraft:calcite"
     }
   },
+  "pattern": [
+    "XXX",
+    "SSS",
+    "S S"
+  ],
   "result": {
-    "item": "pfm:calcite_table_modern_dinner",
-    "count": 4
+    "count": 4,
+    "item": "pfm:calcite_table_modern_dinner"
   }
 }

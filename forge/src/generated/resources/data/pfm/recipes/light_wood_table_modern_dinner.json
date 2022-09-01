@@ -1,10 +1,5 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SSS",
-    "S S"
-  ],
   "key": {
     "S": {
       "item": "minecraft:oak_planks"
@@ -13,8 +8,13 @@
       "item": "minecraft:smooth_quartz"
     }
   },
+  "pattern": [
+    "XXX",
+    "SSS",
+    "S S"
+  ],
   "result": {
-    "item": "pfm:light_wood_table_modern_dinner",
-    "count": 4
+    "count": 4,
+    "item": "pfm:light_wood_table_modern_dinner"
   }
 }

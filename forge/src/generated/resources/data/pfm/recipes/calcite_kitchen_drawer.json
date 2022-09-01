@@ -1,21 +1,21 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "SSS",
-    "XYX",
-    "XXX"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stripped_warped_stem"
-    },
     "S": {
       "item": "minecraft:calcite"
+    },
+    "X": {
+      "item": "minecraft:stripped_warped_stem"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "SSS",
+    "XYX",
+    "XXX"
+  ],
   "result": {
     "item": "pfm:calcite_kitchen_drawer"
   }

@@ -1,20 +1,20 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "YZY",
-    "XXX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:jungle_planks"
     },
-    "Z": {
-      "item": "minecraft:black_bed"
-    },
     "Y": {
       "item": "minecraft:jungle_fence"
+    },
+    "Z": {
+      "item": "minecraft:black_bed"
     }
   },
+  "pattern": [
+    "YZY",
+    "XXX"
+  ],
   "result": {
     "item": "pfm:jungle_black_classic_bed"
   }

@@ -1,16 +1,16 @@
 {
   "type": "minecraft:crafting_shaped",
-  "pattern": [
-    "XX",
-    "XX"
-  ],
   "key": {
     "X": {
       "item": "minecraft:birch_slab"
     }
   },
+  "pattern": [
+    "XX",
+    "XX"
+  ],
   "result": {
-    "item": "pfm:birch_herringbone_planks",
-    "count": 4
+    "count": 4,
+    "item": "pfm:birch_herringbone_planks"
   }
 }

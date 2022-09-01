@@ -1,21 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "pfm:dark_wood_classic_stool"
-    ]
-  },
   "criteria": {
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "pfm:dark_wood_classic_stool"
-      }
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
       "has_the_recipe"
     ]
-  ]
+  ],
+  "rewards": {
+    "recipes": [
+      "pfm:dark_wood_classic_stool"
+    ]
+  }
 }

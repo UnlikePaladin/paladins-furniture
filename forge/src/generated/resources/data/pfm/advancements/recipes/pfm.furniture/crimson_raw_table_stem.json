@@ -1,21 +1,21 @@
 {
   "parent": "minecraft:recipes/root",
-  "rewards": {
-    "recipes": [
-      "pfm:crimson_raw_table_stem"
-    ]
-  },
   "criteria": {
     "has_the_recipe": {
-      "trigger": "minecraft:recipe_unlocked",
       "conditions": {
         "recipe": "pfm:crimson_raw_table_stem"
-      }
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
       "has_the_recipe"
     ]
-  ]
+  ],
+  "rewards": {
+    "recipes": [
+      "pfm:crimson_raw_table_stem"
+    ]
+  }
 }

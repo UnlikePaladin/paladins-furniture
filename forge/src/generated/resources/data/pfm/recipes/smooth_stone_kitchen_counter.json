@@ -1,20 +1,20 @@
 {
   "type": "pfm:furniture",
+  "key": {
+    "S": {
+      "item": "minecraft:smooth_stone"
+    },
+    "X": {
+      "item": "minecraft:white_concrete"
+    }
+  },
   "pattern": [
     "SSS",
     "XXX",
     "XXX"
   ],
-  "key": {
-    "X": {
-      "item": "minecraft:white_concrete"
-    },
-    "S": {
-      "item": "minecraft:smooth_stone"
-    }
-  },
   "result": {
-    "item": "pfm:smooth_stone_kitchen_counter",
-    "count": 6
+    "count": 6,
+    "item": "pfm:smooth_stone_kitchen_counter"
   }
 }

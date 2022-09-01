@@ -1,17 +1,17 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "X  ",
-    "XXX",
-    "X X"
-  ],
   "key": {
     "X": {
       "item": "minecraft:light_blue_concrete"
     }
   },
+  "pattern": [
+    "X  ",
+    "XXX",
+    "X X"
+  ],
   "result": {
-    "item": "pfm:froggy_chair_light_blue",
-    "count": 4
+    "count": 4,
+    "item": "pfm:froggy_chair_light_blue"
   }
 }

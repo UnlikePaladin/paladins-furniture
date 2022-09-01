@@ -1,24 +1,24 @@
 {
   "type": "pfm:furniture",
+  "key": {
+    "S": {
+      "item": "minecraft:acacia_planks"
+    },
+    "X": {
+      "item": "minecraft:stripped_acacia_log"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
   "pattern": [
     "SZS",
     "XYX",
     "XXX"
   ],
-  "key": {
-    "X": {
-      "item": "minecraft:stripped_acacia_log"
-    },
-    "S": {
-      "item": "minecraft:acacia_planks"
-    },
-    "Z": {
-      "item": "minecraft:iron_ingot"
-    },
-    "Y": {
-      "item": "minecraft:bucket"
-    }
-  },
   "result": {
     "item": "pfm:stripped_acacia_kitchen_sink"
   }

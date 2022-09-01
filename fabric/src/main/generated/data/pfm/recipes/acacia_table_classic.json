@@ -1,10 +1,5 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "S S",
-    "S S"
-  ],
   "key": {
     "S": {
       "item": "minecraft:acacia_log"
@@ -13,8 +8,13 @@
       "item": "minecraft:acacia_planks"
     }
   },
+  "pattern": [
+    "XXX",
+    "S S",
+    "S S"
+  ],
   "result": {
-    "item": "pfm:acacia_table_classic",
-    "count": 4
+    "count": 4,
+    "item": "pfm:acacia_table_classic"
   }
 }

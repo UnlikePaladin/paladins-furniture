@@ -1,22 +1,22 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XXX",
-    "SYS"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:dark_oak_planks"
-    },
     "S": {
       "item": "minecraft:polished_deepslate"
+    },
+    "X": {
+      "item": "minecraft:dark_oak_planks"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XXX",
+    "SYS"
+  ],
   "result": {
-    "item": "pfm:deepslate_kitchen_wall_small_drawer",
-    "count": 3
+    "count": 3,
+    "item": "pfm:deepslate_kitchen_wall_small_drawer"
   }
 }

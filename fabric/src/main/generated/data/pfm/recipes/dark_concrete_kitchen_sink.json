@@ -1,24 +1,24 @@
 {
   "type": "pfm:furniture",
+  "key": {
+    "S": {
+      "item": "minecraft:white_concrete"
+    },
+    "X": {
+      "item": "minecraft:gray_concrete"
+    },
+    "Y": {
+      "item": "minecraft:bucket"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
   "pattern": [
     "SZS",
     "XYX",
     "XXX"
   ],
-  "key": {
-    "X": {
-      "item": "minecraft:gray_concrete"
-    },
-    "S": {
-      "item": "minecraft:white_concrete"
-    },
-    "Z": {
-      "item": "minecraft:iron_ingot"
-    },
-    "Y": {
-      "item": "minecraft:bucket"
-    }
-  },
   "result": {
     "item": "pfm:dark_concrete_kitchen_sink"
   }

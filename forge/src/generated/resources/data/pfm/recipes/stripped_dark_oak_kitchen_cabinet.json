@@ -1,21 +1,21 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    "XSX",
-    "XYX",
-    "XSX"
-  ],
   "key": {
-    "X": {
-      "item": "minecraft:stripped_dark_oak_log"
-    },
     "S": {
       "item": "minecraft:dark_oak_planks"
+    },
+    "X": {
+      "item": "minecraft:stripped_dark_oak_log"
     },
     "Y": {
       "item": "minecraft:chest"
     }
   },
+  "pattern": [
+    "XSX",
+    "XYX",
+    "XSX"
+  ],
   "result": {
     "item": "pfm:stripped_dark_oak_kitchen_cabinet"
   }
