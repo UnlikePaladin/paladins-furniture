@@ -1,31 +1,20 @@
 package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.networking.forge.MicrowaveUpdatePacket;
 import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
-import io.netty.buffer.Unpooled;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.ClientConnection;
-import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.WorldChunk;
 import net.minecraftforge.fmllegacy.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
 import java.util.Objects;
 
 public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
@@ -36,7 +25,7 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
         microwaveBlockEntity.setActive(active);
         BlockPos pos = microwaveBlockEntity.getPos();
         WorldChunk chunk = Objects.requireNonNull(microwaveBlockEntity.getWorld()).getWorldChunk(pos);
-        NetworkRegistryForge.PFM_SERVER_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new MicrowaveUpdatePacket(pos, active));
+        NetworkRegistryForge.PFM_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new MicrowaveUpdatePacket(pos, active));
     }
 
     @Nullable

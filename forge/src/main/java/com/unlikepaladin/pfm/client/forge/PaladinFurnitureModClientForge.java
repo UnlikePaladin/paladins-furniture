@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.client.forge;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
+import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
 import com.unlikepaladin.pfm.registry.forge.ScreenHandlerRegistryForge;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
@@ -24,7 +25,7 @@ public class PaladinFurnitureModClientForge {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        ClientPacketsForge.registerClientPackets();
+        NetworkRegistryForge.registerPackets();
         ColorRegistryForge.registerBlockRenderLayers();
 
 

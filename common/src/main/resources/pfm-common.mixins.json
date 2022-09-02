@@ -4,10 +4,12 @@
   "package": "com.unlikepaladin.pfm.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "MixinPointOfInterestType",
-    "MixinClientPacketListener"
+    "MixinPointOfInterestType"
   ],
   "server": [],
+  "client": [
+    "MixinClientPacketListener"
+  ],
   "injectors": {
     "defaultRequire": 1
   }
