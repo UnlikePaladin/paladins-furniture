@@ -16,8 +16,8 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 public class MicrowaveUpdatePacket {
-    private final BlockPos entityPos;
-    private final boolean active;
+    public final BlockPos entityPos;
+    public final boolean active;
 
     public MicrowaveUpdatePacket(BlockPos entityPos, boolean active) {
         this.entityPos = entityPos;
@@ -28,25 +28,9 @@ public class MicrowaveUpdatePacket {
     public static void handle(MicrowaveUpdatePacket msg, Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() ->
                 // Make sure it's only executed on the physical client
-                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> MicrowaveUpdatePacket.handlePacket(msg, ctx))
+                DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientMicrowaveUpdatePackeHandler.handlePacket(msg, ctx))
         );
         ctx.get().setPacketHandled(true);
-    }
-
-    // In ClientPacketHandlerClass
-    public static void handlePacket(MicrowaveUpdatePacket msg, Supplier<NetworkEvent.Context> ctx) {
-        BlockPos blockPos = msg.entityPos;
-        boolean active = msg.active;
-        World world = MinecraftClient.getInstance().world;
-        if (world.isChunkLoaded(blockPos)) {
-            MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) world.getBlockEntity(blockPos);
-                if (Objects.nonNull(MinecraftClient.getInstance().currentScreen) && MinecraftClient.getInstance().currentScreen instanceof MicrowaveScreen microwaveScreen)  {
-                    microwaveScreen.getScreenHandler().setActive(blockEntity, active);
-                }
-        }
-        else {
-            Objects.requireNonNull(ctx.get().getSender()).sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
-        }
     }
 
     public static void encode(MicrowaveUpdatePacket packet, PacketByteBuf buffer) {
