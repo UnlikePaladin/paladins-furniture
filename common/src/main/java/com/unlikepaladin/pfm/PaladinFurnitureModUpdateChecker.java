@@ -178,13 +178,13 @@ public class PaladinFurnitureModUpdateChecker {
             String originalText = info.updateInfo.get("en_us");
             String[] textParts = originalText.split("\\{link}");
             if (textParts.length > 1) {
-                MutableText component1 = new LiteralText(textParts[0]);
-                MutableText component2 = new LiteralText(textParts[1]);
-                MutableText link = new LiteralText(info.modHost).styled(arg -> arg.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, info.modDownload)).withUnderline(true));
+                MutableText component1 = Text.literal(textParts[0]);
+                MutableText component2 = Text.literal(textParts[1]);
+                MutableText link = Text.literal(info.modHost).styled(arg -> arg.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, info.modDownload)).withUnderline(true));
                 return Optional.of(component1.append(link).append(component2));
             } else {
-                MutableText link = new LiteralText(info.modHost).styled(arg -> arg.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, info.modDownload)).withUnderline(true));
-                return Optional.of(new LiteralText(textParts[0]).append(link));
+                MutableText link = Text.literal(info.modHost).styled(arg -> arg.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, info.modDownload)).withUnderline(true));
+                return Optional.of(Text.literal(textParts[0]).append(link));
             }
         } else {
             return Optional.empty();
