@@ -18,7 +18,9 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
+import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.poi.PointOfInterestType;
+import net.minecraft.world.poi.PointOfInterestTypes;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -1155,7 +1157,16 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "simple_light"), addBlockItem(PaladinFurnitureModBlocksItems.SIMPLE_LIGHT));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_switch"), PaladinFurnitureModBlocksItems.LIGHT_SWITCH);
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "basic_toilet"), addBlockItem(PaladinFurnitureModBlocksItems.BASIC_TOILET));
-                });
+            });
+        event.register(ForgeRegistries.Keys.POI_TYPES, pointOfInterestTypeRegisterHelper ->  {
+            Set<BlockState> originalBedStates = PointOfInterestTypes.BED_HEADS;
+            Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBed.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+            Set<BlockState> newBedStates = new HashSet<>();
+            newBedStates.addAll(originalBedStates);
+            newBedStates.addAll(addedBedStates);
+            PointOfInterestTypes.HOME = RegistryKey.of(Registry.POINT_OF_INTEREST_TYPE_KEY, new Identifier("home"));
+            pointOfInterestTypeRegisterHelper.register(new Identifier("home"),new PointOfInterestType(newBedStates, 1, 1));
+        });
     }
 
     @SubscribeEvent
@@ -1187,7 +1198,6 @@ public class BlockItemRegistryForge {
             itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_switch"), PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
         });
     }
-
         public static Item registerBlockItem(String itemName, Block block) {
                 if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
                         return new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP)) {
