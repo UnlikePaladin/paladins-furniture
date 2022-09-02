@@ -16,7 +16,7 @@ public class MixinDedicatedServer {
 
     @Inject(method = "setupServer", at = @At("TAIL"))
     private void pfm$showUpdateMessage(CallbackInfoReturnable<Boolean> cir) {
-        PaladinFurnitureMod.getUpdateChecker().getUpdateMessage().ifPresent(msg ->
+        PaladinFurnitureMod.getUpdateChecker().getUpdateMessageServer().ifPresent(msg ->
                 LOGGER.info(msg)
         );
     }
