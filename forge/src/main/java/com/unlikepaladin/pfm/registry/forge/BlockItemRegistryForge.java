@@ -1199,6 +1199,18 @@ public class BlockItemRegistryForge {
         });
     }
         public static Item registerBlockItem(String itemName, Block block) {
+            if (block instanceof SimpleBed) {
+                if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
+                    return new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).maxCount(1)) {
+                        @Override
+                        public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
+                            return 300;
+                        }
+
+                    };
+                }
+                return new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).maxCount(1));
+            }
                 if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
                         return new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP)) {
                                 @Override
