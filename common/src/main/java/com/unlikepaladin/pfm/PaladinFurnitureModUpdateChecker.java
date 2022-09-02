@@ -7,6 +7,8 @@ import com.google.gson.JsonSyntaxException;
 import com.unlikepaladin.pfm.compat.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.utilities.Version;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.ClickEvent;
@@ -139,6 +141,7 @@ public class PaladinFurnitureModUpdateChecker {
             return null;
         }
 
+        @Environment(EnvType.CLIENT)
         public Optional<Text> getUpdateMessage() {
             if (shouldShowUpdateMessage) {
                 UpdateInfo info = getUpdateInfo();
