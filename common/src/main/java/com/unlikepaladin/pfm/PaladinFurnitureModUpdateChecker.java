@@ -26,6 +26,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -51,6 +52,11 @@ public class PaladinFurnitureModUpdateChecker {
             return null;
         }
 
+        @ExpectPlatform
+        public static URL getUpdateURL() throws MalformedURLException{
+            PaladinFurnitureMod.GENERAL_LOGGER.error("[Paladin's Furniture Update Check] Unable to get update URL!");
+            return null;
+        }
 
         public void checkForUpdates(PaladinFurnitureModConfig pfmConfig) {
             if (!pfmConfig.shouldCheckForUpdates()) {
@@ -85,7 +91,7 @@ public class PaladinFurnitureModUpdateChecker {
                         }
                     }
 
-                    try (InputStream in = new URL("https://github.com/UnlikePaladin/Paladins-Furniture-Update-Index/releases/latest/download/updateIndex.json").openStream()) {
+                    try (InputStream in = getUpdateURL().openStream()) {
                         String updateIndex;
                         try {
                             updateIndex = new JsonParser().parse(new InputStreamReader(in)).getAsJsonObject().get(getMcVersion()).getAsString();
