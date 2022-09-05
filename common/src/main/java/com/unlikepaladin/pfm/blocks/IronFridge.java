@@ -71,8 +71,8 @@ public class IronFridge extends Fridge{
         BlockState blockState = world.getBlockState(blockPos = pos.down());
         if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof Freezer) {
             BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, NOTIFY_ALL | SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, getRawIdFromState(blockState));
+            world.setBlockState(blockPos, blockState2, 3 | 35);
+            world.syncWorldEvent(player, 2001, blockPos, getRawIdFromState(blockState));
         }
     }
 
@@ -82,8 +82,8 @@ public class IronFridge extends Fridge{
     }
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        world.setBlockState(pos, this.freezer.get().getDefaultState().with(FACING, placer.getHorizontalFacing()), NOTIFY_ALL);
-        world.setBlockState(pos.up(), this.getDefaultState().with(FACING, placer.getHorizontalFacing()), NOTIFY_ALL);
+        world.setBlockState(pos, this.freezer.get().getDefaultState().with(FACING, placer.getHorizontalFacing()), 3);
+        world.setBlockState(pos.up(), this.getDefaultState().with(FACING, placer.getHorizontalFacing()), 3);
         BlockEntity blockEntity;
         if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos.up())) instanceof FridgeBlockEntity) {
             ((FridgeBlockEntity)blockEntity).setCustomName(itemStack.getName());
@@ -104,7 +104,7 @@ public class IronFridge extends Fridge{
         BlockState blockState = world.getBlockState(blockPos = pos.down());
         if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof Freezer) {
             BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, NOTIFY_ALL | SKIP_DROPS);
+            world.setBlockState(blockPos, blockState2, 3 | 35);
         }
     }
 }

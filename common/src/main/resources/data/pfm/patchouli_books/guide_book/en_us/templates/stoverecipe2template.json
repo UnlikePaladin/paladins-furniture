@@ -1,7 +1,7 @@
 {
   "include": [
     {
-      "template": "pfm:stoverecipetemplate",
+      "template": "stoverecipetemplate",
       "as": "nn",
       "using": {
         "recipe": "#recipe",
@@ -10,7 +10,7 @@
       "y": 5
     },
     {
-      "template": "pfm:stoverecipetemplate",
+      "template": "stoverecipetemplate",
       "as": "uu",
       "using": {
         "recipe": "#recipe2",
@@ -19,7 +19,7 @@
       "y": 45
     },
     {
-      "template": "pfm:stoverecipetemplate",
+      "template": "stoverecipetemplate",
       "as": "uu",
       "using": {
         "recipe": "#recipe3",

@@ -8,7 +8,6 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -30,12 +29,11 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 public class GenericStorageBlockEntity3x3 extends LootableContainerBlockEntity {
-    public GenericStorageBlockEntity3x3(BlockPos pos, BlockState state) {
-        super(BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, pos, state);
+    public GenericStorageBlockEntity3x3() {
+        super(BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY);
     }
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
-    private final ViewerCountManager stateManager = new ViewerCountManager() {
-        @Override
+
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand){
                 GenericStorageBlockEntity3x3.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
@@ -43,28 +41,12 @@ public class GenericStorageBlockEntity3x3 extends LootableContainerBlockEntity {
             }
         }
 
-        @Override
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand) {
                 GenericStorageBlockEntity3x3.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
                 GenericStorageBlockEntity3x3.this.setOpen(state, false);
             }
         }
-
-        @Override
-        protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
-
-        }
-
-        @Override
-        protected boolean isPlayerViewing(PlayerEntity player) {
-            if (player.currentScreenHandler instanceof GenericContainerScreenHandler) {
-                Inventory inventory = ((GenericContainerScreenHandler)player.currentScreenHandler).getInventory();
-                return inventory == GenericStorageBlockEntity3x3.this;
-            }
-            return false;
-        }
-    };
 
     @Override
     public int size() {
@@ -84,21 +66,21 @@ public class GenericStorageBlockEntity3x3 extends LootableContainerBlockEntity {
     @Override
     public void onOpen(PlayerEntity player) {
         if (!this.removed && !player.isSpectator()) {
-            this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+            this.onContainerOpen( this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
 
     @Override
     public void onClose(PlayerEntity player) {
         if (!this.removed && !player.isSpectator()) {
-            this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+            this.onContainerClose(this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
 
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void fromTag(BlockState state, NbtCompound nbt) {
+        super.fromTag(state, nbt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         if (!this.deserializeLootTable(nbt)) {
             Inventories.readNbt(nbt, this.inventory);
@@ -122,7 +104,7 @@ public class GenericStorageBlockEntity3x3 extends LootableContainerBlockEntity {
     }
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), Block.NOTIFY_ALL);
+        this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), 3);
     }
 
     @Override

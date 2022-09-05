@@ -55,11 +55,6 @@ public class KitchenCounter extends HorizontalFacingBlock {
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
-    }
-
-    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(SHAPE);
@@ -120,7 +115,7 @@ public class KitchenCounter extends HorizontalFacingBlock {
     public boolean canConnect(BlockView world, BlockPos pos, Direction direction)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
-        return (isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock);
+        return (isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof CauldronBlock);
     }
 
     private boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
@@ -129,7 +124,7 @@ public class KitchenCounter extends HorizontalFacingBlock {
     }
 
     public boolean canConnectToCounter(BlockState state) {
-        return isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock;
+        return isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof CauldronBlock;
     }
 
     public boolean isCounter(BlockState state) {
@@ -224,50 +219,65 @@ public class KitchenCounter extends HorizontalFacingBlock {
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         CounterShape shape = state.get(SHAPE);
-            return switch (shape) {
-                case STRAIGHT -> switch (dir) {
-                    case NORTH -> STRAIGHT;
-                    case SOUTH -> STRAIGHT_SOUTH;
-                    case EAST -> STRAIGHT_EAST;
-                    default -> STRAIGHT_WEST;
-                };
-                case INNER_LEFT -> switch (dir) {
-                    case NORTH -> INNER_CORNER_WEST;
-                    case SOUTH -> INNER_CORNER_EAST;
-                    case EAST -> INNER_CORNER;
-                    default -> INNER_CORNER_SOUTH;
-                };
-                case INNER_RIGHT -> switch (dir) {
-                    case NORTH -> INNER_CORNER;
-                    case SOUTH -> INNER_CORNER_SOUTH;
-                    case EAST -> INNER_CORNER_EAST;
-                    default -> INNER_CORNER_WEST;
-                };
-                case OUTER_LEFT -> switch (dir) {
-                    case NORTH -> OUTER_CORNER;
-                    case SOUTH -> OUTER_CORNER_SOUTH;
-                    case EAST -> OUTER_CORNER_EAST;
-                    default -> OUTER_CORNER_WEST;
-                };
-                case OUTER_RIGHT -> switch (dir) {
-                    case NORTH -> OUTER_CORNER_EAST;
-                    case SOUTH -> OUTER_CORNER_WEST;
-                    case EAST -> OUTER_CORNER_SOUTH;
-                    default -> OUTER_CORNER;
-                };
-                case LEFT_EDGE -> switch (dir) {
-                    case NORTH -> LEFT_EDGE;
-                    case SOUTH -> LEFT_EDGE_SOUTH;
-                    case EAST -> LEFT_EDGE_EAST;
-                    default -> LEFT_EDGE_WEST;
-                };
-                case RIGHT_EDGE -> switch (dir) {
-                    case NORTH -> RIGHT_EDGE;
-                    case SOUTH -> RIGHT_EDGE_SOUTH;
-                    case EAST -> RIGHT_EDGE_EAST;
-                    default -> RIGHT_EDGE_WEST;
-                };
-            };
+            switch (shape) {
+                case STRAIGHT: {
+                    switch (dir) {
+                    case NORTH: return STRAIGHT;
+                    case SOUTH: return STRAIGHT_SOUTH;
+                    case EAST: return STRAIGHT_EAST;
+                    default: return STRAIGHT_WEST;
+                    }
+                }
+                case INNER_LEFT: {
+                    switch (dir) {
+                        case NORTH: return INNER_CORNER_WEST;
+                        case SOUTH: return INNER_CORNER_EAST;
+                        case EAST: return INNER_CORNER;
+                        default: return INNER_CORNER_SOUTH;
+                    }
+                }
+                case INNER_RIGHT: {
+                    switch (dir) {
+                        case NORTH: return INNER_CORNER;
+                        case SOUTH: return INNER_CORNER_SOUTH;
+                        case EAST: return INNER_CORNER_EAST;
+                        default: return INNER_CORNER_WEST;
+                    }
+                }
+                case OUTER_LEFT: {
+                    switch (dir) {
+                        case NORTH: return OUTER_CORNER;
+                        case SOUTH: return OUTER_CORNER_SOUTH;
+                        case EAST: return OUTER_CORNER_EAST;
+                        default: return OUTER_CORNER_WEST;
+                    }
+                }
+                case OUTER_RIGHT: {
+                    switch (dir) {
+                        case NORTH: return OUTER_CORNER_EAST;
+                        case SOUTH: return OUTER_CORNER_WEST;
+                        case EAST: return OUTER_CORNER_SOUTH;
+                        default: return OUTER_CORNER;
+                    }
+                }
+                case LEFT_EDGE: {
+                    switch (dir) {
+                        case NORTH: return LEFT_EDGE;
+                        case SOUTH: return LEFT_EDGE_SOUTH;
+                        case EAST: return LEFT_EDGE_EAST;
+                        default: return LEFT_EDGE_WEST;
+                    }
+                }
+                case RIGHT_EDGE: {
+                    switch (dir) {
+                        case NORTH: return  RIGHT_EDGE;
+                        case SOUTH: return RIGHT_EDGE_SOUTH;
+                        case EAST: return RIGHT_EDGE_EAST;
+                        default: return RIGHT_EDGE_WEST;
+                    }
+                }
+            }
+            return STRAIGHT;
         }
 }
 

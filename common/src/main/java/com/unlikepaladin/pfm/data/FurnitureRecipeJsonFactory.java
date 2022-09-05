@@ -11,8 +11,8 @@ import net.minecraft.advancement.AdvancementRewards;
 import net.minecraft.advancement.CriterionMerger;
 import net.minecraft.advancement.criterion.CriterionConditions;
 import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
-import net.minecraft.data.server.recipe.CraftingRecipeJsonFactory;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class FurnitureRecipeJsonFactory implements CraftingRecipeJsonFactory {
+public class FurnitureRecipeJsonFactory {
     private final Item output;
     private final int outputCount;
     private final List<String> pattern = Lists.newArrayList();
@@ -82,24 +82,20 @@ public class FurnitureRecipeJsonFactory implements CraftingRecipeJsonFactory {
         return this;
     }
 
-    @Override
     public FurnitureRecipeJsonFactory criterion(String string, CriterionConditions criterionConditions) {
         this.builder.criterion(string, criterionConditions);
         return this;
     }
 
-    @Override
     public FurnitureRecipeJsonFactory group(@Nullable String string) {
         this.group = string;
         return this;
     }
 
-    @Override
     public Item getOutputItem() {
         return this.output;
     }
 
-    @Override
     public void offerTo(Consumer<RecipeJsonProvider> exporter, Identifier recipeId) {
         this.validate(recipeId);
         this.builder.parent(new Identifier("recipes/root")).criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).criteriaMerger(CriterionMerger.OR);

@@ -8,13 +8,10 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -31,6 +28,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.Tickable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -40,6 +38,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -87,7 +86,7 @@ public class Stove extends SmokerBlock {
             Optional<CampfireCookingRecipe> optional;
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof StoveBlockEntity && (optional = (stoveBlockEntity = (StoveBlockEntity)blockEntity).getRecipeFor(itemStack = player.getStackInHand(hand))).isPresent()) {
-                if (stoveBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+                if (stoveBlockEntity.addItem(player.isCreative() ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
                     player.incrementStat(Statistics.STOVE_OPENED);
                     return ActionResult.SUCCESS;
                 }
@@ -97,7 +96,7 @@ public class Stove extends SmokerBlock {
                 for (int i = 0; i < stoveBlockEntity.getItemsBeingCooked().size(); i++) {
                     ItemStack stack = stoveBlockEntity.getItemsBeingCooked().get(i);
                     if (stack.isEmpty()) continue;
-                    if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) {
+                    if(!world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isPresent()) {
                         ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stoveBlockEntity.removeStack(i));
                         world.spawnEntity(itemEntity);
                         player.incrementStat(Statistics.STOVE_OPENED);
@@ -132,13 +131,18 @@ public class Stove extends SmokerBlock {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        return switch (dir) {
-            case WEST -> STOVE_EAST;
-            case NORTH -> STOVE_NORTH;
-            case SOUTH -> STOVE;
-            default -> STOVE_WEST;
-        };
+        switch (dir) {
+            case WEST:
+                return STOVE_EAST;
+            case NORTH:
+                return STOVE_NORTH;
+            case SOUTH:
+                return STOVE;
+            default:
+                return STOVE_WEST;
+        }
     }
+
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
         if (!state.get(LIT)) {
@@ -154,32 +158,22 @@ public class Stove extends SmokerBlock {
         int max = 3;
         int griddleChosen = (int)Math.floor(Math.random()*(max-min+1)+min);
         switch (griddleChosen) {
-            case 0 -> world.addParticle(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
-            case 1 -> world.addParticle(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
-            case 2 -> world.addParticle(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
-            case 3 -> world.addParticle(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
+            case 0: world.addParticle(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
+            case 1: world.addParticle(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
+            case 2: world.addParticle(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
+            case 3: world.addParticle(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
         }
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return getBlockEntity(pos, state);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return getBlockEntity();
     }
 
     @ExpectPlatform
-    public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
+    public static BlockEntity getBlockEntity() {
         return null;
     }
-
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (world.isClient) {
-                return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::clientTick);
-        } else {
-                return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::litServerTick);
-        }
-    }
-
 
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
@@ -191,7 +185,7 @@ public class Stove extends SmokerBlock {
         {
             if (world instanceof ServerWorld) {
                 ItemScatterer.spawn(world, pos, (StoveBlockEntity)blockEntity);
-                ((StoveBlockEntity)blockEntity).getRecipesUsedAndDropExperience((ServerWorld) world, Vec3d.ofCenter(pos));
+                ((StoveBlockEntity)blockEntity).method_27354(world, Vec3d.ofCenter(pos));
                 ItemScatterer.spawn(world, pos, ((StoveBlockEntity)blockEntity).getItemsBeingCooked());
             }
             world.updateComparators(pos, this);

@@ -47,13 +47,11 @@ import static com.unlikepaladin.pfm.blocks.SimpleStool.rotateShape;
 public class BasicBathtub extends BedBlock {
     public static final IntProperty LEVEL_8 = IntProperty.of("level", 0, 8);
     private final Map<Item, BathtubBehavior> behaviorMap;
-    private final Predicate<Biome.Precipitation> precipitationPredicate;
 
-    public BasicBathtub(Settings settings, Map<Item, BathtubBehavior> map, Predicate<Biome.Precipitation> precipitationPredicate) {
+    public BasicBathtub(Settings settings, Map<Item, BathtubBehavior> map) {
         super(DyeColor.WHITE, settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_8, 0).with(PART, BedPart.FOOT).with(OCCUPIED, false));
         this.behaviorMap = map;
-        this.precipitationPredicate = precipitationPredicate;
         this.height = 0.05f;
     }
 
@@ -130,11 +128,18 @@ public class BasicBathtub extends BedBlock {
     }
 
     @Override
-    public void precipitationTick(BlockState state, World world, BlockPos pos, Biome.Precipitation precipitation) {
-        if (!canFillWithPrecipitation(world, precipitation) || state.get(LEVEL_8) == 8 || !this.precipitationPredicate.test(precipitation)) {
+    public void rainTick(World world, BlockPos pos) {
+        if (world.random.nextInt(20) != 1) {
             return;
         }
-        world.setBlockState(pos, state.cycle(LEVEL_8));
+        float f = world.getBiome(pos).getTemperature(pos);
+        if (f < 0.15f) {
+            return;
+        }
+        BlockState blockState = world.getBlockState(pos);
+        if (blockState.get(LEVEL_8) < 8) {
+            world.setBlockState(pos, blockState.cycle(LEVEL_8), 2);
+        }
     }
 
     public static void decrementFluidLevel(BlockState state, World world, BlockPos pos) {

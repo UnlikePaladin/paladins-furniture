@@ -23,10 +23,9 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
-    public CounterOvenBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, pos, state, RecipeType.SMOKING);
+    public CounterOvenBlockEntity() {
+        super(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, RecipeType.SMOKING);
     }
-     String blockname = this.getCachedState().getBlock().getTranslationKey();
     @Override
     protected Text getContainerName() {
         return new TranslatableText("container.pfm.kitchen_counter_oven");

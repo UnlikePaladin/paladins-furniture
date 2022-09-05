@@ -10,8 +10,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class MicrowaveImpl {
-    public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
-        return new MicrowaveBlockEntityImpl(pos, state);
+    public static BlockEntity getBlockEntity() {
+        return new MicrowaveBlockEntityImpl();
     }
 
     public static void openScreen(PlayerEntity player, BlockState state, World world, BlockPos pos) {

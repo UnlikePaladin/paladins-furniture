@@ -97,61 +97,93 @@ public class ArmChairColored extends ArmChair implements DyeableFurniture {
         ArmChairShape shape = state.get(SHAPE);
         switch(shape) {
             case STRAIGHT:
-                return switch (dir) {
-                    case NORTH -> STANDARD_NORTH;
-                    case SOUTH -> STANDARD_SOUTH;
-                    case EAST -> STANDARD_EAST;
-                    default -> STANDARD;
-                };
+                switch (dir) {
+                    case NORTH:
+                        return STANDARD_NORTH;
+                    case SOUTH:
+                        return STANDARD_SOUTH;
+                    case EAST:
+                        return STANDARD_EAST;
+                    default:
+                        return STANDARD;
+                }
             case MIDDLE:
-                return switch (dir) {
-                    case NORTH -> MIDDLE;
-                    case SOUTH -> MIDDLE_EAST;
-                    case EAST -> MIDDLE_WEST;
-                    default -> MIDDLE_SOUTH;
-                };
+                switch (dir) {
+                    case NORTH:
+                        return MIDDLE;
+                    case SOUTH:
+                        return MIDDLE_EAST;
+                    case EAST:
+                        return MIDDLE_WEST;
+                    default:
+                        return MIDDLE_SOUTH;
+                }
             case OUTER_LEFT:
-                return switch (dir) {
-                    case NORTH -> OUTER_WEST;
-                    case SOUTH -> OUTER_SOUTH;
-                    case EAST -> OUTER_EAST;
-                    default -> OUTER;
-                };
+                switch (dir) {
+                    case NORTH:
+                        return OUTER_WEST;
+                    case SOUTH:
+                        return OUTER_SOUTH;
+                    case EAST:
+                        return OUTER_EAST;
+                    default:
+                        return OUTER;
+                }
             case OUTER_RIGHT:
-                return switch (dir) {
-                    case NORTH -> OUTER_EAST;
-                    case SOUTH -> OUTER;
-                    case EAST -> OUTER_SOUTH;
-                    default -> OUTER_WEST;
-                };
+                switch (dir) {
+                    case NORTH:
+                        return OUTER_EAST;
+                    case SOUTH:
+                        return OUTER;
+                    case EAST:
+                        return OUTER_SOUTH;
+                    default:
+                        return OUTER_WEST;
+                }
             case LEFT_EDGE:
-                return switch (dir) {
-                    case NORTH -> LEFT_EDGE;
-                    case SOUTH -> LEFT_EDGE_EAST;
-                    case EAST -> LEFT_EDGE_NORTH;
-                    default -> LEFT_EDGE_SOUTH;
-                };
+                switch (dir) {
+                    case NORTH:
+                        return LEFT_EDGE;
+                    case SOUTH:
+                        return LEFT_EDGE_EAST;
+                    case EAST:
+                        return LEFT_EDGE_NORTH;
+                    default:
+                        return LEFT_EDGE_SOUTH;
+                }
             case RIGHT_EDGE:
-                return switch (dir) {
-                    case NORTH -> RIGHT_EDGE;
-                    case SOUTH -> RIGHT_EDGE_EAST;
-                    case EAST -> RIGHT_EDGE_NORTH;
-                    default -> RIGHT_EDGE_SOUTH;
-                };
+                switch (dir) {
+                    case NORTH:
+                        return RIGHT_EDGE;
+                    case SOUTH:
+                        return RIGHT_EDGE_EAST;
+                    case EAST:
+                        return RIGHT_EDGE_NORTH;
+                    default:
+                        return RIGHT_EDGE_SOUTH;
+                }
             case INNER_RIGHT:
-                return switch (dir) {
-                    case NORTH -> INNER_NORTH;
-                    case SOUTH -> INNER_SOUTH;
-                    case EAST -> INNER_EAST;
-                    default -> INNER;
-                };
+                switch (dir) {
+                    case NORTH:
+                        return INNER_NORTH;
+                    case SOUTH:
+                        return INNER_SOUTH;
+                    case EAST:
+                        return INNER_EAST;
+                    default:
+                        return INNER;
+                }
             case INNER_LEFT:
-                return switch (dir) {
-                    case NORTH -> INNER;
-                    case SOUTH -> INNER_EAST;
-                    case EAST -> INNER_NORTH;
-                    default -> INNER_SOUTH;
-                };
+                switch (dir) {
+                    case NORTH:
+                        return INNER;
+                    case SOUTH:
+                        return INNER_EAST;
+                    case EAST:
+                        return INNER_NORTH;
+                    default:
+                        return INNER_SOUTH;
+                }
             default:
                 return STANDARD;
         }

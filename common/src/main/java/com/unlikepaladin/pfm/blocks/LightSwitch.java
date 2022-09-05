@@ -29,7 +29,6 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
-import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -71,14 +70,13 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
         BlockState blockState = this.togglePower(state, world, pos, false, false);
         float f = blockState.get(POWERED) ? 0.9f : 0.8f;
         world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3f, f);
-        world.emitGameEvent(player, blockState.get(POWERED) ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
         return ActionResult.CONSUME;
     }
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasNbt()) {
-            NbtCompound nbtCompound = itemStack.getSubNbt("BlockEntityTag");
+        if (itemStack.hasTag()) {
+            NbtCompound nbtCompound = itemStack.getSubTag("BlockEntityTag");
             if (nbtCompound.contains("lights")) {
                 lightSwitchBlockEntity.writeNbt(nbtCompound);
             }
@@ -117,8 +115,8 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
             state = state.with(POWERED, toggleTo);
         }
         else {
-        state = state.cycle(POWERED);}
-        world.setBlockState(pos, state, Block.NOTIFY_ALL);
+            state = state.cycle(POWERED);}
+        world.setBlockState(pos, state, 3);
         this.updateNeighbors(state, world, pos);
         lightSwitchBlockEntity = (LightSwitchBlockEntity) world.getBlockEntity(pos);
         lightSwitchBlockEntity.setState(state.get(POWERED));
@@ -133,16 +131,16 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction facing = getDirection(state);
         switch (facing) {
-            case SOUTH -> {
+            case SOUTH: {
                 return lightSwitchSouth;
             }
-            case EAST -> {
+            case EAST: {
                 return lightSwitchEast;
             }
-            case WEST -> {
+            case WEST: {
                 return lightSwitchWest;
             }
-            default ->  {
+            default: {
                 return lightSwitch;
             }
         }
@@ -187,17 +185,13 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
         if (lightSwitchBlockEntity != null) {
             this.togglePower(state, world, pos, true, false);
         }
-        this.spawnBreakParticles(world, player, pos, state);
-        if (state.isIn(BlockTags.GUARDED_BY_PIGLINS)) {
-            PiglinBrain.onGuardedBlockInteracted(player, false);
-        }
-        world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+        super.onBreak(world, pos, state, player);
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return lightSwitchBlockEntity = new LightSwitchBlockEntity(pos, state);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return lightSwitchBlockEntity = new LightSwitchBlockEntity();
     }
 
 

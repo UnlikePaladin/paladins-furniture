@@ -6,8 +6,8 @@ import com.unlikepaladin.pfm.networking.forge.MicrowaveUpdatePacket;
 import com.unlikepaladin.pfm.networking.forge.ToiletUsePacket;
 import com.unlikepaladin.pfm.networking.forge.TrashcanClearPacket;
 import net.minecraft.util.Identifier;
-import net.minecraftforge.fmllegacy.network.NetworkRegistry;
-import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 
 public class NetworkRegistryForge {
 

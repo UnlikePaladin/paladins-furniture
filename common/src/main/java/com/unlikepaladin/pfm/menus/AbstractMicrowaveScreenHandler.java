@@ -194,12 +194,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     public RecipeBookCategory getCategory() {
         return this.category;
     }
-
-    @Override
-    public boolean canInsertIntoSlot(int index) {
-        return true;
-    }
-
+    
     @Override
     public void close(PlayerEntity player) {
         super.close(player);

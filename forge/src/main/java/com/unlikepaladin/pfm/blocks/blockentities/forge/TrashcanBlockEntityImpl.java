@@ -15,13 +15,14 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 
 public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
-    public TrashcanBlockEntityImpl(BlockEntityType<? extends TrashcanBlockEntity> trashcanBlockEntity, BlockPos pos, BlockState state) {
-        super(trashcanBlockEntity, pos, state);
+    public TrashcanBlockEntityImpl(BlockEntityType<? extends TrashcanBlockEntity> trashcanBlockEntity) {
+        super(trashcanBlockEntity);
     }
 
-    public TrashcanBlockEntityImpl(BlockPos pos, BlockState state) {
-        super(pos, state);
+    public TrashcanBlockEntityImpl() {
+        super();
     }
+
 
     @Nullable
     @Override
@@ -37,9 +38,8 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag) {
-        this.readNbt(tag);
-        super.handleUpdateTag(tag);
+    public void handleUpdateTag(BlockState state, NbtCompound tag) {
+        this.fromTag(state,tag);
     }
 
     @Override

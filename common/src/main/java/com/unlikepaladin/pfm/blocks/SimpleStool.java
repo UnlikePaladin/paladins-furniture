@@ -68,12 +68,20 @@ public class SimpleStool extends BasicChair {
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         if (state.get(TUCKED)) {
-            return switch (dir) {
-                case WEST -> FACE_WEST_TUCKED;
-                case NORTH -> FACE_NORTH_TUCKED;
-                case SOUTH -> FACE_SOUTH_TUCKED;
-                default -> FACE_EAST_TUCKED;
-            };
+            switch (dir) {
+                case WEST: {
+                    return FACE_WEST_TUCKED;
+                }
+                case NORTH: {
+                    return FACE_NORTH_TUCKED;
+                }
+                case SOUTH: {
+                    return FACE_SOUTH_TUCKED;
+                }
+                default: {
+                    return FACE_EAST_TUCKED;
+                }
+            }
         }
         return SIMPLE_STOOL;
     }

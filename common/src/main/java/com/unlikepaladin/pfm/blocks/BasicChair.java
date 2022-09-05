@@ -68,19 +68,27 @@ public class BasicChair extends AbstractSittableBlock {
         public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         if (state.get(TUCKED)) {
-            return switch (dir) {
-                case WEST -> FACE_WEST_TUCKED;
-                case NORTH -> FACE_NORTH_TUCKED;
-                case SOUTH -> FACE_SOUTH_TUCKED;
-                default -> FACE_EAST_TUCKED;
-            };
+            switch (dir) {
+                case WEST:{
+                    return FACE_WEST_TUCKED;}
+                case NORTH:
+                    return FACE_NORTH_TUCKED;
+                case SOUTH:
+                    return FACE_SOUTH_TUCKED;
+                default:
+                    return FACE_EAST_TUCKED;
+            }
         }
-        return switch (dir) {
-            case WEST -> FACE_WEST;
-            case NORTH -> FACE_NORTH;
-            case SOUTH -> FACE_SOUTH;
-            default -> FACE_EAST;
-        };
+        switch (dir) {
+            case WEST:
+                return FACE_WEST;
+            case NORTH:
+                return FACE_NORTH;
+            case SOUTH:
+                return FACE_SOUTH;
+            default:
+                return FACE_EAST;
+        }
     }
 
     /**
@@ -102,21 +110,19 @@ public class BasicChair extends AbstractSittableBlock {
     /** Method to tuck the Chair's Voxel Shapes */
     public static VoxelShape tuckShape(Direction from, VoxelShape shape) {
         VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
-
-        switch (from) {
-            case NORTH -> { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX, minY, minZ + 0.5, maxX, maxY, maxZ + 0.5)));
+            if (from == Direction.NORTH) { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX, minY, minZ + 0.5, maxX, maxY, maxZ + 0.5)));
                 buffer[0] = buffer[1];
                 buffer[1] = VoxelShapes.empty();}
-            case SOUTH -> { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX, minY, minZ - 0.5, maxX, maxY, maxZ - 0.5)));
+            else if (from == Direction.SOUTH) { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX, minY, minZ - 0.5, maxX, maxY, maxZ - 0.5)));
                 buffer[0] = buffer[1];
                 buffer[1] = VoxelShapes.empty();}
-            case WEST -> { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX + 0.5, minY, minZ, maxX + 0.5, maxY, maxZ)));
+            else if (from == Direction.WEST) { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX + 0.5, minY, minZ, maxX + 0.5, maxY, maxZ)));
+                buffer[0] = buffer[1];
+                buffer[1] = VoxelShapes.empty();
+                }
+            else { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX - 0.5, minY, minZ, maxX - 0.5, maxY, maxZ)));
                 buffer[0] = buffer[1];
                 buffer[1] = VoxelShapes.empty();}
-            default -> { buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(minX - 0.5, minY, minZ, maxX - 0.5, maxY, maxZ)));
-                buffer[0] = buffer[1];
-                buffer[1] = VoxelShapes.empty();}
-        }
         return buffer[0];
     }
     @Override

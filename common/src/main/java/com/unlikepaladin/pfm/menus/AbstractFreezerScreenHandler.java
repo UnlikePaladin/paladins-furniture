@@ -3,6 +3,8 @@ package com.unlikepaladin.pfm.menus;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import com.unlikepaladin.pfm.fabric.menus.slots.GenericOutputSlot;
 import com.unlikepaladin.pfm.menus.slots.FreezerFuelSlot;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -163,14 +165,29 @@ public abstract class AbstractFreezerScreenHandler extends AbstractRecipeScreenH
     }
 
     @Override
-    public boolean canInsertIntoSlot(int index) {
-        return index != 1;
+    public boolean canInsertIntoSlot(Slot slot) {
+        return slot.id != 1;
     }
 
     @Override
     public void close(PlayerEntity player) {
         super.close(player);
         this.inventory.onClose(player);
+    }
+
+    @Environment(value= EnvType.CLIENT)
+    public int getCookProgress() {
+        int i = this.propertyDelegate.get(2);
+        int j = this.propertyDelegate.get(3);
+        if (j == 0 || i == 0) {
+            return 0;
+        }
+        return i * 24 / j;
+    }
+
+    @Environment(value=EnvType.CLIENT)
+    public boolean isBurning() {
+        return this.propertyDelegate.get(0) > 0;
     }
 }
 

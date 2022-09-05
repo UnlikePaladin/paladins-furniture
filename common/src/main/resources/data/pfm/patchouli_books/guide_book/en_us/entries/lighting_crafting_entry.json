@@ -8,17 +8,17 @@
       "text": "There are several lighting fixtures, a simple light a pendant and a light switch."
     },
     {
-      "type": "pfm:furniturerecipe2template",
+      "type": "furniturerecipe2template",
       "recipe": "pfm:gray_modern_pendant",
       "recipe2": "pfm:white_modern_pendant"
     },
     {
-      "type": "pfm:furniturerecipe2template",
+      "type": "furniturerecipe2template",
       "recipe": "pfm:glass_modern_pendant",
       "recipe2": "pfm:simple_light"
     },
     {
-      "type": "pfm:furniturerecipetemplate",
+      "type": "furniturerecipetemplate",
       "recipe": "pfm:light_switch"
     }
   ]

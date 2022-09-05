@@ -78,7 +78,7 @@ public class Fridge extends HorizontalFacingBlockWEntity {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        world.setBlockState(pos.up(), this.freezer.get().getDefaultState().with(FACING, placer.getHorizontalFacing()), Block.NOTIFY_ALL);
+        world.setBlockState(pos.up(), this.freezer.get().getDefaultState().with(FACING, placer.getHorizontalFacing()), 3);
         BlockEntity blockEntity;
         if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof FridgeBlockEntity) {
             ((FridgeBlockEntity)blockEntity).setCustomName(itemStack.getName());
@@ -112,11 +112,6 @@ public class Fridge extends HorizontalFacingBlockWEntity {
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
-    }
-
-    @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
@@ -135,15 +130,15 @@ public class Fridge extends HorizontalFacingBlockWEntity {
         BlockState blockState = world.getBlockState(blockPos = pos.up());
         if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof Freezer) {
             BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
+            world.setBlockState(blockPos, blockState2, 3 | 35);
+            world.syncWorldEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));
         }
         blockPos = pos.down();
         blockState = world.getBlockState(blockPos);
         if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof Freezer) {
             BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
+            world.setBlockState(blockPos, blockState2, 3 | 35);
+            world.syncWorldEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));
         }
     }
 
@@ -152,7 +147,7 @@ public class Fridge extends HorizontalFacingBlockWEntity {
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
-        if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
+        if (blockPos.getY() < 255 - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
             return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
         }
         return null;
@@ -218,8 +213,8 @@ public class Fridge extends HorizontalFacingBlockWEntity {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new FridgeBlockEntity(pos, state);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new FridgeBlockEntity();
     }
 
     @Override

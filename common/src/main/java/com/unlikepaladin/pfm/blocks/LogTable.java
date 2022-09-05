@@ -123,11 +123,6 @@ public class LogTable extends HorizontalFacingBlock {
         return state.with(SHAPE, MiddleShape.SINGLE);
     }
 
-    @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
-    }
-
     /**
      * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/
      */
@@ -164,7 +159,7 @@ public class LogTable extends HorizontalFacingBlock {
         boolean dirWestOrEast = dir.equals(Direction.WEST) || dir.equals(Direction.EAST);
 
         switch (tableShape) {
-            case LEFT -> {
+            case LEFT: {
                 if (dirNorthOrSouth) {
                     return LOG_TABLE_ONE;}
                 else if (dirWestOrEast) {
@@ -173,7 +168,7 @@ public class LogTable extends HorizontalFacingBlock {
                     return LOG_TABLE;
                 }
             }
-            case RIGHT -> {
+            case RIGHT: {
                 if (dirNorthOrSouth) {
                 return LOG_TABLE_ONE_SOUTH;}
                 else if (dirWestOrEast) {
@@ -182,10 +177,10 @@ public class LogTable extends HorizontalFacingBlock {
                     return LOG_TABLE;
                 }
             }
-            case MIDDLE -> {
+            case MIDDLE: {
                 return LOG_TABLE_MIDDLE;
             }
-            default -> {
+            default: {
                 if (dirWestOrEast) {
                     return LOG_TABLE_EAST;}
                 else {

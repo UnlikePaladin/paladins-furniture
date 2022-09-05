@@ -35,8 +35,8 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> imple
     }
 
     @Override
-    public void handledScreenTick() {
-        super.handledScreenTick();
+    public void tick() {
+        super.tick();
     }
 
     @Override
@@ -49,9 +49,8 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> imple
 
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        this.client.getTextureManager().bindTexture(TEXTURE);
         int i = this.x;
         int j = (this.height - this.backgroundHeight) / 2;
         this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);

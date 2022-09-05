@@ -155,26 +155,26 @@ public class ModernDinnerTable extends Block {
         boolean dirWestOrEast = dir.equals(Direction.Axis.Z);
 
         switch (tableShape) {
-            case LEFT -> {
+            case LEFT: {
                 if (dirNorthOrSouth) {
                     return MODERN_DINNER_TABLE_ONE_SOUTH;}
                 else {
                     return MODERN_DINNER_TABLE_ONE_WEST;}
             }
-            case RIGHT -> {
+            case RIGHT: {
                 if (dirNorthOrSouth) {
                     return MODERN_DINNER_TABLE_ONE;}
                 else {
                     return MODERN_DINNER_TABLE_ONE_EAST;}
             }
-            case MIDDLE -> {
+            case MIDDLE: {
                 if (dirNorthOrSouth) {
                     return MODERN_DINNER_TABLE_MIDDLE;
                 } else {
                     return MODERN_DINNER_TABLE_MIDDLE_EAST;
                 }
             }
-            default -> {
+            default: {
                 if (dirWestOrEast) {
                     return MODERN_DINNER_TABLE_EAST;}
                 else {

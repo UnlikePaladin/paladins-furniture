@@ -7,12 +7,14 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
 public class InnerTrashcanImpl {
-    public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
-        return new TrashcanBlockEntityImpl(pos, state);
+    public static BlockEntity getBlockEntity() {
+        return new TrashcanBlockEntityImpl(BlockEntities.TRASHCAN_BLOCK_ENTITY);
     }
+
 
     public static void openScreen(PlayerEntity player, BlockState state, World world, BlockPos pos) {
         NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);

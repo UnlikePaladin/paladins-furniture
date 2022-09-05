@@ -20,6 +20,7 @@ import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Clearable;
 import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -31,60 +32,60 @@ import java.util.Optional;
 import java.util.Random;
 
 
-public class StovetopBlockEntity extends BlockEntity implements Clearable {
+public class StovetopBlockEntity extends BlockEntity implements Clearable, Tickable {
 
     protected final DefaultedList<ItemStack> itemsBeingCooked = DefaultedList.ofSize(4, ItemStack.EMPTY);
     private final int[] cookingTimes = new int[4];
     private final int[] cookingTotalTimes = new int[4];
-    public StovetopBlockEntity( BlockPos pos, BlockState state) {
-        super(BlockEntities.STOVE_TOP_BLOCK_ENTITY, pos, state);
+    public StovetopBlockEntity() {
+        super(BlockEntities.STOVE_TOP_BLOCK_ENTITY);
     }
-    public static void litServerTick(World world, BlockPos pos, BlockState state, StovetopBlockEntity stovetopBlockEntity) {
+    public void litServerTick() {
         boolean bl = false;
-        for (int i = 0; i < stovetopBlockEntity.itemsBeingCooked.size(); ++i) {
-            ItemStack itemStack = stovetopBlockEntity.itemsBeingCooked.get(i);
+        for (int i = 0; i < this.itemsBeingCooked.size(); ++i) {
+            ItemStack itemStack = this.itemsBeingCooked.get(i);
             if (itemStack.isEmpty()) continue;
             bl = true;
             int n = i;
-        if (stovetopBlockEntity.cookingTimes[n] < 600){
-            stovetopBlockEntity.cookingTimes[n] = stovetopBlockEntity.cookingTimes[n] + 2;
+        if (this.cookingTimes[n] < 600){
+            this.cookingTimes[n] = this.cookingTimes[n] + 2;
         }
-            if (stovetopBlockEntity.cookingTimes[i] < stovetopBlockEntity.cookingTotalTimes[i]) continue;
+            if (this.cookingTimes[i] < this.cookingTotalTimes[i]) continue;
             SimpleInventory inventory = new SimpleInventory(itemStack);
             ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.craft(inventory)).orElse(itemStack);
                 if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
                     ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), itemStack2);
-                    stovetopBlockEntity.itemsBeingCooked.set(i, ItemStack.EMPTY);
+                    this.itemsBeingCooked.set(i, ItemStack.EMPTY);
                 }
                 else {
-                    stovetopBlockEntity.itemsBeingCooked.set(i, itemStack2);
+                    this.itemsBeingCooked.set(i, itemStack2);
                 }
-            world.updateListeners(pos, state, state, Block.NOTIFY_ALL);
+            world.updateListeners(pos, getCachedState(), getCachedState(), 3);
         }
         if (bl) {
-            CampfireBlockEntity.markDirty(world, pos, state);
+            markDirty();
         }
     }
 
-    public static void unlitServerTick(World world, BlockPos pos, BlockState state, StovetopBlockEntity stovetopBlockEntity) {
+    public void unlitServerTick() {
         boolean bl = false;
-        for (int i = 0; i < stovetopBlockEntity.itemsBeingCooked.size(); ++i) {
-            if (stovetopBlockEntity.cookingTimes[i] <= 0) continue;
+        for (int i = 0; i < this.itemsBeingCooked.size(); ++i) {
+            if (this.cookingTimes[i] <= 0) continue;
             bl = true;
-            stovetopBlockEntity.cookingTimes[i] = MathHelper.clamp(stovetopBlockEntity.cookingTimes[i] - 2, 0, stovetopBlockEntity.cookingTotalTimes[i]);
+            this.cookingTimes[i] = MathHelper.clamp(this.cookingTimes[i] - 2, 0, this.cookingTotalTimes[i]);
         }
         if (bl) {
-            CampfireBlockEntity.markDirty(world, pos, state);
+            markDirty();
         }
     }
 
-    public static void clientTick(World world, BlockPos pos, BlockState state, StovetopBlockEntity stovetopBlockEntity) {
+    public void clientTick() {
         int i;
         Random random = world.random;
-        i = state.get(KitchenStovetop.FACING).rotateYClockwise().getHorizontal();
-        for (int j = 0; j < stovetopBlockEntity.itemsBeingCooked.size(); ++j) {
-            ItemStack stack = stovetopBlockEntity.itemsBeingCooked.get(j);
-            if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) continue;
+        i = getCachedState().get(KitchenStovetop.FACING).rotateYClockwise().getHorizontal();
+        for (int j = 0; j < this.itemsBeingCooked.size(); ++j) {
+            ItemStack stack = this.itemsBeingCooked.get(j);
+            if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || !world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isPresent()) continue;
             Direction direction = Direction.fromHorizontal(Math.floorMod(j + i, 4));
             float f = 0.2125f;
             double x = pos.getX() + 0.5 - ((direction.getOffsetX() * f) + (direction.rotateYClockwise().getOffsetX() * f));
@@ -110,9 +111,9 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void fromTag(BlockState state, NbtCompound nbt) {
         int[] is;
-        super.readNbt(nbt);
+        super.fromTag(state, nbt);
         this.itemsBeingCooked.clear();
         Inventories.readNbt(nbt, this.itemsBeingCooked);
         if (nbt.contains("CookingTimes", 11)) {
@@ -168,7 +169,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
 
     private void updateListeners() {
         this.markDirty();
-        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
+        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
     }
 
     @Override
@@ -177,5 +178,21 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         updateListeners();
     }
 
+    @Override
+    public void tick() {
+        BlockState state = getCachedState();
+        if (world.isClient) {
+            if (getCachedState().get(KitchenStovetop.LIT)) {
+                clientTick();
+            }
+        } else {
+            if (state.get(KitchenStovetop.LIT)) {
+                litServerTick();
+            }
+            else {
+                unlitServerTick();
+            }
+        }
+    }
 }
 

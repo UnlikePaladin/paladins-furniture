@@ -8,7 +8,7 @@
       "text": "To craft a plate lay out white concrete around an item frame. Optionally you can add cutlery to it, which is purely decorative."
     },
     {
-      "type": "pfm:furniturerecipe2template",
+      "type": "furniturerecipe2template",
       "recipe": "pfm:basic_plate",
       "recipe2": "pfm:basic_cutlery"
     }

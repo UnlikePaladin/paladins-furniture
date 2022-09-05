@@ -9,8 +9,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -38,20 +36,18 @@ public class PFMToaster extends ToasterBlock {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext ctx) {
         Direction dir = state.get(Properties.HORIZONTAL_FACING);
-        return switch (dir) {
-            case EAST, WEST -> IRON_TOASTER_WEST_EAST;
-            default -> IRON_TOASTER;
-        };
+        switch (dir) {
+            case EAST:
+            case WEST:
+                return IRON_TOASTER_WEST_EAST;
+            default:
+                return IRON_TOASTER;
+        }
     }
 
     @Nullable
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new PFMToasterBlockEntity(pos, state);
-    }
-
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PFMSandwichableRegistry.IRON_TOASTER_BLOCKENTITY, PFMToasterBlockEntity::tick);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new PFMToasterBlockEntity();
     }
 
 

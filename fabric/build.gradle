@@ -65,19 +65,11 @@ repositories {
 if (rootProject.sandwichable_compatibility == "true") {
     dependencies {
         modImplementation("maven.modrinth:sandwichable:${rootProject.sandwichable_version}")
-        modImplementation("dev.lambdaurora:spruceui:${rootProject.spruceui_version}")
     }
 }
 else {
     dependencies {
         modCompileOnly("maven.modrinth:sandwichable:${rootProject.sandwichable_version}")
-        modCompileOnly("dev.lambdaurora:spruceui:${rootProject.spruceui_version}")
-    }
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
     }
 }
 
@@ -98,13 +90,12 @@ else {
 
 if (rootProject.rei_compatibility == "true"){
     dependencies {
-        modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
-        modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
+        modImplementation "me.shedaniel:RoughlyEnoughItems:${rootProject.rei_version}"
     }
 }
 else {
     dependencies {
-        modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
+        modCompileOnly "me.shedaniel:RoughlyEnoughItems:${rootProject.rei_version}"
     }
 }
 
@@ -153,6 +144,7 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
+    duplicatesStrategy = 'include'
 }
 
 sourceSets {

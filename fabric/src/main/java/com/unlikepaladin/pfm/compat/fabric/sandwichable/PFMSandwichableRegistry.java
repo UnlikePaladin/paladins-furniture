@@ -15,7 +15,6 @@ import net.devtech.arrp.json.tags.JTag;
 import net.devtech.arrp.util.UnsafeByteArrayOutputStream;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
-import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
@@ -47,7 +46,7 @@ public class PFMSandwichableRegistry {
     public static void register() {
             RuntimeResourcePack pack = SANDWICHABLE_RESOURCE_PACK;
             registerFurniture("iron_toaster", IRON_TOASTER, true);
-            IRON_TOASTER_BLOCKENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("pfm","iron_toaster_ent"), FabricBlockEntityTypeBuilder.create(PFMToasterBlockEntity::new, new Block[]{IRON_TOASTER}).build(null));
+            IRON_TOASTER_BLOCKENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("pfm","iron_toaster_ent"), BlockEntityType.Builder.create(PFMToasterBlockEntity::new, new Block[]{IRON_TOASTER}).build(null));
 
             pack.addLootTable(id("pfm:blocks/iron_toaster"),
                 loot("minecraft:block")

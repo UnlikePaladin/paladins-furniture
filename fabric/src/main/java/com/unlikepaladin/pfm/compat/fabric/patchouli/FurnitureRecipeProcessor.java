@@ -29,7 +29,7 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
                     return IVariable.from(ItemStack.EMPTY);
                 }
                 Ingredient ingredient = recipe.getIngredients().get(index);
-                ItemStack[] stacks = ingredient.getMatchingStacks();
+                ItemStack[] stacks = ingredient.getMatchingStacksClient();
                 ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
                 return IVariable.from(stack);
             } else if (key.equals("resultitem")) {

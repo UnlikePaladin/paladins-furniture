@@ -8,27 +8,27 @@
       "text": "There are different kinds of tables, you'll need planks and logs depending on which type you're crafting. To get the different wood types just replace the oak with the wood type you want the table to be."
     },
     {
-      "type": "pfm:furniturerecipe2template",
+      "type": "furniturerecipe2template",
       "recipe": "pfm:oak_table_basic",
       "recipe2": "pfm:stripped_oak_table_basic"
     },
     {
-      "type": "pfm:furniturerecipe2template",
+      "type": "furniturerecipe2template",
       "recipe": "pfm:oak_table_classic",
       "recipe2": "pfm:stripped_oak_table_classic"
     },
     {
-      "type": "pfm:furniturerecipe2template",
+      "type": "furniturerecipe2template",
       "recipe": "pfm:oak_table_log",
       "recipe2": "pfm:stripped_oak_table_log"
     },
     {
-      "type": "pfm:furniturerecipe2template",
+      "type": "furniturerecipe2template",
       "recipe": "pfm:oak_raw_table_log",
       "recipe2": "pfm:stripped_oak_raw_table_log"
     },
     {
-      "type": "pfm:furniturerecipe2template",
+      "type": "furniturerecipe2template",
       "recipe": "pfm:oak_table_dinner",
       "recipe2": "pfm:stripped_oak_table_dinner"
     }

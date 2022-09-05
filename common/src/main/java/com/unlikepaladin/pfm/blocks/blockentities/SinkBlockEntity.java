@@ -11,13 +11,15 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 
-public class SinkBlockEntity extends BlockEntity {
-    public SinkBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntities.SINK_BLOCK_ENTITY, pos, state);
+public class SinkBlockEntity extends BlockEntity implements Tickable {
+    public SinkBlockEntity() {
+        super(BlockEntities.SINK_BLOCK_ENTITY);
     }
     private int sinkTimer = 0;
     private boolean isFilling = false;
@@ -35,10 +37,10 @@ public class SinkBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void fromTag(BlockState state, NbtCompound nbt) {
         sinkTimer = nbt.getInt("sinkTimer");
         isFilling = nbt.getBoolean("isFilling");
-        super.readNbt(nbt);
+        super.fromTag(state, nbt);
     }
 
     public void setSinkTimer(int sinkTimer) {
@@ -62,6 +64,21 @@ public class SinkBlockEntity extends BlockEntity {
                     KitchenSink.spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
                 }
                 blockEntity.sinkTimer++;
+            }
+        }
+    }
+
+    @Override
+    public void tick() {
+        if (this.isFilling) {
+            if (this.sinkTimer >= 30) {
+                this.setSinkTimer(0);
+                this.setFilling(false);
+            } else {
+                if (world.isClient) {
+                    KitchenSink.spawnParticles(this.getCachedState().get(Properties.HORIZONTAL_FACING), this.world, this.getPos());
+                }
+                this.sinkTimer++;
             }
         }
     }

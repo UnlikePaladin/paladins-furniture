@@ -13,18 +13,18 @@ import org.jetbrains.annotations.Nullable;
 
 public class StoveBlockEntityImpl extends StoveBlockEntity {
 
-    public StoveBlockEntityImpl(BlockPos pos, BlockState state) {
-        super(pos, state);
+    public StoveBlockEntityImpl() {
+        super();
     }
 
-    public StoveBlockEntityImpl(BlockEntityType<?> entity, BlockPos pos, BlockState state) {
-        super(entity, pos, state);
+    public StoveBlockEntityImpl(BlockEntityType<?> entity) {
+        super(entity);
     }
 
     @Nullable
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
+        return new BlockEntityUpdateS2CPacket(this.pos, 13, this.toInitialChunkDataNbt());
     }
 
     @Override
@@ -34,9 +34,8 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
         return nbt;
     }
 
-    @Override
     public void handleUpdateTag(NbtCompound tag) {
-        this.readNbt(tag);
+        this.fromTag(getCachedState(), tag);
     }
 
     @Override

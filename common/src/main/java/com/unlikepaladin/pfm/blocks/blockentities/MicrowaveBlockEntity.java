@@ -12,7 +12,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
-import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -33,6 +32,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -43,46 +43,26 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
 
-public class MicrowaveBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker{
+public class MicrowaveBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker, Tickable {
     public boolean isActive = false;
-
-    public MicrowaveBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntities.MICROWAVE_BLOCK_ENTITY, pos, state);
+    public MicrowaveBlockEntity() {
+        super(BlockEntities.MICROWAVE_BLOCK_ENTITY);
         this.recipeType = RecipeType.SMOKING;
         world = this.getWorld();
     }
 
     //Slot 0 = input, 2 = output, 1 = fuel
-    private final ViewerCountManager stateManager = new ViewerCountManager() {
-        @Override
-        protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Microwave) {
-                MicrowaveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, 0);
-                MicrowaveBlockEntity.this.setOpen(state, true);
-            }
-        }
 
-        @Override
-        protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Microwave) {
-                MicrowaveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, 0);
-                MicrowaveBlockEntity.this.setOpen(state, false);
-            }
-        }
+    private int viewerCount;
 
-        @Override
-        protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
+    @Override
+    public boolean onSyncedBlockEvent(int type, int data) {
+        if (type == 1) {
+            this.viewerCount = data;
+            return true;
         }
-
-        @Override
-        protected boolean isPlayerViewing(PlayerEntity player) {
-            if (player.currentScreenHandler instanceof MicrowaveScreenHandler) {
-                Inventory inventory = ((MicrowaveScreenHandler) player.currentScreenHandler).getInventory();
-                return inventory == MicrowaveBlockEntity.this;
-            }
-            return false;
-        }
-    };
+        return super.onSyncedBlockEvent(type, data);
+    }
 
     void playSound(BlockState state, SoundEvent soundEvent, int pitch) {
         Vec3i vec3i = state.get(Microwave.FACING).getVector();
@@ -143,14 +123,21 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     @Override
     public void onOpen(PlayerEntity player) {
         if (!this.removed && !player.isSpectator()) {
-            this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+            if (this.viewerCount < 0) {
+                this.viewerCount = 0;
+            }
+            ++this.viewerCount;
+            MicrowaveBlockEntity.this.playSound(getCachedState(), SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, 0);
+            MicrowaveBlockEntity.this.setOpen(getCachedState(), true);
         }
     }
 
     @Override
     public void onClose(PlayerEntity player) {
         if (!this.removed && !player.isSpectator()) {
-            this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+            --this.viewerCount;
+            MicrowaveBlockEntity.this.playSound(getCachedState(), SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, 0);
+            MicrowaveBlockEntity.this.setOpen(getCachedState(), false);
         }
     }
 
@@ -164,8 +151,8 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void fromTag(BlockState state, NbtCompound nbt) {
+        super.fromTag(state, nbt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.inventory);
         this.cookTime = nbt.getShort("CookTime");
@@ -249,7 +236,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     @Override
     public ItemStack removeStack(int slot, int amount) {
         ItemStack stack =  Inventories.splitStack(this.inventory, slot, amount);
-        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
         this.markDirty();
         return stack;
     }
@@ -257,7 +244,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     @Override
     public ItemStack removeStack(int slot) {
         ItemStack stack =  Inventories.removeStack(this.inventory, slot);
-        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
         this.markDirty();
         return stack;
     }
@@ -271,7 +258,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     @Override
     public void setStack(int slot, ItemStack stack) {
         ItemStack itemStack = this.inventory.get(slot);
-        boolean bl = !stack.isEmpty() && stack.isItemEqualIgnoreDamage(itemStack) && ItemStack.areNbtEqual(stack, itemStack);
+        boolean bl = !stack.isEmpty() && stack.isItemEqualIgnoreDamage(itemStack) && ItemStack.areTagsEqual(stack, itemStack);
         this.inventory.set(slot, stack);
         if (stack.getCount() > this.getMaxCountPerStack()) {
             stack.setCount(this.getMaxCountPerStack());
@@ -280,7 +267,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
             this.cookTimeTotal = MicrowaveBlockEntity.getCookTime(this.world, this.recipeType, this);
             this.cookTime = 0;
             this.markDirty();
-            world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+            world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
         }
     }
 
@@ -319,7 +306,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     @Override
     public void clear() {
         this.inventory.clear();
-        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
     }
 
     @Override
@@ -340,50 +327,50 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Microwave.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
-        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        this.world.setBlockState(this.getPos(), state.with(Microwave.OPEN, open), 3);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
     }
 
 
-    public static void tick(World world, BlockPos pos, BlockState state, MicrowaveBlockEntity blockEntity) {
-        boolean bl = blockEntity.isActive;
+    public void tick() {
+        boolean bl = this.isActive;
         boolean bl2 = false;
-        ItemStack itemStack = blockEntity.inventory.get(0);
-        if (blockEntity.isActive || !itemStack.isEmpty()) {
-            Recipe recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
-            int i = blockEntity.getMaxCountPerStack();
-            if (blockEntity.isActive && canAcceptRecipeOutput(recipe, blockEntity.inventory, i)) {
-                ++blockEntity.cookTime;
-                if (blockEntity.cookTime == blockEntity.cookTimeTotal) {
-                    blockEntity.cookTime = 0;
-                    blockEntity.cookTimeTotal = getCookTime(world, blockEntity.recipeType, blockEntity);
-                    if (craftRecipe(recipe, blockEntity.inventory, i)) {
-                        blockEntity.setLastRecipe(recipe);
-                        blockEntity.world.setBlockState(pos, state = state.with(Microwave.POWERED, false), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
-                        blockEntity.playSound(state, SoundIDs.MICROWAVE_BEEP_EVENT, 1);
-                        blockEntity.setActiveonClient(blockEntity, false);
-                        world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+        ItemStack itemStack = this.inventory.get(0);
+        if (this.isActive || !itemStack.isEmpty()) {
+            Recipe recipe = world.getRecipeManager().getFirstMatch(this.recipeType, this, world).orElse(null);
+            int i = this.getMaxCountPerStack();
+            if (this.isActive && canAcceptRecipeOutput(recipe, this.inventory, i)) {
+                ++this.cookTime;
+                if (this.cookTime == this.cookTimeTotal) {
+                    this.cookTime = 0;
+                    this.cookTimeTotal = getCookTime(world, this.recipeType, this);
+                    if (craftRecipe(recipe, this.inventory, i)) {
+                        this.setLastRecipe(recipe);
+                        this.world.setBlockState(pos, getCachedState().with(Microwave.POWERED, false), 3);
+                        this.playSound(getCachedState(), SoundIDs.MICROWAVE_BEEP_EVENT, 1);
+                        this.setActiveonClient(this, false);
+                        world.updateListeners(pos, getCachedState(), getCachedState(), 3);
                     }
                     bl2 = true;
                 }
                 else {
-                    blockEntity.playSound(state, SoundIDs.MICROWAVE_RUNNING_EVENT, 1);
+                    this.playSound(getCachedState(), SoundIDs.MICROWAVE_RUNNING_EVENT, 1);
                 }
             } else {
-                blockEntity.cookTime = 0;
+                this.cookTime = 0;
                 if(itemStack.isEmpty()) {
-                    blockEntity.setActiveonClient(blockEntity,false);
-                    world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+                    this.setActiveonClient(this,false);
+                    world.updateListeners(pos, getCachedState(), getCachedState(), 3);
                 }
             }
-        } else if (!blockEntity.isActive && blockEntity.cookTime > 0) {
-            blockEntity.cookTime = MathHelper.clamp(blockEntity.cookTime - 2, 0, blockEntity.cookTimeTotal);
+        } else if (!this.isActive && this.cookTime > 0) {
+            this.cookTime = MathHelper.clamp(this.cookTime - 2, 0, this.cookTimeTotal);
         }
-        if (bl != blockEntity.isActive) {
+        if (bl != this.isActive) {
             bl2 = true;
         }
         if (bl2) {
-            markDirty(world, pos, state);
+            markDirty();
         }
 
     }
@@ -398,7 +385,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         nbtCompound.putBoolean("isActive", active);
         this.writeNbt(nbtCompound);
         this.markDirty();
-        world.setBlockState(pos, this.getCachedState().with(Microwave.POWERED, true), Block.NOTIFY_LISTENERS);
+        world.setBlockState(pos, this.getCachedState().with(Microwave.POWERED, true), 3);
     }
 
     @ExpectPlatform

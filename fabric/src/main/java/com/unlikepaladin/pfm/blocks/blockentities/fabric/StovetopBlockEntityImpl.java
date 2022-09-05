@@ -7,13 +7,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 
 public class StovetopBlockEntityImpl extends StovetopBlockEntity implements BlockEntityClientSerializable {
-    public StovetopBlockEntityImpl(BlockPos pos, BlockState state) {
-        super(pos, state);
+    public StovetopBlockEntityImpl() {
+        super();
     }
 
     @Override
     public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
+        fromTag(this.getCachedState(), tag);
     }
 
     @Override

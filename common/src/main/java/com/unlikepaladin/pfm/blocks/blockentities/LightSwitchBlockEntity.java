@@ -5,19 +5,17 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtLong;
+import net.minecraft.nbt.*;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class LightSwitchBlockEntity extends BlockEntity {
     private final List<BlockPos> lights;
-    public LightSwitchBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntities.LIGHT_SWITCH_BLOCK_ENTITY, pos, state);
+    public LightSwitchBlockEntity() {
+        super(BlockEntities.LIGHT_SWITCH_BLOCK_ENTITY);
         lights = DefaultedList.of();
     }
 
@@ -26,25 +24,26 @@ public class LightSwitchBlockEntity extends BlockEntity {
         super.writeNbt(nbt);
         NbtList tagList = new NbtList();
         lights.forEach(blockPos -> tagList.add(NbtLong.of(blockPos.asLong())));
+        System.out.println("Lights in write:" + lights);
         nbt.put("lights", tagList);
         return nbt;
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        if(nbt.contains("lights", NbtElement.LIST_TYPE)){
-            lights.clear();
-            NbtList lightTagList = nbt.getList("lights", NbtElement.LONG_TYPE);
+    public void fromTag(BlockState state, NbtCompound nbt) {
+        super.fromTag(state, nbt);
+        if(nbt.contains("lights", 9)){
+            this.lights.clear();
+            NbtList lightTagList = nbt.getList("lights", 4);
             lightTagList.forEach(nbtElement -> addLight(((NbtLong)nbtElement).longValue()));
         }
     }
     public void addLight(long pos)
     {
         BlockPos lightPos = BlockPos.fromLong(pos);
-        if(!lights.contains(lightPos))
+        if(!this.lights.contains(lightPos))
         {
-            lights.add(lightPos);
+            this.lights.add(lightPos);
         }
     }
 

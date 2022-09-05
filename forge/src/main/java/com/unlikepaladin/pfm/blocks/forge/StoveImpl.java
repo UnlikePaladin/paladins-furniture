@@ -7,7 +7,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 
 public class StoveImpl {
-    public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
-        return new StoveBlockEntityImpl(BlockEntities.STOVE_BLOCK_ENTITY, pos, state);
+    public static BlockEntity getBlockEntity() {
+        return new StoveBlockEntityImpl(BlockEntities.STOVE_BLOCK_ENTITY);
     }
 }

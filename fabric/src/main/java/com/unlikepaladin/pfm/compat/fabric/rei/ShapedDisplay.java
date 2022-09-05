@@ -23,28 +23,65 @@ package com.unlikepaladin.pfm.compat.fabric.rei;
  */
 
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
-import me.shedaniel.rei.api.common.util.EntryIngredients;
+import me.shedaniel.rei.api.EntryStack;
+import me.shedaniel.rei.plugin.crafting.DefaultCraftingDisplay;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.ShapedRecipe;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
-public class ShapedDisplay extends FurnitureDisplay<FurnitureRecipe> {
+@Environment(EnvType.CLIENT)
+public class ShapedDisplay implements DefaultCraftingDisplay {
+
+    private FurnitureRecipe display;
+    private List<List<EntryStack>> input;
+    private List<EntryStack> output;
+
     public ShapedDisplay(FurnitureRecipe recipe) {
-        super(
-                EntryIngredients.ofIngredients(recipe.getIngredients()),
-                Collections.singletonList(EntryIngredients.of(recipe.getOutput())),
-                java.util.Optional.of(recipe)
-        );
+        this.display = recipe;
+        this.input = EntryStack.ofIngredients(recipe.getIngredients());
+        this.output = Collections.singletonList(EntryStack.create(recipe.getOutput()));
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
-    public int getWidth() {
-        return recipe.get().getWidth();
+    public @NotNull Optional<Identifier> getRecipeLocation() {
+        return Optional.ofNullable(display).map(FurnitureRecipe::getId);
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
+    @Override
+    public @NotNull List<List<EntryStack>> getInputEntries() {
+        return input;
+    }
+
+    @Override
+    public @NotNull List<List<EntryStack>> getResultingEntries() {
+        return Collections.singletonList(output);
+    }
+
+    @Override
+    public @NotNull List<List<EntryStack>> getRequiredEntries() {
+        return input;
+    }
+
     @Override
     public int getHeight() {
-        return recipe.get().getHeight();
+        return display.getHeight();
     }
+
+    @Override
+    public Optional<Recipe<?>> getOptionalRecipe() {
+        return Optional.ofNullable(display);
+    }
+
+    @Override
+    public int getWidth() {
+        return display.getWidth();
+    }
+
 }

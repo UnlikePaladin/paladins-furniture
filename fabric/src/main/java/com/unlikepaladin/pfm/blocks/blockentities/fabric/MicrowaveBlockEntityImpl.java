@@ -24,28 +24,30 @@ import java.util.Collection;
 import java.util.stream.Stream;
 
 public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity implements BlockEntityClientSerializable, ExtendedScreenHandlerFactory {
-    public MicrowaveBlockEntityImpl(BlockPos pos, BlockState state) {
-        super(pos, state);
+    public MicrowaveBlockEntityImpl() {
+        super();
     }
 
     public static void setActiveonClient(MicrowaveBlockEntity microwaveBlockEntity, boolean active) {
         microwaveBlockEntity.setActive(active);
-        Collection<ServerPlayerEntity> watchingPlayers = PlayerLookup.tracking(microwaveBlockEntity);
-        // Look at the other methods of `PlayerStream` to capture different groups of players.
-        // We'll get to this later
-        PacketByteBuf clientData = new PacketByteBuf(Unpooled.buffer());
-        clientData.writeBoolean(active);
-        clientData.writeBlockPos(microwaveBlockEntity.getPos());
-        // Then we'll send the packet to all the players
-        watchingPlayers.forEach(player -> {
-                    ServerPlayNetworking.send(player, NetworkIDs.MICROWAVE_UPDATE_PACKET_ID,clientData);
-                }
-        );
+        if (!microwaveBlockEntity.getWorld().isClient) {
+            Collection<ServerPlayerEntity> watchingPlayers = PlayerLookup.tracking(microwaveBlockEntity);
+            // Look at the other methods of `PlayerStream` to capture different groups of players.
+            // We'll get to this later
+            PacketByteBuf clientData = new PacketByteBuf(Unpooled.buffer());
+            clientData.writeBoolean(active);
+            clientData.writeBlockPos(microwaveBlockEntity.getPos());
+            // Then we'll send the packet to all the players
+            watchingPlayers.forEach(player -> {
+                        ServerPlayNetworking.send(player, NetworkIDs.MICROWAVE_UPDATE_PACKET_ID,clientData);
+                    }
+            );
+        }
     }
 
     @Override
     public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
+        fromTag(this.getCachedState(), tag);
     }
 
     @Override

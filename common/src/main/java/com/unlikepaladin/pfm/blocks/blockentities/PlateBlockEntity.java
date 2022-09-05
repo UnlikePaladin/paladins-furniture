@@ -17,13 +17,13 @@ import org.jetbrains.annotations.Nullable;
 
 public class PlateBlockEntity extends BlockEntity implements Clearable {
     protected final DefaultedList<ItemStack> itemInPlate = DefaultedList.ofSize(1, ItemStack.EMPTY);
-    public PlateBlockEntity(BlockPos blockPos, BlockState blockState) {
-        super(BlockEntities.PLATE_BLOCK_ENTITY, blockPos, blockState);
+    public PlateBlockEntity() {
+        super(BlockEntities.PLATE_BLOCK_ENTITY);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void fromTag(BlockState state, NbtCompound nbt) {
+        super.fromTag(state, nbt);
         this.itemInPlate.clear();
         Inventories.readNbt(nbt, this.itemInPlate);
     }
@@ -37,12 +37,12 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
     @Override
     public void clear() {
         this.itemInPlate.clear();
-        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), 3);
     }
 
     private void updateListeners() {
         this.markDirty();
-        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
     }
 
     public boolean addItem(ItemStack item) {

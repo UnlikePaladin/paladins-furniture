@@ -75,12 +75,6 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
         super.onStateReplaced(state, world, pos, newState, moved);
     }
 
-    @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
-    }
-
-
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
@@ -216,25 +210,25 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
         switch(shape) {
             case STRAIGHT:
                  switch(dir) {
-                    case NORTH -> {
+                     case NORTH: {
                         if (open) {
                            return STRAIGHT_OPEN;
                         }
                             return STRAIGHT;
                     }
-                     case SOUTH -> {
+                     case SOUTH: {
                          if (open) {
                              return STRAIGHT_OPEN_SOUTH;
                          }
                          return STRAIGHT_SOUTH;
                      }
-                     case EAST -> {
+                     case EAST: {
                          if (open) {
                              return STRAIGHT_OPEN_EAST;
                          }
                          return STRAIGHT_EAST;
                      }
-                     default -> {
+                     default: {
                          if (open) {
                              return STRAIGHT_OPEN_WEST;
                          }
@@ -244,40 +238,40 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
 
             case INNER_LEFT:
                 switch (dir) {
-                    case NORTH -> {return INNER_CORNER_WEST;}
-                    case SOUTH -> {return INNER_CORNER_EAST;}
-                    case EAST ->  {return INNER_CORNER;}
-                    default -> {return INNER_CORNER_SOUTH;}
+                    case NORTH: {return INNER_CORNER_WEST;}
+                    case SOUTH: {return INNER_CORNER_EAST;}
+                    case EAST: {return INNER_CORNER;}
+                    default: {return INNER_CORNER_SOUTH;}
                 }
 
             case INNER_RIGHT:
                 switch (dir) {
-                    case NORTH -> {return INNER_CORNER;}
-                    case SOUTH -> {return INNER_CORNER_SOUTH;}
-                    case EAST ->  {return INNER_CORNER_EAST;}
-                    default -> {return INNER_CORNER_WEST;}
+                    case NORTH: {return INNER_CORNER;}
+                    case SOUTH: {return INNER_CORNER_SOUTH;}
+                    case EAST: {return INNER_CORNER_EAST;}
+                    default: {return INNER_CORNER_WEST;}
                 }
             case OUTER_LEFT:
                 switch (dir) {
-                    case NORTH -> {
+                    case NORTH: {
                         if (open) {
                             return OUTER_CORNER_OPEN;
                         }
                         return OUTER_CORNER;
                     }
-                    case SOUTH -> {
+                    case SOUTH: {
                         if (open) {
                             return OUTER_CORNER_OPEN_SOUTH;
                         }
                         return OUTER_CORNER_SOUTH;
                     }
-                    case EAST -> {
+                    case EAST: {
                         if (open) {
                             return OUTER_CORNER_OPEN_EAST;
                         }
                         return OUTER_CORNER_EAST;
                     }
-                    default -> {
+                    default: {
                         if (open) {
                             return OUTER_CORNER_OPEN_WEST;
                         }
@@ -286,25 +280,25 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
                 }
             case OUTER_RIGHT:
                 switch (dir) {
-                    case NORTH -> {
+                    case NORTH: {
                         if (open) {
                             return OUTER_CORNER_OPEN_EAST;
                         }
                         return OUTER_CORNER_EAST;
                     }
-                    case SOUTH -> {
+                    case SOUTH: {
                         if (open) {
                             return OUTER_CORNER_OPEN_WEST;
                         }
                         return OUTER_CORNER_WEST;
                     }
-                    case EAST -> {
+                    case EAST: {
                         if (open) {
                             return OUTER_CORNER_OPEN_SOUTH;
                         }
                         return OUTER_CORNER_SOUTH;
                     }
-                    default -> {
+                    default: {
                         if (open) {
                             return OUTER_CORNER_OPEN;
                         }
@@ -313,25 +307,25 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
                 }
             case LEFT_EDGE:
                 switch (dir) {
-                    case NORTH -> {
+                    case NORTH: {
                         if (open) {
                             return LEFT_EDGE_OPEN;
                         }
                         return LEFT_EDGE;
                     }
-                    case SOUTH -> {
+                    case SOUTH: {
                         if (open) {
                             return LEFT_EDGE_OPEN_SOUTH;
                         }
                         return LEFT_EDGE_SOUTH;
                     }
-                    case EAST -> {
+                    case EAST:  {
                         if (open) {
                             return LEFT_EDGE_OPEN_EAST;
                         }
                         return LEFT_EDGE_EAST;
                     }
-                    default -> {
+                    default: {
                         if (open) {
                             return LEFT_EDGE_OPEN_WEST;
                         }
@@ -340,25 +334,25 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
                 }
             case RIGHT_EDGE:
                 switch (dir) {
-                    case NORTH -> {
+                    case NORTH: {
                         if (open) {
                             return RIGHT_EDGE_OPEN;
                         }
                         return RIGHT_EDGE;
                     }
-                    case SOUTH -> {
+                    case SOUTH: {
                         if (open) {
                             return RIGHT_EDGE_OPEN_SOUTH;
                         }
                         return RIGHT_EDGE_SOUTH;
                     }
-                    case EAST -> {
+                    case EAST: {
                         if (open) {
                             return RIGHT_EDGE_OPEN_EAST;
                         }
                         return RIGHT_EDGE_EAST;
                     }
-                    default -> {
+                    default: {
                         if (open) {
                             return RIGHT_EDGE_OPEN_WEST;
                         }
@@ -384,8 +378,8 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     }
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new GenericStorageBlockEntity9x3(pos,state);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new GenericStorageBlockEntity9x3();
     }
 
     @Override

@@ -1,7 +1,7 @@
 {
   "include": [
     {
-      "template": "pfm:freezingrecipetemplate",
+      "template": "freezingrecipetemplate",
       "as": "nn",
       "using": {
         "recipe": "#recipe"
@@ -9,7 +9,7 @@
       "y": 5
     },
     {
-      "template": "pfm:freezingrecipetemplate",
+      "template": "freezingrecipetemplate",
       "as": "uu",
       "using": {
         "recipe": "#recipe2"
@@ -17,7 +17,7 @@
       "y": 45
     },
     {
-      "template": "pfm:freezingrecipetemplate",
+      "template": "freezingrecipetemplate",
       "as": "uu",
       "using": {
         "recipe": "#recipe3"

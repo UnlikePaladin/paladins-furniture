@@ -5,7 +5,6 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -31,44 +30,25 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
             return 54;
         }
 
-    public FridgeBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntities.FRIDGE_BLOCK_ENTITY, pos, state);
+    public FridgeBlockEntity() {
+        super(BlockEntities.FRIDGE_BLOCK_ENTITY);
     }
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(54, ItemStack.EMPTY);
-    private final ViewerCountManager stateManager = new ViewerCountManager() {
 
-
-        @Override
-        protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Fridge) {
-                FridgeBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
-                FridgeBlockEntity.this.setOpen(state, true);
-            }
+    protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
+        if (state.getBlock() instanceof Fridge) {
+            FridgeBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
+            FridgeBlockEntity.this.setOpen(state, true);
         }
+    }
 
-        @Override
-        protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Fridge) {
-                FridgeBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
-                FridgeBlockEntity.this.setOpen(state, false);
-            }
+    protected void onContainerClose(World world, BlockPos pos, BlockState state) {
+        if (state.getBlock() instanceof Fridge) {
+            FridgeBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
+            FridgeBlockEntity.this.setOpen(state, false);
         }
+    }
 
-
-        @Override
-        protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
-
-        }
-
-        @Override
-        protected boolean isPlayerViewing(PlayerEntity player) {
-            if (player.currentScreenHandler instanceof GenericContainerScreenHandler) {
-                Inventory inventory = ((GenericContainerScreenHandler)player.currentScreenHandler).getInventory();
-                return inventory == FridgeBlockEntity.this;
-            }
-            return false;
-        }
-    };
 
     @Override
     protected DefaultedList<ItemStack> getInvStackList() {
@@ -83,20 +63,20 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
     @Override
         public void onOpen(PlayerEntity player) {
             if (!this.removed && !player.isSpectator()) {
-                this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+                this.onContainerOpen(this.getWorld(), this.getPos(), this.getCachedState());
             }
         }
 
     @Override
     public void onClose(PlayerEntity player) {
         if (!this.removed && !player.isSpectator()) {
-            this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+            this.onContainerClose(this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void fromTag(BlockState state, NbtCompound nbt) {
+        super.fromTag(state, nbt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         if (!this.deserializeLootTable(nbt)) {
             Inventories.readNbt(nbt, this.inventory);
@@ -111,15 +91,15 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
         }
         return nbt;
     }
-    String blockname = this.getCachedState().getBlock().getTranslationKey();
 
     protected Text getContainerName() {
+        String blockname = this.getCachedState().getBlock().getTranslationKey();
         blockname = blockname.replace("block.pfm", "");
         return new TranslatableText("container.pfm" + blockname);
     }
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Fridge.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+        this.world.setBlockState(this.getPos(), state.with(Fridge.OPEN, open), 2);
     }
 
     @Override

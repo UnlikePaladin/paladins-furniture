@@ -8,13 +8,13 @@
       "text": "The freezer can currently be used to make ice from water, obsidian from lava, blue ice from powdered snow and leather from rotten flesh."
     },
     {
-      "type": "pfm:freezingrecipe2template",
+      "type": "freezingrecipe2template",
       "recipe": "pfm:rottenflesh_to_leather",
       "recipe2": "pfm:obsidian_recipe",
       "recipe3": "pfm:ice_recipe"
     },
     {
-      "type": "pfm:freezingrecipetemplate",
+      "type": "freezingrecipetemplate",
       "recipe": "pfm:packed_ice_recipe"
     },
     {

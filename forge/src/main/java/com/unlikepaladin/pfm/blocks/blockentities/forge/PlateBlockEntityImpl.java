@@ -13,15 +13,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PlateBlockEntityImpl extends PlateBlockEntity {
-    public PlateBlockEntityImpl(BlockPos blockPos, BlockState blockState) {
-        super(blockPos, blockState);
+    public PlateBlockEntityImpl() {
+        super();
     }
 
 
     @Nullable
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
+        return new BlockEntityUpdateS2CPacket(this.pos, 13, this.toInitialChunkDataNbt());
     }
 
     @Override
@@ -32,8 +32,8 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag) {
-        this.readNbt(tag);
+    public void handleUpdateTag(BlockState state, NbtCompound tag) {
+        fromTag(state, tag);
     }
 
     @Override

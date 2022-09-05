@@ -6,8 +6,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -17,9 +17,10 @@ import net.minecraft.util.math.Vec3f;
 
 @Environment(value= EnvType.CLIENT)
 public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
-        implements BlockEntityRenderer<T> {
+        extends BlockEntityRenderer<T> {
     private static final float SCALE = 0.375f;
-    public StovetopBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+    public StovetopBlockEntityRenderer(BlockEntityRenderDispatcher ctx) {
+        super(ctx);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
             matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90.0f));
             matrices.translate(-0.1625, -0.1625, 0.0);
             matrices.scale(0.355f, 0.355f, 0.355f);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, i, j, matrices, vertexConsumerProvider, k + l);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, i, j, matrices, vertexConsumerProvider);
             matrices.pop();
         }
     }

@@ -65,19 +65,19 @@ public class KitchenWallDrawerSmall extends KitchenWallDrawer{
         boolean open = state.get(OPEN);
         Direction direction = state.get(FACING);
         if (open) {
-            return switch (direction) {
-                case NORTH -> SMALL_DRAWER_OPEN;
-                case SOUTH -> SMALL_DRAWER_OPEN_SOUTH;
-                case WEST -> SMALL_DRAWER_OPEN_WEST;
-                default -> SMALL_DRAWER_OPEN_EAST;
-            };
+            switch (direction) {
+                case NORTH: return SMALL_DRAWER_OPEN;
+                case SOUTH: return SMALL_DRAWER_OPEN_SOUTH;
+                case WEST: return SMALL_DRAWER_OPEN_WEST;
+                default: return SMALL_DRAWER_OPEN_EAST;
+            }
         }
-        return switch (direction) {
-            case NORTH -> SMALL_DRAWER;
-            case SOUTH -> SMALL_DRAWER_SOUTH;
-            case WEST -> SMALL_DRAWER_WEST;
-            default -> SMALL_DRAWER_EAST;
-        };
+            switch (direction) {
+                case NORTH: return SMALL_DRAWER;
+                case SOUTH: return SMALL_DRAWER_SOUTH;
+                case WEST: return SMALL_DRAWER_WEST;
+                default: return SMALL_DRAWER_EAST;
+        }
     }
 
     @Override
@@ -97,8 +97,8 @@ public class KitchenWallDrawerSmall extends KitchenWallDrawer{
     }
 
     @Override
-    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new GenericStorageBlockEntity3x3(pos, state);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new GenericStorageBlockEntity3x3();
     }
 
     @Override

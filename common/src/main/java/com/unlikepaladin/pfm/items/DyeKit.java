@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.items;
 
 import com.unlikepaladin.pfm.blocks.DyeableFurniture;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.SheepEntity;
@@ -10,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
@@ -39,10 +41,10 @@ public class DyeKit extends Item {
         if (playerEntity.isSneaking()) {
             if(blockState.getBlock() instanceof DyeableFurniture) {
                 if (stack.getItem() instanceof DyeKit) {
-                    world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                    world.playSound(null, blockPos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     String newBlock= blockState.getBlock().toString();
                     newBlock = newBlock.replace(((DyeableFurniture) blockState.getBlock()).getColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
-                    BlockState blockState1 = Registry.BLOCK.get(new Identifier(newBlock)).getStateWithProperties(blockState);
+                    BlockState blockState1 = getStateWithProperties(Registry.BLOCK.get(new Identifier(newBlock)), blockState);
                     world.setBlockState(blockPos, blockState1, 3);
                     stack.decrement(1);
                     return ActionResult.CONSUME;
@@ -52,12 +54,24 @@ public class DyeKit extends Item {
         return ActionResult.PASS;
     }
 
+    private static <T extends Comparable<T>> BlockState copyProperty(BlockState source, BlockState target, Property<T> property) {
+        return (BlockState)target.with(property, source.get(property));
+    }
+    protected static BlockState getStateWithProperties(Block block, BlockState state) {
+        BlockState blockState = block.getDefaultState();
+        for (Property<?> property : state.getBlock().getStateManager().getProperties()) {
+            if (!blockState.contains(property)) continue;
+            blockState = copyProperty(state, blockState, property);
+        }
+        return blockState;
+    }
+
 
     public ActionResult useOnEntity(ItemStack stack, PlayerEntity user, LivingEntity entity, Hand hand) {
         if (entity instanceof SheepEntity) {
             SheepEntity sheepEntity = (SheepEntity)entity;
             if (sheepEntity.isAlive() && !sheepEntity.isSheared() && sheepEntity.getColor() != ((DyeKit) stack.getItem()).getColor()) {
-                sheepEntity.world.playSoundFromEntity(user, sheepEntity, SoundEvents.ITEM_DYE_USE, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                sheepEntity.world.playSoundFromEntity(user, sheepEntity, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.PLAYERS, 1.0F, 1.0F);
                 if (!user.world.isClient) {
                     sheepEntity.setColor(this.color);
                     stack.decrement(1);

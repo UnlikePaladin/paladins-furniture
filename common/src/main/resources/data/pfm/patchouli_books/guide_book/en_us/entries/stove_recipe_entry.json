@@ -8,21 +8,21 @@
       "text": "The stove can be used like a smoker and a campfire which means any smoker or campfire recipes will work."
     },
     {
-      "type": "pfm:stoverecipe2template",
+      "type": "stoverecipe2template",
       "recipe": "minecraft:baked_potato_from_smoking",
       "recipe2": "minecraft:cooked_beef_from_smoking",
       "recipe3": "minecraft:cooked_chicken_from_smoking",
       "customicon": "pfm:white_stove"
     },
     {
-      "type": "pfm:stoverecipe2template",
+      "type": "stoverecipe2template",
       "recipe": "minecraft:cooked_cod_from_smoking",
       "recipe2": "minecraft:cooked_salmon_from_smoking",
       "recipe3": "minecraft:cooked_mutton_from_smoking",
       "customicon": "pfm:white_stove"
     },
     {
-      "type": "pfm:stoverecipe2template",
+      "type": "stoverecipe2template",
       "recipe": "minecraft:cooked_rabbit_from_smoking",
       "recipe2": "minecraft:dried_kelp_from_smoking",
       "recipe3": "",

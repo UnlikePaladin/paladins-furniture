@@ -6,7 +6,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.util.math.BlockPos;
 
 public class KitchenStovetopImpl {
-    public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
-        return new StovetopBlockEntityImpl(pos, state);
+    public static BlockEntity getBlockEntity() {
+        return new StovetopBlockEntityImpl();
     }
 }

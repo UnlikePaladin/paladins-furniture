@@ -1,7 +1,0 @@
-{
-  "type": "pfm:freezing",
-  "ingredient": {
-    "item": "minecraft:powder_snow_bucket"
-  },
-  "result": "minecraft:blue_ice"
-}

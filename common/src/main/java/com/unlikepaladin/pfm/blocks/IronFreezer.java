@@ -35,8 +35,8 @@ public class IronFreezer extends Freezer{
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new FreezerBlockEntity(BlockEntities.IRON_FREEZER_BLOCK_ENTITY, pos,state);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new FreezerBlockEntity(BlockEntities.IRON_FREEZER_BLOCK_ENTITY);
     }
 
     protected static final VoxelShape FREEZER = VoxelShapes.union(createCuboidShape(0.7, 1, 2,14.7, 16, 3),createCuboidShape(14.3, 1, 2.3,15.3, 16, 3.3),createCuboidShape(0.7, 0, 3,15.7, 16, 16),createCuboidShape(1.7, 14, 1.06,2.7, 15, 2.06),createCuboidShape(1.7, 14, 0.06,14.2, 15, 1.06));
@@ -83,7 +83,7 @@ public class IronFreezer extends Freezer{
         if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof Fridge) {
             ItemScatterer.spawn((World) world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(this.fridge.get().asItem()));
             BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, NOTIFY_ALL | SKIP_DROPS);
+            world.setBlockState(blockPos, blockState2, 3 | 35);
         }
     }
     protected void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
@@ -91,8 +91,8 @@ public class IronFreezer extends Freezer{
         BlockState blockState = world.getBlockState(blockPos = pos.up());
         if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof Fridge) {
             BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, NOTIFY_ALL | SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, getRawIdFromState(blockState));
+            world.setBlockState(blockPos, blockState2, 3 | 35);
+            world.syncWorldEvent(player, 2001, blockPos, getRawIdFromState(blockState));
         }
     }
 }

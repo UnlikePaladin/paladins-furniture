@@ -7,7 +7,6 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -50,12 +49,20 @@ public class IronStove extends Stove {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        return switch (dir) {
-            case WEST -> IRON_STOVE_EAST;
-            case NORTH -> IRON_STOVE_SOUTH;
-            case SOUTH -> IRON_STOVE;
-            default -> IRON_STOVE_WEST;
-        };
+        switch (dir) {
+            case WEST: {
+                return IRON_STOVE_EAST;
+            }
+            case NORTH: {
+                return IRON_STOVE_SOUTH;
+            }
+            case SOUTH: {
+                return IRON_STOVE;
+            }
+            default: {
+                return IRON_STOVE_WEST;
+            }
+        }
     }
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
@@ -67,16 +74,6 @@ public class IronStove extends Stove {
         double z = (double)pos.getZ() + 0.5;
         if (random.nextDouble() < 0.1) {
             world.playSound(x, y, z, SoundEvents.BLOCK_SMOKER_SMOKE, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
-        }
-    }
-
-    @Override
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (world.isClient) {
-                return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::clientTick);
-        } else {
-                return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::litServerTick);
         }
     }
 

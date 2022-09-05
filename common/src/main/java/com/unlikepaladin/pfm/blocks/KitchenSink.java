@@ -1,13 +1,11 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.*;
-import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -17,8 +15,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -34,7 +30,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldEvents;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,22 +40,19 @@ import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import static com.unlikepaladin.pfm.blocks.BasicToilet.checkType;
+import static net.minecraft.block.Block.createCuboidShape;
 
-public class KitchenSink extends AbstractCauldronBlock implements BlockEntityProvider {
+public class KitchenSink extends CauldronBlock implements BlockEntityProvider {
     private final BlockState baseBlockState;
     private final Block baseBlock;
-    private final Predicate<Biome.Precipitation> precipitationPredicate;
     public static final IntProperty LEVEL_4 = IntProperty.of("level", 0, 3);
-    private final Map<Item, CauldronBehavior> behaviorMap;
+    private final Map<Item, SinkBehavior> behaviorMap;
     private static final List<FurnitureBlock> WOOD_SINKS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_SINKS = new ArrayList<>();
-
-    public KitchenSink(Settings settings, Predicate<Biome.Precipitation> precipitationPredicate, Map<Item, CauldronBehavior> map) {
-        super(settings, map);
+    public KitchenSink(Settings settings, Map<Item, SinkBehavior> map) {
+        super(settings);
         this.setDefaultState(this.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_4, 0));
         this.baseBlockState = this.getDefaultState();
-        this.precipitationPredicate = precipitationPredicate;
         this.behaviorMap = map;
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenSink.class)){
@@ -93,7 +85,7 @@ public class KitchenSink extends AbstractCauldronBlock implements BlockEntityPro
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockPos sourcePos = pos.down().down();
         ItemStack itemStack = player.getStackInHand(hand);
-        CauldronBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
+        SinkBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
         if (state.get(LEVEL_4) > 0 && sinkBehavior != null) {
             return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
         }
@@ -182,11 +174,10 @@ public class KitchenSink extends AbstractCauldronBlock implements BlockEntityPro
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!world.isClient && entity.isOnFire() && this.isEntityTouchingFluid(state, pos, entity)) {
+        int i = state.get(LEVEL_4);
+        if (!world.isClient && entity.isOnFire() && i != 0) {
             entity.extinguish();
-            if (entity.canModifyAt(world, pos)) {
-                this.onFireCollision(state, world, pos);
-            }
+            this.onFireCollision(state, world, pos);
         }
     }
 
@@ -204,17 +195,10 @@ public class KitchenSink extends AbstractCauldronBlock implements BlockEntityPro
         world.setBlockState(pos, state.with(LEVEL_4, i));
     }
 
-    @Override
     public boolean isFull(BlockState state) {
         return state.get(LEVEL_4) == 3;
     }
 
-    @Override
-    protected boolean canBeFilledByDripstone(Fluid fluid) {
-        return fluid == Fluids.WATER && this.precipitationPredicate == LeveledCauldronBlock.RAIN_PREDICATE;
-    }
-
-    @Override
     protected double getFluidHeight(BlockState state) {
         return (6.0 + (double) state.get(LEVEL_4).intValue() * 3.0) / 16.0;
     }
@@ -230,26 +214,26 @@ public class KitchenSink extends AbstractCauldronBlock implements BlockEntityPro
     }
 
     @Override
-    public void precipitationTick(BlockState state, World world, BlockPos pos, Biome.Precipitation precipitation) {
-        if (!canFillWithPrecipitation(world, precipitation) || state.get(LEVEL_4) == 3 || !this.precipitationPredicate.test(precipitation)) {
-            return;
-        }
-        world.setBlockState(pos, state.cycle(LEVEL_4));
-    }
-
-    @Override
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return state.get(LEVEL_4);
     }
 
+
     @Override
-    protected void fillFromDripstone(BlockState state, World world, BlockPos pos, Fluid fluid) {
-        if (this.isFull(state)) {
+    public void rainTick(World world, BlockPos pos) {
+        if (world.random.nextInt(20) != 1) {
             return;
         }
-        world.setBlockState(pos, (BlockState)state.with(LEVEL_4, state.get(LEVEL_4) + 1));
-        world.syncWorldEvent(WorldEvents.POINTED_DRIPSTONE_DRIPS_WATER_INTO_CAULDRON, pos, 0);
+        float f = world.getBiome(pos).getTemperature(pos);
+        if (f < 0.15f) {
+            return;
+        }
+        BlockState blockState = world.getBlockState(pos);
+        if (blockState.get(LEVEL_4) < 4) {
+            world.setBlockState(pos, blockState.cycle(LEVEL_4), 2);
+        }
     }
+
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
         if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
@@ -258,14 +242,9 @@ public class KitchenSink extends AbstractCauldronBlock implements BlockEntityPro
         return 0;
     }
 
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, BlockEntities.SINK_BLOCK_ENTITY, SinkBlockEntity::tick);
-    }
-
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new SinkBlockEntity(pos, state);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new SinkBlockEntity();
     }
 }

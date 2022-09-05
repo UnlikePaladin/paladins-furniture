@@ -2,7 +2,7 @@
   "processor": "com.unlikepaladin.pfm.compat.forge.patchouli.FreezingRecipeProcessor",
   "include": [
     {
-      "template": "pfm:namenumber",
+      "template": "namenumber",
       "as": "nn",
       "using": {
         "iname": "#iname",

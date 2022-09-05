@@ -31,8 +31,6 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldEvents;
-import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.explosion.Explosion;
 
 import java.util.ArrayList;
@@ -45,6 +43,7 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
     public static EnumProperty<MiddleShape> SHAPE = EnumProperty.of("shape", MiddleShape.class);
     private static final List<FurnitureBlock> SIMPLE_BEDS = new ArrayList<>();
     public static final BooleanProperty BUNK = BooleanProperty.of("bunk");
+    private final DyeColor color;
 
     public SimpleBed(DyeColor color, Settings settings) {
         super(color, settings);
@@ -53,6 +52,12 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
             String bedColor = color.getName();
             SIMPLE_BEDS.add(new FurnitureBlock(this, bedColor+"_simple_bed"));
         }
+        this.color = color;
+    }
+
+    @Override
+    public DyeColor getColor() {
+        return this.color;
     }
 
     public static Stream<FurnitureBlock> streamSimpleBeds() {
@@ -82,7 +87,7 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
         if (state.get(PART) != BedPart.HEAD && !((state = world.getBlockState(pos = pos.offset(state.get(FACING)))).getBlock() instanceof SimpleBed)) {
             return ActionResult.CONSUME;
         }
-        if (!BedBlock.isBedWorking(world)) {
+        if (!BedBlock.isOverworld(world)) {
             world.removeBlock(pos, false);
             BlockPos blockPos = pos.offset(state.get(FACING).getOpposite());
             if (world.getBlockState(blockPos).isOf(this)) {
@@ -131,14 +136,10 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
         BlockState blockState;
         BedPart bedPart;
         if (!world.isClient && player.isCreative() && (bedPart = state.get(PART)) == BedPart.FOOT && (blockState = world.getBlockState(blockPos = pos.offset(getDirectionTowardsOtherPart(bedPart, state.get(FACING))))).isOf(this) && blockState.get(PART) == BedPart.HEAD) {
-            world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
+            world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 3);
+            world.syncWorldEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));
         }
-        this.spawnBreakParticles(world, player, pos, state);
-        if (state.isIn(BlockTags.GUARDED_BY_PIGLINS)) {
-            PiglinBrain.onGuardedBlockInteracted(player, false);
-        }
-        world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+        super.onBreak(world, pos, state, player);
     }
 
     @Override
@@ -295,27 +296,27 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
         boolean bunk = state.get(BUNK);
         if(!bunk){
             switch (middleShape){
-                case MIDDLE -> {
+                case MIDDLE: {
                     switch (dir){
-                        case NORTH -> {
+                        case NORTH: {
                             if(bedPart == BedPart.HEAD){
                                 return HEAD;
                             }
                             return FOOT;
                         }
-                        case EAST -> {
+                        case EAST: {
                             if(bedPart == BedPart.HEAD){
                                 return HEAD_EAST;
                             }
                             return FOOT_EAST;
                         }
-                        case WEST -> {
+                        case WEST: {
                             if(bedPart == BedPart.HEAD){
                                 return HEAD_WEST;
                             }
                             return FOOT_WEST;
                         }
-                        default -> {
+                        default: {
                             if(bedPart == BedPart.HEAD){
                                 return HEAD_SOUTH;
                             }
@@ -323,27 +324,27 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
                         }
                     }
                 }
-                case SINGLE -> {
+                case SINGLE: {
                     switch (dir){
-                        case NORTH -> {
+                        case NORTH: {
                             if(bedPart == BedPart.HEAD){
                                 return HEAD_SINGLE;
                             }
                             return FOOT_SINGLE;
                         }
-                        case EAST -> {
+                        case EAST: {
                             if(bedPart == BedPart.HEAD){
                                 return HEAD_SINGLE_EAST;
                             }
                             return FOOT_SINGLE_EAST;
                         }
-                        case WEST -> {
+                        case WEST: {
                             if(bedPart == BedPart.HEAD){
                                 return HEAD_SINGLE_WEST;
                             }
                             return FOOT_SINGLE_WEST;
                         }
-                        default -> {
+                        default: {
                             if(bedPart == BedPart.HEAD){
                                 return HEAD_SINGLE_SOUTH;
                             }
@@ -351,27 +352,27 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
                         }
                     }
                 }
-                case RIGHT -> {
+                case RIGHT: {
                     switch (dir) {
-                        case NORTH -> {
+                        case NORTH: {
                             if (bedPart == BedPart.HEAD) {
                                 return HEAD_RIGHT;
                             }
                             return FOOT_RIGHT;
                         }
-                        case EAST -> {
+                        case EAST: {
                             if (bedPart == BedPart.HEAD) {
                                 return HEAD_RIGHT_EAST;
                             }
                             return FOOT_RIGHT_EAST;
                         }
-                        case WEST -> {
+                        case WEST: {
                             if (bedPart == BedPart.HEAD) {
                                 return HEAD_RIGHT_WEST;
                             }
                             return FOOT_RIGHT_WEST;
                         }
-                        default -> {
+                        default: {
                             if (bedPart == BedPart.HEAD) {
                                 return HEAD_RIGHT_SOUTH;
                             }
@@ -379,27 +380,27 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
                         }
                     }
                 }
-                default -> {
+                default: {
                     switch (dir) {
-                        case NORTH -> {
+                        case NORTH: {
                             if (bedPart == BedPart.HEAD) {
                                 return HEAD_LEFT;
                             }
                             return FOOT_LEFT;
                         }
-                        case EAST -> {
+                        case EAST: {
                             if (bedPart == BedPart.HEAD) {
                                 return HEAD_LEFT_EAST;
                             }
                             return FOOT_LEFT_EAST;
                         }
-                        case WEST -> {
+                        case WEST: {
                             if (bedPart == BedPart.HEAD) {
                                 return HEAD_LEFT_WEST;
                             }
                             return FOOT_LEFT_WEST;
                         }
-                        default -> {
+                        default: {
                             if (bedPart == BedPart.HEAD) {
                                 return HEAD_LEFT_SOUTH;
                             }
@@ -412,82 +413,82 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
         else {
             if (bedPart == BedPart.HEAD) {
                 switch (dir) {
-                    case NORTH -> {
+                    case NORTH: {
                         return HEAD_SINGLE_BUNK;
                     }
-                    case EAST -> {
+                    case EAST: {
                         return HEAD_SINGLE_EAST_BUNK;
                     }
-                    case WEST -> {
+                    case WEST: {
                         return HEAD_SINGLE_WEST_BUNK;
                     }
-                    default -> {
+                    default: {
                         return HEAD_SINGLE_SOUTH_BUNK;
                     }
                 }
             }
             else{
                 switch (middleShape) {
-                    case SINGLE -> {
+                    case SINGLE: {
                         switch (dir){
-                            case NORTH -> {
+                            case NORTH: {
                                 return FOOT_SINGLE_BUNK;
                             }
-                            case EAST -> {
+                            case EAST: {
                                 return FOOT_SINGLE_EAST_BUNK;
                             }
-                            case WEST -> {
+                            case WEST: {
                                 return FOOT_SINGLE_WEST_BUNK;
                             }
-                            default -> {
+                            default: {
                                 return FOOT_SINGLE_SOUTH_BUNK;
                             }
                         }
                     }
-                    case MIDDLE -> {
+                    case MIDDLE: {
                         switch (dir){
-                            case NORTH -> {
+                            case NORTH: {
                                 return FOOT;
                             }
-                            case EAST -> {
+                            case EAST: {
                                 return FOOT_EAST;
                             }
-                            case WEST -> {
+                            case WEST: {
                                 return FOOT_WEST;
                             }
-                            default -> {
+                            default: {
                                 return FOOT_SOUTH;
                             }
                         }
                     }
-                    case RIGHT ->{
+                    case RIGHT: {
                         switch (dir) {
-                            case NORTH -> {
+                            case NORTH: {
                                 return FOOT_RIGHT_BUNK;
                             }
-                            case EAST -> {
+                            case EAST: {
                                 return FOOT_RIGHT_EAST_BUNK;
                             }
-                            case WEST -> {
+                            case WEST: {
                                 return FOOT_RIGHT_WEST_BUNK;
                             }
-                            default -> {
+                            default: {
                                 return FOOT_RIGHT_SOUTH_BUNK;
                             }
                         }
                     }
-                    default -> {
+                    default: {
                         switch (dir) {
-                            case NORTH -> {
+                            case NORTH: {
                                 return FOOT_LEFT_BUNK;
                             }
-                            case EAST -> {
+                            case EAST: {
                                 return FOOT_LEFT_EAST_BUNK;
                             }
-                            case WEST -> {
+                            case WEST: {
                                 return FOOT_LEFT_WEST_BUNK;
                             }
-                            default -> {
+                            default: {
                                 return FOOT_LEFT_SOUTH_BUNK;
                             }
                         }

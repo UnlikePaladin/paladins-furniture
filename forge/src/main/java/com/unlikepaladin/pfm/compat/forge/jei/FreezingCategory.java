@@ -42,7 +42,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
         this.regularFreezeTime = 100;
         this.cachedArrows = CacheBuilder.newBuilder()
                 .maximumSize(25)
-                .build(new CacheLoader<>() {
+                .build(new CacheLoader<Integer, IDrawableAnimated>() {
                     @Override
                     public IDrawableAnimated load(Integer freezeTime) {
                         return guiHelper.drawableBuilder(FREEZE_GUI, 176, 14, 24, 17)
@@ -62,8 +62,8 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     }
 
     @Override
-    public Text getTitle() {
-        return TITLE;
+    public String getTitle() {
+        return TITLE.getString();
     }
 
     @Override

@@ -14,7 +14,7 @@ public class PlateImpl {
         player.sendMessage(Text.of("You just ate a Sandwich in Forge?"), false);
     }
 
-    public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
-        return new PlateBlockEntityImpl(pos, state);
+    public static BlockEntity getBlockEntity() {
+        return new PlateBlockEntityImpl();
     }
 }

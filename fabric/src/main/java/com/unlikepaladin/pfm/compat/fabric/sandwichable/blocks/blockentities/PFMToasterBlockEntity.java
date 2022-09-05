@@ -23,6 +23,7 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -33,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory, BlockEntityClientSerializable {
+public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory, BlockEntityClientSerializable, Tickable {
     private DefaultedList<ItemStack> items = DefaultedList.ofSize(2, ItemStack.EMPTY);
     private @Nullable UUID lastUser;
     private static int toastTime = 240;
@@ -46,13 +47,13 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     private boolean previouslyPowered = false;
     private boolean updateNeighbors = false;
 
-    public PFMToasterBlockEntity(BlockPos pos, BlockState state) {
-        super(PFMSandwichableRegistry.IRON_TOASTER_BLOCKENTITY, pos, state);
+    public PFMToasterBlockEntity() {
+        super(PFMSandwichableRegistry.IRON_TOASTER_BLOCKENTITY);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void fromTag(BlockState state, NbtCompound nbt) {
+        super.fromTag(state, nbt);
         items = DefaultedList.ofSize(2, ItemStack.EMPTY);
         toastProgress = nbt.getInt("toastProgress");
         toasting = nbt.getBoolean("toasting");
@@ -80,7 +81,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
 
     @Override
     public void fromClientTag(NbtCompound NbtCompound) {
-        this.readNbt(NbtCompound);
+        this.fromTag(this.getCachedState(), NbtCompound);
     }
 
     @Override
@@ -214,37 +215,38 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
 
     private boolean tickPitch = false;
 
-    public static void tick(World world, BlockPos pos, BlockState state, PFMToasterBlockEntity blockEntity) {
+    @Override
+    public void tick() {
         int smokeTime = 80;
-        if(blockEntity.updateNeighbors) {
+        if(this.updateNeighbors) {
             world.updateNeighbors(pos, world.getBlockState(pos).getBlock());
-            blockEntity.updateNeighbors = false;
+            this.updateNeighbors = false;
         }
-        blockEntity.previouslyPowered = blockEntity.currentlyPowered;
-        blockEntity.currentlyPowered = world.isReceivingRedstonePower(pos);
-        if(blockEntity.toasting) {
-            blockEntity.toastProgress++;
-            if(blockEntity.toastProgress % 4 == 0 && blockEntity.toastProgress != toastTime) {
-                world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.05F, blockEntity.tickPitch ? 2.0F : 1.9F);
-                blockEntity.tickPitch = !blockEntity.tickPitch;
+        this.previouslyPowered = this.currentlyPowered;
+        this.currentlyPowered = world.isReceivingRedstonePower(pos);
+        if(this.toasting) {
+            this.toastProgress++;
+            if(this.toastProgress % 4 == 0 && this.toastProgress != toastTime) {
+                world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.05F, this.tickPitch ? 2.0F : 1.9F);
+                this.tickPitch = !this.tickPitch;
             }
-            if(blockEntity.hasMetalInside() || world.getBlockState(blockEntity.pos).get(Properties.WATERLOGGED)) {
-                blockEntity.explode();
+            if(this.hasMetalInside() || world.getBlockState(this.pos).get(Properties.WATERLOGGED)) {
+                this.explode();
             }
         }
-        if(blockEntity.toastProgress == toastTime) {
-            blockEntity.stopToasting(null);
-            blockEntity.toastItems();
-            blockEntity.smoking = true;
+        if(this.toastProgress == toastTime) {
+            this.stopToasting(null);
+            this.toastItems();
+            this.smoking = true;
         }
-        if(blockEntity.smoking) {
-            if(blockEntity.smokeProgress % 3 == 0) {
+        if(this.smoking) {
+            if(this.smokeProgress % 3 == 0) {
                 world.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5, 0, 0.03, 0);
             }
-            blockEntity.smokeProgress++;
-        } if (blockEntity.smokeProgress == smokeTime) { blockEntity.smoking = false; blockEntity.smokeProgress = 0; }
-        if(blockEntity.currentlyPowered && !blockEntity.previouslyPowered) {
-            if(!blockEntity.toasting) { blockEntity.startToasting(null); }
+            this.smokeProgress++;
+        } if (this.smokeProgress == smokeTime) { this.smoking = false; this.smokeProgress = 0; }
+        if(this.currentlyPowered && !this.previouslyPowered) {
+            if(!this.toasting) { this.startToasting(null); }
         }
     }
 

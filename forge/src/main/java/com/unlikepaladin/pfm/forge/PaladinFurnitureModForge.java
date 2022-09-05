@@ -8,13 +8,16 @@ import com.unlikepaladin.pfm.registry.forge.*;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.ExtensionPoint;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.client.ConfigGuiHandler;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fmlclient.ConfigGuiHandler;
 
 
 @Mod(PaladinFurnitureMod.MOD_ID)
@@ -32,13 +35,16 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         MinecraftForge.EVENT_BUS.register(SoundRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(PaladinFurnitureModDataGenForge.class);
         NetworkRegistryForge.registerPackets();
-        if (ModList.get().isLoaded("cloth_config")) {
+        if (ModList.get().isLoaded("cloth-config")) {
             pfmConfig = AutoConfig.register(PaladinFurnitureModConfigImpl.class, Toml4jConfigSerializer::new);
-            ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-                    () -> new ConfigGuiHandler.ConfigGuiFactory(
-                            (client, parent) -> AutoConfig.getConfigScreen(PaladinFurnitureModConfigImpl.class, parent).get()));
+            ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> this::screen);
         }
+
         this.commonInit();
+    }
+
+    private Screen screen(MinecraftClient minecraftClient, Screen parent) {
+        return AutoConfig.getConfigScreen(PaladinFurnitureModConfigImpl.class, parent).get();
     }
 
 }

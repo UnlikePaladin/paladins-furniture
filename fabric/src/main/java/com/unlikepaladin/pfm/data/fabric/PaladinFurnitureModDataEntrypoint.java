@@ -6,12 +6,6 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.FurnitureRecipeJsonFactory;
 import com.unlikepaladin.pfm.data.Tags;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTablesProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipesProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.tag.TagFactory;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
@@ -31,7 +25,8 @@ import net.minecraft.util.registry.Registry;
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
-
+//FAPI Data gen does not exist in 1.16
+/*
 public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoint {
 
     @Override
@@ -756,4 +751,4 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
         FurnitureRecipeJsonFactory.create(output, 1).input('Y', base).input('X', material).input('Z', Ingredient.ofItems(Items.BUCKET)).pattern("XY ").pattern("XZX").pattern(" X ").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 }
-
+*/

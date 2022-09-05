@@ -75,10 +75,10 @@ public class WorkingTable extends HorizontalFacingBlock implements Waterloggable
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         switch (state.get(FACING)) {
-            case NORTH -> {return WORKTABLE_SHAPE_SOUTH;}
-            case SOUTH -> {return WORKTABLE_SHAPE;}
-            case WEST -> {return WORKTABLE_SHAPE_EAST;}
-            default -> {return WORKTABLE_SHAPE_WEST;}
+            case NORTH: {return WORKTABLE_SHAPE_SOUTH;}
+            case SOUTH: {return WORKTABLE_SHAPE;}
+            case WEST: {return WORKTABLE_SHAPE_EAST;}
+            default: {return WORKTABLE_SHAPE_WEST;}
         }
     }
 

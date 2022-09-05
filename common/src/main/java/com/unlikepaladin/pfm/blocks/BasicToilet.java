@@ -7,7 +7,6 @@ import com.unlikepaladin.pfm.registry.Statistics;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -23,6 +22,7 @@ import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Tickable;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -67,7 +67,7 @@ public class BasicToilet extends AbstractSittableBlock implements BlockEntityPro
         }
         if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY && (player.getStackInHand(hand).getItem() == Items.POTION) && PotionUtil.getPotion(player.getStackInHand(hand)) == Potions.WATER) {
             world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
-            if (!player.getAbilities().creativeMode)
+            if (!player.isCreative())
                 player.setStackInHand(hand, new ItemStack(Items.GLASS_BOTTLE));
              world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
             return ActionResult.SUCCESS;
@@ -118,14 +118,8 @@ public class BasicToilet extends AbstractSittableBlock implements BlockEntityPro
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new ToiletBlockEntity(pos, state);
-    }
-
-    @Nullable
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, BlockEntities.TOILET_BLOCK_ENTITY, ToiletBlockEntity::tick);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new ToiletBlockEntity();
     }
 
     public static void setClean(BlockState state, World world, BlockPos pos) {
@@ -140,7 +134,7 @@ public class BasicToilet extends AbstractSittableBlock implements BlockEntityPro
             world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
             return;
         }
-        world.setBlockState(pos, state.with(BasicToilet.TOILET_STATE, ToiletState.EMPTY), NOTIFY_ALL);
+        world.setBlockState(pos, state.with(BasicToilet.TOILET_STATE, ToiletState.EMPTY), 3);
     }
     protected static final VoxelShape TOILET_WEST = VoxelShapes.union(createCuboidShape(2, 1, 4.2,14, 6, 11.7),createCuboidShape(1, 0, 3.2,15, 1, 12.7),createCuboidShape(5, 5, 2.5,16, 10, 13.5),createCuboidShape(0, 6, 2.5,5, 20, 13.5),createCuboidShape(5, 8, 3.5,6, 21, 12.5));
     protected static final VoxelShape TOILET_NORTH = rotateShape(Direction.WEST, Direction.NORTH, TOILET_WEST);
@@ -150,18 +144,12 @@ public class BasicToilet extends AbstractSittableBlock implements BlockEntityPro
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        return switch (dir){
-            case NORTH -> TOILET_NORTH;
-            case SOUTH -> TOILET_SOUTH;
-            case EAST -> TOILET_EAST;
-            default -> TOILET_WEST;
-        };
+        switch (dir){
+            case NORTH: return TOILET_NORTH;
+            case SOUTH: return TOILET_SOUTH;
+            case EAST: return TOILET_EAST;
+            default: return TOILET_WEST;
+        }
     }
-
-    @Nullable
-    protected static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
-        return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
-    }
-
 }
 

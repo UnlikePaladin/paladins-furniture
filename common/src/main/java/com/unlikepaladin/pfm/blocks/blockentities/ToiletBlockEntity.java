@@ -6,13 +6,14 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.util.Tickable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 
-public class ToiletBlockEntity extends BlockEntity {
-    public ToiletBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntities.TOILET_BLOCK_ENTITY, pos, state);
+public class ToiletBlockEntity extends BlockEntity implements Tickable {
+    public ToiletBlockEntity() {
+        super(BlockEntities.TOILET_BLOCK_ENTITY);
     }
     private int flushTimer = 0;
 
@@ -29,22 +30,24 @@ public class ToiletBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void fromTag(BlockState state, NbtCompound nbt) {
         flushTimer = nbt.getInt("flushTimer");
-        super.readNbt(nbt);
+        super.fromTag(state, nbt);
     }
 
     public void setFlushTimer(int flushTimer) {
         this.flushTimer = flushTimer;
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, ToiletBlockEntity blockEntity) {
+    @Override
+    public void tick() {
+        BlockState state = this.getCachedState();
         if (state.get(BasicToilet.TOILET_STATE) == ToiletState.FLUSHING) {
-            if (blockEntity.flushTimer >= 120) {
+            if (this.flushTimer >= 120) {
                 BasicToilet.setClean(state, world, pos);
-                blockEntity.setFlushTimer(0);
+                this.setFlushTimer(0);
             } else {
-                blockEntity.flushTimer++;
+                this.flushTimer++;
             }
         }
     }

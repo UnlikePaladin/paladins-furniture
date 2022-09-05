@@ -93,33 +93,49 @@ public class KitchenRangeHood extends HorizontalFacingBlock {
         boolean drawer = state.get(DRAWER);
         Direction direction = state.get(FACING);
         if (down && drawer) {
-            return switch (direction) {
-                case NORTH -> RANGE_HOOD_BOTTOM_DRAWER;
-                case SOUTH -> RANGE_HOOD_BOTTOM_DRAWER_SOUTH;
-                case EAST -> RANGE_HOOD_BOTTOM_DRAWER_EAST;
-                default -> RANGE_HOOD_BOTTOM_DRAWER_WEST;
-            };
+            switch (direction) {
+                case NORTH:
+                    return RANGE_HOOD_BOTTOM_DRAWER;
+                case SOUTH:
+                    return RANGE_HOOD_BOTTOM_DRAWER_SOUTH;
+                case EAST:
+                    return RANGE_HOOD_BOTTOM_DRAWER_EAST;
+                default:
+                    return RANGE_HOOD_BOTTOM_DRAWER_WEST;
+            }
         } else if (down) {
-            return switch (direction) {
-                case NORTH -> RANGE_HOOD_BOTTOM;
-                case SOUTH -> RANGE_HOOD_BOTTOM_SOUTH;
-                case EAST -> RANGE_HOOD_BOTTOM_EAST;
-                default -> RANGE_HOOD_BOTTOM_WEST;
-            };
+            switch (direction) {
+                case NORTH:
+                    return RANGE_HOOD_BOTTOM;
+                case SOUTH:
+                    return RANGE_HOOD_BOTTOM_SOUTH;
+                case EAST:
+                    return RANGE_HOOD_BOTTOM_EAST;
+                default:
+                    return RANGE_HOOD_BOTTOM_WEST;
+            }
         }
         else if (drawer) {
-            return switch (direction) {
-                case NORTH -> RANGE_HOOD_DRAWER;
-                case SOUTH -> RANGE_HOOD_DRAWER_SOUTH;
-                case EAST -> RANGE_HOOD_DRAWER_EAST;
-                default -> RANGE_HOOD_DRAWER_WEST;
-            };
+            switch (direction) {
+                case NORTH:
+                    return RANGE_HOOD_DRAWER;
+                case SOUTH:
+                    return RANGE_HOOD_DRAWER_SOUTH;
+                case EAST:
+                    return RANGE_HOOD_DRAWER_EAST;
+                default:
+                    return RANGE_HOOD_DRAWER_WEST;
+            }
         }
-        return switch (direction) {
-            case NORTH -> RANGE_HOOD;
-            case SOUTH -> RANGE_HOOD_SOUTH;
-            case EAST -> RANGE_HOOD_EAST;
-            default -> RANGE_HOOD_WEST;
-        };
+        switch (direction) {
+            case NORTH:
+                return RANGE_HOOD;
+            case SOUTH:
+                return RANGE_HOOD_SOUTH;
+            case EAST:
+                return RANGE_HOOD_EAST;
+            default:
+                return RANGE_HOOD_WEST;
+        }
     }
 }

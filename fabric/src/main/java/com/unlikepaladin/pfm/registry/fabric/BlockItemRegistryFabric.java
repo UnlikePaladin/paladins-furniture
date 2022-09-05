@@ -84,12 +84,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_chair", PaladinFurnitureModBlocksItems.LIGHT_WOOD_CHAIR, true);
         registerFurniture("dark_wood_chair", PaladinFurnitureModBlocksItems.DARK_WOOD_CHAIR, true);
         registerFurniture("granite_chair", PaladinFurnitureModBlocksItems.GRANITE_CHAIR, true);
-        registerFurniture("calcite_chair", PaladinFurnitureModBlocksItems.CALCITE_CHAIR, true);
         registerFurniture("andesite_chair", PaladinFurnitureModBlocksItems.ANDESITE_CHAIR, true);
         registerFurniture("diorite_chair", PaladinFurnitureModBlocksItems.DIORITE_CHAIR, true);
         registerFurniture("stone_chair", PaladinFurnitureModBlocksItems.STONE_CHAIR, true);
         registerFurniture("blackstone_chair", PaladinFurnitureModBlocksItems.BLACKSTONE_CHAIR, true);
-        registerFurniture("deepslate_chair", PaladinFurnitureModBlocksItems.DEEPSLATE_CHAIR, true);
 
         //Dinner Chairs
         registerFurniture("oak_chair_dinner", PaladinFurnitureModBlocksItems.OAK_CHAIR_DINNER, true);
@@ -113,12 +111,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_chair_dinner", PaladinFurnitureModBlocksItems.LIGHT_WOOD_CHAIR_DINNER, true);
         registerFurniture("dark_wood_chair_dinner", PaladinFurnitureModBlocksItems.DARK_WOOD_CHAIR_DINNER, true);
         registerFurniture("granite_chair_dinner", PaladinFurnitureModBlocksItems.GRANITE_CHAIR_DINNER, true);
-        registerFurniture("calcite_chair_dinner", PaladinFurnitureModBlocksItems.CALCITE_CHAIR_DINNER, true);
         registerFurniture("andesite_chair_dinner", PaladinFurnitureModBlocksItems.ANDESITE_CHAIR_DINNER, true);
         registerFurniture("diorite_chair_dinner", PaladinFurnitureModBlocksItems.DIORITE_CHAIR_DINNER, true);
         registerFurniture("stone_chair_dinner", PaladinFurnitureModBlocksItems.STONE_CHAIR_DINNER, true);
         registerFurniture("blackstone_chair_dinner", PaladinFurnitureModBlocksItems.BLACKSTONE_CHAIR_DINNER, true);
-        registerFurniture("deepslate_chair_dinner", PaladinFurnitureModBlocksItems.DEEPSLATE_CHAIR_DINNER, true);
 
         //Froggy Chairs
         registerFurniture("froggy_chair", PaladinFurnitureModBlocksItems.FROGGY_CHAIR, true);
@@ -167,12 +163,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_chair_classic", PaladinFurnitureModBlocksItems.LIGHT_WOOD_CHAIR_CLASSIC, true);
         registerFurniture("dark_wood_chair_classic", PaladinFurnitureModBlocksItems.DARK_WOOD_CHAIR_CLASSIC, true);
         registerFurniture("granite_chair_classic", PaladinFurnitureModBlocksItems.GRANITE_CHAIR_CLASSIC, true);
-        registerFurniture("calcite_chair_classic", PaladinFurnitureModBlocksItems.CALCITE_CHAIR_CLASSIC, true);
         registerFurniture("andesite_chair_classic", PaladinFurnitureModBlocksItems.ANDESITE_CHAIR_CLASSIC, true);
         registerFurniture("diorite_chair_classic", PaladinFurnitureModBlocksItems.DIORITE_CHAIR_CLASSIC, true);
         registerFurniture("stone_chair_classic", PaladinFurnitureModBlocksItems.STONE_CHAIR_CLASSIC, true);
         registerFurniture("blackstone_chair_classic", PaladinFurnitureModBlocksItems.BLACKSTONE_CHAIR_CLASSIC, true);
-        registerFurniture("deepslate_chair_classic", PaladinFurnitureModBlocksItems.DEEPSLATE_CHAIR_CLASSIC, true);
 
         //Modern Chair
         registerFurniture("oak_chair_modern", PaladinFurnitureModBlocksItems.OAK_CHAIR_MODERN, true);
@@ -196,12 +190,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_chair_modern", PaladinFurnitureModBlocksItems.LIGHT_WOOD_CHAIR_MODERN, true);
         registerFurniture("dark_wood_chair_modern", PaladinFurnitureModBlocksItems.DARK_WOOD_CHAIR_MODERN, true);
         registerFurniture("granite_chair_modern", PaladinFurnitureModBlocksItems.GRANITE_CHAIR_MODERN, true);
-        registerFurniture("calcite_chair_modern", PaladinFurnitureModBlocksItems.CALCITE_CHAIR_MODERN, true);
         registerFurniture("andesite_chair_modern", PaladinFurnitureModBlocksItems.ANDESITE_CHAIR_MODERN, true);
         registerFurniture("diorite_chair_modern", PaladinFurnitureModBlocksItems.DIORITE_CHAIR_MODERN, true);
         registerFurniture("stone_chair_modern", PaladinFurnitureModBlocksItems.STONE_CHAIR_MODERN, true);
         registerFurniture("blackstone_chair_modern", PaladinFurnitureModBlocksItems.BLACKSTONE_CHAIR_MODERN, true);
-        registerFurniture("deepslate_chair_modern", PaladinFurnitureModBlocksItems.DEEPSLATE_CHAIR_MODERN, true);
 
         //Armchairs
         registerFurniture("white_simple_sofa", PaladinFurnitureModBlocksItems.WHITE_SIMPLE_SOFA, true);
@@ -262,12 +254,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_table_basic", PaladinFurnitureModBlocksItems.LIGHT_WOOD_BASIC_TABLE, true);
         registerFurniture("dark_wood_table_basic", PaladinFurnitureModBlocksItems.DARK_WOOD_BASIC_TABLE, true);
         registerFurniture("granite_table_basic", PaladinFurnitureModBlocksItems.GRANITE_BASIC_TABLE, true);
-        registerFurniture("calcite_table_basic", PaladinFurnitureModBlocksItems.CALCITE_BASIC_TABLE, true);
         registerFurniture("andesite_table_basic", PaladinFurnitureModBlocksItems.ANDESITE_BASIC_TABLE, true);
         registerFurniture("diorite_table_basic", PaladinFurnitureModBlocksItems.DIORITE_BASIC_TABLE, true);
         registerFurniture("stone_table_basic", PaladinFurnitureModBlocksItems.STONE_BASIC_TABLE, true);
         registerFurniture("blackstone_table_basic", PaladinFurnitureModBlocksItems.BLACKSTONE_BASIC_TABLE, true);
-        registerFurniture("deepslate_table_basic", PaladinFurnitureModBlocksItems.DEEPSLATE_BASIC_TABLE, true);
 
         //Classic Table
         registerFurniture("oak_table_classic", PaladinFurnitureModBlocksItems.OAK_CLASSIC_TABLE, true);
@@ -291,12 +281,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_table_classic", PaladinFurnitureModBlocksItems.LIGHT_WOOD_CLASSIC_TABLE, true);
         registerFurniture("dark_wood_table_classic", PaladinFurnitureModBlocksItems.DARK_WOOD_CLASSIC_TABLE, true);
         registerFurniture("granite_table_classic", PaladinFurnitureModBlocksItems.GRANITE_CLASSIC_TABLE, true);
-        registerFurniture("calcite_table_classic", PaladinFurnitureModBlocksItems.CALCITE_CLASSIC_TABLE, true);
         registerFurniture("andesite_table_classic", PaladinFurnitureModBlocksItems.ANDESITE_CLASSIC_TABLE, true);
         registerFurniture("diorite_table_classic", PaladinFurnitureModBlocksItems.DIORITE_CLASSIC_TABLE, true);
         registerFurniture("stone_table_classic", PaladinFurnitureModBlocksItems.STONE_CLASSIC_TABLE, true);
         registerFurniture("blackstone_table_classic", PaladinFurnitureModBlocksItems.BLACKSTONE_CLASSIC_TABLE, true);
-        registerFurniture("deepslate_table_classic", PaladinFurnitureModBlocksItems.DEEPSLATE_CLASSIC_TABLE, true);
 
         //Log Table
         registerFurniture("oak_table_log", PaladinFurnitureModBlocksItems.OAK_LOG_TABLE, true);
@@ -320,12 +308,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_table_natural", PaladinFurnitureModBlocksItems.LIGHT_WOOD_NATURAL_TABLE, true);
         registerFurniture("dark_wood_table_natural", PaladinFurnitureModBlocksItems.DARK_WOOD_NATURAL_TABLE, true);
         registerFurniture("granite_table_natural", PaladinFurnitureModBlocksItems.GRANITE_NATURAL_TABLE, true);
-        registerFurniture("calcite_table_natural", PaladinFurnitureModBlocksItems.CALCITE_NATURAL_TABLE, true);
         registerFurniture("andesite_table_natural", PaladinFurnitureModBlocksItems.ANDESITE_NATURAL_TABLE, true);
         registerFurniture("diorite_table_natural", PaladinFurnitureModBlocksItems.DIORITE_NATURAL_TABLE, true);
         registerFurniture("stone_table_natural", PaladinFurnitureModBlocksItems.STONE_NATURAL_TABLE, true);
         registerFurniture("blackstone_table_natural", PaladinFurnitureModBlocksItems.BLACKSTONE_NATURAL_TABLE, true);
-        registerFurniture("deepslate_table_natural", PaladinFurnitureModBlocksItems.DEEPSLATE_NATURAL_TABLE, true);
 
         //Raw Log Table
         registerFurniture("oak_raw_table_log", PaladinFurnitureModBlocksItems.OAK_RAW_LOG_TABLE, true);
@@ -366,12 +352,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_table_dinner", PaladinFurnitureModBlocksItems.LIGHT_WOOD_DINNER_TABLE, true);
         registerFurniture("dark_wood_table_dinner", PaladinFurnitureModBlocksItems.DARK_WOOD_DINNER_TABLE, true);
         registerFurniture("granite_table_dinner", PaladinFurnitureModBlocksItems.GRANITE_DINNER_TABLE, true);
-        registerFurniture("calcite_table_dinner", PaladinFurnitureModBlocksItems.CALCITE_DINNER_TABLE, true);
         registerFurniture("andesite_table_dinner", PaladinFurnitureModBlocksItems.ANDESITE_DINNER_TABLE, true);
         registerFurniture("diorite_table_dinner", PaladinFurnitureModBlocksItems.DIORITE_DINNER_TABLE, true);
         registerFurniture("stone_table_dinner", PaladinFurnitureModBlocksItems.STONE_DINNER_TABLE, true);
         registerFurniture("blackstone_table_dinner", PaladinFurnitureModBlocksItems.BLACKSTONE_DINNER_TABLE, true);
-        registerFurniture("deepslate_table_dinner", PaladinFurnitureModBlocksItems.DEEPSLATE_DINNER_TABLE, true);
 
         registerFurniture("oak_table_modern_dinner", PaladinFurnitureModBlocksItems.OAK_MODERN_DINNER_TABLE, true);
         registerFurniture("birch_table_modern_dinner", PaladinFurnitureModBlocksItems.BIRCH_MODERN_DINNER_TABLE, true);
@@ -394,12 +378,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_table_modern_dinner", PaladinFurnitureModBlocksItems.LIGHT_WOOD_MODERN_DINNER_TABLE, true);
         registerFurniture("dark_wood_table_modern_dinner", PaladinFurnitureModBlocksItems.DARK_WOOD_MODERN_DINNER_TABLE, true);
         registerFurniture("granite_table_modern_dinner", PaladinFurnitureModBlocksItems.GRANITE_MODERN_DINNER_TABLE, true);
-        registerFurniture("calcite_table_modern_dinner", PaladinFurnitureModBlocksItems.CALCITE_MODERN_DINNER_TABLE, true);
         registerFurniture("andesite_table_modern_dinner", PaladinFurnitureModBlocksItems.ANDESITE_MODERN_DINNER_TABLE, true);
         registerFurniture("diorite_table_modern_dinner", PaladinFurnitureModBlocksItems.DIORITE_MODERN_DINNER_TABLE, true);
         registerFurniture("stone_table_modern_dinner", PaladinFurnitureModBlocksItems.STONE_MODERN_DINNER_TABLE, true);
         registerFurniture("blackstone_table_modern_dinner", PaladinFurnitureModBlocksItems.BLACKSTONE_MODERN_DINNER_TABLE, true);
-        registerFurniture("deepslate_table_modern_dinner", PaladinFurnitureModBlocksItems.DEEPSLATE_MODERN_DINNER_TABLE, true);
 
         registerFurniture("oak_classic_nightstand", PaladinFurnitureModBlocksItems.OAK_CLASSIC_NIGHTSTAND, true);
         registerFurniture("birch_classic_nightstand", PaladinFurnitureModBlocksItems.BIRCH_CLASSIC_NIGHTSTAND, true);
@@ -422,12 +404,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_classic_nightstand", PaladinFurnitureModBlocksItems.LIGHT_WOOD_CLASSIC_NIGHTSTAND, true);
         registerFurniture("dark_wood_classic_nightstand", PaladinFurnitureModBlocksItems.DARK_WOOD_CLASSIC_NIGHTSTAND, true);
         registerFurniture("granite_classic_nightstand", PaladinFurnitureModBlocksItems.GRANITE_CLASSIC_NIGHTSTAND, true);
-        registerFurniture("calcite_classic_nightstand", PaladinFurnitureModBlocksItems.CALCITE_CLASSIC_NIGHTSTAND, true);
         registerFurniture("andesite_classic_nightstand", PaladinFurnitureModBlocksItems.ANDESITE_CLASSIC_NIGHTSTAND, true);
         registerFurniture("diorite_classic_nightstand", PaladinFurnitureModBlocksItems.DIORITE_CLASSIC_NIGHTSTAND, true);
         registerFurniture("stone_classic_nightstand", PaladinFurnitureModBlocksItems.STONE_CLASSIC_NIGHTSTAND, true);
         registerFurniture("blackstone_classic_nightstand", PaladinFurnitureModBlocksItems.BLACKSTONE_CLASSIC_NIGHTSTAND, true);
-        registerFurniture("deepslate_classic_nightstand", PaladinFurnitureModBlocksItems.DEEPSLATE_CLASSIC_NIGHTSTAND, true);
 
         registerFurniture("oak_red_simple_bed", PaladinFurnitureModBlocksItems.OAK_RED_SIMPLE_BED, 1);
         registerFurniture("oak_orange_simple_bed", PaladinFurnitureModBlocksItems.OAK_ORANGE_SIMPLE_BED, 1);
@@ -726,12 +706,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_simple_stool", PaladinFurnitureModBlocksItems.LIGHT_WOOD_SIMPLE_STOOL, true);
         registerFurniture("dark_wood_simple_stool", PaladinFurnitureModBlocksItems.DARK_WOOD_SIMPLE_STOOL, true);
         registerFurniture("granite_simple_stool", PaladinFurnitureModBlocksItems.GRANITE_SIMPLE_STOOL, true);
-        registerFurniture("calcite_simple_stool", PaladinFurnitureModBlocksItems.CALCITE_SIMPLE_STOOL, true);
         registerFurniture("andesite_simple_stool", PaladinFurnitureModBlocksItems.ANDESITE_SIMPLE_STOOL, true);
         registerFurniture("diorite_simple_stool", PaladinFurnitureModBlocksItems.DIORITE_SIMPLE_STOOL, true);
         registerFurniture("stone_simple_stool", PaladinFurnitureModBlocksItems.STONE_SIMPLE_STOOL, true);
         registerFurniture("blackstone_simple_stool", PaladinFurnitureModBlocksItems.BLACKSTONE_SIMPLE_STOOL, true);
-        registerFurniture("deepslate_simple_stool", PaladinFurnitureModBlocksItems.DEEPSLATE_SIMPLE_STOOL, true);
 
         registerFurniture("oak_classic_stool", PaladinFurnitureModBlocksItems.OAK_CLASSIC_STOOL, true);
         registerFurniture("birch_classic_stool", PaladinFurnitureModBlocksItems.BIRCH_CLASSIC_STOOL, true);
@@ -754,12 +732,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("light_wood_classic_stool", PaladinFurnitureModBlocksItems.LIGHT_WOOD_CLASSIC_STOOL, true);
         registerFurniture("dark_wood_classic_stool", PaladinFurnitureModBlocksItems.DARK_WOOD_CLASSIC_STOOL, true);
         registerFurniture("granite_classic_stool", PaladinFurnitureModBlocksItems.GRANITE_CLASSIC_STOOL, true);
-        registerFurniture("calcite_classic_stool", PaladinFurnitureModBlocksItems.CALCITE_CLASSIC_STOOL, true);
         registerFurniture("andesite_classic_stool", PaladinFurnitureModBlocksItems.ANDESITE_CLASSIC_STOOL, true);
         registerFurniture("diorite_classic_stool", PaladinFurnitureModBlocksItems.DIORITE_CLASSIC_STOOL, true);
         registerFurniture("stone_classic_stool", PaladinFurnitureModBlocksItems.STONE_CLASSIC_STOOL, true);
         registerFurniture("blackstone_classic_stool", PaladinFurnitureModBlocksItems.BLACKSTONE_CLASSIC_STOOL, true);
-        registerFurniture("deepslate_classic_stool", PaladinFurnitureModBlocksItems.DEEPSLATE_CLASSIC_STOOL, true);
 
         registerFurniture("oak_modern_stool", PaladinFurnitureModBlocksItems.OAK_MODERN_STOOL, true);
         registerFurniture("birch_modern_stool", PaladinFurnitureModBlocksItems.BIRCH_MODERN_STOOL, true);
@@ -786,12 +762,10 @@ public class BlockItemRegistryFabric {
         registerFurniture("quartz_modern_stool", PaladinFurnitureModBlocksItems.QUARTZ_MODERN_STOOL, true);
         registerFurniture("netherite_modern_stool", PaladinFurnitureModBlocksItems.NETHERITE_MODERN_STOOL, true);
         registerFurniture("granite_modern_stool", PaladinFurnitureModBlocksItems.GRANITE_MODERN_STOOL, true);
-        registerFurniture("calcite_modern_stool", PaladinFurnitureModBlocksItems.CALCITE_MODERN_STOOL, true);
         registerFurniture("andesite_modern_stool", PaladinFurnitureModBlocksItems.ANDESITE_MODERN_STOOL, true);
         registerFurniture("diorite_modern_stool", PaladinFurnitureModBlocksItems.DIORITE_MODERN_STOOL, true);
         registerFurniture("stone_modern_stool", PaladinFurnitureModBlocksItems.STONE_MODERN_STOOL, true);
         registerFurniture("blackstone_modern_stool", PaladinFurnitureModBlocksItems.BLACKSTONE_MODERN_STOOL, true);
-        registerFurniture("deepslate_modern_stool", PaladinFurnitureModBlocksItems.DEEPSLATE_MODERN_STOOL, true);
 
         //Counter time
         registerFurniture("oak_kitchen_counter", PaladinFurnitureModBlocksItems.OAK_KITCHEN_COUNTER, true);
@@ -983,15 +957,6 @@ public class BlockItemRegistryFabric {
         registerFurniture("granite_kitchen_wall_drawer", PaladinFurnitureModBlocksItems.GRANITE_KITCHEN_WALL_DRAWER, true);
         registerFurniture("granite_kitchen_wall_small_drawer", PaladinFurnitureModBlocksItems.GRANITE_KITCHEN_WALL_SMALL_DRAWER, true);
 
-        registerFurniture("calcite_kitchen_counter", PaladinFurnitureModBlocksItems.CALCITE_KITCHEN_COUNTER, true);
-        registerFurniture("calcite_kitchen_drawer", PaladinFurnitureModBlocksItems.CALCITE_KITCHEN_DRAWER, true);
-        registerFurniture("calcite_kitchen_cabinet", PaladinFurnitureModBlocksItems.CALCITE_KITCHEN_CABINET, true);
-        registerFurniture("calcite_kitchen_sink", PaladinFurnitureModBlocksItems.CALCITE_KITCHEN_SINK, true);
-        registerFurniture("calcite_kitchen_counter_oven", PaladinFurnitureModBlocksItems.CALCITE_KITCHEN_COUNTER_OVEN, true);
-        registerFurniture("calcite_kitchen_wall_counter", PaladinFurnitureModBlocksItems.CALCITE_KITCHEN_WALL_COUNTER, true);
-        registerFurniture("calcite_kitchen_wall_drawer", PaladinFurnitureModBlocksItems.CALCITE_KITCHEN_WALL_DRAWER, true);
-        registerFurniture("calcite_kitchen_wall_small_drawer", PaladinFurnitureModBlocksItems.CALCITE_KITCHEN_WALL_SMALL_DRAWER, true);
-
         registerFurniture("netherite_kitchen_counter", PaladinFurnitureModBlocksItems.NETHERITE_KITCHEN_COUNTER, true);
         registerFurniture("netherite_kitchen_drawer", PaladinFurnitureModBlocksItems.NETHERITE_KITCHEN_DRAWER, true);
         registerFurniture("netherite_kitchen_cabinet", PaladinFurnitureModBlocksItems.NETHERITE_KITCHEN_CABINET, true);
@@ -1037,15 +1002,6 @@ public class BlockItemRegistryFabric {
         registerFurniture("stone_kitchen_wall_drawer", PaladinFurnitureModBlocksItems.STONE_KITCHEN_WALL_DRAWER, true);
         registerFurniture("stone_kitchen_wall_small_drawer", PaladinFurnitureModBlocksItems.STONE_KITCHEN_WALL_SMALL_DRAWER, true);
 
-        registerFurniture("deepslate_tile_kitchen_counter", PaladinFurnitureModBlocksItems.DEEPSLATE_TILE_KITCHEN_COUNTER, true);
-        registerFurniture("deepslate_tile_kitchen_drawer", PaladinFurnitureModBlocksItems.DEEPSLATE_TILE_KITCHEN_DRAWER, true);
-        registerFurniture("deepslate_tile_kitchen_cabinet", PaladinFurnitureModBlocksItems.DEEPSLATE_TILE_KITCHEN_CABINET, true);
-        registerFurniture("deepslate_tile_kitchen_sink", PaladinFurnitureModBlocksItems.DEEPSLATE_TILE_KITCHEN_SINK, true);
-        registerFurniture("deepslate_tile_kitchen_counter_oven", PaladinFurnitureModBlocksItems.DEEPSLATE_TILE_KITCHEN_COUNTER_OVEN, true);
-        registerFurniture("deepslate_tile_kitchen_wall_counter", PaladinFurnitureModBlocksItems.DEEPSLATE_TILE_KITCHEN_WALL_COUNTER, true);
-        registerFurniture("deepslate_tile_kitchen_wall_drawer", PaladinFurnitureModBlocksItems.DEEPSLATE_TILE_KITCHEN_WALL_DRAWER, true);
-        registerFurniture("deepslate_tile_kitchen_wall_small_drawer", PaladinFurnitureModBlocksItems.DEEPSLATE_TILE_KITCHEN_WALL_SMALL_DRAWER, true);
-
         registerFurniture("blackstone_kitchen_counter", PaladinFurnitureModBlocksItems.BLACKSTONE_KITCHEN_COUNTER, true);
         registerFurniture("blackstone_kitchen_drawer", PaladinFurnitureModBlocksItems.BLACKSTONE_KITCHEN_DRAWER, true);
         registerFurniture("blackstone_kitchen_cabinet", PaladinFurnitureModBlocksItems.BLACKSTONE_KITCHEN_CABINET, true);
@@ -1054,15 +1010,6 @@ public class BlockItemRegistryFabric {
         registerFurniture("blackstone_kitchen_wall_counter", PaladinFurnitureModBlocksItems.BLACKSTONE_KITCHEN_WALL_COUNTER, true);
         registerFurniture("blackstone_kitchen_wall_drawer", PaladinFurnitureModBlocksItems.BLACKSTONE_KITCHEN_WALL_DRAWER, true);
         registerFurniture("blackstone_kitchen_wall_small_drawer", PaladinFurnitureModBlocksItems.BLACKSTONE_KITCHEN_WALL_SMALL_DRAWER, true);
-
-        registerFurniture("deepslate_kitchen_counter", PaladinFurnitureModBlocksItems.DEEPSLATE_KITCHEN_COUNTER, true);
-        registerFurniture("deepslate_kitchen_drawer", PaladinFurnitureModBlocksItems.DEEPSLATE_KITCHEN_DRAWER, true);
-        registerFurniture("deepslate_kitchen_cabinet", PaladinFurnitureModBlocksItems.DEEPSLATE_KITCHEN_CABINET, true);
-        registerFurniture("deepslate_kitchen_sink", PaladinFurnitureModBlocksItems.DEEPSLATE_KITCHEN_SINK, true);
-        registerFurniture("deepslate_kitchen_counter_oven", PaladinFurnitureModBlocksItems.DEEPSLATE_KITCHEN_COUNTER_OVEN, true);
-        registerFurniture("deepslate_kitchen_wall_counter", PaladinFurnitureModBlocksItems.DEEPSLATE_KITCHEN_WALL_COUNTER, true);
-        registerFurniture("deepslate_kitchen_wall_drawer", PaladinFurnitureModBlocksItems.DEEPSLATE_KITCHEN_WALL_DRAWER, true);
-        registerFurniture("deepslate_kitchen_wall_small_drawer", PaladinFurnitureModBlocksItems.DEEPSLATE_KITCHEN_WALL_SMALL_DRAWER, true);
 
         registerFurniture("white_fridge", PaladinFurnitureModBlocksItems.WHITE_FRIDGE, true);
         registerFurniture("white_freezer", PaladinFurnitureModBlocksItems.WHITE_FREEZER, false);

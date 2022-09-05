@@ -1,7 +1,7 @@
 {
   "include": [
     {
-      "template": "pfm:furniturerecipetemplate",
+      "template": "furniturerecipetemplate",
       "as": "nn",
       "using": {
         "recipe": "#recipe",
@@ -9,7 +9,7 @@
       }
     },
     {
-      "template": "pfm:furniturerecipetemplate",
+      "template": "furniturerecipetemplate",
       "as": "uu",
       "using": {
         "recipe": "#recipe2",

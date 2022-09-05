@@ -6,8 +6,6 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -107,8 +105,8 @@ public class Freezer extends HorizontalFacingBlockWEntity {
         BlockState blockState = world.getBlockState(blockPos = pos.down());
         if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof  Fridge) {
             BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
+            world.setBlockState(blockPos, blockState2, 3 | 35);
+            world.syncWorldEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));
         }
     }
 
@@ -117,7 +115,7 @@ public class Freezer extends HorizontalFacingBlockWEntity {
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
-        if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
+        if (blockPos.getY() < 255 - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
             return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
         }
         return null;
@@ -195,29 +193,16 @@ public class Freezer extends HorizontalFacingBlockWEntity {
        if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof Fridge) {
            ItemScatterer.spawn((World) world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(this.fridge.get().asItem()));
            BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-           world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
+           world.setBlockState(blockPos, blockState2, 3 | 35);
        }
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof IronFreezer) {
-            return new FreezerBlockEntity(BlockEntities.IRON_FREEZER_BLOCK_ENTITY, pos,state);
+    public BlockEntity createBlockEntity(BlockView blockView) {
+        if (baseBlockState.getBlock() instanceof IronFreezer) {
+            return new FreezerBlockEntity(BlockEntities.IRON_FREEZER_BLOCK_ENTITY);
         }
-        return new FreezerBlockEntity(BlockEntities.FREEZER_BLOCK_ENTITY, pos,state);
-    }
-    @Override
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (state.getBlock() instanceof IronFreezer) {
-            return checkType(world, type, BlockEntities.IRON_FREEZER_BLOCK_ENTITY);
-        }
-        return checkType(world, type, BlockEntities.FREEZER_BLOCK_ENTITY);
-    }
-
-    @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends FreezerBlockEntity> expectedType) {
-        return world.isClient ? null : Freezer.checkType(givenType, expectedType, FreezerBlockEntity::tick);
+        return new FreezerBlockEntity(BlockEntities.FREEZER_BLOCK_ENTITY);
     }
 }

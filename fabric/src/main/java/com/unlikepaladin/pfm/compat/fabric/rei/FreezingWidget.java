@@ -5,8 +5,9 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import me.shedaniel.clothconfig2.api.animator.NumberAnimator;
 import me.shedaniel.clothconfig2.api.animator.ValueAnimator;
 import me.shedaniel.math.Rectangle;
-import me.shedaniel.rei.api.client.REIRuntime;
-import me.shedaniel.rei.api.client.gui.widgets.BurningFire;
+import me.shedaniel.rei.api.REIHelper;
+import me.shedaniel.rei.api.widgets.BurningFire;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -20,9 +21,6 @@ public class FreezingWidget extends BurningFire {
     private final Identifier background = new Identifier(PaladinFurnitureMod.MOD_ID,"textures/gui/container/freezer.png");
     private Rectangle bounds;
     private double animationDuration = -1;
-    private final NumberAnimator<Float> darkBackgroundAlpha = ValueAnimator.ofFloat()
-            .withConvention(() -> REIRuntime.getInstance().isDarkThemeEnabled() ? 1.0F : 0.0F, ValueAnimator.typicalTransitionTime())
-            .asFloat();
 
     public FreezingWidget(Rectangle bounds) {
         this.bounds = new Rectangle(Objects.requireNonNull(bounds));
@@ -47,14 +45,12 @@ public class FreezingWidget extends BurningFire {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.darkBackgroundAlpha.update(delta);
         renderBackground(matrices, false, 1.0F);
-        renderBackground(matrices, true, this.darkBackgroundAlpha.value());
     }
 
     public void renderBackground(MatrixStack matrices, boolean dark, float alpha) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-        RenderSystem.setShaderTexture(0, background);
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, alpha);
+        MinecraftClient.getInstance().getTextureManager().bindTexture(background);
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(770, 771, 1, 0);
         RenderSystem.blendFunc(770, 771);
@@ -67,7 +63,7 @@ public class FreezingWidget extends BurningFire {
         } else {
             drawTexture(matrices, getX(), getY(), 1, 74, 14, 14);
         }
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
     }
 
     @Override

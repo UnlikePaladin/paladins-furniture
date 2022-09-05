@@ -13,13 +13,11 @@ import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class TrashcanImpl {
-    public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
-        return new TrashcanBlockEntityImpl(BlockEntities.TRASHCAN_BLOCK_ENTITY, pos, state);
-    }
 
     public static void openScreen(PlayerEntity player, BlockState state, World world, BlockPos pos) {
         if (world.isChunkLoaded(pos) && world.getBlockEntity(pos) instanceof TrashcanBlockEntityImpl){
@@ -29,5 +27,9 @@ public class TrashcanImpl {
                 packetByteBuf.writeBlockPos(trashcanScreenHandler.getPos());
             } );
         }
+    }
+
+    public static BlockEntity getBlockEntity() {
+        return new TrashcanBlockEntityImpl(BlockEntities.TRASHCAN_BLOCK_ENTITY);
     }
 }

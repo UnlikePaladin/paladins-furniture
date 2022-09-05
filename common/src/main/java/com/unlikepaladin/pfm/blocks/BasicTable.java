@@ -60,12 +60,13 @@ public class BasicTable extends Block {
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         switch (rotation) {
-            case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> {
+            case CLOCKWISE_90:
+            case COUNTERCLOCKWISE_90: {
                 switch (state.get(AXIS)) {
-                    case X -> {
+                    case X: {
                         return state.with(AXIS, Direction.Axis.Z);
                     }
-                    case Z -> {
+                    case Z: {
                         return state.with(AXIS, Direction.Axis.X);
                     }
                 }
@@ -80,10 +81,6 @@ public class BasicTable extends Block {
             this.baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
             this.baseBlock.onBlockAdded(this.baseBlockState, world, pos, oldState, false);
         }
-    }
-    @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
     }
 
     @Override
@@ -306,46 +303,86 @@ public class BasicTable extends Block {
         boolean dirNorthOrSouth = dir.equals(Direction.Axis.X);
         BasicTableShape blockShape = state.get(SHAPE);
         if (dirNorthOrSouth) {
-            return switch (blockShape) {
-                case NORTH -> TABLE_BASIC_NORTH;
-                case WEST -> TABLE_BASIC_EAST_FACING_WEST;
-                case EAST -> TABLE_BASIC_EAST_FACING_EAST;
-                case SOUTH -> TABLE_BASIC_NORTH_FACING_SOUTH;
-                case CORNER_NORTH_EAST -> TABLE_BASIC_CORNER_NORTH_EAST;
-                case NORTH_SOUTH -> TABLE_BASIC_NORTH_SOUTH;
-                case CORNER_NORTH_WEST -> TABLE_BASIC_CORNER_NORTH_WEST;
-                case CORNER_SOUTH_EAST -> TABLE_BASIC_CORNER_NORTH_WEST_FACING_SOUTH;
-                case CORNER_SOUTH_WEST -> TABLE_BASIC_CORNER_NORTH_EAST_FACING_SOUTH;
-                case EAST_EDGE -> TABLE_BASIC_LEG_FACING_EAST;
-                case WEST_EDGE -> TABLE_BASIC_LEG_FACING_WEST;
-                case NORTH_EDGE,SOUTH_EDGE,ALL,EAST_WEST -> TABLE_BASIC_MIDDLE;
-                case NORTH_EAST -> TABLE_BASIC_NORTH_EAST;
-                case NORTH_WEST-> TABLE_BASIC_NORTH_WEST_NORTH_FACING_EAST;
-                case SOUTH_EAST -> TABLE_BASIC_NORTH_WEST_FACING_WEST;
-                case SOUTH_WEST -> TABLE_BASIC_NORTH_EAST_FACING_SOUTH;
-                default -> TABLE_BASIC;
-                };
+            switch (blockShape) {
+                case NORTH:
+                    return TABLE_BASIC_NORTH;
+                case WEST:
+                    return TABLE_BASIC_EAST_FACING_WEST;
+                case EAST:
+                    return TABLE_BASIC_EAST_FACING_EAST;
+                case SOUTH:
+                    return TABLE_BASIC_NORTH_FACING_SOUTH;
+                case CORNER_NORTH_EAST:
+                    return TABLE_BASIC_CORNER_NORTH_EAST;
+                case NORTH_SOUTH:
+                    return TABLE_BASIC_NORTH_SOUTH;
+                case CORNER_NORTH_WEST:
+                    return TABLE_BASIC_CORNER_NORTH_WEST;
+                case CORNER_SOUTH_EAST:
+                    return TABLE_BASIC_CORNER_NORTH_WEST_FACING_SOUTH;
+                case CORNER_SOUTH_WEST:
+                    return TABLE_BASIC_CORNER_NORTH_EAST_FACING_SOUTH;
+                case EAST_EDGE:
+                    return TABLE_BASIC_LEG_FACING_EAST;
+                case WEST_EDGE:
+                    return TABLE_BASIC_LEG_FACING_WEST;
+                case NORTH_EDGE:
+                case SOUTH_EDGE:
+                case ALL:
+                case EAST_WEST:
+                    return TABLE_BASIC_MIDDLE;
+                case NORTH_EAST:
+                    return TABLE_BASIC_NORTH_EAST;
+                case NORTH_WEST:
+                    return TABLE_BASIC_NORTH_WEST_NORTH_FACING_EAST;
+                case SOUTH_EAST:
+                    return TABLE_BASIC_NORTH_WEST_FACING_WEST;
+                case SOUTH_WEST:
+                    return TABLE_BASIC_NORTH_EAST_FACING_SOUTH;
+                default:
+                    return TABLE_BASIC;
+            }
             }
         else {
-            return switch (blockShape) {
-                case NORTH -> TABLE_BASIC_EAST;
-                case WEST -> TABLE_BASIC_NORTH_FACING_WEST;
-                case EAST -> TABLE_BASIC_NORTH_FACING_EAST;
-                case SOUTH -> TABLE_BASIC_EAST_FACING_SOUTH;
-                case CORNER_NORTH_EAST -> TABLE_BASIC_CORNER_NORTH_WEST_FACING_EAST;
-                case EAST_WEST -> TABLE_BASIC_NORTH_SOUTH_FACING_EAST;
-                case CORNER_NORTH_WEST -> TABLE_BASIC_CORNER_NORTH_EAST_FACING_WEST ;
-                case CORNER_SOUTH_EAST -> TABLE_BASIC_CORNER_NORTH_EAST_FACING_EAST;
-                case CORNER_SOUTH_WEST -> TABLE_BASIC_CORNER_NORTH_WEST_FACING_WEST;
-                case NORTH_EDGE -> TABLE_BASIC_LEG;
-                case SOUTH_EDGE -> TABLE_BASIC_LEG_FACING_SOUTH;
-                case EAST_EDGE,WEST_EDGE,ALL,NORTH_SOUTH -> TABLE_BASIC_MIDDLE;
-                case NORTH_EAST -> TABLE_BASIC_NORTH_WEST_FACING_EAST;
-                case NORTH_WEST-> TABLE_BASIC_NORTH_EAST_FACING_WEST;
-                case SOUTH_EAST -> TABLE_BASIC_NORTH_EAST_FACING_EAST;
-                case SOUTH_WEST -> TABLE_BASIC_NORTH_WEST;
-                default -> TABLE_BASIC_FACING_EAST;
-            };
+            switch (blockShape) {
+                case NORTH:
+                    return TABLE_BASIC_EAST;
+                case WEST:
+                    return TABLE_BASIC_NORTH_FACING_WEST;
+                case EAST:
+                    return TABLE_BASIC_NORTH_FACING_EAST;
+                case SOUTH:
+                    return TABLE_BASIC_EAST_FACING_SOUTH;
+                case CORNER_NORTH_EAST:
+                    return TABLE_BASIC_CORNER_NORTH_WEST_FACING_EAST;
+                case EAST_WEST:
+                    return TABLE_BASIC_NORTH_SOUTH_FACING_EAST;
+                case CORNER_NORTH_WEST:
+                    return TABLE_BASIC_CORNER_NORTH_EAST_FACING_WEST;
+                case CORNER_SOUTH_EAST:
+                    return TABLE_BASIC_CORNER_NORTH_EAST_FACING_EAST;
+                case CORNER_SOUTH_WEST:
+                    return TABLE_BASIC_CORNER_NORTH_WEST_FACING_WEST;
+                case NORTH_EDGE:
+                    return TABLE_BASIC_LEG;
+                case SOUTH_EDGE:
+                    return TABLE_BASIC_LEG_FACING_SOUTH;
+                case EAST_EDGE:
+                case WEST_EDGE:
+                case ALL:
+                case NORTH_SOUTH:
+                    return TABLE_BASIC_MIDDLE;
+                case NORTH_EAST:
+                    return TABLE_BASIC_NORTH_WEST_FACING_EAST;
+                case NORTH_WEST:
+                    return TABLE_BASIC_NORTH_EAST_FACING_WEST;
+                case SOUTH_EAST:
+                    return TABLE_BASIC_NORTH_EAST_FACING_EAST;
+                case SOUTH_WEST:
+                    return TABLE_BASIC_NORTH_WEST;
+                default:
+                    return TABLE_BASIC_FACING_EAST;
+            }
         }
     }
 }

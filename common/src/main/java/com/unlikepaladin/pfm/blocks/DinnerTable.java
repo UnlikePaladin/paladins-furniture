@@ -53,11 +53,6 @@ public class DinnerTable extends HorizontalFacingBlock  {
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
-    }
-
-    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(SHAPE);
         stateManager.add(FACING);
@@ -164,7 +159,7 @@ public class DinnerTable extends HorizontalFacingBlock  {
         boolean dirWestOrEast = dir.equals(Direction.WEST) || dir.equals(Direction.EAST);
 
         switch (tableShape) {
-            case LEFT -> {
+            case LEFT: {
                 if (dirNorthOrSouth) {
                     return dinner_table_one_west;}
                 else if (dirWestOrEast) {
@@ -173,7 +168,7 @@ public class DinnerTable extends HorizontalFacingBlock  {
                     return dinner_table;
                 }
             }
-            case RIGHT -> {
+            case RIGHT: {
                 if (dirNorthOrSouth) {
                 return dinner_table_one_east;}
                 else if (dirWestOrEast) {
@@ -182,10 +177,10 @@ public class DinnerTable extends HorizontalFacingBlock  {
                     return dinner_table;
                 }
             }
-            case MIDDLE -> {
+            case MIDDLE: {
                 return dinner_table_middle;
             }
-            default -> {
+            default: {
                 if (dirWestOrEast) {
                     return dinner_table;}
                 else {

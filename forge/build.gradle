@@ -15,7 +15,6 @@ loom {
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
         mixinConfig "pfm-common.mixins.json"
-
         dataGen {
             mod "pfm"
         }
@@ -44,7 +43,6 @@ repositories {
         url = "https://dvs1.progwml6.com/files/maven/"
     }
 }
-
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"

@@ -36,7 +36,7 @@ public class MixinTitleScreen {
             return;
         }
 
-        MinecraftClient.getInstance().setScreen(new ConfirmScreen(
+        MinecraftClient.getInstance().openScreen(new ConfirmScreen(
                 (boolean accepted) -> {
                     if (accepted) {
                         try {

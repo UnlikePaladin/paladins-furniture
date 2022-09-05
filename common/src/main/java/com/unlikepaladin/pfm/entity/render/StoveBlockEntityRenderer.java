@@ -6,8 +6,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
@@ -17,16 +17,16 @@ import net.minecraft.util.math.Vec3f;
 
 @Environment(value= EnvType.CLIENT)
 public class StoveBlockEntityRenderer<T extends StoveBlockEntity>
-        implements BlockEntityRenderer<T> {
+        extends BlockEntityRenderer<T> {
     private static final float SCALE = 0.375f;
-    public StoveBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+    public StoveBlockEntityRenderer(BlockEntityRenderDispatcher ctx) {
+        super(ctx);
     }
 
     @Override
     public void render(StoveBlockEntity stovetopBlockEntity, float f, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
         Direction direction = stovetopBlockEntity.getCachedState().get(KitchenStovetop.FACING);
         DefaultedList<ItemStack> itemList = stovetopBlockEntity.getItemsBeingCooked();
-        int k = (int)stovetopBlockEntity.getPos().asLong();
         for (int l = 0; l < itemList.size(); ++l) {
             ItemStack itemStack = itemList.get(l);
             if (itemStack == ItemStack.EMPTY) continue;
@@ -47,6 +47,7 @@ public class StoveBlockEntityRenderer<T extends StoveBlockEntity>
                     break;
                 case EAST:
                     matrices.translate(0.5, 1.02, 0.5);
+                    break;
             }
             rot = 180;
             matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(g));
@@ -54,7 +55,7 @@ public class StoveBlockEntityRenderer<T extends StoveBlockEntity>
             matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90.0f));
             matrices.translate(-0.16, -0.16, 0.0);
             matrices.scale(0.4f, 0.4f, 0.4f);
-            MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, i, j, matrices, vertexConsumerProvider, k + l);
+            MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, i, j, matrices, vertexConsumerProvider);
             matrices.pop();
         }
     }

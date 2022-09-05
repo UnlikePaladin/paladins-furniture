@@ -8,7 +8,7 @@
       "text": "The toilet can be crafted with quartz, a bucket, and a button."
     },
     {
-      "type": "pfm:furniturerecipetemplate",
+      "type": "furniturerecipetemplate",
       "recipe": "pfm:basic_toilet"
     }
   ]

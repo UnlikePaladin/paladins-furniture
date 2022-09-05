@@ -2,31 +2,41 @@ package com.unlikepaladin.pfm.blocks.behavior;
 
 import com.unlikepaladin.pfm.blocks.KitchenSink;
 import com.unlikepaladin.pfm.registry.Statistics;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.*;
-import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.block.entity.BannerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.Util;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 
 import java.util.Map;
 import java.util.function.Predicate;
 
-public interface SinkBehavior extends CauldronBehavior {
+public interface SinkBehavior {
 
     SinkBehavior FILL_SINK_WITH_WATER = (state, world, pos, player, hand, stack) -> SinkBehavior.fillCauldron(world, pos, player, hand, stack, state.with(KitchenSink.LEVEL_4, 3), SoundEvents.ITEM_BUCKET_EMPTY);
-    Map<Item, CauldronBehavior> WATER_SINK_BEHAVIOR = CauldronBehavior.createMap();
-    CauldronBehavior CLEAN_SHULKER_BOX = (state, world, pos, player, hand, stack) -> {
+    Map<Item, SinkBehavior> WATER_SINK_BEHAVIOR = SinkBehavior.createMap();
+
+
+    static Object2ObjectOpenHashMap<Item, SinkBehavior> createMap() {
+        return (Object2ObjectOpenHashMap)Util.make(new Object2ObjectOpenHashMap(), (map) -> {
+            map.defaultReturnValue(null);});
+    }
+
+    public ActionResult interact(BlockState var1, World var2, BlockPos var3, PlayerEntity var4, Hand var5, ItemStack var6);
+
+    SinkBehavior CLEAN_SHULKER_BOX = (state, world, pos, player, hand, stack) -> {
         if (state.get(KitchenSink.LEVEL_4) == 0) {
             return ActionResult.PASS;
         }
@@ -36,8 +46,8 @@ public interface SinkBehavior extends CauldronBehavior {
         }
         if (!world.isClient) {
             ItemStack itemStack = new ItemStack(Blocks.SHULKER_BOX);
-            if (stack.hasNbt()) {
-                itemStack.setNbt(stack.getNbt().copy());
+            if (stack.hasTag()) {
+                itemStack.setTag(stack.getTag().copy());
             }
             player.setStackInHand(hand, itemStack);
             player.incrementStat(Stats.CLEAN_SHULKER_BOX);
@@ -46,7 +56,7 @@ public interface SinkBehavior extends CauldronBehavior {
         return ActionResult.success(world.isClient);
     };
 
-    CauldronBehavior CLEAN_DYEABLE_ITEM = (state, world, pos, player, hand, stack) -> {
+    SinkBehavior CLEAN_DYEABLE_ITEM = (state, world, pos, player, hand, stack) -> {
        if (state.get(KitchenSink.LEVEL_4) == 0) {
            return ActionResult.PASS;
        }
@@ -54,7 +64,7 @@ public interface SinkBehavior extends CauldronBehavior {
         if (!(item instanceof DyeableItem)) {
             return ActionResult.PASS;
         }
-        DyeableItem dyeableItem = (DyeableItem)((Object)item);
+        DyeableItem dyeableItem = (DyeableItem) item;
         if (!dyeableItem.hasColor(stack)) {
             return ActionResult.PASS;
         }
@@ -65,7 +75,7 @@ public interface SinkBehavior extends CauldronBehavior {
         }
         return ActionResult.success(world.isClient);
 };
-    CauldronBehavior CLEAN_BANNER = (state, world, pos, player, hand, stack) -> {
+    SinkBehavior CLEAN_BANNER = (state, world, pos, player, hand, stack) -> {
         if (BannerBlockEntity.getPatternCount(stack) <= 0 || state.get(KitchenSink.LEVEL_4) == 0) {
             return ActionResult.PASS;
         }
@@ -73,13 +83,13 @@ public interface SinkBehavior extends CauldronBehavior {
             ItemStack itemStack = stack.copy();
             itemStack.setCount(1);
             BannerBlockEntity.loadFromItemStack(itemStack);
-            if (!player.getAbilities().creativeMode) {
+            if (!player.isCreative()) {
                 stack.decrement(1);
             }
             if (stack.isEmpty()) {
                 player.setStackInHand(hand, itemStack);
-            } else if (player.getInventory().insertStack(itemStack)) {
-                player.playerScreenHandler.syncState();
+            } else if (player.inventory.insertStack(itemStack) && player instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity)player).refreshScreenHandler(player.playerScreenHandler);
             } else {
                 player.dropItem(itemStack, false);
             }
@@ -92,12 +102,11 @@ public interface SinkBehavior extends CauldronBehavior {
     static ActionResult fillCauldron(World world, BlockPos pos, PlayerEntity player, Hand hand, ItemStack stack, BlockState state, SoundEvent soundEvent) {
         if (!world.isClient) {
             Item item = stack.getItem();
-            player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.BUCKET)));
+            player.setStackInHand(hand, ItemUsage.method_30012(stack, player, new ItemStack(Items.BUCKET)));
             player.incrementStat(Statistics.SINK_FILLED);
             player.incrementStat(Stats.USED.getOrCreateStat(item));
             world.setBlockState(pos, state);
             world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0f, 1.0f);
-            world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
         }
         return ActionResult.success(world.isClient);
     }
@@ -108,17 +117,16 @@ public interface SinkBehavior extends CauldronBehavior {
         }
         if (!world.isClient) {
             Item item = stack.getItem();
-            player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, output));
+            player.setStackInHand(hand, ItemUsage.method_30012(stack, player, output));
             player.incrementStat(Statistics.USE_SINK);
             player.incrementStat(Stats.USED.getOrCreateStat(item));
             world.setBlockState(pos, state.with(KitchenSink.LEVEL_4, 0));
             world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0f, 1.0f);
-            world.emitGameEvent(null, GameEvent.FLUID_PICKUP, pos);
         }
         return ActionResult.success(world.isClient);
     }
 
-    static void registerBucketBehavior(Map<Item, CauldronBehavior> behavior) {
+    static void registerBucketBehavior(Map<Item, SinkBehavior> behavior) {
         behavior.put(Items.WATER_BUCKET, FILL_SINK_WITH_WATER);
     }
     static void registerBehavior() {
@@ -128,12 +136,11 @@ public interface SinkBehavior extends CauldronBehavior {
             }
             if (!world.isClient) {
                 Item item = stack.getItem();
-                player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
+                player.setStackInHand(hand, ItemUsage.method_30012(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
                 player.incrementStat(Statistics.USE_SINK);
                 player.incrementStat(Stats.USED.getOrCreateStat(item));
                 world.setBlockState(pos, state.with(KitchenSink.LEVEL_4, state.get(KitchenSink.LEVEL_4) + 1));
                 world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
-                world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
             }
             return ActionResult.success(world.isClient);
         });
@@ -148,12 +155,11 @@ public interface SinkBehavior extends CauldronBehavior {
                     return ActionResult.PASS;
                 }
                 Item item = stack.getItem();
-                player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, PotionUtil.setPotion(new ItemStack(Items.POTION), Potions.WATER)));
+                player.setStackInHand(hand, ItemUsage.method_30012(stack, player, PotionUtil.setPotion(new ItemStack(Items.POTION), Potions.WATER)));
                 player.incrementStat(Statistics.USE_SINK);
                 player.incrementStat(Stats.USED.getOrCreateStat(item));
                 KitchenSink.decrementFluidLevel(state, world, pos);
                 world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
-                world.emitGameEvent(null, GameEvent.FLUID_PICKUP, pos);
             }
             return ActionResult.success(world.isClient);
         });
@@ -162,12 +168,11 @@ public interface SinkBehavior extends CauldronBehavior {
                 return ActionResult.PASS;
             }
             if (!world.isClient) {
-                player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
+                player.setStackInHand(hand, ItemUsage.method_30012(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
                 player.incrementStat(Statistics.USE_SINK);
                 player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
                 world.setBlockState(pos, state.cycle(KitchenSink.LEVEL_4));
                 world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
-                world.emitGameEvent(null, GameEvent.FLUID_PLACE, pos);
             }
             return ActionResult.success(world.isClient);
         });

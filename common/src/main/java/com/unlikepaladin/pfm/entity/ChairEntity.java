@@ -42,7 +42,7 @@ public class ChairEntity extends MobEntity {
     public void tick() {
             if (!this.hasPassengers()) {
                 if (!this.world.isClient){
-                    this.discard();
+                    this.remove();
                 }
             }
             else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicToilet && world.isClient()){
@@ -57,7 +57,7 @@ public class ChairEntity extends MobEntity {
             else {
                 if (!this.world.isClient){
                     this.removeAllPassengers();
-                    this.discard();
+                    this.remove();
                 }
             }
     }
@@ -70,7 +70,7 @@ public class ChairEntity extends MobEntity {
 
     @Override
     public boolean isAlive() {
-        return !this.isRemoved();
+        return !this.removed;
     }
 
 

@@ -6,7 +6,6 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
@@ -58,8 +57,8 @@ public class KitchenCounterOven extends SmokerBlock implements Waterloggable {
     public static final BooleanProperty OPEN = Properties.OPEN;
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new CounterOvenBlockEntity(pos, state);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new CounterOvenBlockEntity();
     }
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
@@ -104,19 +103,10 @@ public class KitchenCounterOven extends SmokerBlock implements Waterloggable {
     }
 
     @Override
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(world, type, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
-    }
-
-    @Override
     public void openScreen(World world, BlockPos pos, PlayerEntity player) {
-        //This is called by the onUse method inside AbstractFurnaceBlock so
-        //it is a little bit different of how you open the screen for normal container
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof CounterOvenBlockEntity) {
             player.openHandledScreen((NamedScreenHandlerFactory)blockEntity);
-            // Optional: increment player's stat
             player.incrementStat(Statistics.STOVE_OPENED);
         }
     }
@@ -139,28 +129,28 @@ public class KitchenCounterOven extends SmokerBlock implements Waterloggable {
         boolean up = state.get(UP);
         boolean down = state.get(DOWN);
         if(up){
-            return switch (dir){
-                case NORTH -> COUNTER_OVEN_BOTTOM_SOUTH;
-                case SOUTH -> COUNTER_OVEN_BOTTOM;
-                case EAST -> COUNTER_OVEN_BOTTOM_WEST;
-                default -> COUNTER_OVEN_BOTTOM_EAST;
-            };
+            switch (dir){
+                case NORTH: return COUNTER_OVEN_BOTTOM_SOUTH;
+                case SOUTH: return COUNTER_OVEN_BOTTOM;
+                case EAST: return COUNTER_OVEN_BOTTOM_WEST;
+                default: return COUNTER_OVEN_BOTTOM_EAST;
+            }
         }
         else if(down) {
-            return switch (dir){
-                case NORTH -> COUNTER_OVEN_MIDDLE_SOUTH;
-                case SOUTH -> COUNTER_OVEN_MIDDLE;
-                case EAST -> COUNTER_OVEN_MIDDLE_WEST;
-                default -> COUNTER_OVEN_MIDDLE_EAST;
-            };
+            switch (dir){
+                case NORTH: return COUNTER_OVEN_MIDDLE_SOUTH;
+                case SOUTH: return COUNTER_OVEN_MIDDLE;
+                case EAST: return COUNTER_OVEN_MIDDLE_WEST;
+                default: return COUNTER_OVEN_MIDDLE_EAST;
+            }
         }
         else {
-        return switch (dir) {
-            case WEST -> COUNTER_OVEN_EAST;
-            case NORTH -> COUNTER_OVEN_SOUTH;
-            case SOUTH -> COUNTER_OVEN;
-            default -> COUNTER_OVEN_WEST;
-            };
+            switch (dir) {
+                case WEST: return COUNTER_OVEN_EAST;
+                case NORTH: return COUNTER_OVEN_SOUTH;
+                case SOUTH: return COUNTER_OVEN;
+                default: return COUNTER_OVEN_WEST;
+            }
         }
     }
 }

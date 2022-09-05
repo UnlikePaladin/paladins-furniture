@@ -8,7 +8,6 @@ import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -72,7 +71,7 @@ public class KitchenStovetop extends HorizontalFacingBlockWEntity {
         Optional<CampfireCookingRecipe> optional;
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof StovetopBlockEntity && (optional = (stovetopBlockEntity = (StovetopBlockEntity)blockEntity).getRecipeFor(itemStack = player.getStackInHand(hand))).isPresent()) {
-            if (!world.isClient && stovetopBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+            if (!world.isClient && stovetopBlockEntity.addItem(player.isCreative() ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
                 player.incrementStat(Statistics.STOVETOP_USED);
                 return ActionResult.SUCCESS;
             }
@@ -83,7 +82,7 @@ public class KitchenStovetop extends HorizontalFacingBlockWEntity {
             for (int i = 0; i < stovetopBlockEntity.getItemsBeingCooked().size(); i++) {
                 ItemStack stack = stovetopBlockEntity.getItemsBeingCooked().get(i);
                 if (stack.isEmpty()) continue;
-                if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) {
+                if(!world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isPresent()) {
                     ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stovetopBlockEntity.removeStack(i));
                     world.spawnEntity(itemEntity);
                     player.incrementStat(Statistics.STOVETOP_USED);
@@ -117,43 +116,28 @@ public class KitchenStovetop extends HorizontalFacingBlockWEntity {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        return switch (dir) {
-            case WEST -> STOVETOP_EAST;
-            case NORTH -> STOVETOP_SOUTH;
-            case SOUTH -> STOVETOP;
-            default -> STOVETOP_WEST;
-        };
+        switch (dir) {
+            case WEST: return STOVETOP_EAST;
+            case NORTH: return STOVETOP_SOUTH;
+            case SOUTH: return STOVETOP;
+            default: return STOVETOP_WEST;
+        }
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return getBlockEntity(pos, state);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return getBlockEntity();
     }
 
     @ExpectPlatform
-    public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
+    public static BlockEntity getBlockEntity() {
         return null;
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(LIT, FACING);
-    }
-    @Override
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (world.isClient) {
-            if (state.get(LIT)) {
-                return checkType(type, BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::clientTick);
-            }
-        } else {
-            if (state.get(LIT)) {
-                return checkType(type, BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::litServerTick);
-            }
-            return checkType(type, BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::unlitServerTick);
-        }
-        return null;
     }
 
     @Override
@@ -171,7 +155,8 @@ public class KitchenStovetop extends HorizontalFacingBlockWEntity {
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof StovetopBlockEntity stovetopBlockEntity) {
+        if (blockEntity instanceof StovetopBlockEntity) {
+            StovetopBlockEntity stovetopBlockEntity = (StovetopBlockEntity) blockEntity;
             ItemScatterer.spawn(world, pos, stovetopBlockEntity.getInventory());
             world.updateComparators(pos, this);
             stovetopBlockEntity.markRemoved();

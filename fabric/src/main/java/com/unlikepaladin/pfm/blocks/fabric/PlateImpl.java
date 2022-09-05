@@ -15,7 +15,7 @@ public class PlateImpl {
         item.finishUsing(stack, world, player);
     }
 
-    public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
-        return new PlateBlockEntityImpl(pos, state);
+    public static BlockEntity getBlockEntity() {
+        return new PlateBlockEntityImpl();
     }
 }

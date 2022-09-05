@@ -7,13 +7,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 
 public class PlateBlockEntityImpl extends PlateBlockEntity implements BlockEntityClientSerializable {
-    public PlateBlockEntityImpl(BlockPos blockPos, BlockState blockState) {
-        super(blockPos, blockState);
+    public PlateBlockEntityImpl() {
+        super();
     }
 
     @Override
     public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
+        fromTag(getCachedState(), tag);
     }
 
     @Override

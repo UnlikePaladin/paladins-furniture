@@ -31,7 +31,7 @@ public class TrashcanScreen extends HandledScreen<TrashcanScreenHandler> {
         this.trashcanBlockEntity = handler.trashcanBlockEntity;
         this.narrow = this.width < 379;
         this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
-        this.startButton = this.addDrawableChild(new ButtonWidget(this.x + 8, this.y + 40, 40, 20, startButtonText, button -> {
+        this.startButton = this.addButton(new ButtonWidget(this.x + 8, this.y + 40, 40, 20, startButtonText, button -> {
             TrashcanScreenHandler.clear(trashcanBlockEntity);
         }));
     }
@@ -49,9 +49,8 @@ public class TrashcanScreen extends HandledScreen<TrashcanScreenHandler> {
 
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, background);
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        this.client.getTextureManager().bindTexture(background);
         int i = this.x;
         int j = this.y;
         this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);

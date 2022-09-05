@@ -51,7 +51,7 @@ public class SimpleLight extends PowerableBlock {
     @Override
     public void scheduledTick(BlockState state, ServerWorld world, BlockPos pos, Random random) {
         if (state.get(LIT) && !world.isReceivingRedstonePower(pos) && !state.get(POWERLOCKED)) {
-            world.setBlockState(pos, state.cycle(LIT), NOTIFY_ALL);
+            world.setBlockState(pos, state.cycle(LIT), 3);
         }
     }
 
@@ -88,7 +88,7 @@ public class SimpleLight extends PowerableBlock {
             if (bl) {
                 world.getBlockTickScheduler().schedule(pos, this, 4);
             } else {
-                world.setBlockState(pos, state.cycle(LIT), NOTIFY_LISTENERS);
+                world.setBlockState(pos, state.cycle(LIT), 2);
             }
         }
         super.neighborUpdate(state, world, pos, block, fromPos, notify);

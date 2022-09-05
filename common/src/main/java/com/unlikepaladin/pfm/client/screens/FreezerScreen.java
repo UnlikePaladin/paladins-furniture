@@ -3,10 +3,12 @@ package com.unlikepaladin.pfm.client.screens;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.menus.AbstractFreezerScreenHandler;
+import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.screen.AbstractFurnaceScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -40,17 +42,16 @@ public class FreezerScreen extends HandledScreen<ScreenHandler> {
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         int k;
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, this.background);
+        RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
+        this.client.getTextureManager().bindTexture(this.background);
         int i = this.x;
         int j = this.y;
         this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        if (((AbstractFreezerScreenHandler)this.handler).isActive()) {
-            k = ((AbstractFreezerScreenHandler)this.handler).getFuelProgress();
+        if (((FreezerScreenHandler)this.handler).isBurning()) {
+            k = ((FreezerScreenHandler)this.handler).getFuelProgress();
             this.drawTexture(matrices, i + 56, j + 36 + 12 - k, 176, 12 - k, 14, k + 1);
         }
-        k = ((AbstractFreezerScreenHandler)this.handler).getFreezeProgress();
+        k = ((FreezerScreenHandler)this.handler).getCookProgress();
         this.drawTexture(matrices, i + 79, j + 34, 176, 14, k + 1, 16);
     }
 

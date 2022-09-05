@@ -10,9 +10,9 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
-import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.DoubleInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
+import net.minecraft.screen.GenericContainerScreenHandler;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -32,75 +33,69 @@ import net.minecraft.tag.Tag;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Tickable;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 
 public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker,
-        RecipeInputProvider {
-    public FreezerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
-        super(blockEntityType, pos, state);
+        RecipeInputProvider, Tickable {
+
+    public FreezerBlockEntity(BlockEntityType<?> blockEntityType) {
+        super(blockEntityType);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
     }
-    public FreezerBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntities.FREEZER_BLOCK_ENTITY, pos, state);
+    public FreezerBlockEntity() {
+        super(BlockEntities.FREEZER_BLOCK_ENTITY);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
     }
-    private final ViewerCountManager stateManager = new ViewerCountManager() {
 
-
-        @Override
-        protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Freezer) {
-                FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
-                FreezerBlockEntity.this.setOpen(state, true);
-            }
+    public static int countViewers(World world, LockableContainerBlockEntity inventory, int x, int y, int z) {
+        int i = 0;
+        float f = 5.0f;
+        List<PlayerEntity> list = world.getNonSpectatingEntities(PlayerEntity.class, new Box((float)x - 5.0f, (float)y - 5.0f, (float)z - 5.0f, (float)(x + 1) + 5.0f, (float)(y + 1) + 5.0f, (float)(z + 1) + 5.0f));
+        for (PlayerEntity playerEntity : list) {
+            Inventory inventory2;
+            if (!(playerEntity.currentScreenHandler instanceof GenericContainerScreenHandler) || (inventory2 = ((GenericContainerScreenHandler)playerEntity.currentScreenHandler).getInventory()) != inventory && (!(inventory2 instanceof DoubleInventory) || !((DoubleInventory)inventory2).isPart(inventory))) continue;
+            ++i;
         }
+        return i;
+    }
 
-        @Override
-        protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Freezer) {
-                FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
-                FreezerBlockEntity.this.setOpen(state, false);
-            }
+    private int viewerCount;
+    @Override
+    public boolean onSyncedBlockEvent(int type, int data) {
+        if (type == 1) {
+            this.viewerCount = data;
+            return true;
         }
-
-
-        @Override
-        protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
-
-        }
-
-        @Override
-        protected boolean isPlayerViewing(PlayerEntity player) {
-            if (player.currentScreenHandler instanceof FreezerScreenHandler) {
-                Inventory inventory = ((FreezerScreenHandler)player.currentScreenHandler).getInventory();
-                return inventory == FreezerBlockEntity.this;
-            }
-            return false;
-        }
-    };
-
+        return super.onSyncedBlockEvent(type, data);
+    }
 
     @Override
     public void onOpen(PlayerEntity player) {
         if (!this.removed && !player.isSpectator()) {
-            this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+            if (this.viewerCount < 0) {
+                this.viewerCount = 0;
+            }
+            ++this.viewerCount;
+            FreezerBlockEntity.this.playSound(getCachedState(), SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
+            FreezerBlockEntity.this.setOpen(getCachedState(), true);
         }
     }
 
     @Override
     public void onClose(PlayerEntity player) {
         if (!this.removed && !player.isSpectator()) {
-            this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+            --this.viewerCount;
+            FreezerBlockEntity.this.playSound(this.getCachedState(), SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
+            FreezerBlockEntity.this.setOpen(this.getCachedState(), false);
         }
     }
 
@@ -228,7 +223,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         if (dir == Direction.DOWN && slot == 1) {
-            return stack.isOf(Items.BUCKET);
+            return stack.getItem() == (Items.BUCKET);
         }
         return true;
     }
@@ -258,7 +253,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     @Override
     public void setStack(int slot, ItemStack stack) {
         ItemStack itemStack = this.inventory.get(slot);
-        boolean bl = !stack.isEmpty() && stack.isItemEqualIgnoreDamage(itemStack) && ItemStack.areNbtEqual(stack, itemStack);
+        boolean bl = !stack.isEmpty() && stack.isItemEqualIgnoreDamage(itemStack) && ItemStack.areTagsEqual(stack, itemStack);
         this.inventory.set(slot, stack);
         if (stack.getCount() > this.getMaxCountPerStack()) {
             stack.setCount(this.getMaxCountPerStack());
@@ -313,8 +308,8 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void fromTag(BlockState state, NbtCompound nbt) {
+        super.fromTag(state, nbt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.inventory);
         this.fuelTime = nbt.getShort("BurnTime");
@@ -342,7 +337,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Freezer.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+        this.world.setBlockState(this.getPos(), state.with(Freezer.OPEN, open), 3);
     }
 
 
@@ -393,7 +388,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         ItemStack itemStack = slots.get(0);
         ItemStack itemStack2 = recipe.getOutput();
         ItemStack itemStack3 = slots.get(2);
-        if (itemStack2.isOf(Items.OBSIDIAN) || itemStack2.isOf(Items.ICE) || itemStack2.isOf(Items.BLUE_ICE)) {
+        if (itemStack2.getItem() == (Items.OBSIDIAN) || itemStack2.getItem() == (Items.ICE) || itemStack2.getItem() == (Items.BLUE_ICE)) {
             slots.set(0, new ItemStack(Items.BUCKET));
         }
         if (itemStack2.getItem() == (Items.SNOWBALL)) {
@@ -401,7 +396,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         }
         if (itemStack3.isEmpty()) {
             slots.set(2, itemStack2.copy());
-        } else if (itemStack3.isOf(itemStack2.getItem())) {
+        } else if (itemStack3.isItemEqual(itemStack2)) {
             itemStack3.increment(1);
         }
         itemStack.decrement(1);
@@ -423,51 +418,52 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         return new FreezerScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, FreezerBlockEntity blockEntity) {
-        boolean bl = blockEntity.isActive();
+    @Override
+    public void tick() {
+        boolean bl = this.isActive();
         boolean bl2 = false;
-        if (blockEntity.isActive()) {
-            --blockEntity.fuelTime;
+        if (this.isActive()) {
+            --this.fuelTime;
         }
-        ItemStack itemStack = blockEntity.inventory.get(1);
-        if (blockEntity.isActive() || !itemStack.isEmpty() && !blockEntity.inventory.get(0).isEmpty()) {
-            Recipe recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
-            int i = blockEntity.getMaxCountPerStack();
-            if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(recipe, blockEntity.inventory, i)) {
-                blockEntity.fuelTimeTotal = blockEntity.fuelTime = blockEntity.getFuelTime(itemStack);
-                if (blockEntity.isActive()) {
+        ItemStack itemStack = this.inventory.get(1);
+        if (this.isActive() || !itemStack.isEmpty() && !this.inventory.get(0).isEmpty()) {
+            Recipe recipe = world.getRecipeManager().getFirstMatch(this.recipeType, this, world).orElse(null);
+            int i = this.getMaxCountPerStack();
+            if (!this.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(recipe, this.inventory, i)) {
+                this.fuelTimeTotal = this.fuelTime = this.getFuelTime(itemStack);
+                if (this.isActive()) {
                     bl2 = true;
                     if (!itemStack.isEmpty()) {
                         Item item = itemStack.getItem();
                         itemStack.decrement(1);
                         if (itemStack.isEmpty()) {
                             Item item2 = item.getRecipeRemainder();
-                            blockEntity.inventory.set(1, item2 == null ? ItemStack.EMPTY : new ItemStack(item2));
+                            this.inventory.set(1, item2 == null ? ItemStack.EMPTY : new ItemStack(item2));
                         }
                     }
                 }
             }
-            if (blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(recipe, blockEntity.inventory, i)) {
-                ++blockEntity.freezeTime;
-                if (blockEntity.freezeTime == blockEntity.freezeTimeTotal) {
-                    blockEntity.freezeTime = 0;
-                    blockEntity.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(world, blockEntity.recipeType, blockEntity);
-                    if (FreezerBlockEntity.craftRecipe(recipe, blockEntity.inventory, i)) {
-                        blockEntity.setLastRecipe(recipe);
+            if (this.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(recipe, this.inventory, i)) {
+                ++this.freezeTime;
+                if (this.freezeTime == this.freezeTimeTotal) {
+                    this.freezeTime = 0;
+                    this.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(world, this.recipeType, this);
+                    if (FreezerBlockEntity.craftRecipe(recipe, this.inventory, i)) {
+                        this.setLastRecipe(recipe);
                     }
                     bl2 = true;
                 }
             } else {
-                blockEntity.freezeTime = 0;
+                this.freezeTime = 0;
             }
-        } else if (!blockEntity.isActive() && blockEntity.freezeTime > 0) {
-            blockEntity.freezeTime = MathHelper.clamp(blockEntity.freezeTime - 2, 0, blockEntity.freezeTimeTotal);
+        } else if (!this.isActive() && this.freezeTime > 0) {
+            this.freezeTime = MathHelper.clamp(this.freezeTime - 2, 0, this.freezeTimeTotal);
         }
-        if (bl != blockEntity.isActive()) {
+        if (bl != this.isActive()) {
             bl2 = true;
         }
         if (bl2) {
-            FreezerBlockEntity.markDirty(world, pos, state);
+            this.markDirty();
         }
     }
 

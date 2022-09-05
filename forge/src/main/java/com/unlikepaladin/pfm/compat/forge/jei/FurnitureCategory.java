@@ -61,8 +61,8 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     }
 
     @Override
-    public Text getTitle() {
-        return TITLE;
+    public String getTitle() {
+        return TITLE.getString();
     }
 
     @Override

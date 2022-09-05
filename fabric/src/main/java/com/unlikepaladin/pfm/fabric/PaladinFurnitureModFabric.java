@@ -27,7 +27,7 @@ import org.apache.logging.log4j.Logger;
 
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 
-public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer {
+public class  PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer {
 
     public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
     public static SoundEvent FURNITURE_DYED_EVENT = new SoundEvent(FURNITURE_DYED_ID);
@@ -53,7 +53,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
             }
             String url = "https://www.curseforge.com/minecraft/mc-mods/arrp/files/3529149";
             MissingDependencyScreen.Screen(reason, url);
-            server.shutdown();
+            server.close();
             throw new RuntimeException("Missing Dependency for Paladin's furniture mod:" + missingMod);
         });
 

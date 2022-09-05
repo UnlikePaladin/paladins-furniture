@@ -21,13 +21,14 @@ import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.BlockView;
 
 public class TrashcanBlockEntity extends LootableContainerBlockEntity {
-    public TrashcanBlockEntity(BlockPos pos, BlockState state) {
-        super(BlockEntities.TRASHCAN_BLOCK_ENTITY, pos, state);
+    public TrashcanBlockEntity() {
+        super(BlockEntities.TRASHCAN_BLOCK_ENTITY);
     }
-    public TrashcanBlockEntity(BlockEntityType<? extends TrashcanBlockEntity> trashcanBlockEntity, BlockPos pos, BlockState state) {
-        super(trashcanBlockEntity, pos, state);
+    public TrashcanBlockEntity(BlockEntityType<? extends TrashcanBlockEntity> trashcanBlockEntity) {
+        super(trashcanBlockEntity);
     }
 
     protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
@@ -97,8 +98,8 @@ public class TrashcanBlockEntity extends LootableContainerBlockEntity {
 
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    public void fromTag(BlockState state, NbtCompound nbt) {
+        super.fromTag(state, nbt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         if (!this.deserializeLootTable(nbt)) {
             Inventories.readNbt(nbt, this.inventory);

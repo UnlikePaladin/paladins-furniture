@@ -38,37 +38,37 @@ public class KitchenWallCounter extends KitchenCounter{
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         CounterShape shape = state.get(SHAPE);
-            return switch (shape) {
-                case INNER_LEFT -> switch (dir) {
-                    case NORTH -> INNER_MIDDLE_WEST;
-                    case SOUTH -> INNER_MIDDLE_EAST;
-                    case WEST -> INNER_MIDDLE_SOUTH;
-                    default -> INNER_MIDDLE;
-                };
-                case INNER_RIGHT -> switch (dir) {
-                    case NORTH -> INNER_MIDDLE;
-                    case SOUTH -> INNER_MIDDLE_SOUTH;
-                    case WEST -> INNER_MIDDLE_WEST;
-                    default -> INNER_MIDDLE_EAST;
-                };
-                case OUTER_RIGHT -> switch (dir) {
-                    case NORTH -> OUTER_MIDDLE_EAST;
-                    case SOUTH -> OUTER_MIDDLE_WEST;
-                    case WEST -> OUTER_MIDDLE;
-                    default -> OUTER_MIDDLE_SOUTH;
-                };
-                case OUTER_LEFT -> switch (dir) {
-                    case NORTH -> OUTER_MIDDLE;
-                    case SOUTH -> OUTER_MIDDLE_SOUTH;
-                    case WEST -> OUTER_MIDDLE_WEST;
-                    default -> OUTER_MIDDLE_EAST;
-                };
-                default -> switch (dir) {
-                    case NORTH -> MIDDLE;
-                    case SOUTH -> MIDDLE_SOUTH;
-                    case WEST -> MIDDLE_WEST;
-                    default -> MIDDLE_EAST;
-                };
-            };
+            switch (shape) {
+                case INNER_LEFT: switch (dir) {
+                    case NORTH: return INNER_MIDDLE_WEST;
+                    case SOUTH: return INNER_MIDDLE_EAST;
+                    case WEST: return INNER_MIDDLE_SOUTH;
+                    default: return INNER_MIDDLE;
+                }
+                case INNER_RIGHT: switch (dir) {
+                    case NORTH: return INNER_MIDDLE;
+                    case SOUTH: return INNER_MIDDLE_SOUTH;
+                    case WEST: return INNER_MIDDLE_WEST;
+                    default: return INNER_MIDDLE_EAST;
+                }
+                case OUTER_RIGHT: switch (dir) {
+                    case NORTH: return OUTER_MIDDLE_EAST;
+                    case SOUTH: return OUTER_MIDDLE_WEST;
+                    case WEST: return OUTER_MIDDLE;
+                    default: return OUTER_MIDDLE_SOUTH;
+                }
+                case OUTER_LEFT: switch (dir) {
+                    case NORTH: return OUTER_MIDDLE;
+                    case SOUTH: return OUTER_MIDDLE_SOUTH;
+                    case WEST: return OUTER_MIDDLE_WEST;
+                    default: return OUTER_MIDDLE_EAST;
+                }
+                default: switch (dir) {
+                    case NORTH: return MIDDLE;
+                    case SOUTH: return MIDDLE_SOUTH;
+                    case WEST: return MIDDLE_WEST;
+                    default: return MIDDLE_EAST;
+                }
+            }
     }
 }

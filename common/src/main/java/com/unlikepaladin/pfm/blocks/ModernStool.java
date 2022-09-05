@@ -56,19 +56,27 @@ public class ModernStool extends BasicChair {
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         if (state.get(TUCKED)) {
-            return switch (dir) {
-                case WEST -> FACE_WEST_TUCKED;
-                case NORTH -> FACE_NORTH_TUCKED;
-                case SOUTH -> FACE_SOUTH_TUCKED;
-                default -> FACE_EAST_TUCKED;
-            };
+            switch (dir) {
+                case WEST:
+                    return FACE_WEST_TUCKED;
+                case NORTH:
+                    return FACE_NORTH_TUCKED;
+                case SOUTH:
+                    return  FACE_SOUTH_TUCKED;
+                default:
+                    return FACE_EAST_TUCKED;
+            }
         }
-        return switch (dir) {
-            case WEST -> MODERN_STOOL_WEST;
-            case NORTH -> MODERN_STOOL;
-            case SOUTH -> MODERN_STOOL_SOUTH;
-            default -> MODERN_STOOL_EAST;
-        };
+        switch (dir) {
+            case WEST:
+                return MODERN_STOOL_WEST;
+            case NORTH:
+                return MODERN_STOOL;
+            case SOUTH:
+                return MODERN_STOOL_SOUTH;
+            default:
+                return MODERN_STOOL_EAST;
+        }
     }
 
 }

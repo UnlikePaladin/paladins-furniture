@@ -115,8 +115,8 @@ public class ClassicNightstand extends HorizontalFacingBlockWEntity {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new GenericStorageBlockEntity9x3(pos, state);
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new GenericStorageBlockEntity9x3();
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
@@ -197,27 +197,27 @@ public class ClassicNightstand extends HorizontalFacingBlockWEntity {
         boolean open = state.get(OPEN);
         MiddleShape shape = state.get(SHAPE);
         switch (shape) {
-            case SINGLE -> {
+            case SINGLE: {
                 switch (dir) {
-                    case NORTH -> {
+                    case NORTH: {
                         if (open) {
                             return NIGHT_STAND_OPEN;
                         }
                         return NIGHT_STAND;
                     }
-                    case SOUTH -> {
+                    case SOUTH: {
                         if (open) {
                             return NIGHT_STAND_OPEN_SOUTH;
                         }
                         return NIGHT_STAND_SOUTH;
                     }
-                    case EAST -> {
+                    case EAST: {
                         if (open) {
                             return NIGHT_STAND_OPEN_EAST;
                         }
                         return NIGHT_STAND_EAST;
                     }
-                    default -> {
+                    default: {
                         if (open) {
                             return NIGHT_STAND_OPEN_WEST;
                         }
@@ -225,27 +225,27 @@ public class ClassicNightstand extends HorizontalFacingBlockWEntity {
                     }
                 }
             }
-            case MIDDLE -> {
+            case MIDDLE: {
                 switch (dir) {
-                    case NORTH -> {
+                    case NORTH: {
                         if (open) {
                             return NIGHT_STAND_MIDDLE_OPEN_EAST;
                         }
                         return NIGHT_STAND_MIDDLE_EAST;
                     }
-                    case SOUTH -> {
+                    case SOUTH: {
                         if (open) {
                             return NIGHT_STAND_MIDDLE_OPEN_WEST;
                         }
                         return NIGHT_STAND_MIDDLE_WEST;
                     }
-                    case EAST -> {
+                    case EAST: {
                         if (open) {
                             return NIGHT_STAND_MIDDLE_OPEN_SOUTH;
                         }
                         return NIGHT_STAND_MIDDLE_SOUTH;
                     }
-                    default -> {
+                    default: {
                         if (open) {
                             return NIGHT_STAND_MIDDLE_OPEN;
                         }
@@ -253,27 +253,27 @@ public class ClassicNightstand extends HorizontalFacingBlockWEntity {
                     }
                 }
             }
-            case LEFT -> {
+            case LEFT: {
                 switch (dir) {
-                    case NORTH -> {
+                    case NORTH: {
                         if (open) {
                             return NIGHT_STAND_LEFT_OPEN_EAST;
                         }
                         return NIGHT_STAND_LEFT_EAST;
                     }
-                    case SOUTH -> {
+                    case SOUTH: {
                         if (open) {
                             return NIGHT_STAND_LEFT_OPEN_WEST;
                         }
                         return NIGHT_STAND_LEFT_WEST;
                     }
-                    case EAST -> {
+                    case EAST: {
                         if (open) {
                             return NIGHT_STAND_LEFT_OPEN_SOUTH;
                         }
                         return NIGHT_STAND_LEFT_SOUTH;
                     }
-                    default -> {
+                    default: {
                         if (open) {
                             return NIGHT_STAND_LEFT_OPEN;
                         }
@@ -281,27 +281,27 @@ public class ClassicNightstand extends HorizontalFacingBlockWEntity {
                     }
                 }
             }
-            default -> {
+            default: {
                 switch (dir) {
-                    case NORTH -> {
+                    case NORTH: {
                         if (open) {
                             return NIGHT_STAND_RIGHT_OPEN_EAST;
                         }
                         return NIGHT_STAND_RIGHT_EAST;
                     }
-                    case SOUTH -> {
+                    case SOUTH: {
                         if (open) {
                             return NIGHT_STAND_RIGHT_OPEN_WEST;
                         }
                         return NIGHT_STAND_RIGHT_WEST;
                     }
-                    case EAST -> {
+                    case EAST: {
                         if (open) {
                             return NIGHT_STAND_RIGHT_OPEN_SOUTH;
                         }
                         return NIGHT_STAND_RIGHT_SOUTH;
                     }
-                    default -> {
+                    default: {
                         if (open) {
                             return NIGHT_STAND_RIGHT_OPEN;
                         }

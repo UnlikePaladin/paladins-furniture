@@ -41,56 +41,56 @@ public class KitchenWallDrawer extends KitchenDrawer{
         boolean open = state.get(OPEN);
         switch (shape) {
             case INNER_LEFT: switch (dir) {
-                case NORTH -> {
+                case NORTH: {
                     return MIDDLE_INNER_CORNER_WEST;
                 }
-                case SOUTH -> {
+                case SOUTH: {
                     return MIDDLE_INNER_CORNER_EAST;
                 }
-                case WEST -> {
+                case WEST: {
                     return MIDDLE_INNER_CORNER_SOUTH;
                 }
-                default -> {
+                default: {
                     return MIDDLE_INNER_CORNER;
                 }
             }
             case INNER_RIGHT: switch (dir) {
-                case NORTH -> {
+                case NORTH: {
                     return MIDDLE_INNER_CORNER;
                 }
-                case SOUTH -> {
+                case SOUTH: {
                     return MIDDLE_INNER_CORNER_SOUTH;
                 }
-                case WEST -> {
+                case WEST: {
                     return MIDDLE_INNER_CORNER_WEST;
                 }
-                default -> {
+                default: {
                     return MIDDLE_INNER_CORNER_EAST;
                 }
             }
             case OUTER_RIGHT: switch (dir) {
-                case NORTH -> {
+                case NORTH: {
                     if (open)
                     {
                         return MIDDLE_OUTER_CORNER_OPEN_EAST;
                     }
                     return MIDDLE_OUTER_CORNER_EAST;
                 }
-                case SOUTH -> {
+                case SOUTH: {
                     if (open)
                     {
                         return MIDDLE_OUTER_CORNER_OPEN_WEST;
                     }
                     return MIDDLE_OUTER_CORNER_WEST;
                 }
-                case WEST -> {
+                case WEST: {
                     if (open)
                     {
                         return MIDDLE_OUTER_CORNER_OPEN;
                     }
                     return MIDDLE_OUTER_CORNER;
                 }
-                default -> {
+                default: {
                     if (open)
                     {
                         return MIDDLE_OUTER_CORNER_OPEN_SOUTH;
@@ -99,28 +99,28 @@ public class KitchenWallDrawer extends KitchenDrawer{
                 }
             }
             case OUTER_LEFT: switch (dir) {
-                case NORTH -> {
+                case NORTH: {
                     if (open)
                     {
                         return MIDDLE_OUTER_CORNER_OPEN;
                     }
                     return MIDDLE_OUTER_CORNER;
                 }
-                case SOUTH -> {
+                case SOUTH: {
                     if (open)
                     {
                         return MIDDLE_OUTER_CORNER_OPEN_SOUTH;
                     }
                     return MIDDLE_OUTER_CORNER_SOUTH;
                 }
-                case WEST -> {
+                case WEST: {
                     if (open)
                     {
                         return MIDDLE_OUTER_CORNER_OPEN_WEST;
                     }
                     return MIDDLE_OUTER_CORNER_WEST;
                 }
-                default -> {
+                default: {
                     if (open)
                     {
                         return MIDDLE_OUTER_CORNER_OPEN_EAST;
@@ -129,25 +129,25 @@ public class KitchenWallDrawer extends KitchenDrawer{
                 }
             }
             default: switch (dir) {
-                case NORTH -> {
+                case NORTH: {
                     if(open){
                         return MIDDLE_OPEN;
                     }
                     return MIDDLE;
                 }
-                case SOUTH -> {
+                case SOUTH: {
                     if (open) {
                         return MIDDLE_OPEN_SOUTH;
                     }
                     return MIDDLE_SOUTH;
                 }
-                case WEST -> {
+                case WEST: {
                     if (open){
                         return MIDDLE_OPEN_WEST;
                     }
                     return MIDDLE_WEST;
                 }
-                default -> {
+                default: {
                     if (open) {
                         return MIDDLE_OPEN_EAST;
                     }

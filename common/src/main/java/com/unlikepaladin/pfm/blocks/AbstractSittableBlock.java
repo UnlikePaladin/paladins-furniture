@@ -70,70 +70,60 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
             if (player.isSpectator() || player.isSneaking()) {
                 return ActionResult.PASS;
             }
-            double px;
             double pz;
+            double px;
             if (state.getBlock() instanceof BasicChair) {
                 Direction direction = state.get(FACING);
                 if (state.get(BasicChair.TUCKED)) {
-                    switch (direction) {
-                        case EAST -> {
-                            px = pos.getX() + 0.1;
-                            pz = pos.getZ() + 0.5;
-                        }
-                        case WEST -> {
-                            px = pos.getX() + 0.9;
-                            pz = pos.getZ() + 0.5;
-                        }
-                        case SOUTH -> {
-                            px = pos.getX() + 0.5;
-                            pz = pos.getZ() + 0.1;
-                        }
-                        default -> {
-                            px = pos.getX() + 0.5;
-                            pz = pos.getZ() + 0.9;
-                        }
+                    if (direction == Direction.EAST) {
+                        px = pos.getX() + 0.1;
+                        pz = pos.getZ() + 0.5;
+                    } else if (direction == Direction.WEST) {
+                        px = pos.getX() + 0.9;
+                        pz = pos.getZ() + 0.5;
+                    } else if (direction == Direction.SOUTH) {
+                        px = pos.getX() + 0.5;
+                        pz = pos.getZ() + 0.1;
+                    } else {
+                        px = pos.getX() + 0.5;
+                        pz = pos.getZ() + 0.9;
                     }
                 }
                 else {
-                    px =  pos.getX() + 0.5;
+                    px = pos.getX() + 0.5;
                     pz = pos.getZ() + 0.5;
                 }
-            }
-            else {
-                px =  pos.getX() + 0.5;
+            } else {
+                px = pos.getX() + 0.5;
                 pz = pos.getZ() + 0.5;
-            }
-            double py = pos.getY() + this.height;
-
-            List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPlayerRider);
-            if (!active.isEmpty())
-                return ActionResult.PASS;
-
-            float yaw = state.get(FACING).getOpposite().asRotation();
-            ChairEntity entity = Entities.CHAIR.create(world);
-            entity.refreshPositionAndAngles(px, py, pz, yaw, 0);
-            entity.setNoGravity(true);
-            entity.setSilent(true);
-            entity.setInvisible(false);
-            entity.setInvulnerable(true);
-            entity.setAiDisabled(true);
-            entity.setNoDrag(true);
-            entity.setHeadYaw(yaw);
-            entity.setYaw(yaw);
-            entity.setBodyYaw(yaw);
-            if (world.spawnEntity(entity)) {
-                player.startRiding(entity, true);
-                player.setYaw(yaw);
-                player.setHeadYaw(yaw);
-                entity.setYaw(yaw);
-                entity.setBodyYaw(yaw);
-                entity.setHeadYaw(yaw);
-                if (!(state.getBlock() instanceof BasicToilet))
-                    player.incrementStat(Statistics.CHAIR_USED);
-                return ActionResult.SUCCESS;
-            }
-            return ActionResult.CONSUME;
         }
+        double py = pos.getY() + this.height;
+
+        List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPlayerRider);
+        if (!active.isEmpty())
+            return ActionResult.PASS;
+
+        float yaw = state.get(FACING).getOpposite().asRotation();
+        ChairEntity entity = Entities.CHAIR.create(world);
+        entity.refreshPositionAndAngles(px, py, pz, yaw, 0);
+        entity.setNoGravity(true);
+        entity.setSilent(true);
+        entity.setInvisible(false);
+        entity.setInvulnerable(true);
+        entity.setAiDisabled(true);
+        entity.setHeadYaw(yaw);
+        entity.setBodyYaw(yaw);
+        if (world.spawnEntity(entity)) {
+            player.startRiding(entity, true);
+            player.setHeadYaw(yaw);
+            entity.setBodyYaw(yaw);
+            entity.setHeadYaw(yaw);
+            if (!(state.getBlock() instanceof BasicToilet))
+                player.incrementStat(Statistics.CHAIR_USED);
+            return ActionResult.SUCCESS;
+        }
+        return ActionResult.CONSUME;
+    }
         return ActionResult.PASS;
     }
 

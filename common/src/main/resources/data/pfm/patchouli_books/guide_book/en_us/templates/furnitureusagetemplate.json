@@ -1,7 +1,7 @@
 {
   "include": [
     {
-      "template": "pfm:stackablespotlight",
+      "template": "stackablespotlight",
       "as": "bb",
       "using": {
         "item": "#item"
@@ -9,7 +9,7 @@
       "y": 10
     },
     {
-      "template": "pfm:stackablespotlight",
+      "template": "stackablespotlight",
       "as": "bb",
       "using": {
         "item": "#item2"
@@ -17,7 +17,7 @@
       "y": 60
     },
     {
-      "template": "pfm:stackablespotlight",
+      "template": "stackablespotlight",
       "as": "bb",
       "using": {
         "item": "#item3"

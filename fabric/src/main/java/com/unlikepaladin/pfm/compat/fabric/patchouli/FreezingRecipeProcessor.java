@@ -26,7 +26,7 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
          switch (key) {
              case "ingredient":
                  Ingredient ingredient = recipe.getIngredients().get(0);
-                 ItemStack[] stacks = ingredient.getMatchingStacks();
+                 ItemStack[] stacks = ingredient.getMatchingStacksClient();
                  ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
 
                  return IVariable.from(stack);

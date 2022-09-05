@@ -25,7 +25,7 @@ public class FreezerFuelSlot
         return FreezerFuelSlot.isBucket(stack) ? 1 : super.getMaxItemCount(stack);
     }
     public static boolean isBucket(ItemStack stack) {
-        return stack.isOf(Items.BUCKET);
+        return stack.getItem() == (Items.BUCKET);
     }
 
 }

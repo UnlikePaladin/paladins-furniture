@@ -12,6 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Base64;
 
 public class SkinGetter {
@@ -55,7 +56,7 @@ public class SkinGetter {
 
             String st = str.replaceAll("\"", "");
             System.out.println(st);
-            Path texturepath = Path.of((FabricLoader.getInstance().getConfigDir() + "/resourcepacks/" + playerName + ".png"));
+            Path texturepath = Paths.get((FabricLoader.getInstance().getConfigDir() + "/resourcepacks/" + playerName + ".png"));
 
             if (!texturepath.toFile().exists()) {
                 System.out.println("Beginning to save file");

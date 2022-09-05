@@ -2,7 +2,7 @@
   "processor": "com.unlikepaladin.pfm.compat.forge.patchouli.FurnitureRecipeProcessor",
   "include": [
     {
-      "template": "pfm:namenumber",
+      "template": "namenumber",
       "as": "nn",
       "using": {
         "iname": "#iname",
@@ -10,7 +10,7 @@
       }
     },
     {
-      "template": "pfm:craftinggridimage",
+      "template": "craftinggridimage",
       "as": "bb",
       "x": 0,
       "y": 5

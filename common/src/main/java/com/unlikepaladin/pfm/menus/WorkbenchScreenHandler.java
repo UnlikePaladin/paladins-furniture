@@ -13,10 +13,13 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.packet.s2c.play.ScreenHandlerSlotUpdateS2CPacket;
+import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeMatcher;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.book.RecipeBookCategory;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
+import net.minecraft.screen.CraftingScreenHandler;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerContext;
 import net.minecraft.screen.slot.Slot;
@@ -63,7 +66,7 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
 
 
 
-    protected static void updateResult(ScreenHandler handler, World world, PlayerEntity player, CraftingInventory craftingInventory, CraftingResultInventory resultInventory) {
+    protected static void updateResult(int syncId, World world, PlayerEntity player, CraftingInventory craftingInventory, CraftingResultInventory resultInventory) {
         FurnitureRecipe furnitureRecipe;
         if (world.isClient) {
             return;
@@ -75,13 +78,12 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
             itemStack = furnitureRecipe.craft(craftingInventory);
         }
         resultInventory.setStack(0, itemStack);
-        handler.setPreviousTrackedSlot(0, itemStack);
-        serverPlayerEntity.networkHandler.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(handler.syncId, handler.nextRevision(), 0, itemStack));
+        serverPlayerEntity.networkHandler.sendPacket(new ScreenHandlerSlotUpdateS2CPacket(syncId, 0, itemStack));
     }
 
     @Override
     public void onContentChanged(Inventory inventory) {
-        this.context.run((world, pos) -> WorkbenchScreenHandler.updateResult(this, world, this.player, this.input, this.result));
+        this.context.run((world, blockPos) -> WorkbenchScreenHandler.updateResult(this.syncId, world, this.player, this.input, this.result));
     }
 
     @Override
@@ -103,7 +105,7 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
     @Override
     public void close(PlayerEntity player) {
         super.close(player);
-        this.context.run((world, pos) -> this.dropInventory(player, this.input));
+        this.context.run((world, pos) -> this.dropInventory(player, world, this.input));
     }
 
     @Override
@@ -171,11 +173,6 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
     @Override
     public RecipeBookCategory getCategory() {
         return RecipeBookCategory.CRAFTING;
-    }
-
-    @Override
-    public boolean canInsertIntoSlot(int index) {
-        return index != this.getCraftingResultSlotIndex();
     }
 }
 

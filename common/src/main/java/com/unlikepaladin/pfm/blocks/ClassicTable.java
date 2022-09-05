@@ -52,11 +52,6 @@ public class ClassicTable extends Block {
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
-    }
-
-    @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(NORTH);
         stateManager.add(EAST);

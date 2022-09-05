@@ -13,6 +13,8 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.impl.networking.ClientSidePacketRegistryImpl;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
@@ -79,7 +81,8 @@ public class NetworkRegistryFabric {
                 if (handler.getWorld().isChunkLoaded(blockPos)) {
                     MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) handler.getWorld().getBlockEntity(blockPos);
                     client.execute(() -> {
-                        if (Objects.nonNull(client.currentScreen) && client.currentScreen instanceof MicrowaveScreen currentScreen)  {
+                        if (Objects.nonNull(client.currentScreen) && client.currentScreen instanceof MicrowaveScreen)  {
+                            MicrowaveScreen currentScreen = (MicrowaveScreen) client.currentScreen;
                             currentScreen.getScreenHandler().setActive(blockEntity, active);}
                     });
                 }

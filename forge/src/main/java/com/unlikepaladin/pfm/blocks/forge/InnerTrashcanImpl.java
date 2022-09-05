@@ -11,12 +11,13 @@ import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.fml.network.NetworkHooks;
 
 public class InnerTrashcanImpl {
-    public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
-        return new TrashcanBlockEntityImpl(BlockEntities.TRASHCAN_BLOCK_ENTITY, pos, state);
+    public static BlockEntity getBlockEntity() {
+        return new TrashcanBlockEntityImpl(BlockEntities.TRASHCAN_BLOCK_ENTITY);
 
     }
 

@@ -12,14 +12,14 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.WorldChunk;
-import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.fml.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
-    public MicrowaveBlockEntityImpl(BlockPos pos, BlockState state) {
-        super(pos, state);
+    public MicrowaveBlockEntityImpl() {
+        super();
     }
     public static void setActiveonClient(MicrowaveBlockEntity microwaveBlockEntity, boolean active) {
         microwaveBlockEntity.setActive(active);
@@ -31,7 +31,7 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
     @Nullable
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
+        return new BlockEntityUpdateS2CPacket(this.pos, 13, this.toInitialChunkDataNbt());
     }
 
     @Override
@@ -44,8 +44,8 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
 
 
     @Override
-    public void handleUpdateTag(NbtCompound tag) {
-        this.readNbt(tag);
+    public void handleUpdateTag(BlockState state, NbtCompound tag) {
+        this.fromTag(state,tag);
     }
 
     @Override
