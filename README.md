@@ -11,7 +11,7 @@ You will need Fabric Loader 0.14.6 or newer installed in your game in order to l
 
 You will also need Fabric API and Cloth Config installed to use the mod, you can get that [here](https://modrinth.com/mod/fabric-api) and [here](https://modrinth.com/mod/cloth-config). 
 
-The mod is avaialbe for versions 1.17 through 1.19 and can be downloaded off of [CurseForge](https://www.curseforge.com/minecraft/mc-mods/paladins-furniture), [Modrinth](https://modrinth.com/mod/paladins-furniture), [PlanetMC](https://www.planetminecraft.com/mod/paladin-s-furniture-mod/) and the [Minecraft Forum](https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/3159314-paladins-furniture-mod).
+The mod is avaialbe for versions 1.16.5 through 1.19.2 and can be downloaded off of [CurseForge](https://www.curseforge.com/minecraft/mc-mods/paladins-furniture), [Modrinth](https://modrinth.com/mod/paladins-furniture), [PlanetMC](https://www.planetminecraft.com/mod/paladin-s-furniture-mod/) and the [Minecraft Forum](https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/3159314-paladins-furniture-mod).
 
 I've made a [Discord](https://discord.gg/zbMDUPB), you can join to ask for help or support, or to give any feedback, I'll also be providing compiled builds for testing new features before they make their way into public releases.
 
