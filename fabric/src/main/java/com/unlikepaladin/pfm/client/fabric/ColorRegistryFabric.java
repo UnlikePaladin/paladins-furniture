@@ -27,9 +27,9 @@ public class ColorRegistryFabric {
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.GRAY_FRIDGE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.XBOX_FRIDGE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.WHITE_STOVE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.GRAY_STOVE, RenderLayer.getCutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.IRON_STOVE, RenderLayer.getCutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.WHITE_STOVE, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.GRAY_STOVE, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.IRON_STOVE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.IRON_CHAIN, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.GRAY_MODERN_PENDANT, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.WHITE_MODERN_PENDANT, RenderLayer.getTranslucent());

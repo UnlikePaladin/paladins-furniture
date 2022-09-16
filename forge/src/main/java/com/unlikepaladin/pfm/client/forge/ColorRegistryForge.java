@@ -48,9 +48,9 @@ public class ColorRegistryForge {
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.WHITE_MODERN_PENDANT, RenderLayer.getTranslucent());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.GRAY_MODERN_PENDANT, RenderLayer.getTranslucent());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.IRON_CHAIN, RenderLayer.getCutout());
-        RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.GRAY_STOVE, RenderLayer.getCutout());
-        RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.WHITE_STOVE, RenderLayer.getCutout());
-        RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.IRON_STOVE, RenderLayer.getCutout());
+        RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.GRAY_STOVE, RenderLayer.getTranslucent());
+        RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.WHITE_STOVE, RenderLayer.getTranslucent());
+        RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.IRON_STOVE, RenderLayer.getTranslucent());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.XBOX_FRIDGE, RenderLayer.getCutout());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.GRAY_FRIDGE, RenderLayer.getCutout());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, RenderLayer.getCutout());
@@ -58,7 +58,7 @@ public class ColorRegistryForge {
         KitchenCounterOven.streamStoneCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
         KitchenCounterOven.streamWoodCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
         ovens.forEach(oven -> {
-            RenderLayers.setRenderLayer(oven, RenderLayer.getCutout());
+            RenderLayers.setRenderLayer(oven, RenderLayer.getTranslucent());
         });
     }
 }
