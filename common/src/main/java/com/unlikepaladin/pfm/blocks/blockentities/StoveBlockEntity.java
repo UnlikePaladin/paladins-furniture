@@ -4,9 +4,11 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -209,7 +211,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
             world.updateListeners(pos, state, state, Block.NOTIFY_ALL);
         }
         if (bl) {
-            CampfireBlockEntity.markDirty(world, pos, state);
+            markDirty(world, pos, state);
         }
         tick(world, pos, state, stoveBlockEntity);
     }
@@ -222,7 +224,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
             stoveBlockEntity.cookingTimes[i] = MathHelper.clamp(stoveBlockEntity.cookingTimes[i] - 2, 0, stoveBlockEntity.cookingTotalTimes[i]);
         }
         if (bl) {
-            CampfireBlockEntity.markDirty(world, pos, state);
+            markDirty(world, pos, state);
         }
         tick(world, pos, state, stoveBlockEntity);
     }

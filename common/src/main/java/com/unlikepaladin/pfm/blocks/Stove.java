@@ -22,6 +22,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
@@ -194,10 +195,13 @@ public class Stove extends SmokerBlock implements Waterloggable {
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof StoveBlockEntity) {
-            ItemScatterer.spawn(world, pos, (StoveBlockEntity)blockEntity);
-            ((StoveBlockEntity)blockEntity).getRecipesUsedAndDropExperience(world, Vec3d.ofCenter(pos));
-            ItemScatterer.spawn(world, pos, ((StoveBlockEntity)blockEntity).getItemsBeingCooked());
+        if (blockEntity instanceof StoveBlockEntity)
+        {
+            if (world instanceof ServerWorld) {
+                ItemScatterer.spawn(world, pos, (StoveBlockEntity)blockEntity);
+                ((StoveBlockEntity)blockEntity).getRecipesUsedAndDropExperience((ServerWorld) world, Vec3d.ofCenter(pos));
+                ItemScatterer.spawn(world, pos, ((StoveBlockEntity)blockEntity).getItemsBeingCooked());
+            }
             world.updateComparators(pos, this);
         }
         super.onStateReplaced(state, world, pos, newState, moved);
