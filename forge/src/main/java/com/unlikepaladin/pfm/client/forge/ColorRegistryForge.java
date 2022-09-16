@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.client.forge;
 
 import com.unlikepaladin.pfm.blocks.BasicToilet;
+import com.unlikepaladin.pfm.blocks.KitchenCounterOven;
 import com.unlikepaladin.pfm.blocks.KitchenSink;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
@@ -49,8 +50,15 @@ public class ColorRegistryForge {
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.IRON_CHAIN, RenderLayer.getCutout());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.GRAY_STOVE, RenderLayer.getCutout());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.WHITE_STOVE, RenderLayer.getCutout());
+        RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.IRON_STOVE, RenderLayer.getCutout());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.XBOX_FRIDGE, RenderLayer.getCutout());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.GRAY_FRIDGE, RenderLayer.getCutout());
         RenderLayers.setRenderLayer(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, RenderLayer.getCutout());
+        List<Block> ovens = new ArrayList<>();
+        KitchenCounterOven.streamStoneCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
+        KitchenCounterOven.streamWoodCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
+        ovens.forEach(oven -> {
+            RenderLayers.setRenderLayer(oven, RenderLayer.getCutout());
+        });
     }
 }
