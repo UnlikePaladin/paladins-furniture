@@ -57,7 +57,6 @@ public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
 
     @Override
     public void onClose(PlayerEntity player) {
-        System.out.println("Closing");
         if (!this.removed && !player.isSpectator()) {
             this.onContainerClose(this.getWorld(), this.getPos(), this.getCachedState());
         }
@@ -65,7 +64,6 @@ public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
 
     @Override
     public void onOpen(PlayerEntity player) {
-        System.out.println("Opening");
         if (!this.removed && !player.isSpectator()) {
             this.onContainerOpen(this.getWorld(), this.getPos(), this.getCachedState());
         }
