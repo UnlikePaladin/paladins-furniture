@@ -5,22 +5,24 @@ import com.unlikepaladin.pfm.blocks.KitchenCounterOven;
 import com.unlikepaladin.pfm.blocks.Stove;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.CampfireBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.block.Block;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
@@ -28,8 +30,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
@@ -41,6 +43,46 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         super(entity, pos, state, RecipeType.SMOKING);
     }
      String blockname = this.getCachedState().getBlock().getTranslationKey();
+
+    protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
+        if (state.getBlock() instanceof Stove){
+            StoveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
+            StoveBlockEntity.this.setOpen(state, true);
+        }
+    }
+
+    protected void onContainerClose(World world, BlockPos pos, BlockState state) {
+        if (state.getBlock() instanceof Stove) {
+            StoveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
+            StoveBlockEntity.this.setOpen(state, false);
+        }
+    }
+
+    void setOpen(BlockState state, boolean open) {
+        this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), 3);
+    }
+
+    @Override
+    public void onClose(PlayerEntity player) {
+        if (!this.removed && !player.isSpectator()) {
+            this.onContainerClose(this.getWorld(), this.getPos(), this.getCachedState());
+        }
+    }
+
+    @Override
+    public void onOpen(PlayerEntity player) {
+        if (!this.removed && !player.isSpectator()) {
+            this.onContainerOpen(this.getWorld(), this.getPos(), this.getCachedState());
+        }
+    }
+
+    void playSound(BlockState state, SoundEvent soundEvent) {
+        Vec3i vec3i = state.get(Properties.HORIZONTAL_FACING).getVector();
+        double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
+        double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
+        double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
+        this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
+    }
 
     @Override
     protected Text getContainerName() {
@@ -167,7 +209,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
             world.updateListeners(pos, state, state, Block.NOTIFY_ALL);
         }
         if (bl) {
-            CampfireBlockEntity.markDirty(world, pos, state);
+            markDirty(world, pos, state);
         }
         tick(world, pos, state, stoveBlockEntity);
     }
@@ -180,7 +222,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
             stoveBlockEntity.cookingTimes[i] = MathHelper.clamp(stoveBlockEntity.cookingTimes[i] - 2, 0, stoveBlockEntity.cookingTotalTimes[i]);
         }
         if (bl) {
-            CampfireBlockEntity.markDirty(world, pos, state);
+            markDirty(world, pos, state);
         }
         tick(world, pos, state, stoveBlockEntity);
     }

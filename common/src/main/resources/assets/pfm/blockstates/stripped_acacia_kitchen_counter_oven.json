@@ -1,24 +1,44 @@
 {"variants":
 {
-    "down=true,up=true,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":180,"uvlock":"true"},
-    "down=true,up=true,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":270,"uvlock":"true"},
-    "down=true,up=true,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":0,"uvlock":"true"},
-    "down=true,up=true,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":90,"uvlock":"true"},
+    "down=true,open=true,up=true,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":180,"uvlock":"true"},
+    "down=true,open=true,up=true,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":270,"uvlock":"true"},
+    "down=true,open=true,up=true,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":0,"uvlock":"true"},
+    "down=true,open=true,up=true,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":90,"uvlock":"true"},
 
-    "down=false,up=true,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_bottom","y":180,"uvlock":"true"},
-    "down=false,up=true,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_bottom","y":270,"uvlock":"true"},
-    "down=false,up=true,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_bottom","y":0,"uvlock":"true"},
-    "down=false,up=true,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_bottom","y":90,"uvlock":"true"},
+    "down=false,open=true,up=true,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":180,"uvlock":"true"},
+    "down=false,open=true,up=true,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":270,"uvlock":"true"},
+    "down=false,open=true,up=true,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":0,"uvlock":"true"},
+    "down=false,open=true,up=true,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":90,"uvlock":"true"},
 
-    "down=true,up=false,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":180,"uvlock":"true"},
-    "down=true,up=false,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":270,"uvlock":"true"},
-    "down=true,up=false,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":0,"uvlock":"true"},
-    "down=true,up=false,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":90,"uvlock":"true"},
+    "down=true,open=true,up=false,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":180,"uvlock":"true"},
+    "down=true,open=true,up=false,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":270,"uvlock":"true"},
+    "down=true,open=true,up=false,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":0,"uvlock":"true"},
+    "down=true,open=true,up=false,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle_open","y":90,"uvlock":"true"},
 
-    "down=false,up=false,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven","y":180,"uvlock":"true"},
-    "down=false,up=false,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven","y":270,"uvlock":"true"},
-    "down=false,up=false,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven","y":0,"uvlock":"true"},
-    "down=false,up=false,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven","y":90,"uvlock":"true"}
+    "down=false,open=true,up=false,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_open","y":180,"uvlock":"true"},
+    "down=false,open=true,up=false,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_open","y":270,"uvlock":"true"},
+    "down=false,open=true,up=false,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_open","y":0,"uvlock":"true"},
+    "down=false,open=true,up=false,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_open","y":90,"uvlock":"true"},
+
+    "down=true,open=false,up=true,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":180,"uvlock":"true"},
+    "down=true,open=false,up=true,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":270,"uvlock":"true"},
+    "down=true,open=false,up=true,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":0,"uvlock":"true"},
+    "down=true,open=false,up=true,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":90,"uvlock":"true"},
+
+    "down=false,open=false,up=true,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":180,"uvlock":"true"},
+    "down=false,open=false,up=true,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":270,"uvlock":"true"},
+    "down=false,open=false,up=true,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":0,"uvlock":"true"},
+    "down=false,open=false,up=true,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":90,"uvlock":"true"},
+
+    "down=true,open=false,up=false,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":180,"uvlock":"true"},
+    "down=true,open=false,up=false,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":270,"uvlock":"true"},
+    "down=true,open=false,up=false,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":0,"uvlock":"true"},
+    "down=true,open=false,up=false,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven_middle","y":90,"uvlock":"true"},
+
+    "down=false,open=false,up=false,facing=north":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven","y":180,"uvlock":"true"},
+    "down=false,open=false,up=false,facing=east":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven","y":270,"uvlock":"true"},
+    "down=false,open=false,up=false,facing=south":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven","y":0,"uvlock":"true"},
+    "down=false,open=false,up=false,facing=west":{"model":"pfm:block/stripped_acacia_kitchen_counter/stripped_acacia_kitchen_counter_oven","y":90,"uvlock":"true"}
 }
 
 }

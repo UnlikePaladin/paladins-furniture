@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -13,6 +14,7 @@ import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -27,9 +29,11 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -47,13 +51,13 @@ import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 public class Stove extends SmokerBlock implements Waterloggable {
     private static final List<FurnitureBlock> STOVES = new ArrayList<>();
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-
+    public static final BooleanProperty OPEN = Properties.OPEN;
     public Stove(Settings settings) {
         super(settings);
         if (this.getClass().isAssignableFrom(Stove.class)){
             STOVES.add(new FurnitureBlock(this, "stove"));
         }
-        setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false).with(FACING, Direction.NORTH).with(LIT, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false).with(FACING, Direction.NORTH).with(LIT, false).with(OPEN, false));
     }
     public static Stream<FurnitureBlock> streamStoves() {
         return STOVES.stream();
@@ -61,7 +65,7 @@ public class Stove extends SmokerBlock implements Waterloggable {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, LIT, WATERLOGGED);
+        builder.add(FACING, LIT, WATERLOGGED, OPEN);
     }
     @Override
     protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
@@ -77,7 +81,7 @@ public class Stove extends SmokerBlock implements Waterloggable {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
-        if (!player.isSneaking()) {
+        if (hit.getSide() == Direction.UP) {
             ItemStack itemStack;
             StoveBlockEntity stoveBlockEntity;
             Optional<CampfireCookingRecipe> optional;
@@ -183,4 +187,19 @@ public class Stove extends SmokerBlock implements Waterloggable {
         }
     }
 
+
+    @Override
+    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.isOf(newState.getBlock())) {
+            return;
+        }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof StoveBlockEntity) {
+            ItemScatterer.spawn(world, pos, (StoveBlockEntity)blockEntity);
+            ((StoveBlockEntity)blockEntity).getRecipesUsedAndDropExperience(world, Vec3d.ofCenter(pos));
+            ItemScatterer.spawn(world, pos, ((StoveBlockEntity)blockEntity).getItemsBeingCooked());
+            world.updateComparators(pos, this);
+        }
+        super.onStateReplaced(state, world, pos, newState, moved);
+    }
 }
