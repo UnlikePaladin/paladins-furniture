@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.registry.forge;
 
 import com.unlikepaladin.pfm.blocks.KitchenCounterOven;
+import com.unlikepaladin.pfm.blocks.KitchenSink;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
 import com.unlikepaladin.pfm.blocks.blockentities.forge.*;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
@@ -36,6 +37,8 @@ public class BlockEntityRegistryForge {
         BlockEntities.TOILET_BLOCK_ENTITY = BlockEntityType.Builder.create(ToiletBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_TOILET).build(null);
         BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY = BlockEntityType.Builder.create(GenericStorageBlockEntity3x3::new, PaladinFurnitureModBlocksItems.OAK_KITCHEN_WALL_SMALL_DRAWER).build(null);
         BlockEntities.TRASHCAN_BLOCK_ENTITY = BlockEntityType.Builder.create(TrashcanBlockEntityImpl::new, PaladinFurnitureModBlocksItems.TRASHCAN).build(null);
+        Block[] sinks = Stream.concat(KitchenSink.streamStoneSinks(), KitchenSink.streamWoodSinks()).map(FurnitureBlock::getBlock).toArray(Block[]::new);
+        BlockEntities.SINK_BLOCK_ENTITY = BlockEntityType.Builder.create(SinkBlockEntity::new, sinks).build(null);
 
         event.getRegistry().registerAll(
                 registerEntity("drawer_block_entity", BlockEntities.DRAWER_BLOCK_ENTITY),
@@ -50,8 +53,9 @@ public class BlockEntityRegistryForge {
                 registerEntity("plate_block_entity", BlockEntities.PLATE_BLOCK_ENTITY),
                 registerEntity("toilet_block_entity", BlockEntities.TOILET_BLOCK_ENTITY),
                 registerEntity("small_storage_block_entity", BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY),
-                registerEntity("trashcan_block_entity", BlockEntities.TRASHCAN_BLOCK_ENTITY)
-                );
+                registerEntity("trashcan_block_entity", BlockEntities.TRASHCAN_BLOCK_ENTITY),
+                registerEntity("sink_block_entity", BlockEntities.SINK_BLOCK_ENTITY)
+        );
     }
 
     private static BlockEntityType<?> registerEntity(String name, BlockEntityType<?> entity) {

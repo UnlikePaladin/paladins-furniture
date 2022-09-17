@@ -11,6 +11,9 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.particle.ParticleTypes;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.IntProperty;
@@ -28,6 +31,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.biome.Biome;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,13 +94,29 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable 
                 else {
                     world.setBlockState(sourcePos, Blocks.AIR.getDefaultState());
                 }
+                SinkBlockEntity blockEntity = (SinkBlockEntity) world.getBlockEntity(pos);
+                if (blockEntity != null) {
+                    blockEntity.setFilling(true);
+                }
                 world.setBlockState(pos, state.with(LEVEL_4, 3));
                 return ActionResult.SUCCESS;
             }
         }
         ItemStack itemStack = player.getStackInHand(hand);
         CauldronBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
+        if (sinkBehavior == null) {
+            return ActionResult.PASS;
+        }
         return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
+    }
+
+    public static void spawnParticles(World world, BlockPos pos) {
+        if (world.isClient) {
+            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+            world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+            world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+            world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+        }
     }
 
     @Override
@@ -106,6 +126,11 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable 
         }
 
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    }
+
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -216,5 +241,11 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable 
             return 20;
         }
         return 0;
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new SinkBlockEntity();
     }
 }
