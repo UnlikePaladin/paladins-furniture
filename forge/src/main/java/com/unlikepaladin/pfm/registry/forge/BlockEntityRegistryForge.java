@@ -1,7 +1,9 @@
 package com.unlikepaladin.pfm.registry.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.KitchenSink;
 import com.unlikepaladin.pfm.blocks.KitchenCounterOven;
+import com.unlikepaladin.pfm.blocks.KitchenSink;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
 import com.unlikepaladin.pfm.blocks.blockentities.forge.*;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
@@ -38,6 +40,8 @@ public class BlockEntityRegistryForge {
             blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "toilet_block_entity"), BlockEntities.TOILET_BLOCK_ENTITY = BlockEntityType.Builder.create(ToiletBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_TOILET).build(null));
             blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "small_storage_block_entity"),BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY = BlockEntityType.Builder.create(GenericStorageBlockEntity3x3::new, PaladinFurnitureModBlocksItems.OAK_KITCHEN_WALL_SMALL_DRAWER).build(null));
             blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "trashcan_block_entity"),BlockEntities.TRASHCAN_BLOCK_ENTITY = BlockEntityType.Builder.create(TrashcanBlockEntityImpl::new, PaladinFurnitureModBlocksItems.TRASHCAN).build(null));
+            Block[] sinks = Stream.concat(KitchenSink.streamStoneSinks(), KitchenSink.streamWoodSinks()).map(FurnitureBlock::getBlock).toArray(Block[]::new);
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "trashcan_block_entity"),BlockEntities.SINK_BLOCK_ENTITY = BlockEntityType.Builder.create(SinkBlockEntity::new, sinks).build(null));
         });
     }
 }
