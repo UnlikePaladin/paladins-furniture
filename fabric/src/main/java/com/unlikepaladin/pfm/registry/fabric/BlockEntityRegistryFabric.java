@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.registry.fabric;
 
 import com.unlikepaladin.pfm.blocks.KitchenCounterOven;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
-import com.unlikepaladin.pfm.blocks.blockentities.*;
 import com.unlikepaladin.pfm.blocks.blockentities.fabric.MicrowaveBlockEntityImpl;
 import com.unlikepaladin.pfm.blocks.blockentities.fabric.PlateBlockEntityImpl;
 import com.unlikepaladin.pfm.blocks.blockentities.fabric.StoveBlockEntityImpl;
@@ -33,6 +32,7 @@ public class BlockEntityRegistryFabric {
         BlockEntities.PLATE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":plate_block_entity", FabricBlockEntityTypeBuilder.create(PlateBlockEntityImpl::new, PaladinFurnitureModBlocksItems.BASIC_PLATE).build(null));
         BlockEntities.TOILET_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":toilet_block_entity", FabricBlockEntityTypeBuilder.create(ToiletBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_TOILET).build(null));
         BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":small_storage_block_entity", FabricBlockEntityTypeBuilder.create(GenericStorageBlockEntity3x3::new, PaladinFurnitureModBlocksItems.OAK_KITCHEN_WALL_SMALL_DRAWER).build(null));
+        BlockEntities.TRASHCAN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":trashcan_block_entity", BlockEntityType.Builder.create(TrashcanBlockEntityImpl::new, PaladinFurnitureModBlocksItems.TRASHCAN).build(null));
 
     }
 }

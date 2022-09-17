@@ -3,10 +3,7 @@ package com.unlikepaladin.pfm.registry.forge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.KitchenCounterOven;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
-import com.unlikepaladin.pfm.blocks.blockentities.forge.MicrowaveBlockEntityImpl;
-import com.unlikepaladin.pfm.blocks.blockentities.forge.PlateBlockEntityImpl;
-import com.unlikepaladin.pfm.blocks.blockentities.forge.StoveBlockEntityImpl;
-import com.unlikepaladin.pfm.blocks.blockentities.forge.StovetopBlockEntityImpl;
+import com.unlikepaladin.pfm.blocks.blockentities.forge.*;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -40,6 +37,7 @@ public class BlockEntityRegistryForge {
             blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "plate_block_entity"), BlockEntities.PLATE_BLOCK_ENTITY = BlockEntityType.Builder.create(PlateBlockEntityImpl::new, PaladinFurnitureModBlocksItems.BASIC_PLATE).build(null));
             blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "toilet_block_entity"), BlockEntities.TOILET_BLOCK_ENTITY = BlockEntityType.Builder.create(ToiletBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_TOILET).build(null));
             blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "small_storage_block_entity"),BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY = BlockEntityType.Builder.create(GenericStorageBlockEntity3x3::new, PaladinFurnitureModBlocksItems.OAK_KITCHEN_WALL_SMALL_DRAWER).build(null));
+            blockEntityTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "trashcan_block_entity"),BlockEntities.TRASHCAN_BLOCK_ENTITY = BlockEntityType.Builder.create(TrashcanBlockEntityImpl::new, PaladinFurnitureModBlocksItems.TRASHCAN).build(null));
         });
     }
 }

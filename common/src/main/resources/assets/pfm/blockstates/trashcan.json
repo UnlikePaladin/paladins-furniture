@@ -1,0 +1,6 @@
+{"variants":
+    {
+        "open=false":{"model":"pfm:block/trashcan/trashcan"},
+        "open=true":{"model":"pfm:block/trashcan/trashcan_open"}
+    }
+}

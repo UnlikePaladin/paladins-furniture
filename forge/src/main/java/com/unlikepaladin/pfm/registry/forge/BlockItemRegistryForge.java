@@ -1157,7 +1157,9 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "simple_light"), addBlockItem(PaladinFurnitureModBlocksItems.SIMPLE_LIGHT));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_switch"), PaladinFurnitureModBlocksItems.LIGHT_SWITCH);
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "basic_toilet"), addBlockItem(PaladinFurnitureModBlocksItems.BASIC_TOILET));
-            });
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "basic_toilet"), addBlockItem(PaladinFurnitureModBlocksItems.TRASHCAN));
+
+        });
         event.register(ForgeRegistries.Keys.POI_TYPES, pointOfInterestTypeRegisterHelper ->  {
             Set<BlockState> originalBedStates = PointOfInterestTypes.BED_HEADS;
             Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBed.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());

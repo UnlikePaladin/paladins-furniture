@@ -17,6 +17,7 @@ public class BlockEntities {
     public static BlockEntityType<? extends StovetopBlockEntity> STOVE_TOP_BLOCK_ENTITY;
     public static BlockEntityType<? extends PlateBlockEntity> PLATE_BLOCK_ENTITY;
     public static BlockEntityType<ToiletBlockEntity> TOILET_BLOCK_ENTITY;
+    public static BlockEntityType<? extends TrashcanBlockEntity> TRASHCAN_BLOCK_ENTITY;
     public static BlockEntityType<GenericStorageBlockEntity3x3> KITCHEN_DRAWER_SMALL_BLOCK_ENTITY;
 
 }

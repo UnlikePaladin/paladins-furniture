@@ -1,0 +1,29 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "IUI",
+    "ZYZ",
+    "ZXZ"
+],
+   "key": {
+    "X": {
+      "item": "minecraft:redstone"
+    },
+    "Y": {
+      "item": "minecraft:ender_pearl"
+    },
+    "Z": {
+      "item": "minecraft:iron_ingot"
+    },
+    "U": {
+      "item": "minecraft:iron_trapdoor"
+    },
+    "I": {
+      "item": "minecraft:heavy_weighted_pressure_plate"
+    }
+  },
+  "result": {
+    "item": "pfm:trashcan",
+    "count": 1
+  }
+}

@@ -52,6 +52,9 @@ public class StatisticsRegistryForge {
 
                             Registry.register(Registry.CUSTOM_STAT, "toilet_used", Statistics.TOILET_USED);
                             Stats.CUSTOM.getOrCreateStat(Statistics.TOILET_USED, StatFormatter.DEFAULT);
+
+                            Registry.register(Registry.CUSTOM_STAT, "trashcan_opened", Statistics.TRASHCAN_OPENED);
+                            Stats.CUSTOM.getOrCreateStat(Statistics.TRASHCAN_OPENED, StatFormatter.DEFAULT);
                 }
         );
     }

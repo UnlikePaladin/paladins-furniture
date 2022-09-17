@@ -1198,6 +1198,7 @@ public class BlockItemRegistryFabric {
         PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
         registerBlock("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH, PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM);
         registerFurniture("basic_toilet", PaladinFurnitureModBlocksItems.BASIC_TOILET, true);
+        registerFurniture("trashcan", PaladinFurnitureModBlocksItems.TRASHCAN, true);
 
         //Dye Kits
         registerItem("dye_kit_red", PaladinFurnitureModBlocksItems.DYE_KIT_RED);

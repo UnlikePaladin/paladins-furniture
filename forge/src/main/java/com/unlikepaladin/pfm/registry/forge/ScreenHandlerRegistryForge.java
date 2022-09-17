@@ -29,6 +29,6 @@ public class ScreenHandlerRegistryForge {
             screenHandlerTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID,"stove_block_entity"), ScreenHandlerIDs.STOVE_SCREEN_HANDLER = IForgeMenuType.create(StoveScreenHandler::new));
             screenHandlerTypeRegisterHelper.register( new Identifier(PaladinFurnitureMod.MOD_ID,"iron_stove_block_entity"), ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER = IForgeMenuType.create(IronStoveScreenHandler::new));
             screenHandlerTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID,"microwave_block_entity"), ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = IForgeMenuType.create(MicrowaveScreenHandler::new));
+            screenHandlerTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "trashcan_block_entity"), ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER = IForgeMenuType.create(TrashcanScreenHandler::new));
         });
-    }
 }
