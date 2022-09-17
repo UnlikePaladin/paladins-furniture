@@ -12,6 +12,7 @@ public class ScreenHandlerIDs {
     public static ScreenHandlerType<IronStoveScreenHandler> IRON_STOVE_SCREEN_HANDLER;
     public static ScreenHandlerType<MicrowaveScreenHandler> MICROWAVE_SCREEN_HANDLER;
     public static ScreenHandlerType<WorkbenchScreenHandler> WORKBENCH_SCREEN_HANDLER;
+    public static ScreenHandlerType<TrashcanScreenHandler> TRASHCAN_SCREEN_HANDLER;
     public static final Identifier FREEZER = new Identifier(PaladinFurnitureMod.MOD_ID, "freezer_block_entity");
 
 }

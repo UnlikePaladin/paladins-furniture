@@ -130,8 +130,6 @@ public class GenericStorageBlockEntity3x3 extends LootableContainerBlockEntity {
         return new Generic3x3ContainerScreenHandler(syncId, playerInventory, this);
     }
 
-
-
     void playSound(BlockState state, SoundEvent soundEvent) {
         Vec3i vec3i = state.get(Properties.HORIZONTAL_FACING).getVector();
         double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;

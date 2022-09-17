@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.registry.fabric;
 import com.unlikepaladin.pfm.blocks.BasicToilet;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.client.screens.MicrowaveScreen;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import com.unlikepaladin.pfm.registry.SoundIDs;
@@ -31,6 +32,21 @@ public class NetworkRegistryFabric {
                     if (world.isChunkLoaded(pos)) {
                         MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) player.world.getBlockEntity(pos);
                         microwaveBlockEntity.setActive(active);
+                    } else {
+                        player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+                    }
+                }
+            });
+        });
+
+        ServerPlayNetworking.registerGlobalReceiver(NetworkIDs.TRASHCAN_CLEAR, (server, player, handler, attachedData, responseSender) -> {
+            BlockPos pos = attachedData.readBlockPos();
+            server.submitAndJoin(() -> {
+                if(Objects.nonNull(player.world.getBlockEntity(pos))){
+                    World world = player.world;
+                    if (world.isChunkLoaded(pos)) {
+                        TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) player.world.getBlockEntity(pos);
+                        trashcanBlockEntity.clear();
                     } else {
                         player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
                     }

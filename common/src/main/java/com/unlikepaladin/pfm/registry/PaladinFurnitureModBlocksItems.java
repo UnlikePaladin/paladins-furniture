@@ -745,6 +745,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final Block IRON_STOVE = new IronStove(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
     public static final Block IRON_MICROWAVE = new Microwave(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
     public static final Block IRON_OVEN_RANGEHOOD = new KitchenRangeHood(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque());
+    public static final Block TRASHCAN = new Trashcan(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
 
     public static final Block OAK_CLASSIC_NIGHTSTAND = new ClassicNightstand(AbstractBlock.Settings.copy(OAK_CHAIR));
     public static final Block BIRCH_CLASSIC_NIGHTSTAND = new ClassicNightstand(AbstractBlock.Settings.copy(BIRCH_CHAIR));

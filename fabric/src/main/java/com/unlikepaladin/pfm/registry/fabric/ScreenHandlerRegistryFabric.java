@@ -14,5 +14,6 @@ public class ScreenHandlerRegistryFabric {
         ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(new Identifier(PaladinFurnitureMod.MOD_ID, "iron_stove_block_entity"), IronStoveScreenHandler::new);
         ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = ScreenHandlerRegistry.registerExtended(new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_block_entity"), MicrowaveScreenHandler::new);
         ScreenHandlerIDs.FREEZER_SCREEN_HANDLER = ScreenHandlerRegistry.registerSimple(ScreenHandlerIDs.FREEZER, FreezerScreenHandler::new);
+        ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER = ScreenHandlerRegistry.registerExtended(new Identifier(PaladinFurnitureMod.MOD_ID, "trashcan_block_entity"), TrashcanScreenHandler::new);
     }
 }

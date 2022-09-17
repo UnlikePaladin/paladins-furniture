@@ -1068,7 +1068,8 @@ public class BlockItemRegistryForge {
                 registerFurniture("glass_modern_pendant", PaladinFurnitureModBlocksItems.GLASS_MODERN_PENDANT, true),
                 registerFurniture("simple_light", PaladinFurnitureModBlocksItems.SIMPLE_LIGHT, true),
                 registerBlock("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH, false),
-                registerFurniture("basic_toilet", PaladinFurnitureModBlocksItems.BASIC_TOILET, true)
+                registerFurniture("basic_toilet", PaladinFurnitureModBlocksItems.BASIC_TOILET, true),
+                registerFurniture("trashcan", PaladinFurnitureModBlocksItems.TRASHCAN, true)
         );
     }
 
