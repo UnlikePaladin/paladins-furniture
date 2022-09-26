@@ -278,7 +278,6 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         return player.squaredDistanceTo((double)this.pos.getX() + 0.5, (double)this.pos.getY() + 0.5, (double)this.pos.getZ() + 0.5) <= 64.0;
     }
 
-
     @Override
     public void clear() {
         this.inventory.clear();
@@ -397,7 +396,9 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         if (itemStack2.isOf(Items.OBSIDIAN) || itemStack2.isOf(Items.ICE) || itemStack2.isOf(Items.BLUE_ICE)) {
             slots.set(0, new ItemStack(Items.BUCKET));
         }
-
+        if (itemStack2.getItem() == (Items.SNOWBALL)) {
+            slots.set(0, new ItemStack(Items.GLASS_BOTTLE));
+        }
         if (itemStack3.isEmpty()) {
             slots.set(2, itemStack2.copy());
         } else if (itemStack3.isOf(itemStack2.getItem())) {
@@ -410,9 +411,6 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
         return this.isValid(slot, stack);
     }
-
-
-
 
     @Nullable
     @Override
