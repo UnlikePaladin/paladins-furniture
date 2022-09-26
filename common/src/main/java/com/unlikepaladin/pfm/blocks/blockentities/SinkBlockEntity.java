@@ -10,12 +10,13 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.Tickable;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.World;
 
-public class SinkBlockEntity extends BlockEntity implements Tickable {
-    public SinkBlockEntity() {
-        super(BlockEntities.SINK_BLOCK_ENTITY);
+public class SinkBlockEntity extends BlockEntity {
+    public SinkBlockEntity(BlockPos pos, BlockState state) {
+        super(BlockEntities.SINK_BLOCK_ENTITY, pos, state);
     }
     private int sinkTimer = 0;
     private boolean isFilling = false;
@@ -33,10 +34,10 @@ public class SinkBlockEntity extends BlockEntity implements Tickable {
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound nbt) {
+    public void readNbt(NbtCompound nbt) {
         sinkTimer = nbt.getInt("sinkTimer");
         isFilling = nbt.getBoolean("isFilling");
-        super.fromTag(state, nbt);
+        super.readNbt(nbt);
     }
 
     public void setSinkTimer(int sinkTimer) {
@@ -50,17 +51,16 @@ public class SinkBlockEntity extends BlockEntity implements Tickable {
         this.isFilling = isFilling;
     }
 
-    @Override
-    public void tick() {
-        if (this.isFilling) {
-            if (this.sinkTimer >= 30) {
-                this.setSinkTimer(0);
-                this.setFilling(false);
+    public static void tick(World world, BlockPos pos, BlockState state, SinkBlockEntity blockEntity) {
+        if (blockEntity.isFilling) {
+            if (blockEntity.sinkTimer >= 30) {
+                blockEntity.setSinkTimer(0);
+                blockEntity.setFilling(false);
             } else {
                 if (world.isClient) {
-                    KitchenSink.spawnParticles(this.world, this.getPos());
+                    KitchenSink.spawnParticles(blockEntity.world, blockEntity.getPos());
                 }
-                this.sinkTimer++;
+                blockEntity.sinkTimer++;
             }
         }
     }

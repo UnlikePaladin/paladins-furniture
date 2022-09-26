@@ -31,7 +31,7 @@ public class TrashcanScreen extends HandledScreen<TrashcanScreenHandler> {
         this.trashcanBlockEntity = handler.trashcanBlockEntity;
         this.narrow = this.width < 379;
         this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
-        this.startButton = this.addDrawable(new ButtonWidget(this.x + 8, this.y + 40, 40, 20, startButtonText, button -> {
+        this.startButton = this.addDrawableChild(new ButtonWidget(this.x + 8, this.y + 40, 40, 20, startButtonText, button -> {
             TrashcanScreenHandler.clear(trashcanBlockEntity);
         }));
     }
