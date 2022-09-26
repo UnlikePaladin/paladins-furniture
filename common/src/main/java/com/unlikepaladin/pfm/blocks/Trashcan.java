@@ -51,11 +51,11 @@ public class Trashcan extends BlockWithEntity {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new TrashcanBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new TrashcanBlockEntity(pos, state);
     }
     @ExpectPlatform
-    public static BlockEntity getBlockEntity() {
+    public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
         throw new AssertionError();
     }
 
