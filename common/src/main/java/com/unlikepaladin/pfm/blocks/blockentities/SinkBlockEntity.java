@@ -26,11 +26,10 @@ public class SinkBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putInt("sinkTimer", sinkTimer);
         nbt.putBoolean("isFilling", isFilling);
-        return nbt;
     }
 
     @Override
