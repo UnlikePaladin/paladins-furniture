@@ -1,8 +1,14 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.*;
 import net.minecraft.block.cauldron.CauldronBehavior;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -40,7 +46,9 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class KitchenSink extends AbstractCauldronBlock implements Waterloggable {
+import static com.unlikepaladin.pfm.blocks.BasicToilet.checkType;
+
+public class KitchenSink extends AbstractCauldronBlock implements Waterloggable, BlockEntityProvider {
     private final BlockState baseBlockState;
     private final Block baseBlock;
     private final Predicate<Biome.Precipitation> precipitationPredicate;
@@ -243,9 +251,14 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable 
         return 0;
     }
 
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, BlockEntities.SINK_BLOCK_ENTITY, SinkBlockEntity::tick);
+    }
+
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
-        return new SinkBlockEntity();
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new SinkBlockEntity(pos, state);
     }
 }

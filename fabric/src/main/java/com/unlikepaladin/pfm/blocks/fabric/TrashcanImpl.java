@@ -12,7 +12,8 @@ import net.minecraft.world.World;
 
 public class TrashcanImpl {
     public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
-        return new TrashcanBlockEntityImpl(BlockEntities.TRASHCAN_BLOCK_ENTITY, pos, state);
+        System.out.println("Wtf why is it using the wrong one?");
+        return new TrashcanBlockEntityImpl(pos, state);
     }
 
     public static void openScreen(PlayerEntity player, BlockState state, World world, BlockPos pos) {
