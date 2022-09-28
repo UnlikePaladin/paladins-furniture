@@ -22,6 +22,8 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
+import org.lwjgl.glfw.GLFW;
+import org.lwjgl.glfw.GLFWKeyCallback;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -44,10 +46,6 @@ public class BlockItemRegistryFabric {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
         }
-        if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
-            FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
-            FuelRegistry.INSTANCE.add(block, 300);
-        }
     }
 
     public static void registerFurniture(String blockName, Block block, int count) {
@@ -64,6 +62,13 @@ public class BlockItemRegistryFabric {
 
     public static void registerItem(String itemName, Item item) {
         Registry.register(Registry.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
+        if (item instanceof BlockItem blockItem) {
+            Block block = Block.getBlockFromItem(blockItem);
+            if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
+                FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
+                FuelRegistry.INSTANCE.add(blockItem, 300);
+            }
+        }
     }
 
     public static void registerBlocks(){
