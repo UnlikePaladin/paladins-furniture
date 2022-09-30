@@ -1,0 +1,7 @@
+{
+  "type": "pfm:freezing",
+  "ingredient": {
+    "item": "minecraft:potion"
+  },
+  "result": "minecraft:snowball"
+}
