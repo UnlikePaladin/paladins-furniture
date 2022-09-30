@@ -6,5 +6,6 @@
   "book_texture": "pfm:textures/gui/book_orange.png",
   "model": "pfm:book_orange",
   "dont_generate_book": "true",
-  "custom_book_item": "pfm:furniture_book"
+  "custom_book_item": "pfm:furniture_book",
+  "show_progress": "false"
 }
