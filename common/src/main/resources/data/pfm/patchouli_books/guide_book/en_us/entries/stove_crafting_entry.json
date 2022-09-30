@@ -20,6 +20,15 @@
       "type": "pfm:furniturerecipe2template",
       "recipe": "pfm:oak_kitchen_counter_oven",
       "recipe2": "pfm:kitchen_stovetop"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Matching Oven Range Hood are also available, purely decorative for now, they connect to the small wall drawers."
+    },
+    {
+      "type": "furniturerecipe2template",
+      "recipe": "pfm:white_oven_range_hood",
+      "recipe2": "pfm:iron_oven_range_hood"
     }
   ]
 }
