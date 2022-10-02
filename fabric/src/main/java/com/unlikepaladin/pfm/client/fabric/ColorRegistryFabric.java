@@ -39,6 +39,8 @@ public class ColorRegistryFabric {
         KitchenCounterOven.streamStoneCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
         KitchenCounterOven.streamWoodCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), ovens.toArray(new Block[0]));
+
+        ColorProviderRegistry.ITEM.register((stack, index) -> index == 1 ?  0x3c44a9 : 0xFFFFFF, PaladinFurnitureModBlocksItems.BASIC_BATHTUB);
     }
 
     private static void addWaterColor(Block block) {

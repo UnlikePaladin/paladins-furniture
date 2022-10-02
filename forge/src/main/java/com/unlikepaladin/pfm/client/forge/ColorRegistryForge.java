@@ -35,6 +35,11 @@ public class ColorRegistryForge {
         event.getBlockColors().registerColorProvider(addWaterColor(), PaladinFurnitureModBlocksItems.BASIC_BATHTUB);
     }
 
+    @SubscribeEvent
+    public static void registerItemColors(ColorHandlerEvent.Item event){
+        event.getItemColors().register((stack, index) -> index == 1 ?  0x3c44a9 : 0xFFFFFF, PaladinFurnitureModBlocksItems.BASIC_BATHTUB.asItem());
+    }
+
     private static BlockColorProvider addToiletColor() {
         return (state, view, pos, index) -> state.get(BasicToilet.TOILET_STATE) !=  ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : 0x534230;
     }
