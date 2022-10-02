@@ -213,7 +213,7 @@
 		{
 			"from": [3, 4.5, 13.5],
 			"to": [13, 10.8, 13.6],
-			"rotation": {"angle": 0, "axis": "x", "origin": [8, 4, 14]},
+			"rotation": {"angle": 0, "axis": "x", "origin": [8, 8, 9]},
 			"faces": {
 				"north": {"uv": [3, 4.2, 13, 9.5], "texture": "#2"},
 				"east": {"uv": [1.4, 4.2, 1.5, 9.5], "texture": "#2"},
