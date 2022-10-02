@@ -112,7 +112,6 @@ public class ChairEntity extends MobEntity {
                     }
                 }
             }
-
             return super.updatePassengerForDismount(passenger);
         }
     }
