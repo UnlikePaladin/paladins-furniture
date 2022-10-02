@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "Y  ",
+    "XZX",
+    "XXX"
+  ],
+  "key": {
+    "Y": {
+      "item": "minecraft:stone_button"
+    },
+    "X": {
+      "item": "minecraft:quartz_block"
+    },
+    "Z": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "pfm:basic_bathtub"
+  }
+}

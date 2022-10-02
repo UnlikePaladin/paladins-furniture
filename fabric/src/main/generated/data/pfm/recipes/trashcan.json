@@ -1,0 +1,25 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "SZS",
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "S": {
+      "item": "minecraft:heavy_weighted_pressure_plate"
+    },
+    "X": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Y": {
+      "item": "minecraft:ender_pearl"
+    },
+    "Z": {
+      "item": "minecraft:stone_slab"
+    }
+  },
+  "result": {
+    "item": "pfm:trashcan"
+  }
+}
