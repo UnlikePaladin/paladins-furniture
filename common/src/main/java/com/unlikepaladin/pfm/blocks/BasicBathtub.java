@@ -35,10 +35,12 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import static com.unlikepaladin.pfm.blocks.SimpleStool.rotateShape;
 
@@ -46,11 +48,13 @@ public class BasicBathtub extends BedBlock {
     public static final EnumProperty<BedPart> TUB_SHAPE = EnumProperty.of("part", BedPart.class);
     public static final IntProperty LEVEL_8 = IntProperty.of("level", 0, 8);
     private final Map<Item, BathtubBehavior> behaviorMap;
+    private final Predicate<Biome.Precipitation> precipitationPredicate;
 
-    public BasicBathtub(Settings settings, Map<Item, BathtubBehavior> map) {
+    public BasicBathtub(Settings settings, Map<Item, BathtubBehavior> map, Predicate<Biome.Precipitation> precipitationPredicate) {
         super(DyeColor.WHITE, settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_8, 0).with(TUB_SHAPE, BedPart.FOOT).with(OCCUPIED, false));
         this.behaviorMap = map;
+        this.precipitationPredicate = precipitationPredicate;
     }
 
     @Override
@@ -117,19 +121,22 @@ public class BasicBathtub extends BedBlock {
         return state.get(LEVEL_8);
     }
 
+    protected static boolean canFillWithPrecipitation(World world, Biome.Precipitation precipitation) {
+        if (precipitation == Biome.Precipitation.RAIN) {
+            return world.getRandom().nextFloat() < 0.05f;
+        }
+        if (precipitation == Biome.Precipitation.SNOW) {
+            return world.getRandom().nextFloat() < 0.1f;
+        }
+        return false;
+    }
+
     @Override
-    public void rainTick(World world, BlockPos pos) {
-        if (world.random.nextInt(20) != 1) {
+    public void precipitationTick(BlockState state, World world, BlockPos pos, Biome.Precipitation precipitation) {
+        if (!canFillWithPrecipitation(world, precipitation) || state.get(LEVEL_8) == 8 || !this.precipitationPredicate.test(precipitation)) {
             return;
         }
-        float f = world.getBiome(pos).getTemperature(pos);
-        if (f < 0.15f) {
-            return;
-        }
-        BlockState blockState = world.getBlockState(pos);
-        if (blockState.get(LEVEL_8) < 8) {
-            world.setBlockState(pos, blockState.cycle(LEVEL_8), 2);
-        }
+        world.setBlockState(pos, state.cycle(LEVEL_8));
     }
 
     public static void decrementFluidLevel(BlockState state, World world, BlockPos pos) {

@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks.behavior;
 
 import com.unlikepaladin.pfm.blocks.BasicBathtub;
+import com.unlikepaladin.pfm.blocks.KitchenSink;
 import com.unlikepaladin.pfm.registry.Statistics;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.Block;
@@ -48,8 +49,8 @@ public interface BathtubBehavior {
         }
         if (!world.isClient) {
             ItemStack itemStack = new ItemStack(Blocks.SHULKER_BOX);
-            if (stack.hasTag()) {
-                itemStack.setTag(stack.getTag().copy());
+            if (stack.hasNbt()) {
+                itemStack.setNbt(stack.getNbt().copy());
             }
             player.setStackInHand(hand, itemStack);
             player.incrementStat(Stats.CLEAN_SHULKER_BOX);
@@ -85,13 +86,13 @@ public interface BathtubBehavior {
             ItemStack itemStack = stack.copy();
             itemStack.setCount(1);
             BannerBlockEntity.loadFromItemStack(itemStack);
-            if (!player.isCreative()) {
+            if (!player.getAbilities().creativeMode) {
                 stack.decrement(1);
             }
             if (stack.isEmpty()) {
                 player.setStackInHand(hand, itemStack);
-            } else if (player.inventory.insertStack(itemStack) && player instanceof ServerPlayerEntity) {
-                ((ServerPlayerEntity)player).refreshScreenHandler(player.playerScreenHandler);
+            } else if (player.getInventory().insertStack(itemStack)) {
+                player.playerScreenHandler.syncState();
             } else {
                 player.dropItem(itemStack, false);
             }
@@ -106,7 +107,7 @@ public interface BathtubBehavior {
             player.incrementStat(Statistics.BATHTUB_FILLED);
             if (usedBucket) {
                 Item item = stack.getItem();
-                player.setStackInHand(hand, ItemUsage.method_30012(stack, player, new ItemStack(Items.BUCKET)));
+                player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.BUCKET)));
                 player.incrementStat(Stats.USED.getOrCreateStat(item));
             }
             int newLevel = (world.getBlockState(pos).get(BasicBathtub.LEVEL_8) + 4);
@@ -126,7 +127,7 @@ public interface BathtubBehavior {
         }
         if (!world.isClient) {
             Item item = stack.getItem();
-            player.setStackInHand(hand, ItemUsage.method_30012(stack, player, output));
+            player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, output));
             player.incrementStat(Statistics.USE_BATHTUB);
             player.incrementStat(Stats.USED.getOrCreateStat(item));
             int newLevel = (world.getBlockState(pos).get(BasicBathtub.LEVEL_8) - 4);
@@ -152,7 +153,7 @@ public interface BathtubBehavior {
                     return ActionResult.PASS;
                 }
                 Item item = stack.getItem();
-                player.setStackInHand(hand, ItemUsage.method_30012(stack, player, PotionUtil.setPotion(new ItemStack(Items.POTION), Potions.WATER)));
+                player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, PotionUtil.setPotion(new ItemStack(Items.POTION), Potions.WATER)));
                 player.incrementStat(Statistics.USE_BATHTUB);
                 player.incrementStat(Stats.USED.getOrCreateStat(item));
                 BasicBathtub.decrementFluidLevel(state, world, pos);
@@ -165,7 +166,7 @@ public interface BathtubBehavior {
                 return ActionResult.PASS;
             }
             if (!world.isClient) {
-                player.setStackInHand(hand, ItemUsage.method_30012(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
+                player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
                 player.incrementStat(Statistics.USE_BATHTUB);
                 player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
                 world.setBlockState(pos, state.cycle(BasicBathtub.LEVEL_8));
