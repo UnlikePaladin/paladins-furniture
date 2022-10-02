@@ -12,7 +12,9 @@ public class Statistics {
     public static final Identifier STOVETOP_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "stovetop_used");
     public static final Identifier TRASHCAN_OPENED = new Identifier(PaladinFurnitureMod.MOD_ID, "trashcan_opened");
     public static final Identifier SINK_FILLED = new Identifier(PaladinFurnitureMod.MOD_ID, "sink_filled");
+    public static final Identifier BATHTUB_FILLED = new Identifier(PaladinFurnitureMod.MOD_ID, "bathtub_filled");
     public static final Identifier USE_SINK = new Identifier(PaladinFurnitureMod.MOD_ID, "use_sink");
+    public static final Identifier USE_BATHTUB = new Identifier(PaladinFurnitureMod.MOD_ID, "use_bathtub");
     public static final Identifier PLATE_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "plate_used");
     public static final Identifier MICROWAVE_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_used");
     public static final Identifier CHAIR_USED = new Identifier(PaladinFurnitureMod.MOD_ID, "chair_used");

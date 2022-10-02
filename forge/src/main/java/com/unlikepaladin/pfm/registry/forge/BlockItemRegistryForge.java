@@ -1158,6 +1158,7 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_switch"), PaladinFurnitureModBlocksItems.LIGHT_SWITCH);
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "basic_toilet"), addBlockItem(PaladinFurnitureModBlocksItems.BASIC_TOILET));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "basic_toilet"), addBlockItem(PaladinFurnitureModBlocksItems.TRASHCAN));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "basic_bathtub"), addBlockItem(PaladinFurnitureModBlocksItems.BASIC_BATHTUB));
 
         });
         event.register(ForgeRegistries.Keys.POI_TYPES, pointOfInterestTypeRegisterHelper ->  {

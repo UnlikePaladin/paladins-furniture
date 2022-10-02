@@ -21,8 +21,8 @@ public class ColorRegistryFabric {
         KitchenSink.streamStoneSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
         KitchenSink.streamWoodSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
         sinks.forEach(ColorRegistryFabric::addWaterColor);
-
         ColorProviderRegistry.BLOCK.register((state, view, pos, index) -> state.get(BasicToilet.TOILET_STATE) != ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : 0x534230, PaladinFurnitureModBlocksItems.BASIC_TOILET);
+        ColorRegistryFabric.addWaterColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB);
 
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, RenderLayer.getCutout());
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.GRAY_FRIDGE, RenderLayer.getCutout());

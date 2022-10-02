@@ -29,6 +29,15 @@ public class StatisticsRegistryForge {
                             Registry.register(Registry.CUSTOM_STAT, "freezer_opened", Statistics.FREEZER_OPENED);
                             Stats.CUSTOM.getOrCreateStat(Statistics.FREEZER_OPENED, StatFormatter.DEFAULT);
 
+                            Registry.register(Registry.CUSTOM_STAT, "bathtub_filled", Statistics.BATHTUB_FILLED);
+                            Stats.CUSTOM.getOrCreateStat(Statistics.BATHTUB_FILLED, StatFormatter.DEFAULT);
+
+                            Registry.register(Registry.CUSTOM_STAT, "use_bathtub", Statistics.USE_BATHTUB);
+                            Stats.CUSTOM.getOrCreateStat(Statistics.USE_BATHTUB, StatFormatter.DEFAULT);
+
+                            Registry.register(Registry.CUSTOM_STAT, "freezer_opened", Statistics.FREEZER_OPENED);
+                            Stats.CUSTOM.getOrCreateStat(Statistics.FREEZER_OPENED, StatFormatter.DEFAULT);
+
                             Registry.register(Registry.CUSTOM_STAT, "drawer_searched", Statistics.DRAWER_SEARCHED);
                             Stats.CUSTOM.getOrCreateStat(Statistics.DRAWER_SEARCHED, StatFormatter.DEFAULT);
 

@@ -14,6 +14,12 @@ public class StatisticsRegistryFabric {
         Registry.register(Registry.CUSTOM_STAT, "sink_filled", Statistics.SINK_FILLED);
         Stats.CUSTOM.getOrCreateStat(Statistics.SINK_FILLED, StatFormatter.DEFAULT);
 
+        Registry.register(Registry.CUSTOM_STAT, "bathtub_filled", Statistics.BATHTUB_FILLED);
+        Stats.CUSTOM.getOrCreateStat(Statistics.BATHTUB_FILLED, StatFormatter.DEFAULT);
+
+        Registry.register(Registry.CUSTOM_STAT, "use_bathtub", Statistics.USE_BATHTUB);
+        Stats.CUSTOM.getOrCreateStat(Statistics.USE_BATHTUB, StatFormatter.DEFAULT);
+
         Registry.register(Registry.CUSTOM_STAT, "use_sink", Statistics.USE_SINK);
         Stats.CUSTOM.getOrCreateStat(Statistics.USE_SINK, StatFormatter.DEFAULT);
 
