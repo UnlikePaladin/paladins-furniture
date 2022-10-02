@@ -23,7 +23,6 @@ public class TrashcanScreenHandler extends ScreenHandler {
     public TrashcanScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
         this(null, syncId, playerInventory, new SimpleInventory(9));
         trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(buf.readBlockPos());
-        System.out.println("Client");
     }
 
     public TrashcanScreenHandler(TrashcanBlockEntity trashcanBlockEntity, int syncId, PlayerInventory playerInventory, Inventory inventory) {
@@ -48,8 +47,6 @@ public class TrashcanScreenHandler extends ScreenHandler {
         for (i = 0; i < 9; ++i) {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
-        if (!world.isClient)
-            System.out.println("Server");
     }
 
     @ExpectPlatform
