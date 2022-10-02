@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.registry;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
+import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.items.DyeKit;
 import com.unlikepaladin.pfm.items.FurnitureGuideBook;
@@ -1238,6 +1239,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final Block BASIC_CUTLERY = new Cutlery(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).nonOpaque());
 
     public static final Block BASIC_TOILET = new BasicToilet(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque());
+    public static final Block BASIC_BATHTUB = new BasicBathtub(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque(), BathtubBehavior.TUB_BEHAVIOR);
 
     public static final Block OAK_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(AbstractBlock.Settings.copy(Blocks.LADDER));
     public static final Block SPRUCE_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(AbstractBlock.Settings.copy(Blocks.LADDER));

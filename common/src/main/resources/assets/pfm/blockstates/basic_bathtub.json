@@ -1,0 +1,108 @@
+{
+    "multipart": [
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "facing": "south" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_foot", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "part": "head" },
+                { "facing": "south" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_head", "y":270}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_foot", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "part": "head" },
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_head", "y":90}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "facing": "west" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_foot", "y":0}
+        },
+        {
+            "when": { "AND": [
+                { "part": "head" },
+                { "facing": "west" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_head", "y":0}
+        },
+        {
+            "when": { "AND": [
+                { "part": "foot" },
+                { "facing": "east" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_foot", "y":180}
+        },
+        {
+            "when": { "AND": [
+                { "part": "head" },
+                { "facing": "east" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_head", "y":180}
+        },
+        {
+            "when": { "AND": [
+                { "level": "1" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_water_1"}
+        },
+        {
+            "when": { "AND": [
+                { "level": "2" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_water_2"}
+        },
+        {
+            "when": { "AND": [
+                { "level": "3" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_water_3"}
+        },
+        {
+            "when": { "AND": [
+                { "level": "4" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_water_4"}
+        },
+        {
+            "when": { "AND": [
+                { "level": "5" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_water_5"}
+        },
+        {
+            "when": { "AND": [
+                { "level": "6" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_water_6"}
+        },
+        {
+            "when": { "AND": [
+                { "level": "7" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_water_7"}
+        },
+        {
+            "when": { "AND": [
+                { "level": "8" }
+            ]},
+            "apply": { "model": "pfm:block/basic_bathtub/bathtub_water_8"}
+        }
+    ]
+}

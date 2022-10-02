@@ -1,10 +1,9 @@
 package com.unlikepaladin.pfm;
 
+import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.compat.PaladinFurnitureModConfig;
-import com.unlikepaladin.pfm.registry.*;
 
-import com.unlikepaladin.pfm.utilities.Version;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.sound.SoundEvent;
@@ -29,6 +28,7 @@ public class PaladinFurnitureMod {
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
 		SinkBehavior.registerBehavior();
+		BathtubBehavior.registerBehavior();
 		updateChecker = new PaladinFurnitureModUpdateChecker();
 		updateChecker.checkForUpdates(getPFMConfig());
 	}

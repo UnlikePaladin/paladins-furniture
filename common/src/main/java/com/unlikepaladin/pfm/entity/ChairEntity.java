@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.entity;
 
 import com.google.common.collect.UnmodifiableIterator;
 import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
+import com.unlikepaladin.pfm.blocks.BasicBathtub;
 import com.unlikepaladin.pfm.blocks.BasicToilet;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
@@ -50,7 +51,7 @@ public class ChairEntity extends MobEntity {
                 }
                 super.tick();
             }
-            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock){
+            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock || this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicBathtub){
                 super.tick();
             }
             else {

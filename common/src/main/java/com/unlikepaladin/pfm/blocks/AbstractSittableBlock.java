@@ -27,10 +27,16 @@ import java.util.List;
 
 public abstract class AbstractSittableBlock extends HorizontalFacingBlock implements Waterloggable {
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    private final BlockState baseBlockState;
+    private final Block baseBlock;
 
     public AbstractSittableBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
+        this.baseBlockState = this.getDefaultState();
+        this.baseBlock = baseBlockState.getBlock();
+        if (!isNotWaterloggable(baseBlock)) {
+            setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
+        }
         this.height = 0.36f;
     }
 
@@ -40,21 +46,31 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock implem
         stateManager.add(WATERLOGGED);
     }
 
+    protected boolean isNotWaterloggable(Block block) {
+        return block instanceof BasicBathtub;
+    }
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         Direction facing = PaladinFurnitureMod.getPFMConfig().doChairsFacePlayer() ? ctx.getPlayerFacing() : ctx.getPlayerFacing().getOpposite();
+        if (isNotWaterloggable(baseBlock)) {
+            return this.getDefaultState().with(Properties.HORIZONTAL_FACING, facing);
+        }
         return this.getDefaultState().with(Properties.HORIZONTAL_FACING, facing).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
+        if (isNotWaterloggable(baseBlock)) {
+            return super.getFluidState(state);
+        }
         return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
+        if (!isNotWaterloggable(baseBlock)) {
+            if (state.get(WATERLOGGED))
+                world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }

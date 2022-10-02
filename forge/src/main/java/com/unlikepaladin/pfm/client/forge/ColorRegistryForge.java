@@ -32,6 +32,7 @@ public class ColorRegistryForge {
         KitchenSink.streamWoodSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
         event.getBlockColors().registerColorProvider(addWaterColor(), sinks.toArray(new Block[0]));
         event.getBlockColors().registerColorProvider(addToiletColor(), PaladinFurnitureModBlocksItems.BASIC_TOILET);
+        event.getBlockColors().registerColorProvider(addWaterColor(), PaladinFurnitureModBlocksItems.BASIC_BATHTUB);
     }
 
     private static BlockColorProvider addToiletColor() {
