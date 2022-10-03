@@ -47,7 +47,7 @@ public class InnerTrashcan extends BlockWithEntity {
         return BlockRenderType.MODEL;
     }
 
-    public static final VoxelShape TRASHCAN = VoxelShapes.union(createCuboidShape(4.5, 0, 2, 11.5, 11, 14), createCuboidShape(4.5, 11, 1.75, 11.5, 11.5, 14.25));
+    public static final VoxelShape TRASHCAN = VoxelShapes.union(createCuboidShape(3.5, 11, 3.25, 12.5, 11.5, 12.75), createCuboidShape(3.5, 0, 3.5, 12.5, 11, 12.5));
     public static final VoxelShape TRASHCAN_EAST_WEST = rotateShape(Direction.NORTH, Direction.EAST, TRASHCAN);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
