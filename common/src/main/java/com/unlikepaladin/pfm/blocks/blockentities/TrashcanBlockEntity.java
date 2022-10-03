@@ -47,7 +47,8 @@ public class TrashcanBlockEntity extends LootableContainerBlockEntity {
     }
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), 3);
+        if (state.contains(Properties.OPEN))
+            this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), 3);
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {

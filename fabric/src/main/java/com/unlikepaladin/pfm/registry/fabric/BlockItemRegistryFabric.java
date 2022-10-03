@@ -1105,6 +1105,7 @@ public class BlockItemRegistryFabric {
         registerFurniture("basic_toilet", PaladinFurnitureModBlocksItems.BASIC_TOILET, true);
         registerFurniture("basic_bathtub", PaladinFurnitureModBlocksItems.BASIC_BATHTUB, true);
         registerFurniture("trashcan", PaladinFurnitureModBlocksItems.TRASHCAN, true);
+        registerFurniture("mesh_trashcan", PaladinFurnitureModBlocksItems.MESH_TRASHCAN, true);
 
 
         //Dye Kits
