@@ -167,7 +167,6 @@ public class BasicBathtub extends BedBlock {
                     world.setBlockState(sourcePos, Blocks.AIR.getDefaultState());
                 }
                 BathtubBehavior.fillTub(world, pos, player, hand, player.getStackInHand(hand), state, SoundEvents.BLOCK_WATER_AMBIENT, false);
-                System.out.println("Should return, fill underneath");
                 return ActionResult.SUCCESS;
             }
         }
@@ -175,15 +174,12 @@ public class BasicBathtub extends BedBlock {
         BathtubBehavior bathtubBehavior = this.behaviorMap.get(itemStack.getItem());
         if (bathtubBehavior != null) {
             bathtubBehavior.interact(state, world, pos, player, hand, itemStack);
-            System.out.println("Should return, interacting with water");
             return ActionResult.SUCCESS;
         }
         if (world.isNight() && world.getDimension().isBedWorking()) {
             super.onUse(state, world, pos, player, hand, hit);
-            System.out.println("Should return, you are sleeping");
             return ActionResult.SUCCESS;
         }
-        System.out.println("Should return, you are sitting");
         return sit(state, world, pos, player, hand, hit);
     }
 
