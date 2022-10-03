@@ -160,25 +160,30 @@ public class BasicBathtub extends BedBlock {
                 BlockState sourceState = world.getBlockState(sourcePos);
                 if (sourceState.getFluidState().getFluid() == Fluids.WATER && !sourceState.getFluidState().isEmpty()) {
                     if (sourceState.getProperties().contains(Properties.WATERLOGGED)) {
-                        world.setBlockState(sourcePos, sourceState.with(Properties.WATERLOGGED, false)); }
-                    else {
+                        world.setBlockState(sourcePos, sourceState.with(Properties.WATERLOGGED, false));
+                    } else {
                         world.setBlockState(sourcePos, Blocks.AIR.getDefaultState());
                     }
                     BathtubBehavior.fillTub(world, pos, player, hand, player.getStackInHand(hand), state, SoundEvents.BLOCK_WATER_AMBIENT, false);
                     return ActionResult.SUCCESS;
                 }
             }
-            ItemStack itemStack = player.getStackInHand(hand);
-            BathtubBehavior bathtubBehavior = this.behaviorMap.get(itemStack.getItem());
-            if (bathtubBehavior != null) {
-                return bathtubBehavior.interact(state, world, pos, player, hand, itemStack);
+            else {
+                ItemStack itemStack = player.getStackInHand(hand);
+                BathtubBehavior bathtubBehavior = this.behaviorMap.get(itemStack.getItem());
+                if (bathtubBehavior != null) {
+                    return bathtubBehavior.interact(state, world, pos, player, hand, itemStack);
+                }
+                else if (world.isNight() && world.getDimension().isBedWorking()) {
+                    super.onUse(state, world, pos, player, hand, hit);
+                    return ActionResult.SUCCESS;
+                }
+                else {
+                    return sit(state, world, pos, player, hand, hit);
+                }
             }
         }
-        if (world.isNight() && world.getDimension().isBedWorking()) {
-            super.onUse(state, world, pos, player, hand, hit);
-            return ActionResult.SUCCESS;
-        }
-        return sit(state, world, pos, player, hand, hit);
+        return ActionResult.PASS;
     }
 
     public ActionResult sit(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
