@@ -168,20 +168,16 @@ public class BasicBathtub extends BedBlock {
                     return ActionResult.SUCCESS;
                 }
             }
-            else {
-                ItemStack itemStack = player.getStackInHand(hand);
-                BathtubBehavior bathtubBehavior = this.behaviorMap.get(itemStack.getItem());
-                if (bathtubBehavior != null) {
-                    return bathtubBehavior.interact(state, world, pos, player, hand, itemStack);
-                }
-                else if (world.isNight() && world.getDimension().isBedWorking()) {
-                    super.onUse(state, world, pos, player, hand, hit);
-                    return ActionResult.SUCCESS;
-                }
-                else {
-                    return sit(state, world, pos, player, hand, hit);
-                }
+            ItemStack itemStack = player.getStackInHand(hand);
+            BathtubBehavior bathtubBehavior = this.behaviorMap.get(itemStack.getItem());
+            if (bathtubBehavior != null) {
+                return bathtubBehavior.interact(state, world, pos, player, hand, itemStack);
             }
+            if (world.isNight() && world.getDimension().isBedWorking()) {
+                super.onUse(state, world, pos, player, hand, hit);
+                return ActionResult.SUCCESS;
+            }
+            return sit(state, world, pos, player, hand, hit);
         }
         return ActionResult.PASS;
     }
