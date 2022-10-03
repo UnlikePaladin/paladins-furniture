@@ -70,7 +70,7 @@ public class BasicBathtub extends BedBlock {
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         Direction direction = state.get(FACING);
-        if (state.get(PART) == BedPart.FOOT) {
+        if (state.get(PART) == BedPart.HEAD) {
             direction = direction.getOpposite();
         }
         return world.getBlockState(pos.offset(direction)).isAir() || world.getBlockState(pos.offset(direction)).getBlock() == this;
