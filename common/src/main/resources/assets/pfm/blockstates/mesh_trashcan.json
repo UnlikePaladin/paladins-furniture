@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/mesh_trashcan","y":180},
+    "facing=east":{"model":"pfm:block/mesh_trashcan","y":270},
+    "facing=south":{"model":"pfm:block/mesh_trashcan","y":0},
+    "facing=west":{"model":"pfm:block/mesh_trashcan","y":90}
+
+}
+
+}

@@ -35,6 +35,7 @@ public class ColorRegistryFabric {
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.WHITE_MODERN_PENDANT, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.GLASS_MODERN_PENDANT, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.IRON_MICROWAVE, RenderLayer.getTranslucent());
+        BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.MESH_TRASHCAN, RenderLayer.getCutout());
         List<Block> ovens = new ArrayList<>();
         KitchenCounterOven.streamStoneCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
         KitchenCounterOven.streamWoodCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
