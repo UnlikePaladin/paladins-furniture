@@ -118,12 +118,29 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable,
         return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
     }
 
-    public static void spawnParticles(World world, BlockPos pos) {
+    public static void spawnParticles(Direction facing, World world, BlockPos pos) {
         if (world.isClient) {
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-            world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
-            world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
-            world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+            if (facing == Direction.EAST) {
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+            }
+            else if (facing == Direction.SOUTH){
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.76, 0.0, 0.0, 0.0);
+            }
+            else if (facing == Direction.NORTH){
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.24, 0.0, 0.0, 0.0);
+            }
+            else {
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+            }
         }
     }
 

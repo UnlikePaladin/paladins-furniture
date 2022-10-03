@@ -10,6 +10,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
@@ -58,7 +59,7 @@ public class SinkBlockEntity extends BlockEntity {
                 blockEntity.setFilling(false);
             } else {
                 if (world.isClient) {
-                    KitchenSink.spawnParticles(blockEntity.world, blockEntity.getPos());
+                    KitchenSink.spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
                 }
                 blockEntity.sinkTimer++;
             }
