@@ -249,6 +249,7 @@
     "pfm:iron_oven_range_hood",
     "pfm:raw_concrete",
     "pfm:iron_chain",
-    "pfm:trashcan"
+    "pfm:trashcan",
+    "pfm:mesh_trashcan"
   ]
 }
