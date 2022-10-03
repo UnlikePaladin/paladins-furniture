@@ -36,7 +36,7 @@ public class ColorRegistryForge {
     }
 
     @SubscribeEvent
-    public static void registerItemColors(ColorHandlerEvent.Item event){
+    public static void registerItemColors(RegisterColorHandlersEvent.Item event){
         event.getItemColors().register((stack, index) -> index == 1 ?  0x3c44a9 : 0xFFFFFF, PaladinFurnitureModBlocksItems.BASIC_BATHTUB.asItem());
     }
 
