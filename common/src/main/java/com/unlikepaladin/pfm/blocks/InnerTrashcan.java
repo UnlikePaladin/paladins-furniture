@@ -7,6 +7,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
@@ -22,6 +23,8 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Random;
+
 import static com.unlikepaladin.pfm.blocks.SimpleStool.rotateShape;
 
 public class InnerTrashcan extends BlockWithEntity {
@@ -29,11 +32,11 @@ public class InnerTrashcan extends BlockWithEntity {
         super(settings);
         setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
     }
-    protected static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-
+    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    protected static final BooleanProperty POWERED = Properties.POWERED;
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING, POWERED);
     }
 
     @Nullable
@@ -94,4 +97,17 @@ public class InnerTrashcan extends BlockWithEntity {
         return ActionResult.CONSUME;
     }
 
+    @Override
+    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        boolean bl = world.isReceivingRedstonePower(pos);
+        if (bl != state.get(POWERED)) {
+            if (bl) {
+                if (world.getBlockEntity(pos) instanceof TrashcanBlockEntity){
+                    TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(pos);
+                    trashcanBlockEntity.clear();
+                }
+            }
+            world.setBlockState(pos, state.with(POWERED, bl), 3);
+        }
+    }
 }
