@@ -30,7 +30,7 @@ public class TrashcanBlockEntity extends LootableContainerBlockEntity {
         super(trashcanBlockEntity, pos, state);
     }
 
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
+    protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
     protected void onContainerOpen(BlockState state) {
         if (state.getBlock() instanceof Trashcan){
@@ -112,5 +112,35 @@ public class TrashcanBlockEntity extends LootableContainerBlockEntity {
             Inventories.writeNbt(nbt, this.inventory);
         }
         return nbt;
+    }
+
+    public DefaultedList<ItemStack> getInventory() {
+        return this.inventory;
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+        super.setStack(slot, stack);
+        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
+    }
+
+    @Override
+    public ItemStack removeStack(int slot) {
+        ItemStack stack = super.removeStack(slot);
+        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
+        return stack;
+    }
+
+    @Override
+    public ItemStack removeStack(int slot, int amount) {
+        ItemStack stack = super.removeStack(slot, amount);
+        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
+        return stack;
+    }
+
+    @Override
+    public void clear() {
+        super.clear();
+        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
     }
 }

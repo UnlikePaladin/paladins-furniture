@@ -19,6 +19,7 @@ public class EntityRenderRegistryFabric {
         BlockEntityRendererRegistry.register(BlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
         BlockEntityRendererRegistry.register(BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityRenderer::new);
         EntityModelLayerRegistry.registerModelLayer(MODEL_CUBE_LAYER, ModelEmpty::getTexturedModelData);
+        BlockEntityRendererRegistry.register(BlockEntities.TRASHCAN_BLOCK_ENTITY, TrashcanBlockEntityRenderer::new);
     }
 
 }
