@@ -1,0 +1,13 @@
+{"variants":
+    {
+        "wall=true,facing=north":{"model":"pfm:block/wall_toilet_paper/toilet_paper","y":180},
+        "wall=true,facing=east":{"model":"pfm:block/wall_toilet_paper/toilet_paper","y":270},
+        "wall=true,facing=south":{"model":"pfm:block/wall_toilet_paper/toilet_paper","y":0},
+        "wall=true,facing=west":{"model":"pfm:block/wall_toilet_paper/toilet_paper","y":90},
+
+        "wall=false,facing=north":{"model":"pfm:block/wall_toilet_paper/toilet_paper_wall","y":180},
+        "wall=false,facing=east":{"model":"pfm:block/wall_toilet_paper/toilet_paper_wall","y":270},
+        "wall=false,facing=south":{"model":"pfm:block/wall_toilet_paper/toilet_paper_wall","y":0},
+        "wall=false,facing=west":{"model":"pfm:block/wall_toilet_paper/toilet_paper_wall","y":90}
+    }
+}

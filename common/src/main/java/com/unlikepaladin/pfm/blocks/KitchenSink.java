@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -94,11 +93,16 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable,
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockPos sourcePos = pos.down().down();
-        if (state.get(LEVEL_4) == 0) {
+        ItemStack itemStack = player.getStackInHand(hand);
+        CauldronBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
+        if (state.get(LEVEL_4) > 0 && sinkBehavior != null) {
+            return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
+        }
+        if (state.get(LEVEL_4) < 3) {
             BlockState sourceState = world.getBlockState(sourcePos);
             if (sourceState.getFluidState().getFluid() == Fluids.WATER && !sourceState.getFluidState().isEmpty()) {
                 if (sourceState.getProperties().contains(Properties.WATERLOGGED)) {
-                world.setBlockState(sourcePos, sourceState.with(Properties.WATERLOGGED, false)); }
+                    world.setBlockState(sourcePos, sourceState.with(Properties.WATERLOGGED, false)); }
                 else {
                     world.setBlockState(sourcePos, Blocks.AIR.getDefaultState());
                 }
@@ -110,36 +114,31 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable,
                 return ActionResult.SUCCESS;
             }
         }
-        ItemStack itemStack = player.getStackInHand(hand);
-        CauldronBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
-        if (sinkBehavior == null) {
-            return ActionResult.PASS;
-        }
-        return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
+        return ActionResult.PASS;
     }
 
     public static void spawnParticles(Direction facing, World world, BlockPos pos) {
         if (world.isClient) {
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
             if (facing == Direction.EAST) {
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
             }
             else if (facing == Direction.SOUTH){
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.76, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.76, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.76, 0.0, 0.0, 0.0);
             }
             else if (facing == Direction.NORTH){
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.24, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.24, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.18, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.24, 0.0, 0.0, 0.0);
             }
             else {
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.18, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
             }
         }
     }
@@ -170,23 +169,23 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable,
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(Properties.HORIZONTAL_FACING);
-        return switch (dir) {
-            case NORTH -> FACING_NORTH;
-            case SOUTH -> FACING_SOUTH;
-            case EAST -> FACING_EAST;
-            default -> FACING_WEST;
-        };
+        switch (dir) {
+            case NORTH: return FACING_NORTH;
+            case SOUTH: return FACING_SOUTH;
+            case EAST: return FACING_EAST;
+            default: return FACING_WEST;
+        }
     }
 
     @Override
     public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(Properties.HORIZONTAL_FACING);
-        return switch (dir) {
-            case NORTH -> FACING_NORTH;
-            case SOUTH -> FACING_SOUTH;
-            case EAST -> FACING_EAST;
-            default -> FACING_WEST;
-        };
+        switch (dir) {
+            case NORTH: return FACING_NORTH;
+            case SOUTH: return FACING_SOUTH;
+            case EAST: return FACING_EAST;
+            default: return FACING_WEST;
+        }
     }
 
 

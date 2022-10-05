@@ -79,7 +79,6 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implemen
                     matrices.translate(0.0, 0.0, 0.15);
                 }
                 int rot = 90;
-                matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(g));
                 matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(rot));
                 int lightAbove = WorldRenderer.getLightmapCoordinates(trashcanBlockEntity.getWorld(), trashcanBlockEntity.getPos().up());
                 matrices.scale(0.8f, 0.8f, 0.8f);

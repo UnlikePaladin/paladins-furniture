@@ -1240,6 +1240,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final Block BASIC_CUTLERY = new Cutlery(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).nonOpaque());
 
     public static final Block BASIC_TOILET = new BasicToilet(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque());
+    public static final Block WALL_TOILET_PAPER = new ToiletPaperWall(AbstractBlock.Settings.of(Material.WOOL, MapColor.OFF_WHITE).nonOpaque());
     public static final Block BASIC_BATHTUB = new BasicBathtub(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque(), BathtubBehavior.TUB_BEHAVIOR, LeveledCauldronBlock.RAIN_PREDICATE);
 
     public static final Block OAK_SIMPLE_BUNK_LADDER = new SimpleBunkLadder(AbstractBlock.Settings.copy(Blocks.LADDER));
