@@ -1103,6 +1103,7 @@ public class BlockItemRegistryFabric {
         PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
         registerBlock("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH, PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM);
         registerFurniture("basic_toilet", PaladinFurnitureModBlocksItems.BASIC_TOILET, true);
+        registerFurniture("wall_toilet_paper", PaladinFurnitureModBlocksItems.WALL_TOILET_PAPER, true);
         registerFurniture("basic_bathtub", PaladinFurnitureModBlocksItems.BASIC_BATHTUB, true);
         registerFurniture("trashcan", PaladinFurnitureModBlocksItems.TRASHCAN, true);
         registerFurniture("mesh_trashcan", PaladinFurnitureModBlocksItems.MESH_TRASHCAN, true);
