@@ -7,12 +7,13 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 
 public class EntityRegistryFabric {
     public static void registerEntity(String name, EntityType<? extends LivingEntity> entity) {
-        Registry.register(Registry.ENTITY_TYPE, new Identifier(PaladinFurnitureMod.MOD_ID, name), entity);
+        Registry.register(Registries.ENTITY_TYPE, new Identifier(PaladinFurnitureMod.MOD_ID, name), entity);
     }
     public static void registerEntities()
     {

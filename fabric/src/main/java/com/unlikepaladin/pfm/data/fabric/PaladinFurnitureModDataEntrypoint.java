@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.data.Tags;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -15,52 +16,59 @@ import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.BedPart;
-import net.minecraft.data.server.BlockLootTableGenerator;
-import net.minecraft.data.server.RecipeProvider;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.tag.*;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 
 import java.util.Arrays;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoint {
+    protected FabricDataGenerator.Pack pack;
 
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator dataGenerator) {
-        dataGenerator.addProvider(PFMBlockTagProvider::new);
-        dataGenerator.addProvider(PFMLootTableProvider::new);
-        dataGenerator.addProvider(PFMRecipeProvider::new);
+        pack = dataGenerator.createPack();
+        pack.addProvider(PFMBlockTagProvider::new);
+        pack.addProvider(PFMLootTableProvider::new);
+        pack.addProvider(PFMRecipeProvider::new);
     }
 
     private static class PFMLootTableProvider extends FabricBlockLootTableProvider {
-        private PFMLootTableProvider(FabricDataGenerator dataGenerator) {
-            super(dataGenerator);
+
+        protected PFMLootTableProvider(FabricDataOutput dataOutput) {
+            super(dataOutput);
         }
 
         @Override
-        protected void generateBlockLootTables() {
+        public void generate() {
             Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
             blocks.forEach(this::addDrop);
             Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
-            Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> BlockLootTableGenerator.dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
+            Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> this.dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
         }
     }
 
     public static class PFMBlockTagProvider extends FabricTagProvider.BlockTagProvider {
-        private PFMBlockTagProvider(FabricDataGenerator dataGenerator) {
-            super(dataGenerator);
+        public PFMBlockTagProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture) {
+            super(output, registriesFuture);
         }
 
         @Override
-        protected void generateTags() {
+        protected void configure(RegistryWrapper.WrapperLookup arg) {
             KitchenCounter[] stoneCounters = KitchenCounter.streamStoneCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounter[]::new);
             KitchenCabinet[] stoneCabinets = KitchenCabinet.streamStoneCabinets().map(FurnitureBlock::getBlock).toArray(KitchenCabinet[]::new);
             KitchenDrawer[] stoneDrawers = KitchenDrawer.streamStoneDrawers().map(FurnitureBlock::getBlock).toArray(KitchenDrawer[]::new);
@@ -232,16 +240,15 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(woodLogTables)
                     .add(stoneNaturalTables);
         }
-
     }
 
     private static class PFMRecipeProvider extends FabricRecipeProvider {
-        private PFMRecipeProvider(FabricDataGenerator dataGenerator) {
-            super(dataGenerator);
+        public PFMRecipeProvider(FabricDataOutput output) {
+            super(output);
         }
 
         @Override
-        protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
+        public void generate(Consumer<RecipeJsonProvider> exporter) {
             FurnitureBlock[] woodClassicChairs = ClassicChair.streamWoodClassicChairs().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock classicChair : woodClassicChairs) {
                 offerClassicChairRecipe(classicChair.getBlock(), Ingredient.ofItems(classicChair.getSecondaryMaterial().asItem()), Ingredient.ofItems(classicChair.getBaseMaterial().asItem()), exporter);
@@ -301,9 +308,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock kitchenCabinet : woodKitchenCabinets) {
                 String cabinetName = kitchenCabinet.getBlock().toString();
                 if (cabinetName.contains("light_wood")) {
-                    offerCabinetRecipe(kitchenCabinet.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerCabinetRecipe(kitchenCabinet.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else if (cabinetName.contains("dark_wood")) {
-                    offerCabinetRecipe(kitchenCabinet.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerCabinetRecipe(kitchenCabinet.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else {
                     offerCabinetRecipe(kitchenCabinet.getBlock(), Ingredient.ofItems(kitchenCabinet.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenCabinet.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
                 }
@@ -313,9 +320,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock kitchenCounterOven : woodKitchenCounterOvens) {
                 String cabinetName = kitchenCounterOven.getBlock().toString();
                 if (cabinetName.contains("light_wood")) {
-                    offerCounterAppliance(kitchenCounterOven.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.FURNACE), exporter);
+                    offerCounterAppliance(kitchenCounterOven.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.FURNACE), exporter);
                 } else if (cabinetName.contains("dark_wood")) {
-                    offerCounterAppliance(kitchenCounterOven.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.FURNACE), exporter);
+                    offerCounterAppliance(kitchenCounterOven.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.FURNACE), exporter);
                 } else {
                     offerCounterAppliance(kitchenCounterOven.getBlock(), Ingredient.ofItems(kitchenCounterOven.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenCounterOven.getBaseMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
                 }
@@ -325,9 +332,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock kitchenCounter : woodKitchenCounters) {
                 String cabinetName = kitchenCounter.getBlock().toString();
                 if (cabinetName.contains("light_wood")) {
-                    offerCounterRecipe(kitchenCounter.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), exporter);
+                    offerCounterRecipe(kitchenCounter.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), exporter);
                 } else if (cabinetName.contains("dark_wood")) {
-                    offerCounterRecipe(kitchenCounter.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), exporter);
+                    offerCounterRecipe(kitchenCounter.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), exporter);
                 } else {
                     offerCounterRecipe(kitchenCounter.getBlock(), Ingredient.ofItems(kitchenCounter.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenCounter.getBaseMaterial().asItem()), exporter);
                 }
@@ -337,9 +344,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock kitchenDrawer : woodKitchenDrawers) {
                 String cabinetName = kitchenDrawer.getBlock().toString();
                 if (cabinetName.contains("light_wood")) {
-                    offerCounterAppliance(kitchenDrawer.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerCounterAppliance(kitchenDrawer.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else if (cabinetName.contains("dark_wood")) {
-                    offerCounterAppliance(kitchenDrawer.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerCounterAppliance(kitchenDrawer.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else {
                     offerCounterAppliance(kitchenDrawer.getBlock(), Ingredient.ofItems(kitchenDrawer.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
                 }
@@ -349,9 +356,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock kitchenCounter : woodWallKitchenCounters) {
                 String cabinetName = kitchenCounter.getBlock().toString();
                 if (cabinetName.contains("light_wood")) {
-                    offerCounterRecipe(kitchenCounter.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), exporter);
+                    offerCounterRecipe(kitchenCounter.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), exporter);
                 } else if (cabinetName.contains("dark_wood")) {
-                    offerCounterRecipe(kitchenCounter.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), exporter);
+                    offerCounterRecipe(kitchenCounter.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), exporter);
                 } else {
                     offerCounterRecipe(kitchenCounter.getBlock(), Ingredient.ofItems(kitchenCounter.getBaseMaterial().asItem()), Ingredient.ofItems(kitchenCounter.getBaseMaterial().asItem()), exporter);
                 }
@@ -361,9 +368,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock kitchenDrawer : woodWallKitchenDrawers) {
                 String cabinetName = kitchenDrawer.getBlock().toString();
                 if (cabinetName.contains("light_wood")) {
-                    offerWallDrawer(kitchenDrawer.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerWallDrawer(kitchenDrawer.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else if (cabinetName.contains("dark_wood")) {
-                    offerWallDrawer(kitchenDrawer.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerWallDrawer(kitchenDrawer.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else {
                     offerWallDrawer(kitchenDrawer.getBlock(), Ingredient.ofItems(kitchenDrawer.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
                 }
@@ -373,9 +380,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock kitchenDrawer : woodWallSmallKitchenDrawers) {
                 String cabinetName = kitchenDrawer.getBlock().toString();
                 if (cabinetName.contains("light_wood")) {
-                    offerWallDrawerSmall(kitchenDrawer.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerWallDrawerSmall(kitchenDrawer.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else if (cabinetName.contains("dark_wood")) {
-                    offerWallDrawerSmall(kitchenDrawer.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerWallDrawerSmall(kitchenDrawer.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else {
                     offerWallDrawerSmall(kitchenDrawer.getBlock(), Ingredient.ofItems(kitchenDrawer.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
                 }
@@ -385,9 +392,9 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             for (FurnitureBlock kitchenSink : woodKitchenSinks) {
                 String cabinetName = kitchenSink.getBlock().toString();
                 if (cabinetName.contains("light_wood")) {
-                    offerSinkRecipe(kitchenSink.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
+                    offerSinkRecipe(kitchenSink.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
                 } else if (cabinetName.contains("dark_wood")) {
-                    offerSinkRecipe(kitchenSink.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
+                    offerSinkRecipe(kitchenSink.getBlock(), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registries.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
                 } else {
                     offerSinkRecipe(kitchenSink.getBlock(), Ingredient.ofItems(kitchenSink.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenSink.getBaseMaterial().asItem()), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
                 }
@@ -651,7 +658,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
     }
 
     public static void offerHerringbonePlanks(ItemConvertible output, Item baseMaterial, Consumer<RecipeJsonProvider> exporter) {
-        ShapedRecipeJsonBuilder.create(output, 4).input('X', baseMaterial).pattern("XX").pattern("XX").criterion("has_wood_slabs", RecipeProvider.conditionsFromItem(baseMaterial)).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+        ShapedRecipeJsonBuilder.create(RecipeCategory.BUILDING_BLOCKS, output, 4).input('X', baseMaterial).pattern("XX").pattern("XX").criterion("has_wood_slabs", RecipeProvider.conditionsFromItem(baseMaterial)).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerCabinetRecipe(ItemConvertible output, Ingredient baseMaterial, Ingredient legMaterial, Ingredient chest, Consumer<RecipeJsonProvider> exporter) {

@@ -12,8 +12,6 @@ import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ClientMicrowaveUpdatePackeHandler {
-
-    // In ClientPacketHandlerClass
     public static void handlePacket(MicrowaveUpdatePacket msg, Supplier<NetworkEvent.Context> ctx) {
         BlockPos blockPos = msg.entityPos;
         boolean active = msg.active;

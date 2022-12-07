@@ -16,9 +16,13 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.data.DataGenerator;
-import net.minecraft.data.server.*;
+import net.minecraft.data.DataOutput;
+import net.minecraft.data.server.loottable.BlockLootTableGenerator;
+import net.minecraft.data.server.loottable.LootTableProvider;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.data.server.tag.AbstractTagProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
@@ -31,24 +35,27 @@ import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.tag.BlockTags;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 import net.minecraftforge.common.data.ExistingFileHelper;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
+
 import javax.annotation.Nullable;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-
+/*
+//TODO: Update Datagen
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PaladinFurnitureModDataGenForge extends DataGenerator {
     private final Collection<Path> inputs;
@@ -65,24 +72,19 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
         DataGenerator generator = dataEvent.getGenerator();
         String modID = dataEvent.getModContainer().getModId();
         ExistingFileHelper fileHelper = dataEvent.getExistingFileHelper();
-        generator.addProvider(true, new PaladinFurnitureModDataGenForge.PFMLootTableProvider(generator));
+        generator.addProvider(true, new PaladinFurnitureModDataGenForge.PFMLootTableProvider(generator.getPackOutput()));
         generator.addProvider(true, new PaladinFurnitureModDataGenForge.PFMRecipeProvider(generator));
         generator.addProvider(true, new PaladinFurnitureModDataGenForge.PFMBlockTagProvider(generator, modID, fileHelper));
     }
 
     public static class PFMLootTableProvider extends LootTableProvider {
-        public PFMLootTableProvider(DataGenerator root) {
+        public PFMLootTableProvider(DataOutput root) {
             super(root);
         }
-        private final List<Pair<Supplier<Consumer<BiConsumer<Identifier, LootTable.Builder>>>, LootContextType>> lootTypeGenerators = ImmutableList.of(Pair.of(PFMBlockLootTableGenerator::new, LootContextTypes.BLOCK));
+        private final List<LootTypeGenerator> lootTypeGenerators = ImmutableList.of(Pair.of(PFMBlockLootTableGenerator::new, LootContextTypes.BLOCK));
         @Override
-        protected List<Pair<Supplier<Consumer<BiConsumer<Identifier, LootTable.Builder>>>, LootContextType>> getTables() {
+        public List<LootTypeGenerator> getTables() {
             return lootTypeGenerators;
-        }
-
-        @Override
-        public String getName() {
-            return "Paladin's Furniture Loot Tables";
         }
 
         @Override
@@ -91,8 +93,12 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
         }
     }
     public static class PFMBlockLootTableGenerator extends BlockLootTableGenerator {
+        protected PFMBlockLootTableGenerator(Set<Item> explosionImmuneItems, FeatureSet requiredFeatures) {
+            super(explosionImmuneItems, requiredFeatures);
+        }
+
         @Override
-        protected void addTables() {
+        protected void generate() {
             PaladinFurnitureMod.GENERAL_LOGGER.info("Running Loot Tables");
             Stream<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks();
             blocks.forEach(this::addDrop);
@@ -107,13 +113,13 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
     }
     public static class PFMBlockTagProvider extends AbstractTagProvider<Block> {
         public PFMBlockTagProvider(DataGenerator root, String modId, @Nullable ExistingFileHelper existingFileHelper) {
-            super(root, Registry.BLOCK, modId, existingFileHelper);
+            super(root, Registries.BLOCK, modId, existingFileHelper);
             this.root = root;
         }
         DataGenerator root;
 
         @Override
-        protected void configure() {
+        protected void configure(RegistryWrapper.WrapperLookup lookup) {
             PaladinFurnitureMod.GENERAL_LOGGER.info("Running Block Tags");
             KitchenCounter[] stoneCounters = KitchenCounter.streamStoneCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounter[]::new);
             KitchenCabinet[] stoneCabinets = KitchenCabinet.streamStoneCabinets().map(FurnitureBlock::getBlock).toArray(KitchenCabinet[]::new);
@@ -158,7 +164,7 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
             KitchenRangeHood[] rangeHoods = KitchenRangeHood.streamOvenRangeHoods().map(FurnitureBlock::getBlock).toArray(KitchenRangeHood[]::new);
 
             this.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
-                    .add(stoneCounters)
+                    .add(stoneCounters[1].getRegistryEntry())
                     .add(stoneCabinets)
                     .add(stoneDrawers)
                     .add(stoneCounterOvens)
@@ -299,7 +305,7 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
     }
 
     public static class PFMRecipeProvider extends RecipeProvider {
-        public PFMRecipeProvider(DataGenerator generatorIn)
+        public PFMRecipeProvider(DataOutput generatorIn)
         {
             super(generatorIn);
         }
@@ -366,7 +372,7 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
             for (FurnitureBlock kitchenCabinet : woodKitchenCabinets) {
                 String cabinetName = kitchenCabinet.getBlock().toString();
                 if (cabinetName.contains("light_wood")) {
-                    offerCabinetRecipe(kitchenCabinet.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
+                    offerCabinetRecipe(kitchenCabinet.getBlock(), Ingredient.ofItems(ForgeRegistries.BLOCKS.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else if (cabinetName.contains("dark_wood")) {
                     offerCabinetRecipe(kitchenCabinet.getBlock(), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "smooth_quartz"))), Ingredient.ofItems(Registry.BLOCK.get(new Identifier("minecraft:" + "stripped_dark_oak_log"))), Ingredient.ofItems(Items.CHEST), exporter);
                 } else {
@@ -833,3 +839,4 @@ public class PaladinFurnitureModDataGenForge extends DataGenerator {
     }
 }
 
+*/

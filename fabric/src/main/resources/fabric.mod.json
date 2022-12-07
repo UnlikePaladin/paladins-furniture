@@ -47,8 +47,8 @@
       "pfm.mixins.json"
   ],
   "depends": {
-    "fabric": "*",
-    "minecraft": "1.19.x",
+    "fabric-api": "*",
+    "minecraft": "1.19.3",
     "cloth-config2": ">=6.2.57"
     },
   "suggests": {

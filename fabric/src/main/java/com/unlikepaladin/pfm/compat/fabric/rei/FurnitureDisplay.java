@@ -173,7 +173,7 @@ public abstract class FurnitureDisplay<C extends FurnitureRecipe> extends BasicD
 
         List<EntryIngredient> inputEntries = getInputEntries();
         for (int i = 0; i < inputEntries.size(); i++) {
-            grid[i % getInputWidth()][i / getInputWidth()] = InputIngredient.of(getSlotWithSize(getInputWidth(), i, craftingWidth), inputEntries.get(i));
+            grid[i % getInputWidth(3,3)][i / getInputWidth(3,3)] = InputIngredient.of(getSlotWithSize(getInputWidth(3,3), i, craftingWidth), inputEntries.get(i));
         }
 
         List<InputIngredient<EntryStack<?>>> list = new ArrayList<>(craftingWidth * craftingHeight);
@@ -258,11 +258,13 @@ public abstract class FurnitureDisplay<C extends FurnitureRecipe> extends BasicD
             return height;
         }
 
+        @SuppressWarnings("Deprecated")
         @Override
         public int getInputWidth() {
             return 3;
         }
 
+        @SuppressWarnings("Deprecated")
         @Override
         public int getInputHeight() {
             return 3;

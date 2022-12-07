@@ -11,7 +11,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 
 import java.util.Objects;
 
@@ -47,7 +47,7 @@ public class PFMToasterBlockEntityRenderer implements BlockEntityRenderer<PFMToa
                     rot = 180;
             }
 
-            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion((float)rot));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float)rot));
             matrices.scale(0.8f,0.8f,0.8f);
             matrices.translate(0.0D, 0.0D, -0.55D);
             matrices.translate(0.0D, 0.0D, 0.41D);

@@ -3,7 +3,7 @@ package com.unlikepaladin.pfm.registry.forge;
 import com.unlikepaladin.pfm.registry.SoundIDs;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;

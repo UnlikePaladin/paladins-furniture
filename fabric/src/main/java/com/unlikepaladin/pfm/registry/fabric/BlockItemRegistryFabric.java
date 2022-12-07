@@ -9,8 +9,11 @@ import com.unlikepaladin.pfm.items.fabric.FurnitureGuideBookImpl;
 import com.unlikepaladin.pfm.mixin.fabric.MixinPointOfInterestType;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.impl.itemgroup.ItemGroupHelper;
+import net.fabricmc.fabric.mixin.itemgroup.ItemGroupAccessor;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
@@ -18,9 +21,12 @@ import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWKeyCallback;
@@ -36,22 +42,28 @@ public class BlockItemRegistryFabric {
         registerBlock(blockName, block, false);
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
+            Item item = new BlockItem(block, new FabricItemSettings());
+            PaladinFurnitureModBlocksItems.PFM_TAB_ITEMS.add(item);
+            registerItem(blockName, item);
         }
     }
 
     public static void registerBlock(String blockName, Block block, boolean registerItem) {
-        Registry.register(Registry.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName),  block);
+        Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName),  block);
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(ItemGroup.BUILDING_BLOCKS)));
+            Item item = new BlockItem(block, new FabricItemSettings());
+            registerItem(blockName, item);
+            ItemGroupEvents.modifyEntriesEvent(ItemGroups.BUILDING_BLOCKS).register(entries -> entries.add(item));
         }
     }
 
     public static void registerFurniture(String blockName, Block block, int count) {
         PaladinFurnitureModBlocksItems.BLOCKS.add(block);
         registerBlock(blockName, block, false);
-        registerItem(blockName, new BlockItem(block, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP).maxCount(count)));
+        Item item = new BlockItem(block, new FabricItemSettings().maxCount(count));
+        PaladinFurnitureModBlocksItems.PFM_TAB_ITEMS.add(item);
+        registerItem(blockName, item);
     }
 
     public static void registerBlock(String blockName, Block block, BlockItem item) {
@@ -61,7 +73,7 @@ public class BlockItemRegistryFabric {
     }
 
     public static void registerItem(String itemName, Item item) {
-        Registry.register(Registry.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
+        Registry.register(Registries.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
         if (item instanceof BlockItem blockItem) {
             Block block = Block.getBlockFromItem(blockItem);
             if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
@@ -73,8 +85,10 @@ public class BlockItemRegistryFabric {
 
     public static void registerBlocks(){
         //Block Registry
-        PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).maxCount(1));
+        PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new FabricItemSettings().rarity(Rarity.RARE).maxCount(1));
         registerItem("furniture_book", PaladinFurnitureModBlocksItems.FURNITURE_BOOK);
+        PaladinFurnitureModBlocksItems.PFM_TAB_ITEMS.add(PaladinFurnitureModBlocksItems.FURNITURE_BOOK);
+
         registerFurniture("working_table", PaladinFurnitureModBlocksItems.WORKING_TABLE, true);
 
         registerFurniture("oak_chair", PaladinFurnitureModBlocksItems.OAK_CHAIR, true);
@@ -1195,8 +1209,9 @@ public class BlockItemRegistryFabric {
         registerFurniture("white_modern_pendant", PaladinFurnitureModBlocksItems.WHITE_MODERN_PENDANT, true);
         registerFurniture("glass_modern_pendant", PaladinFurnitureModBlocksItems.GLASS_MODERN_PENDANT, true);
         registerFurniture("simple_light", PaladinFurnitureModBlocksItems.SIMPLE_LIGHT, true);
-        PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+        PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings());
         registerBlock("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH, PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM);
+        PaladinFurnitureModBlocksItems.PFM_TAB_ITEMS.add(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM);
         registerFurniture("basic_toilet", PaladinFurnitureModBlocksItems.BASIC_TOILET, true);
         registerFurniture("wall_toilet_paper", PaladinFurnitureModBlocksItems.WALL_TOILET_PAPER, true);
         registerFurniture("basic_bathtub", PaladinFurnitureModBlocksItems.BASIC_BATHTUB, true);

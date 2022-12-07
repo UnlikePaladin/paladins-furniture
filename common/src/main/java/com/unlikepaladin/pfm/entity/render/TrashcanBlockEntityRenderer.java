@@ -16,9 +16,9 @@ import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.util.math.RotationAxis;
 
 public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
@@ -75,11 +75,11 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implemen
                 }
                 if (!(itemStack.getItem() instanceof BlockItem)) {
                     matrices.translate(0.0, 0.0, 0.1);
-                } else if (Registry.ITEM.getId(itemStack.getItem()).getNamespace().contains("pfm")) {
+                } else if (Registries.ITEM.getId(itemStack.getItem()).getNamespace().contains("pfm")) {
                     matrices.translate(0.0, 0.0, 0.15);
                 }
                 int rot = 90;
-                matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(rot));
+                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rot));
                 int lightAbove = WorldRenderer.getLightmapCoordinates(trashcanBlockEntity.getWorld(), trashcanBlockEntity.getPos().up());
                 matrices.scale(0.8f, 0.8f, 0.8f);
                 MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.GROUND, lightAbove, overlay, matrices, vertexConsumerProvider, (int) (trashcanBlockEntity.getPos().asLong()+ i));

@@ -10,6 +10,7 @@ import io.github.foundationgames.sandwichable.recipe.ToastingRecipe;
 import io.github.foundationgames.sandwichable.util.Util;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
@@ -29,6 +30,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
@@ -94,7 +96,8 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     private void explode() {
         if(!world.isClient) {
             world.removeBlock(pos, true);
-            world.createExplosion(world.getClosestPlayer(pos.getX(), pos.getZ(), 8, 10, false), pos.getX(), pos.getY(), pos.getZ(), 2.2F, true, Explosion.DestructionType.DESTROY);
+            PlayerEntity player = world.getClosestPlayer(pos.getX(), pos.getZ(), 8, 10, false);
+            world.createExplosion(player, DamageSource.player(player), null, pos.getX(), pos.getY(), pos.getZ(), 2.2f, true, World.ExplosionSourceType.BLOCK);
         }
     }
 
@@ -191,13 +194,13 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         if(this.world.getBlockState(this.pos).getBlock() instanceof PFMToaster) {
             this.world.setBlockState(pos, this.world.getBlockState(this.pos).with(ToasterBlock.ON, false));
         }
-        world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BELL, SoundCategory.BLOCKS, 0.8F, 4);
+        world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), SoundCategory.BLOCKS, 0.8F, 4);
         toastProgress = 0;
         toasting = false;
         updateNeighbors = true;
         if (player != null) this.setLastUser(player);
     }
-
+//    public void playSound(@Nullable Entity except, BlockPos pos, SoundEvent sound, SoundCategory category, float volume, float pitch) {
     public int getComparatorOutput() {
         int r = 0;
         for (int i = 0; i < 2; i++) {

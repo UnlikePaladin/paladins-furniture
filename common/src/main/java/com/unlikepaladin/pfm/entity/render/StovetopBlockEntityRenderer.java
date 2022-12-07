@@ -13,7 +13,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.RotationAxis;
 
 @Environment(value= EnvType.CLIENT)
 public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
@@ -48,9 +48,9 @@ public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
                     matrices.translate(0.55, 0.05, 0.5);
             }
             rot = 180;
-            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(g));
-            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rot));
-            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90.0f));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(g));
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rot));
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0f));
             matrices.translate(-0.1625, -0.1625, 0.0);
             matrices.scale(0.355f, 0.355f, 0.355f);
             MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, i, j, matrices, vertexConsumerProvider, k + l);

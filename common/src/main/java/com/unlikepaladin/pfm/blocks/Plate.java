@@ -16,6 +16,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -26,7 +27,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -69,7 +70,7 @@ public class Plate extends HorizontalFacingBlockWEntity {
             }
             return ActionResult.CONSUME;
         }
-        if(Registry.BLOCK.get(Registry.ITEM.getId(itemStack.getItem())) instanceof Cutlery) {
+        if(Registries.BLOCK.get(Registries.ITEM.getId(itemStack.getItem())) instanceof Cutlery) {
             world.setBlockState(pos, state.with(CUTLERY, true));
             return ActionResult.SUCCESS;
         }
@@ -90,7 +91,7 @@ public class Plate extends HorizontalFacingBlockWEntity {
                 if (!plateBlockEntity.getItemInPlate().isEmpty()) {
                     ItemStack stack = plateBlockEntity.getItemInPlate();
                     spawnItemParticles(player, stack, 16);
-                    if (Registry.ITEM.getId(stack.getItem()).toString().equals("sandwichable:sandwich")) {
+                    if (Registries.ITEM.getId(stack.getItem()).toString().equals("sandwichable:sandwich")) {
                        eatSandwich(stack, world, player);
                     }
                     else {

@@ -86,7 +86,7 @@ public class SimpleLight extends PowerableBlock {
         boolean bl = (state.get(LIT));
         if (bl != world.isReceivingRedstonePower(pos)) {
             if (bl) {
-                world.createAndScheduleBlockTick(pos, this, 4);
+                world.scheduleBlockTick(pos, this, 4);
             } else {
                 world.setBlockState(pos, state.cycle(LIT), NOTIFY_LISTENERS);
             }

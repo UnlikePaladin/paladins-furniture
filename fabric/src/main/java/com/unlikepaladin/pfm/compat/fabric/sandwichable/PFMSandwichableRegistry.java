@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.PFMToaster;
 import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.blockentities.PFMToasterBlockEntity;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.fabric.arrp.JFurnitureRecipe;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.devtech.arrp.api.RRPCallback;
 import net.devtech.arrp.api.RuntimeResourcePack;
 import net.devtech.arrp.impl.RuntimeResourcePackImpl;
@@ -20,9 +21,11 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
@@ -37,16 +40,18 @@ public class PFMSandwichableRegistry {
     public static final RuntimeResourcePack SANDWICHABLE_RESOURCE_PACK = RuntimeResourcePack.create("pfm:sandiwchable_data");
 
     public static void registerFurniture(String blockName, Block block, Boolean registerItem) {
-        Registry.register(Registry.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName),  block);
+        Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName),  block);
         if (registerItem) {
-            Registry.register(Registry.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), new BlockItem(block, new FabricItemSettings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
+            Item item = new BlockItem(block, new FabricItemSettings());
+            Registry.register(Registries.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), item);
+            PaladinFurnitureModBlocksItems.PFM_TAB_ITEMS.add(item);
         }
     }
     public static final PFMToaster IRON_TOASTER = new PFMToaster(FabricBlockSettings.copy(Blocks.STONECUTTER).requiresTool());
     public static void register() {
             RuntimeResourcePack pack = SANDWICHABLE_RESOURCE_PACK;
             registerFurniture("iron_toaster", IRON_TOASTER, true);
-            IRON_TOASTER_BLOCKENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier("pfm","iron_toaster_ent"), FabricBlockEntityTypeBuilder.create(PFMToasterBlockEntity::new, new Block[]{IRON_TOASTER}).build(null));
+            IRON_TOASTER_BLOCKENTITY = Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier("pfm","iron_toaster_ent"), FabricBlockEntityTypeBuilder.create(PFMToasterBlockEntity::new, new Block[]{IRON_TOASTER}).build(null));
 
             pack.addLootTable(id("pfm:blocks/iron_toaster"),
                 loot("minecraft:block")

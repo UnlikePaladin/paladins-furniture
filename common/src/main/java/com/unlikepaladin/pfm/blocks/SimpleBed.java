@@ -5,6 +5,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BedPart;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.mob.PiglinBrain;
@@ -17,7 +18,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.tag.BlockTags;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
@@ -26,6 +27,7 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
@@ -34,6 +36,7 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldEvents;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.explosion.ExplosionBehavior;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,7 +91,8 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
             if (world.getBlockState(blockPos).isOf(this)) {
                 world.removeBlock(blockPos, false);
             }
-            world.createExplosion(null, DamageSource.badRespawnPoint(), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0f, true, Explosion.DestructionType.DESTROY);
+            Vec3d centerPos = pos.toCenterPos();
+            world.createExplosion(null, DamageSource.badRespawnPoint(centerPos), null, centerPos, 5.0F, true, World.ExplosionSourceType.BLOCK);
             return ActionResult.SUCCESS;
         }
         if (state.get(OCCUPIED)) {

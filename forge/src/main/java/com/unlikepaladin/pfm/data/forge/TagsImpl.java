@@ -1,8 +1,7 @@
 package com.unlikepaladin.pfm.data.forge;
 
 import net.minecraft.block.Block;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
 public class TagsImpl {

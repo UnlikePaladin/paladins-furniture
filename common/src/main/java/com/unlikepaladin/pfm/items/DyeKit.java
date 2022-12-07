@@ -8,6 +8,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -15,7 +16,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 import net.minecraft.world.World;
 
 public class DyeKit extends Item {
@@ -42,7 +43,7 @@ public class DyeKit extends Item {
                     world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     String newBlock= blockState.getBlock().toString();
                     newBlock = newBlock.replace(((DyeableFurniture) blockState.getBlock()).getColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
-                    BlockState blockState1 = Registry.BLOCK.get(new Identifier(newBlock)).getStateWithProperties(blockState);
+                    BlockState blockState1 = Registries.BLOCK.get(new Identifier(newBlock)).getStateWithProperties(blockState);
                     world.setBlockState(blockPos, blockState1, 3);
                     stack.decrement(1);
                     return ActionResult.CONSUME;

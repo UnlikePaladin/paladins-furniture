@@ -22,14 +22,14 @@ import java.util.Set;
 @Mixin(PointOfInterestTypes.class)
 public abstract class MixinPointOfInterestType {
     @ModifyArgs(
-            method = "registerAndGetDefault(Lnet/minecraft/util/registry/Registry;)Lnet/minecraft/world/poi/PointOfInterestType;",
+            method = "registerAndGetDefault(Lnet/minecraft/registry/Registry;)Lnet/minecraft/world/poi/PointOfInterestType;",
             slice = @Slice(from = @At(
                     value = "FIELD",
-                    target = "Lnet/minecraft/world/poi/PointOfInterestTypes;HOME:Lnet/minecraft/util/registry/RegistryKey;"
+                    target = "Lnet/minecraft/world/poi/PointOfInterestTypes;HOME:Lnet/minecraft/registry/RegistryKey;"
             )),
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/world/poi/PointOfInterestTypes;register(Lnet/minecraft/util/registry/Registry;Lnet/minecraft/util/registry/RegistryKey;Ljava/util/Set;II)Lnet/minecraft/world/poi/PointOfInterestType;",
+                    target = "Lnet/minecraft/world/poi/PointOfInterestTypes;register(Lnet/minecraft/registry/Registry;Lnet/minecraft/registry/RegistryKey;Ljava/util/Set;II)Lnet/minecraft/world/poi/PointOfInterestType;",
                     ordinal = 0
             )
     )

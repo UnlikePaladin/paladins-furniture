@@ -15,7 +15,7 @@ public class PaladinFurnitureMod {
 
 	public static final String MOD_ID = "pfm";
 	public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
-	public static SoundEvent FURNITURE_DYED_EVENT = new SoundEvent(FURNITURE_DYED_ID);
+	public static SoundEvent FURNITURE_DYED_EVENT = SoundEvent.of(FURNITURE_DYED_ID);
 
 	public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 	public static ItemGroup FURNITURE_GROUP;

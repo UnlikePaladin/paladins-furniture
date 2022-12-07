@@ -4,8 +4,6 @@ import com.unlikepaladin.pfm.compat.PaladinFurnitureModConfig;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.fml.config.IConfigSpec;
 
 @Config(name = "pfm")
 public class PaladinFurnitureModConfigImpl extends PaladinFurnitureModConfig implements ConfigData {

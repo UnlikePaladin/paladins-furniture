@@ -2,20 +2,16 @@ package com.unlikepaladin.pfm.registry;
 
 
 import com.google.common.base.Suppliers;
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.items.DyeKit;
-import com.unlikepaladin.pfm.items.FurnitureGuideBook;
-import com.unlikepaladin.pfm.items.LightSwitchItem;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
-import net.minecraft.util.Rarity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +21,9 @@ import java.util.stream.Stream;
 
 public class PaladinFurnitureModBlocksItems {
     public static final List<Block> BLOCKS = new ArrayList<>();
+    public static final List<Item> PFM_TAB_ITEMS = new ArrayList<>();
+    public static final List<Block> OTHER_TAB_BLOCKS = new ArrayList<>();
+    public static final List<Item> OTHER_TAB_ITEMS = new ArrayList<>();
 
     public static final Block OAK_CHAIR = new BasicChair(AbstractBlock.Settings.of(Material.WOOD).strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOD).mapColor(MapColor.OAK_TAN));
     public static final Block BIRCH_CHAIR = new BasicChair(AbstractBlock.Settings.copy(OAK_CHAIR).mapColor(MapColor.PALE_YELLOW));
@@ -1111,8 +1110,6 @@ public class PaladinFurnitureModBlocksItems {
     public static final Block CRIMSON_HERRINGBONE_PLANKS = new HerringbonePlanks(AbstractBlock.Settings.copy(Blocks.CRIMSON_PLANKS).sounds(BlockSoundGroup.WOOD));
     public static final Block MANGROVE_HERRINGBONE_PLANKS = new HerringbonePlanks(AbstractBlock.Settings.copy(Blocks.MANGROVE_PLANKS).sounds(BlockSoundGroup.WOOD));
 
-    public static final Block RAW_CONCRETE = new Block(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE));
-    public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND));
     public static final Block LEATHER_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.WHITE_WOOL).sounds(BlockSoundGroup.WOOL).mapColor(MapColor.ORANGE));
 
     public static final Block IRON_CHAIN = new ChainBlock(AbstractBlock.Settings.copy(Blocks.IRON_BARS).sounds(BlockSoundGroup.METAL));
@@ -1124,12 +1121,14 @@ public class PaladinFurnitureModBlocksItems {
 
     public static final Block LIGHT_SWITCH = new LightSwitch(AbstractBlock.Settings.copy(Blocks.WHITE_CONCRETE).sounds(BlockSoundGroup.STONE).nonOpaque().mapColor(MapColor.WHITE));
     public static BlockItem LIGHT_SWITCH_ITEM;
-    public static Item FURNITURE_BOOK;
 
     private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
         return state -> state.get(Properties.LIT) ? litLevel : 0;
     }
+    public static Item FURNITURE_BOOK;
 
+    public static final Block RAW_CONCRETE = new Block(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE));
+    public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND));
     public static final Block CONCRETE_KITCHEN_COUNTER = new KitchenCounter(AbstractBlock.Settings.copy(RAW_CONCRETE).mapColor(MapColor.LIGHT_GRAY));
     public static final Block CONCRETE_KITCHEN_DRAWER = new KitchenDrawer(AbstractBlock.Settings.copy(CONCRETE_KITCHEN_COUNTER));
     public static final Block CONCRETE_KITCHEN_CABINET = new KitchenCabinet(AbstractBlock.Settings.copy(CONCRETE_KITCHEN_COUNTER));

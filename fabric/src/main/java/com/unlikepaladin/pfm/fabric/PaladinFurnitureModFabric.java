@@ -12,24 +12,29 @@ import me.shedaniel.autoconfig.ConfigHolder;
 import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
+import net.fabricmc.fabric.impl.itemgroup.FabricItemGroupBuilderImpl;
+import net.fabricmc.fabric.impl.itemgroup.ItemGroupHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sound.SoundEvent;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.util.ArrayList;
 
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 
 public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer {
 
     public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
-    public static SoundEvent FURNITURE_DYED_EVENT = new SoundEvent(FURNITURE_DYED_ID);
+    public static SoundEvent FURNITURE_DYED_EVENT = SoundEvent.of(FURNITURE_DYED_ID);
 
     public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 
@@ -55,11 +60,12 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
             server.shutdown();
             throw new RuntimeException("Missing Dependency for Paladin's furniture mod:" + missingMod);
         });
+        BlockItemRegistryFabric.registerBlocks();
 
-        PaladinFurnitureMod.DYE_KITS = FabricItemGroupBuilder.create(
-                        new Identifier(MOD_ID, "dye_kits"))
+        PaladinFurnitureMod.DYE_KITS = FabricItemGroup.builder(new Identifier(MOD_ID, "dye_kits"))
+                .displayName(Text.translatable("itemGroup.pfm.dye_kits"))
                 .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
-                .appendItems(stacks -> {
+                .entries((enabledFeatures, stacks, operatorEnabled) -> {
                     stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED));
                     stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE));
                     stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW));
@@ -79,12 +85,15 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                 })
                 .build();
 
-        PaladinFurnitureMod.FURNITURE_GROUP = FabricItemGroupBuilder.build(
-                new Identifier(MOD_ID, "furniture"),
-                () -> new ItemStack(PaladinFurnitureModBlocksItems.OAK_CHAIR));
+        PaladinFurnitureMod.FURNITURE_GROUP = FabricItemGroup.builder(new Identifier(MOD_ID, "furniture"))
+                .displayName(Text.translatable("itemGroup.pfm.furniture"))
+                .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.OAK_CHAIR))
+                .entries((enabledFeatures, stacks, operatorEnabled) -> {
+                            PaladinFurnitureModBlocksItems.PFM_TAB_ITEMS.forEach(item -> stacks.add(new ItemStack(item)));
+                        }
+                ).build();
 
         EntityRegistryFabric.registerEntities();
-        BlockItemRegistryFabric.registerBlocks();
         if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
             PFMSandwichableRegistry.register();
         }

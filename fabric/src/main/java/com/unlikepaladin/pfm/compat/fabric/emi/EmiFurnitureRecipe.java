@@ -29,7 +29,7 @@ public class EmiFurnitureRecipe extends EmiCraftingRecipe {
                 }
 
                 @Override
-                public ItemStack transferSlot(PlayerEntity player, int index) {
+                public ItemStack quickMove(PlayerEntity player, int index) {
                     return null;
                 }
             }, 3, 3);

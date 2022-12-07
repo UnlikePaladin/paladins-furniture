@@ -73,12 +73,6 @@ else {
         modCompileOnly("maven.modrinth:sandwichable:${rootProject.sandwichable_version}")
         modCompileOnly("dev.lambdaurora:spruceui:${rootProject.spruceui_version}")
     }
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
 }
 
 if (rootProject.cloth_config_compatibility == "true") {
@@ -141,7 +135,9 @@ else {
 }
 if (rootProject.jei_compatibility == "true") {
     dependencies {
- //       modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}")
+        modImplementation("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version_fabric}") {
+            exclude group: "mezz.jei"
+        }
     }
 }
 else{

@@ -12,8 +12,6 @@ import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Map;
-
 public class FurnitureRecipeSerializerForge implements RecipeSerializer<FurnitureRecipe> {
     public FurnitureRecipeSerializerForge() {
         serializer = new FurnitureSerializer();

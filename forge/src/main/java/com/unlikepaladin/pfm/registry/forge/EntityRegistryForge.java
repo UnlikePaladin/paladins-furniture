@@ -12,7 +12,7 @@ import net.minecraft.entity.attribute.DefaultAttributeRegistry;
 import net.minecraft.entity.attribute.EntityAttribute;
 import net.minecraft.item.Item;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;

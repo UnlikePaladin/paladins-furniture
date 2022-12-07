@@ -17,9 +17,11 @@ import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.tag.TagKey;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
@@ -42,9 +44,12 @@ public class FurnitureRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
     @Nullable
     private String group;
 
+    private final RecipeCategory category;
+
     public FurnitureRecipeJsonBuilder(ItemConvertible output, int outputCount) {
         this.output = output.asItem();
         this.outputCount = outputCount;
+        this.category = RecipeCategory.DECORATIONS;
     }
 
     public static FurnitureRecipeJsonBuilder create(ItemConvertible output) {
@@ -107,7 +112,7 @@ public class FurnitureRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
         Map inputs = this.inputs;
         Advancement.Builder advancementBuilder = this.advancementBuilder;
         String recipeIdNamespace = recipeId.getNamespace();
-        String name = this.output.getGroup().getName();
+        String name = this.category.getName();
         exporter.accept(new FurnitureRecipeJsonProvider(recipeId, output, outputCount, group, pattern, inputs, advancementBuilder, new Identifier(recipeIdNamespace, "recipes/" + name + "/" + recipeId.getPath())));
     }
 
@@ -186,7 +191,7 @@ public class FurnitureRecipeJsonBuilder implements CraftingRecipeJsonBuilder {
 
             json.add("key", jsonObject);
             JsonObject string = new JsonObject();
-            string.addProperty("item", Registry.ITEM.getId(this.output).toString());
+            string.addProperty("item", Registries.ITEM.getId(this.output).toString());
             if (this.resultCount > 1) {
                 string.addProperty("count", this.resultCount);
             }

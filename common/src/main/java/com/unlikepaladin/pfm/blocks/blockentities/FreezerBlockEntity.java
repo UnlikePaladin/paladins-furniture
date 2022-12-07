@@ -22,13 +22,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.tag.TagKey;
+import net.minecraft.registry.tag.TagKey;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -36,8 +37,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3i;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryEntry;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.Registries;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
@@ -181,7 +182,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
     private static void addFuel(Map<Item, Integer> fuelTimes, TagKey<Item> tag, int fuelTime) {
-        Iterator var3 = Registry.ITEM.iterateEntries(tag).iterator();
+        Iterator var3 = Registries.ITEM.iterateEntries(tag).iterator();
 
         while(var3.hasNext()) {
             RegistryEntry<Item> registryEntry = (RegistryEntry)var3.next();
@@ -262,7 +263,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     @Override
     public void setStack(int slot, ItemStack stack) {
         ItemStack itemStack = this.inventory.get(slot);
-        boolean bl = !stack.isEmpty() && stack.isItemEqualIgnoreDamage(itemStack) && ItemStack.areNbtEqual(stack, itemStack);
+        boolean bl = !stack.isEmpty() && stack.isItemEqual(itemStack) && ItemStack.areNbtEqual(stack, itemStack);
         this.inventory.set(slot, stack);
         if (stack.getCount() > this.getMaxCountPerStack()) {
             stack.setCount(this.getMaxCountPerStack());
@@ -380,7 +381,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         if (itemStack2.isEmpty()) {
             return true;
         }
-        if (!itemStack2.isItemEqualIgnoreDamage(itemStack)) {
+        if (!itemStack2.isItemEqual(itemStack)) {
             return false;
         }
         if (itemStack2.getCount() < count && itemStack2.getCount() < itemStack2.getMaxCount()) {

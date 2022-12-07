@@ -12,25 +12,20 @@ import net.minecraft.block.Material;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.registry.RegistryKey;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraft.world.poi.PointOfInterestTypes;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
-import net.minecraftforge.registries.RegistryObject;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockItemRegistryForge {
@@ -1137,20 +1132,20 @@ public class BlockItemRegistryForge {
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "basic_plate"), addBlockItem(PaladinFurnitureModBlocksItems.BASIC_PLATE));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "basic_cutlery"), addBlockItem(PaladinFurnitureModBlocksItems.BASIC_CUTLERY));
 
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "oak_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.OAK_HERRINGBONE_PLANKS));
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "spruce_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.SPRUCE_HERRINGBONE_PLANKS));
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "birch_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.BIRCH_HERRINGBONE_PLANKS));
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "jungle_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.JUNGLE_HERRINGBONE_PLANKS));
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "acacia_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.ACACIA_HERRINGBONE_PLANKS));
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.DARK_OAK_HERRINGBONE_PLANKS));
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.CRIMSON_HERRINGBONE_PLANKS));
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.WARPED_HERRINGBONE_PLANKS));
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_herringbone_planks"), addBlockItem(PaladinFurnitureModBlocksItems.MANGROVE_HERRINGBONE_PLANKS));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "oak_herringbone_planks"), addOtherTabItem(PaladinFurnitureModBlocksItems.OAK_HERRINGBONE_PLANKS));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "spruce_herringbone_planks"), addOtherTabItem(PaladinFurnitureModBlocksItems.SPRUCE_HERRINGBONE_PLANKS));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "birch_herringbone_planks"), addOtherTabItem(PaladinFurnitureModBlocksItems.BIRCH_HERRINGBONE_PLANKS));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "jungle_herringbone_planks"), addOtherTabItem(PaladinFurnitureModBlocksItems.JUNGLE_HERRINGBONE_PLANKS));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "acacia_herringbone_planks"), addOtherTabItem(PaladinFurnitureModBlocksItems.ACACIA_HERRINGBONE_PLANKS));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dark_oak_herringbone_planks"), addOtherTabItem(PaladinFurnitureModBlocksItems.DARK_OAK_HERRINGBONE_PLANKS));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "crimson_herringbone_planks"), addOtherTabItem(PaladinFurnitureModBlocksItems.CRIMSON_HERRINGBONE_PLANKS));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "warped_herringbone_planks"), addOtherTabItem(PaladinFurnitureModBlocksItems.WARPED_HERRINGBONE_PLANKS));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "mangrove_herringbone_planks"), addOtherTabItem(PaladinFurnitureModBlocksItems.MANGROVE_HERRINGBONE_PLANKS));
 
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "raw_concrete"), addBlockItem(PaladinFurnitureModBlocksItems.RAW_CONCRETE));
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "raw_concrete_powder"), addBlockItem(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER));
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "iron_chain"), addBlockItem(PaladinFurnitureModBlocksItems.IRON_CHAIN));
-                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "leather_block"), addBlockItem(PaladinFurnitureModBlocksItems.LEATHER_BLOCK));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "raw_concrete"), addOtherTabItem(PaladinFurnitureModBlocksItems.RAW_CONCRETE));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "raw_concrete_powder"), addOtherTabItem(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "iron_chain"), addOtherTabItem(PaladinFurnitureModBlocksItems.IRON_CHAIN));
+                    blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "leather_block"), addOtherTabItem(PaladinFurnitureModBlocksItems.LEATHER_BLOCK));
 
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "gray_modern_pendant"), addBlockItem(PaladinFurnitureModBlocksItems.GRAY_MODERN_PENDANT));
                     blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "white_modern_pendant"), addBlockItem(PaladinFurnitureModBlocksItems.WHITE_MODERN_PENDANT));
@@ -1170,7 +1165,7 @@ public class BlockItemRegistryForge {
             Set<BlockState> newBedStates = new HashSet<>();
             newBedStates.addAll(originalBedStates);
             newBedStates.addAll(addedBedStates);
-            PointOfInterestTypes.HOME = RegistryKey.of(Registry.POINT_OF_INTEREST_TYPE_KEY, new Identifier("home"));
+            PointOfInterestTypes.HOME = RegistryKey.of(ForgeRegistries.POI_TYPES.getRegistryKey(), new Identifier("home"));
             pointOfInterestTypeRegisterHelper.register(new Identifier("home"),new PointOfInterestType(newBedStates, 1, 1));
         });
     }
@@ -1178,8 +1173,8 @@ public class BlockItemRegistryForge {
     @SubscribeEvent
     public static void registerItems(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.ITEMS, itemRegisterHelper -> {
-            itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture_book"), PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).maxCount(1)));
-            itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_switch"), PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP)));
+            itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture_book"), PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Settings().rarity(Rarity.RARE).maxCount(1)));
+            PaladinFurnitureModBlocksItems.PFM_TAB_ITEMS.add(PaladinFurnitureModBlocksItems.FURNITURE_BOOK);
             itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dye_kit_red"), PaladinFurnitureModBlocksItems.DYE_KIT_RED);
             itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dye_kit_orange"), PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE);
             itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dye_kit_yellow"), PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW);
@@ -1196,40 +1191,56 @@ public class BlockItemRegistryForge {
             itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dye_kit_gray"), PaladinFurnitureModBlocksItems.DYE_KIT_GRAY);
             itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dye_kit_light_gray"), PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY);
             itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "dye_kit_white"), PaladinFurnitureModBlocksItems.DYE_KIT_WHITE);
-                List<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks().toList();
-                blocks.forEach(block -> {
+
+            List<Block> blocks = PaladinFurnitureModBlocksItems.streamBlocks().toList();
+            blocks.forEach(block -> {
                         String name = block.getTranslationKey().replace("block.pfm.", "");
-                        Item item = registerBlockItem(name, block);
-                        itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, name), item);
+                        registerBlockItem(name, block, itemRegisterHelper, PaladinFurnitureModBlocksItems.PFM_TAB_ITEMS);
                 });
+
+            itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "light_switch"), PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings()));
+            PaladinFurnitureModBlocksItems.PFM_TAB_ITEMS.add(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM);
+
+
+            PaladinFurnitureModBlocksItems.OTHER_TAB_BLOCKS.forEach(block -> {
+                String name = block.getTranslationKey().replace("block.pfm.", "");
+                registerBlockItem(name, block, itemRegisterHelper, PaladinFurnitureModBlocksItems.OTHER_TAB_ITEMS);
+            });
+
         });
     }
-        public static Item registerBlockItem(String itemName, Block block) {
+        public static Item registerBlockItem(String itemName, Block block, RegisterEvent.RegisterHelper<Item> registerEvent, List<Item> itemList) {
+            int maxCount = 64;
             if (block instanceof SimpleBed) {
-                if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
-                    return new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).maxCount(1)) {
+                maxCount = 1;
+            }
+            BlockItem item;
+            if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
+                item =  new BlockItem(block, new Item.Settings().maxCount(maxCount)) {
                         @Override
                         public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
-                            return 300;
+                                return 300;
                         }
-
-                    };
-                }
-                return new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).maxCount(1));
+                };
+            } else {
+                item = new BlockItem(block, new Item.Settings().maxCount(maxCount));
             }
-                if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
-                        return new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP)) {
-                                @Override
-                                public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
-                                        return 300;
-                                }
+            itemList.add(item);
+            registerEvent.register(new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
+            return item;
+        }
 
-                        };
-                }
-                return new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
-        }
         public static Block addBlockItem(Block block) {
-                PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-                return block;
+            PaladinFurnitureModBlocksItems.BLOCKS.add(block);
+            return block;
         }
+
+        public static Block addOtherTabItem(Block block) {
+            PaladinFurnitureModBlocksItems.OTHER_TAB_BLOCKS.add(block);
+            return block;
+        }
+
+
+
+
 }

@@ -12,10 +12,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.registry.Registry;
 import net.minecraft.world.World;
 
 import java.util.HashMap;
@@ -268,7 +269,7 @@ public class FurnitureRecipe implements IFurnitureRecipe {
 
     public static Item getItem(JsonObject json) {
         String string = JsonHelper.getString(json, "item");
-        Item item = Registry.ITEM.getOrEmpty(new Identifier(string)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + string + "'"));
+        Item item = Registries.ITEM.getOrEmpty(new Identifier(string)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + string + "'"));
         if (item == Items.AIR) {
             throw new JsonSyntaxException("Invalid item: " + string);
         }

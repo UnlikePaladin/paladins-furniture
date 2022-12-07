@@ -221,7 +221,7 @@ public class PaladinFurnitureModUpdateChecker {
      * @see <a href="https://github.com/sp614x/optifine/blob/9c6a5b5326558ccc57c6490b66b3be3b2dc8cbef/OptiFineDoc/doc/shaders.txt#L696-L699">Optifine Doc</a>
      */
     public static String getMcVersion() {
-        String version = SharedConstants.getGameVersion().getReleaseTarget();
+        String version = getReleaseTarget();
         // release target so snapshots are set to the higher version
         //
         // For example if we were running the mod on 21w07a, getReleaseTarget() would return 1.17
@@ -255,5 +255,12 @@ public class PaladinFurnitureModUpdateChecker {
 
         return major + minor + bugfix;
     }
+    private static String backupVersionNumber = "1.19.3";
+
+    public static String getReleaseTarget() {
+        // If this is a snapshot, you must change backupVersionNumber!
+        return SharedConstants.getGameVersion().isStable() ? SharedConstants.getGameVersion().getName() : backupVersionNumber;
+    }
+
 }
 

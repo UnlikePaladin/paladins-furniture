@@ -11,9 +11,9 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.util.math.RotationAxis;
 
 public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
@@ -35,10 +35,10 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
             case EAST -> matrices.translate(0.35, 0.08, 0.5);
         }
         int rot = 90;
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(g));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(rot));
-        if (Registry.ITEM.getId(itemStack.getItem()).toString().equals("sandwichable:sandwich")) {
-            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270.0f));
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(g));
+        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rot));
+        if (Registries.ITEM.getId(itemStack.getItem()).toString().equals("sandwichable:sandwich")) {
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(270.0f));
             matrices.translate(0.0, 0.11, 0.05);
         }
         int lightAbove = WorldRenderer.getLightmapCoordinates(plateBlockEntity.getWorld(), plateBlockEntity.getPos().up());
