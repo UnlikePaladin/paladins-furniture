@@ -1,0 +1,15 @@
+{
+  "name": "用途：染色套件",
+  "icon": "pfm:dye_kit_red",
+  "category": "pfm:dye_kit_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "通过潜行右键家具的方式，染色套件可以被用来改变家具上的羊毛颜色，染色套件也可以被用在羊身上。"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

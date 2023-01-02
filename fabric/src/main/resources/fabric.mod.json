@@ -11,7 +11,11 @@
     "homepage": "https://www.curseforge.com/minecraft/mc-mods/paladins-furniture",
     "sources": "https://github.com/UnlikePaladin/paladins-furniture"
   },
-
+  "contributors": [
+    "lzyzl6",
+    "MIHONO",
+    "WrenXing"
+  ],
   "license": "LGPL-3.0-only",
   "icon": "assets/pfm/icon.png",
   "environment": "*",

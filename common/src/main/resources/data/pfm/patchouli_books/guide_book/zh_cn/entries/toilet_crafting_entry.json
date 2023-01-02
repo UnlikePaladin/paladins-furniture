@@ -1,0 +1,15 @@
+{
+  "name": "合成：马桶",
+  "icon": "minecraft:quartz_block",
+  "category": "pfm:toilet_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "马桶可以用石英、一个桶和一个按钮来制作。"
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:basic_toilet"
+    }
+  ]
+}

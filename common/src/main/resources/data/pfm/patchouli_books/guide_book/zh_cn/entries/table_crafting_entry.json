@@ -1,0 +1,36 @@
+{
+  "name": "合成：桌子",
+  "icon": "minecraft:oak_log",
+  "category": "pfm:table_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "本模组有着多种多样的桌子。取决于你正在制作的类型，你将需要不同的木板和原木。要获得其他木材的材质，只需将橡木替换为想要的木材类型即可。"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_table_basic",
+      "recipe2": "pfm:stripped_oak_table_basic"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_table_classic",
+      "recipe2": "pfm:stripped_oak_table_classic"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_table_log",
+      "recipe2": "pfm:stripped_oak_table_log"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_raw_table_log",
+      "recipe2": "pfm:stripped_oak_raw_table_log"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_table_dinner",
+      "recipe2": "pfm:stripped_oak_table_dinner"
+    }
+  ]
+}

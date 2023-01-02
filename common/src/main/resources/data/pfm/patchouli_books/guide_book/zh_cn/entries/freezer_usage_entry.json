@@ -1,0 +1,28 @@
+{
+  "name": "用途：冰箱",
+  "icon": "minecraft:ice",
+  "category": "pfm:freezing_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "要使用冷冻室，请右键单击冰箱的上部或下部，位置取决于冰箱是铁制的还是混凝土制的。这将打开冷冻室的GUI，在上部的槽位中，你可以选择想要冻结的东西，而在下部，你需要添加“燃料”，可以是冰、浮冰、蓝冰、雪块、雪或雪球。"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:ice",
+      "item2": "minecraft:packed_ice",
+      "item3": "minecraft:blue_ice"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:snow_block",
+      "item2": "minecraft:snow",
+      "item3": "minecraft:snowball"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "使用",
+      "text": "要使用冰箱，请右键单击冰箱的上部或下部，位置取决于冰箱是铁制的还是混凝土制的。这将打开冰箱的GUI，它的存储空间和大箱子一样多，你可以在里面存储任何你想存的东西。"
+    }
+  ]
+}

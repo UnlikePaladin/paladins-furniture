@@ -1,0 +1,15 @@
+{
+  "name": "用途：抽屉",
+  "icon": "pfm:oak_kitchen_drawer",
+  "category": "pfm:drawer_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "要打开一个抽屉，只需右键单击它，你可以在其中存储任何你想存的东西。就像柜台一样，它们会相互连接并改变形状。"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

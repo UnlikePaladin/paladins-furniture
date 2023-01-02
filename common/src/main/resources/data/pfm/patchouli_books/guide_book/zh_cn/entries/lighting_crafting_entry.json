@@ -1,0 +1,25 @@
+{
+  "name": "合成：灯具",
+  "icon": "pfm:glass_modern_pendant",
+  "category": "pfm:lighting_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "本模组目前有如下几种照明设备：简易灯，吊灯和开关。"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:gray_modern_pendant",
+      "recipe2": "pfm:white_modern_pendant"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:glass_modern_pendant",
+      "recipe2": "pfm:simple_light"
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:light_switch"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "合成：木工台",
+  "icon": "minecraft:spruce_planks",
+  "category": "pfm:working_table_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "木工台可以在原版工作台上合成，你需要任意八个木板和一个铁锭."
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:working_table"
+    }
+  ]
+}

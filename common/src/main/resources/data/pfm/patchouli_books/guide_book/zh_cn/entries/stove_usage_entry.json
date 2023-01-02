@@ -1,0 +1,113 @@
+{
+  "name": "用途：炉灶",
+  "icon": "minecraft:coal",
+  "category": "pfm:stove_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "炉灶像营火和烟熏炉一样工作，要使用营火的功能，请拿着食物右键单击顶部使它开始烹烤。要移除食物，请在烹烤完成后再次右键单击。要使用烟熏炉功能，请空手潜行右键单击它，这将打开火炉的GUI。它就将如熔炉或烟熏炉一样工作。"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:coal",
+      "item2": "minecraft:charcoal",
+      "item3": "minecraft:oak_wood"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:oak_planks",
+      "item2": "minecraft:stick",
+      "item3": "minecraft:bamboo"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:lava_bucket",
+      "item2": "minecraft:coal_block",
+      "item3": "minecraft:dried_kelp_block"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:blaze_rod",
+      "item2": "minecraft:oak_boat",
+      "item3": "minecraft:scaffolding"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:blaze_rod",
+      "item2": "minecraft:oak_boat",
+      "item3": "minecraft:scaffolding"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:bee_nest",
+      "item2": "minecraft:beehive",
+      "item3": "minecraft:bowl"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:oak_button",
+      "item2": "minecraft:oak_stairs",
+      "item3": "minecraft:oak_slab"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:oak_trapdoor",
+      "item2": "minecraft:ladder",
+      "item3": "minecraft:crafting_table"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:cartography_table",
+      "item2": "minecraft:fletching_table",
+      "item3": "minecraft:smithing_table"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:loom",
+      "item2": "minecraft:bookshelf",
+      "item3": "minecraft:lectern"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:composter",
+      "item2": "minecraft:chest",
+      "item3": "minecraft:barrel"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:daylight_detector",
+      "item2": "minecraft:jukebox",
+      "item3": "minecraft:note_block"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:white_banner",
+      "item2": "minecraft:crossbow",
+      "item3": "minecraft:bow"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:fishing_rod",
+      "item2": "minecraft:oak_door",
+      "item3": "minecraft:oak_sign"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:wooden_pickaxe",
+      "item2": "minecraft:wooden_shovel",
+      "item3": "minecraft:wooden_hoe"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:wooden_sword",
+      "item2": "minecraft:stick",
+      "item3": "minecraft:azalea"
+    },
+    {
+      "type": "pfm:furnitureusagetemplate",
+      "item": "minecraft:white_wool",
+      "item2": "minecraft:white_carpet",
+      "item3": "minecraft:oak_sapling"
+    }
+  ]
+}

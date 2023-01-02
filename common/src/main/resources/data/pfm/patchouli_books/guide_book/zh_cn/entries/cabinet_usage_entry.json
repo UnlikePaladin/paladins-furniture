@@ -1,0 +1,15 @@
+{
+  "name": "用途：橱柜",
+  "icon": "pfm:oak_kitchen_cabinet",
+  "category": "pfm:cabinet_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "要打开橱柜，只需右键单击它。你可以在其中存储任何想存的东西。"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

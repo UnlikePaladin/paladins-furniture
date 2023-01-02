@@ -1,0 +1,25 @@
+{
+  "name": "合成：炉灶",
+  "icon": "minecraft:white_concrete",
+  "category": "pfm:stove_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "炉灶可以用一个熔炉以及外壳材料————可以是混凝土或铁————制作，按照展示的顺序放在合成栏上合成。"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:white_stove",
+      "recipe2": "pfm:iron_stove"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "还有一个内置于柜台的烤箱和一个分离出的灶台可合成来代替炉灶。若要更改烤箱类型，只需更改材料以匹配柜台的材料。炉灶具有营火的功能，而烤箱则具有烟熏炉的功能。"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_kitchen_counter_oven",
+      "recipe2": "pfm:kitchen_stovetop"
+    }
+  ]
+}

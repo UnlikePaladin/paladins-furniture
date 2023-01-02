@@ -1,0 +1,15 @@
+{
+  "name": "用途：床",
+  "icon": "pfm:jungle_cyan_simple_bed",
+  "category": "pfm:bed_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "要使用床，只需右键单击它，它会让你睡到第二天。如果你放置两张或更多的床，它们会连接起来。床也可以堆叠成一个多层床，没有高度或长度限制。村民也可以在上面睡觉。"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

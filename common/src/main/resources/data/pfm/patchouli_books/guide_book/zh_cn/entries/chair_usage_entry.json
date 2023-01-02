@@ -1,0 +1,15 @@
+{
+  "name": "用途：椅子",
+  "icon": "pfm:oak_chair",
+  "category": "pfm:chair_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "要坐在椅子上，只需右键单击它，按Shift键离开。如果你按住Shift键空手右击它并且它朝向桌子，它就会被收到桌下。"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}
