@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "冷冻室目前可以用水制冰，用熔岩制黑曜石，用细雪制蓝冰，用腐肉制皮革。"
+      "text": "制冰器目前可以用水制冰，用熔岩制黑曜石，用细雪制蓝冰，用腐肉制皮革。"
     },
     {
       "type": "pfm:freezingrecipe2template",

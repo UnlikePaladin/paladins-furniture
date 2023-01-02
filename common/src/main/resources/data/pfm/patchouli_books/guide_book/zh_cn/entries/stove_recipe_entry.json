@@ -1,11 +1,11 @@
 {
-  "name": "配方: 炉灶",
+  "name": "配方: 火炉",
   "icon": "pfm:white_stove",
   "category": "pfm:stove_category",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "炉灶可以像营火和烟熏炉一样被使用，这意味着所有的营火和烟熏炉配方都可被应用于炉灶。"
+      "text": "火炉可以像篝火和烟熏炉一样被使用，这意味着所有的篝火和烟熏炉配方都可被应用于火炉。"
     },
     {
       "type": "pfm:stoverecipe2template",
