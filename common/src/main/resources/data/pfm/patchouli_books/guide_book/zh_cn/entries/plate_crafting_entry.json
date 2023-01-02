@@ -1,0 +1,16 @@
+{
+  "name": "合成: 盘子",
+  "icon": "minecraft:white_concrete",
+  "category": "pfm:plate_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "若要制作盘子，请在木工台内在一个物品框周围放上白色混凝土。出于纯粹装饰性的考虑，你可以选择在上面加上餐具。"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:basic_plate",
+      "recipe2": "pfm:basic_cutlery"
+    }
+  ]
+}

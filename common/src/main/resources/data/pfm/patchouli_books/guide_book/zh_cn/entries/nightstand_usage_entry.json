@@ -1,0 +1,15 @@
+{
+  "name": "使用: 床头柜",
+  "icon": "pfm:oak_classic_nightstand",
+  "category": "pfm:nightstand_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "要打开一个床头柜，只需右键单击它，你可以在其中存储任何你想存的东西。如果你将两个或多个床头柜放在一起，它们会连接起来。"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

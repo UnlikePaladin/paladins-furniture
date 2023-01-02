@@ -1,0 +1,32 @@
+{
+  "name": "配方: 微波炉",
+  "icon": "pfm:iron_microwave",
+  "category": "pfm:microwave_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "微波炉不像熔炉或者烟熏炉一样需要燃料。所有的烟熏炉配方都可被应用其上。"
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:baked_potato_from_smoking",
+      "recipe2": "minecraft:cooked_beef_from_smoking",
+      "recipe3": "minecraft:cooked_chicken_from_smoking",
+      "customicon": "pfm:iron_microwave"
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:cooked_cod_from_smoking",
+      "recipe2": "minecraft:cooked_salmon_from_smoking",
+      "recipe3": "minecraft:cooked_mutton_from_smoking",
+      "customicon": "pfm:iron_microwave"
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:cooked_rabbit_from_smoking",
+      "recipe2": "minecraft:dried_kelp_from_smoking",
+      "recipe3": "",
+      "customicon": "pfm:iron_microwave"
+    }
+  ]
+}

@@ -1,0 +1,54 @@
+{
+  "name": "合成: 橱柜",
+  "icon": "minecraft:oak_log",
+  "category": "pfm:cabinet_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "本模组有着多种多样的橱柜。取决于你正在制作的类型，你将需要不同的木板、原木或石头，另外还需要一个箱子来合成。要获得其他木材的材质，只需将橡木替换为想要的木材类型即可。"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_kitchen_cabinet",
+      "recipe2": "pfm:stripped_oak_kitchen_cabinet"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:concrete_kitchen_cabinet",
+      "recipe2": "pfm:dark_concrete_kitchen_cabinet"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:light_wood_kitchen_cabinet",
+      "recipe2": "pfm:dark_wood_kitchen_cabinet"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:granite_kitchen_cabinet",
+      "recipe2": "pfm:calcite_kitchen_cabinet"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:netherite_kitchen_cabinet",
+      "recipe2": "pfm:andesite_kitchen_cabinet"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:diorite_kitchen_cabinet",
+      "recipe2": "pfm:stone_kitchen_cabinet"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:deepslate_tile_kitchen_cabinet",
+      "recipe2": "pfm:deepslate_kitchen_cabinet"
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:blackstone_kitchen_cabinet"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

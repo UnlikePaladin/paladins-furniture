@@ -1,0 +1,25 @@
+{
+  "name": "配方: 冰箱",
+  "icon": "pfm:white_fridge",
+  "category": "pfm:freezing_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "制冰器目前可以用水制冰，用熔岩制黑曜石，用细雪制蓝冰，用腐肉制皮革。"
+    },
+    {
+      "type": "pfm:freezingrecipe2template",
+      "recipe": "pfm:rottenflesh_to_leather",
+      "recipe2": "pfm:obsidian_recipe",
+      "recipe3": "pfm:ice_recipe"
+    },
+    {
+      "type": "pfm:freezingrecipetemplate",
+      "recipe": "pfm:packed_ice_recipe"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

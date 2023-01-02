@@ -1,0 +1,15 @@
+{
+  "name": "使用: 盘子",
+  "icon": "pfm:basic_plate",
+  "category": "pfm:plate_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "若要使用餐盘，请拿着食物右键单击餐盘来将食物放上去，再次右键单击来食用食物。如果你想在不吃食物的情况下移除食物，请潜行右键单击。若要添加餐具，请拿着餐具右键单击盘子，你也可以先放置餐具，然后再用盘子右键单击餐具。"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}
