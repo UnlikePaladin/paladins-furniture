@@ -1,0 +1,25 @@
+{
+  "name": "合成: 床",
+  "icon": "minecraft:oak_planks",
+  "category": "pfm:bed_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "本模组有着多种多样的床。想好你想要的床和木材的类型，你将需要一些木板、一张原版的床和一些栅栏来合成它。"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_red_simple_bed",
+      "recipe2": "pfm:spruce_cyan_classic_bed"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "你可以选择制作多层床梯并将其放置在多层床上，它们也可以在其他地方用作普通梯子。"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_simple_bunk_ladder",
+      "recipe2": "pfm:warped_simple_bunk_ladder"
+    }
+  ]
+}

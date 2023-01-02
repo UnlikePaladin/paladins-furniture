@@ -1,0 +1,15 @@
+{
+  "name": "使用: 柜台",
+  "icon": "pfm:oak_kitchen_counter",
+  "category": "pfm:counter_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "柜台纯粹是装饰性方块，它们以类似于楼梯的方式相互连接。"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

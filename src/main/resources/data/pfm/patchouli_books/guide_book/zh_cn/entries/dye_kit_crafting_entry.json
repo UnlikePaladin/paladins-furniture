@@ -1,0 +1,55 @@
+{
+  "name": "合成: 染色套件",
+  "icon": "minecraft:red_dye",
+  "category": "pfm:dye_kit_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "染色套件由一个瓶子和一种染料制成。"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:dye_kit_red",
+      "recipe2": "pfm:dye_kit_orange"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:dye_kit_yellow",
+      "recipe2": "pfm:dye_kit_green"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:dye_kit_lime",
+      "recipe2": "pfm:dye_kit_cyan"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:dye_kit_blue",
+      "recipe2": "pfm:dye_kit_light_blue"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:dye_kit_purple",
+      "recipe2": "pfm:dye_kit_magenta"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:dye_kit_pink",
+      "recipe2": "pfm:dye_kit_black"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:dye_kit_white",
+      "recipe2": "pfm:dye_kit_gray"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:dye_kit_light_gray",
+      "recipe2": "pfm:dye_kit_black"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}
