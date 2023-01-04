@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "本模组目前有如下几种照明设备：简单的灯，吊灯和开关。"
+      "text": "本模组目前有如下几种照明设备：简易灯，吊灯和开关。"
     },
     {
       "type": "pfm:furniturerecipe2template",
