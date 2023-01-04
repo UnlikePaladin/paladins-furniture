@@ -1,11 +1,11 @@
 {
-  "name": "使用: 木工台",
+  "name": "使用: 木制工作桌",
   "icon": "pfm:working_table",
   "category": "pfm:working_table_category",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "木工台用起来和工作台一样，只是它用来制作家具。"
+      "text": "木制工作桌用起来和工作台一样，只是它用来制作家具。"
     },
     {
       "type": "pfm:craftinggridimage"
