@@ -1,11 +1,11 @@
 {
-  "name": "合成: 炉灶",
+  "name": "合成：炉灶",
   "icon": "minecraft:white_concrete",
   "category": "pfm:stove_category",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "炉灶可以用一个熔炉以及外壳材料————可以是混凝土或铁————制作，按照展示的顺序放在工作桌上合成。"
+      "text": "炉灶可以用一个熔炉以及外壳材料————可以是混凝土或铁————制作，按照展示的顺序放在合成栏上合成。"
     },
     {
       "type": "pfm:furniturerecipe2template",

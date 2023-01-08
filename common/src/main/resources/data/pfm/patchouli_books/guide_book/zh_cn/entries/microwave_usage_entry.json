@@ -1,11 +1,11 @@
 {
-  "name": "使用: 微波炉",
+  "name": "用途：微波炉",
   "icon": "minecraft:redstone",
   "category": "pfm:microwave_category",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "若要使用微波炉，请右键单击它，这将打开微波炉的GUI。微波炉一次只能烹饪一件东西，你需要按下开始按钮来让其运转。"
+      "text": "若要使用微波炉，请右键单击它，这将打开微波炉的GUI。微波炉一次只能烹饪一个物品，你需要按下开始按钮来让其工作。"
     },
     {
       "type": "patchouli:image",
