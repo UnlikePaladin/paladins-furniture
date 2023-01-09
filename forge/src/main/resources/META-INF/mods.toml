@@ -12,7 +12,7 @@ description = '''
 A Brand-New Furniture mod for Modern Minecraft where things are functional!
 '''
 logoFile = "icon.png"
-credits = "Translators: lzyzl6"
+credits = "Translators: lzyzl6, MIHONO, WrenXing"
 
 [[dependencies.pfm]]
 modId = "forge"
