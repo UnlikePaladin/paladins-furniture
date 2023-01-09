@@ -1,11 +1,11 @@
 {
-  "name": "配方: 微波炉",
+  "name": "配方：微波炉",
   "icon": "pfm:iron_microwave",
   "category": "pfm:microwave_category",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "微波炉不像熔炉或者烟熏炉一样需要燃料。所有的烟熏炉配方都可被应用其上。"
+      "text": "微波炉不像熔炉或者烟熏炉一样需要燃料。所有的烟熏炉配方皆用其制作。"
     },
     {
       "type": "pfm:stoverecipe2template",
