@@ -1,11 +1,11 @@
 {
-  "name": "合成: 盘子",
+  "name": "合成：盘子",
   "icon": "minecraft:white_concrete",
   "category": "pfm:plate_category",
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "若要制作盘子，请在工作桌内在一个物品框周围放上白色混凝土。出于纯粹装饰性的考虑，你可以选择在上面加上刀叉。"
+      "text": "若要制作盘子，请在合成栏内在一个物品展示框周围围一圈白色混凝土。出于纯粹装饰性的考虑，你可以选择在上面放上刀叉。"
     },
     {
       "type": "pfm:furniturerecipe2template",
