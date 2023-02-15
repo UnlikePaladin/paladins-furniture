@@ -45,7 +45,7 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if (!(this.baseBlock instanceof KitchenWallDrawerSmall)) {
-            setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT).with(WATERLOGGED, false));
+            setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, CounterShape.STRAIGHT));
         }
         counterFurnitureBlock = new FurnitureBlock(this, "kitchen_drawer");
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenDrawer.class)){
@@ -85,7 +85,6 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
         stateManager.add(SHAPE);
-        stateManager.add(WATERLOGGED);
     }
     public BlockState rotate(BlockState state, BlockRotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));

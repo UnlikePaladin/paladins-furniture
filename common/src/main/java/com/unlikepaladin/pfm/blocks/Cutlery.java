@@ -28,12 +28,11 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.ClassicStool.rotateShape;
 
-public class Cutlery extends HorizontalFacingBlock implements Waterloggable {
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+public class Cutlery extends HorizontalFacingBlock {
     private static final List<FurnitureBlock> CUTLERY = new ArrayList<>();
     public Cutlery(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
         CUTLERY.add(new FurnitureBlock(this, "cutlery"));
     }
 
@@ -43,21 +42,17 @@ public class Cutlery extends HorizontalFacingBlock implements Waterloggable {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, WATERLOGGED);
+        builder.add(FACING);
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState()
-                .with(FACING, ctx.getPlayerFacing())
-                .with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+                .with(FACING, ctx.getPlayerFacing());
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         if (!state.canPlaceAt(world, pos)) {
             return Blocks.AIR.getDefaultState();
         }
@@ -72,12 +67,20 @@ public class Cutlery extends HorizontalFacingBlock implements Waterloggable {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        return switch (dir) {
-            case WEST -> FACING_SOUTH;
-            case NORTH -> FACING_WEST;
-            case SOUTH -> FACING_EAST;
-            default -> FACING_NORTH;
-        };
+        switch (dir) {
+            case WEST: {
+                return FACING_SOUTH;
+            }
+            case NORTH: {
+                return FACING_WEST;
+            }
+            case SOUTH: {
+                return FACING_EAST;
+            }
+            default: {
+                return FACING_NORTH;
+            }
+        }
     }
 
     @Override
@@ -86,7 +89,8 @@ public class Cutlery extends HorizontalFacingBlock implements Waterloggable {
         Block block = (Registry.BLOCK.get(Registry.ITEM.getId(itemStack.getItem())));
         if(block instanceof Plate) {
             BlockState newState = block.getDefaultState();
-            world.setBlockState(pos, newState.with(Plate.CUTLERY, true).with(FACING, state.get(FACING)).with(WATERLOGGED, state.get(WATERLOGGED)));
+            world.setBlockState(pos, newState.with(Plate.CUTLERY, true).with(FACING, state.get(FACING)));
+            itemStack.decrement(1);
             return ActionResult.SUCCESS;
         }
         return super.onUse(state, world, pos, player, hand, hit);

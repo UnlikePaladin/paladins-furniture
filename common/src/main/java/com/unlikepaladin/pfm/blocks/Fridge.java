@@ -35,19 +35,17 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
-public class Fridge extends HorizontalFacingBlockWEntity implements Waterloggable {
+public class Fridge extends HorizontalFacingBlockWEntity {
     public static final BooleanProperty OPEN = Properties.OPEN;
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private Supplier<Block> freezer;
     private static final List<FurnitureBlock> FRIDGES = new ArrayList<>();
 
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-
     public Fridge(Settings settings, Supplier<Block> freezer) {
         super(settings);
         this.freezer = freezer;
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         FRIDGES.add(new FurnitureBlock(this, "fridge"));
@@ -61,7 +59,6 @@ public class Fridge extends HorizontalFacingBlockWEntity implements Waterloggabl
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
-        stateManager.add(WATERLOGGED);
     }
 
     @Override
@@ -103,15 +100,7 @@ public class Fridge extends HorizontalFacingBlockWEntity implements Waterloggabl
     }
 
     @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
-
-    @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         if (!(direction.getAxis() != Direction.Axis.Y != (direction == Direction.UP) || neighborState.getBlock() == this.freezer.get())) {
             return Blocks.AIR.getDefaultState();
         }
@@ -164,7 +153,7 @@ public class Fridge extends HorizontalFacingBlockWEntity implements Waterloggabl
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
         if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
-            return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+            return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
         }
         return null;
     }

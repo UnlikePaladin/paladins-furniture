@@ -32,7 +32,7 @@ public class BasicChair extends AbstractSittableBlock {
     protected static final BooleanProperty TUCKED = BooleanProperty.of("tucked");
     public BasicChair(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(TUCKED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));
         this.height = 0.36f;
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(BasicChair.class)){
             WOOD_BASIC_CHAIRS.add(new FurnitureBlock(this, "chair"));

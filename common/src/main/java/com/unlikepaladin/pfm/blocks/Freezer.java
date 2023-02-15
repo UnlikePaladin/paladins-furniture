@@ -37,17 +37,16 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
-public class Freezer extends HorizontalFacingBlockWEntity implements Waterloggable {
+public class Freezer extends HorizontalFacingBlockWEntity {
     public static final BooleanProperty OPEN = Properties.OPEN;
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private Supplier<Block> fridge;
     private static final List<FurnitureBlock> FREEZERS = new ArrayList<>();
 
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public Freezer(Settings settings, Supplier<Block> fridge) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
         this.fridge = fridge;
         this.baseBlock = baseBlockState.getBlock();
@@ -75,7 +74,6 @@ public class Freezer extends HorizontalFacingBlockWEntity implements Waterloggab
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
-        stateManager.add(WATERLOGGED);
     }
     @Override
     public BlockRenderType getRenderType(BlockState state) {
@@ -94,9 +92,6 @@ public class Freezer extends HorizontalFacingBlockWEntity implements Waterloggab
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         if (!(direction.getAxis() == Direction.Axis.Y == (direction == Direction.UP) || neighborState.getBlock() instanceof Fridge)) {
             return Blocks.AIR.getDefaultState();
         }
@@ -123,14 +118,11 @@ public class Freezer extends HorizontalFacingBlockWEntity implements Waterloggab
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
         if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
-            return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+            return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
         }
         return null;
     }
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
+
     protected static final VoxelShape FREEZER = VoxelShapes.union(createCuboidShape(0.5, -16, 3,15.5, 16, 16),createCuboidShape(0.5, 5, 2,14.83, 16, 3.1),createCuboidShape(13, 5.19, 0.09,14, 15.19, 1.09),createCuboidShape(13, 5.19, 0.98,14, 6.19, 2.98),createCuboidShape(13, 14.19, 1.06,14, 15.19, 3.06));
     protected static final VoxelShape FREEZER_OPEN = VoxelShapes.union(createCuboidShape(0.5, -16, 2.8,15.5, 16, 16),createCuboidShape(0.5, 5, -11.29,1.5, 16, 3.05),createCuboidShape(-1.41, 5.19, -10.45,-0.41, 15.19, -9.45),createCuboidShape(-0.52, 5.19, -10.45,1.48, 6.19, -9.45),createCuboidShape(-0.44, 14.19, -10.45,1.26, 15.19, -9.45));
 

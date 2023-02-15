@@ -25,18 +25,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class KitchenCounter extends HorizontalFacingBlock implements Waterloggable {
+public class KitchenCounter extends HorizontalFacingBlock {
     private float height = 0.36f;
     private final Block baseBlock;
     public static final EnumProperty<CounterShape> SHAPE = EnumProperty.of("shape", CounterShape.class);
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     protected FurnitureBlock counterFurnitureBlock;
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> WOOD_COUNTERS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_COUNTERS = new ArrayList<>();
     public KitchenCounter(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         counterFurnitureBlock = new FurnitureBlock(this, "kitchen_counter");
@@ -64,12 +63,6 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(SHAPE);
-        stateManager.add(WATERLOGGED);
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     public BlockState rotate(BlockState state, BlockRotation rotation) {
@@ -79,7 +72,7 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
         return blockState.with(SHAPE, getShape(blockState, world, blockPos));
     }
 
@@ -155,9 +148,6 @@ public class KitchenCounter extends HorizontalFacingBlock implements Waterloggab
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
        if ( direction.getAxis().isHorizontal()) {
            return state.with(SHAPE, getShape(state, world, pos));
        }

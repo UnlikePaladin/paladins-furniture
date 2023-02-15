@@ -25,8 +25,7 @@ import net.minecraft.world.WorldAccess;
 
 import java.util.List;
 
-public abstract class AbstractSittableBlock extends HorizontalFacingBlock implements Waterloggable {
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
     private final BlockState baseBlockState;
     private final Block baseBlock;
 
@@ -34,39 +33,31 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock implem
         super(settings);
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
-        if (!this.getDefaultState().contains(WATERLOGGED)) {
-            setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
-        }
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
+
         this.height = 0.36f;
     }
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
-        stateManager.add(WATERLOGGED);
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         Direction facing = PaladinFurnitureMod.getPFMConfig().doChairsFacePlayer() ? ctx.getPlayerFacing() : ctx.getPlayerFacing().getOpposite();
-        if (!this.getDefaultState().contains(WATERLOGGED)) {
             return this.getDefaultState().with(Properties.HORIZONTAL_FACING, facing);
-        }
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, facing).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        if (!state.contains(WATERLOGGED)) {
-            return super.getFluidState(state);
-        }
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return super.getFluidState(state);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.contains(WATERLOGGED)) {
-            if (state.get(WATERLOGGED))
+        if (state.contains(Properties.WATERLOGGED)) {
+            if (state.get(Properties.WATERLOGGED))
                 world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
         }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);

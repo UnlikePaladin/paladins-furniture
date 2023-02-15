@@ -49,16 +49,15 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
-public class Stove extends SmokerBlock implements Waterloggable {
+public class Stove extends SmokerBlock {
     private static final List<FurnitureBlock> STOVES = new ArrayList<>();
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public static final BooleanProperty OPEN = Properties.OPEN;
     public Stove(Settings settings) {
         super(settings);
         if (this.getClass().isAssignableFrom(Stove.class)){
             STOVES.add(new FurnitureBlock(this, "stove"));
         }
-        setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false).with(FACING, Direction.NORTH).with(LIT, false).with(OPEN, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(LIT, false).with(OPEN, false));
     }
     public static Stream<FurnitureBlock> streamStoves() {
         return STOVES.stream();
@@ -66,7 +65,7 @@ public class Stove extends SmokerBlock implements Waterloggable {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(FACING, LIT, WATERLOGGED, OPEN);
+        builder.add(FACING, LIT, OPEN);
     }
     @Override
     protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
@@ -118,18 +117,11 @@ public class Stove extends SmokerBlock implements Waterloggable {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
     }
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-    }
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     protected static final VoxelShape STOVE = VoxelShapes.union(createCuboidShape(0, 0, 0, 16, 16, 14),createCuboidShape(0, 1, 14, 16, 16, 15),createCuboidShape(1.8, 12.2, 15.5375, 14.3, 12.799, 16.1375),createCuboidShape(2.5, 12.2, 14.07, 3.1, 12.79, 15.56),createCuboidShape(12.6, 12.2, 14.07, 13.2, 12.79, 15.57),createCuboidShape(1.8, 2.89, 15.437, 14.3, 3.49, 16.037),createCuboidShape(2.5, 2.89, 13.47, 3.1, 3.49, 15.47),createCuboidShape(12.6, 2.89, 13.47, 13.2, 3.49, 15.47),createCuboidShape(0, 16, 0, 16, 19, 1));

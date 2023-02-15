@@ -44,7 +44,7 @@ public class BasicToilet extends AbstractSittableBlock implements BlockEntityPro
     public static final EnumProperty<ToiletState> TOILET_STATE = EnumProperty.of("toilet", ToiletState.class);
     public BasicToilet(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(TOILET_STATE, ToiletState.EMPTY));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TOILET_STATE, ToiletState.EMPTY));
         if(this.getClass().isAssignableFrom(BasicToilet.class)){
             BASIC_TOILET.add(new FurnitureBlock(this, "basic_toilet"));
         }

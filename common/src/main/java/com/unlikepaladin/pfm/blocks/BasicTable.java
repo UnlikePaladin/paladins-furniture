@@ -24,19 +24,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class BasicTable extends Block implements Waterloggable{
+public class BasicTable extends Block {
     private final Block baseBlock;
     public static final EnumProperty<BasicTableShape> SHAPE = EnumProperty.of("shape", BasicTableShape.class);
 
     public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
-
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> WOOD_BASIC_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_BASIC_TABLES = new ArrayList<>();
     public BasicTable(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, BasicTableShape.SINGLE).with(WATERLOGGED, false).with(AXIS, Direction.Axis.X));
+        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, BasicTableShape.SINGLE).with(AXIS, Direction.Axis.X));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(BasicTable.class)){
@@ -58,7 +56,6 @@ public class BasicTable extends Block implements Waterloggable{
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(AXIS);
         stateManager.add(SHAPE);
-        stateManager.add(WATERLOGGED);
     }
     @Override
     public BlockState rotate(BlockState state, BlockRotation rotation) {
@@ -91,9 +88,6 @@ public class BasicTable extends Block implements Waterloggable{
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         return direction.getAxis().isHorizontal() ? getShape(state, world, pos) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
@@ -101,12 +95,12 @@ public class BasicTable extends Block implements Waterloggable{
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
         Direction.Axis facing = ctx.getPlayerFacing().getAxis();
-        BlockState blockState = this.getDefaultState().with(AXIS, facing).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        BlockState blockState = this.getDefaultState().with(AXIS, facing);
         return getShape(blockState, world, blockPos);
     }
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return super.getFluidState(state);
     }
 
     boolean canConnect(BlockState blockState)

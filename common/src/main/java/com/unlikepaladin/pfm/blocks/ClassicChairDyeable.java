@@ -21,7 +21,7 @@ public class ClassicChairDyeable extends ClassicChair implements DyeableFurnitur
     private static final List<FurnitureBlock> STONE_DYEABLE_CLASSIC_CHAIRS = new ArrayList<>();
     public ClassicChairDyeable(DyeColor color, Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false).with(TUCKED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ClassicChairDyeable.class)){
             WOOD_DYEABLE_CLASSIC_CHAIRS.add(new FurnitureBlock(this, "oak_chair_classic"));
         }

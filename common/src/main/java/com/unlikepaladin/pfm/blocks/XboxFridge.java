@@ -47,7 +47,6 @@ public class XboxFridge extends Fridge
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
         stateManager.add(HALF);
-        stateManager.add(WATERLOGGED);
     }
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -81,10 +80,6 @@ public class XboxFridge extends Fridge
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
-
         DoubleBlockHalf doubleBlockHalf = state.get(HALF);
         if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP)) {
             if (neighborState.isOf(this) && neighborState.get(HALF) != doubleBlockHalf) {
@@ -93,10 +88,7 @@ public class XboxFridge extends Fridge
         }
         return state;
     }
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
+
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         BlockPos blockPos = pos.down();
@@ -113,7 +105,7 @@ public class XboxFridge extends Fridge
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
         if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
-            return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(OPEN, false).with(HALF, DoubleBlockHalf.LOWER).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+            return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(OPEN, false).with(HALF, DoubleBlockHalf.LOWER);
         }
         return null;
     }
