@@ -32,7 +32,7 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbt = super.toInitialChunkDataNbt();
-        Inventories.writeNbt(nbt, this.getInvStackList());
+        Inventories.writeNbt(nbt, this.inventory);
         return nbt;
     }
 
@@ -46,7 +46,7 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
     public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
         super.onDataPacket(net, pkt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readNbt(pkt.getNbt(), this.getInvStackList());
+        Inventories.readNbt(pkt.getNbt(), this.inventory);
     }
 
 }
