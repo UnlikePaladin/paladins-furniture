@@ -21,7 +21,7 @@ public class ArmChair extends AbstractSittableBlock {
     private static final List<FurnitureBlock> ARM_CHAIRS = new ArrayList<>();
     public ArmChair(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
         if (this.getClass().isAssignableFrom(ArmChair.class)) {
             ARM_CHAIRS.add(new FurnitureBlock(this, "armchair_"));
         }

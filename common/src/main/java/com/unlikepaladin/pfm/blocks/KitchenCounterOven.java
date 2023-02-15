@@ -35,7 +35,6 @@ public class KitchenCounterOven extends SmokerBlock implements Waterloggable {
     private static final List<FurnitureBlock> WOOD_COUNTER_OVENS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_COUNTER_OVENS = new ArrayList<>();
 
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public KitchenCounterOven(Settings settings) {
         super(settings);
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCounterOven.class)){
@@ -44,7 +43,7 @@ public class KitchenCounterOven extends SmokerBlock implements Waterloggable {
         else if (this.getClass().isAssignableFrom(KitchenCounterOven.class)){
             STONE_COUNTER_OVENS.add(new FurnitureBlock(this, "kitchen_counter_oven"));
         }
-        setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false).with(FACING, Direction.NORTH).with(LIT, false).with(OPEN, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(LIT, false).with(OPEN, false));
     }
 
     public static Stream<FurnitureBlock> streamWoodCounterOvens() {
@@ -69,7 +68,6 @@ public class KitchenCounterOven extends SmokerBlock implements Waterloggable {
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(UP);
         builder.add(DOWN);
-        builder.add(WATERLOGGED);
         builder.add(OPEN);
         super.appendProperties(builder);
     }
@@ -90,14 +88,11 @@ public class KitchenCounterOven extends SmokerBlock implements Waterloggable {
         BlockPos blockPos = ctx.getBlockPos();
         boolean up = connectsVertical(world.getBlockState(blockPos.up()).getBlock());
         boolean down = connectsVertical(world.getBlockState(blockPos.down()).getBlock());
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(UP, up).with(DOWN, down).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(UP, up).with(DOWN, down);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         if (direction.getAxis().isVertical()) {
             boolean up = connectsVertical(world.getBlockState(pos.up()).getBlock());
             boolean down = connectsVertical(world.getBlockState(pos.down()).getBlock());

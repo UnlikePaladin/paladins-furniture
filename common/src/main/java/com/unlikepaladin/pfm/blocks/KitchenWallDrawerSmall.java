@@ -34,7 +34,7 @@ public class KitchenWallDrawerSmall extends KitchenWallDrawer{
     private static final List<FurnitureBlock> STONE_SMALL_WALL_DRAWERS = new ArrayList<>();
     public KitchenWallDrawerSmall(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false));
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenWallDrawerSmall.class)){
             WOOD_SMALL_WALL_DRAWERS.add(new FurnitureBlock(this, "kitchen_wall_small_drawer"));
         }
@@ -83,21 +83,17 @@ public class KitchenWallDrawerSmall extends KitchenWallDrawer{
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(FACING);
-        stateManager.add(WATERLOGGED);
         stateManager.add(OPEN);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         return state;
     }
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
 
     @Override

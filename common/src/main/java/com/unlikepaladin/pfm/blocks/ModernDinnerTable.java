@@ -22,12 +22,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ModernDinnerTable extends Block implements Waterloggable{
+public class ModernDinnerTable extends Block {
     private final Block baseBlock;
     public static final EnumProperty<MiddleShape> SHAPE = EnumProperty.of("table_type", MiddleShape.class);
     public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
-
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     private static final List<FurnitureBlock> WOOD_DINNER_MODERN_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DINNER_MODERN_TABLES = new ArrayList<>();
 
@@ -35,7 +33,7 @@ public class ModernDinnerTable extends Block implements Waterloggable{
 
     public ModernDinnerTable(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(AXIS, Direction.Axis.X).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(AXIS, Direction.Axis.X));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ModernDinnerTable.class)){
@@ -57,7 +55,6 @@ public class ModernDinnerTable extends Block implements Waterloggable{
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(SHAPE);
         stateManager.add(AXIS);
-        stateManager.add(WATERLOGGED);
     }
 
     @Override
@@ -68,21 +65,13 @@ public class ModernDinnerTable extends Block implements Waterloggable{
         }
     }
 
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
-
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(AXIS, ctx.getPlayerFacing().rotateYClockwise().getAxis()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        BlockState blockState = this.getDefaultState().with(AXIS, ctx.getPlayerFacing().rotateYClockwise().getAxis());
         return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(AXIS));
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(AXIS)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 

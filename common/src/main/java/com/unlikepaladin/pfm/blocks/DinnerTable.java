@@ -23,19 +23,18 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class DinnerTable extends HorizontalFacingBlock implements Waterloggable {
+public class DinnerTable extends HorizontalFacingBlock  {
 
     private final Block baseBlock;
     public static final EnumProperty<MiddleShape> SHAPE = EnumProperty.of("table_type", MiddleShape.class);
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     private final BlockState baseBlockState;
 
     private static final List<FurnitureBlock> WOOD_DINNER_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DINNER_TABLES = new ArrayList<>();
     public DinnerTable(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(DinnerTable.class)){
@@ -62,7 +61,6 @@ public class DinnerTable extends HorizontalFacingBlock implements Waterloggable 
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(SHAPE);
         stateManager.add(FACING);
-        stateManager.add(WATERLOGGED);
     }
 
     @Override
@@ -75,19 +73,16 @@ public class DinnerTable extends HorizontalFacingBlock implements Waterloggable 
 
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
         return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
     }
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return super.getFluidState(state);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(FACING)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 

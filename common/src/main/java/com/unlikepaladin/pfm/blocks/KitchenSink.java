@@ -47,7 +47,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.BasicToilet.checkType;
 
-public class KitchenSink extends AbstractCauldronBlock implements Waterloggable, BlockEntityProvider {
+public class KitchenSink extends AbstractCauldronBlock implements BlockEntityProvider {
     private final BlockState baseBlockState;
     private final Block baseBlock;
     private final Predicate<Biome.Precipitation> precipitationPredicate;
@@ -55,10 +55,10 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable,
     private final Map<Item, CauldronBehavior> behaviorMap;
     private static final List<FurnitureBlock> WOOD_SINKS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_SINKS = new ArrayList<>();
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+
     public KitchenSink(Settings settings, Predicate<Biome.Precipitation> precipitationPredicate, Map<Item, CauldronBehavior> map) {
         super(settings, map);
-        this.setDefaultState(this.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_4, 0).with(WATERLOGGED, false));
+        this.setDefaultState(this.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_4, 0));
         this.baseBlockState = this.getDefaultState();
         this.precipitationPredicate = precipitationPredicate;
         this.behaviorMap = map;
@@ -82,11 +82,10 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable,
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(LEVEL_4);
-        stateManager.add(WATERLOGGED);
     }
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing());
     }
 
 
@@ -102,7 +101,8 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable,
             BlockState sourceState = world.getBlockState(sourcePos);
             if (sourceState.getFluidState().getFluid() == Fluids.WATER && !sourceState.getFluidState().isEmpty()) {
                 if (sourceState.getProperties().contains(Properties.WATERLOGGED)) {
-                    world.setBlockState(sourcePos, sourceState.with(Properties.WATERLOGGED, false)); }
+                    world.setBlockState(sourcePos, sourceState.with(Properties.WATERLOGGED, false));
+                }
                 else {
                     world.setBlockState(sourcePos, Blocks.AIR.getDefaultState());
                 }
@@ -145,21 +145,12 @@ public class KitchenSink extends AbstractCauldronBlock implements Waterloggable,
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
-
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
-    }
-
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
     }
 
     private static final VoxelShape FACING_NORTH = VoxelShapes.combineAndSimplify(VoxelShapes.union(VoxelShapes.fullCube(), createCuboidShape(1.0625, 11.3, 0.296,15.0625, 16.3, 12.296)),VoxelShapes.union(createCuboidShape(2, 11, 2.3,14, 16.3, 11.3),createCuboidShape(0, 0, 13,16, 14, 16),createCuboidShape(0, 0, 12,16, 1, 13)), BooleanBiFunction.ONLY_FIRST);

@@ -22,15 +22,14 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawer.rotateShape;
 
-public class KitchenRangeHood extends HorizontalFacingBlock implements Waterloggable {
+public class KitchenRangeHood extends HorizontalFacingBlock {
     public static final BooleanProperty DOWN = Properties.DOWN;
     public static final BooleanProperty DRAWER = BooleanProperty.of("drawer");
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     private static final List<FurnitureBlock> OVEN_RANGE_HOOD = new ArrayList<>();
 
     public KitchenRangeHood(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(DOWN, false).with(WATERLOGGED, false).with(DRAWER, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(DOWN, false).with(DRAWER, false));
         OVEN_RANGE_HOOD.add(new FurnitureBlock(this, "oven_range_hood"));
     }
 
@@ -44,7 +43,6 @@ public class KitchenRangeHood extends HorizontalFacingBlock implements Waterlogg
         builder.add(FACING);
         builder.add(DOWN);
         builder.add(DRAWER);
-        builder.add(WATERLOGGED);
     }
 
     @Nullable
@@ -52,19 +50,16 @@ public class KitchenRangeHood extends HorizontalFacingBlock implements Waterlogg
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         boolean down = ctx.getWorld().getBlockState(ctx.getBlockPos().down()).getBlock() instanceof KitchenRangeHood;
         boolean drawer = ctx.getWorld().getBlockState(ctx.getBlockPos().up()).getBlock() instanceof KitchenWallDrawerSmall;
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER).with(DOWN, down).with(DRAWER, drawer);
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(DOWN, down).with(DRAWER, drawer);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return super.getFluidState(state);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-           world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         if (direction.getAxis().isVertical()) {
             boolean down = world.getBlockState(pos.down()).getBlock() instanceof KitchenRangeHood;
             boolean drawer = world.getBlockState(pos.up()).getBlock() instanceof KitchenWallDrawerSmall;

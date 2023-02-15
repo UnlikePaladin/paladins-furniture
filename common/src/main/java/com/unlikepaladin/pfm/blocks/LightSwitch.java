@@ -36,16 +36,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class LightSwitch extends HorizontalFacingBlockWEntity implements Waterloggable {
+public class LightSwitch extends HorizontalFacingBlockWEntity {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final BooleanProperty POWERED = Properties.POWERED;
 
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     public LightSwitchBlockEntity lightSwitchBlockEntity;
     private static final List<LightSwitch> LIGHT_SWITCHES = new ArrayList<>();
     public LightSwitch(Settings settings) {
         super(settings);
-        this.setDefaultState(stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWERED, false).with(WATERLOGGED, false));
+        this.setDefaultState(stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWERED, false));
         LIGHT_SWITCHES.add(this);
     }
 
@@ -56,7 +55,7 @@ public class LightSwitch extends HorizontalFacingBlockWEntity implements Waterlo
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(POWERED, false).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(POWERED, false);
     }
 
     @Override
@@ -88,9 +87,6 @@ public class LightSwitch extends HorizontalFacingBlockWEntity implements Waterlo
     }
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         if (direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos)) {
             return Blocks.AIR.getDefaultState();
         }
@@ -109,12 +105,11 @@ public class LightSwitch extends HorizontalFacingBlockWEntity implements Waterlo
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         builder.add(FACING);
         builder.add(POWERED);
-        builder.add(WATERLOGGED);
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return super.getFluidState(state);
     }
 
     public BlockState togglePower(BlockState state, World world, BlockPos pos, boolean listenTo, boolean toggleTo) {
@@ -129,6 +124,7 @@ public class LightSwitch extends HorizontalFacingBlockWEntity implements Waterlo
         lightSwitchBlockEntity.setState(state.get(POWERED));
         return state;
     }
+
     private static final VoxelShape lightSwitch = VoxelShapes.union(createCuboidShape(5, 3, 15,11, 11, 16));
     private static final VoxelShape lightSwitchSouth = BasicTable.rotateShape(Direction.NORTH, Direction.SOUTH, lightSwitch);
     private static final VoxelShape lightSwitchEast = BasicTable.rotateShape(Direction.NORTH, Direction.EAST, lightSwitch);

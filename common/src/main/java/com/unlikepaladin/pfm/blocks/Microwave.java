@@ -40,18 +40,16 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.ClassicChair.rotateShape;
 
-public class Microwave extends HorizontalFacingBlockWEntity implements Waterloggable {
+public class Microwave extends HorizontalFacingBlockWEntity  {
     public static final BooleanProperty OPEN = Properties.OPEN;
     public static final BooleanProperty POWERED = Properties.POWERED;
-
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> MICROWAVES = new ArrayList<>();
 
     public Microwave(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(OPEN, false).with(FACING, Direction.NORTH).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(OPEN, false).with(FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         MICROWAVES.add(new FurnitureBlock(this, "microwave"));
@@ -65,7 +63,6 @@ public class Microwave extends HorizontalFacingBlockWEntity implements Waterlogg
         stateManager.add(Properties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
         stateManager.add(POWERED);
-        stateManager.add(WATERLOGGED);
     }
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
@@ -105,12 +102,9 @@ public class Microwave extends HorizontalFacingBlockWEntity implements Waterlogg
     @Nullable
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
-    @Override
-    public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
-    }
+
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         BlockEntity blockEntity;
@@ -135,9 +129,6 @@ public class Microwave extends HorizontalFacingBlockWEntity implements Waterlogg
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 

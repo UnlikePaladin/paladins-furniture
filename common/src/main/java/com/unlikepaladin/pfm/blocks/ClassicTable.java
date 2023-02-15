@@ -21,20 +21,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ClassicTable extends Block implements Waterloggable {
+public class ClassicTable extends Block {
     private final Block baseBlock;
     public static final BooleanProperty NORTH = BooleanProperty.of("north");
     public static final BooleanProperty EAST = BooleanProperty.of("east");
     public static final BooleanProperty SOUTH = BooleanProperty.of("south");
     public static final BooleanProperty WEST = BooleanProperty.of("west");
-    public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
 
     private static final List<FurnitureBlock> WOOD_CLASSIC_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_CLASSIC_TABLES = new ArrayList<>();
     private final BlockState baseBlockState;
     public ClassicTable(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(NORTH, false).with(SOUTH,false).with(EAST,false).with(WEST,false).with(WATERLOGGED, false));
+        setDefaultState(this.getStateManager().getDefaultState().with(NORTH, false).with(SOUTH,false).with(EAST,false).with(WEST,false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ClassicTable.class)){
@@ -63,7 +62,6 @@ public class ClassicTable extends Block implements Waterloggable {
         stateManager.add(EAST);
         stateManager.add(WEST);
         stateManager.add(SOUTH);
-        stateManager.add(WATERLOGGED);
     }
 
     @Override
@@ -83,16 +81,13 @@ public class ClassicTable extends Block implements Waterloggable {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (state.get(WATERLOGGED)) {
-            world.getFluidTickScheduler().schedule(pos, Fluids.WATER, Fluids.WATER.getTickRate(world));
-        }
         return direction.getAxis().isHorizontal() ? getShape(state, world, pos) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
-        BlockState blockState = this.getDefaultState().with(WATERLOGGED, ctx.getWorld().getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER);;
+        BlockState blockState = this.getDefaultState();
         return getShape(blockState, world, blockPos);
     }
 
@@ -123,7 +118,7 @@ public class ClassicTable extends Block implements Waterloggable {
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStill(false) : super.getFluidState(state);
+        return super.getFluidState(state);
     }
 
     /** Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/ */
