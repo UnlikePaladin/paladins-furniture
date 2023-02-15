@@ -47,9 +47,7 @@ public class LightSwitchBlockEntity extends BlockEntity {
             lights.add(lightPos);
         }
     }
-    public void isLightValid(){
 
-    }
     public void setState(boolean powered)
     {
         if(!lights.isEmpty()) {
