@@ -1,0 +1,15 @@
+{
+  "name": "用途：马桶",
+  "icon": "pfm:basic_toilet",
+  "category": "pfm:toilet_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "要使用马桶，首先你要坐在上面，然后你可以按下绑定的按键（默认为U）来使用它。完事之后，离开马桶，然后空手潜行右键冲马桶。"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "和水槽一样，马桶需要水来运作，其两格之下的一格水源将为它供给所需。不过，它只能用上述方式或一个水瓶加水，因为一桶水对它来说太多了。"
+    }
+  ]
+}

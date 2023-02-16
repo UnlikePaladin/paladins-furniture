@@ -1,0 +1,15 @@
+{
+  "name": "合成：微波炉",
+  "icon": "minecraft:iron_block",
+  "category": "pfm:microwave_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "若要制作一个微波炉，你需要红石粉、一个箱子和制作微波炉外壳的材料，然后按照展示的摆放顺序将它们置于工作桌上。"
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:iron_microwave"
+    }
+  ]
+}

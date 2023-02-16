@@ -1,0 +1,15 @@
+{
+  "name": "用途：灯具",
+  "icon": "pfm:light_switch",
+  "category": "pfm:lighting_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "灯具可以用红石或开关激活。拿着开关右键单击要连接到的灯以连接两者，对空气按住Shift右键以清除所有连接，若将开关放置在离灯一定范围内，已连接的灯将与开关同步。"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

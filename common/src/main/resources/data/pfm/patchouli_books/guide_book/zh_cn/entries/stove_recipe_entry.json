@@ -1,0 +1,32 @@
+{
+  "name": "配方：炉灶",
+  "icon": "pfm:white_stove",
+  "category": "pfm:stove_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "炉灶可以像营火和烟熏炉一样被使用，这意味着所有的营火和烟熏炉配方都可被应用于炉灶。"
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:baked_potato_from_smoking",
+      "recipe2": "minecraft:cooked_beef_from_smoking",
+      "recipe3": "minecraft:cooked_chicken_from_smoking",
+      "customicon": "pfm:white_stove"
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:cooked_cod_from_smoking",
+      "recipe2": "minecraft:cooked_salmon_from_smoking",
+      "recipe3": "minecraft:cooked_mutton_from_smoking",
+      "customicon": "pfm:white_stove"
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:cooked_rabbit_from_smoking",
+      "recipe2": "minecraft:dried_kelp_from_smoking",
+      "recipe3": "",
+      "customicon": "pfm:white_stove"
+    }
+  ]
+}

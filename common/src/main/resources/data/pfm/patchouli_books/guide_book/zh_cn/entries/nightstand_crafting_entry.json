@@ -1,0 +1,16 @@
+{
+  "name": "合成：床头柜",
+  "icon": "minecraft:oak_planks",
+  "category": "pfm:nightstand_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "若要制作一个床头柜，除了一个箱子以外，你还需要不同的木板（取决于你要制作的类型）。"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_classic_nightstand",
+      "recipe2": "pfm:stripped_birch_classic_nightstand"
+    }
+  ]
+}

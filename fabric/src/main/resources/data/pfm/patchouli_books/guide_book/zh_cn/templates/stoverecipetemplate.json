@@ -1,0 +1,52 @@
+{
+  "processor": "com.unlikepaladin.pfm.compat.fabric.patchouli.FreezingRecipeProcessor",
+  "include": [
+    {
+      "template": "pfm:namenumber",
+      "as": "nn",
+      "using": {
+        "iname": "#iname",
+        "icount": "#icount"
+      },
+      "y": 8
+    }
+  ],
+  "components": [
+    {
+      "type": "patchouli:item", "item": "#ingredient", "x": 17, "y": 18
+    },
+    {
+      "type": "patchouli:item", "item": "#output", "x": 86, "y": 18
+    },
+    {
+      "type": "patchouli:image",
+      "image": "patchouli:textures/gui/crafting.png",
+      "width": 35,
+      "height": 22,
+      "texture_width": 128,
+      "texture_height": 256,
+      "u": 71,
+      "v": 72,
+      "x": 70,
+      "y": 15
+    },
+    {
+      "type": "patchouli:image",
+      "image": "patchouli:textures/gui/crafting.png",
+      "width": 35,
+      "height": 22,
+      "texture_width": 128,
+      "texture_height": 256,
+      "u": 12,
+      "v": 72,
+      "x": 15,
+      "y": 15
+    },
+    {
+      "type": "patchouli:item",
+      "item": "#customicon",
+      "x": 50,
+      "y": 20
+    }
+  ]
+}
