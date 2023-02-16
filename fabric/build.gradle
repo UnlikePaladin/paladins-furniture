@@ -54,6 +54,12 @@ repositories {
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 if (rootProject.sandwichable_compatibility == "true") {
@@ -66,6 +72,12 @@ else {
     dependencies {
         modCompileOnly("maven.modrinth:sandwichable:${rootProject.sandwichable_version}")
         modCompileOnly("dev.lambdaurora:spruceui:${rootProject.spruceui_version}")
+    }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
     }
 }
 
@@ -109,12 +121,12 @@ else {
 
 if (rootProject.arrp_compatibility == "true") {
     dependencies {
-        modImplementation("net.devtech:arrp:${rootProject.arrp_version}")
+        modImplementation "curse.maven:arrp-463113:${rootProject.arrp_version}"
     }
 }
 else {
     dependencies {
-        modCompileOnly("net.devtech:arrp:${rootProject.arrp_version}")
+        modCompileOnly "curse.maven:arrp-463113:${rootProject.arrp_version}"
     }
 }
 if (rootProject.emi_compatibility == "true"){
