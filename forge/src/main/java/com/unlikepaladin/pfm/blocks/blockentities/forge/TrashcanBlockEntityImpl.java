@@ -26,7 +26,7 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
     @Nullable
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, 13, this.toInitialChunkDataNbt());
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
     @Override

@@ -25,7 +25,7 @@ public class ScreenHandlerRegistryForge {
         ScreenHandlerIDs.STOVE_SCREEN_HANDLER = IForgeMenuType.create(StoveScreenHandler::new);
         ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER = IForgeMenuType.create(IronStoveScreenHandler::new);
         ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = IForgeMenuType.create(MicrowaveScreenHandler::new);
-        ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER = IForgeContainerType.create(TrashcanScreenHandler::new);
+        ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER = IForgeMenuType.create(TrashcanScreenHandler::new);
 
         event.getRegistry().registerAll(
                 ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER.setRegistryName("furniture"),
