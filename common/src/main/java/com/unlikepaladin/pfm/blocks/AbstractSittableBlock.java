@@ -6,10 +6,14 @@ import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -70,64 +74,11 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
             if (player.isSpectator() || player.isSneaking()) {
                 return ActionResult.PASS;
             }
-            double px;
-            double pz;
-            if (state.getBlock() instanceof BasicChair) {
-                Direction direction = state.get(FACING);
-                if (state.get(BasicChair.TUCKED)) {
-                    switch (direction) {
-                        case EAST -> {
-                            px = pos.getX() + 0.1;
-                            pz = pos.getZ() + 0.5;
-                        }
-                        case WEST -> {
-                            px = pos.getX() + 0.9;
-                            pz = pos.getZ() + 0.5;
-                        }
-                        case SOUTH -> {
-                            px = pos.getX() + 0.5;
-                            pz = pos.getZ() + 0.1;
-                        }
-                        default -> {
-                            px = pos.getX() + 0.5;
-                            pz = pos.getZ() + 0.9;
-                        }
-                    }
-                }
-                else {
-                    px =  pos.getX() + 0.5;
-                    pz = pos.getZ() + 0.5;
-                }
-            }
-            else {
-                px =  pos.getX() + 0.5;
-                pz = pos.getZ() + 0.5;
-            }
-            double py = pos.getY() + this.height;
-
-            List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPlayerRider);
+            List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers);
             if (!active.isEmpty())
                 return ActionResult.PASS;
 
-            float yaw = state.get(FACING).getOpposite().asRotation();
-            ChairEntity entity = Entities.CHAIR.create(world);
-            entity.refreshPositionAndAngles(px, py, pz, yaw, 0);
-            entity.setNoGravity(true);
-            entity.setSilent(true);
-            entity.setInvisible(false);
-            entity.setInvulnerable(true);
-            entity.setAiDisabled(true);
-            entity.setNoDrag(true);
-            entity.setHeadYaw(yaw);
-            entity.setYaw(yaw);
-            entity.setBodyYaw(yaw);
-            if (world.spawnEntity(entity)) {
-                player.startRiding(entity, true);
-                player.setYaw(yaw);
-                player.setHeadYaw(yaw);
-                entity.setYaw(yaw);
-                entity.setBodyYaw(yaw);
-                entity.setHeadYaw(yaw);
+            if (sitEntity(world, pos, state, player) == ActionResult.SUCCESS) {
                 if (!(state.getBlock() instanceof BasicToilet))
                     player.incrementStat(Statistics.CHAIR_USED);
                 return ActionResult.SUCCESS;
@@ -135,6 +86,80 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
             return ActionResult.CONSUME;
         }
         return ActionResult.PASS;
+    }
+
+
+    public ActionResult sitEntity(World world, BlockPos pos, BlockState state, Entity entityToSit) {
+        double px;
+        double pz;
+        if (state.getBlock() instanceof BasicChair) {
+            Direction direction = state.get(FACING);
+            if (state.get(BasicChair.TUCKED)) {
+                switch (direction) {
+                    case EAST -> {
+                        px = pos.getX() + 0.1;
+                        pz = pos.getZ() + 0.5;
+                    }
+                    case WEST -> {
+                        px = pos.getX() + 0.9;
+                        pz = pos.getZ() + 0.5;
+                    }
+                    case SOUTH -> {
+                        px = pos.getX() + 0.5;
+                        pz = pos.getZ() + 0.1;
+                    }
+                    default -> {
+                        px = pos.getX() + 0.5;
+                        pz = pos.getZ() + 0.9;
+                    }
+                }
+            }
+            else {
+                px =  pos.getX() + 0.5;
+                pz = pos.getZ() + 0.5;
+            }
+        }
+        else {
+            px =  pos.getX() + 0.5;
+            pz = pos.getZ() + 0.5;
+        }
+        double py = pos.getY() + this.height;
+        float yaw = state.get(FACING).getOpposite().asRotation();
+        ChairEntity chairEntity = Entities.CHAIR.create(world);
+        chairEntity.refreshPositionAndAngles(px, py, pz, yaw, 0);
+        chairEntity.setNoGravity(true);
+        chairEntity.setSilent(true);
+        chairEntity.setInvisible(false);
+        chairEntity.setInvulnerable(true);
+        chairEntity.setAiDisabled(true);
+        chairEntity.setNoDrag(true);
+        chairEntity.setHeadYaw(yaw);
+        chairEntity.setYaw(yaw);
+        chairEntity.setBodyYaw(yaw);
+        if (world.spawnEntity(chairEntity)) {
+            entityToSit.startRiding(chairEntity, true);
+            entityToSit.setYaw(yaw);
+            entityToSit.setHeadYaw(yaw);
+            chairEntity.setYaw(yaw);
+            chairEntity.setBodyYaw(yaw);
+            chairEntity.setHeadYaw(yaw);
+
+            return ActionResult.SUCCESS;
+        }
+        return ActionResult.CONSUME;
+    }
+
+    @Override
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+        super.onEntityCollision(state, world, pos, entity);
+        List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers);
+        if (!active.isEmpty())
+            return;
+
+        if (entity instanceof PlayerEntity || entity instanceof IronGolemEntity || entity instanceof AbstractMinecartEntity || entity.hasVehicle() || !(entity instanceof LivingEntity)) {
+            return;
+        }
+        sitEntity(world, pos, state, entity);
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
