@@ -188,26 +188,6 @@ public class KitchenDrawer extends KitchenCounter implements BlockEntityProvider
     protected static final VoxelShape MIDDLE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE);
     protected static final VoxelShape MIDDLE_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_OPEN);
 
-    protected static final VoxelShape BOTTOM = VoxelShapes.union(createCuboidShape(0, 1, 0,16, 16, 13),createCuboidShape(0, 0, 0,16, 1, 12),createCuboidShape(13, 2, 14,14, 6, 15),createCuboidShape(1, 1, 13,15, 15, 14));
-    protected static final VoxelShape BOTTOM_OPEN = VoxelShapes.union(createCuboidShape(0, 1, 0,16, 16, 13),createCuboidShape(0, 0, 0,16, 1, 12),createCuboidShape(1, 1, 13,2, 15, 27),createCuboidShape(0, 2, 25,1, 6, 26));
-    protected static final VoxelShape BOTTOM_OUTER_CORNER = VoxelShapes.union(createCuboidShape(0, 1, 0,13, 16, 13),createCuboidShape(13, 2, 1,14, 15, 12),createCuboidShape(14, 2.5, 10,15, 6.5, 11),createCuboidShape(1, 2, 12,12, 15, 14),createCuboidShape(10, 2.5, 14,11, 6.5, 15),createCuboidShape(0, 0, 0,12, 1, 12));
-    protected static final VoxelShape BOTTOM_OUTER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(0, 1, 0,13, 16, 13),createCuboidShape(1, 2, 12.75,2, 15, 23.75),createCuboidShape(0, 2.5, 21.75,1, 6.5, 22.75),createCuboidShape(13, 2, 1,14, 15, 12),createCuboidShape(14, 2.5, 10,15, 6.5, 11),createCuboidShape(14, 2.5, 10,15, 6.5, 11));
-    protected static final VoxelShape BOTTOM_INNER_CORNER = VoxelShapes.union(createCuboidShape(3, 1, 13,16, 16, 16),createCuboidShape(0, 1, 0,16, 16, 13),createCuboidShape(0, 0, 0,16, 1, 12),createCuboidShape(4, 0, 12,16, 1, 16),createCuboidShape(2, 1, 14,3, 15, 16),createCuboidShape(0, 1, 13,3, 15, 14));
-    protected static final VoxelShape BOTTOM_INNER_CORNER_WEST =  rotateShape(Direction.NORTH, Direction.WEST, BOTTOM_INNER_CORNER);
-    protected static final VoxelShape BOTTOM_INNER_CORNER_EAST =  rotateShape(Direction.NORTH, Direction.EAST, BOTTOM_INNER_CORNER);
-    protected static final VoxelShape BOTTOM_INNER_CORNER_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM_INNER_CORNER);
-    protected static final VoxelShape BOTTOM_OUTER_CORNER_WEST =  rotateShape(Direction.NORTH, Direction.WEST, BOTTOM_OUTER_CORNER);
-    protected static final VoxelShape BOTTOM_OUTER_CORNER_EAST =  rotateShape(Direction.NORTH, Direction.EAST, BOTTOM_OUTER_CORNER);
-    protected static final VoxelShape BOTTOM_OUTER_CORNER_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM_OUTER_CORNER);
-    protected static final VoxelShape BOTTOM_OUTER_CORNER_OPEN_WEST =  rotateShape(Direction.NORTH, Direction.WEST, BOTTOM_OUTER_CORNER_OPEN);
-    protected static final VoxelShape BOTTOM_OUTER_CORNER_OPEN_EAST =  rotateShape(Direction.NORTH, Direction.EAST, BOTTOM_OUTER_CORNER_OPEN);
-    protected static final VoxelShape BOTTOM_OUTER_CORNER_OPEN_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM_OUTER_CORNER_OPEN);
-    protected static final VoxelShape BOTTOM_WEST = rotateShape(Direction.NORTH, Direction.WEST, BOTTOM);
-    protected static final VoxelShape BOTTOM_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, BOTTOM_OPEN);
-    protected static final VoxelShape BOTTOM_EAST = rotateShape(Direction.NORTH, Direction.EAST, BOTTOM);
-    protected static final VoxelShape BOTTOM_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, BOTTOM_OPEN);
-    protected static final VoxelShape BOTTOM_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM);
-    protected static final VoxelShape BOTTOM_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, BOTTOM_OPEN);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);

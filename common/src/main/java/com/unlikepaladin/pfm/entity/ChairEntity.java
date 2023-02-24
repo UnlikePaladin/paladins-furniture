@@ -83,6 +83,7 @@ public class ChairEntity extends MobEntity {
         return false;
     }
 
+    @Override
     public Vec3d updatePassengerForDismount(LivingEntity passenger) {
         Direction direction = this.getMovementDirection();
         if (direction.getAxis() == Direction.Axis.Y) {

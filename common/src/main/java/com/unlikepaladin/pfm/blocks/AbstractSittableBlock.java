@@ -27,6 +27,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
@@ -70,22 +71,30 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
     public float height;
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
-            if (player.isSpectator() || player.isSneaking()) {
-                return ActionResult.PASS;
-            }
-            List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers);
-            if (!active.isEmpty())
-                return ActionResult.PASS;
-
-            if (sitEntity(world, pos, state, player) == ActionResult.SUCCESS) {
-                if (!(state.getBlock() instanceof BasicToilet))
-                    player.incrementStat(Statistics.CHAIR_USED);
-                return ActionResult.SUCCESS;
-            }
+        if (world.isClient) {
             return ActionResult.CONSUME;
         }
-        return ActionResult.PASS;
+
+        if (player.isSpectator() || player.isSneaking()) {
+            return ActionResult.FAIL;
+        }
+
+        List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers);
+        List<Entity> hasPassenger = new ArrayList<>();
+        active.forEach(chairEntity -> hasPassenger.add(chairEntity.getFirstPassenger()));
+        if (!active.isEmpty() && hasPassenger.stream().anyMatch(Entity::isPlayer)) {
+            return ActionResult.FAIL;
+        }
+        else if (!active.isEmpty()) {
+            hasPassenger.forEach(Entity::stopRiding);
+            return ActionResult.SUCCESS;
+        }
+        else if (sitEntity(world, pos, state, player) == ActionResult.SUCCESS) {
+            if (!(state.getBlock() instanceof BasicToilet))
+                player.incrementStat(Statistics.CHAIR_USED);
+            return ActionResult.SUCCESS;
+        }
+        return ActionResult.CONSUME;
     }
 
 
