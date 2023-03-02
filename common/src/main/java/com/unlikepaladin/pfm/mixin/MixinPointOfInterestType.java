@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.mixin;
 
 import com.google.common.collect.ImmutableSet;
-import com.unlikepaladin.pfm.blocks.SimpleBed;
+import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.BedPart;
@@ -33,7 +33,7 @@ public abstract class MixinPointOfInterestType {
     )
 
     private static Set<BlockState> appendBeds(Set<BlockState> workStationStates) {
-        Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBed.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+        Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
         Set<BlockState> newBedStates = new HashSet<>();
         newBedStates.addAll(workStationStates);
         newBedStates.addAll(addedBedStates);

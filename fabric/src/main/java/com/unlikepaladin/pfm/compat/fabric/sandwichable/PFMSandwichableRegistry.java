@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.compat.fabric.sandwichable;
 
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.PFMToaster;
+import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.PFMToasterBlock;
 import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.blockentities.PFMToasterBlockEntity;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.fabric.arrp.JFurnitureRecipe;
@@ -43,7 +43,7 @@ public class PFMSandwichableRegistry {
         }
     }
     //protected static JTag iron_toaster_tag = JTag.tag();
-    public static final PFMToaster IRON_TOASTER = new PFMToaster(FabricBlockSettings.copy(Blocks.STONECUTTER).requiresTool());
+    public static final PFMToasterBlock IRON_TOASTER = new PFMToasterBlock(FabricBlockSettings.copy(Blocks.STONECUTTER).requiresTool());
     public static void register() {
             RuntimeResourcePack pack = SANDWICHABLE_RESOURCE_PACK;
             registerFurniture("iron_toaster", IRON_TOASTER, true);

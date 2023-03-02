@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.blockentities;
 
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.PFMToaster;
+import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.PFMToasterBlock;
 import com.unlikepaladin.pfm.compat.fabric.sandwichable.PFMSandwichableRegistry;
 import io.github.foundationgames.sandwichable.Sandwichable;
 import io.github.foundationgames.sandwichable.blocks.ToasterBlock;
@@ -174,7 +174,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     }
 
     public void startToasting(@Nullable PlayerEntity player) {
-        if(this.world.getBlockState(this.pos).getBlock() instanceof PFMToaster) {
+        if(this.world.getBlockState(this.pos).getBlock() instanceof PFMToasterBlock) {
             this.world.setBlockState(pos, this.world.getBlockState(this.pos).with(ToasterBlock.ON, true));
         }
         world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.5F, 0.8F);
@@ -185,7 +185,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     }
 
     public void stopToasting(@Nullable PlayerEntity player) {
-        if(this.world.getBlockState(this.pos).getBlock() instanceof PFMToaster) {
+        if(this.world.getBlockState(this.pos).getBlock() instanceof PFMToasterBlock) {
             this.world.setBlockState(pos, this.world.getBlockState(this.pos).with(ToasterBlock.ON, false));
         }
         world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BELL, SoundCategory.BLOCKS, 0.8F, 4);

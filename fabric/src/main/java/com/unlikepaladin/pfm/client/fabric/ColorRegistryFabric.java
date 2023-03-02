@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.client.fabric;
 
-import com.unlikepaladin.pfm.blocks.BasicToilet;
-import com.unlikepaladin.pfm.blocks.KitchenCounterOven;
-import com.unlikepaladin.pfm.blocks.KitchenSink;
+import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
+import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
+import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -18,10 +18,10 @@ import java.util.List;
 public class ColorRegistryFabric {
     public static void registerAll(){
         List<Block> sinks = new ArrayList<>();
-        KitchenSink.streamStoneSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
-        KitchenSink.streamWoodSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
+        KitchenSinkBlock.streamStoneSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
+        KitchenSinkBlock.streamWoodSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
         sinks.forEach(ColorRegistryFabric::addWaterColor);
-        ColorProviderRegistry.BLOCK.register((state, view, pos, index) -> state.get(BasicToilet.TOILET_STATE) != ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : 0x534230, PaladinFurnitureModBlocksItems.BASIC_TOILET);
+        ColorProviderRegistry.BLOCK.register((state, view, pos, index) -> state.get(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : 0x534230, PaladinFurnitureModBlocksItems.BASIC_TOILET);
         ColorRegistryFabric.addWaterColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB);
 
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, RenderLayer.getCutout());
@@ -37,8 +37,8 @@ public class ColorRegistryFabric {
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.IRON_MICROWAVE, RenderLayer.getTranslucent());
         BlockRenderLayerMap.INSTANCE.putBlock(PaladinFurnitureModBlocksItems.MESH_TRASHCAN, RenderLayer.getCutout());
         List<Block> ovens = new ArrayList<>();
-        KitchenCounterOven.streamStoneCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
-        KitchenCounterOven.streamWoodCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
+        KitchenCounterOvenBlock.streamStoneCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
+        KitchenCounterOvenBlock.streamWoodCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderLayer.getTranslucent(), ovens.toArray(new Block[0]));
 
         ColorProviderRegistry.ITEM.register((stack, index) -> index == 1 ?  0x3c44a9 : 0xFFFFFF, PaladinFurnitureModBlocksItems.BASIC_BATHTUB);

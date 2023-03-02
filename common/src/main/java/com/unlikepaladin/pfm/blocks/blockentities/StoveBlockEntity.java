@@ -8,7 +8,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -46,14 +45,14 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
      String blockname = this.getCachedState().getBlock().getTranslationKey();
 
     protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof Stove){
+        if (state.getBlock() instanceof StoveBlock){
             StoveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
             StoveBlockEntity.this.setOpen(state, true);
         }
     }
 
     protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof Stove) {
+        if (state.getBlock() instanceof StoveBlock) {
             StoveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
             StoveBlockEntity.this.setOpen(state, false);
         }
@@ -88,7 +87,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     @Override
     protected Text getContainerName() {
         blockname = blockname.replace("block.pfm", "");
-        if (this.getCachedState().getBlock() instanceof KitchenCounterOven) {
+        if (this.getCachedState().getBlock() instanceof KitchenCounterOvenBlock) {
             return new TranslatableText("container.pfm.kitchen_counter_oven");
         }
         return new TranslatableText("container.pfm" + blockname);
@@ -232,7 +231,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     public static void clientTick(World world, BlockPos pos, BlockState state, StoveBlockEntity stoveBlockEntity) {
         int i;
         Random random = world.random;
-        i = state.get(Stove.FACING).rotateYClockwise().getHorizontal();
+        i = state.get(StoveBlock.FACING).rotateYClockwise().getHorizontal();
         for (int j = 0; j < stoveBlockEntity.itemsBeingCooked.size(); ++j) {
             ItemStack stack = stoveBlockEntity.itemsBeingCooked.get(j);
             if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) continue;

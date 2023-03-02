@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.google.common.collect.Maps;
-import com.unlikepaladin.pfm.blocks.Freezer;
+import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
@@ -59,7 +59,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
         @Override
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Freezer) {
+            if (state.getBlock() instanceof FreezerBlock) {
                 FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
                 FreezerBlockEntity.this.setOpen(state, true);
             }
@@ -67,7 +67,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
         @Override
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Freezer) {
+            if (state.getBlock() instanceof FreezerBlock) {
                 FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
                 FreezerBlockEntity.this.setOpen(state, false);
             }
@@ -342,12 +342,12 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Freezer.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+        this.world.setBlockState(this.getPos(), state.with(FreezerBlock.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
     }
 
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.get(Freezer.FACING).getVector();
+        Vec3i vec3i = state.get(FreezerBlock.FACING).getVector();
         double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;

@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.BasicToilet;
+import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
@@ -39,9 +39,9 @@ public class ToiletBlockEntity extends BlockEntity {
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, ToiletBlockEntity blockEntity) {
-        if (state.get(BasicToilet.TOILET_STATE) == ToiletState.FLUSHING) {
+        if (state.get(BasicToiletBlock.TOILET_STATE) == ToiletState.FLUSHING) {
             if (blockEntity.flushTimer >= 120) {
-                BasicToilet.setClean(state, world, pos);
+                BasicToiletBlock.setClean(state, world, pos);
                 blockEntity.setFlushTimer(0);
             } else {
                 blockEntity.flushTimer++;

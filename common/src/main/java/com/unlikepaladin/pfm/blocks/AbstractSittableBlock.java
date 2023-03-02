@@ -13,9 +13,7 @@ import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -90,7 +88,7 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
             return ActionResult.SUCCESS;
         }
         else if (sitEntity(world, pos, state, player) == ActionResult.SUCCESS) {
-            if (!(state.getBlock() instanceof BasicToilet))
+            if (!(state.getBlock() instanceof BasicToiletBlock))
                 player.incrementStat(Statistics.CHAIR_USED);
             return ActionResult.SUCCESS;
         }
@@ -101,9 +99,9 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
     public ActionResult sitEntity(World world, BlockPos pos, BlockState state, Entity entityToSit) {
         double px;
         double pz;
-        if (state.getBlock() instanceof BasicChair) {
+        if (state.getBlock() instanceof BasicChairBlock) {
             Direction direction = state.get(FACING);
-            if (state.get(BasicChair.TUCKED)) {
+            if (state.get(BasicChairBlock.TUCKED)) {
                 switch (direction) {
                     case EAST -> {
                         px = pos.getX() + 0.1;

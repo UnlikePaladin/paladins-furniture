@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.Trashcan;
+import com.unlikepaladin.pfm.blocks.TrashcanBlock;
 import com.unlikepaladin.pfm.menus.TrashcanScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
@@ -20,7 +20,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 
 public class TrashcanBlockEntity extends LootableContainerBlockEntity {
     public TrashcanBlockEntity(BlockPos pos, BlockState state) {
@@ -33,14 +32,14 @@ public class TrashcanBlockEntity extends LootableContainerBlockEntity {
     protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
     protected void onContainerOpen(BlockState state) {
-        if (state.getBlock() instanceof Trashcan){
+        if (state.getBlock() instanceof TrashcanBlock){
             this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
             this.setOpen(state, true);
         }
     }
 
     protected void onContainerClose(BlockState state) {
-        if (state.getBlock() instanceof Trashcan) {
+        if (state.getBlock() instanceof TrashcanBlock) {
             this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
             this.setOpen(state, false);
         }

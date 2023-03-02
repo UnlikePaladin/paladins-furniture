@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.ClassicNightstand;
-import com.unlikepaladin.pfm.blocks.KitchenCabinet;
-import com.unlikepaladin.pfm.blocks.KitchenDrawer;
+import com.unlikepaladin.pfm.blocks.ClassicNightstandBlock;
+import com.unlikepaladin.pfm.blocks.KitchenCabinetBlock;
+import com.unlikepaladin.pfm.blocks.KitchenDrawerBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -38,7 +38,7 @@ public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
 
         @Override
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand){
+            if (state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock){
                 GenericStorageBlockEntity9x3.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
                 GenericStorageBlockEntity9x3.this.setOpen(state, true);
             }
@@ -46,7 +46,7 @@ public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
 
         @Override
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand) {
+            if (state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock) {
                 GenericStorageBlockEntity9x3.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
                 GenericStorageBlockEntity9x3.this.setOpen(state, false);
             }
@@ -120,9 +120,9 @@ public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
 
     String blockname = this.getCachedState().getBlock().getTranslationKey();
     protected Text getContainerName() {
-    if (this.getCachedState().getBlock() instanceof KitchenDrawer)
+    if (this.getCachedState().getBlock() instanceof KitchenDrawerBlock)
         return new TranslatableText("container.pfm.drawer");
-    else if (this.getCachedState().getBlock() instanceof ClassicNightstand)
+    else if (this.getCachedState().getBlock() instanceof ClassicNightstandBlock)
         return new TranslatableText("container.pfm.nightstand");
     else
         return new TranslatableText("container.pfm.cabinet");
