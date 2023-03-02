@@ -40,7 +40,6 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
     public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
     public static final BooleanProperty POWERED = Properties.POWERED;
 
-    public LightSwitchBlockEntity lightSwitchBlockEntity;
     private static final List<LightSwitch> LIGHT_SWITCHES = new ArrayList<>();
     public LightSwitch(Settings settings) {
         super(settings);
@@ -61,13 +60,8 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient) {
-            BlockState blockState = state.cycle(POWERED);
-            if (blockState.get(POWERED)) {
-
-            }
             return ActionResult.SUCCESS;
         }
-        lightSwitchBlockEntity = (LightSwitchBlockEntity) world.getBlockEntity(pos);
         BlockState blockState = this.togglePower(state, world, pos, false, false);
         float f = blockState.get(POWERED) ? 0.9f : 0.8f;
         world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3f, f);
@@ -80,7 +74,8 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
         if (itemStack.hasNbt()) {
             NbtCompound nbtCompound = itemStack.getSubNbt("BlockEntityTag");
             if (nbtCompound.contains("lights")) {
-                lightSwitchBlockEntity.writeNbt(nbtCompound);
+                world.getBlockEntity(pos).writeNbt(nbtCompound);
+                itemStack.setNbt(null);
             }
         }
 
@@ -120,8 +115,7 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
         state = state.cycle(POWERED);}
         world.setBlockState(pos, state, Block.NOTIFY_ALL);
         this.updateNeighbors(state, world, pos);
-        lightSwitchBlockEntity = (LightSwitchBlockEntity) world.getBlockEntity(pos);
-        lightSwitchBlockEntity.setState(state.get(POWERED));
+        ((LightSwitchBlockEntity)world.getBlockEntity(pos)).setState(state.get(POWERED));
         return state;
     }
 
@@ -184,20 +178,16 @@ public class LightSwitch extends HorizontalFacingBlockWEntity {
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (lightSwitchBlockEntity != null) {
+        if (world.getBlockEntity(pos) != null) {
             this.togglePower(state, world, pos, true, false);
         }
-        this.spawnBreakParticles(world, player, pos, state);
-        if (state.isIn(BlockTags.GUARDED_BY_PIGLINS)) {
-            PiglinBrain.onGuardedBlockInteracted(player, false);
-        }
-        world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+       super.onBreak(world, pos, state, player);
     }
 
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return lightSwitchBlockEntity = new LightSwitchBlockEntity(pos, state);
+        return new LightSwitchBlockEntity(pos, state);
     }
 
 
