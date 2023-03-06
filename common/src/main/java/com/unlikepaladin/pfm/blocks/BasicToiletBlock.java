@@ -72,6 +72,13 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
              world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
             return ActionResult.SUCCESS;
         }
+        else if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY && (player.getStackInHand(hand).getItem() == Items.WATER_BUCKET)) {
+            world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
+            if (!player.getAbilities().creativeMode)
+                player.setStackInHand(hand, new ItemStack(Items.BUCKET));
+            world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            return ActionResult.SUCCESS;
+        }
         if (player.isSneaking() && !world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY) {
             BlockPos sourcePos = pos.down().down();
             BlockState sourceState = world.getBlockState(sourcePos);

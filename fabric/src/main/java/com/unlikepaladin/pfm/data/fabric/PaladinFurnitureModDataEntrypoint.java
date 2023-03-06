@@ -50,6 +50,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             blocks.forEach(this::addDrop);
             Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
             Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
+            BasicBathtubBlock.basicBathtubBlockStream().forEach(basicBathtubBlock -> this.addDrop(basicBathtubBlock, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
         }
     }
     
@@ -102,6 +103,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             CutleryBlock[] cutleries = CutleryBlock.streamCutlery().map(FurnitureBlock::getBlock).toArray(CutleryBlock[]::new);
             BasicToiletBlock[] basicToilets = BasicToiletBlock.streamBasicToilet().map(FurnitureBlock::getBlock).toArray(BasicToiletBlock[]::new);
             KitchenRangeHoodBlock[] rangeHoods = KitchenRangeHoodBlock.streamOvenRangeHoods().map(FurnitureBlock::getBlock).toArray(KitchenRangeHoodBlock[]::new);
+            BasicSinkBlock[] sinkBlocks = BasicSinkBlock.streamSinks().toList().toArray(new BasicSinkBlock[0]);
 
             this.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                     .add(stoneCounters)
@@ -141,7 +143,10 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
                     .add(basicToilets)
                     .add(rangeHoods)
                     .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE)
-                    .add(PaladinFurnitureModBlocksItems.IRON_CHAIN);
+                    .add(PaladinFurnitureModBlocksItems.IRON_CHAIN)
+                    .add(sinkBlocks)
+                    .add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE)
+                    .add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD);
 
             KitchenCounterBlock[] woodCounters = KitchenCounterBlock.streamWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
             KitchenWallCounterBlock[] woodWallCounters = KitchenWallCounterBlock.streamWallWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenWallCounterBlock[]::new);

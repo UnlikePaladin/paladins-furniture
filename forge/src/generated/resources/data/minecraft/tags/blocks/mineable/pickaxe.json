@@ -250,6 +250,9 @@
     "pfm:raw_concrete",
     "pfm:iron_chain",
     "pfm:trashcan",
-    "pfm:mesh_trashcan"
+    "pfm:mesh_trashcan",
+    "pfm:basic_sink",
+    "pfm:basic_shower_handle",
+    "pfm:basic_shower_head"
   ]
 }

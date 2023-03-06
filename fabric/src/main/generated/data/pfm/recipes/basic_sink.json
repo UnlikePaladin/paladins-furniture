@@ -1,0 +1,25 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "YVY",
+    "XZX",
+    " X "
+  ],
+  "key": {
+    "Y": {
+      "item": "minecraft:stone_button"
+    },
+    "X": {
+      "item": "minecraft:quartz_block"
+    },
+    "Z": {
+      "item": "minecraft:bucket"
+    },
+    "V": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "pfm:basic_sink"
+  }
+}

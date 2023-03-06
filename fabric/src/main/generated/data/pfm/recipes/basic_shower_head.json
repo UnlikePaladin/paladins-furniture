@@ -1,0 +1,22 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "Z",
+    "Y",
+    "V"
+  ],
+  "key": {
+    "Y": {
+      "item": "minecraft:stone_button"
+    },
+    "Z": {
+      "item": "minecraft:bucket"
+    },
+    "V": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "pfm:basic_shower_head"
+  }
+}

@@ -197,6 +197,10 @@
   "item.pfm.dye_kit_white":"White Dye Kit",
 
   "block.pfm.light_switch":"Light Switch",
+  "block.pfm.basic_shower_handle":"Basic Shower Handle",
+  "block.pfm.basic_shower_head":"Basic Shower Head",
+  "block.pfm.basic_sink":"Basic Sink",
+
   "message.pfm.light_switch_not_canopy": "You must only select the light's canopy",
   "message.pfm.light_switch_far": "This light switch is too far from these lights so they've been disconnected: %s",
   "tooltip.pfm.light_switch_connected": "This light switch has %d lights connected",

@@ -35,9 +35,11 @@ import net.minecraft.world.WorldView;
 import net.minecraft.world.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 
@@ -45,13 +47,18 @@ public class BasicBathtubBlock extends BedBlock {
     public static final IntProperty LEVEL_8 = IntProperty.of("level", 0, 8);
     private final Map<Item, BathtubBehavior> behaviorMap;
     private final Predicate<Biome.Precipitation> precipitationPredicate;
-
+    private static final List<BasicBathtubBlock> basicBathtubBlocks = new ArrayList<>();
     public BasicBathtubBlock(Settings settings, Map<Item, BathtubBehavior> map, Predicate<Biome.Precipitation> precipitationPredicate) {
         super(DyeColor.WHITE, settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_8, 0).with(PART, BedPart.FOOT).with(OCCUPIED, false));
         this.behaviorMap = map;
         this.precipitationPredicate = precipitationPredicate;
         this.height = 0.05f;
+        basicBathtubBlocks.add(this);
+    }
+
+    public static Stream<BasicBathtubBlock> basicBathtubBlockStream() {
+        return basicBathtubBlocks.stream();
     }
 
     @Override
