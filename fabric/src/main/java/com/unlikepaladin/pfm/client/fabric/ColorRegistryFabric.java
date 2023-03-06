@@ -1,9 +1,6 @@
 package com.unlikepaladin.pfm.client.fabric;
 
-import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
-import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
-import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
-import com.unlikepaladin.pfm.blocks.ToiletState;
+import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
@@ -20,6 +17,7 @@ public class ColorRegistryFabric {
         List<Block> sinks = new ArrayList<>();
         KitchenSinkBlock.streamStoneSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
         KitchenSinkBlock.streamWoodSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
+        BasicSinkBlock.streamSinks().forEach(sinks::add);
         sinks.forEach(ColorRegistryFabric::addWaterColor);
         ColorProviderRegistry.BLOCK.register((state, view, pos, index) -> state.get(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : 0x534230, PaladinFurnitureModBlocksItems.BASIC_TOILET);
         ColorRegistryFabric.addWaterColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB);

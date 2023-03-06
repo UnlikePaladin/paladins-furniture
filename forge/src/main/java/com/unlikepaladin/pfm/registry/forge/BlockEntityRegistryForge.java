@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.registry.forge;
 
+import com.unlikepaladin.pfm.blocks.BasicSinkBlock;
 import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
 import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
@@ -13,6 +14,7 @@ import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -35,7 +37,10 @@ public class BlockEntityRegistryForge {
         BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY = BlockEntityType.Builder.create(GenericStorageBlockEntity3x3::new, PaladinFurnitureModBlocksItems.OAK_KITCHEN_WALL_SMALL_DRAWER).build(null);
         BlockEntities.TRASHCAN_BLOCK_ENTITY = BlockEntityType.Builder.create(TrashcanBlockEntityImpl::new, PaladinFurnitureModBlocksItems.MESH_TRASHCAN).build(null);
         Block[] sinks = Stream.concat(KitchenSinkBlock.streamStoneSinks(), KitchenSinkBlock.streamWoodSinks()).map(FurnitureBlock::getBlock).toArray(Block[]::new);
+        sinks = Stream.concat(Arrays.stream(sinks), BasicSinkBlock.streamSinks()).toArray(Block[]::new);
         BlockEntities.SINK_BLOCK_ENTITY = BlockEntityType.Builder.create(SinkBlockEntity::new, sinks).build(null);
+        BlockEntities.SHOWER_HEAD_BLOCK_ENTITY = BlockEntityType.Builder.create(ShowerHeadBlockEntityImpl::new, PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD).build(null);
+        BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY = BlockEntityType.Builder.create(ShowerHandleBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE).build(null);
 
         event.getRegistry().registerAll(
                 registerEntity("drawer_block_entity", BlockEntities.DRAWER_BLOCK_ENTITY),
@@ -51,7 +56,10 @@ public class BlockEntityRegistryForge {
                 registerEntity("toilet_block_entity", BlockEntities.TOILET_BLOCK_ENTITY),
                 registerEntity("small_storage_block_entity", BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY),
                 registerEntity("trashcan_block_entity", BlockEntities.TRASHCAN_BLOCK_ENTITY),
-                registerEntity("sink_block_entity", BlockEntities.SINK_BLOCK_ENTITY)
+                registerEntity("sink_block_entity", BlockEntities.SINK_BLOCK_ENTITY),
+                registerEntity("basic_shower_head_block_entity", BlockEntities.SHOWER_HEAD_BLOCK_ENTITY),
+                registerEntity("basic_shower_handle_block_entity", BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY)
+
         );
     }
 

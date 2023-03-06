@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.registry.fabric;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.items.FurnitureGuideBook;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
+import com.unlikepaladin.pfm.items.ShowerHandleItem;
 import com.unlikepaladin.pfm.items.fabric.FurnitureGuideBookImpl;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
@@ -1104,7 +1105,12 @@ public class BlockItemRegistryFabric {
         registerBlock("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH, PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM);
         registerFurniture("basic_toilet", PaladinFurnitureModBlocksItems.BASIC_TOILET, true);
         registerFurniture("wall_toilet_paper", PaladinFurnitureModBlocksItems.WALL_TOILET_PAPER, true);
+        registerFurniture("basic_sink", PaladinFurnitureModBlocksItems.BASIC_SINK, true);
         registerFurniture("basic_bathtub", PaladinFurnitureModBlocksItems.BASIC_BATHTUB, true);
+        registerFurniture("basic_shower_head", PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD, true);
+        PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM = new ShowerHandleItem(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+
+        registerBlock("basic_shower_handle", PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM);
         registerFurniture("trashcan", PaladinFurnitureModBlocksItems.TRASHCAN, true);
         registerFurniture("mesh_trashcan", PaladinFurnitureModBlocksItems.MESH_TRASHCAN, true);
 

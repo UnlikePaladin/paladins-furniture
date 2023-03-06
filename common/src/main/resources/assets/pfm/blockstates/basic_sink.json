@@ -1,0 +1,112 @@
+{
+    "multipart": [
+        {
+            "when": { "AND": [
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink"}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "north" },
+                { "level": "1" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_level1"}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "north" },
+                { "level": "2" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_level2"}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "north" },
+                { "level": "3" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_full"}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "south" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink","y":180}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "south" },
+                { "level": "1" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_level1","y":180}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "south" },
+                { "level": "2" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_level2","y":180}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "south" },
+                { "level": "3" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_full","y":180}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "east" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink","y":90}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "east" },
+                { "level": "1" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_level1","y":90}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "east" },
+                { "level": "2" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_level2","y":90}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "east" },
+                { "level": "3" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_full","y":90}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "west" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink","y":270}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "west" },
+                { "level": "1" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_level1","y":270}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "west" },
+                { "level": "2" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_level2","y":270}
+        },
+        {
+            "when": { "AND": [
+                { "facing": "west" },
+                { "level": "3" }
+            ]},
+            "apply": { "model": "pfm:block/basic_sink/basic_sink_full","y":270}
+        }
+    ]
+}

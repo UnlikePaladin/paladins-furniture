@@ -1,9 +1,6 @@
 package com.unlikepaladin.pfm.client.forge;
 
-import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
-import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
-import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
-import com.unlikepaladin.pfm.blocks.ToiletState;
+import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
@@ -26,6 +23,7 @@ public class ColorRegistryForge {
         List<Block> sinks = new ArrayList<>();
         KitchenSinkBlock.streamStoneSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
         KitchenSinkBlock.streamWoodSinks().map(FurnitureBlock::getBlock).forEach(sinks::add);
+        BasicSinkBlock.streamSinks().forEach(sinks::add);
         event.getBlockColors().registerColorProvider(addWaterColor(), sinks.toArray(new Block[0]));
         event.getBlockColors().registerColorProvider(addToiletColor(), PaladinFurnitureModBlocksItems.BASIC_TOILET);
         event.getBlockColors().registerColorProvider(addWaterColor(), PaladinFurnitureModBlocksItems.BASIC_BATHTUB);

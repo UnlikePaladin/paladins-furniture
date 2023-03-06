@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.registry.fabric;
 
+import com.unlikepaladin.pfm.blocks.BasicSinkBlock;
 import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
 import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
@@ -12,6 +13,7 @@ import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityT
 import net.minecraft.block.Block;
 import net.minecraft.util.registry.Registry;
 
+import java.util.Arrays;
 import java.util.stream.Stream;
 
 public class BlockEntityRegistryFabric {
@@ -32,7 +34,10 @@ public class BlockEntityRegistryFabric {
         BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":small_storage_block_entity", FabricBlockEntityTypeBuilder.create(GenericStorageBlockEntity3x3::new, PaladinFurnitureModBlocksItems.OAK_KITCHEN_WALL_SMALL_DRAWER).build(null));
         BlockEntities.TRASHCAN_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":trashcan_block_entity", FabricBlockEntityTypeBuilder.create(TrashcanBlockEntityImpl::new, PaladinFurnitureModBlocksItems.TRASHCAN, PaladinFurnitureModBlocksItems.MESH_TRASHCAN).build(null));
         Block[] sinks = Stream.concat(KitchenSinkBlock.streamStoneSinks(), KitchenSinkBlock.streamWoodSinks()).map(FurnitureBlock::getBlock).toArray(Block[]::new);
+        sinks = Stream.concat(Arrays.stream(sinks), BasicSinkBlock.streamSinks()).toArray(Block[]::new);
         BlockEntities.SINK_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":sink_block_entity", FabricBlockEntityTypeBuilder.create(SinkBlockEntity::new, sinks).build(null));
+        BlockEntities.SHOWER_HEAD_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":basic_shower_head_block_entity", FabricBlockEntityTypeBuilder.create(ShowerHeadBlockEntityImpl::new, PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD).build(null));
+        BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":basic_shower_handle_block_entity", FabricBlockEntityTypeBuilder.create(ShowerHandleBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE).build(null));
 
     }
 }

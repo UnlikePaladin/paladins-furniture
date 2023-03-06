@@ -2,18 +2,16 @@ package com.unlikepaladin.pfm.registry.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
+import com.unlikepaladin.pfm.items.ShowerHandleItem;
 import com.unlikepaladin.pfm.items.forge.FurnitureGuideBookImpl;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
-import net.minecraft.util.registry.Registry;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -22,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockItemRegistryForge {
@@ -1070,6 +1067,9 @@ public class BlockItemRegistryForge {
                 registerBlock("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH, false),
                 registerFurniture("basic_toilet", PaladinFurnitureModBlocksItems.BASIC_TOILET, true),
                 registerFurniture("wall_toilet_paper", PaladinFurnitureModBlocksItems.WALL_TOILET_PAPER, true),
+                registerFurniture("basic_sink", PaladinFurnitureModBlocksItems.BASIC_SINK, true),
+                registerFurniture("basic_shower_head", PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD, true),
+                registerBlock("basic_shower_handle", PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, false),
                 registerFurniture("basic_bathtub", PaladinFurnitureModBlocksItems.BASIC_BATHTUB, true),
                 registerFurniture("trashcan", PaladinFurnitureModBlocksItems.TRASHCAN, true),
                 registerFurniture("mesh_trashcan", PaladinFurnitureModBlocksItems.MESH_TRASHCAN, true)
@@ -1088,9 +1088,12 @@ public class BlockItemRegistryForge {
         event.getRegistry().registerAll(items.toArray(Item[]::new));
         PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
         PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).maxCount(1));
+        PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM = new ShowerHandleItem(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+
         event.getRegistry().registerAll(
                 registerItem("furniture_book", PaladinFurnitureModBlocksItems.FURNITURE_BOOK),
                 registerItem("light_switch", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM),
+                registerItem("basic_shower_handle", PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM),
                 registerItem("dye_kit_red", PaladinFurnitureModBlocksItems.DYE_KIT_RED),
                 registerItem("dye_kit_orange", PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE),
                 registerItem("dye_kit_yellow", PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW),
