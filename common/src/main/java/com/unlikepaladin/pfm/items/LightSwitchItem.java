@@ -98,7 +98,7 @@ public class LightSwitchItem extends BlockItem {
                 }
             }
 
-            if (!removedLights.isEmpty() && context.getWorld().isClient){ //.append(removedLights.toString())
+            if (!removedLights.isEmpty() && context.getWorld().isClient){
                 context.getPlayer().sendMessage(new TranslatableText("message.pfm.light_switch_far", removedLights.toString()), false);
             }
         }
