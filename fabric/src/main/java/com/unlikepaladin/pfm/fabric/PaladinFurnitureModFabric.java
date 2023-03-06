@@ -91,6 +91,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         NetworkRegistryFabric.registerPackets();
         ScreenHandlerRegistryFabric.registerScreenHandlers();
         RecipeRegistryFabric.registerRecipes();
+        ParticleTypeRegistryFabric.registerParticleTypes();
     }
 
 

@@ -2,11 +2,11 @@
 	"credit": "By UnlikePaladin",
 	"textures": {
 		"sink": "block/light_gray_concrete",
-		"hardware": "block/gray_concrete",
 		"fluid": "block/water_still",
 		"particle": "block/oak_planks",
 		"base": "block/oak_planks",
-		"legs": "block/oak_log"
+		"legs": "block/oak_log",
+		"hardware": "block/gray_concrete"
 	},
 	"elements": [
 		{

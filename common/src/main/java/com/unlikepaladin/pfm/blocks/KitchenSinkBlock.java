@@ -43,22 +43,12 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.checkType;
 
-public class KitchenSinkBlock extends AbstractCauldronBlock implements BlockEntityProvider {
-    private final BlockState baseBlockState;
-    private final Block baseBlock;
-    private final Predicate<Biome.Precipitation> precipitationPredicate;
-    public static final IntProperty LEVEL_4 = IntProperty.of("level", 0, 3);
-    private final Map<Item, CauldronBehavior> behaviorMap;
+public class KitchenSinkBlock extends AbstractSinkBlock {
     private static final List<FurnitureBlock> WOOD_SINKS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_SINKS = new ArrayList<>();
 
     public KitchenSinkBlock(Settings settings, Predicate<Biome.Precipitation> precipitationPredicate, Map<Item, CauldronBehavior> map) {
-        super(settings, map);
-        this.setDefaultState(this.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_4, 0));
-        this.baseBlockState = this.getDefaultState();
-        this.precipitationPredicate = precipitationPredicate;
-        this.behaviorMap = map;
-        this.baseBlock = baseBlockState.getBlock();
+        super(settings, precipitationPredicate, map);
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenSinkBlock.class)){
             WOOD_SINKS.add(new FurnitureBlock(this, "kitchen_sink"));
         }
@@ -72,81 +62,6 @@ public class KitchenSinkBlock extends AbstractCauldronBlock implements BlockEnti
     }
     public static Stream<FurnitureBlock> streamStoneSinks() {
         return STONE_SINKS.stream();
-    }
-
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(Properties.HORIZONTAL_FACING);
-        stateManager.add(LEVEL_4);
-    }
-    @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing());
-    }
-
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        BlockPos sourcePos = pos.down().down();
-        ItemStack itemStack = player.getStackInHand(hand);
-        CauldronBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
-        if (state.get(LEVEL_4) > 0 && sinkBehavior != null) {
-            return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
-        }
-        if (state.get(LEVEL_4) < 3) {
-            BlockState sourceState = world.getBlockState(sourcePos);
-            if (sourceState.getFluidState().getFluid() == Fluids.WATER && !sourceState.getFluidState().isEmpty()) {
-                if (sourceState.getProperties().contains(Properties.WATERLOGGED)) {
-                    world.setBlockState(sourcePos, sourceState.with(Properties.WATERLOGGED, false));
-                }
-                else {
-                    world.setBlockState(sourcePos, Blocks.AIR.getDefaultState());
-                }
-                SinkBlockEntity blockEntity = (SinkBlockEntity) world.getBlockEntity(pos);
-                if (blockEntity != null) {
-                    blockEntity.setFilling(true);
-                }
-                world.setBlockState(pos, state.with(LEVEL_4, 3));
-                return ActionResult.SUCCESS;
-            }
-        }
-        return ActionResult.PASS;
-    }
-
-    public static void spawnParticles(Direction facing, World world, BlockPos pos) {
-        if (world.isClient) {
-            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-            if (facing == Direction.EAST) {
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.76, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
-            }
-            else if (facing == Direction.SOUTH){
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.76, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.76, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.76, 0.0, 0.0, 0.0);
-            }
-            else if (facing == Direction.NORTH){
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.24, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.24, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.5, y + 1.14, z + 0.24, 0.0, 0.0, 0.0);
-            }
-            else {
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleTypes.FALLING_WATER, x + 0.24, y + 1.14, z + 0.5, 0.0, 0.0, 0.0);
-            }
-        }
-    }
-
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-    }
-
-    @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
     }
 
     private static final VoxelShape FACING_NORTH = VoxelShapes.combineAndSimplify(VoxelShapes.union(VoxelShapes.fullCube(), createCuboidShape(1.0625, 11.3, 0.296,15.0625, 16.3, 12.296)),VoxelShapes.union(createCuboidShape(2, 11, 2.3,14, 16.3, 11.3),createCuboidShape(0, 0, 13,16, 14, 16),createCuboidShape(0, 0, 12,16, 1, 13)), BooleanBiFunction.ONLY_FIRST);
@@ -164,104 +79,10 @@ public class KitchenSinkBlock extends AbstractCauldronBlock implements BlockEnti
         }
     }
 
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(Properties.HORIZONTAL_FACING);
-        switch (dir) {
-            case NORTH: return FACING_NORTH;
-            case SOUTH: return FACING_SOUTH;
-            case EAST: return FACING_EAST;
-            default: return FACING_WEST;
-        }
-    }
-
-
-    @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        if (!world.isClient && entity.isOnFire() && this.isEntityTouchingFluid(state, pos, entity)) {
-            entity.extinguish();
-            if (entity.canModifyAt(world, pos)) {
-                this.onFireCollision(state, world, pos);
-            }
-        }
-    }
-
-    @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        super.randomDisplayTick(state, world, pos, random);
-    }
-
-    protected void onFireCollision(BlockState state, World world, BlockPos pos) {
-        KitchenSinkBlock.decrementFluidLevel(state, world, pos);
-    }
-
-    public static void decrementFluidLevel(BlockState state, World world, BlockPos pos) {
-        int i = state.get(LEVEL_4) - 1;
-        world.setBlockState(pos, state.with(LEVEL_4, i));
-    }
-
-    @Override
-    public boolean isFull(BlockState state) {
-        return state.get(LEVEL_4) == 3;
-    }
-
-    @Override
-    protected boolean canBeFilledByDripstone(Fluid fluid) {
-        return fluid == Fluids.WATER && this.precipitationPredicate == LeveledCauldronBlock.RAIN_PREDICATE;
-    }
-
-    @Override
-    protected double getFluidHeight(BlockState state) {
-        return (6.0 + (double) state.get(LEVEL_4).intValue() * 3.0) / 16.0;
-    }
-
-    protected static boolean canFillWithPrecipitation(World world, Biome.Precipitation precipitation) {
-        if (precipitation == Biome.Precipitation.RAIN) {
-            return world.getRandom().nextFloat() < 0.05f;
-        }
-        if (precipitation == Biome.Precipitation.SNOW) {
-            return world.getRandom().nextFloat() < 0.1f;
-        }
-        return false;
-    }
-
-    @Override
-    public void precipitationTick(BlockState state, World world, BlockPos pos, Biome.Precipitation precipitation) {
-        if (!canFillWithPrecipitation(world, precipitation) || state.get(LEVEL_4) == 3 || !this.precipitationPredicate.test(precipitation)) {
-            return;
-        }
-        world.setBlockState(pos, state.cycle(LEVEL_4));
-    }
-
-    @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return state.get(LEVEL_4);
-    }
-
-    @Override
-    protected void fillFromDripstone(BlockState state, World world, BlockPos pos, Fluid fluid) {
-        if (this.isFull(state)) {
-            return;
-        }
-        world.setBlockState(pos, (BlockState)state.with(LEVEL_4, state.get(LEVEL_4) + 1));
-        world.syncWorldEvent(WorldEvents.POINTED_DRIPSTONE_DRIPS_WATER_INTO_CAULDRON, pos, 0);
-    }
-
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
         if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
             return 20;
         }
         return 0;
-    }
-
-    @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, BlockEntities.SINK_BLOCK_ENTITY, SinkBlockEntity::tick);
-    }
-
-    @Nullable
-    @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new SinkBlockEntity(pos, state);
     }
 }
