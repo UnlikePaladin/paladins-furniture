@@ -91,6 +91,10 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
                        eatSandwich(stack, world, player);
                     }
                     else {
+                        if (!player.isCreative()) {
+                            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stack.finishUsing(world, player));
+                            world.spawnEntity(itemEntity);
+                        }
                         player.eatFood(world, stack);
                     }
                     plateBlockEntity.removeItem();
