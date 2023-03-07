@@ -51,14 +51,4 @@ public class FurnitureSerializer implements RecipeSerializer<FurnitureRecipe> {
         packetByteBuf.writeItemStack(shapedRecipe.output);
     }
 
-   /*@Override
-    public Recipe read(Identifier id, PacketByteBuf buf) {
-        return this.read(id, buf);
-    }
-
-    @Override
-    public Recipe read(Identifier id, JsonObject json) {
-        return this.read(id, json);
-    }
-}*/
 }
