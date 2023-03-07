@@ -58,9 +58,9 @@ public class BlockEntityRegistryForge {
                 registerEntity("small_storage_block_entity", BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY),
                 registerEntity("trashcan_block_entity", BlockEntities.TRASHCAN_BLOCK_ENTITY),
                 registerEntity("sink_block_entity", BlockEntities.SINK_BLOCK_ENTITY),
-                registerEntity("basic_shower_head_block_entity", BlockEntities.SHOWER_HEAD_BLOCK_ENTITY),
-                registerEntity("basic_shower_handle_block_entity", BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY),
-                registerEntity("bathtub_entity", BlockEntities.BATHTUB_BLOCK_ENTITY)
+                registerEntity("shower_head_block_entity", BlockEntities.SHOWER_HEAD_BLOCK_ENTITY),
+                registerEntity("shower_handle_block_entity", BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY),
+                registerEntity("bathtub_block_entity", BlockEntities.BATHTUB_BLOCK_ENTITY)
         );
     }
 
