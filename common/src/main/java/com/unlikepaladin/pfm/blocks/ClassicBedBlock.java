@@ -52,7 +52,7 @@ public class ClassicBedBlock extends SimpleBedBlock {
 
     static final VoxelShape FOOT_EAST = VoxelShapes.union(createCuboidShape(0, 9, 0,3, 11, 16),createCuboidShape(0, 0, 0,18, 9, 16));
     static final VoxelShape FOOT_SOUTH = rotateShape(Direction.EAST, Direction.SOUTH, FOOT_EAST);
-    static final VoxelShape FOOT_WEST = rotateShape(Direction.EAST, Direction.EAST, FOOT_EAST);
+    static final VoxelShape FOOT_WEST = rotateShape(Direction.EAST, Direction.WEST, FOOT_EAST);
     static final VoxelShape FOOT_NORTH = rotateShape(Direction.EAST, Direction.NORTH, FOOT_EAST);
 
     @Override
