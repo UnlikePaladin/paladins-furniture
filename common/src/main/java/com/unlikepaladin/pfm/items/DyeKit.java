@@ -41,7 +41,7 @@ public class DyeKit extends Item {
                 if (stack.getItem() instanceof DyeKit) {
                     world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                     String newBlock= blockState.getBlock().toString();
-                    newBlock = newBlock.replace(((DyeableFurniture) blockState.getBlock()).getColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
+                    newBlock = newBlock.replace(((DyeableFurniture) blockState.getBlock()).getPFMColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
                     BlockState blockState1 = Registry.BLOCK.get(new Identifier(newBlock)).getStateWithProperties(blockState);
                     world.setBlockState(blockPos, blockState1, 3);
                     stack.decrement(1);

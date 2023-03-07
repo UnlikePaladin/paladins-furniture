@@ -242,7 +242,7 @@ public class FurnitureBlock extends Material {
             return this.baseMaterial;
         }
         if (this.block instanceof DyeableFurniture) {
-            String color = ((DyeableFurniture) this.block).getColor().toString();
+            String color = ((DyeableFurniture) this.block).getPFMColor().toString();
             this.baseMaterial = Registry.ITEM.get(new Identifier("minecraft:" + color + "_wool"));
             return this.baseMaterial;
         }

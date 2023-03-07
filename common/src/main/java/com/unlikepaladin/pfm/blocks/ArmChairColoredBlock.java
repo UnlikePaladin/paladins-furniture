@@ -47,7 +47,7 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
         return COLORED_ARMCHAIRS.stream();
     }
 
-    public DyeColor getColor() {
+    public DyeColor getPFMColor() {
         return this.color;
     }
 

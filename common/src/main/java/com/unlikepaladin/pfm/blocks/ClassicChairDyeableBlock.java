@@ -44,7 +44,7 @@ public class ClassicChairDyeableBlock extends ClassicChairBlock implements Dyeab
     }
 
     @Override
-    public DyeColor getColor() {
+    public DyeColor getPFMColor() {
         return this.color;
     }
 }

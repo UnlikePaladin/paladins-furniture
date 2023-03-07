@@ -42,7 +42,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurniture {
     public static EnumProperty<MiddleShape> SHAPE = EnumProperty.of("shape", MiddleShape.class);
     private static final List<FurnitureBlock> SIMPLE_BEDS = new ArrayList<>();
     public static final BooleanProperty BUNK = BooleanProperty.of("bunk");
-
+    private final DyeColor color;
     public SimpleBedBlock(DyeColor color, Settings settings) {
         super(color, settings);
         setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(PART, BedPart.FOOT).with(OCCUPIED, false).with(BUNK, false).with(SHAPE, MiddleShape.SINGLE));
@@ -50,6 +50,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurniture {
             String bedColor = color.getName();
             SIMPLE_BEDS.add(new FurnitureBlock(this, bedColor+"_simple_bed"));
         }
+        this.color = color;
     }
 
     public static Stream<FurnitureBlock> streamSimpleBeds() {
@@ -251,5 +252,10 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurniture {
     @Override
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
+    }
+
+    @Override
+    public DyeColor getPFMColor() {
+        return color;
     }
 }
