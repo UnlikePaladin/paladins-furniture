@@ -15,6 +15,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
@@ -86,7 +87,6 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     private static final int[] TOP_SLOTS = new int[]{0};
-    private static final int[] BOTTOM_SLOTS = new int[]{1};
     public DefaultedList<ItemStack> inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY);
     int cookTime;
     int cookTimeTotal;
@@ -184,10 +184,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        if (side == Direction.DOWN) {
-            return BOTTOM_SLOTS;
-        }
-        if (side == Direction.UP) {
+        if (side == Direction.UP || side == Direction.DOWN) {
             return TOP_SLOTS;
         }
         return null;
@@ -204,7 +201,6 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         return new MicrowaveScreenHandler(this,syncId, playerInventory, this, this.propertyDelegate);
     }
 
-
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
         return this.isValid(slot, stack);
@@ -212,12 +208,16 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return true;
+        return dir == Direction.DOWN && getRecipe(new SimpleInventory(stack)) == null;
+    }
+
+    public Recipe<?> getRecipe(Inventory inventory) {
+        return this.world.getRecipeManager().getFirstMatch(RecipeType.SMOKING, inventory, world).orElse(null);
     }
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        return true;
+        return slot == 0;
     }
 
     @Override
