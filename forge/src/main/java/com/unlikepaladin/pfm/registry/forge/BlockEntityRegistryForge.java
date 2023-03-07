@@ -60,7 +60,7 @@ public class BlockEntityRegistryForge {
                 registerEntity("sink_block_entity", BlockEntities.SINK_BLOCK_ENTITY),
                 registerEntity("basic_shower_head_block_entity", BlockEntities.SHOWER_HEAD_BLOCK_ENTITY),
                 registerEntity("basic_shower_handle_block_entity", BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY),
-                registerEntity("basic_bathtub_entity", BlockEntities.BATHTUB_BLOCK_ENTITY)
+                registerEntity("bathtub_entity", BlockEntities.BATHTUB_BLOCK_ENTITY)
         );
     }
 
