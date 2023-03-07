@@ -20,5 +20,7 @@ public class BlockEntities {
     public static BlockEntityType<GenericStorageBlockEntity3x3> KITCHEN_DRAWER_SMALL_BLOCK_ENTITY;
     public static BlockEntityType<? extends ShowerHeadBlockEntity> SHOWER_HEAD_BLOCK_ENTITY;
     public static BlockEntityType<ShowerHandleBlockEntity> SHOWER_HANDLE_BLOCK_ENTITY;
+    public static BlockEntityType<BathtubBlockEntity> BATHTUB_BLOCK_ENTITY;
+
 
 }

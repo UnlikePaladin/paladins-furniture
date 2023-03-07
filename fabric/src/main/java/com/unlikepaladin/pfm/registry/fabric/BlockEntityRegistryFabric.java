@@ -38,6 +38,6 @@ public class BlockEntityRegistryFabric {
         BlockEntities.SINK_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":sink_block_entity", FabricBlockEntityTypeBuilder.create(SinkBlockEntity::new, sinks).build(null));
         BlockEntities.SHOWER_HEAD_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":basic_shower_head_block_entity", FabricBlockEntityTypeBuilder.create(ShowerHeadBlockEntityImpl::new, PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD).build(null));
         BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + ":basic_shower_handle_block_entity", FabricBlockEntityTypeBuilder.create(ShowerHandleBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE).build(null));
-
+        BlockEntities.BATHTUB_BLOCK_ENTITY = Registry.register(Registry.BLOCK_ENTITY_TYPE, PaladinFurnitureMod.MOD_ID + "basic_bathtub_entity",  FabricBlockEntityTypeBuilder.create(BathtubBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_BATHTUB).build(null));
     }
 }

@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
@@ -176,6 +177,9 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
         return 0;
     }
 
-
+    @Override
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        return false;
+    }
 }
 

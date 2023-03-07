@@ -2,18 +2,26 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
+import com.unlikepaladin.pfm.blocks.blockentities.BathtubBlockEntity;
 import com.unlikepaladin.pfm.entity.ChairEntity;
+import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Entities;
+import com.unlikepaladin.pfm.registry.ParticleIDs;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
@@ -41,6 +49,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
+import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.checkType;
 import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 
 public class BasicBathtubBlock extends BedBlock {
@@ -159,26 +168,31 @@ public class BasicBathtubBlock extends BedBlock {
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockPos sourcePos = pos.down().down();
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
+        ItemStack itemStack = player.getStackInHand(hand);
+        BathtubBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
+        if (sinkBehavior != null && itemStack.getItem() != Items.AIR) {
+            return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
         }
         if (state.get(LEVEL_8) < 8) {
             BlockState sourceState = world.getBlockState(sourcePos);
             if (sourceState.getFluidState().getFluid() == Fluids.WATER && !sourceState.getFluidState().isEmpty()) {
                 if (sourceState.getProperties().contains(Properties.WATERLOGGED)) {
                     world.setBlockState(sourcePos, sourceState.with(Properties.WATERLOGGED, false));
-                } else {
+                }
+                else {
                     world.setBlockState(sourcePos, Blocks.AIR.getDefaultState());
+                }
+                BlockPos headPos = pos;
+                if (state.get(PART) != BedPart.HEAD) {
+                  headPos = headPos.offset(getDirectionTowardsOtherPart(state.get(PART), state.get(FACING)));
+                }
+                BathtubBlockEntity blockEntity = (BathtubBlockEntity) world.getBlockEntity(headPos);
+                if (blockEntity != null) {
+                    blockEntity.setFilling(true);
                 }
                 BathtubBehavior.fillTub(world, pos, player, hand, player.getStackInHand(hand), state, SoundEvents.BLOCK_WATER_AMBIENT, false);
                 return ActionResult.SUCCESS;
             }
-        }
-        ItemStack itemStack = player.getStackInHand(hand);
-        BathtubBehavior bathtubBehavior = this.behaviorMap.get(itemStack.getItem());
-        if (bathtubBehavior != null) {
-            bathtubBehavior.interact(state, world, pos, player, hand, itemStack);
-            return ActionResult.SUCCESS;
         }
         if (world.isNight() && world.getDimension().isBedWorking()) {
             super.onUse(state, world, pos, player, hand, hit);
@@ -244,10 +258,6 @@ public class BasicBathtubBlock extends BedBlock {
         return part == BedPart.FOOT ? direction : direction.getOpposite();
     }
 
-    private static final VoxelShape HEAD = VoxelShapes.combineAndSimplify(VoxelShapes.union(createCuboidShape(0, 0, 0,16, 11, 16),createCuboidShape(0.5, 11, 10,2, 12.5, 11.5),createCuboidShape(0.5, 11, 7.5,2, 14.5, 9),createCuboidShape(2, 13, 7.5,4.5, 14.5, 9),createCuboidShape(0.5, 11, 4,2, 12.5, 5.5)),createCuboidShape(3, 2, 3,16, 11, 13), BooleanBiFunction.ONLY_FIRST);
-    private static final VoxelShape HEAD_NORTH = rotateShape(Direction.WEST, Direction.NORTH, HEAD);
-    private static final VoxelShape HEAD_EAST = rotateShape(Direction.WEST, Direction.EAST, HEAD);
-    private static final VoxelShape HEAD_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, HEAD);
     private static final VoxelShape FOOT = VoxelShapes.combineAndSimplify(createCuboidShape(0, 0, 0,16, 11, 16),createCuboidShape(0,2,3,13, 11, 13),BooleanBiFunction.ONLY_FIRST);
     private static final VoxelShape FOOT_NORTH = rotateShape(Direction.WEST, Direction.NORTH, FOOT);
     private static final VoxelShape FOOT_EAST = rotateShape(Direction.WEST, Direction.EAST, FOOT);
@@ -255,26 +265,8 @@ public class BasicBathtubBlock extends BedBlock {
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction facing = state.get(FACING);
-        BedPart tubPart = state.get(PART);
-        if (tubPart == BedPart.HEAD) {
-            switch (facing) {
-                case WEST: {
-                    return HEAD;
-                }
-                case EAST: {
-                    return HEAD_EAST;
-                }
-                case NORTH:
-                {
-                    return HEAD_NORTH;
-                }
-                case SOUTH:
-                {
-                    return HEAD_SOUTH;
-                }
-            }
-        }
-        else {
+        BedPart part = state.get(PART);
+        if (part == BedPart.FOOT) {
             switch (facing) {
                 case WEST: {
                     return FOOT;
@@ -282,16 +274,69 @@ public class BasicBathtubBlock extends BedBlock {
                 case EAST: {
                     return FOOT_EAST;
                 }
-                case NORTH:
-                {
+                case NORTH: {
                     return FOOT_NORTH;
                 }
-                case SOUTH:
-                {
+                default: {
                     return FOOT_SOUTH;
                 }
             }
+        } else {
+            switch (facing) {
+                case WEST: {
+                    return FOOT_EAST;
+                }
+                case EAST: {
+                    return FOOT;
+                }
+                case NORTH: {
+                    return FOOT_SOUTH;
+                }
+                default: {
+                    return FOOT_NORTH;
+                }
+            }
         }
-        return HEAD;
+    }
+
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return checkType(type, BlockEntities.BATHTUB_BLOCK_ENTITY, BathtubBlockEntity::tick);
+    }
+
+    @Override
+    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new BathtubBlockEntity(pos, state);
+    }
+
+    @Override
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        return false;
+    }
+    
+    public static void spawnParticles(Direction facing, World world, BlockPos pos) {
+        if (world.isClient) {
+            int x = pos.getX(), y = pos.getY(), z = pos.getZ();
+            if (facing == Direction.EAST) {
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.76, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.76, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.76, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+            }
+            else if (facing == Direction.SOUTH){
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.5, y + 0.8, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.5, y + 0.8, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.5, y + 0.8, z + 0.76, 0.0, 0.0, 0.0);
+            }
+            else if (facing == Direction.NORTH){
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.5, y + 0.8, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.5, y + 0.8, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.5, y + 0.8, z + 0.24, 0.0, 0.0, 0.0);
+            }
+            else {
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.24, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.24, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticle(ParticleIDs.WATER_DROP, x + 0.24, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+            }
+        }
     }
 }

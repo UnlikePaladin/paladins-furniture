@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import net.minecraft.block.*;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -152,5 +153,10 @@ public class PendantBlock extends PowerableBlock  {
         builder.add(DOWN);
         builder.add(LIT);
         builder.add(POWERLOCKED);
+    }
+
+    @Override
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        return false;
     }
 }

@@ -41,6 +41,7 @@ public class BlockEntityRegistryForge {
         BlockEntities.SINK_BLOCK_ENTITY = BlockEntityType.Builder.create(SinkBlockEntity::new, sinks).build(null);
         BlockEntities.SHOWER_HEAD_BLOCK_ENTITY = BlockEntityType.Builder.create(ShowerHeadBlockEntityImpl::new, PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD).build(null);
         BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY = BlockEntityType.Builder.create(ShowerHandleBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE).build(null);
+        BlockEntities.BATHTUB_BLOCK_ENTITY = BlockEntityType.Builder.create(BathtubBlockEntity::new, PaladinFurnitureModBlocksItems.BASIC_BATHTUB).build(null);
 
         event.getRegistry().registerAll(
                 registerEntity("drawer_block_entity", BlockEntities.DRAWER_BLOCK_ENTITY),
@@ -58,8 +59,8 @@ public class BlockEntityRegistryForge {
                 registerEntity("trashcan_block_entity", BlockEntities.TRASHCAN_BLOCK_ENTITY),
                 registerEntity("sink_block_entity", BlockEntities.SINK_BLOCK_ENTITY),
                 registerEntity("basic_shower_head_block_entity", BlockEntities.SHOWER_HEAD_BLOCK_ENTITY),
-                registerEntity("basic_shower_handle_block_entity", BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY)
-
+                registerEntity("basic_shower_handle_block_entity", BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY),
+                registerEntity("basic_bathtub_entity", BlockEntities.BATHTUB_BLOCK_ENTITY)
         );
     }
 

@@ -174,7 +174,4 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
         }
         super.onStateReplaced(state, world, pos, newState, moved);
     }
-
-
-
 }
