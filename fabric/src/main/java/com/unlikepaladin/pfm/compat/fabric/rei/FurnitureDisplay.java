@@ -85,7 +85,7 @@ public abstract class FurnitureDisplay<C extends FurnitureRecipe> extends BasicD
             if (recipe instanceof FurnitureRecipe) {
                 return new CraftingRecipeSizeProvider.Size(recipe.getWidth(), recipe.getHeight());
             }
-            System.out.println("Registering as null");
+            PaladinFurnitureMod.GENERAL_LOGGER.warn("Registering Furniture REI Display as null");
             return null;
         });
     }
