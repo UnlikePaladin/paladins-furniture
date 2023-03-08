@@ -81,21 +81,6 @@ else {
     }
 }
 
-if (rootProject.cloth_config_compatibility == "true") {
-    dependencies {
-        modApi("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
-            exclude(group: "net.fabricmc.fabric-api")
-        }
-    }
-}
-else {
-    dependencies {
-        modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
-            exclude(group: "net.fabricmc.fabric-api")
-        }
-    }
-}
-
 if (rootProject.rei_compatibility == "true"){
     dependencies {
         modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"

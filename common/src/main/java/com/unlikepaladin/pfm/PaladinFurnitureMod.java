@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm;
 
 import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
-import com.unlikepaladin.pfm.compat.PaladinFurnitureModConfig;
+import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.item.ItemGroup;

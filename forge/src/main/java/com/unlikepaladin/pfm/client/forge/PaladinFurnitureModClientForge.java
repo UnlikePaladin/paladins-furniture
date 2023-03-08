@@ -27,15 +27,17 @@ public class PaladinFurnitureModClientForge {
     public static void clientSetup(FMLClientSetupEvent event) {
         NetworkRegistryForge.registerPackets();
         ColorRegistryForge.registerBlockRenderLayers();
+        event.enqueueWork(PaladinFurnitureModClientForge::registerScreens);
+        PaladinFurnitureModClient.USE_TOILET_KEYBIND = registerKey("key.pfm.toiletUse", "keybindings.category.pfm", GLFW.GLFW_KEY_U);
+    }
 
-
+    private static void registerScreens() {
         HandledScreens.register(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
         HandledScreens.register(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, WorkbenchScreen::new);
         HandledScreens.register(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, StoveScreen::new);
         HandledScreens.register(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
         HandledScreens.register(ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
         HandledScreens.register(ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER, TrashcanScreen::new);
-        PaladinFurnitureModClient.USE_TOILET_KEYBIND = registerKey("key.pfm.toiletUse", "keybindings.category.pfm", GLFW.GLFW_KEY_U);
     }
 
     public static KeyBinding registerKey(String name, String category, int keyCode) {

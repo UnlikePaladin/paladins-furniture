@@ -2,8 +2,8 @@ package com.unlikepaladin.pfm.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.fabric.MissingDependencyScreen;
-import com.unlikepaladin.pfm.compat.fabric.PaladinFurnitureModConfigImpl;
 import com.unlikepaladin.pfm.compat.fabric.sandwichable.PFMSandwichableRegistry;
+import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.registry.*;
 import com.unlikepaladin.pfm.registry.fabric.*;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -19,6 +19,8 @@ import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.io.IOException;
+
 public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer {
 
     public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
@@ -26,12 +28,19 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
 
     public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 
-    public static ConfigHolder<PaladinFurnitureModConfigImpl> pfmConfig;
+    public static PaladinFurnitureModConfig pfmConfig;
     @Override
     public void onInitialize() {
         // This code runs as soon as Minecraft is in a mod-load-ready state.
         // However, some things (like resources) may still be uninitialized.
         // Proceed with mild caution.
+        pfmConfig = new PaladinFurnitureModConfig(FabricLoader.getInstance().getConfigDir().resolve("pfm.properties"));
+        try {
+            pfmConfig.initialize();
+        } catch (IOException e) {
+            GENERAL_LOGGER.error("Failed to initialize Paladin's Furniture configuration, default values will be used instead");
+            GENERAL_LOGGER.error("", e);
+        }
 
         ServerLifecycleEvents.SERVER_STARTED.register((server) ->
         {
@@ -81,9 +90,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
             PFMSandwichableRegistry.register();
         }
-        if (FabricLoader.getInstance().isModLoaded("cloth-config2")) {
-            pfmConfig = AutoConfig.register(PaladinFurnitureModConfigImpl.class, Toml4jConfigSerializer::new);
-        }
+
         this.commonInit();
         StatisticsRegistryFabric.registerStatistics();
         SoundRegistryFabric.registerSounds();

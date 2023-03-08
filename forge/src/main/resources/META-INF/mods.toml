@@ -27,11 +27,3 @@ mandatory = true
 versionRange = "[1.17.1,)"
 ordering = "NONE"
 side = "BOTH"
-
-
-[[dependencies.pfm]]
-modId = "cloth_config"
-mandatory = true
-versionRange = "[5.3.63,)"
-ordering = "NONE"
-side = "BOTH"

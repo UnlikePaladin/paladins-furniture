@@ -42,8 +42,7 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": ">=1.17.1",
-    "cloth-config2": ">=5.0.34"
+    "minecraft": ">=1.17.1"
   },
   "suggests": {
     "patchouli": "*"

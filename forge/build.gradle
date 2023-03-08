@@ -53,8 +53,6 @@ dependencies {
     modCompileOnly(("mezz.jei:jei-${rootProject.minecraft_version}:${rootProject.jei_version}:api"))
     modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}:${rootProject.jei_version}")
 
-    modApi("me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_config_version}")
-
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 }
