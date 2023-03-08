@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.config.option;
 
 import net.minecraft.text.Text;
+import net.minecraft.util.StringIdentifiable;
 
 public abstract class AbstractConfigOption<T> {
 
@@ -20,8 +21,11 @@ public abstract class AbstractConfigOption<T> {
 
     public abstract boolean isDefault();
 
+    public abstract Side getSide();
+
     @Override
     public String toString() {
         return "{Type: " + getType() + ", Title: " + getTitle().getString() + ", Category: " + getCategory() +  ", Value: " + getValue() + "}";
     }
 }
+

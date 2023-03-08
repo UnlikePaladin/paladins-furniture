@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.config;
 
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
+import com.unlikepaladin.pfm.config.option.Side;
 import net.minecraft.text.TranslatableText;
 
 import java.io.IOException;
@@ -29,11 +30,11 @@ public class PaladinFurnitureModConfig {
 
     public PaladinFurnitureModConfig(Path propertiesPath) {
         this.addOptions(
-            checkForUpdates = new BooleanConfigOption(new TranslatableText("pfm.option.checkForUpdates"), new TranslatableText("pfm.option.checkForUpdates.tooltip"), MOD_OPTIONS, true),
-            doChairsFacePlayer = new BooleanConfigOption(new TranslatableText("pfm.option.chairsFacePlayer"), new TranslatableText("pfm.option.chairsFacePlayer.tooltip"), GAMEPLAY_OPTIONS, true),
-            foodPopsOffStove = new BooleanConfigOption(new TranslatableText("pfm.option.foodPopsOffStove"), new TranslatableText("pfm.option.foodPopsOffStove.tooltip"), GAMEPLAY_OPTIONS, false),
-            countersOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false),
-            tablesOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false)
+            checkForUpdates = new BooleanConfigOption(new TranslatableText("pfm.option.checkForUpdates"), new TranslatableText("pfm.option.checkForUpdates.tooltip"), MOD_OPTIONS, true, Side.CLIENT),
+            doChairsFacePlayer = new BooleanConfigOption(new TranslatableText("pfm.option.chairsFacePlayer"), new TranslatableText("pfm.option.chairsFacePlayer.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
+            foodPopsOffStove = new BooleanConfigOption(new TranslatableText("pfm.option.foodPopsOffStove"), new TranslatableText("pfm.option.foodPopsOffStove.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            countersOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            tablesOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER)
         );
         this.propertiesPath = propertiesPath;
     }

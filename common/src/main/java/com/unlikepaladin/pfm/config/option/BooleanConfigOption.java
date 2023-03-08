@@ -8,12 +8,15 @@ public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
     private final String category;
     private boolean value;
     private final boolean defaultValue;
-    public BooleanConfigOption(Text title, Text tooltip, String category, boolean value) {
+
+    private final Side side;
+    public BooleanConfigOption(Text title, Text tooltip, String category, boolean value, Side side) {
         this.title = title;
         this.category = category;
         this.tooltip = tooltip;
         this.value = value;
         this.defaultValue = value;
+        this.side = side;
     }
 
     @Override
@@ -54,5 +57,10 @@ public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
     @Override
     public boolean isDefault() {
         return value == defaultValue;
+    }
+
+    @Override
+    public Side getSide() {
+        return side;
     }
 }
