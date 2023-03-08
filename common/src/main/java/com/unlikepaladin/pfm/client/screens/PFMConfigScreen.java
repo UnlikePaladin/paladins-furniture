@@ -9,6 +9,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
+import net.minecraft.text.TextColor;
 import net.minecraft.text.TranslatableText;
 
 import java.io.IOException;
@@ -21,10 +24,13 @@ public class PFMConfigScreen extends Screen {
     private ButtonWidget resetButton;
     private final ArrayList<AbstractConfigOption<?>> options;
     private final MinecraftClient client;
+
+    private final MutableText TITLE;
     public PFMConfigScreen(MinecraftClient client, Screen parent) {
-        super(new TranslatableText("pfm.config.title"));
+        super( new TranslatableText("pfm.config.title"));
         this.parent = parent;
         this.client = client;
+        TITLE = new TranslatableText("pfm.config.title");
         this.options = PaladinFurnitureMod.getPFMConfig().options;
     }
 
@@ -63,7 +69,7 @@ public class PFMConfigScreen extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         this.optionListWidget.render(matrices, mouseX, mouseY, delta);
-        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 8, 0xFFFFFF);
+        drawCenteredText(matrices, this.textRenderer, TITLE.setStyle(Style.EMPTY.withColor(0xf77f34).withBold(true)), this.width / 2, 8, 0xFFFFFF);
         boolean bl = false;
         for (AbstractConfigOption option : this.options) {
             if (option.isDefault()) continue;

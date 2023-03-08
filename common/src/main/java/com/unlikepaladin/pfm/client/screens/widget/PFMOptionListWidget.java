@@ -17,6 +17,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.MutableText;
+import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
@@ -63,17 +64,17 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
     @Environment(value= EnvType.CLIENT)
     public class CategoryEntry
             extends Entry {
-        final Text text;
+        final MutableText text;
         private final int textWidth;
 
-        public CategoryEntry(Text text) {
+        public CategoryEntry(MutableText text) {
             this.text = text;
             this.textWidth = PFMOptionListWidget.this.client.textRenderer.getWidth(this.text);
         }
 
         @Override
         public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            PFMOptionListWidget.this.client.textRenderer.draw(matrices, this.text, (float)((PFMOptionListWidget.this.client.currentScreen.width / 2 - this.textWidth / 2)), (float)(y + entryHeight - (PFMOptionListWidget.this).client.textRenderer.fontHeight - 1), 0xFFFFFF);
+            PFMOptionListWidget.this.client.textRenderer.draw(matrices, this.text.setStyle(Style.EMPTY.withBold(true)), (float)((PFMOptionListWidget.this.client.currentScreen.width / 2 - this.textWidth / 2)), (float)(y + entryHeight - (PFMOptionListWidget.this).client.textRenderer.fontHeight - 1), 0xFFFFFF);
         }
 
         @Override
