@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.client.screens.MicrowaveScreen;
+import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
 import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
@@ -100,6 +101,7 @@ public class NetworkRegistryFabric {
 
                     client.execute(() -> {
                         map.forEach((title, configOption) -> {
+                            PFMConfigScreen.isOnServer = true;
                             if (configOption.getSide() == Side.SERVER) {
                                 LeaveEventHandlerFabric.originalConfigValues.put(title, PaladinFurnitureMod.getPFMConfig().options.get(title).getValue());
                                 PaladinFurnitureMod.getPFMConfig().options.get(title).setValue(configOption.getValue());

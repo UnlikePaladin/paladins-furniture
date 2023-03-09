@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.screens.widget.PFMOptionListWidget;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
+import com.unlikepaladin.pfm.config.option.Side;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
@@ -28,7 +29,7 @@ public class PFMConfigScreen extends Screen {
     private ButtonWidget resetButton;
     private final HashMap<String, AbstractConfigOption> options;
     private final MinecraftClient client;
-
+    public static boolean isOnServer = false;
     private final MutableText TITLE;
     public PFMConfigScreen(MinecraftClient client, Screen parent) {
         super( new TranslatableText("pfm.config.title"));
@@ -56,7 +57,11 @@ public class PFMConfigScreen extends Screen {
         this.addSelectableChild(this.optionListWidget);
         this.resetButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 155, this.height - 29, 150, 20, new TranslatableText("pfm.option.resetAll"), button -> {
             options.forEach((title, option) -> {
-                option.setValue(option.getDefaultValue());
+                if (!isOnServer || option.getSide() == Side.SERVER) {
+                    option.setValue(option.getDefaultValue());
+                } else if (option.getSide() == Side.SERVER){
+                    option.setValue(option.getDefaultValue());
+                }
             });
         }));
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 155 + 160, this.height - 29, 150, 20, ScreenTexts.DONE, button -> {

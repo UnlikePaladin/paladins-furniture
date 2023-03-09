@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
+import com.unlikepaladin.pfm.config.option.Side;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -138,11 +139,12 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             PFMOptionListWidget.this.client.textRenderer.draw(matrices, this.optionName, (float)(x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (float)(y + entryHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), 0xFFFFFF);
             this.resetButton.x = x + 190;
             this.resetButton.y = y;
-            this.resetButton.active = !this.configOption.isDefault();
+            this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !this.configOption.isDefault() : !this.configOption.isDefault();;
             this.resetButton.render(matrices, mouseX, mouseY, tickDelta);
             this.valueButton.x = x + 105;
             this.valueButton.y = y;
             this.valueButton.setMessage(this.configOption.getValue() ? ScreenTexts.YES : ScreenTexts.NO);
+            this.valueButton.active = this.configOption.getSide() != Side.SERVER || !PFMConfigScreen.isOnServer;
             this.valueButton.render(matrices, mouseX, mouseY, tickDelta);
         }
 

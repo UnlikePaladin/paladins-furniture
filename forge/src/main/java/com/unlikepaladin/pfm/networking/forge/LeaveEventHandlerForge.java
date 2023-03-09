@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.networking.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -15,9 +16,9 @@ public class LeaveEventHandlerForge {
 
     @SubscribeEvent
     public static void onServerLeave(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+        PFMConfigScreen.isOnServer = false;
         originalConfigValues.forEach((key, value) -> {
             PaladinFurnitureMod.getPFMConfig().options.get(key).setValue(value);
-            System.out.println("Key is " + key + ", value is " + value);
         });
         try {
             PaladinFurnitureMod.getPFMConfig().save();
