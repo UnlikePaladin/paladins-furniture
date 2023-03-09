@@ -1155,6 +1155,8 @@
   "pfm.option.checkForUpdates.tooltip": "If true, the mod will check for updates and notify you when a new release is available.",
   "pfm.config.title": "Paladin's Furniture Mod Config",
   "pfm.option.resetAll": "Reset All Options",
+  "pfm.option.client": "Controller by the Client",
+  "pfm.option.server": "Controller by the Server",
   "pfm.config.categories.mod_options": "Mod Options",
   "pfm.config.categories.gameplay_options": "Gameplay Options"
 

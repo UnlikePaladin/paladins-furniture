@@ -12,20 +12,19 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ScreenTexts;
+import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.*;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Consumer;
 
 public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.Entry> {
     final PFMConfigScreen parent;
@@ -115,13 +114,30 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         private final ButtonWidget valueButton;
         private final ButtonWidget resetButton;
 
+        private final ButtonWidget.TooltipSupplier supplier;
+
         BooleanEntry(final BooleanConfigOption configOption, final Text optionName) {
             this.configOption = configOption;
             this.optionName = optionName;
+            this.supplier = new ButtonWidget.TooltipSupplier() {
+                final MutableText sideText = configOption.getSide() == Side.CLIENT ? new TranslatableText("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0x73CC57)) : new TranslatableText("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0x73CC57)));
+                final MutableText styledTooltip = ((MutableText)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true));
+                final MutableText combinedText = new LiteralText("").append(sideText).append(new LiteralText("\n")).append(styledTooltip);
+                @Override
+                public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
+                    PFMOptionListWidget.this.parent.renderOrderedTooltip(matrices, PFMOptionListWidget.this.client.textRenderer.wrapLines(combinedText, Math.max(PFMOptionListWidget.this.width / 2 - 43, 170)), mouseX, mouseY);
+                }
+                @Override
+                public void supply(Consumer<Text> consumer) {
+                    consumer.accept(combinedText);
+                    ButtonWidget.TooltipSupplier.super.supply(consumer);
+                }
+            };
+
             this.valueButton = new ButtonWidget(0, 0, 75, 20, optionName, button -> {
                 PFMOptionListWidget.this.parent.focusedConfigOption = configOption;
                 configOption.setValue(!configOption.getValue());
-            });
+            }, this.supplier);
 
             this.resetButton = new ButtonWidget(0, 0, 50, 20, new TranslatableText("controls.reset"), button -> {
                 configOption.setValue(configOption.getDefaultValue());
