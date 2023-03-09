@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.client.screens.MicrowaveScreen;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
+import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import com.unlikepaladin.pfm.registry.SoundIDs;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -89,7 +90,6 @@ public class NetworkRegistryFabric {
                 }
             }
         );
-
         ClientPlayNetworking.registerGlobalReceiver(NetworkIDs.CONFIG_SYNC_ID,
                 (client, handler, buf, responseSender) -> {
                     ArrayList<AbstractConfigOption> configOptions = buf.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
@@ -101,12 +101,8 @@ public class NetworkRegistryFabric {
                     client.execute(() -> {
                         map.forEach((title, configOption) -> {
                             if (configOption.getSide() == Side.SERVER) {
+                                LeaveEventHandlerFabric.originalConfigValues.put(title, PaladinFurnitureMod.getPFMConfig().options.get(title).getValue());
                                 PaladinFurnitureMod.getPFMConfig().options.get(title).setValue(configOption.getValue());
-                                try {
-                                    PaladinFurnitureMod.getPFMConfig().save();
-                                } catch (IOException e) {
-                                    throw new RuntimeException(e);
-                                }
                             }
                         });
                     });

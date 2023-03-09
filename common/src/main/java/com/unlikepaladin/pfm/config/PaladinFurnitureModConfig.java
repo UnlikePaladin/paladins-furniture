@@ -20,7 +20,6 @@ import java.util.Properties;
  * A class dedicated to storing the config values of the Mod. Original source: the Iris Config System: <a href="https://github.com/IrisShaders/Iris/blob/trunk/src/main/java/net/coderbot/iris/config/IrisConfig.java">...</a>
  * */
 public class PaladinFurnitureModConfig {
-    //TODO: Sync Client's Config to Server's.
     private static final String COMMENT =
             "This file stores configuration options for Paladin's Furniture Mod";
     private final Path propertiesPath;
@@ -29,11 +28,8 @@ public class PaladinFurnitureModConfig {
     public static final String MOD_OPTIONS = "pfm.config.categories.mod_options";
     public static final String GAMEPLAY_OPTIONS = "pfm.config.categories.gameplay_options";
 
-    //TODO: Get the right size for Config Objects
-    //TODO: Actually sync the config when user is on a server
-    //TODO: Gray out Buttons with tooltip
+    //TODO: Gray out Buttons with tooltip explaining why when on server
     //TODO: Add tooltips to options
-    //TODO: Add syncing on Fabric
     public PaladinFurnitureModConfig(Path propertiesPath) {
         this.addOptions(
             checkForUpdates = new BooleanConfigOption(new TranslatableText("pfm.option.checkForUpdates"), new TranslatableText("pfm.option.checkForUpdates.tooltip"), MOD_OPTIONS, true, Side.CLIENT),
