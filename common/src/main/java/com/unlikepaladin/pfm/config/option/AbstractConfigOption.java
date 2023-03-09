@@ -9,13 +9,14 @@ import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
 
-public abstract class AbstractConfigOption<T> {
+public abstract class AbstractConfigOption<T> implements Comparable<String> {
     public static final byte NULL_TYPE = 0;
     public static final byte BOOL_TYPE = 1;
 
@@ -87,5 +88,9 @@ public abstract class AbstractConfigOption<T> {
         }
     }
 
+    @Override
+    public int compareTo(@NotNull String o) {
+        return this.getCategory().compareTo(o);
+    }
 }
 

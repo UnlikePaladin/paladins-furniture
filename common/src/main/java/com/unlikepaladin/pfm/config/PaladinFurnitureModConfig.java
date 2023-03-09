@@ -10,10 +10,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Properties;
+import java.util.*;
 
 
 /**
@@ -23,28 +20,30 @@ public class PaladinFurnitureModConfig {
     private static final String COMMENT =
             "This file stores configuration options for Paladin's Furniture Mod";
     private final Path propertiesPath;
-    public HashMap<String, AbstractConfigOption> options = new HashMap<>();
+    public HashMap<String, AbstractConfigOption> options = new LinkedHashMap<>();
 
     public static final String MOD_OPTIONS = "pfm.config.categories.mod_options";
     public static final String GAMEPLAY_OPTIONS = "pfm.config.categories.gameplay_options";
 
-    //TODO: Gray out Buttons with tooltip explaining why when on server
-    //TODO: Add tooltips to options
     public PaladinFurnitureModConfig(Path propertiesPath) {
         this.addOptions(
             checkForUpdates = new BooleanConfigOption(new TranslatableText("pfm.option.checkForUpdates"), new TranslatableText("pfm.option.checkForUpdates.tooltip"), MOD_OPTIONS, true, Side.CLIENT),
             doChairsFacePlayer = new BooleanConfigOption(new TranslatableText("pfm.option.chairsFacePlayer"), new TranslatableText("pfm.option.chairsFacePlayer.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
             foodPopsOffStove = new BooleanConfigOption(new TranslatableText("pfm.option.foodPopsOffStove"), new TranslatableText("pfm.option.foodPopsOffStove.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
             countersOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
-            tablesOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER)
+            tablesOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            enableBook = new BooleanConfigOption(new TranslatableText("pfm.option.enableBook"), new TranslatableText("pfm.option.enableBook.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER)
         );
         this.propertiesPath = propertiesPath;
     }
 
     private void addOptions(AbstractConfigOption<?>... args) {
-        Arrays.stream(args).forEach(abstractConfigOption -> {
-            options.put(((TranslatableText)abstractConfigOption.getTitle()).getKey(), abstractConfigOption);
-        });
+        ArrayList<AbstractConfigOption> configOptions = new ArrayList<>(Arrays.asList(args));
+        configOptions.sort(Comparator.comparing(config1 -> config1.getCategory().substring(22).replace("_options", "")));
+        Collections.reverse(configOptions);
+        for (AbstractConfigOption configOption : configOptions) {
+            options.put(((TranslatableText)configOption.getTitle()).getKey(), configOption);
+        }
     }
 
     /**
@@ -79,6 +78,10 @@ public class PaladinFurnitureModConfig {
         return checkForUpdates.getValue();
     }
 
+    public boolean shouldGiveGuideBook() {
+        return enableBook.getValue();
+    }
+
     private BooleanConfigOption checkForUpdates;
 
     private BooleanConfigOption doChairsFacePlayer;
@@ -89,25 +92,8 @@ public class PaladinFurnitureModConfig {
 
     private BooleanConfigOption tablesOfDifferentMaterialsConnect;
 
-    public void setCheckForUpdates(boolean setUpdates) {
-        checkForUpdates.setValue(setUpdates);
-    }
+    private BooleanConfigOption enableBook;
 
-    public void setDoChairsFacePlayer(boolean chairsFacePlayer) {
-        doChairsFacePlayer.setValue(chairsFacePlayer);
-    }
-
-    public void setFoodPopsOffStove(boolean setPop) {
-        foodPopsOffStove.setValue(setPop);
-    }
-
-    public void setTablessOfDifferentMaterialsConnect(boolean differentMaterialsConnect) {
-        tablesOfDifferentMaterialsConnect.setValue(differentMaterialsConnect);
-    }
-
-    public void setCountersOfDifferentMaterialsConnect(boolean differentMaterialsConnect) {
-        countersOfDifferentMaterialsConnect.setValue(differentMaterialsConnect);
-    }
 
     public Path getPath() {
         return this.propertiesPath;
@@ -128,11 +114,12 @@ public class PaladinFurnitureModConfig {
         try (InputStream is = Files.newInputStream(propertiesPath)) {
             properties.load(is);
         }
-        checkForUpdates.setValue( "true".equals(properties.getProperty("checkForUpdates")));
+        checkForUpdates.setValue("true".equals(properties.getProperty("checkForUpdates")));
         doChairsFacePlayer.setValue("true".equals(properties.getProperty("doChairsFacePlayer")));
         countersOfDifferentMaterialsConnect.setValue(!"false".equals(properties.getProperty("countersOfDifferentMaterialsConnect")));
         tablesOfDifferentMaterialsConnect.setValue(!"false".equals(properties.getProperty("tablesOfDifferentMaterialsConnect")));
         foodPopsOffStove.setValue(!"false".equals(properties.getProperty("foodPopsOffStove")));
+        enableBook.setValue("true".equals(properties.getProperty("enableBook")));
     }
 
     /**
@@ -147,6 +134,7 @@ public class PaladinFurnitureModConfig {
         properties.setProperty("countersOfDifferentMaterialsConnect", countersOfDifferentMaterialsConnect.getValue() ? "true" : "false");
         properties.setProperty("foodPopsOffStove", foodPopsOffStove.getValue() ? "true" : "false");
         properties.setProperty("tablesOfDifferentMaterialsConnect",tablesOfDifferentMaterialsConnect.getValue() ? "true" : "false");
+        properties.setProperty("enableBook",enableBook.getValue() ? "true" : "false");
         // NB: This uses ISO-8859-1 with unicode escapes as the encoding
         try (OutputStream os = Files.newOutputStream(propertiesPath)) {
             properties.store(os, COMMENT);
