@@ -2,6 +2,8 @@ package com.unlikepaladin.pfm.config.option;
 
 import net.minecraft.util.StringIdentifiable;
 
+import java.util.Objects;
+
 public enum Side implements StringIdentifiable {
     CLIENT("client"),
     SERVER("server");
@@ -22,3 +24,4 @@ public enum Side implements StringIdentifiable {
         return name;
     }
 }
+

@@ -16,13 +16,17 @@ import net.minecraft.text.TranslatableText;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 
 public class PFMConfigScreen extends Screen {
     private final Screen parent;
     private PFMOptionListWidget optionListWidget;
     public AbstractConfigOption<?> focusedConfigOption;
     private ButtonWidget resetButton;
-    private final ArrayList<AbstractConfigOption<?>> options;
+    private final HashMap<String, AbstractConfigOption> options;
     private final MinecraftClient client;
 
     private final MutableText TITLE;
@@ -51,9 +55,9 @@ public class PFMConfigScreen extends Screen {
         this.optionListWidget = new PFMOptionListWidget(this, this.client);
         this.addSelectableChild(this.optionListWidget);
         this.resetButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 155, this.height - 29, 150, 20, new TranslatableText("pfm.option.resetAll"), button -> {
-            for (AbstractConfigOption option : this.options) {
+            options.forEach((title, option) -> {
                 option.setValue(option.getDefaultValue());
-            }
+            });
         }));
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 155 + 160, this.height - 29, 150, 20, ScreenTexts.DONE, button -> {
             this.client.setScreen(this.parent);
@@ -68,11 +72,13 @@ public class PFMConfigScreen extends Screen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
-        this.optionListWidget.render(matrices, mouseX, mouseY, delta);
+        if (this.optionListWidget != null)
+            this.optionListWidget.render(matrices, mouseX, mouseY, delta);
+
         drawCenteredText(matrices, this.textRenderer, TITLE.setStyle(Style.EMPTY.withColor(0xf77f34).withBold(true)), this.width / 2, 8, 0xFFFFFF);
         boolean bl = false;
-        for (AbstractConfigOption option : this.options) {
-            if (option.isDefault()) continue;
+        for (Map.Entry<String, AbstractConfigOption> optionEntry : options.entrySet()) {
+            if (optionEntry.getValue().isDefault()) continue;
             bl = true;
             break;
         }

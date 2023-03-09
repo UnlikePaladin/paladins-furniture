@@ -23,6 +23,8 @@ import net.minecraft.text.TranslatableText;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.Entry> {
     final PFMConfigScreen parent;
@@ -32,19 +34,19 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         super(client, parent.width + 125, parent.height, 43, parent.height - 32, 20);
         this.parent = parent;
         String string = null;
-        for (AbstractConfigOption configOption : PaladinFurnitureMod.getPFMConfig().options) {
+        for(Map.Entry<String, AbstractConfigOption> configOptionEntry : PaladinFurnitureMod.getPFMConfig().options.entrySet()) {
             Text text;
             int i;
-            String configOptionCategory = configOption.getCategory();
+            String configOptionCategory = configOptionEntry.getValue().getCategory();
             if (!configOptionCategory.equals(string)) {
                 string = configOptionCategory;
                 this.addEntry(new CategoryEntry(new TranslatableText(configOptionCategory)));
             }
-            if ((i = client.textRenderer.getWidth(text = configOption.getTitle())) > this.maxKeyNameLength) {
+            if ((i = client.textRenderer.getWidth(text = configOptionEntry.getValue().getTitle())) > this.maxKeyNameLength) {
                 this.maxKeyNameLength = i;
             }
-            if (configOption.getType() == Boolean.class) {
-                this.addEntry(new BooleanEntry((BooleanConfigOption)configOption, text));
+            if (configOptionEntry.getValue().getType() == Boolean.class) {
+                this.addEntry(new BooleanEntry((BooleanConfigOption)configOptionEntry.getValue(), text));
             } else {
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Unsupported Config Type!");
             }

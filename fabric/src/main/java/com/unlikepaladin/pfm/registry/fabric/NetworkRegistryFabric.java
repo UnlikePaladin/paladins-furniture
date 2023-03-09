@@ -1,20 +1,26 @@
 package com.unlikepaladin.pfm.registry.fabric;
 
+import com.google.common.collect.Lists;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.client.screens.MicrowaveScreen;
+import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
+import com.unlikepaladin.pfm.config.option.Side;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import com.unlikepaladin.pfm.registry.SoundIDs;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Objects;
+import java.io.IOException;
+import java.util.*;
 
 public class NetworkRegistryFabric {
     public static void registerPackets() {
@@ -83,6 +89,28 @@ public class NetworkRegistryFabric {
                 }
             }
         );
-    }
 
+        ClientPlayNetworking.registerGlobalReceiver(NetworkIDs.CONFIG_SYNC_ID,
+                (client, handler, buf, responseSender) -> {
+                    ArrayList<AbstractConfigOption> configOptions = buf.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
+                    Map<String, AbstractConfigOption> map = new HashMap<>();
+                    configOptions.forEach(abstractConfigOption -> {
+                        map.put(((TranslatableText)abstractConfigOption.getTitle()).getKey(), abstractConfigOption);
+                    });
+
+                    client.execute(() -> {
+                        map.forEach((title, configOption) -> {
+                            if (configOption.getSide() == Side.SERVER) {
+                                PaladinFurnitureMod.getPFMConfig().options.get(title).setValue(configOption.getValue());
+                                try {
+                                    PaladinFurnitureMod.getPFMConfig().save();
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+                        });
+                    });
+                }
+            );
+        }
 }

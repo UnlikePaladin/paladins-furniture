@@ -12,6 +12,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Properties;
 
 
@@ -23,11 +24,16 @@ public class PaladinFurnitureModConfig {
     private static final String COMMENT =
             "This file stores configuration options for Paladin's Furniture Mod";
     private final Path propertiesPath;
-    public ArrayList<AbstractConfigOption<?>> options = new ArrayList<>();
+    public HashMap<String, AbstractConfigOption> options = new HashMap<>();
 
     public static final String MOD_OPTIONS = "pfm.config.categories.mod_options";
     public static final String GAMEPLAY_OPTIONS = "pfm.config.categories.gameplay_options";
 
+    //TODO: Get the right size for Config Objects
+    //TODO: Actually sync the config when user is on a server
+    //TODO: Gray out Buttons with tooltip
+    //TODO: Add tooltips to options
+    //TODO: Add syncing on Fabric
     public PaladinFurnitureModConfig(Path propertiesPath) {
         this.addOptions(
             checkForUpdates = new BooleanConfigOption(new TranslatableText("pfm.option.checkForUpdates"), new TranslatableText("pfm.option.checkForUpdates.tooltip"), MOD_OPTIONS, true, Side.CLIENT),
@@ -40,7 +46,9 @@ public class PaladinFurnitureModConfig {
     }
 
     private void addOptions(AbstractConfigOption<?>... args) {
-        options.addAll(Arrays.stream(args).toList());
+        Arrays.stream(args).forEach(abstractConfigOption -> {
+            options.put(((TranslatableText)abstractConfigOption.getTitle()).getKey(), abstractConfigOption);
+        });
     }
 
     /**
@@ -105,6 +113,9 @@ public class PaladinFurnitureModConfig {
         countersOfDifferentMaterialsConnect.setValue(differentMaterialsConnect);
     }
 
+    public Path getPath() {
+        return this.propertiesPath;
+    }
     /**
      * loads the config file and then populates the string, int, and boolean entries with the parsed entries
      *

@@ -5,15 +5,19 @@ import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.data.forge.PaladinFurnitureModDataGenForge;
 import com.unlikepaladin.pfm.data.forge.TagsImpl;
+import com.unlikepaladin.pfm.networking.forge.SyncConfigPacket;
 import com.unlikepaladin.pfm.registry.forge.*;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.ModList;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fmlclient.ConfigGuiHandler;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
 
 import java.io.IOException;
 
@@ -39,12 +43,8 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         MinecraftForge.EVENT_BUS.register(BlockEntityRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(SoundRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(PaladinFurnitureModDataGenForge.class);
+        MinecraftForge.EVENT_BUS.register(NetworkRegistryForge.class);
         NetworkRegistryForge.registerPackets();
-        ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-                () -> new ConfigGuiHandler.ConfigGuiFactory(
-                        (client, parent) -> new PFMConfigScreen(client, parent)));
-
         this.commonInit();
     }
-
 }
