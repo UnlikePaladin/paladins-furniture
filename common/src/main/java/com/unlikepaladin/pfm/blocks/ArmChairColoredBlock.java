@@ -35,8 +35,6 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
     public ArmChairColoredBlock(DyeColor color, Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(SHAPE, ArmChairShape.STRAIGHT));
-        this.baseBlockState = this.getDefaultState();
-        this.baseBlock = baseBlockState.getBlock();
             if (this.getClass().isAssignableFrom(ArmChairColoredBlock.class)) {
                 COLORED_ARMCHAIRS.add(new FurnitureBlock(this, "arm_chair"));
             }
@@ -51,8 +49,6 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
         return this.color;
     }
 
-    private BlockState baseBlockState;
-    private Block baseBlock;
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         super.appendProperties(stateManager);
@@ -213,14 +209,14 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
         Direction facing = PaladinFurnitureMod.getPFMConfig().doChairsFacePlayer() ? ctx.getPlayerFacing() : ctx.getPlayerFacing().getOpposite();
-        return baseBlockState.with(SHAPE, getShape(blockState, ctx.getWorld(), ctx.getBlockPos())).with(FACING, facing);
+        return this.getDefaultState().with(SHAPE, getShape(blockState, ctx.getWorld(), ctx.getBlockPos())).with(FACING, facing);
     }
 
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (!state.isOf(state.getBlock())) {
-            this.baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
-            this.baseBlock.onBlockAdded(this.baseBlockState, world, pos, oldState, false);
+            this.getDefaultState().neighborUpdate(world, pos, Blocks.AIR, pos, false);
+            this.onBlockAdded(this.getDefaultState(), world, pos, oldState, false);
         }
     }
 

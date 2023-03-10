@@ -1114,6 +1114,22 @@ public class BlockItemRegistryFabric {
         registerFurniture("trashcan", PaladinFurnitureModBlocksItems.TRASHCAN, true);
         registerFurniture("mesh_trashcan", PaladinFurnitureModBlocksItems.MESH_TRASHCAN, true);
 
+        registerFurniture("white_shower_towel", PaladinFurnitureModBlocksItems.WHITE_SHOWER_TOWEL, true);
+        registerFurniture("orange_shower_towel", PaladinFurnitureModBlocksItems.ORANGE_SHOWER_TOWEL, true);
+        registerFurniture("magenta_shower_towel", PaladinFurnitureModBlocksItems.MAGENTA_SHOWER_TOWEL, true);
+        registerFurniture("light_blue_shower_towel", PaladinFurnitureModBlocksItems.LIGHT_BLUE_SHOWER_TOWEL, true);
+        registerFurniture("yellow_shower_towel", PaladinFurnitureModBlocksItems.YELLOW_SHOWER_TOWEL, true);
+        registerFurniture("lime_shower_towel", PaladinFurnitureModBlocksItems.LIME_SHOWER_TOWEL, true);
+        registerFurniture("pink_shower_towel", PaladinFurnitureModBlocksItems.PINK_SHOWER_TOWEL, true);
+        registerFurniture("gray_shower_towel", PaladinFurnitureModBlocksItems.GRAY_SHOWER_TOWEL, true);
+        registerFurniture("light_gray_shower_towel", PaladinFurnitureModBlocksItems.LIGHT_GRAY_SHOWER_TOWEL, true);
+        registerFurniture("cyan_shower_towel", PaladinFurnitureModBlocksItems.CYAN_SHOWER_TOWEL, true);
+        registerFurniture("purple_shower_towel", PaladinFurnitureModBlocksItems.PURPLE_SHOWER_TOWEL, true);
+        registerFurniture("blue_shower_towel", PaladinFurnitureModBlocksItems.BLUE_SHOWER_TOWEL, true);
+        registerFurniture("brown_shower_towel", PaladinFurnitureModBlocksItems.BROWN_SHOWER_TOWEL, true);
+        registerFurniture("green_shower_towel", PaladinFurnitureModBlocksItems.GREEN_SHOWER_TOWEL, true);
+        registerFurniture("red_shower_towel", PaladinFurnitureModBlocksItems.RED_SHOWER_TOWEL, true);
+        registerFurniture("black_shower_towel", PaladinFurnitureModBlocksItems.BLACK_SHOWER_TOWEL, true);
 
         //Dye Kits
         registerItem("dye_kit_red", PaladinFurnitureModBlocksItems.DYE_KIT_RED);

@@ -1,0 +1,19 @@
+{
+  "type": "pfm:furniture",
+  "pattern": [
+    "XYX",
+    "YYY"
+  ],
+  "key": {
+    "Y": {
+      "item": "minecraft:black_wool"
+    },
+    "X": {
+      "item": "minecraft:light_gray_concrete"
+    }
+  },
+  "result": {
+    "item": "pfm:black_shower_towel",
+    "count": 2
+  }
+}

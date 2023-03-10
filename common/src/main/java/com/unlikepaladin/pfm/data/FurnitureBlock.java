@@ -251,6 +251,15 @@ public class FurnitureBlock extends Material {
         return this.baseMaterial;
     }
 
+    public Item getWoolColor() {
+        if (this.block instanceof DyeableFurniture) {
+            String color = ((DyeableFurniture) this.block).getPFMColor().toString();
+            this.baseMaterial = Registry.ITEM.get(new Identifier("minecraft:" + color + "_wool"));
+            return this.baseMaterial;
+        }
+        return null;
+    }
+
     public Block getBed() {
         if (block instanceof SimpleBedBlock){
             String color = ((SimpleBedBlock) block).getColor().getName();

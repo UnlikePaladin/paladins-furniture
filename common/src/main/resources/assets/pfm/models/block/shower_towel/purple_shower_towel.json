@@ -1,0 +1,8 @@
+{
+	"credit": "By UnlikePaladin",
+	"parent": "pfm:block/shower_towel/white_shower_towel",
+	"textures": {
+		"particle": "block/purple_wool",
+		"towel": "block/purple_wool"
+	}
+}
