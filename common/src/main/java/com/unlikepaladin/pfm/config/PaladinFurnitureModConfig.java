@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.config;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
@@ -115,11 +116,19 @@ public class PaladinFurnitureModConfig {
             properties.load(is);
         }
         checkForUpdates.setValue("true".equals(properties.getProperty("checkForUpdates")));
-        doChairsFacePlayer.setValue("true".equals(properties.getProperty("doChairsFacePlayer")));
+        doChairsFacePlayer.setValue("true".equals(properties.getProperty("chairsFacePlayer")));
         countersOfDifferentMaterialsConnect.setValue(!"false".equals(properties.getProperty("countersOfDifferentMaterialsConnect")));
         tablesOfDifferentMaterialsConnect.setValue(!"false".equals(properties.getProperty("tablesOfDifferentMaterialsConnect")));
         foodPopsOffStove.setValue(!"false".equals(properties.getProperty("foodPopsOffStove")));
         enableBook.setValue("true".equals(properties.getProperty("enableBook")));
+
+        for (String key : options.keySet()) {
+            if (!properties.containsKey(key.replace("pfm.option.", ""))){
+                PaladinFurnitureMod.GENERAL_LOGGER.warn("Missing Config Option: " +  key.replace("pfm.option.", "") + ", resetting to default value.");
+                options.get(key).setValue(options.get(key).getDefaultValue());
+                save();
+            }
+        }
     }
 
     /**
@@ -130,7 +139,7 @@ public class PaladinFurnitureModConfig {
     public void save() throws IOException {
         Properties properties = new Properties();
         properties.setProperty("checkForUpdates", checkForUpdates.getValue() ? "true" : "false");
-        properties.setProperty("doChairsFacePlayer", doChairsFacePlayer.getValue() ? "true" : "false");
+        properties.setProperty("chairsFacePlayer", doChairsFacePlayer.getValue() ? "true" : "false");
         properties.setProperty("countersOfDifferentMaterialsConnect", countersOfDifferentMaterialsConnect.getValue() ? "true" : "false");
         properties.setProperty("foodPopsOffStove", foodPopsOffStove.getValue() ? "true" : "false");
         properties.setProperty("tablesOfDifferentMaterialsConnect",tablesOfDifferentMaterialsConnect.getValue() ? "true" : "false");
