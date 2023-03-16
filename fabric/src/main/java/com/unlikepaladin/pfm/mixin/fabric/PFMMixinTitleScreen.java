@@ -16,7 +16,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 @Mixin(TitleScreen.class)
-public class MixinTitleScreen {
+public class PFMMixinTitleScreen {
     private static boolean pfm$firstInit;
 
     @Inject(method = "init", at = @At("RETURN"))

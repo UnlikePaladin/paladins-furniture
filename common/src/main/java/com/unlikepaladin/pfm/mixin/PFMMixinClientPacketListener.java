@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPlayNetworkHandler.class)
-public class MixinClientPacketListener {
+public class PFMMixinClientPacketListener {
     @Shadow
     private MinecraftClient client;
 

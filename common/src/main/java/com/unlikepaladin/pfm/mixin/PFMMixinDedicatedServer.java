@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecraftDedicatedServer.class)
-public class MixinDedicatedServer {
+public class PFMMixinDedicatedServer {
     @Shadow
     static Logger LOGGER;
 
