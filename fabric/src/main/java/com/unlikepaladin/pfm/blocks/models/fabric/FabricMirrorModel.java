@@ -23,7 +23,7 @@ import net.minecraft.world.BlockRenderView;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
-//TODO: Clean up classes, add rotation, implement and register on Forge, add IP compatibility on Forge
+//TODO: Clean up classes, implement and register on Forge, add IP compatibility on Forge
 public class FabricMirrorModel extends BakedMirrorModel implements FabricBakedModel {
     public FabricMirrorModel(Sprite frame, Map<BlockState, Sprite> frameOverrides, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<Identifier,BakedModel> bakedModels) {
         super(frame, frameOverrides, glassTex, reflectTex, settings, bakedModels);
@@ -48,7 +48,6 @@ public class FabricMirrorModel extends BakedMirrorModel implements FabricBakedMo
             boolean cornerRightDown = block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYCounterclockwise()).down()), state);
             boolean cornerLeftDown = block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYClockwise()).down()), state);
             boolean cornerRightUp = block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYCounterclockwise()).up()), state);
-
 
             context.fallbackConsumer().accept(getBakedModels().get(MirrorUnbakedModel.MODEL_MIRROR_GLASS));
             if (!down) {
@@ -88,15 +87,5 @@ public class FabricMirrorModel extends BakedMirrorModel implements FabricBakedMo
     @Override
     public ModelTransformation getTransformation() {
         return ModelHelper.MODEL_TRANSFORM_BLOCK;
-    }
-
-    public static float getAngle(BlockState state) {
-        switch (state.get(MirrorBlock.FACING)) {
-            case NORTH: return 0;
-            case EAST: return 90;
-            case SOUTH: return 180;
-            case WEST: return 270;
-            default: throw new RuntimeException();
-        }
     }
 }

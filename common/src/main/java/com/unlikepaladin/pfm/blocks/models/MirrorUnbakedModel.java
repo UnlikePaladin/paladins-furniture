@@ -57,21 +57,20 @@ public class MirrorUnbakedModel implements UnbakedModel {
         list.add(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, DEFAULT_REFLECT));
         return list;
     }
-    Map<Identifier,BakedModel> bakedModels = new LinkedHashMap<>();
-
 
     @Nullable
     @Override
     public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        bakedModels.put(MODEL_MIRROR_GLASS, loader.getOrLoadModel(MODEL_MIRROR_GLASS).bake(loader, textureGetter, rotationContainer, modelId));
-        bakedModels.put(MODEL_MIRROR_TOP, loader.getOrLoadModel(MODEL_MIRROR_TOP).bake(loader, textureGetter, rotationContainer, modelId));
-        bakedModels.put(MODEL_MIRROR_BOTTOM, loader.getOrLoadModel(MODEL_MIRROR_BOTTOM).bake(loader, textureGetter, rotationContainer, modelId));
-        bakedModels.put(MODEL_MIRROR_LEFT, loader.getOrLoadModel(MODEL_MIRROR_LEFT).bake(loader, textureGetter, rotationContainer, modelId));
-        bakedModels.put(MODEL_MIRROR_RIGHT, loader.getOrLoadModel(MODEL_MIRROR_RIGHT).bake(loader, textureGetter, rotationContainer, modelId));
-        bakedModels.put(MODEL_MIRROR_RIGHT_TOP_CORNER, loader.getOrLoadModel(MODEL_MIRROR_RIGHT_TOP_CORNER).bake(loader, textureGetter, rotationContainer, modelId));
-        bakedModels.put(MODEL_MIRROR_LEFT_TOP_CORNER, loader.getOrLoadModel(MODEL_MIRROR_LEFT_TOP_CORNER).bake(loader, textureGetter, rotationContainer, modelId));
-        bakedModels.put(MODEL_MIRROR_RIGHT_BOTTOM_CORNER, loader.getOrLoadModel(MODEL_MIRROR_RIGHT_BOTTOM_CORNER).bake(loader, textureGetter, rotationContainer, modelId));
-        bakedModels.put(MODEL_MIRROR_LEFT_BOTTOM_CORNER, loader.getOrLoadModel(MODEL_MIRROR_LEFT_BOTTOM_CORNER).bake(loader, textureGetter, rotationContainer, modelId));
+        Map<Identifier,BakedModel> bakedModels = new LinkedHashMap<>();
+        bakedModels.put(MODEL_MIRROR_GLASS, loader.bake(MODEL_MIRROR_GLASS, rotationContainer));
+        bakedModels.put(MODEL_MIRROR_TOP, loader.bake(MODEL_MIRROR_TOP, rotationContainer));
+        bakedModels.put(MODEL_MIRROR_BOTTOM, loader.bake(MODEL_MIRROR_BOTTOM, rotationContainer));
+        bakedModels.put(MODEL_MIRROR_LEFT, loader.bake(MODEL_MIRROR_LEFT, rotationContainer));
+        bakedModels.put(MODEL_MIRROR_RIGHT, loader.bake(MODEL_MIRROR_RIGHT, rotationContainer));
+        bakedModels.put(MODEL_MIRROR_RIGHT_TOP_CORNER, loader.bake(MODEL_MIRROR_RIGHT_TOP_CORNER, rotationContainer));
+        bakedModels.put(MODEL_MIRROR_LEFT_TOP_CORNER, loader.bake(MODEL_MIRROR_LEFT_TOP_CORNER, rotationContainer));
+        bakedModels.put(MODEL_MIRROR_RIGHT_BOTTOM_CORNER, loader.bake(MODEL_MIRROR_RIGHT_BOTTOM_CORNER, rotationContainer));
+        bakedModels.put(MODEL_MIRROR_LEFT_BOTTOM_CORNER, loader.bake(MODEL_MIRROR_LEFT_BOTTOM_CORNER, rotationContainer));
         return getBakedModel(textureGetter.apply(frameTex), null, textureGetter.apply(glassTex), textureGetter.apply(reflectTex), rotationContainer, bakedModels);
     }
 
