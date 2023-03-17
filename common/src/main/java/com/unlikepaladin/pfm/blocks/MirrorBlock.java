@@ -51,19 +51,9 @@ public class MirrorBlock extends HorizontalFacingBlock {
     protected static final VoxelShape MIRROR_EAST = rotateShape(Direction.NORTH, Direction.EAST, MIRROR_NORTH);
     protected static final VoxelShape MIRROR_WEST = rotateShape(Direction.NORTH, Direction.WEST, MIRROR_NORTH);
 
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.onPlaced(world, pos, state, placer, itemStack);
-    }
-
     public boolean canConnect(BlockState neighborState, BlockState state)
     {
-        return (PaladinFurnitureMod.getPFMConfig().doDifferentMirrorsConnect() ? neighborState.getBlock() instanceof MirrorBlock : neighborState.getBlock() == state.getBlock()) && neighborState.get(FACING) == state.get(FACING);
-    }
-
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return (PaladinFurnitureMod.getPFMConfig().doDifferentMirrorsConnect() ? neighborState.getBlock() instanceof MirrorBlock && neighborState.get(FACING) == state.get(FACING): neighborState.getBlock() == state.getBlock()) && neighborState.get(FACING) == state.get(FACING);
     }
 
     @Override
@@ -84,10 +74,5 @@ public class MirrorBlock extends HorizontalFacingBlock {
                 return MIRROR_NORTH;
             }
         }
-    }
-
-    @Override
-    public VoxelShape getCollisionShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return this.getOutlineShape(state, world, pos, context);
     }
 }

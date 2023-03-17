@@ -21,6 +21,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -32,7 +33,6 @@ public class PFMMirrorBlockIP extends MirrorBlock {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-
         if (!world.isClient && world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos)).isEmpty()) {
             PFMMirrorEntity.createMirror((ServerWorld) world, pos, state.get(FACING).getOpposite());
         }
@@ -46,27 +46,26 @@ public class PFMMirrorBlockIP extends MirrorBlock {
             mirrorBlockEntities.forEach(pfmMirrorEntity -> {
                 pfmMirrorEntity.remove(Entity.RemovalReason.KILLED);
             });
+            world.updateNeighbors(pos, state.getBlock());
         }
-    }
-
-    @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborUpdate(state, world, pos, block, fromPos, notify);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!world.isClient() && neighborState.getBlock() instanceof PFMMirrorBlockIP && world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(neighborPos)).isEmpty()) {
-            List<PFMMirrorEntity> mirrorBlockEntities;
-            if (!(mirrorBlockEntities = world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos))).isEmpty()) {
+        if (!world.isClient()) {
+            List<PFMMirrorEntity> mirrorBlockEntities = new ArrayList<>();
+            if (canConnect(neighborState, state)) {
+                mirrorBlockEntities.addAll(world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(neighborPos)));
+            }
+            if (!(world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos)).isEmpty())) {
+                mirrorBlockEntities.addAll(world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos)));
                 mirrorBlockEntities.forEach(pfmMirrorEntity -> {
-                    pfmMirrorEntity.remove(Entity.RemovalReason.KILLED);
+                   pfmMirrorEntity.remove(Entity.RemovalReason.KILLED);
                 });
             }
-            PFMMirrorEntity.createMirror((ServerWorld) world, neighborPos, neighborState.get(FACING).getOpposite());
-            world.updateNeighbors(neighborPos, neighborState.getBlock());
+            PFMMirrorEntity.createMirror((ServerWorld) world, pos, state.get(FACING).getOpposite());
+            world.updateNeighbors(pos, state.getBlock());
         }
-        System.out.println("Called from: " + pos);
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 }
