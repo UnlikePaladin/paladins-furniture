@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.client.fabric;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.screens.*;
+import com.unlikepaladin.pfm.compat.fabric.imm_ptl.client.PFMImmPtlRegistryClient;
 import com.unlikepaladin.pfm.compat.fabric.sandwichable.client.PFMSandwichableClient;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
@@ -14,6 +15,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.loader.api.FabricLoader;
@@ -54,10 +56,16 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         ScreenRegistry.register(ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
         ScreenRegistry.register(ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER, TrashcanScreen::new);
         ParticleProviderRegistryFabric.registerParticleFactories();
+        ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new ModelProviderFabric());
 
         if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
             PFMSandwichableClient.register();
         }
+
+        if (FabricLoader.getInstance().isModLoaded("imm_ptl_core")) {
+            PFMImmPtlRegistryClient.register();
+        }
+
         ClientPlayConnectionEvents.DISCONNECT.register(LeaveEventHandlerFabric::onServerLeave);
     }
 

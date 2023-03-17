@@ -46,6 +46,7 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    maven { url 'https://jitpack.io' }
     maven {
         url = uri("https://storage.googleapis.com/devan-maven/")
     }
@@ -114,6 +115,32 @@ else {
         modCompileOnly "curse.maven:arrp-463113:${rootProject.arrp_version}"
     }
 }
+
+if (rootProject.immersive_portals_compatibility= "true"){
+    dependencies {
+        modImplementation ("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
+            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
+        }
+        modImplementation("com.github.qouteall.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
+            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
+        }
+    }
+}
+else {
+    dependencies {
+        modCompileOnly("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
+            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
+        }
+        modCompileOnly("com.github.qouteall.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
+            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
+        }
+    }
+}
+
 dependencies {
     // To change the versions see the gradle.properties file
 

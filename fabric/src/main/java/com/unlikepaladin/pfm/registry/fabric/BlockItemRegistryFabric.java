@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.registry.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.items.FurnitureGuideBook;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.ShowerHandleItem;
@@ -9,7 +10,10 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
+import net.minecraft.block.MapColor;
 import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -1148,6 +1152,11 @@ public class BlockItemRegistryFabric {
         registerItem("dye_kit_gray", PaladinFurnitureModBlocksItems.DYE_KIT_GRAY);
         registerItem("dye_kit_light_gray", PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY);
         registerItem("dye_kit_white", PaladinFurnitureModBlocksItems.DYE_KIT_WHITE);
+
+        if (!FabricLoader.getInstance().isModLoaded("imm_ptl_core")) {
+            PaladinFurnitureModBlocksItems.WHITE_MIRROR = new MirrorBlock(AbstractBlock.Settings.of(Material.STONE, MapColor.WHITE).nonOpaque());
+            registerFurniture("white_mirror", PaladinFurnitureModBlocksItems.WHITE_MIRROR, true);
+        }
     }
 
 }
