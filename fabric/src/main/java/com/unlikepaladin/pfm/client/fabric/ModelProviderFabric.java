@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ModelProviderFabric implements ModelResourceProvider {
-    private static final Identifier[] MIRROR_MODEL_IDS = {new Identifier(PaladinFurnitureMod.MOD_ID, "block/white_mirror"), new Identifier(PaladinFurnitureMod.MOD_ID, "item/white_mirror")};
+    private static final Identifier[] MIRROR_MODEL_IDS = {new Identifier(PaladinFurnitureMod.MOD_ID, "block/white_mirror")};
     @Override
     public @Nullable UnbakedModel loadModelResource(Identifier resourceId, ModelProviderContext context) throws ModelProviderException {
         if (containsIdentifier(MIRROR_MODEL_IDS, resourceId)){
