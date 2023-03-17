@@ -31,7 +31,6 @@ public class FabricMirrorModel extends BakedMirrorModel implements FabricBakedMo
     @Override
     public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         context.getEmitter().emit();
-
     }
 
     @Override
