@@ -317,9 +317,9 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         super.readNbt(nbt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.inventory);
-        this.fuelTime = nbt.getShort("BurnTime");
-        this.freezeTime = nbt.getShort("CookTime");
-        this.freezeTimeTotal = nbt.getShort("CookTimeTotal");
+        this.fuelTime = nbt.getShort("FuelTimeLeft");
+        this.freezeTime = nbt.getShort("FreezeTime");
+        this.freezeTimeTotal = nbt.getShort("FreezeTimeTotal");
         this.fuelTimeTotal = this.getFuelTime(this.inventory.get(1));
         NbtCompound nbtCompound = nbt.getCompound("RecipesUsed");
         for (String string : nbtCompound.getKeys()) {
@@ -330,12 +330,12 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+        Inventories.writeNbt(nbt, this.inventory);
         nbt.putShort("FuelTimeLeft", (short)this.fuelTime);
         nbt.putShort("FreezeTime", (short)this.freezeTime);
         nbt.putShort("FreezeTimeTotal", (short)this.freezeTimeTotal);
-        Inventories.writeNbt(nbt, this.inventory);
         NbtCompound nbtCompound = new NbtCompound();
-        this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), (int)integer));
+        this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), integer));
         nbt.put("RecipesUsed", nbtCompound);
         return nbt;
     }

@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
@@ -260,4 +261,8 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         return false;
     }
 
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends StoveBlockEntity> getFactory() {
+        throw new UnsupportedOperationException();
+    }
 }

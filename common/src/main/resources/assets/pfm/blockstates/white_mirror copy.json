@@ -1,0 +1,69 @@
+{
+    "multipart": [
+        {
+            "when": { "AND": [
+                { "up": "false" },
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/mirror/white/mirror_top"}
+        },
+        {
+            "when": { "AND": [
+                { "down": "false" },
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/mirror/white/mirror_bottom"}
+        },
+        {
+            "when": { "AND": [
+                { "left": "false" },
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/mirror/white/mirror_left"}
+        },
+        {
+            "when": { "AND": [
+                { "right": "false" },
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/mirror/white/mirror_right"}
+        },
+        {
+            "when": { "AND": [
+                { "left": "true" },
+                { "up": "true" },
+                { "corner": "false" },
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/mirror/white/mirror_right_up"}
+        },
+        {
+            "when": { "AND": [
+                { "left": "true" },
+                { "down": "true" },
+                { "corner": "false" },
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/mirror/white/mirror_right_down"}
+        }
+        ,
+        {
+            "when": { "AND": [
+                { "right": "true" },
+                { "up": "true" },
+                { "corner": "false" },
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/mirror/white/mirror_left_up"}
+        },
+        {
+            "when": { "AND": [
+                { "right": "true" },
+                { "down": "true" },
+                { "corner": "false" },
+                { "facing": "north" }
+            ]},
+            "apply": { "model": "pfm:block/mirror/white/mirror_left_down"}
+        }
+    ]
+}

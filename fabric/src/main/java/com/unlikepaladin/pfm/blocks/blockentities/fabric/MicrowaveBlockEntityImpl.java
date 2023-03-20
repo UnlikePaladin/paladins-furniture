@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import io.netty.buffer.Unpooled;
@@ -11,6 +12,7 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.server.PlayerStream;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.nbt.NbtCompound;
@@ -56,5 +58,9 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity implements Bl
     public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
         packetByteBuf.writeBoolean(this.isActive);
         packetByteBuf.writeBlockPos(this.pos);
+    }
+
+    public static BlockEntityType.BlockEntityFactory<? extends MicrowaveBlockEntity> getFactory() {
+        return MicrowaveBlockEntityImpl::new;
     }
 }

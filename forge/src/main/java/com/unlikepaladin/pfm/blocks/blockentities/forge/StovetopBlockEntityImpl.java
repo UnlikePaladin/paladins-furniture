@@ -1,7 +1,9 @@
 package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
+import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.ClientConnection;
@@ -38,4 +40,9 @@ public class StovetopBlockEntityImpl extends StovetopBlockEntity {
         super.onDataPacket(net, pkt);
         this.itemsBeingCooked.clear();
         Inventories.readNbt(pkt.getNbt(), this.itemsBeingCooked);
-    }}
+    }
+
+    public static BlockEntityType.BlockEntityFactory<? extends StovetopBlockEntity> getFactory() {
+        return StovetopBlockEntityImpl::new;
+    }
+}

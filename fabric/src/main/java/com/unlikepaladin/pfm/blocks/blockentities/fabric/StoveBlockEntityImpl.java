@@ -25,4 +25,8 @@ public class StoveBlockEntityImpl extends StoveBlockEntity implements BlockEntit
     public NbtCompound toClientTag(NbtCompound tag) {
         return writeNbt(tag);
     }
+
+    public static BlockEntityType.BlockEntityFactory<? extends StoveBlockEntity> getFactory() {
+        return StoveBlockEntityImpl::new;
+    }
 }

@@ -6,12 +6,10 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
 
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 
-public class ItemGroupRegistry {
+public class ItemGroupRegistryForge {
 
     public static void registerItemGroups(){
         PaladinFurnitureMod.FURNITURE_GROUP = new ItemGroup(MOD_ID + ".furniture") {

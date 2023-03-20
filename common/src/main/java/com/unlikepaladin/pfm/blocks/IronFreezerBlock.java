@@ -33,12 +33,6 @@ public class IronFreezerBlock extends FreezerBlock {
         return world.getBlockState(pos.up()).getBlock() == this.fridge.get();
     }
 
-    @Nullable
-    @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new FreezerBlockEntity(BlockEntities.IRON_FREEZER_BLOCK_ENTITY, pos,state);
-    }
-
     protected static final VoxelShape FREEZER = VoxelShapes.union(createCuboidShape(0.7, 1, 2,14.7, 16, 3),createCuboidShape(14.3, 1, 2.3,15.3, 16, 3.3),createCuboidShape(0.7, 0, 3,15.7, 16, 16),createCuboidShape(1.7, 14, 1.06,2.7, 15, 2.06),createCuboidShape(1.7, 14, 0.06,14.2, 15, 1.06));
     protected static final VoxelShape FREEZER_OPEN = VoxelShapes.union(createCuboidShape(0.7, 0, 3,15.7, 16, 16),createCuboidShape(13.7, 11, -1.4,14.7, 12.1, 3.6),createCuboidShape(0.7, 11, -1.4,1.7, 12.1, 3.6),createCuboidShape(14, 1, -1.6,15.5, 16, -0.6),createCuboidShape(0.7, 1, -2,14.6, 16, -1),createCuboidShape(1.7, 14, -2.9,2.7, 15, -0.9),createCuboidShape(1.7, 14, -3.9,14.2, 15, -2.9),createCuboidShape(13.2, 14, -3,14.2, 15, -1));
 

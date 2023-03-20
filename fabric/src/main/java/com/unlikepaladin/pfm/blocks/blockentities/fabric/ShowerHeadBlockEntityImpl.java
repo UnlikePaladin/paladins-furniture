@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHeadBlockEntity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
 
@@ -20,6 +21,10 @@ public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity implements 
     @Override
     public NbtCompound toClientTag(NbtCompound tag) {
         return writeNbt(tag);
+    }
+
+    public static BlockEntityType.BlockEntityFactory<? extends ShowerHeadBlockEntity> getFactory() {
+        return ShowerHeadBlockEntityImpl::new;
     }
 
 }

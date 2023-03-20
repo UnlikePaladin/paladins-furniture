@@ -3,9 +3,11 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
@@ -173,5 +175,9 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         updateListeners();
     }
 
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends StovetopBlockEntity> getFactory() {
+        throw new UnsupportedOperationException();
+    }
 }
 

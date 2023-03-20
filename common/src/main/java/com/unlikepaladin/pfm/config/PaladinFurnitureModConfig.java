@@ -33,6 +33,7 @@ public class PaladinFurnitureModConfig {
             foodPopsOffStove = new BooleanConfigOption(new TranslatableText("pfm.option.foodPopsOffStove"), new TranslatableText("pfm.option.foodPopsOffStove.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
             countersOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
             tablesOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            differentMirrorsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.differentMirrorsConnect"), new TranslatableText("pfm.option.differentMirrorsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
             enableBook = new BooleanConfigOption(new TranslatableText("pfm.option.enableBook"), new TranslatableText("pfm.option.enableBook.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER)
         );
         this.propertiesPath = propertiesPath;
@@ -63,6 +64,10 @@ public class PaladinFurnitureModConfig {
        return tablesOfDifferentMaterialsConnect.getValue();
     }
 
+    public boolean doDifferentMirrorsConnect() {
+        return differentMirrorsConnect.getValue();
+    }
+
     public boolean doChairsFacePlayer() {
         return doChairsFacePlayer.getValue();
     }
@@ -88,6 +93,8 @@ public class PaladinFurnitureModConfig {
     private BooleanConfigOption doChairsFacePlayer;
 
     private BooleanConfigOption countersOfDifferentMaterialsConnect;
+
+    private BooleanConfigOption differentMirrorsConnect;
 
     private BooleanConfigOption foodPopsOffStove;
 
@@ -121,6 +128,7 @@ public class PaladinFurnitureModConfig {
         tablesOfDifferentMaterialsConnect.setValue(!"false".equals(properties.getProperty("tablesOfDifferentMaterialsConnect")));
         foodPopsOffStove.setValue(!"false".equals(properties.getProperty("foodPopsOffStove")));
         enableBook.setValue("true".equals(properties.getProperty("enableBook")));
+        differentMirrorsConnect.setValue(!"false".equals(properties.getProperty("differentMirrorsConnect")));
 
         for (String key : options.keySet()) {
             if (!properties.containsKey(key.replace("pfm.option.", ""))){
@@ -144,6 +152,8 @@ public class PaladinFurnitureModConfig {
         properties.setProperty("foodPopsOffStove", foodPopsOffStove.getValue() ? "true" : "false");
         properties.setProperty("tablesOfDifferentMaterialsConnect",tablesOfDifferentMaterialsConnect.getValue() ? "true" : "false");
         properties.setProperty("enableBook",enableBook.getValue() ? "true" : "false");
+        properties.setProperty("differentMirrorsConnect", differentMirrorsConnect.getValue() ? "true" : "false");
+
         // NB: This uses ISO-8859-1 with unicode escapes as the encoding
         try (OutputStream os = Files.newOutputStream(propertiesPath)) {
             properties.store(os, COMMENT);

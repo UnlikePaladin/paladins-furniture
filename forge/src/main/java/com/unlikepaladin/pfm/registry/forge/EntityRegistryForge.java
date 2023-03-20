@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.registry.forge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
+import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -24,17 +25,17 @@ public class EntityRegistryForge {
 
     @SubscribeEvent
     public static void registerEntities(RegistryEvent.Register<EntityType<?>> event) {
+        EntityRegistry.registerEntityTypes();
         event.getRegistry().registerAll(
-                registerEntity("chair", Entities.CHAIR)
+                EntityRegistryImpl.entityTypeList.toArray(new EntityType[0])
         );
-    }
-
-    private static EntityType<?> registerEntity(String name, EntityType<? extends LivingEntity> entity) {
-        return entity.setRegistryName(name);
     }
 
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
-        event.put(Entities.CHAIR, ChairEntity.createMobAttributes().build());
+        EntityRegistry.registerAttributes();
+        EntityRegistryImpl.attributeMap.forEach((entityType, builder) -> {
+            event.put(entityType, builder.build());
+        });
     }
 }

@@ -2,6 +2,9 @@ package com.unlikepaladin.pfm.client.forge;
 
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.screens.*;
+import com.unlikepaladin.pfm.compat.forge.imm_ptl.PFMImmPtlRegistry;
+import com.unlikepaladin.pfm.compat.forge.imm_ptl.client.PFMImmPtlRegistryClient;
+import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
 import com.unlikepaladin.pfm.registry.forge.ScreenHandlerRegistryForge;
@@ -28,12 +31,15 @@ public class PaladinFurnitureModClientForge {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
         NetworkRegistryForge.registerPackets();
+
         ColorRegistryForge.registerBlockRenderLayers();
         event.enqueueWork(PaladinFurnitureModClientForge::registerScreens);
         ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
                 () -> new ConfigGuiHandler.ConfigGuiFactory(
                         (client, parent) -> new PFMConfigScreen(client, parent)));
-
+        if (BlockItemRegistry.isModLoaded("immersive_portals")) {
+            PFMImmPtlRegistryClient.register();
+        }
         PaladinFurnitureModClient.USE_TOILET_KEYBIND = registerKey("key.pfm.toiletUse", "keybindings.category.pfm", GLFW.GLFW_KEY_U);
     }
 

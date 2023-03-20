@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.blocks.TrashcanBlock;
 import com.unlikepaladin.pfm.menus.TrashcanScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
@@ -141,5 +142,10 @@ public class TrashcanBlockEntity extends LootableContainerBlockEntity {
     public void clear() {
         super.clear();
         this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
+    }
+
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends TrashcanBlockEntity> getFactory() {
+        throw new UnsupportedOperationException();
     }
 }

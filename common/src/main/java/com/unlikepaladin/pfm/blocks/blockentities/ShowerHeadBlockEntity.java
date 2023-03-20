@@ -2,8 +2,10 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -99,5 +101,10 @@ public class ShowerHeadBlockEntity extends BlockEntity {
         super.writeNbt(nbt);
         nbt.putBoolean("isOpen", isOpen);
         return nbt;
+    }
+
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends ShowerHeadBlockEntity> getFactory() {
+        throw new UnsupportedOperationException();
     }
 }
