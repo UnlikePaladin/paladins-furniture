@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.client.forge;
 
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
+import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.compat.forge.imm_ptl.PFMImmPtlRegistry;
 import com.unlikepaladin.pfm.compat.forge.imm_ptl.client.PFMImmPtlRegistryClient;
@@ -44,12 +45,7 @@ public class PaladinFurnitureModClientForge {
     }
 
     private static void registerScreens() {
-        HandledScreens.register(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
-        HandledScreens.register(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, WorkbenchScreen::new);
-        HandledScreens.register(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, StoveScreen::new);
-        HandledScreens.register(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
-        HandledScreens.register(ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
-        HandledScreens.register(ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER, TrashcanScreen::new);
+        ScreenRegistry.registerScreens();
     }
 
     public static KeyBinding registerKey(String name, String category, int keyCode) {

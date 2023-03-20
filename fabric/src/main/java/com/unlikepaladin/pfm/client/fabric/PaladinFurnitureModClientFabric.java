@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.client.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
+import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.compat.fabric.imm_ptl.client.PFMImmPtlRegistryClient;
 import com.unlikepaladin.pfm.compat.fabric.sandwichable.client.PFMSandwichableClient;
@@ -17,7 +18,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
@@ -48,13 +48,7 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         ));
         EntityRenderRegistryFabric.registerRender();
 
-
-        ScreenRegistry.register(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
-        ScreenRegistry.register(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, WorkbenchScreen::new);
-        ScreenRegistry.register(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, StoveScreen::new);
-        ScreenRegistry.register(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
-        ScreenRegistry.register(ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
-        ScreenRegistry.register(ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER, TrashcanScreen::new);
+        ScreenRegistry.registerScreens();
         ParticleProviderRegistryFabric.registerParticleFactories();
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new ModelProviderFabric());
 
