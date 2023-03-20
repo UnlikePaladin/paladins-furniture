@@ -18,16 +18,7 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class UnbakedMirrorModel implements UnbakedModel {
-    public static final Identifier MODEL_MIRROR_GLASS = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_base");
-    public static final Identifier MODEL_MIRROR_TOP = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_top");
-    public static final Identifier MODEL_MIRROR_BOTTOM = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_bottom");
-    public static final Identifier MODEL_MIRROR_LEFT = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_left");
-    public static final Identifier MODEL_MIRROR_RIGHT = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_right");
-    public static final Identifier MODEL_MIRROR_RIGHT_TOP_CORNER = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_right_top");
-    public static final Identifier MODEL_MIRROR_LEFT_TOP_CORNER = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_left_top");
-    public static final Identifier MODEL_MIRROR_RIGHT_BOTTOM_CORNER = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_right_bottom");
-    public static final Identifier MODEL_MIRROR_LEFT_BOTTOM_CORNER = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_left_bottom");
-
+    public static final String[] MODEL_PARTS = new String[] {"block/mirror/mirror_base", "block/mirror/mirror_top", "block/mirror/mirror_bottom", "block/mirror/mirror_left","block/mirror/mirror_right", "block/mirror/mirror_right_top", "block/mirror/mirror_left_top", "block/mirror/mirror_right_bottom", "block/mirror/mirror_left_bottom"};
     public static final Identifier DEFAULT_FRAME_TEXTURE = new Identifier("minecraft","block/white_concrete");
     public static final Identifier DEFAULT_REFLECT = new Identifier("pfm","block/mirror");
     public static final Identifier DEFAULT_GLASS = new Identifier("minecraft","block/glass");
@@ -61,21 +52,15 @@ public class UnbakedMirrorModel implements UnbakedModel {
     @Nullable
     @Override
     public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        Map<Identifier,BakedModel> bakedModels = new LinkedHashMap<>();
-        bakedModels.put(MODEL_MIRROR_GLASS, loader.bake(MODEL_MIRROR_GLASS, rotationContainer));
-        bakedModels.put(MODEL_MIRROR_TOP, loader.bake(MODEL_MIRROR_TOP, rotationContainer));
-        bakedModels.put(MODEL_MIRROR_BOTTOM, loader.bake(MODEL_MIRROR_BOTTOM, rotationContainer));
-        bakedModels.put(MODEL_MIRROR_LEFT, loader.bake(MODEL_MIRROR_LEFT, rotationContainer));
-        bakedModels.put(MODEL_MIRROR_RIGHT, loader.bake(MODEL_MIRROR_RIGHT, rotationContainer));
-        bakedModels.put(MODEL_MIRROR_RIGHT_TOP_CORNER, loader.bake(MODEL_MIRROR_RIGHT_TOP_CORNER, rotationContainer));
-        bakedModels.put(MODEL_MIRROR_LEFT_TOP_CORNER, loader.bake(MODEL_MIRROR_LEFT_TOP_CORNER, rotationContainer));
-        bakedModels.put(MODEL_MIRROR_RIGHT_BOTTOM_CORNER, loader.bake(MODEL_MIRROR_RIGHT_BOTTOM_CORNER, rotationContainer));
-        bakedModels.put(MODEL_MIRROR_LEFT_BOTTOM_CORNER, loader.bake(MODEL_MIRROR_LEFT_BOTTOM_CORNER, rotationContainer));
+        Map<String,BakedModel> bakedModels = new LinkedHashMap<>();
+        for (String modelPart: MODEL_PARTS) {
+            bakedModels.put(modelPart, loader.bake(new Identifier(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
+        }
         return getBakedModel(textureGetter.apply(frameTex), textureGetter.apply(glassTex), textureGetter.apply(reflectTex), rotationContainer, bakedModels);
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<Identifier,BakedModel> bakedModels) {
+    public static BakedModel getBakedModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels) {
         return new BakedMirrorModel(frame, glassTex, reflectTex, settings, bakedModels);
     }
 }

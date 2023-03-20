@@ -20,8 +20,8 @@ public class BakedMirrorModel implements BakedModel {
     protected final Sprite reflectTex;
     protected final ModelBakeSettings settings;
     private final Sprite frame;
-    private final Map<Identifier,BakedModel> bakedModels;
-    public BakedMirrorModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<Identifier,BakedModel> bakedModels) {
+    private final Map<String,BakedModel> bakedModels;
+    public BakedMirrorModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels) {
         this.frame = frame;
         this.glassTex = glassTex;
         this.reflectTex = reflectTex;
@@ -29,7 +29,7 @@ public class BakedMirrorModel implements BakedModel {
         this.bakedModels = bakedModels;
     }
 
-    public Map<Identifier,BakedModel> getBakedModels() {
+    public Map<String,BakedModel> getBakedModels() {
         return bakedModels;
     }
 

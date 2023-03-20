@@ -22,7 +22,7 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class ForgeMirrorModel extends BakedMirrorModel {
-    public ForgeMirrorModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<Identifier, BakedModel> bakedModels) {
+    public ForgeMirrorModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String, BakedModel> bakedModels) {
         super(frame, glassTex, reflectTex, settings, bakedModels);
     }
 
@@ -31,32 +31,32 @@ public class ForgeMirrorModel extends BakedMirrorModel {
     @NotNull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
-        List<BakedQuad> quads = new ArrayList<>(getBakedModels().get(UnbakedMirrorModel.MODEL_MIRROR_GLASS).getQuads(state, side, rand, extraData));
+        List<BakedQuad> quads = new ArrayList<>(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[0]).getQuads(state, side, rand, extraData));
         if (state.getBlock() instanceof MirrorBlock) {
             BitSet connections = extraData.getData(DIRECTIONS).connections;
             if (!connections.get(0)) {
-                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_MIRROR_TOP).getQuads(state, side, rand, extraData));
+                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[1]).getQuads(state, side, rand, extraData));
             }
             if (!connections.get(1)) {
-                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_MIRROR_BOTTOM).getQuads(state, side, rand, extraData));
+                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[2]).getQuads(state, side, rand, extraData));
             }
             if (!connections.get(2)) {
-                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_MIRROR_RIGHT).getQuads(state, side, rand, extraData));
+                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[4]).getQuads(state, side, rand, extraData));
             }
             if (!connections.get(3)) {
-                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_MIRROR_LEFT).getQuads(state, side, rand, extraData));
+                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[3]).getQuads(state, side, rand, extraData));
             }
             if (!connections.get(4)) {
-                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_MIRROR_LEFT_TOP_CORNER).getQuads(state, side, rand, extraData));
+                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[6]).getQuads(state, side, rand, extraData));
             }
             if (!connections.get(5)) {
-                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_MIRROR_LEFT_BOTTOM_CORNER).getQuads(state, side, rand, extraData));
+                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[8]).getQuads(state, side, rand, extraData));
             }
             if (!connections.get(6)) {
-                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_MIRROR_RIGHT_TOP_CORNER).getQuads(state, side, rand, extraData));
+                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[5]).getQuads(state, side, rand, extraData));
             }
             if (!connections.get(7)) {
-                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_MIRROR_RIGHT_BOTTOM_CORNER).getQuads(state, side, rand, extraData));
+                quads.addAll(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[7]).getQuads(state, side, rand, extraData));
             }
         }
         return quads;

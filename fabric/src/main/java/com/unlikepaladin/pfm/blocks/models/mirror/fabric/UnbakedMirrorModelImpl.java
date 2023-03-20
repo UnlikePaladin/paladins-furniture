@@ -9,7 +9,7 @@ import net.minecraft.util.Identifier;
 import java.util.Map;
 
 public class UnbakedMirrorModelImpl {
-    public static BakedModel getBakedModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<Identifier,BakedModel> bakedModels) {
+    public static BakedModel getBakedModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels) {
         return new FabricMirrorModel(frame, glassTex, reflectTex, settings, bakedModels);
     }
 }

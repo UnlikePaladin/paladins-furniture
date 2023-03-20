@@ -30,7 +30,8 @@ import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 import java.util.Collection;
-
+//TODO: Implement Baked Model for Beds and Tables and Kitchen Counters
+//TODO: check why mirror turns gray when far away, fix if possible, fix counters facing total opposite directions connecting
 @Environment(EnvType.CLIENT)
 public class PaladinFurnitureModClientFabric implements ClientModInitializer {
     public static final Logger CLIENT_LOGGER = LogManager.getLogger();
