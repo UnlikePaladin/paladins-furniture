@@ -11,6 +11,6 @@ import java.util.Map;
 
 public class MirrorUnbakedModelImpl {
     public static BakedModel getBakedModel(Sprite frame, Map<BlockState, Sprite> frameOverrides, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<Identifier,BakedModel> bakedModels) {
-        return null;
+        return new ForgeMirrorModel(frame, frameOverrides, glassTex, reflectTex, settings, bakedModels);
     }
 }

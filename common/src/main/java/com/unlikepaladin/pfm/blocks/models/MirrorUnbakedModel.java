@@ -35,10 +35,12 @@ public class MirrorUnbakedModel implements UnbakedModel {
     public static final Identifier DEFAULT_GLASS = new Identifier("minecraft","block/glass");
 
     private static final Identifier PARENT = new Identifier("block/block");
+    public static final Identifier[] MIRROR_MODEL_IDS = {new Identifier(PaladinFurnitureMod.MOD_ID, "block/white_mirror")};
 
-    private final SpriteIdentifier reflectTex;
-    private final SpriteIdentifier glassTex;
-    private final SpriteIdentifier frameTex;
+
+    protected final SpriteIdentifier reflectTex;
+    protected final SpriteIdentifier glassTex;
+    protected final SpriteIdentifier frameTex;
     public MirrorUnbakedModel(Identifier reflect, Identifier defaultFrameTexture, Identifier glass) {
         this.reflectTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, reflect);
         this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, defaultFrameTexture);

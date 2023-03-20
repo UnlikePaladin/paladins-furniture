@@ -23,9 +23,7 @@ import net.minecraft.world.BlockRenderView;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
-//TODO: Clean up classes
-//TODO: implement and register mirror model on Forge
-//TODO: add IP compatibility on Forge
+
 public class FabricMirrorModel extends BakedMirrorModel implements FabricBakedModel {
     public FabricMirrorModel(Sprite frame, Map<BlockState, Sprite> frameOverrides, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<Identifier,BakedModel> bakedModels) {
         super(frame, frameOverrides, glassTex, reflectTex, settings, bakedModels);

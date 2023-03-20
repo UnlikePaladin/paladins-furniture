@@ -74,12 +74,6 @@ else {
         modCompileOnly("maven.modrinth:sandwichable:${rootProject.sandwichable_version}")
         modCompileOnly("dev.lambdaurora:spruceui:${rootProject.spruceui_version}")
     }
-    maven {
-        url "https://cursemaven.com"
-        content {
-            includeGroup "curse.maven"
-        }
-    }
 }
 
 if (rootProject.rei_compatibility == "true"){
@@ -116,7 +110,7 @@ else {
     }
 }
 
-if (rootProject.immersive_portals_compatibility= "true"){
+if (rootProject.immersive_portals_compatibility_fabric == "true"){
     dependencies {
         modImplementation ("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
             exclude(group: "net.fabricmc.fabric-api")

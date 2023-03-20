@@ -15,6 +15,7 @@ loom {
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
         mixinConfig "pfm-common.mixins.json"
+        mixinConfig "pfm.mixins.json"
 
         dataGen {
             mod "pfm"
@@ -43,6 +44,12 @@ repositories {
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 
@@ -55,6 +62,21 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+}
+
+if (rootProject.immersive_portals_compatibility_forge == "true"){
+    dependencies {
+        modImplementation("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
+            transitive(false)
+        }
+    }
+}
+else {
+    dependencies {
+        modCompileOnly("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
+            transitive(false)
+        }
+    }
 }
 
 processResources {

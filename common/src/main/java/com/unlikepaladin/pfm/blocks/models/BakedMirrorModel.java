@@ -16,9 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class BakedMirrorModel implements BakedModel {
-
     private final Map<BlockState, Sprite> frameOverrides;
-
     protected final Sprite glassTex;
     protected final Sprite reflectTex;
     protected final ModelBakeSettings settings;
