@@ -5,9 +5,11 @@ import com.unlikepaladin.pfm.compat.fabric.imm_ptl.PFMImmPtlRegistry;
 import com.unlikepaladin.pfm.compat.fabric.imm_ptl.PFMMirrorBlockIP;
 import com.unlikepaladin.pfm.compat.fabric.imm_ptl.shape.BlockPortalShape;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.property.Properties;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -29,6 +31,7 @@ public class PFMMirrorEntity extends Mirror {
     @Nullable
     public BlockPortalShape blockPortalShape;
     public boolean unbreakable = false;
+    private Direction facing;
 
     public PFMMirrorEntity(EntityType<PFMMirrorEntity> entityType, World world) {
         super(entityType, world);
@@ -105,12 +108,12 @@ public class PFMMirrorEntity extends Mirror {
         boolean wallValid;
         if (wallArea != null) {
             wallValid = wallArea.fastStream().allMatch(
-                    blockPos -> isMirrorBlock(world, blockPos)
+                    blockPos -> isMirrorBlock(world, blockPos, this.facing.getOpposite())
             );
         }
         else if (blockPortalShape != null) {
             wallValid = blockPortalShape.area.stream().allMatch(
-                    blockPos -> isMirrorBlock(world, blockPos)
+                    blockPos -> isMirrorBlock(world, blockPos, this.facing.getOpposite())
             );
         }
         else {
@@ -121,9 +124,12 @@ public class PFMMirrorEntity extends Mirror {
         }
     }
 
-    public static boolean isMirrorBlock(World world, BlockPos blockPos) {
-        Block block = world.getBlockState(blockPos).getBlock();
-        return block instanceof PFMMirrorBlockIP;
+    public static boolean isMirrorBlock(World world, BlockPos blockPos, Direction facing) {
+        BlockState blockState = world.getBlockState(blockPos);
+        if (blockState.contains(Properties.HORIZONTAL_FACING)) {
+            return blockState.getBlock() instanceof PFMMirrorBlockIP && blockState.get(Properties.HORIZONTAL_FACING).equals(facing);
+        }
+        return false;
     }
 
     public static PFMMirrorEntity createMirror(
@@ -131,14 +137,14 @@ public class PFMMirrorEntity extends Mirror {
             BlockPos glassPos,
             Direction facing
     ) {
-        if (!isMirrorBlock(world, glassPos)) {
+        if (!isMirrorBlock(world, glassPos, facing.getOpposite())) {
             return null;
         }
 
         BlockPortalShape shape = BlockPortalShape.findArea(
                 glassPos, facing.getAxis(),
-                blockPos -> isMirrorBlock(world, blockPos),
-                blockPos -> !(isMirrorBlock(world, blockPos))
+                blockPos -> isMirrorBlock(world, blockPos, facing.getOpposite()),
+                blockPos -> !(isMirrorBlock(world, blockPos, facing.getOpposite()))
         );
 
         if (shape == null) {
@@ -146,13 +152,13 @@ public class PFMMirrorEntity extends Mirror {
         }
 
         PFMMirrorEntity pfmMirrorEntity = PFMMirrorEntity.entityType.create(world);
-        double distanceToCenter = -0.45;
+        double distanceToCenter = -0.452;
 
         Box wallBox = getWallBox(world, shape.area.stream());
         if (wallBox == null) {
             return null;
         }
-
+        pfmMirrorEntity.facing = facing;
         Vec3d pos = Helper.getBoxSurfaceInversed(wallBox, facing.getOpposite()).getCenter();
         pos = Helper.putCoordinate(
                 pos, facing.getAxis(),
@@ -175,25 +181,6 @@ public class PFMMirrorEntity extends Mirror {
         return pfmMirrorEntity;
     }
 
-    public IntBox getAreaBox() {
-        if (wallArea != null) {
-            return wallArea;
-        }
-        else if (blockPortalShape != null) {
-            return blockPortalShape.innerAreaBox;
-        }
-        else {
-            throw new RuntimeException();
-        }
-    }
-
-    //it's a little bit incorrect with corner glass pane
-    @Nullable
-    public static Box getWallBox(World world, IntBox glassArea) {
-        Stream<BlockPos> blockPosStream = glassArea.stream();
-        return getWallBox(world, blockPosStream);
-    }
-
     @Nullable
     public static Box getWallBox(World world, Stream<BlockPos> blockPosStream) {
         return blockPosStream.map(blockPos -> {
@@ -207,4 +194,3 @@ public class PFMMirrorEntity extends Mirror {
         }).filter(b -> b != null).reduce(Box::union).orElse(null);
     }
 }
-
