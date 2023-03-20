@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHeadBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
@@ -34,5 +35,9 @@ public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity {
     public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
         super.onDataPacket(net, pkt);
         this.isOpen = pkt.getNbt().getBoolean("isOpen");
+    }
+
+    public static BlockEntityType.BlockEntityFactory<? extends ShowerHeadBlockEntity> getFactory() {
+        return ShowerHeadBlockEntityImpl::new;
     }
 }

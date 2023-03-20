@@ -1,10 +1,13 @@
 package com.unlikepaladin.pfm.registry;
 
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.items.DyeKit;
+import com.unlikepaladin.pfm.items.LightSwitchItem;
+import com.unlikepaladin.pfm.items.ShowerHandleItem;
 import net.minecraft.block.*;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
@@ -1096,6 +1099,7 @@ public class PaladinFurnitureModBlocksItems {
 
     public static final Block LIGHT_SWITCH = new LightSwitchBlock(AbstractBlock.Settings.copy(Blocks.WHITE_CONCRETE).sounds(BlockSoundGroup.STONE).nonOpaque().mapColor(MapColor.WHITE));
     public static BlockItem LIGHT_SWITCH_ITEM;
+    ;
     public static Item FURNITURE_BOOK;
 
     private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {

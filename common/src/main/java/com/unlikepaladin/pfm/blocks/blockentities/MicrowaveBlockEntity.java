@@ -8,6 +8,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -396,6 +397,11 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     @ExpectPlatform
     public static void setActiveonClient(MicrowaveBlockEntity microwaveBlockEntity, boolean active) {
         throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends MicrowaveBlockEntity> getFactory() {
+        throw new UnsupportedOperationException();
     }
 }
 

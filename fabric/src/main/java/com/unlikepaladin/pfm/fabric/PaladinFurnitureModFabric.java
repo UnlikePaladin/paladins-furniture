@@ -94,6 +94,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                 () -> new ItemStack(PaladinFurnitureModBlocksItems.OAK_CHAIR));
 
         EntityRegistryFabric.registerEntities();
+        BlockItemRegistryFabric.registerItems();
         BlockItemRegistryFabric.registerBlocks();
         if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
             PFMSandwichableRegistry.register();

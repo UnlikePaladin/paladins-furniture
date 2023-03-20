@@ -201,17 +201,11 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof IronFreezerBlock) {
-            return new FreezerBlockEntity(BlockEntities.IRON_FREEZER_BLOCK_ENTITY, pos,state);
-        }
         return new FreezerBlockEntity(BlockEntities.FREEZER_BLOCK_ENTITY, pos,state);
     }
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (state.getBlock() instanceof IronFreezerBlock) {
-            return checkType(world, type, BlockEntities.IRON_FREEZER_BLOCK_ENTITY);
-        }
         return checkType(world, type, BlockEntities.FREEZER_BLOCK_ENTITY);
     }
 

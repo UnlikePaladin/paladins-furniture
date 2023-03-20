@@ -7,7 +7,6 @@ public class BlockEntities {
     public static BlockEntityType<GenericStorageBlockEntity9x3> DRAWER_BLOCK_ENTITY;
     public static BlockEntityType<FridgeBlockEntity> FRIDGE_BLOCK_ENTITY;
     public static BlockEntityType<FreezerBlockEntity> FREEZER_BLOCK_ENTITY;
-    public static BlockEntityType<FreezerBlockEntity> IRON_FREEZER_BLOCK_ENTITY;
     public static BlockEntityType<? extends StoveBlockEntity> STOVE_BLOCK_ENTITY;
     public static BlockEntityType<CounterOvenBlockEntity> KITCHEN_COUNTER_OVEN_BLOCK_ENTITY;
     public static BlockEntityType<LightSwitchBlockEntity> LIGHT_SWITCH_BLOCK_ENTITY;

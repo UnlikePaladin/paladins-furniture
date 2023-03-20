@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.registry.fabric;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
+import com.unlikepaladin.pfm.registry.EntityRegistry;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
@@ -17,7 +18,7 @@ public class EntityRegistryFabric {
     }
     public static void registerEntities()
     {
-        registerEntity("chair", Entities.CHAIR);
-        FabricDefaultAttributeRegistry.register(Entities.CHAIR, ChairEntity.createMobAttributes());
+        EntityRegistry.registerEntityTypes();
+        EntityRegistry.registerAttributes();
     }
 }

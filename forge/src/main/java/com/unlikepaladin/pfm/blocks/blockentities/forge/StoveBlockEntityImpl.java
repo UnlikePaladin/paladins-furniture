@@ -46,4 +46,7 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
         Inventories.readNbt(pkt.getNbt(), this.itemsBeingCooked);
     }
 
+    public static BlockEntityType.BlockEntityFactory<? extends StoveBlockEntity> getFactory() {
+        return StoveBlockEntityImpl::new;
+    }
 }

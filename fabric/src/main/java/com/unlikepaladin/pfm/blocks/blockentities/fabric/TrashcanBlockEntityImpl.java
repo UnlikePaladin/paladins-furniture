@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -28,5 +29,9 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity implements Exte
     @Override
     public NbtCompound toClientTag(NbtCompound tag) {
         return writeNbt(tag);
+    }
+
+    public static BlockEntityType.BlockEntityFactory<? extends TrashcanBlockEntity> getFactory() {
+        return TrashcanBlockEntityImpl::new;
     }
 }
