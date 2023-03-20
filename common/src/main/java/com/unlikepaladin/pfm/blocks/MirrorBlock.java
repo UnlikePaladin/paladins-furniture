@@ -1,10 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
@@ -43,7 +40,18 @@ public class MirrorBlock extends HorizontalFacingBlock {
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return super.canPlaceAt(state, world, pos);
+        Direction direction = state.get(FACING);
+        BlockPos blockPos = pos.offset(direction);
+        BlockState blockState = world.getBlockState(blockPos);
+        return blockState.isSideSolidFullSquare(world, blockPos, direction.getOpposite());
+    }
+
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (direction == state.get(FACING) && !state.canPlaceAt(world, pos)) {
+            return Blocks.AIR.getDefaultState();
+        }
+        return state;
     }
 
     protected static final VoxelShape MIRROR_NORTH = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 1));

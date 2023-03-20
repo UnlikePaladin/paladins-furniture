@@ -1,10 +1,9 @@
 package com.unlikepaladin.pfm.mixin.forge;
 
 
-import com.unlikepaladin.pfm.blocks.models.MirrorUnbakedModel;
+import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 
-import com.unlikepaladin.pfm.blocks.models.forge.UnbakedMirrorModelForge;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.util.Identifier;
@@ -24,8 +23,8 @@ public abstract class PFMModelLoaderMixin {
 
     @Inject(method = "loadModel", at = @At("HEAD"), cancellable = true)
     private void pfm$addMirrorModel(Identifier resourceId, CallbackInfo ci) {
-        if (ModelHelper.containsIdentifier(MirrorUnbakedModel.MIRROR_MODEL_IDS, resourceId)){
-            UnbakedModel model =  new UnbakedMirrorModelForge(MirrorUnbakedModel.DEFAULT_REFLECT, MirrorUnbakedModel.DEFAULT_FRAME_TEXTURE, MirrorUnbakedModel.DEFAULT_GLASS);
+        if (ModelHelper.containsIdentifier(UnbakedMirrorModel.MIRROR_MODEL_IDS, resourceId)){
+            UnbakedModel model =  new UnbakedMirrorModel(UnbakedMirrorModel.DEFAULT_REFLECT, UnbakedMirrorModel.DEFAULT_FRAME_TEXTURE, UnbakedMirrorModel.DEFAULT_GLASS);
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();

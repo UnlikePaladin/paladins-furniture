@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.blocks.models;
+package com.unlikepaladin.pfm.blocks.models.mirror;
 
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
@@ -16,15 +16,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class BakedMirrorModel implements BakedModel {
-    private final Map<BlockState, Sprite> frameOverrides;
     protected final Sprite glassTex;
     protected final Sprite reflectTex;
     protected final ModelBakeSettings settings;
     private final Sprite frame;
     private final Map<Identifier,BakedModel> bakedModels;
-    public BakedMirrorModel(Sprite frame, Map<BlockState, Sprite> frameOverrides, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<Identifier,BakedModel> bakedModels) {
+    public BakedMirrorModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<Identifier,BakedModel> bakedModels) {
         this.frame = frame;
-        this.frameOverrides = frameOverrides;
         this.glassTex = glassTex;
         this.reflectTex = reflectTex;
         this.settings = settings;

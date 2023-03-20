@@ -11,6 +11,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
+import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
@@ -53,9 +54,19 @@ public class ShowerTowelBlock extends HorizontalFacingBlock implements DyeableFu
     }
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return !(world.getBlockState(pos.offset(state.get(FACING).getOpposite())).getBlock() instanceof AirBlock);
+        Direction direction = state.get(FACING);
+        BlockPos blockPos = pos.offset(direction.getOpposite());
+        BlockState blockState = world.getBlockState(blockPos);
+        return blockState.isSideSolidFullSquare(world, blockPos, direction);
     }
 
+    @Override
+    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+        if (direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos)) {
+            return Blocks.AIR.getDefaultState();
+        }
+        return state;
+    }
     private static final VoxelShape TOWEL_SOUTH = VoxelShapes.union(createCuboidShape(1, 1, 2,15, 13, 5), createCuboidShape(1, 0, 2,15, 1, 3), createCuboidShape(0, 11, 0,1, 12, 4), createCuboidShape(15, 11, 0,16, 12, 4));
     private static final VoxelShape TOWEL_NORTH = rotateShape(Direction.SOUTH, Direction.NORTH, TOWEL_SOUTH);
     private static final VoxelShape TOWEL_EAST = rotateShape(Direction.SOUTH, Direction.EAST, TOWEL_SOUTH);

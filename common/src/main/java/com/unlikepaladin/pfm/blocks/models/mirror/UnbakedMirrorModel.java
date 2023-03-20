@@ -1,6 +1,5 @@
-package com.unlikepaladin.pfm.blocks.models;
+package com.unlikepaladin.pfm.blocks.models.mirror;
 
-import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -16,10 +15,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
-public class MirrorUnbakedModel implements UnbakedModel {
+public class UnbakedMirrorModel implements UnbakedModel {
     public static final Identifier MODEL_MIRROR_GLASS = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_base");
     public static final Identifier MODEL_MIRROR_TOP = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_top");
     public static final Identifier MODEL_MIRROR_BOTTOM = new Identifier(PaladinFurnitureMod.MOD_ID,"block/mirror/mirror_bottom");
@@ -41,7 +39,7 @@ public class MirrorUnbakedModel implements UnbakedModel {
     protected final SpriteIdentifier reflectTex;
     protected final SpriteIdentifier glassTex;
     protected final SpriteIdentifier frameTex;
-    public MirrorUnbakedModel(Identifier reflect, Identifier defaultFrameTexture, Identifier glass) {
+    public UnbakedMirrorModel(Identifier reflect, Identifier defaultFrameTexture, Identifier glass) {
         this.reflectTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, reflect);
         this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, defaultFrameTexture);
         this.glassTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, glass);
@@ -73,11 +71,11 @@ public class MirrorUnbakedModel implements UnbakedModel {
         bakedModels.put(MODEL_MIRROR_LEFT_TOP_CORNER, loader.bake(MODEL_MIRROR_LEFT_TOP_CORNER, rotationContainer));
         bakedModels.put(MODEL_MIRROR_RIGHT_BOTTOM_CORNER, loader.bake(MODEL_MIRROR_RIGHT_BOTTOM_CORNER, rotationContainer));
         bakedModels.put(MODEL_MIRROR_LEFT_BOTTOM_CORNER, loader.bake(MODEL_MIRROR_LEFT_BOTTOM_CORNER, rotationContainer));
-        return getBakedModel(textureGetter.apply(frameTex), null, textureGetter.apply(glassTex), textureGetter.apply(reflectTex), rotationContainer, bakedModels);
+        return getBakedModel(textureGetter.apply(frameTex), textureGetter.apply(glassTex), textureGetter.apply(reflectTex), rotationContainer, bakedModels);
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Sprite frame, Map<BlockState, Sprite> frameOverrides, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<Identifier,BakedModel> bakedModels) {
-        return new BakedMirrorModel(frame, frameOverrides, glassTex, reflectTex, settings, bakedModels);
+    public static BakedModel getBakedModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<Identifier,BakedModel> bakedModels) {
+        return new BakedMirrorModel(frame, glassTex, reflectTex, settings, bakedModels);
     }
 }
