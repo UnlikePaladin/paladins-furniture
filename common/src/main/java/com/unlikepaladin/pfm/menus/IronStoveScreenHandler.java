@@ -24,11 +24,6 @@ public class IronStoveScreenHandler extends AbstractFurnaceScreenHandler {
         inventory.onOpen(playerInventory.player);
     }
 
-    public IronStoveScreenHandler(int i, PlayerInventory playerInventory, PacketByteBuf packetByteBuf) {
-        super(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipeBookCategory.SMOKER, i, playerInventory);
-        this.inventory = new SimpleInventory(3);
-    }
-
     @Override
     public void close(PlayerEntity player) {
         super.close(player);

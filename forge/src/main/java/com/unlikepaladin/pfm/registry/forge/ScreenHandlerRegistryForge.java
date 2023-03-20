@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.menus.*;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
+import com.unlikepaladin.pfm.registry.ScreenHandlerRegistry;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.screen.ScreenHandlerType;
@@ -21,21 +22,9 @@ public class ScreenHandlerRegistryForge {
 
     @SubscribeEvent
     public static void registerScreenHandlers(RegistryEvent.Register<ScreenHandlerType<?>> event) {
-        ScreenHandlerIDs.FREEZER_SCREEN_HANDLER = IForgeContainerType.create(FreezerScreenHandler::new);
-        ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER = IForgeContainerType.create(WorkbenchScreenHandler::new);
-        ScreenHandlerIDs.STOVE_SCREEN_HANDLER = IForgeContainerType.create(StoveScreenHandler::new);
-        ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER = IForgeContainerType.create(IronStoveScreenHandler::new);
-        ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = IForgeContainerType.create(MicrowaveScreenHandler::new);
-        ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER = IForgeContainerType.create(TrashcanScreenHandler::new);
-
+        ScreenHandlerRegistry.registerScreenHandlers();
         event.getRegistry().registerAll(
-                ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER.setRegistryName("furniture"),
-                ScreenHandlerIDs.STOVE_SCREEN_HANDLER.setRegistryName("stove_block_entity"),
-                ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER.setRegistryName("iron_stove_block_entity"),
-                ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER .setRegistryName("microwave_block_entity"),
-                ScreenHandlerIDs.FREEZER_SCREEN_HANDLER.setRegistryName("freezer_block_entity"),
-                ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER.setRegistryName("trashcan_block_entity")
-            );
-
+            ScreenHandlerRegistryImpl.screenHandlerTypeList.toArray(new ScreenHandlerType[0])
+        );
     }
 }

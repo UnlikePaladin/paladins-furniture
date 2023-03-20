@@ -14,8 +14,8 @@ import java.util.List;
 public class BlockEntityRegistryImpl {
     public static List<BlockEntityType<?>> blockEntityTypes = new ArrayList<>();
 
-    public static BlockEntityType<? extends BlockEntity> registerBlockEntity(String blockEntityId, Block[] block, BlockEntityType.BlockEntityFactory<? extends BlockEntity> factory) {
-        BlockEntityType<?> blockEntityType = BlockEntityType.Builder.create(factory, block).build(null);
+    public static <T extends BlockEntity>BlockEntityType<T> registerBlockEntity(String blockEntityId, Block[] block, BlockEntityType.BlockEntityFactory<T> factory) {
+        BlockEntityType<T> blockEntityType = BlockEntityType.Builder.create(factory, block).build(null);
         blockEntityType.setRegistryName(blockEntityId);
         blockEntityTypes.add(blockEntityType);
         return blockEntityType;

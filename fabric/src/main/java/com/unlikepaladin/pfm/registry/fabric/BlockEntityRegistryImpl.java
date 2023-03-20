@@ -13,7 +13,7 @@ import net.minecraft.util.registry.Registry;
 
 public class BlockEntityRegistryImpl {
 
-    public static BlockEntityType<? extends BlockEntity> registerBlockEntity(String id, Block[] block, BlockEntityType.BlockEntityFactory<? extends BlockEntity> factory) {
+    public static <T extends BlockEntity>BlockEntityType<T> registerBlockEntity(String id, Block[] block, BlockEntityType.BlockEntityFactory<T> factory) {
         return Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(PaladinFurnitureMod.MOD_ID, id), BlockEntityType.Builder.create(factory, block).build(null));
     }
 }

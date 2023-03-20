@@ -35,10 +35,6 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
         this(syncId, playerInventory, ScreenHandlerContext.EMPTY);
     }
 
-    public WorkbenchScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf packetByteBuf) {
-        this(syncId, playerInventory, ScreenHandlerContext.EMPTY);
-    }
-
     public WorkbenchScreenHandler(int syncId, PlayerInventory playerInventory, ScreenHandlerContext context) {
         super(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, syncId);
         int j;
