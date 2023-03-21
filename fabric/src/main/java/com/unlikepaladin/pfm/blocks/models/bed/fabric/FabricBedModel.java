@@ -29,7 +29,7 @@ public class FabricBedModel extends BakedBedModel implements FabricBakedModel {
         super(frame, beddingTex, settings, bakedModels);
         this.modelParts = MODEL_PARTS;
     }
-
+//TODO: do this for the classic bed, add simple if check at beginning of emitblock quads
     @Override
     public boolean isVanillaAdapter() {
         return false;
@@ -42,7 +42,6 @@ public class FabricBedModel extends BakedBedModel implements FabricBakedModel {
             boolean left = isBed(blockView, pos, dir.rotateYCounterclockwise(), dir, state);
             boolean right = isBed(blockView, pos, dir.rotateYClockwise(), dir, state);
             boolean bunk = isBed(blockView, pos, Direction.DOWN, dir, state);
-            
             BedPart part = state.get(BedBlock.PART);
             if (part == BedPart.HEAD) {
                 ((FabricBakedModel)getBakedModels().get(modelParts.get(1))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
@@ -73,19 +72,6 @@ public class FabricBedModel extends BakedBedModel implements FabricBakedModel {
                 }
             }
         }
-    }
-
-    public boolean isBed(BlockRenderView world, BlockPos pos, Direction direction, Direction bedDirection, BlockState originalState)
-    {
-        BlockState state = world.getBlockState(pos.offset(direction));
-        if(state.getBlock().getClass().isAssignableFrom(SimpleBedBlock.class) && state.getBlock() instanceof SimpleBedBlock)
-        {
-            if (state.get(BedBlock.PART) == originalState.get(BedBlock.PART)) {
-                Direction sourceDirection = state.get(BedBlock.FACING);
-                return sourceDirection.equals(bedDirection);
-            }
-        }
-        return false;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.client.fabric;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import net.fabricmc.fabric.api.client.model.ExtraModelProvider;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelResourceProvider;
 import net.minecraft.client.render.model.UnbakedModel;

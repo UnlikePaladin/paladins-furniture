@@ -38,7 +38,7 @@ public class UnbakedBedModel implements UnbakedModel {
             add("block/simple_bed/oak/bunk/foot/simple_bed_foot_left");
         }
     };
-    //TODO Undo changes to Bed and Mineable axe tags
+
     public static final Identifier[] DEFAULT_TEXTURES = new Identifier[] {new Identifier("minecraft","block/white_concrete"), new Identifier("minecraft","block/glass"), new Identifier("pfm","block/mirror")};
     private static final Identifier PARENT = new Identifier("block/block");
     public static final List<Identifier> BED_MODEL_IDS = new ArrayList<>() {
@@ -51,17 +51,28 @@ public class UnbakedBedModel implements UnbakedModel {
         }
     };
 
+    public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
+        {
+            for(WoodVariant variant : WoodVariant.values()){
+                for (DyeColor dyeColor : DyeColor.values()) {
+                    for (String part : SIMPLE_MODEL_PARTS_BASE) {
+                        String newPart = part.replace("oak", variant.asString()).replace("red", dyeColor.getName());
+                        add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
+                    }
+                }
+            }
+        }
+    };
+
     protected final SpriteIdentifier beddingTex;
     protected final SpriteIdentifier frameTex;
     private final List<String> MODEL_PARTS;
     public UnbakedBedModel(Identifier defaultFrameTexture, Identifier beddingTexture, WoodVariant variant, DyeColor color, List<String> modelParts) {
         this.beddingTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, beddingTexture);
         this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, defaultFrameTexture);
-        //TODO: replace this with a constructor parameter for bed type
         for(String modelPartName : SIMPLE_MODEL_PARTS_BASE){
             String s = modelPartName.replace("oak", variant.asString()).replace("red", color.getName());
             modelParts.add(s);
-            System.out.println(s);
         }
         this.MODEL_PARTS = modelParts;
     }

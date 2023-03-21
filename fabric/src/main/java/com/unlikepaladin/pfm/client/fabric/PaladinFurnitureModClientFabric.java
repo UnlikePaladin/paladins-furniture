@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.client.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
@@ -24,12 +25,16 @@ import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.function.Consumer;
+
 //TODO: Implement Baked Model for Beds and Tables and Kitchen Counters
 //TODO: fix counters facing total opposite directions connecting
 @Environment(EnvType.CLIENT)
@@ -51,8 +56,8 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
 
         ScreenRegistry.registerScreens();
         ParticleProviderRegistryFabric.registerParticleFactories();
+        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> new ExtraModelProviderFabric());
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new ModelProviderFabric());
-
         if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
             PFMSandwichableClient.register();
         }

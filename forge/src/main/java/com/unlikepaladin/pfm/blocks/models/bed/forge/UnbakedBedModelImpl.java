@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public class UnbakedBedModelImpl {
-    //TODO: fix this
     public static BakedModel getBakedModel(Sprite frame, Sprite beddingTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        return null;
+        return new ForgeBedModel(frame, beddingTex, settings, bakedModels, MODEL_PARTS);
     }
 }

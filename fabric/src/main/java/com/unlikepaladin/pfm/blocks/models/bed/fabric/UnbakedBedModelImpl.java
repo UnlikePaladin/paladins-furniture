@@ -10,7 +10,6 @@ import java.util.Map;
 public class UnbakedBedModelImpl {
 
     public static BakedModel getBakedModel(Sprite frame, Sprite beddingTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        System.out.println(bakedModels);
         return new FabricBedModel(frame, beddingTex, settings, bakedModels, MODEL_PARTS);
     }
 }
