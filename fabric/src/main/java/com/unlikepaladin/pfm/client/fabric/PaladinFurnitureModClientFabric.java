@@ -55,7 +55,7 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         EntityRenderRegistryFabric.registerRender();
 
         ScreenRegistry.registerScreens();
-        ModelLoadingRegistry.INSTANCE.registerModelProvider((manager, out) -> new PFMExtraModelProvider().provideExtraModels(manager, out));
+        ModelLoadingRegistry.INSTANCE.registerModelProvider(new PFMExtraModelProvider());
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new PFMModelProvider());
         ParticleProviderRegistryFabric.registerParticleFactories();
         if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
