@@ -45,31 +45,31 @@ public class FabricBedModel extends BakedBedModel implements FabricBakedModel {
             
             BedPart part = state.get(BedBlock.PART);
             if (part == BedPart.HEAD) {
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(1)));
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(3)));
+                ((FabricBakedModel)getBakedModels().get(modelParts.get(1))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                ((FabricBakedModel)getBakedModels().get(modelParts.get(3))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 if (!right){
-                    context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(6)));
+                    ((FabricBakedModel)getBakedModels().get(modelParts.get(6))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
                 if (!left){
-                    context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(7)));
+                    ((FabricBakedModel)getBakedModels().get(modelParts.get(7))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
                 if (bunk){
-                    context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(8)));
+                    ((FabricBakedModel)getBakedModels().get(modelParts.get(8))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
             } else {
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(0)));
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(2)));
+                ((FabricBakedModel)getBakedModels().get(modelParts.get(0))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                ((FabricBakedModel)getBakedModels().get(modelParts.get(2))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 if (!right){
-                    context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(4)));
+                    ((FabricBakedModel)getBakedModels().get(modelParts.get(4))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
                 if (!left){
-                    context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(5)));
+                    ((FabricBakedModel)getBakedModels().get(modelParts.get(5))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
                 if (!right && bunk){
-                    context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(9)));
+                    ((FabricBakedModel)getBakedModels().get(modelParts.get(9))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
                 if (!left && bunk){
-                    context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(10)));
+                    ((FabricBakedModel)getBakedModels().get(modelParts.get(10))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
             }
         }
