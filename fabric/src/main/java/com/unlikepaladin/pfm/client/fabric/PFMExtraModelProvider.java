@@ -7,9 +7,9 @@ import net.minecraft.util.Identifier;
 
 import java.util.function.Consumer;
 
-public class ExtraModelProviderFabric implements ExtraModelProvider {
+public class PFMExtraModelProvider implements ExtraModelProvider {
     @Override
     public void provideExtraModels(ResourceManager manager, Consumer<Identifier> out) {
-        UnbakedBedModel.ALL_MODEL_IDS.forEach(out);
+        UnbakedBedModel.ALL_MODEL_IDS.forEach(out::accept);
     }
 }

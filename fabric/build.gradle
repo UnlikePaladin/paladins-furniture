@@ -65,48 +65,70 @@ repositories {
 
 if (rootProject.sandwichable_compatibility == "true") {
     dependencies {
-        modImplementation("maven.modrinth:sandwichable:${rootProject.sandwichable_version}")
-        modImplementation("dev.lambdaurora:spruceui:${rootProject.spruceui_version}")
+        modImplementation("maven.modrinth:sandwichable:${rootProject.sandwichable_version}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
+        modImplementation("dev.lambdaurora:spruceui:${rootProject.spruceui_version}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
     }
 }
 else {
     dependencies {
-        modCompileOnly("maven.modrinth:sandwichable:${rootProject.sandwichable_version}")
-        modCompileOnly("dev.lambdaurora:spruceui:${rootProject.spruceui_version}")
+        modCompileOnly("maven.modrinth:sandwichable:${rootProject.sandwichable_version}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
+        modCompileOnly("dev.lambdaurora:spruceui:${rootProject.spruceui_version}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
     }
 }
 
 if (rootProject.rei_compatibility == "true"){
     dependencies {
-        modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
-        modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"
+        modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
+        modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
     }
 }
 else {
     dependencies {
-        modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
+        modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
     }
 }
 
 if (rootProject.patchouli_compatibility == "true") {
     dependencies {
-        modImplementation("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_fabric}")
+        modImplementation("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_fabric}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
     }
 }
 else {
     dependencies {
-        modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_fabric}")
+        modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_fabric}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
     }
 }
 
 if (rootProject.arrp_compatibility == "true") {
     dependencies {
-        modImplementation "curse.maven:arrp-463113:${rootProject.arrp_version}"
+        modImplementation("curse.maven:arrp-463113:${rootProject.arrp_version}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
     }
 }
 else {
     dependencies {
-        modCompileOnly "curse.maven:arrp-463113:${rootProject.arrp_version}"
+        modCompileOnly("curse.maven:arrp-463113:${rootProject.arrp_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
+        }
     }
 }
 
@@ -141,6 +163,7 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
 
     modImplementation("com.terraformersmc:modmenu:${rootProject.modmenu_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
         transitive = false
     }
 }

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.client.forge;
 
+import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
@@ -13,6 +14,8 @@ import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -57,5 +60,10 @@ public class PaladinFurnitureModClientForge {
         );
         ClientRegistry.registerKeyBinding(key);
         return key;
+    }
+
+    @SubscribeEvent
+    public static void registerExtraModels(ModelRegistryEvent event) {
+        UnbakedBedModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
     }
 }

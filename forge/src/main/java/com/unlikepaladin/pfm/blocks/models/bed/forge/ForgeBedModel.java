@@ -67,7 +67,7 @@ public class ForgeBedModel extends BakedBedModel {
                 quads.addAll(getBakedModels().get(modelParts.get(10)).getQuads(state, side, rand, extraData));
             }
         }
-        return super.getQuads(state, side, rand, extraData);
+        return quads;
     }
 
 

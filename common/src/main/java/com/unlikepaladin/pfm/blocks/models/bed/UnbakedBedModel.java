@@ -39,7 +39,6 @@ public class UnbakedBedModel implements UnbakedModel {
         }
     };
 
-    public static final Identifier[] DEFAULT_TEXTURES = new Identifier[] {new Identifier("minecraft","block/white_concrete"), new Identifier("minecraft","block/glass"), new Identifier("pfm","block/mirror")};
     private static final Identifier PARENT = new Identifier("block/block");
     public static final List<Identifier> BED_MODEL_IDS = new ArrayList<>() {
         {
