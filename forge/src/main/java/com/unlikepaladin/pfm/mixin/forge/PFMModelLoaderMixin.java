@@ -24,7 +24,7 @@ public abstract class PFMModelLoaderMixin {
     @Inject(method = "loadModel", at = @At("HEAD"), cancellable = true)
     private void pfm$addMirrorModel(Identifier resourceId, CallbackInfo ci) {
         if (ModelHelper.containsIdentifier(UnbakedMirrorModel.MIRROR_MODEL_IDS, resourceId)){
-            UnbakedModel model =  new UnbakedMirrorModel(UnbakedMirrorModel.DEFAULT_REFLECT, UnbakedMirrorModel.DEFAULT_FRAME_TEXTURE, UnbakedMirrorModel.DEFAULT_GLASS);
+            UnbakedModel model =  new UnbakedMirrorModel(UnbakedMirrorModel.DEFAULT_TEXTURES[2], UnbakedMirrorModel.DEFAULT_TEXTURES[0], UnbakedMirrorModel.DEFAULT_TEXTURES[1]);
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();

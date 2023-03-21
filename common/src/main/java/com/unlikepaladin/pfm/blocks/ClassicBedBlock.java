@@ -31,20 +31,6 @@ public class ClassicBedBlock extends SimpleBedBlock {
         return CLASSIC_BEDS.stream();
     }
 
-    @Override
-    public boolean isBed(WorldAccess world, BlockPos pos, Direction direction, Direction bedDirection, BlockState originalState)
-    {
-        BlockState state = world.getBlockState(pos.offset(direction));
-        if(state.getBlock().getClass().isAssignableFrom(ClassicBedBlock.class) && state.getBlock() instanceof ClassicBedBlock)
-        {
-            if (state.get(PART) == originalState.get(PART)) {
-                Direction sourceDirection = state.get(FACING);
-                return sourceDirection.equals(bedDirection);
-            }
-        }
-        return false;
-    }
-
     static final VoxelShape HEAD = VoxelShapes.union(createCuboidShape(0, 9, 0,16, 16, 3),createCuboidShape(0, 0, 0,16, 9, 16));
     static final VoxelShape HEAD_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, HEAD);
     static final VoxelShape HEAD_EAST = rotateShape(Direction.NORTH, Direction.EAST, HEAD);

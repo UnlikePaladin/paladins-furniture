@@ -1,5 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models;
 
+import com.unlikepaladin.pfm.blocks.materials.WoodVariant;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 
 import java.util.Arrays;
@@ -14,5 +16,45 @@ public class ModelHelper {
             }
         });
         return contains.get();
+    }
+
+    public static WoodVariant getWoodType(Identifier identifier){
+        if (identifier.getPath().contains("dark_oak")) {
+            return WoodVariant.DARK_OAK;
+        }
+        else if (identifier.getPath().contains("oak")) {
+            return WoodVariant.OAK;
+        }
+        else if (identifier.getPath().contains("birch")) {
+            return WoodVariant.BIRCH;
+        }
+        else if (identifier.getPath().contains("acacia")) {
+            return WoodVariant.ACACIA;
+        }
+        else if (identifier.getPath().contains("jungle")) {
+            return WoodVariant.JUNGLE;
+        }
+        else if (identifier.getPath().contains("spruce")) {
+            return WoodVariant.SPRUCE;
+        }
+        else if (identifier.getPath().contains("crimson")) {
+            return WoodVariant.CRIMSON;
+        }
+        else if (identifier.getPath().contains("warped")) {
+            return WoodVariant.WARPED;
+        }
+        return WoodVariant.OAK;
+    }
+
+    public static DyeColor getColor(Identifier identifier) {
+        for (DyeColor color : DyeColor.values()) {
+            if (identifier.getPath().contains(color.getName())){
+                if (identifier.getPath().contains("light") && !color.getName().contains("light"))  {
+                    continue;
+                }
+                return color;
+            }
+        }
+        return DyeColor.RED;
     }
 }

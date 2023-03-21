@@ -514,7 +514,7 @@ public class BlockItemRegistry {
         registerFurniture("crimson_black_simple_bed", PaladinFurnitureModBlocksItems.CRIMSON_BLACK_SIMPLE_BED, 1);
         registerFurniture("crimson_white_simple_bed", PaladinFurnitureModBlocksItems.CRIMSON_WHITE_SIMPLE_BED, 1);
 
-        registerFurniture("oak_red_classic_bed", PaladinFurnitureModBlocksItems.OAK_RED_CLASSIC_BED, 1);
+        /*registerFurniture("oak_red_classic_bed", PaladinFurnitureModBlocksItems.OAK_RED_CLASSIC_BED, 1);
         registerFurniture("oak_orange_classic_bed", PaladinFurnitureModBlocksItems.OAK_ORANGE_CLASSIC_BED, 1);
         registerFurniture("oak_yellow_classic_bed", PaladinFurnitureModBlocksItems.OAK_YELLOW_CLASSIC_BED, 1);
         registerFurniture("oak_green_classic_bed", PaladinFurnitureModBlocksItems.OAK_GREEN_CLASSIC_BED, 1);
@@ -641,7 +641,7 @@ public class BlockItemRegistry {
         registerFurniture("crimson_brown_classic_bed", PaladinFurnitureModBlocksItems.CRIMSON_BROWN_CLASSIC_BED, 1);
         registerFurniture("crimson_gray_classic_bed", PaladinFurnitureModBlocksItems.CRIMSON_GRAY_CLASSIC_BED, 1);
         registerFurniture("crimson_black_classic_bed", PaladinFurnitureModBlocksItems.CRIMSON_BLACK_CLASSIC_BED, 1);
-        registerFurniture("crimson_white_classic_bed", PaladinFurnitureModBlocksItems.CRIMSON_WHITE_CLASSIC_BED, 1);
+        registerFurniture("crimson_white_classic_bed", PaladinFurnitureModBlocksItems.CRIMSON_WHITE_CLASSIC_BED, 1);*/
 
         registerFurniture("oak_simple_bunk_ladder", PaladinFurnitureModBlocksItems.OAK_SIMPLE_BUNK_LADDER, true);
         registerFurniture("birch_simple_bunk_ladder", PaladinFurnitureModBlocksItems.BIRCH_SIMPLE_BUNK_LADDER, true);

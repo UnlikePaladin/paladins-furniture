@@ -39,13 +39,11 @@ import java.util.stream.Stream;
 import static com.unlikepaladin.pfm.blocks.LogTableBlock.rotateShape;
 
 public class SimpleBedBlock extends BedBlock implements DyeableFurniture {
-    public static EnumProperty<MiddleShape> SHAPE = EnumProperty.of("shape", MiddleShape.class);
     private static final List<FurnitureBlock> SIMPLE_BEDS = new ArrayList<>();
-    public static final BooleanProperty BUNK = BooleanProperty.of("bunk");
     private final DyeColor color;
     public SimpleBedBlock(DyeColor color, Settings settings) {
         super(color, settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(PART, BedPart.FOOT).with(OCCUPIED, false).with(BUNK, false).with(SHAPE, MiddleShape.SINGLE));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(PART, BedPart.FOOT).with(OCCUPIED, false));
         if(this.getClass().isAssignableFrom(SimpleBedBlock.class)){
             String bedColor = color.getName();
             SIMPLE_BEDS.add(new FurnitureBlock(this, bedColor+"_simple_bed"));
@@ -63,7 +61,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurniture {
         BlockPos blockPos = ctx.getBlockPos();
         BlockPos blockPos2 = blockPos.offset(direction);
         if (ctx.getWorld().getBlockState(blockPos2).canReplace(ctx)) {
-            return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
+            return blockState;
         }
         return null;
     }
@@ -120,7 +118,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurniture {
             }
             return Blocks.AIR.getDefaultState();
         }
-        return getShape(state, world, pos, state.get(FACING));
+        return state;
     }
 
     @Override
@@ -146,8 +144,6 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurniture {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(SHAPE);
-        stateManager.add(BUNK);
         super.appendProperties(stateManager);
     }
 
@@ -161,48 +157,6 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurniture {
     @Override
     public FluidState getFluidState(BlockState state) {
         return super.getFluidState(state);
-    }
-
-    public boolean isBed(WorldAccess world, BlockPos pos, Direction direction, Direction bedDirection, BlockState originalState)
-    {
-        BlockState state = world.getBlockState(pos.offset(direction));
-        if(state.getBlock().getClass().isAssignableFrom(SimpleBedBlock.class) && state.getBlock() instanceof SimpleBedBlock)
-        {
-            if (state.get(PART) == originalState.get(PART)) {
-                Direction sourceDirection = state.get(FACING);
-                return sourceDirection.equals(bedDirection);
-            }
-        }
-        return false;
-    }
-
-    public BlockState getShape(BlockState state, WorldAccess world, BlockPos pos, Direction dir)
-    {
-        boolean left = isBed(world, pos, dir.rotateYCounterclockwise(), dir, state);
-        boolean right = isBed(world, pos, dir.rotateYClockwise(), dir, state);
-        if(left && right)
-        {
-            state = state.with(SHAPE, MiddleShape.MIDDLE);
-        }
-        else if(left)
-        {
-            state = state.with(SHAPE, MiddleShape.RIGHT);
-        }
-        else if(right)
-        {
-            state = state.with(SHAPE, MiddleShape.LEFT);
-        }
-        else {
-            state = state.with(SHAPE, MiddleShape.SINGLE);
-        }
-        boolean down = isBed(world, pos, Direction.DOWN, dir, state);
-        if (down) {
-            state = state.with(BUNK, true);
-        }
-        else {
-            state = state.with(BUNK, false);
-        }
-        return state;
     }
 
     static final VoxelShape HEAD = VoxelShapes.union(createCuboidShape(0, 9, 0,16, 14, 3),createCuboidShape(0, 0, 0,16, 9, 16));

@@ -31,7 +31,7 @@ public class PFMMirrorEntity extends Mirror {
     @Nullable
     public BlockPortalShape blockPortalShape;
     public boolean unbreakable = false;
-    private Direction facing;
+    private Direction facing = Direction.NORTH;
 
     public PFMMirrorEntity(EntityType<PFMMirrorEntity> entityType, World world) {
         super(entityType, world);
