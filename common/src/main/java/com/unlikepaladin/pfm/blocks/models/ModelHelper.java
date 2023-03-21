@@ -1,8 +1,10 @@
 package com.unlikepaladin.pfm.blocks.models;
 
+import com.unlikepaladin.pfm.blocks.DyeableFurniture;
 import com.unlikepaladin.pfm.blocks.materials.WoodVariant;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,6 +49,9 @@ public class ModelHelper {
     }
 
     public static DyeColor getColor(Identifier identifier) {
+        if (Registry.BLOCK.get(identifier) instanceof DyeableFurniture block) {
+            return block.getPFMColor();
+        }
         for (DyeColor color : DyeColor.values()) {
             if (identifier.getPath().contains(color.getName())){
                 if (identifier.getPath().contains("light") && !color.getName().contains("light"))  {

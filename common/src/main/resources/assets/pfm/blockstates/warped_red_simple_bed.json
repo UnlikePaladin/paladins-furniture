@@ -1,8 +1,8 @@
 {
     "variants": {
-      "facing=north": { "model": "pfm:block/warped_yellow_simple_bed" },
-      "facing=south": { "model": "pfm:block/warped_yellow_simple_bed", "y":180 },
-      "facing=east": { "model": "pfm:block/warped_yellow_simple_bed", "y":90 },
-      "facing=west": { "model": "pfm:block/warped_yellow_simple_bed", "y":270 }
+      "facing=north": { "model": "pfm:block/warped_red_simple_bed" },
+      "facing=south": { "model": "pfm:block/warped_red_simple_bed", "y":180 },
+      "facing=east": { "model": "pfm:block/warped_red_simple_bed", "y":90 },
+      "facing=west": { "model": "pfm:block/warped_red_simple_bed", "y":270 }
     }
   }

@@ -61,6 +61,7 @@ public class UnbakedBedModel implements UnbakedModel {
         for(String modelPartName : SIMPLE_MODEL_PARTS_BASE){
             String s = modelPartName.replace("oak", variant.asString()).replace("red", color.getName());
             modelParts.add(s);
+            System.out.println(s);
         }
         this.MODEL_PARTS = modelParts;
     }
