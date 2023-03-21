@@ -31,7 +31,7 @@ public abstract class PFMModelLoaderMixin {
             this.modelsToBake.put(resourceId, model);
             ci.cancel();
         } else if (ModelHelper.containsIdentifier(UnbakedBedModel.BED_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            UnbakedModel model = new UnbakedBedModel(UnbakedMirrorModel.DEFAULT_TEXTURES[0], UnbakedMirrorModel.DEFAULT_TEXTURES[1], ModelHelper.getWoodType(resourceId), ModelHelper.getColor(resourceId), new ArrayList<>());
+            UnbakedModel model = new UnbakedBedModel(UnbakedMirrorModel.DEFAULT_TEXTURES[0], UnbakedMirrorModel.DEFAULT_TEXTURES[1], ModelHelper.getWoodType(resourceId), ModelHelper.getColor(resourceId), new ArrayList<>(), resourceId.getPath().contains("classic"));
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();

@@ -33,9 +33,9 @@ public class UnbakedBedModel implements UnbakedModel {
             add("block/simple_bed/oak/foot/simple_bed_foot_left");
             add("block/simple_bed/oak/head/simple_bed_head_right");
             add("block/simple_bed/oak/head/simple_bed_head_left");
-            add("block/simple_bed/oak/bunk/head/simple_bed_head");
             add("block/simple_bed/oak/bunk/foot/simple_bed_foot_right");
             add("block/simple_bed/oak/bunk/foot/simple_bed_foot_left");
+            add("block/simple_bed/oak/bunk/head/simple_bed_head");
         }
     };
 
@@ -45,6 +45,11 @@ public class UnbakedBedModel implements UnbakedModel {
             for(WoodVariant variant : WoodVariant.values()){
                 for (DyeColor dyeColor : DyeColor.values()) {
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + variant.asString() + "_" + dyeColor.getName() + "_simple_bed"));
+                }
+            }
+            for(WoodVariant variant : WoodVariant.values()){
+                for (DyeColor dyeColor : DyeColor.values()) {
+                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + variant.asString() + "_" + dyeColor.getName() + "_classic_bed"));
                 }
             }
         }
@@ -60,19 +65,35 @@ public class UnbakedBedModel implements UnbakedModel {
                     }
                 }
             }
+            for(WoodVariant variant : WoodVariant.values()){
+                for (DyeColor dyeColor : DyeColor.values()) {
+                    for (String part : SIMPLE_MODEL_PARTS_BASE) {
+                        if (part.contains("bunk/head")) {
+                            continue;
+                        }
+                        String newPart = part.replace("oak", variant.asString()).replace("red", dyeColor.getName()).replace("simple", "classic");
+                        add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
+                    }
+                }
+            }
         }
     };
 
     protected final SpriteIdentifier beddingTex;
     protected final SpriteIdentifier frameTex;
     private final List<String> MODEL_PARTS;
-    public UnbakedBedModel(Identifier defaultFrameTexture, Identifier beddingTexture, WoodVariant variant, DyeColor color, List<String> modelParts) {
+    private final boolean isClassic;
+    public UnbakedBedModel(Identifier defaultFrameTexture, Identifier beddingTexture, WoodVariant variant, DyeColor color, List<String> modelParts, boolean isClassic) {
         this.beddingTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, beddingTexture);
         this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, defaultFrameTexture);
         for(String modelPartName : SIMPLE_MODEL_PARTS_BASE){
             String s = modelPartName.replace("oak", variant.asString()).replace("red", color.getName());
+            if (isClassic) {
+                s = s.replace("simple", "classic");
+            }
             modelParts.add(s);
         }
+        this.isClassic = isClassic;
         this.MODEL_PARTS = modelParts;
     }
 
@@ -93,6 +114,9 @@ public class UnbakedBedModel implements UnbakedModel {
     public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
         Map<String,BakedModel> bakedModels = new LinkedHashMap<>();
         for (String modelPart : MODEL_PARTS) {
+            if (isClassic && modelPart.contains("bunk/head")) {
+                continue;
+            }
             bakedModels.put(modelPart, loader.bake(new Identifier(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
         }
         return getBakedModel(textureGetter.apply(frameTex), textureGetter.apply(beddingTex), rotationContainer, bakedModels, MODEL_PARTS);

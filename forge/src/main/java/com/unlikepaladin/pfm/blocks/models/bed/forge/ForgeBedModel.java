@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models.bed.forge;
 
+import com.unlikepaladin.pfm.blocks.ClassicBedBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.blocks.models.bed.BakedBedModel;
 import net.minecraft.block.BedBlock;
@@ -48,8 +49,8 @@ public class ForgeBedModel extends BakedBedModel {
             if (!left){
                 quads.addAll(getBakedModels().get(modelParts.get(7)).getQuads(state, side, rand, extraData));
             }
-            if (bunk){
-                quads.addAll(getBakedModels().get(modelParts.get(8)).getQuads(state, side, rand, extraData));
+            if (bunk && !(state.getBlock() instanceof ClassicBedBlock)){
+                quads.addAll(getBakedModels().get(modelParts.get(10)).getQuads(state, side, rand, extraData));
             }
         } else {
             quads.addAll(getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData));
@@ -61,10 +62,10 @@ public class ForgeBedModel extends BakedBedModel {
                 quads.addAll(getBakedModels().get(modelParts.get(5)).getQuads(state, side, rand, extraData));
             }
             if (!right && bunk){
-                quads.addAll(getBakedModels().get(modelParts.get(9)).getQuads(state, side, rand, extraData));
+                quads.addAll(getBakedModels().get(modelParts.get(8)).getQuads(state, side, rand, extraData));
             }
             if (!left && bunk){
-                quads.addAll(getBakedModels().get(modelParts.get(10)).getQuads(state, side, rand, extraData));
+                quads.addAll(getBakedModels().get(modelParts.get(9)).getQuads(state, side, rand, extraData));
             }
         }
         return quads;
@@ -77,9 +78,10 @@ public class ForgeBedModel extends BakedBedModel {
         ModelDataMap.Builder builder = new ModelDataMap.Builder();
         if (state.getBlock() instanceof SimpleBedBlock) {
             Direction dir = state.get(BedBlock.FACING);
-            boolean left = isBed(blockView, pos, dir.rotateYCounterclockwise(), dir, state);
-            boolean right = isBed(blockView, pos, dir.rotateYClockwise(), dir, state);
-            boolean bunk = isBed(blockView, pos, Direction.DOWN, dir, state);
+            boolean isClassic = state.getBlock().getTranslationKey().contains("classic");
+            boolean left = isBed(blockView, pos, dir.rotateYCounterclockwise(), dir, state, isClassic);
+            boolean right = isBed(blockView, pos, dir.rotateYClockwise(), dir, state, isClassic);
+            boolean bunk = isBed(blockView, pos, Direction.DOWN, dir, state, isClassic);
             BitSet set = new BitSet();
             set.set(0, left);
             set.set(1, right);
