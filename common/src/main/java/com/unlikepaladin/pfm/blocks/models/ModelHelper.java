@@ -20,6 +20,12 @@ public class ModelHelper {
         return contains.get();
     }
 
+    public static Identifier getPlankTexture(WoodVariant variant) {
+        String path = "block/";
+        String woodType = variant.asString();
+        return new Identifier("minecraft",path + woodType + "_planks");
+    }
+
     public static WoodVariant getWoodType(Identifier identifier){
         if (identifier.getPath().contains("dark_oak")) {
             return WoodVariant.DARK_OAK;

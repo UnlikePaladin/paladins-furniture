@@ -22,13 +22,11 @@ import java.util.Map;
 import java.util.Random;
 
 public class BakedBedModel implements BakedModel{
-    protected final Sprite beddingTex;
     protected final ModelBakeSettings settings;
     private final Sprite frame;
     private final Map<String,BakedModel> bakedModels;
-    public BakedBedModel(Sprite frame, Sprite beddingTex, ModelBakeSettings settings, Map<String, BakedModel> bakedModels) {
+    public BakedBedModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels) {
         this.frame = frame;
-        this.beddingTex = beddingTex;
         this.settings = settings;
         this.bakedModels = bakedModels;
     }

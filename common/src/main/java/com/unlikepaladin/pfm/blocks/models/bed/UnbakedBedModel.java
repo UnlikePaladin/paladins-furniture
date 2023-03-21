@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.bed;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.materials.WoodVariant;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -79,13 +80,11 @@ public class UnbakedBedModel implements UnbakedModel {
         }
     };
 
-    protected final SpriteIdentifier beddingTex;
     protected final SpriteIdentifier frameTex;
     private final List<String> MODEL_PARTS;
     private final boolean isClassic;
-    public UnbakedBedModel(Identifier defaultFrameTexture, Identifier beddingTexture, WoodVariant variant, DyeColor color, List<String> modelParts, boolean isClassic) {
-        this.beddingTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, beddingTexture);
-        this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, defaultFrameTexture);
+    public UnbakedBedModel(WoodVariant variant, DyeColor color, List<String> modelParts, boolean isClassic) {
+        this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, ModelHelper.getPlankTexture(variant));
         for(String modelPartName : SIMPLE_MODEL_PARTS_BASE){
             String s = modelPartName.replace("oak", variant.asString()).replace("red", color.getName());
             if (isClassic) {
@@ -105,7 +104,6 @@ public class UnbakedBedModel implements UnbakedModel {
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         List<SpriteIdentifier> list = new ArrayList<>(2);
         list.add(frameTex);
-        list.add(beddingTex);
         return list;
     }
 
@@ -119,11 +117,11 @@ public class UnbakedBedModel implements UnbakedModel {
             }
             bakedModels.put(modelPart, loader.bake(new Identifier(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
         }
-        return getBakedModel(textureGetter.apply(frameTex), textureGetter.apply(beddingTex), rotationContainer, bakedModels, MODEL_PARTS);
+        return getBakedModel(textureGetter.apply(frameTex), rotationContainer, bakedModels, MODEL_PARTS);
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Sprite frame, Sprite beddingTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        return new BakedBedModel(frame, beddingTex, settings, bakedModels);
+    public static BakedModel getBakedModel(Sprite frame, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
+        return new BakedBedModel(frame, settings, bakedModels);
     }
 }

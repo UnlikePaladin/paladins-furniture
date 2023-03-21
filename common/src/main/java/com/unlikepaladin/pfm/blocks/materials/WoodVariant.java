@@ -38,4 +38,4 @@ public enum WoodVariant implements StringIdentifiable {
         public String toString() {
             return this.type;
         }
-    }
+}

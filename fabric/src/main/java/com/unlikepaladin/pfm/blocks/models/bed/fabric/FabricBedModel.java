@@ -26,8 +26,8 @@ import java.util.function.Supplier;
 
 public class FabricBedModel extends BakedBedModel implements FabricBakedModel {
     private final List<String> modelParts; 
-    public FabricBedModel(Sprite frame, Sprite beddingTex, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, beddingTex, settings, bakedModels);
+    public FabricBedModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
+        super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;
     }
 

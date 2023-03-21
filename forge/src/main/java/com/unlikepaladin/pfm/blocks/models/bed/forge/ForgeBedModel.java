@@ -23,8 +23,8 @@ import java.util.*;
 import java.util.function.Predicate;
 
 public class ForgeBedModel extends BakedBedModel {
-    public ForgeBedModel(Sprite frame, Sprite beddingTex, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, beddingTex, settings, bakedModels);
+    public ForgeBedModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
+        super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;

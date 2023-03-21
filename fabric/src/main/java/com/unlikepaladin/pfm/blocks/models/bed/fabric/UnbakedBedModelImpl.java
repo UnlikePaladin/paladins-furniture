@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class UnbakedBedModelImpl {
 
-    public static BakedModel getBakedModel(Sprite frame, Sprite beddingTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        return new FabricBedModel(frame, beddingTex, settings, bakedModels, MODEL_PARTS);
+    public static BakedModel getBakedModel(Sprite frame, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
+        return new FabricBedModel(frame, settings, bakedModels, MODEL_PARTS);
     }
 }
