@@ -100,7 +100,7 @@ class BedConnections implements Predicate<BedConnections>
 
     protected BitSet connections;
     @Override
-    public boolean test(BedConnections mirrorDirections) {
-        return connections.equals(mirrorDirections.connections);
+    public boolean test(BedConnections bedConnections) {
+        return connections.equals(bedConnections.connections);
     }
 }

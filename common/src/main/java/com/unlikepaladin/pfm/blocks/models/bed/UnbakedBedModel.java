@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.models.bed;
 
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.materials.BlockType;
 import com.unlikepaladin.pfm.blocks.materials.WoodVariant;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -84,7 +85,7 @@ public class UnbakedBedModel implements UnbakedModel {
     private final List<String> MODEL_PARTS;
     private final boolean isClassic;
     public UnbakedBedModel(WoodVariant variant, DyeColor color, List<String> modelParts, boolean isClassic) {
-        this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, ModelHelper.getPlankTexture(variant));
+        this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PLANKS));
         for(String modelPartName : SIMPLE_MODEL_PARTS_BASE){
             String s = modelPartName.replace("oak", variant.asString()).replace("red", color.getName());
             if (isClassic) {

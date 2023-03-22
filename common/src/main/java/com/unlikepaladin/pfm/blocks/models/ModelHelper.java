@@ -1,6 +1,9 @@
 package com.unlikepaladin.pfm.blocks.models;
 
 import com.unlikepaladin.pfm.blocks.DyeableFurniture;
+import com.unlikepaladin.pfm.blocks.materials.BlockType;
+import com.unlikepaladin.pfm.blocks.materials.MaterialEnum;
+import com.unlikepaladin.pfm.blocks.materials.StoneVariant;
 import com.unlikepaladin.pfm.blocks.materials.WoodVariant;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
@@ -20,12 +23,34 @@ public class ModelHelper {
         return contains.get();
     }
 
-    public static Identifier getPlankTexture(WoodVariant variant) {
-        String path = "block/";
-        String woodType = variant.asString();
-        return new Identifier("minecraft",path + woodType + "_planks");
+    public static BlockType getBlockType(Identifier identifier) {
+        if (identifier.getPath().contains("stripped_")) {
+            return BlockType.STRIPPED_LOG;
+        }
+        for (WoodVariant variant : WoodVariant.values()) {
+            if (identifier.getPath().contains(variant.asString())) {
+                return BlockType.PLANKS;
+            }
+        }
+        return BlockType.BLOCK;
     }
 
+    public static MaterialEnum getVariant(Identifier identifier) {
+        MaterialEnum var = getStoneType(identifier);
+        if (var == StoneVariant.STONE && !identifier.getPath().contains("stone")) {
+            var = getWoodType(identifier);
+        }
+        return var;
+    }
+    public static StoneVariant getStoneType(Identifier identifier) {
+        for (StoneVariant variant:
+             StoneVariant.values()) {
+            if (identifier.getPath().contains(variant.asString())) {
+                return variant;
+            }
+        }
+        return StoneVariant.STONE;
+    }
     public static WoodVariant getWoodType(Identifier identifier){
         if (identifier.getPath().contains("dark_oak")) {
             return WoodVariant.DARK_OAK;

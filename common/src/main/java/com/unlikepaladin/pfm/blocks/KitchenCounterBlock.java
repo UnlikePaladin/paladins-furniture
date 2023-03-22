@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class KitchenCounterBlock extends HorizontalFacingBlock {
+    //TODO: Add a baked model for these :pain:
     private float height = 0.36f;
     private final Block baseBlock;
     public static final EnumProperty<CounterShape> SHAPE = EnumProperty.of("shape", CounterShape.class);
@@ -305,4 +306,3 @@ enum CounterShape implements StringIdentifiable
         return this.name;
     }
 }
-

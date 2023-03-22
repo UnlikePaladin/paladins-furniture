@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.client.forge;
 
+import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
@@ -65,5 +66,6 @@ public class PaladinFurnitureModClientForge {
     @SubscribeEvent
     public static void registerExtraModels(ModelRegistryEvent event) {
         UnbakedBedModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        UnbakedBasicTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
     }
 }

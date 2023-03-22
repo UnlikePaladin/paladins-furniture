@@ -23,10 +23,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
+//TODO: Definitely add a baked model here
 public class BasicTableBlock extends Block {
     private final Block baseBlock;
     public static final EnumProperty<BasicTableShape> SHAPE = EnumProperty.of("shape", BasicTableShape.class);
-
     public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> WOOD_BASIC_TABLES = new ArrayList<>();
@@ -102,7 +102,7 @@ public class BasicTableBlock extends Block {
         return super.getFluidState(state);
     }
 
-    boolean canConnect(BlockState blockState)
+    public boolean canConnect(BlockState blockState)
     {
         return PaladinFurnitureMod.getPFMConfig().doTablesOfDifferentMaterialsConnect() ? blockState.getBlock() instanceof BasicTableBlock : blockState.getBlock() == this;
     }

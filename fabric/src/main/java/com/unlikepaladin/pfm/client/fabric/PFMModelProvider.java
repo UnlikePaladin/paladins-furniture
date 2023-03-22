@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.client.fabric;
 
+import com.unlikepaladin.pfm.blocks.materials.BlockType;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
@@ -18,6 +20,9 @@ public class PFMModelProvider implements ModelResourceProvider {
             return new UnbakedMirrorModel(UnbakedMirrorModel.DEFAULT_TEXTURES[2], UnbakedMirrorModel.DEFAULT_TEXTURES[0], UnbakedMirrorModel.DEFAULT_TEXTURES[1]);
         } else if (ModelHelper.containsIdentifier(UnbakedBedModel.BED_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
             return new UnbakedBedModel(ModelHelper.getWoodType(resourceId), ModelHelper.getColor(resourceId), new ArrayList<>(), resourceId.getPath().contains("classic"));
+        }
+        else if (ModelHelper.containsIdentifier(UnbakedBasicTableModel.TABLE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            return new UnbakedBasicTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
         }
         else
             return null;
