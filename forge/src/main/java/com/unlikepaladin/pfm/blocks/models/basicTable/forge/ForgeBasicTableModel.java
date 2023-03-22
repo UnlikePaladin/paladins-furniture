@@ -33,30 +33,15 @@ public class ForgeBasicTableModel extends BakedBasicTableModel {
     public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
         ModelDataMap.Builder builder = new ModelDataMap.Builder();
         if (state.getBlock() instanceof BasicTableBlock) {
-            Direction.Axis dir = state.get(BasicTableBlock.AXIS);
             BasicTableBlock block = (BasicTableBlock) state.getBlock();
-            boolean north = false;
-            boolean east = false;
-            boolean west = false;
-            boolean south = false;
-            if (block.canConnect(world.getBlockState(pos.north())) && world.getBlockState(pos.north()).get(BasicTableBlock.AXIS) == dir) {
-                north = block.canConnect(world.getBlockState(pos.north()));
-            }
-            if (block.canConnect(world.getBlockState(pos.east())) && world.getBlockState(pos.east()).get(BasicTableBlock.AXIS) == dir) {
-                east =  block.canConnect(world.getBlockState(pos.east()));
-            }
-
-            if (block.canConnect(world.getBlockState(pos.west())) && world.getBlockState(pos.west()).get(BasicTableBlock.AXIS) == dir) {
-                west =  block.canConnect(world.getBlockState(pos.west()));
-            }
-            if (block.canConnect(world.getBlockState(pos.south())) && world.getBlockState(pos.south()).get(BasicTableBlock.AXIS) == dir) {
-                south =  block.canConnect(world.getBlockState(pos.south()));
-            }
-            boolean cornerNorthWest = north && west && !block.canConnect(world.getBlockState(pos.north().west()));
-            boolean cornerNorthEast = north && east && !block.canConnect(world.getBlockState(pos.north().east()));
-            boolean cornerSouthEast = south && east && !block.canConnect(world.getBlockState(pos.south().east()));
-            boolean cornerSouthWest = south && west && !block.canConnect(world.getBlockState(pos.south().west()));
-
+            boolean north = block.canConnect(world, state, pos.north(), pos);
+            boolean east = block.canConnect(world, state, pos.east(), pos);
+            boolean west = block.canConnect(world, state, pos.west(), pos);
+            boolean south = block.canConnect(world, state, pos.south(), pos);
+            boolean cornerNorthWest = north && west && !block.canConnect(world, state, pos.north().west(), pos);
+            boolean cornerNorthEast = north && east && !block.canConnect(world, state, pos.north().east(), pos);
+            boolean cornerSouthEast = south && east && !block.canConnect(world, state, pos.south().east(), pos);
+            boolean cornerSouthWest = south && west && !block.canConnect(world, state, pos.north().east(), pos);
             BitSet set = new BitSet();
             set.set(0, north);
             set.set(1, east);
