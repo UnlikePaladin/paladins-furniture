@@ -18,10 +18,7 @@ import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Stream;
 
 public class BasicTableBlock extends Block {
@@ -147,7 +144,7 @@ public class BasicTableBlock extends Block {
         }
         return false;
     }
-    //TODO: ROTATE SHAPE
+
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction.Axis dir = state.get(BasicTableBlock.AXIS);
 
@@ -158,69 +155,111 @@ public class BasicTableBlock extends Block {
         boolean cornerNorthWest = north && west && !canConnect(world, state, pos.north().west(), pos);
         boolean cornerNorthEast = north && east && !canConnect(world, state, pos.north().east(), pos);
         boolean cornerSouthEast = south && east && !canConnect(world, state, pos.south().east(), pos);
-        boolean cornerSouthWest = south && west && !canConnect(world, state, pos.north().east(), pos);
+        boolean cornerSouthWest = south && west && !canConnect(world, state, pos.south().west(), pos);
 
-        String key = north.toString()+ east + west + south + cornerNorthWest + cornerNorthEast + cornerSouthEast + cornerSouthWest;
+        String key = north.toString()+ east + west + south + cornerNorthWest + cornerNorthEast + cornerSouthEast + cornerSouthWest + dir.asString();
         if (!VOXEL_SHAPES.containsKey(key)) {
-            generateVoxelShape(key, north, east, west, south, cornerNorthWest, cornerNorthEast, cornerSouthEast, cornerSouthWest);
+            generateVoxelShape(key, north, east, west, south, cornerNorthWest, cornerNorthEast, cornerSouthEast, cornerSouthWest, dir);
         }
         return VOXEL_SHAPES.get(key);
     }
 
-    private void generateVoxelShape(String key, Boolean north, Boolean east, Boolean west, Boolean south, Boolean cornerNorthWest, Boolean cornerNorthEast, Boolean cornerSouthEast, Boolean cornerSouthWest) {
+    private static void generateVoxelShape(String key, Boolean north, Boolean east, Boolean west, Boolean south, Boolean cornerNorthWest, Boolean cornerNorthEast, Boolean cornerSouthEast, Boolean cornerSouthWest, Direction.Axis axis) {
         VoxelShape newVoxelShape = TABLE_BASIC_BASE;
         if (!north && !south && !east && !west) {
             newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_NORTH, TABLE_BASIC_EAST_WEST_SOUTH);
         }
-        if (!north && !east)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_EAST_LEG);
+        if (!north && !east) {
+            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_NORTH_EAST_LEG, TABLE_BASIC_NORTH_WEST_LEG));
         }
         if (!north && !west)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_WEST_LEG);
+            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_NORTH_WEST_LEG, TABLE_BASIC_SOUTH_WEST_LEG));
         }
         if (!south && !east)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_LEG);
+            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_SOUTH_EAST_LEG, TABLE_BASIC_NORTH_EAST_LEG));
         }
         if (!south && !west)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_LEG);
-        }
-        if (!north && south && !east && !west) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_NORTH);
-        }
-        if (north && !south && !east && !west) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_SOUTH);
-        }
-        if (!north && east && !west) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_TOP);
-        }
-        if (!south && !east && west) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_BOTTOM);
-        }
-        if (!south && east && !west) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_BOTTOM);
-        }
-        if (!north && !east && west) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_TOP);
-        }
-        if (!north && east && west) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_WEST);
-        }
-        if (!south && east && west) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_EAST);
+            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_SOUTH_WEST_LEG, TABLE_BASIC_SOUTH_EAST_LEG));
         }
         if (cornerNorthEast) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_EAST_CORNER, TABLE_BASIC_NORTH_EAST_LEG);
+            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, VoxelShapes.union(TABLE_BASIC_NORTH_EAST_LEG, TABLE_BASIC_NORTH_EAST_CORNER), VoxelShapes.union(TABLE_BASIC_NORTH_WEST_LEG, TABLE_BASIC_NORTH_WEST_CORNER)));
         }
         if (cornerNorthWest) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_WEST_CORNER, TABLE_BASIC_NORTH_WEST_LEG);
+            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, VoxelShapes.union(TABLE_BASIC_NORTH_WEST_LEG, TABLE_BASIC_NORTH_WEST_CORNER), VoxelShapes.union(TABLE_BASIC_SOUTH_WEST_LEG, TABLE_BASIC_SOUTH_WEST_CORNER)));
         }
         if (cornerSouthWest) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_CORNER, TABLE_BASIC_SOUTH_WEST_LEG);
+            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, VoxelShapes.union(TABLE_BASIC_SOUTH_WEST_LEG, TABLE_BASIC_SOUTH_WEST_CORNER), VoxelShapes.union(TABLE_BASIC_SOUTH_EAST_LEG, TABLE_BASIC_SOUTH_EAST_CORNER)));
         }
         if (cornerSouthEast) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_CORNER, TABLE_BASIC_SOUTH_EAST_LEG);
+            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, VoxelShapes.union(TABLE_BASIC_SOUTH_EAST_LEG, TABLE_BASIC_SOUTH_EAST_CORNER), VoxelShapes.union(TABLE_BASIC_NORTH_EAST_LEG, TABLE_BASIC_NORTH_EAST_CORNER)));
+        }
+
+        if (axis == Direction.Axis.Z) {
+            if (!north && south && !east && !west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_NORTH);
+            }
+            if (north && !south && !east && !west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_SOUTH);
+            }
+            if (!north && east && !west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_TOP);
+            }
+            if (!south && !east && west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_BOTTOM);
+            }
+            if (!south && east && !west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_BOTTOM);
+            }
+            if (!north && !east && west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_TOP);
+            }
+            if (!north && east && west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_WEST);
+            }
+            if (!south && east && west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_EAST);
+            }
+        }
+        else {
+            if (!north && south && !west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_BOTTOM);
+            }
+            if (north && !south && !west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_BOTTOM);
+            }
+            if (!north && south && !east) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_TOP);
+            }
+            if (north && !south && !east) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_TOP);
+            }
+            if (north && !south && !east) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_TOP);
+            }
+            if (!north && !south && !east) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_NORTH);
+            }
+            if (!north && !south && !west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_SOUTH);
+            }
+            if (north && south && !east) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_WEST);
+            }
+            if (north && south && !west) {
+                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_EAST);
+            }
+            newVoxelShape = rotateShape(Direction.NORTH, Direction.EAST, newVoxelShape);
         }
         VOXEL_SHAPES.put(key, newVoxelShape);
+    }
+
+    private static VoxelShape getShapeForAxis(Direction.Axis axis, VoxelShape a, VoxelShape b) {
+        if (axis == Direction.Axis.Z) {
+            return a;
+        } else if (axis == Direction.Axis.X) {
+            return b;
+        }
+        return VoxelShapes.empty();
     }
 
     @Override

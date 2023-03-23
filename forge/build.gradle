@@ -78,6 +78,11 @@ else {
         }
     }
 }
+if (rootProject.lazy_dfu_enabled == "true"){
+    dependencies {
+        modRuntimeOnly ("curse.maven:lazydfu-460819:${rootProject.lazy_dfu_version_forge}")
+    }
+}
 
 processResources {
     inputs.property "version", project.version

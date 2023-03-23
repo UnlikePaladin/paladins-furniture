@@ -41,7 +41,7 @@ public class ForgeBasicTableModel extends BakedBasicTableModel {
             boolean cornerNorthWest = north && west && !block.canConnect(world, state, pos.north().west(), pos);
             boolean cornerNorthEast = north && east && !block.canConnect(world, state, pos.north().east(), pos);
             boolean cornerSouthEast = south && east && !block.canConnect(world, state, pos.south().east(), pos);
-            boolean cornerSouthWest = south && west && !block.canConnect(world, state, pos.north().east(), pos);
+            boolean cornerSouthWest = south && west && !block.canConnect(world, state, pos.south().west(), pos);
             BitSet set = new BitSet();
             set.set(0, north);
             set.set(1, east);

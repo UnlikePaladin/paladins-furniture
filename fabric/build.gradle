@@ -156,6 +156,11 @@ else {
         }
     }
 }
+if (rootProject.lazy_dfu_enabled == "true"){
+    dependencies {
+        modRuntimeOnly ("maven.modrinth:lazydfu:${rootProject.lazy_dfu_version_fabric}")
+    }
+}
 
 dependencies {
     // To change the versions see the gradle.properties file

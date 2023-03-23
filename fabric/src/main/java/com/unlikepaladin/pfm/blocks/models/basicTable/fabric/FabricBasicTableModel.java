@@ -41,7 +41,7 @@ public class FabricBasicTableModel extends BakedBasicTableModel implements Fabri
             boolean cornerNorthWest = north && west && !block.canConnect(world, state, pos.north().west(), pos);
             boolean cornerNorthEast = north && east && !block.canConnect(world, state, pos.north().east(), pos);
             boolean cornerSouthEast = south && east && !block.canConnect(world, state, pos.south().east(), pos);
-            boolean cornerSouthWest = south && west && !block.canConnect(world, state, pos.north().east(), pos);
+            boolean cornerSouthWest = south && west && !block.canConnect(world, state, pos.south().west(), pos);
 
             ((FabricBakedModel)getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
             if (!north && !south && !east && !west) {
