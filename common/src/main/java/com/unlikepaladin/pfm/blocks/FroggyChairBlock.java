@@ -30,7 +30,7 @@ public class FroggyChairBlock extends BasicChairBlock {
         return FROGGY_CHAIRS.stream();
     }
 
-    protected static final VoxelShape FACE_WEST = VoxelShapes.union(createCuboidShape(0.3, 10.5, 1.6,2.6, 22.5, 14.6), createCuboidShape(0.3, 22.5, 9.6, 2.6, 24.5, 13.6), createCuboidShape(0.3, 22.5, 2.6, 2.6, 24.5, 6.6), createCuboidShape(2.8, 10.5, 3.1, 12.8, 11, 13.1), createCuboidShape(0.3, 8, 1.6,14.3, 10.5, 14.6), createCuboidShape(11, 0, 11.5, 13.5, 8, 14), createCuboidShape(1, 0, 2.5, 3.5, 8, 5), createCuboidShape(1, 0, 11.5, 3.5, 8, 14), createCuboidShape(11, 0, 2.5, 13.5, 8, 5));
+    protected static final VoxelShape FACE_WEST = VoxelShapes.union(createCuboidShape(0.8, 9.5, 2.6,2.6, 19.5, 13.6), createCuboidShape(0.8, 17.5, 10.6,2.6, 21.5, 14.6), createCuboidShape(0.8, 17.5, 1.6, 2.6, 21.5, 5.6), createCuboidShape(0.8, 8, 2.6,13.3, 9.5, 13.6), createCuboidShape(12, 0, 1.5,14, 8, 3.5), createCuboidShape(11.5, 6.5, 2.5, 13.5, 8, 4.5), createCuboidShape(11.5, 6.5, 11.5, 13.5, 8, 13.5), createCuboidShape(12, 0, 12.5, 14, 8, 14.5), createCuboidShape(1.5, 6.5, 11, 3.5, 8, 13), createCuboidShape(0.5, 0, 12.5,2.5, 8, 14.5), createCuboidShape(0.5, 0, 1.5,2.5, 8, 3.5), createCuboidShape(1.5, 6.5, 2.5,3.5, 8, 4.5));
     protected static final VoxelShape FACE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, FACE_WEST);
     protected static final VoxelShape FACE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, FACE_WEST);
     protected static final VoxelShape FACE_EAST = rotateShape(Direction.WEST, Direction.EAST, FACE_WEST);
