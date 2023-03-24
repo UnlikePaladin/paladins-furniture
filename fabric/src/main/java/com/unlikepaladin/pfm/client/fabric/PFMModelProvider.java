@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.materials.BlockType;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
+import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelResourceProvider;
@@ -23,6 +24,9 @@ public class PFMModelProvider implements ModelResourceProvider {
         }
         else if (ModelHelper.containsIdentifier(UnbakedBasicTableModel.TABLE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
             return new UnbakedBasicTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        }
+        else if (ModelHelper.containsIdentifier(UnbakedClassicTableModel.TABLE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            return new UnbakedClassicTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
         }
         else
             return null;

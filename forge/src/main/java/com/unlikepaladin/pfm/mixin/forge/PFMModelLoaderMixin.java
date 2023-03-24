@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.mixin.forge;
 
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
+import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 
@@ -39,6 +40,12 @@ public abstract class PFMModelLoaderMixin {
         }
         else if (ModelHelper.containsIdentifier(UnbakedBasicTableModel.TABLE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
             UnbakedModel model = new UnbakedBasicTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (ModelHelper.containsIdentifier(UnbakedClassicTableModel.TABLE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            UnbakedModel model = new UnbakedClassicTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();

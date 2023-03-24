@@ -34,7 +34,7 @@ public class FabricBasicTableModel extends BakedBasicTableModel implements Fabri
         if (state.getBlock() instanceof BasicTableBlock) {
             Direction.Axis dir = state.get(BasicTableBlock.AXIS);
             BasicTableBlock block = (BasicTableBlock) state.getBlock();
-            Boolean north = block.canConnect(world, state, pos.north(), pos);
+            boolean north = block.canConnect(world, state, pos.north(), pos);
             boolean east = block.canConnect(world, state, pos.east(), pos);
             boolean west = block.canConnect(world, state, pos.west(), pos);
             boolean south = block.canConnect(world, state, pos.south(), pos);

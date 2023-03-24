@@ -19,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.function.Predicate;
 
-//TODO: remove state properties and add outline back to the actual table block
 public class ForgeBasicTableModel extends BakedBasicTableModel {
     public ForgeBasicTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
@@ -201,4 +200,3 @@ class TableConnections implements Predicate<TableConnections>
         return connections.equals(tableConnections.connections);
     }
 }
-
