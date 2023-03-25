@@ -21,7 +21,7 @@ import net.minecraft.world.WorldAccess;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-//todo: bake log, modern dinner and normal dinner table models
+//todo: bake modern dinner and normal dinner table models
 public class LogTableBlock extends HorizontalFacingBlock {
     private final Block baseBlock;
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
@@ -138,7 +138,7 @@ public class LogTableBlock extends HorizontalFacingBlock {
         if (left && right) {
             return LOG_TABLE_MIDDLE;
         }
-        if (left) {
+        else if (left) {
             if (dirNorthOrSouth) {
                 return LOG_TABLE_ONE;}
             else if (dirWestOrEast) {

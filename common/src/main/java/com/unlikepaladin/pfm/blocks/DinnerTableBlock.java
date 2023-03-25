@@ -16,6 +16,7 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +25,6 @@ import java.util.stream.Stream;
 public class DinnerTableBlock extends HorizontalFacingBlock  {
 
     private final Block baseBlock;
-    public static final EnumProperty<MiddleShape> SHAPE = EnumProperty.of("table_type", MiddleShape.class);
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     private final BlockState baseBlockState;
 
@@ -32,7 +32,7 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
     private static final List<FurnitureBlock> STONE_DINNER_TABLES = new ArrayList<>();
     public DinnerTableBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(DinnerTableBlock.class)){
@@ -57,7 +57,6 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(SHAPE);
         stateManager.add(FACING);
     }
 
@@ -71,8 +70,7 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
 
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
     @Override
     public FluidState getFluidState(BlockState state) {
@@ -81,7 +79,7 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(FACING)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     boolean canConnect(BlockState blockState)
@@ -89,7 +87,7 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
         return PaladinFurnitureMod.getPFMConfig().doTablesOfDifferentMaterialsConnect() ? blockState.getBlock() instanceof DinnerTableBlock : blockState.getBlock() == this;
     }
 
-    private boolean isTable(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)
+    public boolean isTable(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
         if(canConnect(state))
@@ -98,25 +96,6 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
             return sourceDirection.equals(tableDirection);
         }
         return false;
-    }
-
-    public BlockState getShape(BlockState state, WorldAccess world, BlockPos pos, Direction dir)
-    {
-        boolean left = isTable(world, pos, dir.rotateYCounterclockwise(), dir);
-        boolean right = isTable(world, pos, dir.rotateYClockwise(), dir);
-        if(left && right)
-        {
-            return state.with(SHAPE, MiddleShape.MIDDLE);
-        }
-        else if(left)
-        {
-            return state.with(SHAPE, MiddleShape.RIGHT);
-        }
-        else if(right)
-        {
-            return state.with(SHAPE, MiddleShape.LEFT);
-        }
-        return state.with(SHAPE, MiddleShape.SINGLE);
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
@@ -142,56 +121,49 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
         return buffer[0];
     }
 
-
-    protected MiddleShape getShape(BlockState state) {
-        return state.get(SHAPE);
-    }
-
     final static VoxelShape dinner_table = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(0.1, 0, 2, 15.8, 14, 4.05), createCuboidShape(0.1, 0, 11.9, 15.8, 14, 13.95));
     final static VoxelShape dinner_table_middle = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16));
-    final static VoxelShape dinner_table_one = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(0.1, 0, 2, 15.8, 14, 4.05));
-    final static VoxelShape dinner_table_one_west = rotateShape(Direction.NORTH, Direction.WEST, dinner_table_one);
-    final static VoxelShape dinner_table_one_east = rotateShape(Direction.NORTH, Direction.EAST, dinner_table_one);
-    final static VoxelShape dinner_table_one_south = rotateShape(Direction.NORTH, Direction.SOUTH, dinner_table_one);
+    final static VoxelShape dinner_table_one_east = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(0.1, 0, 2, 15.8, 14, 4.05));
+    final static VoxelShape dinner_table_one_south = rotateShape(Direction.NORTH, Direction.WEST, dinner_table_one_east);
+    final static VoxelShape dinner_table_one = rotateShape(Direction.NORTH, Direction.EAST, dinner_table_one_east);
+    final static VoxelShape dinner_table_one_west = rotateShape(Direction.NORTH, Direction.SOUTH, dinner_table_one_east);
     final static VoxelShape dinner_table_east = rotateShape(Direction.NORTH, Direction.EAST, dinner_table);
 
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        MiddleShape tableShape = getShape(state);
         Direction dir = state.get(FACING);
         boolean dirNorthOrSouth = dir.equals(Direction.NORTH) || dir.equals(Direction.SOUTH);
         boolean dirWestOrEast = dir.equals(Direction.WEST) || dir.equals(Direction.EAST);
+        boolean left = isTable(view, pos, dir.rotateYCounterclockwise(), dir);
+        boolean right = isTable(view, pos, dir.rotateYClockwise(), dir);
 
-        switch (tableShape) {
-            case LEFT -> {
-                if (dirNorthOrSouth) {
-                    return dinner_table_one_west;}
-                else if (dirWestOrEast) {
-                    return dinner_table_one;}
-                else {
-                    return dinner_table;
-                }
-            }
-            case RIGHT -> {
-                if (dirNorthOrSouth) {
-                return dinner_table_one_east;}
-                else if (dirWestOrEast) {
-                    return dinner_table_one_south;}
-                else {
-                    return dinner_table;
-                }
-            }
-            case MIDDLE -> {
-                return dinner_table_middle;
-            }
-            default -> {
-                if (dirWestOrEast) {
-                    return dinner_table;}
-                else {
-                    return dinner_table_east;
-                }
+        if (left && right) {
+            return dinner_table_middle;
+        }
+        else if (left) {
+            if (dirNorthOrSouth) {
+                return dinner_table_one;}
+            else if (dirWestOrEast) {
+                return dinner_table_one_west;}
+            else {
+                return dinner_table;
             }
         }
-
+        else if (right) {
+            if (dirNorthOrSouth) {
+                return dinner_table_one_south;}
+            else if (dirWestOrEast) {
+                return dinner_table_one_east;}
+            else {
+                return dinner_table;
+            }
+        }
+        else {
+            if (dirWestOrEast) {
+                return dinner_table;}
+            else {
+                return dinner_table_east;
+            }
+        }
     }
 }
 

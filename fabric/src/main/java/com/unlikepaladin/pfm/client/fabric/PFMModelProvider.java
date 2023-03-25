@@ -1,10 +1,10 @@
 package com.unlikepaladin.pfm.client.fabric;
 
-import com.unlikepaladin.pfm.blocks.materials.BlockType;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
+import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
@@ -33,9 +33,11 @@ public class PFMModelProvider implements ModelResourceProvider {
             boolean raw = resourceId.getPath().contains("raw");
             return new UnbakedLogTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId), raw);
         }
+        else if (ModelHelper.containsIdentifier(UnbakedDinnerTableModel.TABLE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            System.out.println("HII");
+            return new UnbakedDinnerTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        }
         else
             return null;
-
-
     }
 }
