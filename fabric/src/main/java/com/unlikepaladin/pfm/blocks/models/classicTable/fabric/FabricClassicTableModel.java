@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class FabricClassicTableModel  extends BakedClassicTableModel implements FabricBakedModel {
+public class FabricClassicTableModel extends BakedClassicTableModel implements FabricBakedModel {
     public FabricClassicTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;

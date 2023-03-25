@@ -3,10 +3,10 @@ package com.unlikepaladin.pfm.client.forge;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
+import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
-import com.unlikepaladin.pfm.compat.forge.imm_ptl.PFMImmPtlRegistry;
 import com.unlikepaladin.pfm.compat.forge.imm_ptl.client.PFMImmPtlRegistryClient;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
@@ -69,5 +69,6 @@ public class PaladinFurnitureModClientForge {
         UnbakedBedModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedBasicTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedClassicTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        UnbakedLogTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
     }
 }
