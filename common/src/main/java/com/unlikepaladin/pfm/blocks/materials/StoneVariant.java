@@ -41,6 +41,12 @@ public enum StoneVariant implements MaterialEnum {
     public Block getBaseBlock() {
         return baseBlock;
     }
+
+    @Override
+    public boolean isNetherWood() {
+        return false;
+    }
+
     @Environment(EnvType.CLIENT)
     @Override
     public Identifier getTexture(BlockType type) {

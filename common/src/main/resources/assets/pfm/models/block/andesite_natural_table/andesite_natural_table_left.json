@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/log_table/log_table_left",
+	"textures": {
+        
+		"particle": "block/andesite",
+		"base": "block/polished_andesite",
+		"legs": "block/andesite"
+	}
+    
+}

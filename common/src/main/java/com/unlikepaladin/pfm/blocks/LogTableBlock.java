@@ -21,10 +21,9 @@ import net.minecraft.world.WorldAccess;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
+//todo: bake log, modern dinner and normal dinner table models
 public class LogTableBlock extends HorizontalFacingBlock {
     private final Block baseBlock;
-    public static final EnumProperty<MiddleShape> SHAPE = EnumProperty.of("table_type", MiddleShape.class);
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
 
     private final BlockState baseBlockState;
@@ -32,7 +31,7 @@ public class LogTableBlock extends HorizontalFacingBlock {
     private static final List<FurnitureBlock> STONE_NATURAL_TABLES = new ArrayList<>();
     public LogTableBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(LogTableBlock.class)){
@@ -52,7 +51,6 @@ public class LogTableBlock extends HorizontalFacingBlock {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(SHAPE);
         stateManager.add(FACING);
     }
 
@@ -70,17 +68,16 @@ public class LogTableBlock extends HorizontalFacingBlock {
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
 
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(FACING)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    private boolean isTable(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)
+    public boolean isTable(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
         if(canConnect(state))
@@ -98,28 +95,9 @@ public class LogTableBlock extends HorizontalFacingBlock {
         return 0;
     }
 
-    boolean canConnect(BlockState blockState)
+    public boolean canConnect(BlockState blockState)
     {
         return PaladinFurnitureMod.getPFMConfig().doTablesOfDifferentMaterialsConnect() ? blockState.getBlock() instanceof LogTableBlock : blockState.getBlock() == this;
-    }
-
-    public BlockState getShape(BlockState state, WorldAccess world, BlockPos pos, Direction dir)
-    {
-        boolean left = isTable(world, pos, dir.rotateYCounterclockwise(), dir);
-        boolean right = isTable(world, pos, dir.rotateYClockwise(), dir);
-        if(left && right)
-        {
-            return state.with(SHAPE, MiddleShape.MIDDLE);
-        }
-        else if(left)
-        {
-            return state.with(SHAPE, MiddleShape.RIGHT);
-        }
-        else if(right)
-        {
-            return state.with(SHAPE, MiddleShape.LEFT);
-        }
-        return state.with(SHAPE, MiddleShape.SINGLE);
     }
 
     @Override
@@ -143,11 +121,6 @@ public class LogTableBlock extends HorizontalFacingBlock {
         return buffer[0];
     }
 
-
-    protected MiddleShape getShape(BlockState state) {
-        return state.get(SHAPE);
-    }
-
     final static VoxelShape LOG_TABLE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(2, 0, 5, 4.5, 14, 11), createCuboidShape(11.5, 0, 5, 14, 14, 11));
     final static VoxelShape LOG_TABLE_MIDDLE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16));
     final static VoxelShape LOG_TABLE_ONE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(6, 0, 5, 8.5, 14, 11));
@@ -157,39 +130,37 @@ public class LogTableBlock extends HorizontalFacingBlock {
     final static VoxelShape LOG_TABLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, LOG_TABLE);
     //Cursed I know
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        MiddleShape tableShape = getShape(state);
         Direction dir = state.get(FACING);
+        boolean left = isTable(view, pos, dir.rotateYCounterclockwise(), dir);
+        boolean right = isTable(view, pos, dir.rotateYClockwise(), dir);
         boolean dirNorthOrSouth = dir.equals(Direction.NORTH) || dir.equals(Direction.SOUTH);
         boolean dirWestOrEast = dir.equals(Direction.WEST) || dir.equals(Direction.EAST);
-
-        switch (tableShape) {
-            case LEFT -> {
-                if (dirNorthOrSouth) {
-                    return LOG_TABLE_ONE;}
-                else if (dirWestOrEast) {
-                    return LOG_TABLE_ONE_WEST;}
-                else {
-                    return LOG_TABLE;
-                }
+        if (left && right) {
+            return LOG_TABLE_MIDDLE;
+        }
+        if (left) {
+            if (dirNorthOrSouth) {
+                return LOG_TABLE_ONE;}
+            else if (dirWestOrEast) {
+                return LOG_TABLE_ONE_WEST;}
+            else {
+                return LOG_TABLE;
             }
-            case RIGHT -> {
-                if (dirNorthOrSouth) {
+        }
+        else if (right) {
+            if (dirNorthOrSouth) {
                 return LOG_TABLE_ONE_SOUTH;}
-                else if (dirWestOrEast) {
-                    return LOG_TABLE_ONE_EAST;}
-                else {
-                    return LOG_TABLE;
-                }
+            else if (dirWestOrEast) {
+                return LOG_TABLE_ONE_EAST;}
+            else {
+                return LOG_TABLE;
             }
-            case MIDDLE -> {
-                return LOG_TABLE_MIDDLE;
-            }
-            default -> {
-                if (dirWestOrEast) {
-                    return LOG_TABLE_EAST;}
-                else {
-                    return LOG_TABLE;
-                }
+        }
+        else {
+            if (dirWestOrEast) {
+                return LOG_TABLE_EAST;}
+            else {
+                return LOG_TABLE;
             }
         }
     }

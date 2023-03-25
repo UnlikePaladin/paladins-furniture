@@ -56,7 +56,7 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
     public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
         return false;
     }
-
+//TODO: add more mirrors and lang translation for mirror option in ui
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);

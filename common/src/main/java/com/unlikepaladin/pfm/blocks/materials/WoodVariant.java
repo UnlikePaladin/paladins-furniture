@@ -5,7 +5,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
 
 public enum WoodVariant implements MaterialEnum {
         OAK(Blocks.OAK_PLANKS, "oak"),
@@ -35,7 +34,7 @@ public enum WoodVariant implements MaterialEnum {
     public Identifier getTexture(BlockType type) {
         String path = "block/";
         String prefix = type.getPrefix().trim().isBlank() ? "" : type.getPrefix() + "_";
-        String postfix = this == CRIMSON || this == WARPED ? type.getPostfix().replace("log", "stem"): type.getPostfix();
+        String postfix = isNetherWood()? type.getPostfix().replace("log", "stem"): type.getPostfix();
         return new Identifier("minecraft",path + prefix + this.type + "_" + postfix);
     }
 
@@ -51,4 +50,8 @@ public enum WoodVariant implements MaterialEnum {
     public String toString() {
             return this.type;
         }
+
+    public boolean isNetherWood() {
+        return this == CRIMSON || this == WARPED;
+    }
 }

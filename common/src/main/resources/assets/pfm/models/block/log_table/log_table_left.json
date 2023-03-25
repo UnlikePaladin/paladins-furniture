@@ -1,0 +1,78 @@
+{
+	"credit": "By UnlikePaladin",
+	"textures": {
+		"particle": "block/oak_planks",
+		"legs": "block/oak_log"
+	},
+	"elements": [
+		{
+			"from": [6, 0, 5],
+			"to": [8.5, 14, 11],
+			"rotation": {"angle": 0, "axis": "y", "origin": [8, 7, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 3, 13], "texture": "#legs"},
+				"east": {"uv": [0, 0, 6, 13], "texture": "#legs"},
+				"south": {"uv": [0, 0, 3, 13], "texture": "#legs"},
+				"west": {"uv": [0, 0, 6, 13], "texture": "#legs"},
+				"up": {"uv": [0, 0, 2.5, 6], "texture": "#legs"},
+				"down": {"uv": [0, 0, 2.5, 6], "texture": "#legs"}
+			}
+		}
+	],
+	"display": {
+		"thirdperson_righthand": {
+			"rotation": [59, -140, 0],
+			"translation": [-0.5, 0.25, -1.5],
+			"scale": [0.39, 0.39, 0.39]
+		},
+		"thirdperson_lefthand": {
+			"rotation": [59, 58, 0],
+			"translation": [0.5, 1, 0],
+			"scale": [0.39, 0.39, 0.39]
+		},
+		"firstperson_righthand": {
+			"rotation": [-1, -146, 0],
+			"translation": [0, 0.75, 0],
+			"scale": [0.44, 0.44, 0.44]
+		},
+		"firstperson_lefthand": {
+			"rotation": [-1, 32, 0],
+			"translation": [0, 0.75, 0],
+			"scale": [0.44, 0.44, 0.44]
+		},
+		"ground": {
+			"translation": [0, -0.75, 0],
+			"scale": [0.39, 0.39, 0.39]
+		},
+		"gui": {
+			"rotation": [13, -58, 0],
+			"translation": [0, -0.5, 0],
+			"scale": [0.58, 0.58, 0.58]
+		},
+		"head": {
+			"rotation": [-1, 90, 0],
+			"translation": [0, 4.5, 0],
+			"scale": [0.93, 0.95, 0.92]
+		},
+		"fixed": {
+			"rotation": [0, 90, 0],
+			"translation": [0, -3, -5.5],
+			"scale": [0.9, 0.9, 0.9]
+		}
+	},
+	"groups": [
+		{
+			"name": "table",
+			"origin": [0, 0, 0],
+			"color": 0,
+			"children": [
+				{
+					"name": "legs",
+					"origin": [0, 0, 0],
+					"color": 0,
+					"children": [0]
+				}
+			]
+		}
+	]
+}

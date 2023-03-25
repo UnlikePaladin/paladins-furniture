@@ -6,7 +6,6 @@ import com.unlikepaladin.pfm.blocks.materials.BlockType;
 import com.unlikepaladin.pfm.blocks.materials.MaterialEnum;
 import com.unlikepaladin.pfm.blocks.materials.StoneVariant;
 import com.unlikepaladin.pfm.blocks.materials.WoodVariant;
-import com.unlikepaladin.pfm.blocks.models.basicTable.BakedBasicTableModel;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

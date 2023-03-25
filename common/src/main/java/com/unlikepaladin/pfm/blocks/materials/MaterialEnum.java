@@ -12,4 +12,6 @@ public interface MaterialEnum extends StringIdentifiable {
     Identifier getTexture(BlockType type);
 
     Block getBaseBlock();
+
+    boolean isNetherWood();
 }
