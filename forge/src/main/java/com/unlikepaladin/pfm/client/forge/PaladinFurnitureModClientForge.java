@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
 import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
+import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
@@ -72,5 +73,6 @@ public class PaladinFurnitureModClientForge {
         UnbakedClassicTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedLogTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedDinnerTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        UnbakedModernDinnerTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
     }
 }

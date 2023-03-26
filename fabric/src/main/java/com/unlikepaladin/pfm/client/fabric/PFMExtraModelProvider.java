@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
 import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
+import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import net.fabricmc.fabric.api.client.model.ExtraModelProvider;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -19,5 +20,6 @@ public class PFMExtraModelProvider implements ExtraModelProvider {
         UnbakedClassicTableModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedLogTableModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedDinnerTableModel.ALL_MODEL_IDS.forEach(out::accept);
+        UnbakedModernDinnerTableModel.ALL_MODEL_IDS.forEach(out::accept);
     }
 }

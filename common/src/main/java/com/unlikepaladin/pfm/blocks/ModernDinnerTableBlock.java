@@ -22,16 +22,14 @@ import java.util.stream.Stream;
 
 public class ModernDinnerTableBlock extends Block {
     private final Block baseBlock;
-    public static final EnumProperty<MiddleShape> SHAPE = EnumProperty.of("table_type", MiddleShape.class);
     public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
     private static final List<FurnitureBlock> WOOD_DINNER_MODERN_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DINNER_MODERN_TABLES = new ArrayList<>();
-
     private final BlockState baseBlockState;
 
     public ModernDinnerTableBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(SHAPE, MiddleShape.SINGLE).with(AXIS, Direction.Axis.X));
+        setDefaultState(this.getStateManager().getDefaultState().with(AXIS, Direction.Axis.X));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ModernDinnerTableBlock.class)){
@@ -51,7 +49,6 @@ public class ModernDinnerTableBlock extends Block {
 
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(SHAPE);
         stateManager.add(AXIS);
     }
 
@@ -64,13 +61,12 @@ public class ModernDinnerTableBlock extends Block {
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(AXIS, ctx.getPlayerFacing().rotateYClockwise().getAxis());
-        return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(AXIS));
+        return this.getDefaultState().with(AXIS, ctx.getPlayerFacing().rotateYClockwise().getAxis());
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(AXIS)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     boolean canConnect(BlockState blockState)
@@ -78,7 +74,7 @@ public class ModernDinnerTableBlock extends Block {
         return PaladinFurnitureMod.getPFMConfig().doTablesOfDifferentMaterialsConnect() ? blockState.getBlock() instanceof ModernDinnerTableBlock : blockState.getBlock() == this;
     }
 
-    private boolean isTable(WorldAccess world, BlockPos pos, Direction.Axis direction, int i)
+    public boolean isTable(BlockView world, BlockPos pos, Direction.Axis direction, int i)
     {
         BlockState state = world.getBlockState(pos.offset(direction, i));
         if(canConnect(state))
@@ -87,25 +83,6 @@ public class ModernDinnerTableBlock extends Block {
             return sourceDirection.equals(direction);
         }
         return false;
-    }
-
-    public BlockState getShape(BlockState state, WorldAccess world, BlockPos pos, Direction.Axis dir)
-    {
-        boolean left = isTable(world, pos, dir, -1);
-        boolean right = isTable(world, pos, dir, 1);
-        if(left && right)
-        {
-            return state.with(SHAPE, MiddleShape.MIDDLE);
-        }
-        else if(left)
-        {
-            return state.with(SHAPE, MiddleShape.RIGHT);
-        }
-        else if(right)
-        {
-            return state.with(SHAPE, MiddleShape.LEFT);
-        }
-        return state.with(SHAPE, MiddleShape.SINGLE);
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
@@ -131,11 +108,6 @@ public class ModernDinnerTableBlock extends Block {
         return buffer[0];
     }
 
-
-    protected MiddleShape getShape(BlockState state) {
-        return state.get(this.SHAPE);
-    }
-
     final static VoxelShape MODERN_DINNER_TABLE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(12, 0, 12, 14, 14, 14), createCuboidShape(12, 0, 2, 14, 14, 4), createCuboidShape(13, 2, 7,15, 14, 9), createCuboidShape(1, 2, 7, 3, 14, 9),createCuboidShape(2, 0, 2,4, 14, 4),createCuboidShape(2, 0, 4, 4, 2, 12), createCuboidShape(3, 2, 7,13, 4, 9),createCuboidShape(12, 0, 4,14, 2, 12), createCuboidShape(2, 0, 12,4, 14, 14));
     final static VoxelShape MODERN_DINNER_TABLE_MIDDLE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16),createCuboidShape(0, 2, 7,16, 4, 9 ));
     final static VoxelShape MODERN_DINNER_TABLE_ONE = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(13, 2, 7, 15, 14, 9), createCuboidShape(12, 0, 12,14, 14, 14), createCuboidShape(12, 0, 4,14, 2, 12 ), createCuboidShape(0, 2, 7,13, 4, 9), createCuboidShape(12, 0, 2,14, 14, 4 ));
@@ -145,39 +117,39 @@ public class ModernDinnerTableBlock extends Block {
     final static VoxelShape MODERN_DINNER_TABLE_MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_DINNER_TABLE_MIDDLE);
     final static VoxelShape MODERN_DINNER_TABLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_DINNER_TABLE);
 
-    //Cursed I know
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        MiddleShape tableShape = getShape(state);
         Direction.Axis dir = state.get(AXIS);
         boolean dirNorthOrSouth = dir.equals(Direction.Axis.X);
         boolean dirWestOrEast = dir.equals(Direction.Axis.Z);
+        boolean left = isTable(view, pos, dir, -1);
+        boolean right = isTable(view, pos, dir, 1);
 
-        switch (tableShape) {
-            case LEFT -> {
-                if (dirNorthOrSouth) {
-                    return MODERN_DINNER_TABLE_ONE_SOUTH;}
-                else {
-                    return MODERN_DINNER_TABLE_ONE_WEST;}
+        if (left && right) {
+            if (dirNorthOrSouth) {
+                return MODERN_DINNER_TABLE_MIDDLE;
+            } else {
+                return MODERN_DINNER_TABLE_MIDDLE_EAST;
             }
-            case RIGHT -> {
-                if (dirNorthOrSouth) {
-                    return MODERN_DINNER_TABLE_ONE;}
-                else {
-                    return MODERN_DINNER_TABLE_ONE_EAST;}
+        }
+        else if (right) {
+            if (dirNorthOrSouth) {
+                return MODERN_DINNER_TABLE_ONE_SOUTH;
+            } else {
+                return MODERN_DINNER_TABLE_ONE_WEST;
             }
-            case MIDDLE -> {
-                if (dirNorthOrSouth) {
-                    return MODERN_DINNER_TABLE_MIDDLE;
-                } else {
-                    return MODERN_DINNER_TABLE_MIDDLE_EAST;
-                }
+        }
+        else if (left) {
+            if (dirNorthOrSouth) {
+                return MODERN_DINNER_TABLE_ONE;
+            } else {
+                return MODERN_DINNER_TABLE_ONE_EAST;
             }
-            default -> {
-                if (dirWestOrEast) {
-                    return MODERN_DINNER_TABLE_EAST;}
-                else {
-                    return MODERN_DINNER_TABLE;
-                }
+        }
+        else {
+            if (dirWestOrEast) {
+                return MODERN_DINNER_TABLE_EAST;}
+            else {
+                return MODERN_DINNER_TABLE;
             }
         }
     }
