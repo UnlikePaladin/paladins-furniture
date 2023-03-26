@@ -82,7 +82,7 @@ public class UnbakedClassicTableModel implements UnbakedModel {
             this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(type));
             for(String modelPartName : CLASSIC_MODEL_PARTS_BASE){
                 String s = modelPartName;
-                if (!variant.equals(WoodVariant.OAK))
+                if (!variant.equals(WoodVariant.OAK) || !type.equals(BlockType.PLANKS))
                     s = s.replace("table", variant.asString() + "_table");
                 if (type == BlockType.STRIPPED_LOG) {
                     s = s.replace(variant.asString(), "stripped_" + variant.asString());

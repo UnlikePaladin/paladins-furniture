@@ -79,7 +79,7 @@ public class UnbakedDinnerTableModel implements UnbakedModel {
         this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(type));
         for(String modelPartName : DINNER_MODEL_PARTS_BASE){
             String s = modelPartName;
-            if (!variant.equals(WoodVariant.OAK))
+            if (!variant.equals(WoodVariant.OAK) || !type.equals(BlockType.PLANKS))
                 s = s.replace("dinner", variant.asString() + "_dinner");
             if (type == BlockType.STRIPPED_LOG) {
                 s = s.replace(variant.asString(), "stripped_" + variant.asString());
