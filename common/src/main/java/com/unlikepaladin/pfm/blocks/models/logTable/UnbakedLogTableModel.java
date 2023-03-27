@@ -72,8 +72,7 @@ public class UnbakedLogTableModel implements UnbakedModel {
             for(WoodVariant variant : WoodVariant.values()){
                 for (String part : LOG_MODEL_PARTS_BASE) {
                     String newPart = part;
-                    if (!variant.equals(WoodVariant.OAK))
-                        newPart = part.replace("log", variant.asString() + "_raw_log");
+                    newPart = newPart.replace("log", variant.asString() + "_raw_log");
                     if (variant.isNetherWood())
                         newPart = newPart.replace("log", "stem");
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
@@ -117,7 +116,7 @@ public class UnbakedLogTableModel implements UnbakedModel {
                 s = s.replace(variant.asString(), "stripped_" + variant.asString());
             }
             if (raw) {
-                if (variant.equals(WoodVariant.OAK)) {
+                if (variant.equals(WoodVariant.OAK) && type.equals(BlockType.PLANKS)) {
                     s = s.replace("log", "oak_log");
                 }
                 s = s.replace("log", "raw_log");
