@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_counter/kitchen_counter_middle_outer_corner_right",
+	"textures": {
+        
+		"particle": "block/white_concrete",
+		"base": "block/white_concrete",
+		"legs": "block/smooth_stone"
+	}
+    
+}

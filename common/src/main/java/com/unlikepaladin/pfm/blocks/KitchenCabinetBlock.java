@@ -16,6 +16,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.State;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
+import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -34,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static com.unlikepaladin.pfm.blocks.KitchenCounterBlock.SHAPE;
 import static com.unlikepaladin.pfm.blocks.KitchenCounterBlock.rotateShape;
 
 public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockEntityProvider {
@@ -42,6 +42,7 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
     private final Block baseBlock;
     private static final List<FurnitureBlock> WOOD_CABINETS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_CABINETS = new ArrayList<>();
+    private static final EnumProperty<CounterShape> SHAPE = EnumProperty.of("shape",CounterShape.class);
 
     public KitchenCabinetBlock(Settings settings) {
         super(settings);

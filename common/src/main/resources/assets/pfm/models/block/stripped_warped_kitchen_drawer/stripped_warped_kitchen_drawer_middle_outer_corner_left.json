@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_drawer/kitchen_drawer_middle_outer_corner_left",
+	"textures": {
+        
+		"particle": "block/stripped_warped_stem",
+		"base": "block/stripped_warped_stem",
+		"legs": "block/warped_planks"
+	}
+    
+}

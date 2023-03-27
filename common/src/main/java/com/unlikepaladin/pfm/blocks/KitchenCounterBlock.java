@@ -23,10 +23,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class KitchenCounterBlock extends HorizontalFacingBlock {
-    //TODO: Add a baked model for these :pain:
     private float height = 0.36f;
     private final Block baseBlock;
-    public static final EnumProperty<CounterShape> SHAPE = EnumProperty.of("shape", CounterShape.class);
     protected FurnitureBlock counterFurnitureBlock;
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> WOOD_COUNTERS = new ArrayList<>();
@@ -56,11 +54,10 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
     public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
         return false;
     }
-//TODO: add more mirrors and lang translation for mirror option in ui
+
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
-        stateManager.add(SHAPE);
     }
 
     public BlockState rotate(BlockState state, BlockRotation rotation) {
@@ -68,51 +65,7 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
     }
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockPos blockPos = ctx.getBlockPos();
-        World world = ctx.getWorld();
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        return blockState.with(SHAPE, getShape(blockState, world, blockPos));
-    }
-
-    private CounterShape getShape(BlockState state, BlockView world, BlockPos pos) {
-        Direction direction = state.get(FACING);
-        BlockState blockState = world.getBlockState(pos.offset(direction));
-        if (canConnectToCounter(blockState) && blockState.getProperties().contains(Properties.HORIZONTAL_FACING)) {
-            Direction direction2 = blockState.get(Properties.HORIZONTAL_FACING);
-            if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
-                if (direction2 == direction.rotateYCounterclockwise()) {
-                    return CounterShape.OUTER_LEFT;
-                }
-                return CounterShape.OUTER_RIGHT;
-            }
-        }
-        BlockState direction2 = world.getBlockState(pos.offset(direction.getOpposite()));
-        if (canConnectToCounter(direction2) && direction2.getProperties().contains(Properties.HORIZONTAL_FACING)) {
-            Direction direction3;
-            if (direction2.getBlock() instanceof AbstractFurnaceBlock) {
-                 direction3 = direction2.get(Properties.HORIZONTAL_FACING).getOpposite();
-            }
-            else {
-                 direction3 = direction2.get(Properties.HORIZONTAL_FACING);
-            }
-            if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3)) {
-                if (direction3 == direction.rotateYCounterclockwise()) {
-                    return CounterShape.INNER_LEFT;
-                }
-                return CounterShape.INNER_RIGHT;
-            }
-        }
-        boolean right = canConnect(world, pos, state.get(FACING).rotateYCounterclockwise());
-        boolean left = canConnect(world, pos, state.get(FACING).rotateYClockwise());
-        if (left && right) {
-            return CounterShape.STRAIGHT;
-        } else if (left) {
-            return CounterShape.LEFT_EDGE;
-        } else if (right) {
-            return CounterShape.RIGHT_EDGE;
-        }
-        return CounterShape.STRAIGHT;
-
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
 
     public boolean canConnect(BlockView world, BlockPos pos, Direction direction)
@@ -121,7 +74,7 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
         return (isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock);
     }
 
-    private boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
+    public boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
         BlockState blockState = world.getBlockState(pos.offset(dir));
         return !canConnectToCounter(blockState); //|| blockState.get(FACING) != state.get(FACING);
     }
@@ -146,12 +99,7 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-       if ( direction.getAxis().isHorizontal()) {
-           return state.with(SHAPE, getShape(state, world, pos));
-       }
-       else{
-            return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-        }
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @SuppressWarnings("deprecated")
@@ -219,54 +167,103 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
     protected static final VoxelShape RIGHT_EDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
     protected static final VoxelShape RIGHT_EDGE_WEST = rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE);
     @Override
-        public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
-        CounterShape shape = state.get(SHAPE);
-            return switch (shape) {
-                case STRAIGHT -> switch (dir) {
-                    case NORTH -> STRAIGHT;
-                    case SOUTH -> STRAIGHT_SOUTH;
-                    case EAST -> STRAIGHT_EAST;
-                    default -> STRAIGHT_WEST;
-                };
-                case INNER_LEFT -> switch (dir) {
-                    case NORTH -> INNER_CORNER_WEST;
-                    case SOUTH -> INNER_CORNER_EAST;
-                    case EAST -> INNER_CORNER;
-                    default -> INNER_CORNER_SOUTH;
-                };
-                case INNER_RIGHT -> switch (dir) {
-                    case NORTH -> INNER_CORNER;
-                    case SOUTH -> INNER_CORNER_SOUTH;
-                    case EAST -> INNER_CORNER_EAST;
-                    default -> INNER_CORNER_WEST;
-                };
-                case OUTER_LEFT -> switch (dir) {
-                    case NORTH -> OUTER_CORNER;
-                    case SOUTH -> OUTER_CORNER_SOUTH;
-                    case EAST -> OUTER_CORNER_EAST;
-                    default -> OUTER_CORNER_WEST;
-                };
-                case OUTER_RIGHT -> switch (dir) {
-                    case NORTH -> OUTER_CORNER_EAST;
-                    case SOUTH -> OUTER_CORNER_WEST;
-                    case EAST -> OUTER_CORNER_SOUTH;
-                    default -> OUTER_CORNER;
-                };
-                case LEFT_EDGE -> switch (dir) {
-                    case NORTH -> LEFT_EDGE;
-                    case SOUTH -> LEFT_EDGE_SOUTH;
-                    case EAST -> LEFT_EDGE_EAST;
-                    default -> LEFT_EDGE_WEST;
-                };
-                case RIGHT_EDGE -> switch (dir) {
-                    case NORTH -> RIGHT_EDGE;
-                    case SOUTH -> RIGHT_EDGE_SOUTH;
-                    case EAST -> RIGHT_EDGE_EAST;
-                    default -> RIGHT_EDGE_WEST;
-                };
-            };
+        public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+        Direction direction = state.get(KitchenCounterBlock.FACING);
+        boolean right = canConnect(world, pos, state.get(KitchenCounterBlock.FACING).rotateYCounterclockwise());
+        boolean left = canConnect(world, pos, state.get(KitchenCounterBlock.FACING).rotateYClockwise());
+        BlockState neighborStateFacing = world.getBlockState(pos.offset(direction));
+        BlockState neighborStateOpposite = world.getBlockState(pos.offset(direction.getOpposite()));
+        if (canConnectToCounter(neighborStateFacing) && neighborStateFacing.getProperties().contains(Properties.HORIZONTAL_FACING)) {
+            Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
+            if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
+                if (direction2 == direction.rotateYCounterclockwise()) {
+                    switch (direction) {
+                        case NORTH: return OUTER_CORNER;
+                        case SOUTH: return OUTER_CORNER_SOUTH;
+                        case EAST: return OUTER_CORNER_EAST;
+                        default: return OUTER_CORNER_WEST;
+                    }
+                }
+                else {
+                    switch (direction) {
+                        case NORTH: return OUTER_CORNER_EAST;
+                        case SOUTH: return OUTER_CORNER_WEST;
+                        case EAST: return OUTER_CORNER_SOUTH;
+                        default: return OUTER_CORNER;
+                    }
+                }
+            } else {
+                switch (direction) {
+                    case NORTH: return STRAIGHT;
+                    case SOUTH: return STRAIGHT_SOUTH;
+                    case EAST: return STRAIGHT_EAST;
+                    default: return STRAIGHT_WEST;
+                }
+            }
         }
+        else if (canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.getProperties().contains(Properties.HORIZONTAL_FACING)) {
+            Direction direction3;
+            if (neighborStateOpposite.getBlock() instanceof AbstractFurnaceBlock) {
+                direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING).getOpposite();
+            }
+            else {
+                direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
+            }
+            if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3)) {
+                if (direction3 == direction.rotateYCounterclockwise()) {
+                    switch (direction) {
+                        case NORTH: return INNER_CORNER;
+                        case SOUTH: return INNER_CORNER_SOUTH;
+                        case EAST: return INNER_CORNER_EAST;
+                        default: return INNER_CORNER_WEST;
+                    }
+                } else {
+                    switch (direction) {
+                        case NORTH: return INNER_CORNER_WEST;
+                        case SOUTH: return INNER_CORNER_EAST;
+                        case EAST: return INNER_CORNER;
+                        default: return INNER_CORNER_SOUTH;
+                    }
+                }
+            } else {
+                switch (direction) {
+                    case NORTH: return STRAIGHT;
+                    case SOUTH: return STRAIGHT_SOUTH;
+                    case EAST: return STRAIGHT_EAST;
+                    default: return STRAIGHT_WEST;
+                }
+            }
+        }
+        else if (left && right) {
+            switch (direction) {
+                case NORTH: return STRAIGHT;
+                case SOUTH: return STRAIGHT_SOUTH;
+                case EAST: return STRAIGHT_EAST;
+                default: return STRAIGHT_WEST;
+            }
+        } else if (left) {
+            switch (direction) {
+                case NORTH: return LEFT_EDGE;
+                case SOUTH: return LEFT_EDGE_SOUTH;
+                case EAST: return LEFT_EDGE_EAST;
+                default: return LEFT_EDGE_WEST;
+            }
+        } else if (right) {
+            switch (direction) {
+                case NORTH: return RIGHT_EDGE;
+                case SOUTH: return RIGHT_EDGE_SOUTH;
+                case EAST: return RIGHT_EDGE_EAST;
+                default: return RIGHT_EDGE_WEST;
+            }
+        } else {
+            switch (direction) {
+                case NORTH: return STRAIGHT;
+                case SOUTH: return STRAIGHT_SOUTH;
+                case EAST: return STRAIGHT_EAST;
+                default: return STRAIGHT_WEST;
+            }
+        }
+    }
 
     @Override
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {

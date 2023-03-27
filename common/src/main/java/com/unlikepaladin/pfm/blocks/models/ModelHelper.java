@@ -1,10 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models;
 
 import com.unlikepaladin.pfm.blocks.DyeableFurniture;
-import com.unlikepaladin.pfm.blocks.materials.BlockType;
-import com.unlikepaladin.pfm.blocks.materials.MaterialEnum;
-import com.unlikepaladin.pfm.blocks.materials.StoneVariant;
-import com.unlikepaladin.pfm.blocks.materials.WoodVariant;
+import com.unlikepaladin.pfm.blocks.materials.*;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
@@ -36,11 +33,24 @@ public class ModelHelper {
     }
 
     public static MaterialEnum getVariant(Identifier identifier) {
-        MaterialEnum var = getStoneType(identifier);
-        if (var == StoneVariant.STONE && !identifier.getPath().contains("stone")) {
+        MaterialEnum var = getExtraCounterType(identifier);
+        if (var == ExtraCounterVariants.DEEPSLATE_TILE && !identifier.getPath().contains("deepslate_tile")) {
+            var = getStoneType(identifier);
+        }
+        if ((var == StoneVariant.STONE && !identifier.getPath().contains("stone")) || (var == ExtraCounterVariants.DEEPSLATE_TILE && !identifier.getPath().contains("deepslate_tile"))) {
             var = getWoodType(identifier);
         }
         return var;
+    }
+
+    public static ExtraCounterVariants getExtraCounterType(Identifier identifier) {
+        for (ExtraCounterVariants variant:
+                ExtraCounterVariants.values()) {
+            if (identifier.getPath().contains(variant.asString())) {
+                return variant;
+            }
+        }
+        return ExtraCounterVariants.DEEPSLATE_TILE;
     }
     public static StoneVariant getStoneType(Identifier identifier) {
         for (StoneVariant variant:
