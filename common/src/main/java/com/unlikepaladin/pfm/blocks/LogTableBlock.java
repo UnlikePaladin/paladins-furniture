@@ -21,7 +21,6 @@ import net.minecraft.world.WorldAccess;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-//todo: bake modern dinner and normal dinner table models
 public class LogTableBlock extends HorizontalFacingBlock {
     private final Block baseBlock;
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;

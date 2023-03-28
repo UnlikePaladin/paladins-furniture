@@ -24,7 +24,6 @@ public class BakedKitchenWallDrawerModel implements BakedModel {
         this.settings = settings;
         this.bakedModels = bakedModels;
     }
-//TODO Fix small cabinet baked model, fix cabinet and counter collision for inner corners
     public Map<String, BakedModel> getBakedModels() {
         return bakedModels;
     }

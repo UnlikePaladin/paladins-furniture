@@ -35,8 +35,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.function.Consumer;
 
-//TODO: Implement Baked Model for Beds and Tables and Kitchen Counters
-//TODO: fix counters facing total opposite directions connecting
 @Environment(EnvType.CLIENT)
 public class PaladinFurnitureModClientFabric implements ClientModInitializer {
     public static final Logger CLIENT_LOGGER = LogManager.getLogger();
