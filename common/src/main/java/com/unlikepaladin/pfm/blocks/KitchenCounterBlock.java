@@ -212,17 +212,17 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
             if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3)) {
                 if (direction3 == direction.rotateYCounterclockwise()) {
                     switch (direction) {
-                        case NORTH: return INNER_CORNER;
-                        case SOUTH: return INNER_CORNER_SOUTH;
-                        case EAST: return INNER_CORNER_EAST;
-                        default: return INNER_CORNER_WEST;
-                    }
-                } else {
-                    switch (direction) {
                         case NORTH: return INNER_CORNER_WEST;
                         case SOUTH: return INNER_CORNER_EAST;
                         case EAST: return INNER_CORNER;
                         default: return INNER_CORNER_SOUTH;
+                    }
+                } else {
+                    switch (direction) {
+                        case NORTH: return INNER_CORNER;
+                        case SOUTH: return INNER_CORNER_SOUTH;
+                        case EAST: return INNER_CORNER_EAST;
+                        default: return INNER_CORNER_WEST;
                     }
                 }
             } else {

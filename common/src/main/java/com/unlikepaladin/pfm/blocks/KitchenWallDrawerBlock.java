@@ -142,17 +142,17 @@ public class KitchenWallDrawerBlock extends KitchenDrawerBlock {
             if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3)) {
                 if (direction3 == direction.rotateYCounterclockwise()) {
                     switch (direction) {
-                        case NORTH: return MIDDLE_INNER_CORNER;
-                        case SOUTH: return MIDDLE_INNER_CORNER_SOUTH;
-                        case EAST: return MIDDLE_INNER_CORNER_EAST;
-                        default: return MIDDLE_INNER_CORNER_WEST;
-                    }
-                } else {
-                    switch (direction) {
                         case NORTH: return MIDDLE_INNER_CORNER_WEST;
                         case SOUTH: return MIDDLE_INNER_CORNER_EAST;
                         case EAST: return MIDDLE_INNER_CORNER;
                         default: return MIDDLE_INNER_CORNER_SOUTH;
+                    }
+                } else {
+                    switch (direction) {
+                        case NORTH: return MIDDLE_INNER_CORNER;
+                        case SOUTH: return MIDDLE_INNER_CORNER_SOUTH;
+                        case EAST: return MIDDLE_INNER_CORNER_EAST;
+                        default: return MIDDLE_INNER_CORNER_WEST;
                     }
                 }
             } else {

@@ -81,17 +81,17 @@ public class KitchenWallCounterBlock extends KitchenCounterBlock{
             if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, view, pos, direction3)) {
                 if (direction3 == direction.rotateYCounterclockwise()) {
                     switch (direction) {
-                        case NORTH: return INNER_MIDDLE;
-                        case SOUTH: return INNER_MIDDLE_SOUTH;
-                        case EAST: return INNER_MIDDLE_EAST;
-                        default: return INNER_MIDDLE_WEST;
-                    }
-                } else {
-                    switch (direction) {
                         case NORTH: return INNER_MIDDLE_WEST;
                         case SOUTH: return INNER_MIDDLE_EAST;
                         case EAST: return INNER_MIDDLE;
                         default: return INNER_MIDDLE_SOUTH;
+                    }
+                } else {
+                    switch (direction) {
+                        case NORTH: return INNER_MIDDLE;
+                        case SOUTH: return INNER_MIDDLE_SOUTH;
+                        case EAST: return INNER_MIDDLE_EAST;
+                        default: return INNER_MIDDLE_WEST;
                     }
                 }
             } else {
