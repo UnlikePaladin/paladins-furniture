@@ -42,7 +42,6 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
     private final Block baseBlock;
     private static final List<FurnitureBlock> WOOD_CABINETS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_CABINETS = new ArrayList<>();
-    private static final EnumProperty<CounterShape> SHAPE = EnumProperty.of("shape",CounterShape.class);
 
     public KitchenCabinetBlock(Settings settings) {
         super(settings);
@@ -98,154 +97,182 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(Properties.HORIZONTAL_FACING);
-        stateManager.add(SHAPE);
         stateManager.add(OPEN);
     }
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
-        CounterShape shape = state.get(SHAPE);
-        Boolean open = state.get(OPEN);
-        switch(shape) {
-            case STRAIGHT:
-                switch (dir) {
-                    case NORTH -> {
-                        if (open)
+        Direction direction = state.get(KitchenCounterBlock.FACING);
+        BlockState neighborStateFacing = view.getBlockState(pos.offset(direction));
+        BlockState neighborStateOpposite = view.getBlockState(pos.offset(direction.getOpposite()));
+        boolean open = state.get(OPEN);
+        if (isCabinet(neighborStateFacing) && neighborStateFacing.getProperties().contains(Properties.HORIZONTAL_FACING)) {
+            Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
+            if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, view, pos, direction2.getOpposite())) {
+                if (direction2 == direction.rotateYCounterclockwise()) {
+                    switch (direction) {
+                        case NORTH: {
+                            if (open) {
+                                return OUTER_CORNER_OPEN;
+                            }
+                            return OUTER_CORNER;
+                        }
+                        case SOUTH: {
+                            if (open) {
+                                return OUTER_CORNER_OPEN_SOUTH;
+                            }
+                            return OUTER_CORNER_SOUTH;
+                        }
+                        case EAST: {
+                            if (open) {
+                                return OUTER_CORNER_OPEN_EAST;
+                            }
+                            return OUTER_CORNER_EAST;
+                        }
+                        default: {
+                            if (open) {
+                                return OUTER_CORNER_OPEN_WEST;
+                            }
+                            return OUTER_CORNER_WEST;
+                        }
+                    }
+                }
+                else {
+                    switch (direction) {
+                        case NORTH: {
+                            if (open) {
+                                return OUTER_CORNER_OPEN_EAST;
+                            }
+                            return OUTER_CORNER_EAST;
+                        }
+                        case SOUTH: {
+                            if (open) {
+                                return OUTER_CORNER_OPEN_WEST;
+                            }
+                            return OUTER_CORNER_WEST;
+                        }
+                        case EAST: {
+                            if (open) {
+                                return OUTER_CORNER_OPEN_SOUTH;
+                            }
+                            return OUTER_CORNER_SOUTH;
+                        }
+                        default: {
+                            if (open) {
+                                return OUTER_CORNER_OPEN;
+                            }
+                            return OUTER_CORNER;
+                        }
+                    }
+                }
+            } else {
+                switch (direction) {
+                    case NORTH: {
+                        if (open) {
                             return STRAIGHT_OPEN;
-                        else
-                            return STRAIGHT;
+                        }
+                        return STRAIGHT;
                     }
-                    case SOUTH -> {
-                        if (open)
+                    case SOUTH: {
+                        if (open) {
                             return STRAIGHT_OPEN_SOUTH;
-                        else
-                            return STRAIGHT_SOUTH;
+                        }
+                        return STRAIGHT_SOUTH;
                     }
-                    case EAST -> {
-                        if (open)
+                    case EAST: {
+                        if (open) {
                             return STRAIGHT_OPEN_EAST;
-                        else
-                            return STRAIGHT_EAST;
+                        }
+                        return STRAIGHT_EAST;
                     }
-                    default -> {
-                        if (open)
+                    default: {
+                        if (open) {
                             return STRAIGHT_OPEN_WEST;
-                        else
-                            return STRAIGHT_WEST;
+                        }
+                        return STRAIGHT_WEST;
                     }
                 }
-            case INNER_LEFT:
-                switch (dir) {
-                    case NORTH -> {
-                        if (open)
-                            return INNER_CORNER_OPEN_WEST;
-                        else
-                            return INNER_CORNER_WEST;
+            }
+        }
+        else if (isCabinet(neighborStateOpposite) && neighborStateOpposite.getProperties().contains(Properties.HORIZONTAL_FACING)) {
+            Direction direction3;
+            if (neighborStateOpposite.getBlock() instanceof AbstractFurnaceBlock) {
+                direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING).getOpposite();
+            }
+            else {
+                direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
+            }
+            if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, view, pos, direction3)) {
+                if (direction3 == direction.rotateYCounterclockwise()) {
+                    switch (direction) {
+                        case NORTH: return INNER_CORNER_WEST;
+                        case SOUTH: return INNER_CORNER_EAST;
+                        case EAST: return INNER_CORNER;
+                        default: return INNER_CORNER_SOUTH;
                     }
-                    case SOUTH -> {
-                        if (open)
-                            return INNER_CORNER_OPEN_EAST;
-                        else
-                            return INNER_CORNER_EAST;
-                    }
-                    case EAST -> {
-                        if (open)
-                            return INNER_CORNER_OPEN;
-                        else
-                            return INNER_CORNER;
-                    }
-                    default -> {
-                        if (open)
-                            return INNER_CORNER_OPEN_SOUTH;
-                        else
-                            return INNER_CORNER_SOUTH;
-                    }
-                }
-            case INNER_RIGHT:
-                switch (dir) {
-                    case NORTH -> {
-                        if (open)
-                            return INNER_CORNER_OPEN;
-                        else
-                            return INNER_CORNER;
-                    }
-                    case SOUTH -> {
-                        if (open)
-                            return INNER_CORNER_OPEN_SOUTH;
-                        else
-                            return INNER_CORNER_SOUTH;
-                    }
-                    case EAST -> {
-                        if (open)
-                            return INNER_CORNER_OPEN_EAST;
-                        else
-                            return INNER_CORNER_EAST;
-                    }
-                    default -> {
-                        if (open)
-                            return INNER_CORNER_OPEN_WEST;
-                        else
-                            return INNER_CORNER_WEST;
+                } else {
+                    switch (direction) {
+                        case NORTH: return INNER_CORNER;
+                        case SOUTH: return INNER_CORNER_SOUTH;
+                        case EAST: return INNER_CORNER_EAST;
+                        default: return INNER_CORNER_WEST;
                     }
                 }
-
-            case OUTER_LEFT:
-                switch (dir) {
-                    case NORTH -> {
-                        if (open)
-                            return OUTER_CORNER_OPEN;
-                        else
-                            return OUTER_CORNER;
+            } else {
+                switch (direction) {
+                    case NORTH: {
+                        if (open) {
+                            return STRAIGHT_OPEN;
+                        }
+                        return STRAIGHT;
                     }
-                    case SOUTH -> {
-                        if (open)
-                            return OUTER_CORNER_OPEN_SOUTH;
-                        else
-                            return OUTER_CORNER_SOUTH;
+                    case SOUTH: {
+                        if (open) {
+                            return STRAIGHT_OPEN_SOUTH;
+                        }
+                        return STRAIGHT_SOUTH;
                     }
-                    case EAST -> {
-                        if (open)
-                            return OUTER_CORNER_OPEN_EAST;
-                        else
-                            return OUTER_CORNER_EAST;
+                    case EAST: {
+                        if (open) {
+                            return STRAIGHT_OPEN_EAST;
+                        }
+                        return STRAIGHT_EAST;
                     }
-                    default -> {
-                        if (open)
-                            return OUTER_CORNER_OPEN_WEST;
-                        else
-                            return OUTER_CORNER_WEST;
-                    }
-                }
-
-            case OUTER_RIGHT:
-                switch (dir){
-                    case NORTH -> {
-                        if (open)
-                            return OUTER_CORNER_OPEN_EAST;
-                        else
-                            return OUTER_CORNER_EAST;
-                    }
-                    case SOUTH -> {
-                        if (open)
-                            return OUTER_CORNER_OPEN_WEST;
-                        else
-                            return OUTER_CORNER_WEST;
-                    }
-                    case EAST -> {
-                        if (open)
-                            return OUTER_CORNER_OPEN_SOUTH;
-                        else
-                            return OUTER_CORNER_SOUTH;
-                    }
-                    default -> {
-                        if (open)
-                            return OUTER_CORNER_OPEN;
-                        else
-                            return OUTER_CORNER;
+                    default: {
+                        if (open) {
+                            return STRAIGHT_OPEN_WEST;
+                        }
+                        return STRAIGHT_WEST;
                     }
                 }
-            default:
-                return STRAIGHT;
+            }
+        }
+        else {
+            switch (direction) {
+                case NORTH: {
+                    if (open) {
+                        return STRAIGHT_OPEN;
+                    }
+                    return STRAIGHT;
+                }
+                case SOUTH: {
+                    if (open) {
+                        return STRAIGHT_OPEN_SOUTH;
+                    }
+                    return STRAIGHT_SOUTH;
+                }
+                case EAST: {
+                    if (open) {
+                        return STRAIGHT_OPEN_EAST;
+                    }
+                    return STRAIGHT_EAST;
+                }
+                default: {
+                    if (open) {
+                        return STRAIGHT_OPEN_WEST;
+                    }
+                    return STRAIGHT_WEST;
+                }
+            }
         }
     }
 
@@ -265,14 +292,14 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
         return state.getBlock() instanceof KitchenCabinetBlock;
     }
 
-    private boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
+    public boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
         BlockState blockState = world.getBlockState(pos.offset(dir));
         return !this.isCabinet(blockState);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return direction.getAxis().isHorizontal() ? state.with(SHAPE, getShape(state, world, pos)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
@@ -284,10 +311,7 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockPos blockPos = ctx.getBlockPos();
-        World world = ctx.getWorld();
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        return blockState.with(SHAPE, this.getShape(blockState, world, blockPos));
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
 
     private CounterShape getShape(BlockState state, BlockView world, BlockPos pos) {

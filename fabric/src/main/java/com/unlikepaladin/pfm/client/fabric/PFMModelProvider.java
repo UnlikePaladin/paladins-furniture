@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
 import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenDrawer.UnbakedKitchenDrawerModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.UnbakedKitchenWallCounterModel;
@@ -54,6 +55,9 @@ public class PFMModelProvider implements ModelResourceProvider {
         }
         else if (ModelHelper.containsIdentifier(UnbakedKitchenWallDrawerModel.DRAWER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
             return new UnbakedKitchenWallDrawerModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        }
+        else if (ModelHelper.containsIdentifier(UnbakedKitchenCabinetModel.CABINET_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            return new UnbakedKitchenCabinetModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
         }
         else
             return null;

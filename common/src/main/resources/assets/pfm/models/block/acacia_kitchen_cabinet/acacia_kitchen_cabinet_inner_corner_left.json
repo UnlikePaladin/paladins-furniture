@@ -1,0 +1,11 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/kitchen_cabinet/kitchen_cabinet_inner_corner_left",
+	"textures": {
+        
+		"particle": "block/acacia_planks",
+		"base": "block/acacia_planks",
+		"legs": "block/acacia_log"
+	}
+    
+}
