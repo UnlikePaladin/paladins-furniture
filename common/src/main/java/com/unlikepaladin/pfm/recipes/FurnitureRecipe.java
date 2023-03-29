@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
@@ -61,7 +62,7 @@ public class FurnitureRecipe implements IFurnitureRecipe {
     }
 
     @Override
-    public ItemStack getOutput() {
+    public ItemStack getOutput(DynamicRegistryManager registryManager) {
         return this.output;
     }
 
@@ -106,8 +107,8 @@ public class FurnitureRecipe implements IFurnitureRecipe {
     }
 
     @Override
-    public ItemStack craft(CraftingInventory craftingInventory) {
-        return this.getOutput().copy();
+    public ItemStack craft(CraftingInventory craftingInventory, DynamicRegistryManager registryManager) {
+        return this.getOutput(registryManager).copy();
     }
 
     public int getWidth() {

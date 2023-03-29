@@ -31,18 +31,18 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
 
                  return IVariable.from(stack);
              case "output":
-                 ItemStack result = recipe.getOutput();
+                 ItemStack result = recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager());
                  return IVariable.from(result);
              case "icon":
                  ItemStack icon = recipe.createIcon();
                  return IVariable.from(icon);
              case "text":
-                 ItemStack out = recipe.getOutput();
+                 ItemStack out = recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager());
                  return IVariable.wrap(out.getCount() + "x$(br)" + out.getName());
              case "icount":
-                 return IVariable.wrap(recipe.getOutput().getCount());
+                 return IVariable.wrap(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()).getCount());
              case "iname":
-                 return IVariable.wrap(recipe.getOutput().getName().getString());
+                 return IVariable.wrap(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()).getName().getString());
          }
         }
      return null;

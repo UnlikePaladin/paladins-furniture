@@ -105,7 +105,7 @@ public class XboxFridge extends Fridge
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
         if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
-            return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(OPEN, false).with(HALF, DoubleBlockHalf.LOWER);
+            return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing()).with(OPEN, false).with(HALF, DoubleBlockHalf.LOWER);
         }
         return null;
     }

@@ -25,7 +25,7 @@ public class ItemGroupRegistry {
         PaladinFurnitureMod.DYE_KITS = creativeModeTabEvent.registerCreativeModeTab(new Identifier(MOD_ID, "dye_kits"), builder -> {
                 builder.displayName(Text.translatable("itemGroup.pfm.dye_kits"))
                         .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
-                        .entries((enabledFeatures, stacks, operatorEnabled) -> {
+                        .entries((enabledFeatures, stacks) -> {
                             stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED));
                             stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE));
                             stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW));
@@ -51,7 +51,7 @@ public class ItemGroupRegistry {
         PaladinFurnitureMod.FURNITURE_GROUP = creativeModeTabEvent.registerCreativeModeTab(new Identifier(MOD_ID, "furniture"), builder -> {
                     builder.displayName(Text.translatable("itemGroup.pfm.furniture"))
                             .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.OAK_CHAIR))
-                            .entries((enabledFeatures, stacks, operatorEnabled) -> {
+                            .entries((enabledFeatures, stacks) -> {
                                 PaladinFurnitureModBlocksItems.PFM_TAB_ITEMS.forEach(stacks::add);
                             })
                             .build();

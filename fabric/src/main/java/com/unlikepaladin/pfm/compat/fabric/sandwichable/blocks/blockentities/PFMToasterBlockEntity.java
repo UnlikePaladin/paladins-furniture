@@ -10,7 +10,6 @@ import io.github.foundationgames.sandwichable.recipe.ToastingRecipe;
 import io.github.foundationgames.sandwichable.util.Util;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
@@ -18,7 +17,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
@@ -30,9 +29,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
-import net.minecraft.world.explosion.Explosion;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -97,7 +94,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         if(!world.isClient) {
             world.removeBlock(pos, true);
             PlayerEntity player = world.getClosestPlayer(pos.getX(), pos.getZ(), 8, 10, false);
-            world.createExplosion(player, DamageSource.player(player), null, pos.getX(), pos.getY(), pos.getZ(), 2.2f, true, World.ExplosionSourceType.BLOCK);
+            world.createExplosion(player, world.getDamageSources().explosion(player, player), null, pos.getX(), pos.getY(), pos.getZ(), 2.2f, true, World.ExplosionSourceType.BLOCK);
         }
     }
 
@@ -151,14 +148,14 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         return this.items.get(0).isIn(Sandwichable.METAL_ITEMS) || this.items.get(1).isIn(Sandwichable.METAL_ITEMS);
     }
 
-    private void toastItems() {
+    private void toastItems(World world) {
         for (int i = 0; i < 2; i++) {
             SimpleInventory inv = new SimpleInventory(items.get(i));
-            Optional<ToastingRecipe> match = world.getRecipeManager().getFirstMatch(ToastingRecipe.Type.INSTANCE, inv, world);
+            Optional<ToastingRecipe> match = this.world.getRecipeManager().getFirstMatch(ToastingRecipe.Type.INSTANCE, inv, this.world);
 
             boolean changed = false;
             if(match.isPresent()) {
-                items.set(i, match.get().getOutput().copy());
+                items.set(i, match.get().getOutput(world.getRegistryManager()).copy());
                 changed = true;
             } else {
                 if(items.get(i).isFood()) {
@@ -168,7 +165,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
                 }
             }
 
-            if (!world.isClient() && changed) {
+            if (!this.world.isClient() && changed) {
                 ItemStack advStack = items.get(i);
                 this.getLastUser().ifPresent(player -> {
                     if (player instanceof ServerPlayerEntity) {
@@ -240,7 +237,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         }
         if(blockEntity.toastProgress == toastTime) {
             blockEntity.stopToasting(null);
-            blockEntity.toastItems();
+            blockEntity.toastItems(world);
             blockEntity.smoking = true;
         }
         if(blockEntity.smoking) {

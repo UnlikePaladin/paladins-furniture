@@ -12,7 +12,9 @@ import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -22,7 +24,9 @@ import net.minecraft.util.math.RotationAxis;
 
 public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
+    private final ItemRenderer itemRenderer;
     public TrashcanBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+        this.itemRenderer = ctx.getItemRenderer();
     }
 
     @Override
@@ -82,7 +86,7 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implemen
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rot));
                 int lightAbove = WorldRenderer.getLightmapCoordinates(trashcanBlockEntity.getWorld(), trashcanBlockEntity.getPos().up());
                 matrices.scale(0.8f, 0.8f, 0.8f);
-                MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.GROUND, lightAbove, overlay, matrices, vertexConsumerProvider, (int) (trashcanBlockEntity.getPos().asLong()+ i));
+                this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, overlay, matrices, vertexConsumerProvider, trashcanBlockEntity.getWorld(), (int) (trashcanBlockEntity.getPos().asLong()+ i));
                 matrices.pop();
             }
         }

@@ -38,6 +38,7 @@ import me.shedaniel.rei.api.common.transfer.info.MenuSerializationContext;
 import me.shedaniel.rei.api.common.transfer.info.simple.SimpleGridMenuInfo;
 import me.shedaniel.rei.api.common.util.CollectionUtils;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.screen.ScreenHandler;
@@ -98,7 +99,7 @@ public abstract class FurnitureDisplay<C extends FurnitureRecipe> extends BasicD
 
                 if (size != null) {
                     return new DefaultCustomShapedDisplay(recipe, EntryIngredients.ofIngredients(recipe.getIngredients()),
-                            Collections.singletonList(EntryIngredients.of(recipe.getOutput())),
+                            Collections.singletonList(EntryIngredients.of(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()))),
                             size.getWidth(), size.getHeight());
                 }
 

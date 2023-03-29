@@ -6,6 +6,7 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 
 import java.util.Collections;
@@ -21,7 +22,7 @@ public class FreezingDisplay implements Display {
 
     public FreezingDisplay(FreezingRecipe recipe) {
         input = EntryIngredients.ofIngredients(recipe.getIngredients());
-        output = Collections.singletonList(EntryIngredients.of(recipe.getOutput()));
+        output = Collections.singletonList(EntryIngredients.of(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager())));
         cookTime = recipe.getCookTime();
         xp = recipe.getExperience();
     }

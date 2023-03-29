@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.compat.fabric.emi;
 
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
+import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -18,7 +19,7 @@ import java.util.List;
 public class EmiFurnitureRecipe extends EmiCraftingRecipe {
 
     public EmiFurnitureRecipe(FurnitureRecipe recipe) {
-        super(padIngredients(recipe), EmiStack.of(recipe.getOutput()),
+        super(padIngredients(recipe), EmiStack.of(EmiPort.getOutput(recipe)),
                 recipe.getId(), false);
         for (int i = 0; i < input.size(); i++) {
             CraftingInventory inv = new CraftingInventory(new ScreenHandler(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, -1) {

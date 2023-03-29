@@ -50,7 +50,7 @@ public class KitchenRangeHood extends HorizontalFacingBlock {
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         boolean down = ctx.getWorld().getBlockState(ctx.getBlockPos().down()).getBlock() instanceof KitchenRangeHood;
         boolean drawer = ctx.getWorld().getBlockState(ctx.getBlockPos().up()).getBlock() instanceof KitchenWallDrawerSmall;
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing()).with(DOWN, down).with(DRAWER, drawer);
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing()).with(DOWN, down).with(DRAWER, drawer);
     }
 
     @Override

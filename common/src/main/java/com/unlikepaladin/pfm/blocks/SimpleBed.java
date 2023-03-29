@@ -8,6 +8,7 @@ import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.damage.DamageTypes;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -63,8 +64,8 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        Direction direction = ctx.getPlayerFacing();
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+        Direction direction = ctx.getHorizontalPlayerFacing();
         BlockPos blockPos = ctx.getBlockPos();
         BlockPos blockPos2 = blockPos.offset(direction);
         if (ctx.getWorld().getBlockState(blockPos2).canReplace(ctx)) {
@@ -92,7 +93,7 @@ public class SimpleBed extends BedBlock implements DyeableFurniture {
                 world.removeBlock(blockPos, false);
             }
             Vec3d centerPos = pos.toCenterPos();
-            world.createExplosion(null, DamageSource.badRespawnPoint(centerPos), null, centerPos, 5.0F, true, World.ExplosionSourceType.BLOCK);
+            world.createExplosion(null, world.getDamageSources().badRespawnPoint(centerPos), null, centerPos, 5.0F, true, World.ExplosionSourceType.BLOCK);
             return ActionResult.SUCCESS;
         }
         if (state.get(OCCUPIED)) {

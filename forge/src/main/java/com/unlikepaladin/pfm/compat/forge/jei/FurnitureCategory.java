@@ -20,6 +20,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.recipe.category.extensions.IExtendableRecipeCategory;
 import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
 import net.minecraft.block.Block;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
@@ -74,7 +75,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         List<List<ItemStack>> inputs = recipe.getIngredients().stream()
                 .map(ingredient -> List.of(ingredient.getMatchingStacks()))
                 .toList();
-        ItemStack resultItem = recipe.getOutput();
+        ItemStack resultItem = recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager());
 
         int width = recipe.getWidth();
         int height = recipe.getHeight();

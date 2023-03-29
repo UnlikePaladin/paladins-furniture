@@ -11,6 +11,7 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
@@ -58,7 +59,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         List<List<ItemStack>> inputs = recipe.getIngredients().stream()
                 .map(ingredient -> List.of(ingredient.getMatchingStacks()))
                 .toList();
-        ItemStack resultItem = recipe.getOutput();
+        ItemStack resultItem = recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager());
 
         int width = recipe.getWidth();
         int height = recipe.getHeight();

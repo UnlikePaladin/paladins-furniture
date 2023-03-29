@@ -8,7 +8,9 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
@@ -18,7 +20,9 @@ import net.minecraft.util.math.RotationAxis;
 public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
     private static final float SCALE = 0.375f;
+    private final ItemRenderer itemRenderer;
     public PlateBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+        itemRenderer = ctx.getItemRenderer();
     }
     @Override
     public void render(PlateBlockEntity plateBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
@@ -42,7 +46,7 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
             matrices.translate(0.0, 0.11, 0.05);
         }
         int lightAbove = WorldRenderer.getLightmapCoordinates(plateBlockEntity.getWorld(), plateBlockEntity.getPos().up());
-        MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumerProvider, 0);
+        this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumerProvider, plateBlockEntity.getWorld(),0);
         matrices.pop();
     }
 }

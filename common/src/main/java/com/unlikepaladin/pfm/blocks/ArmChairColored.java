@@ -212,8 +212,8 @@ public class ArmChairColored extends ArmChair implements DyeableFurniture {
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        Direction facing = PaladinFurnitureMod.getPFMConfig().doChairsFacePlayer() ? ctx.getPlayerFacing() : ctx.getPlayerFacing().getOpposite();
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+        Direction facing = PaladinFurnitureMod.getPFMConfig().doChairsFacePlayer() ? ctx.getHorizontalPlayerFacing() : ctx.getHorizontalPlayerFacing().getOpposite();
         return baseBlockState.with(SHAPE, getShape(blockState, ctx.getWorld(), ctx.getBlockPos())).with(FACING, facing);
     }
 

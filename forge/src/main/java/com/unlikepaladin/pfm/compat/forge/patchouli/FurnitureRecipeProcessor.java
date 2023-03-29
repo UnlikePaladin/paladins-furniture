@@ -33,18 +33,18 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
                 ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
                 return IVariable.from(stack);
             } else if (key.equals("resultitem")) {
-                ItemStack result = recipe.getOutput();
+                ItemStack result = recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager());
                 return IVariable.from(result);
             } else if (key.equals("icon")) {
                 ItemStack icon = recipe.createIcon();
                 return IVariable.from(icon);
             } else if (key.equals("text")) {
-                ItemStack out = recipe.getOutput();
+                ItemStack out = recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager());
                 return IVariable.wrap(out.getCount() + "x$(br)" + out.getName());
             } else if (key.equals("icount")) {
-                return IVariable.wrap(recipe.getOutput().getCount());
+                return IVariable.wrap(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()).getCount());
             } else if (key.equals("iname")) {
-                return IVariable.wrap(recipe.getOutput().getName().getString());
+                return IVariable.wrap(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()).getName().getString());
             }
         }
         return null;

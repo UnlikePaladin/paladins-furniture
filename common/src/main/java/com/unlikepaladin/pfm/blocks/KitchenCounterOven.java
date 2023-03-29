@@ -88,7 +88,7 @@ public class KitchenCounterOven extends SmokerBlock implements Waterloggable {
         BlockPos blockPos = ctx.getBlockPos();
         boolean up = connectsVertical(world.getBlockState(blockPos.up()).getBlock());
         boolean down = connectsVertical(world.getBlockState(blockPos.down()).getBlock());
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(UP, up).with(DOWN, down);
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite()).with(UP, up).with(DOWN, down);
     }
 
     @Override

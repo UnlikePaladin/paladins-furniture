@@ -65,7 +65,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         PaladinFurnitureMod.DYE_KITS = FabricItemGroup.builder(new Identifier(MOD_ID, "dye_kits"))
                 .displayName(Text.translatable("itemGroup.pfm.dye_kits"))
                 .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
-                .entries((enabledFeatures, stacks, operatorEnabled) -> {
+                .entries((displayContext, stacks) -> {
                     stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED));
                     stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE));
                     stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW));
@@ -88,7 +88,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         PaladinFurnitureMod.FURNITURE_GROUP = FabricItemGroup.builder(new Identifier(MOD_ID, "furniture"))
                 .displayName(Text.translatable("itemGroup.pfm.furniture"))
                 .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.OAK_CHAIR))
-                .entries((enabledFeatures, stacks, operatorEnabled) -> {
+                .entries((displayContext, stacks) -> {
                             PaladinFurnitureModBlocksItems.PFM_TAB_ITEMS.forEach(item -> stacks.add(new ItemStack(item)));
                         }
                 ).build();

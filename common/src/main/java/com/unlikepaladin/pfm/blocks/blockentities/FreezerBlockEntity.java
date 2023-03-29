@@ -22,6 +22,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
@@ -369,11 +370,11 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
 
-    private static boolean canAcceptRecipeOutput(@Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
+    private static boolean canAcceptRecipeOutput(DynamicRegistryManager registryManager, @Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
         if (slots.get(0).isEmpty() || recipe == null) {
             return false;
         }
-        ItemStack itemStack = recipe.getOutput();
+        ItemStack itemStack = recipe.getOutput(registryManager);
         if (itemStack.isEmpty()) {
             return false;
         }
@@ -390,12 +391,12 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         return itemStack2.getCount() < itemStack.getMaxCount();
     }
 
-    private static boolean craftRecipe(@Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
-        if (recipe == null || !FreezerBlockEntity.canAcceptRecipeOutput(recipe, slots, count)) {
+    private static boolean craftRecipe(DynamicRegistryManager registryManager, @Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
+        if (recipe == null || !FreezerBlockEntity.canAcceptRecipeOutput(registryManager,recipe, slots, count)) {
             return false;
         }
         ItemStack itemStack = slots.get(0);
-        ItemStack itemStack2 = recipe.getOutput();
+        ItemStack itemStack2 = recipe.getOutput(registryManager);
         ItemStack itemStack3 = slots.get(2);
         if (itemStack2.isOf(Items.OBSIDIAN) || itemStack2.isOf(Items.ICE) || itemStack2.isOf(Items.BLUE_ICE)) {
             slots.set(0, new ItemStack(Items.BUCKET));
@@ -437,7 +438,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         if (blockEntity.isActive() || !itemStack.isEmpty() && !blockEntity.inventory.get(0).isEmpty()) {
             Recipe recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
             int i = blockEntity.getMaxCountPerStack();
-            if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(recipe, blockEntity.inventory, i)) {
+            if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {
                 blockEntity.fuelTimeTotal = blockEntity.fuelTime = blockEntity.getFuelTime(itemStack);
                 if (blockEntity.isActive()) {
                     bl2 = true;
@@ -451,12 +452,12 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
                     }
                 }
             }
-            if (blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(recipe, blockEntity.inventory, i)) {
+            if (blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {
                 ++blockEntity.freezeTime;
                 if (blockEntity.freezeTime == blockEntity.freezeTimeTotal) {
                     blockEntity.freezeTime = 0;
                     blockEntity.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(world, blockEntity.recipeType, blockEntity);
-                    if (FreezerBlockEntity.craftRecipe(recipe, blockEntity.inventory, i)) {
+                    if (FreezerBlockEntity.craftRecipe(world.getRegistryManager(),recipe, blockEntity.inventory, i)) {
                         blockEntity.setLastRecipe(recipe);
                     }
                     bl2 = true;

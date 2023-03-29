@@ -49,7 +49,7 @@ public class Cutlery extends HorizontalFacingBlock {
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState()
-                .with(FACING, ctx.getPlayerFacing());
+                .with(FACING, ctx.getHorizontalPlayerFacing());
     }
 
     @Override

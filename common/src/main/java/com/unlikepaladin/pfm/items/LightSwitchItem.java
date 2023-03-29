@@ -80,7 +80,7 @@ public class LightSwitchItem extends BlockItem {
         WorldView world = context.getWorld();
         if (getLights(context.getStack()) != null) {
             NbtList lights = getLights(context.getStack());
-            Direction facing = context.getPlayerFacing();
+            Direction facing = context.getHorizontalPlayerFacing();
             for(int i = 0; i < lights.size(); i++)
             {
                 NbtElement nbtElement = lights.get(i);

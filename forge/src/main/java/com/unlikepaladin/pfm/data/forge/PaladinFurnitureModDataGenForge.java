@@ -22,7 +22,7 @@ import net.minecraft.data.server.loottable.LootTableProvider;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
-import net.minecraft.data.server.tag.AbstractTagProvider;
+//import net.minecraft.data.server.tag.AbstractTagProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.Items;

@@ -21,7 +21,7 @@ public class EmiFreezingRecipe extends EmiCookingRecipe {
     public EmiFreezingRecipe(FreezingRecipe recipe) {
         super(recipe, PaladinFurnitureModEMIPlugin.FREEZER, 2, false);
         input = EmiIngredient.of(recipe.getIngredients().get(0));
-        output = EmiStack.of(recipe.getOutput());
+        output = EmiStack.of(EmiPort.getOutput(recipe));
         this.recipe = recipe;
     }
 

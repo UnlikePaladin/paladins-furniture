@@ -107,7 +107,7 @@ public class KitchenStovetop extends HorizontalFacingBlockWEntity {
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
+        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
     }
 
     protected static final VoxelShape STOVETOP = VoxelShapes.union(createCuboidShape(0, 0, 1, 16, 0.5, 15));

@@ -286,7 +286,7 @@ public class KitchenCabinet extends HorizontalFacingBlock implements BlockEntity
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
         return blockState.with(SHAPE, this.getShape(blockState, world, blockPos));
     }
 

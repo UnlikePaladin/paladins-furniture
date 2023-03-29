@@ -72,7 +72,7 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
         ItemStack itemStack = ItemStack.EMPTY;
         Optional<FurnitureRecipe> optional = world.getServer().getRecipeManager().getFirstMatch(RecipeTypes.FURNITURE_RECIPE, craftingInventory, world);
         if (optional.isPresent() && resultInventory.shouldCraftRecipe(world, serverPlayerEntity, furnitureRecipe = optional.get())) {
-            itemStack = furnitureRecipe.craft(craftingInventory);
+            itemStack = furnitureRecipe.craft(craftingInventory, world.getRegistryManager());
         }
         resultInventory.setStack(0, itemStack);
         handler.setPreviousTrackedSlot(0, itemStack);
@@ -101,8 +101,8 @@ public class WorkbenchScreenHandler extends AbstractRecipeScreenHandler<Crafting
     }
 
     @Override
-    public void close(PlayerEntity player) {
-        super.close(player);
+    public void onClosed(PlayerEntity player) {
+        super.onClosed(player);
         this.context.run((world, pos) -> this.dropInventory(player, this.input));
     }
 

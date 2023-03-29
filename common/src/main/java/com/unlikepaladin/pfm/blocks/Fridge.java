@@ -72,7 +72,7 @@ public class Fridge extends HorizontalFacingBlockWEntity {
     }
 
     @Override
-    public boolean isTranslucent(BlockState state, BlockView world, BlockPos pos) {
+    public boolean isTransparent(BlockState state, BlockView world, BlockPos pos) {
         return true;
     }
 
@@ -153,7 +153,7 @@ public class Fridge extends HorizontalFacingBlockWEntity {
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
         if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
-            return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
+            return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
         }
         return null;
     }

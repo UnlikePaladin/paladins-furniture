@@ -4,12 +4,10 @@ import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
-
-import javax.annotation.Nullable;
 
 public class StoveBlockEntityImpl extends StoveBlockEntity {
 
@@ -21,7 +19,6 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
         super(entity, pos, state);
     }
 
-    @Nullable
     @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);

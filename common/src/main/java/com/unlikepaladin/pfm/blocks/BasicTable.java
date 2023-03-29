@@ -94,7 +94,7 @@ public class BasicTable extends Block {
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
-        Direction.Axis facing = ctx.getPlayerFacing().getAxis();
+        Direction.Axis facing = ctx.getHorizontalPlayerFacing().getAxis();
         BlockState blockState = this.getDefaultState().with(AXIS, facing);
         return getShape(blockState, world, blockPos);
     }

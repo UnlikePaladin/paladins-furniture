@@ -72,7 +72,7 @@ public class KitchenCounter extends HorizontalFacingBlock {
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         BlockPos blockPos = ctx.getBlockPos();
         World world = ctx.getWorld();
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
         return blockState.with(SHAPE, getShape(blockState, world, blockPos));
     }
 

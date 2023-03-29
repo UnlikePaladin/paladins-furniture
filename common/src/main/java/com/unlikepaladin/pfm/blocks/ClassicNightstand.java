@@ -91,7 +91,7 @@ public class ClassicNightstand extends HorizontalFacingBlockWEntity {
 
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
         return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
     }
 

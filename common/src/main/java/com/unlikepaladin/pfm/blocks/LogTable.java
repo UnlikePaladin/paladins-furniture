@@ -71,7 +71,7 @@ public class LogTable extends HorizontalFacingBlock {
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
         return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
     }
 

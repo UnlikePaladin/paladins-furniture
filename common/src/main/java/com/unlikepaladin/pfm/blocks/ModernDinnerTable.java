@@ -66,7 +66,7 @@ public class ModernDinnerTable extends Block {
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(AXIS, ctx.getPlayerFacing().rotateYClockwise().getAxis());
+        BlockState blockState = this.getDefaultState().with(AXIS, ctx.getHorizontalPlayerFacing().rotateYClockwise().getAxis());
         return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(AXIS));
     }
 

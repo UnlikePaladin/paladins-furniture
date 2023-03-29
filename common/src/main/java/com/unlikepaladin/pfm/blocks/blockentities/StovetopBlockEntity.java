@@ -51,7 +51,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         }
             if (stovetopBlockEntity.cookingTimes[i] < stovetopBlockEntity.cookingTotalTimes[i]) continue;
             SimpleInventory inventory = new SimpleInventory(itemStack);
-            ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.craft(inventory)).orElse(itemStack);
+            ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.craft(inventory, world.getRegistryManager())).orElse(itemStack);
                 if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
                     ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), itemStack2);
                     stovetopBlockEntity.itemsBeingCooked.set(i, ItemStack.EMPTY);

@@ -83,6 +83,8 @@ public class ChairEntity extends MobEntity {
         return false;
     }
 
+    @Override
+
     public Vec3d updatePassengerForDismount(LivingEntity passenger) {
         Direction direction = this.getMovementDirection();
         if (direction.getAxis() == Direction.Axis.Y) {
@@ -121,7 +123,7 @@ public class ChairEntity extends MobEntity {
     }
 
     @Override
-    public boolean canBeRiddenInWater() {
-        return true;
+    public boolean shouldDismountUnderwater() {
+        return false;
     }
 }
