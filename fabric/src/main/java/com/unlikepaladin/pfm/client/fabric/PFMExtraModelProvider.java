@@ -10,6 +10,7 @@ import com.unlikepaladin.pfm.blocks.models.kitchenDrawer.UnbakedKitchenDrawerMod
 import com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.UnbakedKitchenWallCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawer.UnbakedKitchenWallDrawerModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
+import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import net.fabricmc.fabric.api.client.model.ExtraModelProvider;
 import net.minecraft.resource.ResourceManager;
@@ -31,5 +32,6 @@ public class PFMExtraModelProvider implements ExtraModelProvider {
         UnbakedKitchenWallCounterModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedKitchenWallDrawerModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedKitchenCabinetModel.ALL_MODEL_IDS.forEach(out::accept);
+        UnbakedMirrorModel.ALL_MODEL_IDS.forEach(out::accept);
     }
 }

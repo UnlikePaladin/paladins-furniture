@@ -16,7 +16,10 @@ public class PFMImmPtlRegistry {
    public static final EntityType<PFMMirrorEntity> MIRROR = EntityType.Builder.create(PFMMirrorEntity::new, SpawnGroup.MISC).setDimensions(0.0F, 0.0F).makeFireImmune().disableSummon().build("mirror_entity");
     public static void register() {
         PaladinFurnitureModBlocksItems.WHITE_MIRROR = new PFMMirrorBlockIP(AbstractBlock.Settings.of(Material.STONE, MapColor.WHITE).nonOpaque());
+        PaladinFurnitureModBlocksItems.GRAY_MIRROR = new PFMMirrorBlockIP(AbstractBlock.Settings.of(Material.STONE, MapColor.GRAY).nonOpaque());
+
         BlockItemRegistry.registerFurniture("white_mirror", PaladinFurnitureModBlocksItems.WHITE_MIRROR, true);
+        BlockItemRegistry.registerFurniture("gray_mirror", PaladinFurnitureModBlocksItems.GRAY_MIRROR, true);
 
         EntityRegistry.registerEntityType("mirror_entity", MIRROR);
     }

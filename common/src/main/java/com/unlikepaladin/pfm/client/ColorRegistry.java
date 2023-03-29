@@ -41,6 +41,7 @@ public class ColorRegistry {
         registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, RenderLayer.getCutout());
         registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.MESH_TRASHCAN, RenderLayer.getCutout());
         registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.WHITE_MIRROR, RenderLayer.getTranslucent());
+        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.GRAY_MIRROR, RenderLayer.getTranslucent());
 
         List<Block> ovens = new ArrayList<>();
         KitchenCounterOvenBlock.streamStoneCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);

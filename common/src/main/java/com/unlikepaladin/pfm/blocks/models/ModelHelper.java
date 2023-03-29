@@ -95,12 +95,19 @@ public class ModelHelper {
         }
         for (DyeColor color : DyeColor.values()) {
             if (identifier.getPath().contains(color.getName())){
-                if (identifier.getPath().contains("light") && !color.getName().contains("light"))  {
+                if (!identifier.getPath().contains("light") && color.getName().contains("light"))  {
                     continue;
                 }
                 return color;
             }
         }
         return DyeColor.RED;
+    }
+
+    public static Identifier getVanillaConcreteColor(Identifier identifier) {
+        DyeColor color = getColor(identifier);
+        if (!identifier.getPath().contains(color.getName()))
+            return new Identifier("minecraft", "block/white_concrete");
+        return new Identifier("minecraft", "block/"+ color.getName() + "_concrete");
     }
 }

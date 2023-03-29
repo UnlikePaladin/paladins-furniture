@@ -1090,6 +1090,8 @@ public class BlockItemRegistry {
         if (!isModLoaded("imm_ptl_core")) {
             PaladinFurnitureModBlocksItems.WHITE_MIRROR = new MirrorBlock(AbstractBlock.Settings.of(Material.STONE, MapColor.WHITE).nonOpaque());
             registerFurniture("white_mirror", PaladinFurnitureModBlocksItems.WHITE_MIRROR, true);
+            PaladinFurnitureModBlocksItems.GRAY_MIRROR = new MirrorBlock(AbstractBlock.Settings.of(Material.STONE, MapColor.GRAY).nonOpaque());
+            registerFurniture("gray_mirror", PaladinFurnitureModBlocksItems.GRAY_MIRROR, true);
         }
     }
 

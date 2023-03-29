@@ -12,20 +12,21 @@ import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
 public class FabricMirrorModel extends BakedMirrorModel implements FabricBakedModel {
-    public FabricMirrorModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels) {
+    public FabricMirrorModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, glassTex, reflectTex, settings, bakedModels);
+        this.modelParts = MODEL_PARTS;
     }
-
+    private final List<String> modelParts;
     @Override
     public boolean isVanillaAdapter() {
         return false;
@@ -46,38 +47,38 @@ public class FabricMirrorModel extends BakedMirrorModel implements FabricBakedMo
             boolean cornerLeftDown = block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYClockwise()).down()), state);
             boolean cornerRightUp = block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYCounterclockwise()).up()), state);
 
-            context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[0]));
+            context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(0)));
             if (!down) {
-                context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[2]));
+                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(2)));
             }
             if (!up) {
-                context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[1]));
+                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(1)));
             }
             if (!right) {
-                context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[3]));
+                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(3)));
             }
             if (!left) {
-                context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[4]));
+                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(4)));
             }
 
             if (!cornerLeftDown) {
-                context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[8]));
+                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(8)));
             }
             if (!cornerRightDown) {
-                context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[7]));
+                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(7)));
             }
             if (!cornerLeftUp) {
-                context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[6]));
+                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(6)));
             }
             if (!cornerRightUp) {
-                context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[5]));
+                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(5)));
             }
         }
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.MODEL_PARTS[0]));
+        context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.BASE_MODEL_PARTS[0]));
     }
 
     @Override

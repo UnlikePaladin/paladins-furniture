@@ -1252,6 +1252,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final Block WARPED_SIMPLE_BUNK_LADDER = new SimpleBunkLadderBlock(AbstractBlock.Settings.copy(Blocks.LADDER));
 
     public static Block WHITE_MIRROR;
+    public static Block GRAY_MIRROR;
 
     public static final Block BASIC_SHOWER_HEAD = new BasicShowerHeadBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque());
     public static final Block BASIC_SHOWER_HANDLE = new BasicShowerHandleBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque());

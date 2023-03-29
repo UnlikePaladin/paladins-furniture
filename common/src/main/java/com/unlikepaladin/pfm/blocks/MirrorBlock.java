@@ -61,7 +61,7 @@ public class MirrorBlock extends HorizontalFacingBlock {
 
     public boolean canConnect(BlockState neighborState, BlockState state)
     {
-        return (PaladinFurnitureMod.getPFMConfig().doDifferentMirrorsConnect() ? neighborState.getBlock() instanceof MirrorBlock && neighborState.get(FACING) == state.get(FACING): neighborState.getBlock() == state.getBlock()) && neighborState.get(FACING) == state.get(FACING);
+        return PaladinFurnitureMod.getPFMConfig().doDifferentMirrorsConnect() ? neighborState.getBlock() instanceof MirrorBlock && neighborState.get(FACING) == state.get(FACING) : neighborState.getBlock() == state.getBlock() && neighborState.get(FACING) == state.get(FACING);
     }
 
     @Override
