@@ -2,7 +2,7 @@
 	"credit": "By UnlikePaladin",
 	"parent": "pfm:block/shower_towel/white_shower_towel",
 	"textures": {
-		"particle": "block/green_wool",
-		"towel": "block/green_wool"
+		"particle": "pfm:block/shower_towel/green_towel",
+		"towel": "pfm:block/shower_towel/green_towel"
 	}
 }
