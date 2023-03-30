@@ -11,13 +11,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecraftDedicatedServer.class)
 public class PFMMixinDedicatedServer {
-    @Shadow
-    static Logger LOGGER;
-
     @Inject(method = "setupServer", at = @At("TAIL"))
     private void pfm$showUpdateMessage(CallbackInfoReturnable<Boolean> cir) {
         PaladinFurnitureMod.getUpdateChecker().getUpdateMessageServer().ifPresent(msg ->
-                LOGGER.info(msg.getString())
+                PaladinFurnitureMod.GENERAL_LOGGER.info(msg.getString())
         );
     }
 }
