@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.compat.fabric.MissingDependencyScreen;
 import com.unlikepaladin.pfm.compat.fabric.PaladinFurnitureModConfigImpl;
+import com.unlikepaladin.pfm.compat.fabric.jei.PaladinFurnitureModJEIPlugin;
 import com.unlikepaladin.pfm.compat.fabric.sandwichable.PFMSandwichableRegistry;
 import com.unlikepaladin.pfm.registry.*;
 import com.unlikepaladin.pfm.registry.fabric.*;
@@ -99,6 +100,9 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         }
         if (FabricLoader.getInstance().isModLoaded("cloth-config2")) {
             pfmConfig = AutoConfig.register(PaladinFurnitureModConfigImpl.class, Toml4jConfigSerializer::new);
+        }
+        if (FabricLoader.getInstance().isModLoaded("jei")) {
+            ServerLifecycleEvents.SERVER_STARTED.register(PaladinFurnitureModJEIPlugin::trackServer);
         }
         this.commonInit();
         StatisticsRegistryFabric.registerStatistics();

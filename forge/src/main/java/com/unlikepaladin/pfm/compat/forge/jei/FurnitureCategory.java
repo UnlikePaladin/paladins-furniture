@@ -42,6 +42,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private static final int craftOutputSlot = 0;
     private static final int craftInputSlot1 = 1;
 
+
     public FurnitureCategory(IGuiHelper guiHelper) {
         ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(PaladinFurnitureModBlocksItems.WORKING_TABLE));
         this.BACKGROUND = guiHelper.createDrawable(TEXTURE_GUI_VANILLA, 0, 60, 116, 54);
@@ -75,7 +76,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         List<List<ItemStack>> inputs = recipe.getIngredients().stream()
                 .map(ingredient -> List.of(ingredient.getMatchingStacks()))
                 .toList();
-        ItemStack resultItem = recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager());
+        ItemStack resultItem = recipe.getOutput(PaladinFurnitureModJEIPlugin.REGISTRY_MANAGER_SUPPLIER.get());
 
         int width = recipe.getWidth();
         int height = recipe.getHeight();

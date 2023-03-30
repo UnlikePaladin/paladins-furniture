@@ -98,7 +98,7 @@ public abstract class FurnitureDisplay<C extends FurnitureRecipe> extends BasicD
 
                 if (size != null) {
                     return new DefaultCustomShapedDisplay(recipe, EntryIngredients.ofIngredients(recipe.getIngredients()),
-                            Collections.singletonList(EntryIngredients.of(recipe.getOutput())),
+                            Collections.singletonList(EntryIngredients.of(recipe.getOutput(BasicDisplay.registryAccess()))),
                             size.getWidth(), size.getHeight());
                 }
 

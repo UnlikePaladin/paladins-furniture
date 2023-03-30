@@ -23,6 +23,7 @@ package com.unlikepaladin.pfm.compat.forge.rei;
  */
 
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
+import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 
 import java.util.Collections;
@@ -31,7 +32,7 @@ public class ShapedDisplay extends FurnitureDisplay<FurnitureRecipe> {
     public ShapedDisplay(FurnitureRecipe recipe) {
         super(
                 EntryIngredients.ofIngredients(recipe.getIngredients()),
-                Collections.singletonList(EntryIngredients.of(recipe.getOutput())),
+                Collections.singletonList(EntryIngredients.of(recipe.getOutput(BasicDisplay.registryAccess()))),
                 java.util.Optional.of(recipe)
         );
     }

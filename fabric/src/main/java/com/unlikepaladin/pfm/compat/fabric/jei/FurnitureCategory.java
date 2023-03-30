@@ -59,7 +59,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         List<List<ItemStack>> inputs = recipe.getIngredients().stream()
                 .map(ingredient -> List.of(ingredient.getMatchingStacks()))
                 .toList();
-        ItemStack resultItem = recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager());
+        ItemStack resultItem = recipe.getOutput(PaladinFurnitureModJEIPlugin.REGISTRY_MANAGER_SUPPLIER.get());
 
         int width = recipe.getWidth();
         int height = recipe.getHeight();

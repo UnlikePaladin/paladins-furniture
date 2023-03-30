@@ -15,11 +15,17 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.util.Identifier;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.loading.FMLEnvironment;
+import net.minecraftforge.server.ServerLifecycleHooks;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 @JeiPlugin
 public class PaladinFurnitureModJEIPlugin implements IModPlugin {
@@ -27,6 +33,7 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
 
     }
 
+    public static final Supplier<DynamicRegistryManager> REGISTRY_MANAGER_SUPPLIER = FMLEnvironment.dist == Dist.DEDICATED_SERVER ? () -> ServerLifecycleHooks.getCurrentServer().getRegistryManager() : () -> MinecraftClient.getInstance().getServer().getRegistryManager();
     public static final RecipeType<FurnitureRecipe> FURNITURE_RECIPE =
             RecipeType.create(PaladinFurnitureMod.MOD_ID, "furniture", FurnitureRecipe.class);
 

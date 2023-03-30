@@ -4,9 +4,9 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
+import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 
 import java.util.Collections;
@@ -22,7 +22,7 @@ public class FreezingDisplay implements Display {
 
     public FreezingDisplay(FreezingRecipe recipe) {
         input = EntryIngredients.ofIngredients(recipe.getIngredients());
-        output = Collections.singletonList(EntryIngredients.of(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager())));
+        output = Collections.singletonList(EntryIngredients.of(recipe.getOutput(BasicDisplay.registryAccess())));
         cookTime = recipe.getCookTime();
         xp = recipe.getExperience();
     }
