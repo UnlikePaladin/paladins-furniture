@@ -6,9 +6,9 @@ import com.unlikepaladin.pfm.registry.RecipeTypes;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
-import me.shedaniel.rei.forge.REIPluginCommon;
+import me.shedaniel.rei.forge.REIPluginClient;
 
-@REIPluginCommon
+@REIPluginClient
 public class PaladinFurnitureModREIPlugin implements REIClientPlugin {
     @Override
     public void registerCategories(CategoryRegistry registry) {
