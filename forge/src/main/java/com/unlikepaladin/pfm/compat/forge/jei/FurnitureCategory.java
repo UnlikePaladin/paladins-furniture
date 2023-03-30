@@ -35,7 +35,7 @@ import java.util.List;
 
 public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private final IDrawable BACKGROUND;
-    public static final Identifier TEXTURE_GUI_VANILLA = new Identifier("jei:textures/gui/gui_vanilla.png");
+    public static final Identifier TEXTURE_GUI_VANILLA = new Identifier("jei", "textures/jei/gui/gui_vanilla.png");
     public final IDrawable ICON;
     public static final Text TITLE = Text.translatable("rei.pfm.furniture");
     private final ICraftingGridHelper craftingGridHelper;
