@@ -279,12 +279,10 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
                 double e = mouseY - (double)(yOffsetForMouseClick + m / RECIPE_LIST_COLUMNS * RECIPE_ENTRY_HEIGHT);
                 int clickedRecipeIdCopy = clickedRecipeId;
                 if (this.handler.searching) {
-                    System.out.println("Before: " + clickedRecipeIdCopy);
                     if (clickedRecipeIdCopy < this.handler.getSearchableRecipes().size())
                         clickedRecipeIdCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(clickedRecipeIdCopy));
                     else
                         clickedRecipeIdCopy = -1;
-                    System.out.println("After: " + clickedRecipeIdCopy);
                 }
                 if (!(d >= 0.0) || !(e >= 0.0) || !(d < 16.0) || !(e < 18.0) || !this.handler.onButtonClick(this.client.player, clickedRecipeIdCopy)) continue;
                 this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0f));
