@@ -18,7 +18,7 @@ import net.minecraft.text.Text;
 public class ScreenRegistry {
     public static void registerScreens() {
         registerScreen(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
-        registerScreen(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, WorkbenchScreen::new);
+        registerScreen(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, NewWorkbenchScreen::new);
         registerScreen(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, StoveScreen::new);
         registerScreen(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
         registerScreen(ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);

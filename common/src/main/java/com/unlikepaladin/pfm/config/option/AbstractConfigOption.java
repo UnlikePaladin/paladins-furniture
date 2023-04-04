@@ -11,7 +11,6 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
 import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Objects;
@@ -71,7 +70,7 @@ public abstract class AbstractConfigOption<T> implements Comparable<String> {
     public static AbstractConfigOption readConfigOption(PacketByteBuf packetByteBuf) {
         return readConfigOption(packetByteBuf, new ConfigSizeTracker(2097152L));
     }
-    @Nullable
+
     public static AbstractConfigOption readConfigOption(PacketByteBuf packetByteBuf, ConfigSizeTracker sizeTracker) {
         int i = packetByteBuf.readerIndex();
         byte b0 = packetByteBuf.readByte();

@@ -810,6 +810,7 @@
   "container.pfm.gray_stove": "Gray Stove",
   "container.pfm.iron_stove": "Iron Stove",
   "container.pfm.kitchen_counter_oven": "Built-in Oven",
+  "container.pfm.working_table.ingredient_required" : "Ingredients Required:",
 
   "block.pfm.kitchen_stovetop": "Kitchen Stovetop",
   "block.pfm.white_stove": "White Stove",

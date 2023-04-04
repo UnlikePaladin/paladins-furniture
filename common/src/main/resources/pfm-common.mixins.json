@@ -4,7 +4,8 @@
   "package": "com.unlikepaladin.pfm.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "PFMMixinPointOfInterestType"
+    "PFMMixinPointOfInterestType",
+    "PFMPlayerInventoryMixin"
   ],
   "server": [
     "PFMMixinDedicatedServer"
