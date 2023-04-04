@@ -17,15 +17,6 @@ loom {
         mixinConfig "pfm-common.mixins.json"
         mixinConfig "pfm.mixins.json"
 
-        dataGen {
-            mod "pfm"
-        }
-    }
-
-    launches {
-        data {
-            arg "--existing", file("src/main/resources").absolutePath
-        }
     }
 }
 
