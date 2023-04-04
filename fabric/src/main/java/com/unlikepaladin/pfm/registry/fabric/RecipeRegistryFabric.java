@@ -3,8 +3,6 @@ package com.unlikepaladin.pfm.registry.fabric;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
-import com.unlikepaladin.pfm.recipes.FurnitureSerializer;
-import com.unlikepaladin.pfm.recipes.NewFurnitureRecipe;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.recipe.CookingRecipeSerializer;
 import net.minecraft.recipe.RecipeType;
@@ -18,15 +16,10 @@ public class RecipeRegistryFabric {
             @Override
             public String toString() {return "freezing";}
         });
+        RecipeTypes.FURNITURE_SERIALIZER =Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(PaladinFurnitureMod.MOD_ID,"furniture"), new FurnitureRecipe.Serializer());
         RecipeTypes.FURNITURE_RECIPE = Registry.register(Registry.RECIPE_TYPE, RecipeTypes.FURNITURE_ID,  new RecipeType<FurnitureRecipe>() {
             @Override
             public String toString() {return "furniture";}
-        });
-        RecipeTypes.FURNITURE_SERIALIZER = Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(PaladinFurnitureMod.MOD_ID,"furniture"), new FurnitureSerializer());
-        RecipeTypes.NEW_FURNITURE_SERIALIZER =Registry.register(Registry.RECIPE_SERIALIZER, new Identifier(PaladinFurnitureMod.MOD_ID,"newfurniture"), new NewFurnitureRecipe.Serializer());
-        RecipeTypes.NEW_FURNITURE_RECIPE = Registry.register(Registry.RECIPE_TYPE, RecipeTypes.NEW_FURNITURE_ID,  new RecipeType<NewFurnitureRecipe>() {
-            @Override
-            public String toString() {return "newfurniture";}
         });
     }
 }

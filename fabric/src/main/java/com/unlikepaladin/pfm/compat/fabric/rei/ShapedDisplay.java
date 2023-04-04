@@ -39,12 +39,14 @@ public class ShapedDisplay extends FurnitureDisplay<FurnitureRecipe> {
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public int getWidth() {
-        return recipe.get().getWidth();
+        //return recipe.get().getWidth();
+        return 0;
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public int getHeight() {
-        return recipe.get().getHeight();
+        //return recipe.get().getHeight();
+        return 0;
     }
 }

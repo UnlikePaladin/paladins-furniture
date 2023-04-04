@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.menus.NewWorkbenchScreenHandler;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -105,7 +104,7 @@ public class WorkingTableBlock extends HorizontalFacingBlock implements Waterlog
 
     @Override
     public NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos) {
-        return new SimpleNamedScreenHandlerFactory((syncId, inventory, player) -> new NewWorkbenchScreenHandler(syncId, inventory, ScreenHandlerContext.create(world, pos)), TITLE);
+        return new SimpleNamedScreenHandlerFactory((syncId, inventory, player) -> new WorkbenchScreenHandler(syncId, inventory, ScreenHandlerContext.create(world, pos)), TITLE);
     }
 
     @Override

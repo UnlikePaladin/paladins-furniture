@@ -3,15 +3,11 @@ package com.unlikepaladin.pfm.registry.forge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
-import com.unlikepaladin.pfm.recipes.FurnitureSerializer;
-import com.unlikepaladin.pfm.recipes.forge.FurnitureRecipeSerializerForge;
+import com.unlikepaladin.pfm.recipes.forge.FurnitureSerializerForge;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.block.Block;
 import net.minecraft.recipe.CookingRecipeSerializer;
-import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.recipe.RecipeType;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.event.RegistryEvent;
@@ -27,7 +23,7 @@ public class RecipeRegistryForge {
                 (RecipeTypes.FREEZING_RECIPE_SERIALIZER = new CookingRecipeSerializer<>(FreezingRecipe::new, 200)).setRegistryName(new Identifier(PaladinFurnitureMod.MOD_ID, "freezing"))
         );
         event.getRegistry().register(
-                (RecipeTypes.FURNITURE_SERIALIZER = new FurnitureRecipeSerializerForge()).setRegistryName(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"))
+                (RecipeTypes.FURNITURE_SERIALIZER = new FurnitureSerializerForge()).setRegistryName(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"))
         );
     }
 

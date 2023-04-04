@@ -1,35 +1,22 @@
 package com.unlikepaladin.pfm.compat.forge.jei;
 
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.IRecipeLayout;
 import mezz.jei.api.gui.drawable.IDrawable;
-import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.gui.ingredient.IGuiItemStackGroup;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.ingredients.IIngredients;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import mezz.jei.api.recipe.category.extensions.IExtendableRecipeCategory;
-import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICraftingCategoryExtension;
-import mezz.jei.api.recipe.category.extensions.vanilla.crafting.ICustomCraftingCategoryExtension;
-import net.minecraft.block.Block;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.CraftingRecipe;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.common.util.Size2i;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 
 public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
@@ -96,14 +83,14 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         List<List<ItemStack>> inputs = ingredients.getInputs(VanillaTypes.ITEM);
         List<List<ItemStack>> outputs = ingredients.getOutputs(VanillaTypes.ITEM);
 
-        Size2i size = new Size2i(recipe.getWidth(), recipe.getHeight());
+        /*Size2i size = new Size2i(recipe.getWidth(), recipe.getHeight());
         if (size != null && size.width > 0 && size.height > 0) {
             craftingGridHelper.setInputs(guiItemStacks, inputs, size.width, size.height);
         } else {
             craftingGridHelper.setInputs(guiItemStacks, inputs);
             recipeLayout.setShapeless();
         }
-        guiItemStacks.set(craftOutputSlot, outputs.get(0));
+        guiItemStacks.set(craftOutputSlot, outputs.get(0));*/
     }
 
 }

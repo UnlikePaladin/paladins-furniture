@@ -7,7 +7,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 import java.util.function.BiFunction;
@@ -15,7 +14,7 @@ import java.util.function.BiFunction;
 public class ScreenHandlerRegistry {
     public static void registerScreenHandlers() {
         ScreenHandlerIDs.FREEZER_SCREEN_HANDLER = registerScreenHandlerSimple(ScreenHandlerIDs.FREEZER, FreezerScreenHandler::new);
-        ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER = registerScreenHandlerSimple(new Identifier(PaladinFurnitureMod.MOD_ID,"furniture"), NewWorkbenchScreenHandler::new);
+        ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER = registerScreenHandlerSimple(new Identifier(PaladinFurnitureMod.MOD_ID,"furniture"), WorkbenchScreenHandler::new);
         ScreenHandlerIDs.STOVE_SCREEN_HANDLER = registerScreenHandlerSimple(new Identifier(PaladinFurnitureMod.MOD_ID,"stove_block_entity"), StoveScreenHandler::new);
         ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER = registerScreenHandlerSimple(new Identifier(PaladinFurnitureMod.MOD_ID,"iron_stove_block_entity"), IronStoveScreenHandler::new);
         ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = registerScreenHandlerExtended(new Identifier(PaladinFurnitureMod.MOD_ID,"microwave_block_entity"), MicrowaveScreenHandler::new);

@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.mixin;
 
-import com.unlikepaladin.pfm.menus.NewWorkbenchScreenHandler;
+import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import org.spongepowered.asm.mixin.Final;
@@ -17,8 +17,8 @@ public class PFMPlayerInventoryMixin {
     public PlayerEntity player;
     @Inject(at = @At("HEAD"), method = "markDirty")
     private void updateWorkbenchScreenInventoryOnSetStack(CallbackInfo ci) {
-        if (player.currentScreenHandler instanceof NewWorkbenchScreenHandler) {
-            ((NewWorkbenchScreenHandler)player.currentScreenHandler).updateInput();
+        if (player.currentScreenHandler instanceof WorkbenchScreenHandler) {
+            ((WorkbenchScreenHandler)player.currentScreenHandler).updateInput();
         }
     }
 }
