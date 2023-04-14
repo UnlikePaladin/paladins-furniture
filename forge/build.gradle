@@ -66,6 +66,10 @@ if (rootProject.rei_compatibility == "true"){
     dependencies {
         modImplementation("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version}")
     }
+} else {
+    dependencies {
+        modCompileOnly("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version}")
+    }
 }
 
 processResources {
