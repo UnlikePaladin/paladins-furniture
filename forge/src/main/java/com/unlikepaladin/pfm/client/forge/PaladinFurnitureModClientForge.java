@@ -24,7 +24,6 @@ public class PaladinFurnitureModClientForge {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        ClientPacketsForge.registerClientPackets();
         ColorRegistryForge.registerBlockRenderLayers();
 
 

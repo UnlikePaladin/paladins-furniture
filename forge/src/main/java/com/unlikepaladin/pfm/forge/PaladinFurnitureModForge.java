@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.client.forge.ClientPacketsForge;
 import com.unlikepaladin.pfm.compat.forge.PaladinFurnitureModConfigImpl;
 //import com.unlikepaladin.pfm.data.forge.PaladinFurnitureModDataGenForge;
 import com.unlikepaladin.pfm.data.forge.TagsImpl;
@@ -42,6 +43,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         this.commonInit();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ItemGroupRegistry::registerItemGroups);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ItemGroupRegistry::addToVanillaItemGroups);
+        ClientPacketsForge.registerClientPackets();
     }
 
 }
