@@ -16,6 +16,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.screen.StonecutterScreenHandler;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.tag.Tag;
@@ -32,7 +33,6 @@ import org.lwjgl.glfw.GLFW;
 import java.util.*;
 import java.util.function.Predicate;
 
-//TODO: show all recipes, custom tooltip with ingredients, search bar, fix reset on craft
 public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     private static final Identifier TEXTURE = new Identifier("pfm:textures/gui/container/working_table.png");
     private static final int SCROLLBAR_WIDTH = 12;
@@ -59,7 +59,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     @Override
     protected void init() {
         super.init();
-        this.searchBox = new TextFieldWidget(this.textRenderer, this.x + 20, this.y + 18, 80, this.textRenderer.fontHeight, new TranslatableText("itemGroup.search"));
+        this.searchBox = new TextFieldWidget(this.textRenderer, this.x + 20, this.y + 18, 110, this.textRenderer.fontHeight, new TranslatableText("itemGroup.search"));
         this.searchBox.setMaxLength(50);
         this.searchBox.setDrawsBackground(false);
         this.searchBox.setVisible(true);
@@ -168,6 +168,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
+    //TODO: Fix scrollbar getting stuck on the bottom
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
@@ -178,7 +179,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
         int y = this.y;
         this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         int k = (int)(41.0f * this.scrollAmount);
-        this.drawTexture(matrices, x + 119, y + 31 + k, 176 + (this.shouldScroll() ? 0 : 12), 0, 12, 15);
+        this.drawTexture(matrices, x + 119, y + 31 + k, 176 + (this.shouldScroll() ? 0 : 12), 0, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
         int xOffSetForIcons = this.x + RECIPE_LIST_OFFSET_X;
         int yOffsetForIcons = this.y + RECIPE_LIST_OFFSET_Y;
         int scrollOffsetForIcons = this.scrollOffset + 18;
@@ -243,7 +244,10 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             if (this.handler.searching) {
                 iCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(iCopy));
             }
-            if (!this.handler.getAvailableRecipes().contains(this.handler.getSortedRecipes().get(iCopy))) {
+            if (iCopy == this.handler.getSelectedRecipe()) {
+                v += 55;
+            }
+            else if (!this.handler.getAvailableRecipes().contains(this.handler.getSortedRecipes().get(iCopy))) {
                 v += 18;
             } else if (mouseX >= k && mouseY >= m && mouseX < k + 16 && mouseY < m + 18) {
                 v += 36;
@@ -301,11 +305,11 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.mouseClicked && this.shouldScroll()) {
-            int i = this.y + 14;
+            int i = this.y + 30;
             int j = i + 54;
-            this.scrollAmount = ((float)mouseY - (float)i - 7.5f) / ((float)(j - i) - 15.0f);
+            this.scrollAmount = ((float)mouseY - (float)i - 7.5f) / ((float)(j - i) - SCROLLBAR_HEIGHT);
             this.scrollAmount = MathHelper.clamp(this.scrollAmount, 0.0f, 1.0f);
-            this.scrollOffset = (int)((double)(this.scrollAmount * (float)this.getMaxScroll()) + 0.5) * 4;
+            this.scrollOffset = (int)((double)(this.scrollAmount * (float)this.getMaxScroll()) + 0.5) * RECIPE_LIST_COLUMNS;
             return true;
         }
         return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -317,17 +321,17 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             int i = this.getMaxScroll();
             this.scrollAmount = (float)((double)this.scrollAmount - amount / (double)i);
             this.scrollAmount = MathHelper.clamp(this.scrollAmount, 0.0f, 1.0f);
-            this.scrollOffset = (int)((double)(this.scrollAmount * (float)i) + 0.5) * 4;
+            this.scrollOffset = (int)((double)(this.scrollAmount * (float)i) + 0.5) * RECIPE_LIST_COLUMNS;
         }
         return true;
     }
 
     private boolean shouldScroll() {
-        return this.canCraft && this.handler.getVisibleRecipeCount() > 18;
+        return this.handler.getVisibleRecipeCount() > 18;
     }
 
     protected int getMaxScroll() {
-        return (this.handler.getVisibleRecipeCount() + RECIPE_LIST_COLUMNS - 1) / 4 - 3;
+        return (this.handler.getVisibleRecipeCount() + RECIPE_LIST_COLUMNS - 1) / RECIPE_LIST_COLUMNS - RECIPE_LIST_ROWS;
     }
 
     private void onInventoryChange() {

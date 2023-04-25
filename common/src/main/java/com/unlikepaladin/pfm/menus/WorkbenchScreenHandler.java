@@ -81,6 +81,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
         this.addProperty(this.selectedRecipe);
         allRecipes.addAll(world.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE).stream().sorted().toList());
         this.updateInput();
+        selectedRecipe.set(-1);
     }
 
     boolean craft() {
