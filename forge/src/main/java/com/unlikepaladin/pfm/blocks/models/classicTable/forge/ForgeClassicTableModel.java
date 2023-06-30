@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.blocks.models.classicTable.forge;
 
-import com.unlikepaladin.pfm.blocks.BasicTableBlock;
 import com.unlikepaladin.pfm.blocks.ClassicTableBlock;
-import com.unlikepaladin.pfm.blocks.models.classicTable.BakedClassicTableModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -18,15 +18,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Predicate;
 
-public class ForgeClassicTableModel extends BakedClassicTableModel {
+public class ForgeClassicTableModel extends AbstractBakedModel {
     public ForgeClassicTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;
-    public static ModelProperty<TableConnections> CONNECTIONS = new ModelProperty<>();
+    public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
 
     @NotNull
     @Override
@@ -43,7 +42,7 @@ public class ForgeClassicTableModel extends BakedClassicTableModel {
             set.set(1, east);
             set.set(2, west);
             set.set(3, south);
-            builder.withInitial(CONNECTIONS, new TableConnections(set));
+            builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set));
         }
         return builder.build();
     }
@@ -71,17 +70,5 @@ public class ForgeClassicTableModel extends BakedClassicTableModel {
                 quads.addAll(getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData));            }
         }
         return quads;
-    }
-}
-class TableConnections implements Predicate<TableConnections>
-{
-    public TableConnections(BitSet connections) {
-        this.connections = connections;
-    }
-
-    protected BitSet connections;
-    @Override
-    public boolean test(TableConnections tableConnections) {
-        return connections.equals(tableConnections.connections);
     }
 }

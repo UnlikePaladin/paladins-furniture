@@ -14,7 +14,6 @@ public class PaladinFurnitureModREIPlugin implements REIClientPlugin {
         registry.addWorkstations(FurnitureDisplay.IDENTIFIER, FurnitureCategory.ICON);
         registry.add(new FreezingCategory());
         registry.addWorkstations(FreezingDisplay.IDENTIFIER, FreezingCategory.ICON);
-
     }
 
     @Override

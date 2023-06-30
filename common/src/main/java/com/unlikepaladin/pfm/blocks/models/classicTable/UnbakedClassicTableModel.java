@@ -2,10 +2,7 @@ package com.unlikepaladin.pfm.blocks.models.classicTable;
 
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.materials.BlockType;
-import com.unlikepaladin.pfm.blocks.materials.MaterialEnum;
-import com.unlikepaladin.pfm.blocks.materials.StoneVariant;
-import com.unlikepaladin.pfm.blocks.materials.WoodVariant;
+import com.unlikepaladin.pfm.data.materials.*;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,50 +22,49 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public class UnbakedClassicTableModel implements UnbakedModel {
     public static final List<String> CLASSIC_MODEL_PARTS_BASE = new ArrayList<>() {
-    {
-        add("block/table_classic/table_classic_middle");
-        add("block/table_classic/table_classic_two");
-        add("block/table_classic/table_classic_two_uved");
-        add("block/table_classic/table_classic_one");
-        add("block/table_classic/table_classic_one_uved");
-        add("block/table_classic/table_classic");
-    }
-};
+        {
+            add("block/table_classic/template_table_classic/template_table_classic_middle");
+            add("block/table_classic/template_table_classic/template_table_classic_two");
+            add("block/table_classic/template_table_classic/template_table_classic_two_uved");
+            add("block/table_classic/template_table_classic/template_table_classic_one");
+            add("block/table_classic/template_table_classic/template_table_classic_one_uved");
+            add("block/table_classic/template_table_classic/template_table_classic");
+        }
+}   ;
 
         private static final Identifier PARENT = new Identifier("block/block");
         public static final List<Identifier> TABLE_MODEL_IDS = new ArrayList<>() {
             {
-                for(WoodVariant variant : WoodVariant.values()){
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + variant.asString() + "_table_classic"));
+                for(WoodVariant variant : WoodVariantRegistry.getVariants()){
+                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_classic/" + variant.asString() + "_table_classic"));
                 }
-                for(WoodVariant variant : WoodVariant.values()){
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/stripped_" + variant.asString() + "_table_classic"));
+                for(WoodVariant variant : WoodVariantRegistry.getVariants()){
+                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_classic/stripped_" + variant.asString() + "_table_classic"));
                 }
                 for(StoneVariant variant : StoneVariant.values()){
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + variant.asString() + "_table_classic"));
+                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_classic/" + variant.asString() + "_table_classic"));
                 }
             }
         };
 
         public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
             {
-                for(WoodVariant variant : WoodVariant.values()){
+                for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                     for (String part : CLASSIC_MODEL_PARTS_BASE) {
-                        String newPart = part;
-                        if (!variant.equals(WoodVariant.OAK))
-                            newPart = part.replace("table", variant.asString() + "_table");
+                        String newPart = part.replace("template", variant.asString());
                         add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                     }
                 }
-                for(WoodVariant variant : WoodVariant.values()){
+                for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                     for (String part : CLASSIC_MODEL_PARTS_BASE) {
-                        String newPart = part.replace("table", "stripped_" + variant.asString() + "_table");
+                        String newPart = part.replace("template", "stripped_" + variant.asString());
                         add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                     }
                 }
                 for(StoneVariant variant : StoneVariant.values()){
+                    
                     for (String part : CLASSIC_MODEL_PARTS_BASE) {
-                        String newPart = part.replace("table", variant.asString() + "_table");
+                        String newPart = part.replace("template", variant.asString());
                         add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                     }
                 }
@@ -78,12 +74,10 @@ public class UnbakedClassicTableModel implements UnbakedModel {
         protected final SpriteIdentifier frameTex;
         private final List<String> MODEL_PARTS;
 
-        public UnbakedClassicTableModel(MaterialEnum variant, List<String> modelParts, BlockType type) {
+        public UnbakedClassicTableModel(VariantBase variant, List<String> modelParts, BlockType type) {
             this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(type));
             for(String modelPartName : CLASSIC_MODEL_PARTS_BASE){
-                String s = modelPartName;
-                if (!variant.equals(WoodVariant.OAK) || !type.equals(BlockType.PLANKS))
-                    s = s.replace("table", variant.asString() + "_table");
+                String s = modelPartName.replace("template", variant.asString());
                 if (type == BlockType.STRIPPED_LOG) {
                     s = s.replace(variant.asString(), "stripped_" + variant.asString());
                 }
@@ -115,6 +109,6 @@ public class UnbakedClassicTableModel implements UnbakedModel {
 
         @ExpectPlatform
         public static BakedModel getBakedModel(Sprite frame, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
-            return new BakedClassicTableModel(frame, settings, bakedModels);
+            throw new RuntimeException("Method wasn't replaced correctly");
         }
 }

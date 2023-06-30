@@ -4,13 +4,18 @@
   "package": "com.unlikepaladin.pfm.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
+    "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMMixinPointOfInterestType",
-    "PFMPlayerInventoryMixin"
+    "PFMMixinPointOfInterestTypeFactory",
+    "PFMPlayerInventoryMixin",
+    "PFMReloadableResourceManagerImplMixin",
+    "PFMTextureKeyFactory"
   ],
   "server": [
     "PFMMixinDedicatedServer"
   ],
   "client": [
+    "PFMLanguageManagerAccessor",
     "PFMMixinClientPacketListener"
   ],
   "injectors": {

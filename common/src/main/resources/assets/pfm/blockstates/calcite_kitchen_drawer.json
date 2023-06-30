@@ -1,8 +1,0 @@
-{
-   "variants": {
-     "facing=north": { "model": "pfm:block/calcite_kitchen_drawer", "y":0, "uvlock":"true" },
-     "facing=south": { "model": "pfm:block/calcite_kitchen_drawer", "y":180, "uvlock":"true" },
-     "facing=east": { "model": "pfm:block/calcite_kitchen_drawer", "y":90, "uvlock":"true" },
-     "facing=west": { "model": "pfm:block/calcite_kitchen_drawer", "y":270, "uvlock":"true" }
-   }
-}

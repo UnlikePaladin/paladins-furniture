@@ -1,8 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models.kitchenDrawer.fabric;
 
-import com.unlikepaladin.pfm.blocks.KitchenCounterBlock;
 import com.unlikepaladin.pfm.blocks.KitchenDrawerBlock;
-import com.unlikepaladin.pfm.blocks.models.kitchenCounter.BakedKitchenCounterModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.AbstractFurnaceBlock;
@@ -21,7 +20,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class FabricKitchenDrawerModel extends BakedKitchenCounterModel implements FabricBakedModel {
+public class FabricKitchenDrawerModel extends AbstractBakedModel implements FabricBakedModel {
     public FabricKitchenDrawerModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;

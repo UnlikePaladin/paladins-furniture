@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models.classicTable.fabric;
 
 import com.unlikepaladin.pfm.blocks.ClassicTableBlock;
-import com.unlikepaladin.pfm.blocks.models.classicTable.BakedClassicTableModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -10,7 +10,6 @@ import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 
 import java.util.List;
@@ -18,7 +17,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class FabricClassicTableModel extends BakedClassicTableModel implements FabricBakedModel {
+public class FabricClassicTableModel extends AbstractBakedModel implements FabricBakedModel {
     public FabricClassicTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;

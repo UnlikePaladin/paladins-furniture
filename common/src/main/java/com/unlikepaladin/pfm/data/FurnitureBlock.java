@@ -262,7 +262,7 @@ public class FurnitureBlock extends Material {
 
     public Block getBed() {
         if (block instanceof SimpleBedBlock){
-            String color = ((SimpleBedBlock) block).getColor().getName();
+            String color = ((SimpleBedBlock) block).getPFMColor().getName();
             return Registry.BLOCK.get(new Identifier("minecraft:" + color + "_bed"));
         }
         return null;

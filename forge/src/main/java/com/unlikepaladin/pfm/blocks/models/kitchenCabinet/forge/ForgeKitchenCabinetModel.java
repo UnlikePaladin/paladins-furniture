@@ -2,7 +2,8 @@ package com.unlikepaladin.pfm.blocks.models.kitchenCabinet.forge;
 
 import com.unlikepaladin.pfm.blocks.KitchenCabinetBlock;
 import com.unlikepaladin.pfm.blocks.KitchenWallDrawerBlock;
-import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.BakedKitchenCabinetModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -19,15 +20,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Predicate;
 
-public class ForgeKitchenCabinetModel extends BakedKitchenCabinetModel {
+public class ForgeKitchenCabinetModel extends AbstractBakedModel {
     public ForgeKitchenCabinetModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;
-    public static ModelProperty<CounterConnections> CONNECTIONS = new ModelProperty<>();
+    public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     public static ModelProperty<BlockState> NEIGHBOR_OPPOSITE = new ModelProperty<>();
     public static ModelProperty<BlockState> NEIGHBOR_FACING = new ModelProperty<>();
 
@@ -53,7 +53,7 @@ public class ForgeKitchenCabinetModel extends BakedKitchenCabinetModel {
             BitSet set = new BitSet();
             set.set(0, innerCorner);
             set.set(1, isNeighborStateOppositeFacingDifferentDirection);
-            builder.withInitial(CONNECTIONS, new CounterConnections(set)).withInitial(NEIGHBOR_OPPOSITE, neighborStateOpposite).withInitial(NEIGHBOR_FACING, blockState);
+            builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set)).withInitial(NEIGHBOR_OPPOSITE, neighborStateOpposite).withInitial(NEIGHBOR_FACING, blockState);
         }
         return builder.build();
     }
@@ -94,17 +94,5 @@ public class ForgeKitchenCabinetModel extends BakedKitchenCabinetModel {
             }
         }
         return Collections.emptyList();
-    }
-}
-class CounterConnections implements Predicate<CounterConnections>
-{
-    public CounterConnections(BitSet connections) {
-        this.connections = connections;
-    }
-
-    protected BitSet connections;
-    @Override
-    public boolean test(CounterConnections tableConnections) {
-        return connections.equals(tableConnections.connections);
     }
 }

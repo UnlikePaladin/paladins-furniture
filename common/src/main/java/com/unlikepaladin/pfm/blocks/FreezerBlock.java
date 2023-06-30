@@ -30,7 +30,9 @@ import net.minecraft.world.*;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
@@ -40,16 +42,16 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty OPEN = Properties.OPEN;
     private final Block baseBlock;
     private final BlockState baseBlockState;
-    private Supplier<Block> fridge;
+    private Supplier<FridgeBlock> fridge;
     private static final List<FurnitureBlock> FREEZERS = new ArrayList<>();
 
-    public FreezerBlock(Settings settings, Supplier<Block> fridge) {
+    public FreezerBlock(Settings settings, Supplier<FridgeBlock> fridge) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
         this.fridge = fridge;
         this.baseBlock = baseBlockState.getBlock();
-        FREEZERS.add(new FurnitureBlock(this, "freezer_"));
+        FREEZERS.add(new FurnitureBlock(this, "freezer"));
     }
 
     public static Stream<FurnitureBlock> streamFreezers() {
@@ -86,77 +88,52 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return this.fridge.get().getPickStack(world, pos, state);
+        return super.getPickStack(world, pos, state);
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!(direction.getAxis() == Direction.Axis.Y == (direction == Direction.UP) || neighborState.getBlock() instanceof FridgeBlock)) {
-            return Blocks.AIR.getDefaultState();
-        }
-        if (direction == Direction.DOWN && !state.canPlaceAt(world, pos)) {
-            return Blocks.AIR.getDefaultState();
-        }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
 
     }
 
     protected void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        BlockPos blockPos;
-        BlockState blockState = world.getBlockState(blockPos = pos.down());
-        if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof FridgeBlock) {
-            BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
-        }
     }
 
     @Override
     @Nullable
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockPos blockPos = ctx.getBlockPos();
-        World world = ctx.getWorld();
-        if (blockPos.getY() < world.getTopY() - 1 && world.getBlockState(blockPos.up()).canReplace(ctx)) {
-            return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        }
-        return null;
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
 
-    protected static final VoxelShape FREEZER = VoxelShapes.union(createCuboidShape(0.5, -16, 3,15.5, 16, 16),createCuboidShape(0.5, 5, 2,14.83, 16, 3.1),createCuboidShape(13, 5.19, 0.09,14, 15.19, 1.09),createCuboidShape(13, 5.19, 0.98,14, 6.19, 2.98),createCuboidShape(13, 14.19, 1.06,14, 15.19, 3.06));
-    protected static final VoxelShape FREEZER_OPEN = VoxelShapes.union(createCuboidShape(0.5, -16, 2.8,15.5, 16, 16),createCuboidShape(0.5, 5, -11.29,1.5, 16, 3.05),createCuboidShape(-1.41, 5.19, -10.45,-0.41, 15.19, -9.45),createCuboidShape(-0.52, 5.19, -10.45,1.48, 6.19, -9.45),createCuboidShape(-0.44, 14.19, -10.45,1.26, 15.19, -9.45));
+    protected static final Map<Direction, VoxelShape> FREEZER = new HashMap<>() {{put(Direction.NORTH, VoxelShapes.union(createCuboidShape(0.5, -16, 3,15.5, 16, 16),createCuboidShape(0.5, 5, 2,14.83, 16, 3.1),createCuboidShape(13, 5.19, 0.09,14, 15.19, 1.09),createCuboidShape(13, 5.19, 0.98,14, 6.19, 2.98),createCuboidShape(13, 14.19, 1.06,14, 15.19, 3.06)));}};
+    protected static final Map<Direction, VoxelShape> FREEZER_SINGLE = new HashMap<>() {{put(Direction.NORTH, VoxelShapes.union(createCuboidShape(0.51, 0.131, 2.609,15.19, 1.1, 3.609),createCuboidShape(0.5, 1, 3,15.5, 16, 16),createCuboidShape(0.5, 0, 2.844,15.5, 1, 15.844),createCuboidShape(12.979, 3, 0.027,13.979, 14, 1.027),createCuboidShape(12.979, 3, 0.918,13.979, 4, 2.918),createCuboidShape(12.979, 13, 0.918,13.979, 14, 2.918),createCuboidShape(0.479, 1, 1.933,14.174, 16, 3.033),createCuboidShape(13.814, 1, 2.081,14.814, 16, 3.481)));}};
+    protected static final Map<Direction, VoxelShape> FREEZER_OPEN = new HashMap<>() {{put(Direction.NORTH, VoxelShapes.union(createCuboidShape(0.5, -16, 2.8,15.5, 16, 16),createCuboidShape(0.5, 5, -11.29,1.5, 16, 3.05),createCuboidShape(-1.41, 5.19, -10.45,-0.41, 15.19, -9.45),createCuboidShape(-0.52, 5.19, -10.45,1.48, 6.19, -9.45),createCuboidShape(-0.44, 14.19, -10.45,1.26, 15.19, -9.45)));}};
+    protected static final Map<Direction, VoxelShape> FREEZER_SINGLE_OPEN = new HashMap<>() {{put(Direction.NORTH, VoxelShapes.union(createCuboidShape(0.5, 1, 3,15.5, 16, 16),createCuboidShape(0.5, 0, 2.844,15.5, 1, 15.844),createCuboidShape(-1.407, 3, -10.505,-0.407, 14, -9.505),createCuboidShape(-0.516, 3, -10.505,1.484, 4, -9.505),createCuboidShape(-0.516, 13, -10.505,1.484, 14, -9.505),createCuboidShape(0.5, 1, -10.7,1.6, 16, 2.995),createCuboidShape(0.647, 1, -11.34,2.047, 16, -10.34),createCuboidShape(0.688, 0.3, 2.612,15.116, 15.82, 4.013),createCuboidShape(1.4, 9.5, -10.7,4.4, 12.5, 2.3),createCuboidShape(1.4, 2, -10.7,4.4, 5, 2.3)));}};
 
-    protected static final VoxelShape FREEZER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FREEZER);
-    protected static final VoxelShape FREEZER_SOUTH_OPEN = rotateShape(Direction.NORTH, Direction.SOUTH, FREEZER_OPEN);
-    protected static final VoxelShape FREEZER_EAST = rotateShape(Direction.NORTH, Direction.EAST, FREEZER);
-    protected static final VoxelShape FREEZER_EAST_OPEN = rotateShape(Direction.NORTH, Direction.EAST, FREEZER_OPEN);
-    protected static final VoxelShape FREEZER_WEST = rotateShape(Direction.NORTH, Direction.WEST, FREEZER);
-    protected static final VoxelShape FREEZER_WEST_OPEN = rotateShape(Direction.NORTH, Direction.WEST, FREEZER_OPEN);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
+        Direction dir = state.get(FACING).getOpposite();
         Boolean open = state.get(OPEN);
-        switch (dir) {
-            case NORTH:
-                if (open)
-                    return FREEZER_SOUTH_OPEN;
-                else
-                    return FREEZER_SOUTH;
-            case SOUTH:
-                if (open)
-                    return FREEZER_OPEN;
-                else
-                    return FREEZER;
-            case EAST:
-                if (open)
-                    return FREEZER_WEST_OPEN;
-                else
-                    return FREEZER_WEST;
-            case WEST:
-            default:
-                if (open)
-                    return FREEZER_EAST_OPEN;
-                else
-                    return FREEZER_EAST;
+        boolean hasFridge = world.getBlockState(pos.down()).getBlock() instanceof FridgeBlock && !(world.getBlockState(pos.down()).getBlock() instanceof IronFridgeBlock);
+        if (hasFridge) {
+            if (open) {
+                if (!FREEZER_OPEN.containsKey(dir))
+                    FREEZER_OPEN.put(dir, rotateShape(Direction.NORTH, dir, FREEZER_OPEN.get(Direction.NORTH)));
+                return FREEZER_OPEN.get(dir);
+            }
+            if (!FREEZER.containsKey(dir))
+                FREEZER.put(dir, rotateShape(Direction.NORTH, dir, FREEZER.get(Direction.NORTH)));
+            return FREEZER.get(dir);
+        } else {
+            if (open) {
+                if (!FREEZER_SINGLE_OPEN.containsKey(dir))
+                    FREEZER_SINGLE_OPEN.put(dir, rotateShape(Direction.NORTH, dir, FREEZER_SINGLE_OPEN.get(Direction.NORTH)));
+                return FREEZER_SINGLE_OPEN.get(dir);
+            }
+            if (!FREEZER_SINGLE.containsKey(dir))
+                FREEZER_SINGLE.put(dir, rotateShape(Direction.NORTH, dir, FREEZER_SINGLE.get(Direction.NORTH)));
+            return FREEZER_SINGLE.get(dir);
         }
     }
 
@@ -170,7 +147,7 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return world.getBlockState(pos.down()).getBlock() instanceof FridgeBlock;
+        return super.canPlaceAt(state, world, pos);
     }
 
     @Override
@@ -189,13 +166,6 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
    @Override
     public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
        super.onBroken(world, pos, state);
-       BlockPos blockPos;
-       BlockState blockState = world.getBlockState(blockPos = pos.down());
-       if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof FridgeBlock) {
-           ItemScatterer.spawn((World) world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(this.fridge.get().asItem()));
-           BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-           world.setBlockState(blockPos, blockState2, Block.NOTIFY_ALL | Block.SKIP_DROPS);
-       }
     }
 
     @Nullable

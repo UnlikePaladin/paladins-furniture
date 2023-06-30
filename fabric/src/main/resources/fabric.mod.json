@@ -26,14 +26,14 @@
     "client": [
       "com.unlikepaladin.pfm.client.fabric.PaladinFurnitureModClientFabric"
     ],
-    "fabric-datagen": [
-      "com.unlikepaladin.pfm.data.fabric.PaladinFurnitureModDataEntrypoint"
-    ],
     "rei": [
       "com.unlikepaladin.pfm.compat.fabric.rei.PaladinFurnitureModREIPlugin"
     ],
     "modmenu": [
       "com.unlikepaladin.pfm.compat.fabric.PaladinFurnitureModMenu"
+    ],
+    "server": [
+      "com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric"
     ]
   },
   "mixins": [

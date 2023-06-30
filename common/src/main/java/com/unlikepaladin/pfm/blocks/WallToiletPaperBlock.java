@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -19,13 +20,24 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 
 public class WallToiletPaperBlock extends HorizontalFacingBlock {
     protected static final BooleanProperty WALL = BooleanProperty.of("wall");
+    private static final List<FurnitureBlock> TOILET_PAPER = new ArrayList<>();
     public WallToiletPaperBlock(Settings settings) {
         super(settings);
         this.setDefaultState(getDefaultState().with(FACING, Direction.NORTH).with(WALL, false));
+        TOILET_PAPER.add(new FurnitureBlock(this, "toilet_paper"));
+
+    }
+
+    public static Stream<FurnitureBlock> streamToiletPaperBlocks() {
+        return TOILET_PAPER.stream();
     }
 
     @Override

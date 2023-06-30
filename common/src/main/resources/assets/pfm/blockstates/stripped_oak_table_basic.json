@@ -1,6 +1,0 @@
-{
-    "variants": {
-      "axis=x": { "model": "pfm:block/stripped_oak_table_basic" , "y":90 },
-      "axis=z": { "model": "pfm:block/stripped_oak_table_basic"}
-    }
-  }

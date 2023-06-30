@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models.logTable.fabric;
 
 import com.unlikepaladin.pfm.blocks.LogTableBlock;
-import com.unlikepaladin.pfm.blocks.models.logTable.BakedLogTableModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class FabricLogTableModel extends BakedLogTableModel implements FabricBakedModel {
+public class FabricLogTableModel extends AbstractBakedModel implements FabricBakedModel {
     public FabricLogTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;

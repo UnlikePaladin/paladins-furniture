@@ -1,6 +1,0 @@
-{
-    "variants": {
-      "axis=x": { "model": "pfm:block/light_wood_table_basic" , "y":90 },
-      "axis=z": { "model": "pfm:block/light_wood_table_basic"}
-    }
-  }

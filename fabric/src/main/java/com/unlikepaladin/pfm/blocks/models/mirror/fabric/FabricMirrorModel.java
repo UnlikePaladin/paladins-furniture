@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models.mirror.fabric;
 
 import com.unlikepaladin.pfm.blocks.MirrorBlock;
-import com.unlikepaladin.pfm.blocks.models.mirror.BakedMirrorModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
@@ -21,11 +21,16 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class FabricMirrorModel extends BakedMirrorModel implements FabricBakedModel {
+public class FabricMirrorModel extends AbstractBakedModel implements FabricBakedModel {
     public FabricMirrorModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, glassTex, reflectTex, settings, bakedModels);
+        super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;
+        this.glassTex = glassTex;
+        this.reflectTex = reflectTex;
     }
+    protected final Sprite glassTex;
+    protected final Sprite reflectTex;
+
     private final List<String> modelParts;
     @Override
     public boolean isVanillaAdapter() {

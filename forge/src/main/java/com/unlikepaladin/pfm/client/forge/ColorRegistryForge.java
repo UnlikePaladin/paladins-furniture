@@ -22,7 +22,6 @@ public class ColorRegistryForge {
         ColorRegistry.registerBlockColors();
         ColorRegistryImpl.BLOCK_COLOR_PROVIDER_MAP.forEach((block, blockColorProvider) -> event.getBlockColors().registerColorProvider(blockColorProvider, block));
     }
-
     @SubscribeEvent
     public static void registerItemColors(ColorHandlerEvent.Item event){
         ColorRegistry.registerItemColors();

@@ -29,7 +29,7 @@ public class BasicChairBlock extends AbstractSittableBlock {
     private static final List<FurnitureBlock> WOOD_BASIC_CHAIRS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_BASIC_CHAIRS = new ArrayList<>();
 
-    protected static final BooleanProperty TUCKED = BooleanProperty.of("tucked");
+    public static final BooleanProperty TUCKED = BooleanProperty.of("tucked");
     public BasicChairBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));

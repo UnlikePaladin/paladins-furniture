@@ -1,8 +1,0 @@
-{
-    "variants": {
-      "facing=north": { "model": "pfm:block/birch_gray_simple_bed" },
-      "facing=south": { "model": "pfm:block/birch_gray_simple_bed", "y":180 },
-      "facing=east": { "model": "pfm:block/birch_gray_simple_bed", "y":90 },
-      "facing=west": { "model": "pfm:block/birch_gray_simple_bed", "y":270 }
-    }
-  }

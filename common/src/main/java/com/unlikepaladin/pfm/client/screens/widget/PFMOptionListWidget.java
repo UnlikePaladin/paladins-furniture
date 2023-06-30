@@ -6,13 +6,14 @@ import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
+import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.ScreenTexts;
-import net.minecraft.client.gui.screen.TitleScreen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -23,7 +24,6 @@ import net.minecraft.text.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.Entry> {
@@ -51,6 +51,13 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Unsupported Config Type!");
             }
         }
+        this.addEntry(new CategoryEntry(new LiteralText("")));
+        this.addEntry(new ButtonEntry(Side.CLIENT, new TranslatableText("pfm.option.regenAssets"), new TranslatableText("pfm.config.regen"), new TranslatableText("pfm.option.regenAssets.tooltip"), button -> {
+            PFMFileUtil.deleteDir(PFMRuntimeResources.getResourceDirectory().toFile());
+            PFMRuntimeResources.prepareAsyncResourceGen(true);
+            PFMRuntimeResources.runAsyncResourceGen();
+            MinecraftClient.getInstance().reloadResourcesConcurrently();
+        }));
     }
 
     @Override
@@ -185,6 +192,69 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         @Override
         public boolean mouseReleased(double mouseX, double mouseY, int button) {
             return this.valueButton.mouseReleased(mouseX, mouseY, button) || this.resetButton.mouseReleased(mouseX, mouseY, button);
+        }
+    }
+
+    @Environment(value=EnvType.CLIENT)
+    public class ButtonEntry
+            extends Entry {
+        private final Text optionName;
+        private final ButtonWidget button;
+
+        private final ButtonWidget.TooltipSupplier supplier;
+        private final Side side;
+        ButtonEntry(Side side, final Text optionName, Text buttonText, Text tooltip, ButtonWidget.PressAction pressAction) {
+            this.optionName = optionName;
+            this.side = side;
+            this.supplier = new ButtonWidget.TooltipSupplier() {
+                final MutableText sideText = side == Side.CLIENT ? new TranslatableText("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : new TranslatableText("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+                final MutableText styledTooltip = ((MutableText)tooltip).setStyle(Style.EMPTY.withItalic(true));
+                final MutableText combinedText = new LiteralText("").append(sideText).append(new LiteralText("\n")).append(styledTooltip);
+                @Override
+                public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
+                    PFMOptionListWidget.this.parent.renderOrderedTooltip(matrices, PFMOptionListWidget.this.client.textRenderer.wrapLines(combinedText, Math.max(PFMOptionListWidget.this.width / 2 - 43, 170)), mouseX, mouseY);
+                }
+                @Override
+                public void supply(Consumer<Text> consumer) {
+                    consumer.accept(combinedText);
+                    ButtonWidget.TooltipSupplier.super.supply(consumer);
+                }
+            };
+
+            this.button = new ButtonWidget(0, 0, 135, 20, buttonText, pressAction, supplier){
+                @Override
+                protected MutableText getNarrationMessage() {
+                    return (MutableText) optionName;
+                }
+            };
+        }
+
+        @Override
+        public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            PFMOptionListWidget.this.client.textRenderer.draw(matrices, this.optionName, (float)(x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (float)(y + entryHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), 0xFFFFFF);
+            this.button.x = x + 105;
+            this.button.y = y;
+            this.button.render(matrices, mouseX, mouseY, tickDelta);
+        }
+
+        @Override
+        public List<? extends Element> children() {
+            return ImmutableList.of(this.button);
+        }
+
+        @Override
+        public List<? extends Selectable> selectableChildren() {
+            return ImmutableList.of(this.button);
+        }
+
+        @Override
+        public boolean mouseClicked(double mouseX, double mouseY, int button) {
+            return this.button.mouseClicked(mouseX, mouseY, button);
+        }
+
+        @Override
+        public boolean mouseReleased(double mouseX, double mouseY, int button) {
+            return this.button.mouseReleased(mouseX, mouseY, button);
         }
     }
 

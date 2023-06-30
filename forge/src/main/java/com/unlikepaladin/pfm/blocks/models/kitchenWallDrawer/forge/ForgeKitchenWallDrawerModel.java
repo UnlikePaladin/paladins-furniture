@@ -1,7 +1,8 @@
 package com.unlikepaladin.pfm.blocks.models.kitchenWallDrawer.forge;
 
 import com.unlikepaladin.pfm.blocks.KitchenWallDrawerBlock;
-import com.unlikepaladin.pfm.blocks.models.kitchenDrawer.BakedKitchenDrawerModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
@@ -19,15 +20,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Predicate;
 
-public class ForgeKitchenWallDrawerModel extends BakedKitchenDrawerModel {
+public class ForgeKitchenWallDrawerModel extends AbstractBakedModel {
     public ForgeKitchenWallDrawerModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;
-    public static ModelProperty<CounterConnections> CONNECTIONS = new ModelProperty<>();
+    public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     public static ModelProperty<BlockState> NEIGHBOR_FACING = new ModelProperty<>();
     public static ModelProperty<BlockState> NEIGHBOR_OPPOSITE = new ModelProperty<>();
 
@@ -64,7 +64,7 @@ public class ForgeKitchenWallDrawerModel extends BakedKitchenDrawerModel {
             BitSet set = new BitSet();
             set.set(0, isNeighborStateOppositeFacingDifferentDirection);
             set.set(1, isNeighborStateFacingDifferentDirection);
-            builder.withInitial(CONNECTIONS, new CounterConnections(set)).withInitial(NEIGHBOR_FACING, neighborStateFacing).withInitial(NEIGHBOR_OPPOSITE, neighborStateOpposite);
+            builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set)).withInitial(NEIGHBOR_FACING, neighborStateFacing).withInitial(NEIGHBOR_OPPOSITE, neighborStateOpposite);
         }
         return builder.build();
     }
@@ -116,17 +116,5 @@ public class ForgeKitchenWallDrawerModel extends BakedKitchenDrawerModel {
             }
         }
         return Collections.emptyList();
-    }
-}
-class CounterConnections implements Predicate<CounterConnections>
-{
-    public CounterConnections(BitSet connections) {
-        this.connections = connections;
-    }
-
-    protected BitSet connections;
-    @Override
-    public boolean test(CounterConnections tableConnections) {
-        return connections.equals(tableConnections.connections);
     }
 }

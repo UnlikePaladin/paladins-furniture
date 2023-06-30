@@ -76,6 +76,6 @@ public class UnbakedMirrorModel implements UnbakedModel {
 
     @ExpectPlatform
     public static BakedModel getBakedModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        return new BakedMirrorModel(frame, glassTex, reflectTex, settings, bakedModels);
+        throw new RuntimeException("Method wasn't replaced correctly");
     }
 }

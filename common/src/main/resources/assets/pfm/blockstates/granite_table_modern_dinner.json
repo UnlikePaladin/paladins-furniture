@@ -1,6 +1,0 @@
-{
-    "variants": {
-      "axis=z": { "model": "pfm:block/granite_table_modern_dinner", "y":90 },
-      "axis=x": { "model": "pfm:block/granite_table_modern_dinner", "y":0 }
-    }
-  }

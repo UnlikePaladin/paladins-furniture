@@ -1,10 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models.logTable;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.materials.BlockType;
-import com.unlikepaladin.pfm.blocks.materials.MaterialEnum;
-import com.unlikepaladin.pfm.blocks.materials.StoneVariant;
-import com.unlikepaladin.pfm.blocks.materials.WoodVariant;
+import com.unlikepaladin.pfm.data.materials.*;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,78 +22,75 @@ import java.util.function.Function;
 public class UnbakedLogTableModel implements UnbakedModel {
     public static final List<String> LOG_MODEL_PARTS_BASE = new ArrayList<>() {
         {
-            add("block/log_table/log_table_middle");
-            add("block/log_table/log_table_right");
-            add("block/log_table/log_table_left");
-            add("block/log_table/log_table");
+            add("block/log_table/template_log_table/template_log_table_middle");
+            add("block/log_table/template_log_table/template_log_table_right");
+            add("block/log_table/template_log_table/template_log_table_left");
+            add("block/log_table/template_log_table/template_log_table");
         }
     };
 
     private static final Identifier PARENT = new Identifier("block/block");
     public static final List<Identifier> TABLE_MODEL_IDS = new ArrayList<>() {
         {
-            for(WoodVariant variant : WoodVariant.values()){
+            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 String logType = variant.isNetherWood() ? "stem" : "log";
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + variant.asString() + "_" + logType+ "_table"));
+                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/" + variant.asString() + "_" + logType+ "_table"));
             }
-            for(WoodVariant variant : WoodVariant.values()){
+            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 String logType = variant.isNetherWood() ? "stem" : "log";
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + variant.asString() + "_raw_" + logType+ "_table"));
+                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/" + variant.asString() + "_raw_" + logType+ "_table"));
             }
-            for(WoodVariant variant : WoodVariant.values()){
+            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 String logType = variant.isNetherWood() ? "stem" : "log";
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/stripped_" + variant.asString() + "_" + logType+ "_table"));
+                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/stripped_" + variant.asString() + "_" + logType+ "_table"));
             }
-            for(WoodVariant variant : WoodVariant.values()){
+            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 String logType = variant.isNetherWood() ? "stem" : "log";
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/stripped_" + variant.asString() + "_raw_" + logType+ "_table"));
+                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/stripped_" + variant.asString() + "_raw_" + logType+ "_table"));
             }
             for(StoneVariant variant : StoneVariant.values()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + variant.asString() + "_natural_table"));
+                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/" + variant.asString() + "_natural_table"));
             }
         }
     };
 
     public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
         {
-            for(WoodVariant variant : WoodVariant.values()){
+            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 for (String part : LOG_MODEL_PARTS_BASE) {
-                    String newPart = part;
-                    if (!variant.equals(WoodVariant.OAK))
-                        newPart = part.replace("log", variant.asString() + "_log");
+                    String newPart = part.replace("template", variant.asString());
                     if (variant.isNetherWood())
-                        newPart = newPart.replace("log", "stem");
+                        newPart = newPart.replace(variant.asString() + "_log", variant.asString() + "_stem");
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                 }
             }
-            for(WoodVariant variant : WoodVariant.values()){
+            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 for (String part : LOG_MODEL_PARTS_BASE) {
-                    String newPart = part;
-                    newPart = newPart.replace("log", variant.asString() + "_raw_log");
+                    String newPart = part.replace("template", variant.asString() + "_raw");
                     if (variant.isNetherWood())
-                        newPart = newPart.replace("log", "stem");
+                        newPart = newPart.replace(variant.asString() + "_raw_log", variant.asString() + "_raw_stem");
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                 }
             }
-            for(WoodVariant variant : WoodVariant.values()){
+            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 for (String part : LOG_MODEL_PARTS_BASE) {
-                    String newPart = part.replace("log", "stripped_" + variant.asString() + "_raw_log");
+                    String newPart = part.replace("template", "stripped_" + variant.asString() + "_raw");
                     if (variant.isNetherWood())
-                        newPart = newPart.replace("log", "stem");
+                        newPart = newPart.replace(variant.asString() + "_raw_log", variant.asString() + "_raw_stem");
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                 }
             }
-            for(WoodVariant variant : WoodVariant.values()){
+            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 for (String part : LOG_MODEL_PARTS_BASE) {
-                    String newPart = part.replace("log", "stripped_" + variant.asString() + "_log");
+                    String newPart = part.replace("template", "stripped_" + variant.asString());
                     if (variant.isNetherWood())
-                        newPart = newPart.replace("log", "stem");
+                        newPart = newPart.replace(variant.asString() + "_log", variant.asString() + "_stem");
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                 }
             }
             for(StoneVariant variant : StoneVariant.values()){
                 for (String part : LOG_MODEL_PARTS_BASE) {
-                    String newPart = part.replace("log", variant.asString() + "_log").replace("log", "natural");
+                    String newPart = part.replace("template", variant.asString()).replace(variant.asString() + "_log", variant.asString() +"_natural");
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                 }
             }
@@ -106,25 +100,22 @@ public class UnbakedLogTableModel implements UnbakedModel {
     protected final SpriteIdentifier frameTex;
     private final List<String> MODEL_PARTS;
 
-        public UnbakedLogTableModel(MaterialEnum variant, List<String> modelParts, BlockType type, boolean raw) {
+        public UnbakedLogTableModel(VariantBase variant, List<String> modelParts, BlockType type, boolean raw) {
         this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(type));
         for(String modelPartName : LOG_MODEL_PARTS_BASE){
-            String s = modelPartName;
-            if (!variant.equals(WoodVariant.OAK) || !type.equals(BlockType.PLANKS))
-                s = s.replace("log", variant.asString() + "_log");
+            String s = modelPartName.replace("template", variant.asString());
             if (type == BlockType.STRIPPED_LOG) {
                 s = s.replace(variant.asString(), "stripped_" + variant.asString());
             }
             if (raw) {
-                if (variant.equals(WoodVariant.OAK) && type.equals(BlockType.PLANKS)) {
-                    s = s.replace("log", "oak_log");
-                }
-                s = s.replace("log", "raw_log");
+                s = s.replace(variant.asString() + "_log", variant.asString() + "_raw_log");
+                if (variant.isNetherWood())
+                    s = s.replace(variant.asString()  + "_raw_log", variant.asString()  + "_raw_stem");
             }
             if (variant instanceof StoneVariant) {
-                s = s.replace("log", "natural");
+                s = s.replace(variant.asString()  + "_log", variant.asString()  + "_natural");
             } else if(variant.isNetherWood()) {
-                s = s.replace("log", "stem");
+                s = s.replace(variant.asString()  + "_log", variant.asString()  + "_stem");
             }
             modelParts.add(s);
         }
@@ -156,6 +147,6 @@ public class UnbakedLogTableModel implements UnbakedModel {
 
     @ExpectPlatform
     public static BakedModel getBakedModel(Sprite frame, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        return new BakedLogTableModel(frame, settings, bakedModels);
+        throw new RuntimeException("Method wasn't replaced correctly");
     }
 }

@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models.modernDinnerTable.fabric;
 
 import com.unlikepaladin.pfm.blocks.ModernDinnerTableBlock;
-import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.BakedModernDinnerTableModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -18,7 +18,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class FabricModernDinnerTableModel extends BakedModernDinnerTableModel implements FabricBakedModel {
+public class FabricModernDinnerTableModel extends AbstractBakedModel implements FabricBakedModel {
     public FabricModernDinnerTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;

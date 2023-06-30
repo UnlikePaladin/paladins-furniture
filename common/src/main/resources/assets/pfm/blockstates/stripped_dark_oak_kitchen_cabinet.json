@@ -1,8 +1,0 @@
-{
-   "variants": {
-     "facing=north": { "model": "pfm:block/stripped_dark_oak_kitchen_cabinet", "y":0, "uvlock":"true" },
-     "facing=south": { "model": "pfm:block/stripped_dark_oak_kitchen_cabinet", "y":180, "uvlock":"true" },
-     "facing=east": { "model": "pfm:block/stripped_dark_oak_kitchen_cabinet", "y":90, "uvlock":"true" },
-     "facing=west": { "model": "pfm:block/stripped_dark_oak_kitchen_cabinet", "y":270, "uvlock":"true" }
-   }
-}

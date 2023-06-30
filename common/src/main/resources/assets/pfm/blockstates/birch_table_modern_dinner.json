@@ -1,6 +1,0 @@
-{
-    "variants": {
-      "axis=z": { "model": "pfm:block/birch_table_modern_dinner", "y":90 },
-      "axis=x": { "model": "pfm:block/birch_table_modern_dinner", "y":0 }
-    }
-  }

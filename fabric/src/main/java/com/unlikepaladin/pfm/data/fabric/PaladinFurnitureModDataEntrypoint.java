@@ -3,9 +3,9 @@ package com.unlikepaladin.pfm.data.fabric;
 import com.unlikepaladin.pfm.blocks.DinnerChairBlock;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import com.unlikepaladin.pfm.data.FurnitureRecipeJsonFactory;
 import com.unlikepaladin.pfm.data.Tags;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import com.unlikepaladin.pfm.runtime.data.FurnitureRecipeJsonFactory;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTablesProvider;
@@ -28,10 +28,15 @@ import net.minecraft.util.registry.Registry;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoint {
+    @Override
+    public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 
+    }
+/*
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator dataGenerator) {
         dataGenerator.addProvider(PFMBlockTagProvider::new);
@@ -492,7 +497,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
 
             FurnitureBlock[] stoneKitchenCounterOvens = KitchenCounterOvenBlock.streamStoneCounterOvens().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock kitchenCounterOven : stoneKitchenCounterOvens) {
-                    offerCounterAppliance(kitchenCounterOven.getBlock(), Ingredient.ofItems(kitchenCounterOven.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenCounterOven.getBaseMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
+                offerCounterAppliance(kitchenCounterOven.getBlock(), Ingredient.ofItems(kitchenCounterOven.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenCounterOven.getBaseMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
             }
 
             FurnitureBlock[] stoneKitchenCounters = KitchenCounterBlock.streamStoneCounters().toList().toArray(new FurnitureBlock[0]);
@@ -507,7 +512,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
 
             FurnitureBlock[] stoneKitchenDrawers = KitchenDrawerBlock.streamStoneDrawers().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock kitchenDrawer : stoneKitchenDrawers) {
-                    offerCounterAppliance(kitchenDrawer.getBlock(), Ingredient.ofItems(kitchenDrawer.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
+                offerCounterAppliance(kitchenDrawer.getBlock(), Ingredient.ofItems(kitchenDrawer.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenDrawer.getBaseMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
             }
 
             FurnitureBlock[] stoneWallKitchenDrawers = KitchenWallDrawerBlock.streamWallStoneDrawers().toList().toArray(new FurnitureBlock[0]);
@@ -523,7 +528,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
 
             FurnitureBlock[] stoneKitchenSinks = KitchenSinkBlock.streamStoneSinks().toList().toArray(new FurnitureBlock[0]);
             for (FurnitureBlock kitchenSink : stoneKitchenSinks) {
-                    offerSinkRecipe(kitchenSink.getBlock(), Ingredient.ofItems(kitchenSink.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenSink.getBaseMaterial().asItem()), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
+                offerSinkRecipe(kitchenSink.getBlock(), Ingredient.ofItems(kitchenSink.getSecondaryMaterial().asItem()), Ingredient.ofItems(kitchenSink.getBaseMaterial().asItem()), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
             }
 
             FurnitureBlock[] froggyChairs = FroggyChairBlock.streamFroggyChair().toList().toArray(new FurnitureBlock[0]);
@@ -622,6 +627,7 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
             }
         }
     }
+
 
     public static void offerClassicChairRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonFactory.create(output, 4).input('S', legMaterial).input('X', baseMaterial).pattern("S  ").pattern("SXX").pattern("S S").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
@@ -744,7 +750,6 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
         FurnitureRecipeJsonFactory.create(output, 1).input('X', legMaterial).input('Y', secondMaterial).pattern(" X ").pattern(" X ").pattern("XYX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
-
     public static void offerSimpleBed(ItemConvertible output, Ingredient legMaterial, Ingredient baseBed, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonFactory.create(output, 1).input('X', legMaterial).input('Z', baseBed).pattern("XZX").pattern("XXX").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
@@ -769,6 +774,5 @@ public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoin
 
     public static void offerToiletRecipe(ItemConvertible output, Ingredient base, Ingredient material, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonFactory.create(output, 1).input('Y', base).input('X', material).input('Z', Ingredient.ofItems(Items.BUCKET)).pattern("XY ").pattern("XZX").pattern(" X ").offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
-    }
+    }*/
 }
-

@@ -2,29 +2,27 @@ package com.unlikepaladin.pfm.blocks.models.bed.fabric;
 
 import com.unlikepaladin.pfm.blocks.ClassicBedBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
-import com.unlikepaladin.pfm.blocks.models.bed.BakedBedModel;
-import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.bed.BedInterface;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class FabricBedModel extends BakedBedModel implements FabricBakedModel {
+public class FabricBedModel extends AbstractBakedModel implements FabricBakedModel, BedInterface {
     private final List<String> modelParts; 
     public FabricBedModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);

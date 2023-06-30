@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.items;
 
+import com.unlikepaladin.pfm.blocks.BasicShowerHandleBlock;
 import com.unlikepaladin.pfm.blocks.BasicShowerHeadBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -24,12 +25,13 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public class ShowerHandleItem extends BlockItem {
-    private Block block;
+    private Supplier<BasicShowerHandleBlock> block;
 
-    public ShowerHandleItem(Block block, Settings settings) {
-        super(block, settings);
+    public ShowerHandleItem(Supplier<BasicShowerHandleBlock> block, Settings settings) {
+        super(block.get(), settings);
         this.block = block;
     }
 

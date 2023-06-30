@@ -3,9 +3,9 @@
 	"parent": "block/block",
 	"textures": {
 		"2": "block/stone",
-		"base": "block/oak_planks",
-		"particle": "block/oak_log",
-		"support": "block/oak_log"
+		"base": "#texture",
+		"particle": "#log",
+		"support": "#log"
 	},
 	"elements": [
 		{

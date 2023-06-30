@@ -3,10 +3,15 @@ package com.unlikepaladin.pfm.mixin.forge;
 
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
+import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
 import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedIronFridgeModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenDrawer.UnbakedKitchenDrawerModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.UnbakedKitchenWallCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawer.UnbakedKitchenWallDrawerModel;
@@ -103,6 +108,36 @@ public abstract class PFMModelLoaderMixin {
         }
         else if (ModelHelper.containsIdentifier(UnbakedKitchenCabinetModel.CABINET_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
             UnbakedModel model = new UnbakedKitchenCabinetModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (ModelHelper.containsIdentifier(UnbakedClassicNightstandModel.NIGHSTAND_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            UnbakedModel model = new UnbakedClassicNightstandModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (ModelHelper.containsIdentifier(UnbakedKitchenCounterOvenModel.OVEN_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            UnbakedModel model = new UnbakedKitchenCounterOvenModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (ModelHelper.containsIdentifier(UnbakedIronFridgeModel.IRON_FRIDGE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            UnbakedModel model = new UnbakedIronFridgeModel();
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (ModelHelper.containsIdentifier(UnbakedFridgeModel.FRIDGE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            UnbakedModel model = new UnbakedFridgeModel(resourceId);
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (ModelHelper.containsIdentifier(UnbakedFreezerModel.FREEZER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            UnbakedModel model = new UnbakedFreezerModel(resourceId);
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();

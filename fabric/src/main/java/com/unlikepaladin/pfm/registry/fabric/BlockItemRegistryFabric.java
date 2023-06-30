@@ -35,4 +35,4 @@ public class BlockItemRegistryFabric {
         BlockItemRegistry.registerCommonItems();
     }
 
-    }
+}

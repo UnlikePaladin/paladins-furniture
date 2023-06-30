@@ -89,7 +89,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             }
             return true;
         }
-        return false;
+        return super.charTyped(chr, modifiers);
     }
 
     @Override
@@ -122,6 +122,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
         } else {
             this.handler.updateInput();
             SearchableContainer<ItemStack> searchable;
+            //TODO: fix searching with tags
             if (string.startsWith("#")) {
                 string = string.substring(1);
                 searchable = this.client.getSearchableContainer(SearchManager.ITEM_TAG);
@@ -139,6 +140,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             this.handler.searching = true;
         }
         this.scrollAmount = 0.0f;
+        this.scrollOffset = 0;
     }
 
     private void searchForTags(String id2) {
@@ -168,7 +170,6 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
-    //TODO: Fix scrollbar getting stuck on the bottom
     @Override
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);

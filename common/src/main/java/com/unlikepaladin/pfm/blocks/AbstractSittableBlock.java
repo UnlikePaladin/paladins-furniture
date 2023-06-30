@@ -167,6 +167,9 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
         if (entity instanceof PlayerEntity || entity instanceof IronGolemEntity || entity instanceof AbstractMinecartEntity || entity.hasVehicle() || !(entity instanceof LivingEntity)) {
             return;
         }
+        if (!PaladinFurnitureMod.getPFMConfig().doMobsSitOnChairs())
+            return;
+
         sitEntity(world, pos, state, entity);
     }
 

@@ -1,8 +1,0 @@
-{
-    "variants": {
-      "facing=north": { "model": "pfm:block/warped_cyan_classic_bed" },
-      "facing=south": { "model": "pfm:block/warped_cyan_classic_bed", "y":180 },
-      "facing=east": { "model": "pfm:block/warped_cyan_classic_bed", "y":90 },
-      "facing=west": { "model": "pfm:block/warped_cyan_classic_bed", "y":270 }
-    }
-  }

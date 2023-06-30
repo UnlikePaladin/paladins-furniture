@@ -1,7 +1,8 @@
 package com.unlikepaladin.pfm.blocks.models.logTable.forge;
 
 import com.unlikepaladin.pfm.blocks.LogTableBlock;
-import com.unlikepaladin.pfm.blocks.models.classicTable.BakedClassicTableModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -16,15 +17,14 @@ import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.*;
-import java.util.function.Predicate;
 
-public class ForgeLogTableModel extends BakedClassicTableModel {
+public class ForgeLogTableModel extends AbstractBakedModel {
     public ForgeLogTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;
-    public static ModelProperty<TableConnections> CONNECTIONS = new ModelProperty<>();
+    public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
 
     @NotNull
     @Override
@@ -38,7 +38,7 @@ public class ForgeLogTableModel extends BakedClassicTableModel {
             BitSet set = new BitSet();
             set.set(0, left);
             set.set(1, right);
-            builder.withInitial(CONNECTIONS, new TableConnections(set));
+            builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set));
         }
         return builder.build();
     }
@@ -65,17 +65,5 @@ public class ForgeLogTableModel extends BakedClassicTableModel {
             }
         }
         return quads;
-    }
-}
-class TableConnections implements Predicate<TableConnections>
-{
-    public TableConnections(BitSet connections) {
-        this.connections = connections;
-    }
-
-    protected BitSet connections;
-    @Override
-    public boolean test(TableConnections tableConnections) {
-        return connections.equals(tableConnections.connections);
     }
 }

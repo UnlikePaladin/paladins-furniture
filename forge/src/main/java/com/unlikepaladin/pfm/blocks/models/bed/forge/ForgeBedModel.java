@@ -2,7 +2,9 @@ package com.unlikepaladin.pfm.blocks.models.bed.forge;
 
 import com.unlikepaladin.pfm.blocks.ClassicBedBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
-import com.unlikepaladin.pfm.blocks.models.bed.BakedBedModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
+import com.unlikepaladin.pfm.blocks.models.bed.BedInterface;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.BedPart;
@@ -20,16 +22,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Predicate;
 
-public class ForgeBedModel extends BakedBedModel {
+public class ForgeBedModel extends AbstractBakedModel implements BedInterface {
     public ForgeBedModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;
 
-    public static ModelProperty<BedConnections> CONNECTIONS = new ModelProperty<>();
+    public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
 
     @NotNull
     @Override
@@ -86,21 +87,8 @@ public class ForgeBedModel extends BakedBedModel {
             set.set(0, left);
             set.set(1, right);
             set.set(2, bunk);
-            builder.withInitial(CONNECTIONS, new BedConnections(set));
+            builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set));
         }
         return builder.build();
-    }
-}
-
-class BedConnections implements Predicate<BedConnections>
-{
-    public BedConnections(BitSet connections) {
-        this.connections = connections;
-    }
-
-    protected BitSet connections;
-    @Override
-    public boolean test(BedConnections bedConnections) {
-        return connections.equals(bedConnections.connections);
     }
 }

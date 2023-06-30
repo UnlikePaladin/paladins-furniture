@@ -125,6 +125,11 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
         return this.output.toString().compareTo(furnitureRecipe.output.toString());
     }
 
+    @Override
+    public boolean isIgnoredInRecipeBook() {
+        return true;
+    }
+
     public static class Serializer
             implements RecipeSerializer<FurnitureRecipe> {
         @Override

@@ -171,6 +171,9 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
         transitive = false
     }
+
+    modImplementation("com.terraformersmc:terrestria:${rootProject.terrestria}")
+
 }
 
 dependencies {

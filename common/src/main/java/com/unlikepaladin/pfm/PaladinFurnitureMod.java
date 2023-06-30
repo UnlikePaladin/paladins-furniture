@@ -4,14 +4,20 @@ import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
+import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
+import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
 public class PaladinFurnitureMod {
 
@@ -24,6 +30,7 @@ public class PaladinFurnitureMod {
 
 	public static ItemGroup DYE_KITS;
 	private static PaladinFurnitureModUpdateChecker updateChecker;
+	public static boolean isClient = false;
 
 	public void commonInit() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
@@ -33,9 +40,23 @@ public class PaladinFurnitureMod {
 		BathtubBehavior.registerBehavior();
 		updateChecker = new PaladinFurnitureModUpdateChecker();
 		updateChecker.checkForUpdates(getPFMConfig());
+		DynamicBlockRegistry.addBlockSetContainer(WoodVariantRegistry.INSTANCE.getType(), WoodVariantRegistry.INSTANCE);
 	}
 
 
+	public static void registerLateEntries() {
+		DynamicBlockRegistry.initialize();
+		try {
+			LateBlockRegistry.registerBlocks();
+		} catch (InvocationTargetException e) {
+			throw new RuntimeException(e);
+		} catch (InstantiationException e) {
+			throw new RuntimeException(e);
+		} catch (IllegalAccessException e) {
+			throw new RuntimeException(e);
+		}
+		BlockEntityRegistry.registerBlockEntities();
+	}
 	@ExpectPlatform
     public static PaladinFurnitureModConfig getPFMConfig() {
 		throw new AssertionError();
@@ -44,4 +65,7 @@ public class PaladinFurnitureMod {
 	public static PaladinFurnitureModUpdateChecker getUpdateChecker() {
 		return updateChecker;
 	}
+
+	@ExpectPlatform
+	public static List<String> getModList() {throw new AssertionError();}
 }

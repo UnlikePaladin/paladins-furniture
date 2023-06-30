@@ -38,11 +38,10 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
     public static BooleanProperty OPEN = Properties.OPEN;
     private static final List<FurnitureBlock> WOOD_NIGHTSTAND = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_NIGHTSTAND = new ArrayList<>();
-    public static final EnumProperty<MiddleShape> SHAPE = EnumProperty.of("shape", MiddleShape.class);
 
     public ClassicNightstandBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false).with(SHAPE, MiddleShape.SINGLE));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(OPEN, false));
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ClassicNightstandBlock.class)){
             WOOD_NIGHTSTAND.add(new FurnitureBlock(this, "classic_nightstand"));
         }
@@ -71,7 +70,6 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(OPEN);
-        stateManager.add(SHAPE);
         super.appendProperties(stateManager);
     }
 
@@ -91,13 +89,12 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
 
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
-        return getShape(blockState, ctx.getWorld(), ctx.getBlockPos(), blockState.get(FACING));
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-            return direction.getAxis().isHorizontal() ? getShape(state, world, pos, state.get(FACING)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+            return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
         }
 
     @Override
@@ -126,7 +123,7 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
         return 0;
     }
 
-    private boolean isTable(WorldAccess world, BlockPos pos, Direction direction, Direction tableDirection)
+    public boolean isStand(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
         if(state.getBlock() == this)
@@ -135,25 +132,6 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
             return sourceDirection.equals(tableDirection);
         }
         return false;
-    }
-
-    public BlockState getShape(BlockState state, WorldAccess world, BlockPos pos, Direction dir)
-    {
-        boolean right = isTable(world, pos, dir.rotateYCounterclockwise(), dir);
-        boolean left = isTable(world, pos, dir.rotateYClockwise(), dir);
-        if(left && right)
-        {
-            return state.with(SHAPE, MiddleShape.MIDDLE);
-        }
-        else if(left)
-        {
-            return state.with(SHAPE, MiddleShape.RIGHT);
-        }
-        else if(right)
-        {
-            return state.with(SHAPE, MiddleShape.LEFT);
-        }
-        return state.with(SHAPE, MiddleShape.SINGLE);
     }
 
     static final VoxelShape NIGHT_STAND = VoxelShapes.union(createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(3, 1, 1,13, 3, 2),createCuboidShape(13, 1, 1,15, 14, 2),createCuboidShape(1, 1, 2,15, 14, 15),createCuboidShape(0.5, 0, 0,3.5, 1, 16),createCuboidShape(12.5, 0, 0,15.5, 1, 16),createCuboidShape(4, 9, 1,12, 13, 2),createCuboidShape(4, 4, 1,12, 8, 2),createCuboidShape(6.5, 5.5, 0,9.5, 6.5, 1),createCuboidShape(6.5, 10.5, 0,9.5, 11.5, 1));
@@ -195,7 +173,9 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         boolean open = state.get(OPEN);
-        MiddleShape shape = state.get(SHAPE);
+        boolean left = isStand(world, pos, dir.rotateYCounterclockwise(), dir);
+        boolean right = isStand(world, pos, dir.rotateYClockwise(), dir);
+        MiddleShape shape = left || right ? left && right ? MiddleShape.MIDDLE : left ? MiddleShape.LEFT : MiddleShape.RIGHT : MiddleShape.SINGLE;
         switch (shape) {
             case SINGLE -> {
                 switch (dir) {

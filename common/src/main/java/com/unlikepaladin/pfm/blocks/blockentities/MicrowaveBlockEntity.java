@@ -199,7 +199,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new MicrowaveScreenHandler(this,syncId, playerInventory, this, this.propertyDelegate);
+        return new MicrowaveScreenHandler(this, syncId, playerInventory, this, this.propertyDelegate);
     }
 
     @Override

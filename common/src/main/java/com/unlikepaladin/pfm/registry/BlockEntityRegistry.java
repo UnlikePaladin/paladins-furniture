@@ -1,9 +1,7 @@
 package com.unlikepaladin.pfm.registry;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.BasicSinkBlock;
-import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
-import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
+import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -17,13 +15,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.registry.Registry;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class BlockEntityRegistry {
 
     public static void registerBlockEntities() {
-        BlockEntities.DRAWER_BLOCK_ENTITY = registerBlockEntity("drawer_block_entity", new Block[]{PaladinFurnitureModBlocksItems.OAK_KITCHEN_DRAWER}, GenericStorageBlockEntity9x3::new);
-        BlockEntities.FRIDGE_BLOCK_ENTITY = registerBlockEntity("fridge_block_entity", new Block[]{PaladinFurnitureModBlocksItems.WHITE_FRIDGE}, FridgeBlockEntity::new);
+        BlockEntities.DRAWER_BLOCK_ENTITY = registerBlockEntity("drawer_block_entity", Stream.concat(KitchenDrawerBlock.streamWoodDrawers(), KitchenDrawerBlock.streamStoneDrawers()).map(FurnitureBlock::getBlock).toArray(Block[]::new), GenericStorageBlockEntity9x3::new);
+        BlockEntities.FRIDGE_BLOCK_ENTITY = registerBlockEntity("fridge_block_entity", new Block[]{PaladinFurnitureModBlocksItems.WHITE_FRIDGE, PaladinFurnitureModBlocksItems.XBOX_FRIDGE, PaladinFurnitureModBlocksItems.GRAY_MIRROR, PaladinFurnitureModBlocksItems.IRON_FRIDGE}, FridgeBlockEntity::new);
         BlockEntities.FREEZER_BLOCK_ENTITY = registerBlockEntity("freezer_block_entity", new Block[]{PaladinFurnitureModBlocksItems.WHITE_FREEZER, PaladinFurnitureModBlocksItems.GRAY_FREEZER, PaladinFurnitureModBlocksItems.IRON_FREEZER}, FreezerBlockEntity::new);
         Block[] counterOvens = Stream.concat(KitchenCounterOvenBlock.streamStoneCounterOvens(), KitchenCounterOvenBlock.streamWoodCounterOvens()).map(FurnitureBlock::getBlock).toArray(Block[]::new);
         BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY = registerBlockEntity("kitchen_counter_oven_block_entity", counterOvens, CounterOvenBlockEntity::new);
@@ -33,7 +32,7 @@ public class BlockEntityRegistry {
         BlockEntities.MICROWAVE_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("microwave_block_entity", new Block[]{PaladinFurnitureModBlocksItems.IRON_MICROWAVE}, MicrowaveBlockEntity.getFactory());
         BlockEntities.PLATE_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("plate_block_entity", new Block[]{PaladinFurnitureModBlocksItems.BASIC_PLATE}, PlateBlockEntity.getFactory());
         BlockEntities.TOILET_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("toilet_block_entity", new Block[]{PaladinFurnitureModBlocksItems.BASIC_TOILET}, ToiletBlockEntity::new);
-        BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("small_storage_block_entity", new Block[]{PaladinFurnitureModBlocksItems.OAK_KITCHEN_WALL_SMALL_DRAWER}, GenericStorageBlockEntity3x3::new);
+        BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("small_storage_block_entity", Stream.concat(KitchenWallDrawerSmallBlock.streamStoneWallSmallDrawers(), KitchenWallDrawerSmallBlock.streamWoodWallSmallDrawers()).map(FurnitureBlock::getBlock).toArray(Block[]::new), GenericStorageBlockEntity3x3::new);
         BlockEntities.TRASHCAN_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("trashcan_block_entity", new Block[]{PaladinFurnitureModBlocksItems.TRASHCAN, PaladinFurnitureModBlocksItems.MESH_TRASHCAN}, TrashcanBlockEntity.getFactory());
         Block[] sinks = Stream.concat(KitchenSinkBlock.streamStoneSinks(), KitchenSinkBlock.streamWoodSinks()).map(FurnitureBlock::getBlock).toArray(Block[]::new);
         sinks = Stream.concat(Arrays.stream(sinks), BasicSinkBlock.streamSinks()).toArray(Block[]::new);

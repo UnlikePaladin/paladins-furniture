@@ -2,9 +2,9 @@
 	"credit": "By UnlikePaladin",
 	"textures": {
 		"2": "block/stone",
-		"legs": "block/oak_log",
-		"particle": "block/oak_planks",
-		"base": "block/oak_planks"
+		"legs": "#log",
+		"particle": "#texture",
+		"base": "#texture"
 	},
 	"elements": [
 		{

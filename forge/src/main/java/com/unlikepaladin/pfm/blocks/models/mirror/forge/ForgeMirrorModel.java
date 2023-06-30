@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.blocks.models.mirror.forge;
 
 import com.unlikepaladin.pfm.blocks.MirrorBlock;
-import com.unlikepaladin.pfm.blocks.models.mirror.BakedMirrorModel;
-import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -18,15 +18,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Predicate;
 
-public class ForgeMirrorModel extends BakedMirrorModel {
+public class ForgeMirrorModel extends AbstractBakedModel {
     public ForgeMirrorModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, glassTex, reflectTex, settings, bakedModels);
+        super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;
+        this.glassTex = glassTex;
+        this.reflectTex = reflectTex;
     }
+    protected final Sprite glassTex;
+    protected final Sprite reflectTex;
+
     private final List<String> modelParts;
-    public static ModelProperty<MirrorDirections> DIRECTIONS = new ModelProperty<>();
+    public static ModelProperty<ModelBitSetProperty> DIRECTIONS = new ModelProperty<>();
 
     @NotNull
     @Override
@@ -79,22 +83,9 @@ public class ForgeMirrorModel extends BakedMirrorModel {
             connections.set(5, block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYClockwise()).down()), state));
             connections.set(6, block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYCounterclockwise()).up()), state));
             connections.set(7, block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYCounterclockwise()).down()), state));
-            MirrorDirections mirrorDirections = new MirrorDirections(connections);
+            ModelBitSetProperty mirrorDirections = new ModelBitSetProperty(connections);
             builder.withInitial(DIRECTIONS, mirrorDirections);
         }
         return builder.build();
-    }
-}
-
-class MirrorDirections implements Predicate<MirrorDirections>
-{
-    public MirrorDirections(BitSet connections) {
-        this.connections = connections;
-    }
-
-    protected BitSet connections;
-    @Override
-    public boolean test(MirrorDirections mirrorDirections) {
-        return connections.equals(mirrorDirections.connections);
     }
 }

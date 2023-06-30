@@ -1,8 +1,0 @@
-{
-    "variants": {
-      "facing=north": { "model": "pfm:block/oak_orange_simple_bed" },
-      "facing=south": { "model": "pfm:block/oak_orange_simple_bed", "y":180 },
-      "facing=east": { "model": "pfm:block/oak_orange_simple_bed", "y":90 },
-      "facing=west": { "model": "pfm:block/oak_orange_simple_bed", "y":270 }
-    }
-  }

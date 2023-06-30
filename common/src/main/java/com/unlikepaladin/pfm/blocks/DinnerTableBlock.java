@@ -143,7 +143,7 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
             if (dirNorthOrSouth) {
                 return dinner_table_one;}
             else if (dirWestOrEast) {
-                return dinner_table_one_west;}
+                return dinner_table_one_east;}
             else {
                 return dinner_table;
             }
@@ -152,7 +152,7 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
             if (dirNorthOrSouth) {
                 return dinner_table_one_south;}
             else if (dirWestOrEast) {
-                return dinner_table_one_east;}
+                return dinner_table_one_west;}
             else {
                 return dinner_table;
             }

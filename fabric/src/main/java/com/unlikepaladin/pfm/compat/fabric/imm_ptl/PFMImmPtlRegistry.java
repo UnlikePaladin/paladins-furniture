@@ -15,10 +15,6 @@ public class PFMImmPtlRegistry {
     public static void register() {
         PaladinFurnitureModBlocksItems.WHITE_MIRROR = new PFMMirrorBlockIP(AbstractBlock.Settings.of(Material.STONE, MapColor.WHITE).nonOpaque());
         PaladinFurnitureModBlocksItems.GRAY_MIRROR = new PFMMirrorBlockIP(AbstractBlock.Settings.of(Material.STONE, MapColor.GRAY).nonOpaque());
-
-        BlockItemRegistry.registerFurniture("white_mirror", PaladinFurnitureModBlocksItems.WHITE_MIRROR, true);
-        BlockItemRegistry.registerFurniture("gray_mirror", PaladinFurnitureModBlocksItems.GRAY_MIRROR, true);
-
         EntityRegistryFabric.registerEntity("mirror_entity", MIRROR);
     }
 }

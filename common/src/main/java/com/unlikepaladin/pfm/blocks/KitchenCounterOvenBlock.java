@@ -53,8 +53,6 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements Waterloggabl
         return STONE_COUNTER_OVENS.stream();
     }
 
-    public static final BooleanProperty UP = Properties.UP;
-    public static final BooleanProperty DOWN = Properties.DOWN;
     public static final BooleanProperty OPEN = Properties.OPEN;
 
     @Override
@@ -66,8 +64,6 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements Waterloggabl
     }
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(UP);
-        builder.add(DOWN);
         builder.add(OPEN);
         super.appendProperties(builder);
     }
@@ -86,21 +82,12 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements Waterloggabl
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         World world = ctx.getWorld();
         BlockPos blockPos = ctx.getBlockPos();
-        boolean up = connectsVertical(world.getBlockState(blockPos.up()).getBlock());
-        boolean down = connectsVertical(world.getBlockState(blockPos.down()).getBlock());
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(UP, up).with(DOWN, down);
+        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (direction.getAxis().isVertical()) {
-            boolean up = connectsVertical(world.getBlockState(pos.up()).getBlock());
-            boolean down = connectsVertical(world.getBlockState(pos.down()).getBlock());
-            return state.with(UP, up).with(DOWN, down);
-        }
-        else{
-            return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
-        }
+        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Override
@@ -111,12 +98,9 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements Waterloggabl
 
     @Override
     public void openScreen(World world, BlockPos pos, PlayerEntity player) {
-        //This is called by the onUse method inside AbstractFurnaceBlock so
-        //it is a little bit different of how you open the screen for normal container
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof CounterOvenBlockEntity) {
             player.openHandledScreen((NamedScreenHandlerFactory)blockEntity);
-            // Optional: increment player's stat
             player.incrementStat(Statistics.STOVE_OPENED);
         }
     }
@@ -136,8 +120,8 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements Waterloggabl
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
-        boolean up = state.get(UP);
-        boolean down = state.get(DOWN);
+        boolean up = connectsVertical(view.getBlockState(pos.up()).getBlock());
+        boolean down = connectsVertical(view.getBlockState(pos.down()).getBlock());
         if(up){
             return switch (dir){
                 case NORTH -> COUNTER_OVEN_BOTTOM_SOUTH;

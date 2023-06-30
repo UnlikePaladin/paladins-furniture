@@ -2,10 +2,15 @@ package com.unlikepaladin.pfm.client.fabric;
 
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
+import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
 import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedIronFridgeModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenDrawer.UnbakedKitchenDrawerModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.UnbakedKitchenWallCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawer.UnbakedKitchenWallDrawerModel;
@@ -24,6 +29,7 @@ public class PFMExtraModelProvider implements ExtraModelProvider {
         UnbakedBedModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedBasicTableModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedClassicTableModel.ALL_MODEL_IDS.forEach(out::accept);
+        UnbakedClassicNightstandModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedLogTableModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedDinnerTableModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedModernDinnerTableModel.ALL_MODEL_IDS.forEach(out::accept);
@@ -32,6 +38,11 @@ public class PFMExtraModelProvider implements ExtraModelProvider {
         UnbakedKitchenWallCounterModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedKitchenWallDrawerModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedKitchenCabinetModel.ALL_MODEL_IDS.forEach(out::accept);
+        UnbakedKitchenCounterOvenModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(out::accept);
+        UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(out::accept);
+        UnbakedFridgeModel.ALL_MODEL_IDS.forEach(out::accept);
+        UnbakedFreezerModel.ALL_MODEL_IDS.forEach(out::accept);
+
     }
 }

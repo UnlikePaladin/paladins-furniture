@@ -53,6 +53,8 @@ dependencies {
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+
+    modRuntimeOnly("curse.maven:biomesop-220318:3562256")
 }
 
 if (rootProject.immersive_portals_compatibility_forge == "true"){

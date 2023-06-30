@@ -22,7 +22,7 @@ import java.util.List;
 public class WorkbenchScreenHandler extends ScreenHandler {
     private final ScreenHandlerContext context;
     private final List<FurnitureRecipe> availableRecipes = Lists.newArrayList();
-    private final List<FurnitureRecipe> allRecipes = Lists.newArrayList();
+    private static final List<FurnitureRecipe> allRecipes = Lists.newArrayList();
     private final List<FurnitureRecipe> sortedRecipes = Lists.newArrayList();
     private final List<FurnitureRecipe> searchableRecipes = Lists.newArrayList();
 
@@ -79,7 +79,8 @@ public class WorkbenchScreenHandler extends ScreenHandler {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 156));
         }
         this.addProperty(this.selectedRecipe);
-        allRecipes.addAll(world.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE).stream().sorted().toList());
+        if (allRecipes.isEmpty())
+            allRecipes.addAll(world.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE).stream().sorted().toList());
         this.updateInput();
         selectedRecipe.set(-1);
     }
@@ -165,14 +166,17 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     }
 
     public void updateInput() {
-        if (!availableRecipes.isEmpty() && getSelectedRecipe() != -1) {
-            if (!sortedRecipes.get(getSelectedRecipe()).matches(playerInventory, world)){
+        //Reset the selected recipe and clear the output slot
+        if (!this.availableRecipes.isEmpty() && getSelectedRecipe() != -1) {
+            if (!this.sortedRecipes.get(getSelectedRecipe()).matches(playerInventory, world)){
                 this.selectedRecipe.set(-1);
                 this.outputSlot.setStack(ItemStack.EMPTY);
             }
         }
+        //Reset the available recipes list and add all recipes that can be crafted
         this.availableRecipes.clear();
         this.availableRecipes.addAll(allRecipes.stream().filter(newFurnitureRecipe -> newFurnitureRecipe.matches(playerInventory, world)).toList());
+        //Clear the visible recipe list and add the craft-able recipes first, then add the rest, checking that it's not present already so that it's not overridden.
         this.sortedRecipes.clear();
         this.sortedRecipes.addAll(availableRecipes);
         this.sortedRecipes.addAll(allRecipes.stream().filter(furnitureRecipe -> !sortedRecipes.contains(furnitureRecipe)).toList());

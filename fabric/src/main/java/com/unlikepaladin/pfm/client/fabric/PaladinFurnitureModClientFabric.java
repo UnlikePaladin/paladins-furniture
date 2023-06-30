@@ -8,10 +8,14 @@ import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.compat.fabric.imm_ptl.client.PFMImmPtlRegistryClient;
 import com.unlikepaladin.pfm.compat.fabric.sandwichable.client.PFMSandwichableClient;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
+import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
+import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric;
 import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import com.unlikepaladin.pfm.registry.fabric.NetworkRegistryFabric;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
@@ -41,6 +45,9 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        PaladinFurnitureMod.isClient = true;
+        PaladinFurnitureMod.registerLateEntries();
+        PaladinFurnitureModFabric.replaceHomePOI();
         ColorRegistryFabric.registerAll();
         NetworkRegistryFabric.registerClientPackets();
 
@@ -63,7 +70,6 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         if (FabricLoader.getInstance().isModLoaded("imm_ptl_core")) {
             PFMImmPtlRegistryClient.register();
         }
-
         ClientPlayConnectionEvents.DISCONNECT.register(LeaveEventHandlerFabric::onServerLeave);
     }
 }

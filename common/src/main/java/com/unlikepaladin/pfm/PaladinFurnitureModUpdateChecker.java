@@ -69,7 +69,7 @@ public class PaladinFurnitureModUpdateChecker {
                 try {
                     File updateFile = getUpdateFile();
                     if (DateUtils.isSameDay(new Date(), new Date(updateFile.lastModified()))) {
-                        PaladinFurnitureMod.GENERAL_LOGGER.warn("[Paladin's Furniture Update Check] Cached update file detected, using that!");
+                        PaladinFurnitureMod.GENERAL_LOGGER.info("[Paladin's Furniture Update Check] Cached update file detected, using that!");
                         UpdateInfo updateInfo;
                         try {
                             updateInfo = new Gson().fromJson(FileUtils.readFileToString(updateFile, StandardCharsets.UTF_8), UpdateInfo.class);
@@ -81,7 +81,7 @@ public class PaladinFurnitureModUpdateChecker {
                         try {
                             if (Version.getVersion(updateInfo.semanticVersion)) {
                                 shouldShowUpdateMessage = true;
-                                PaladinFurnitureMod.GENERAL_LOGGER.warn("[Paladin's Furniture Update Check] New update detected, showing update message!");
+                                PaladinFurnitureMod.GENERAL_LOGGER.info("[Paladin's Furniture Update Check] New update detected, showing update message!");
                                 return updateInfo;
                             } else {
                                 return null;

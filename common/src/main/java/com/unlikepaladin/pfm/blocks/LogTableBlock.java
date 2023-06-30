@@ -36,7 +36,7 @@ public class LogTableBlock extends HorizontalFacingBlock {
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(LogTableBlock.class)){
             WOOD_LOG_TABLES.add(new FurnitureBlock(this, "table_"));
         }
-        else if (this.getClass().isAssignableFrom(ClassicTableBlock.class)){
+        else if (this.getClass().isAssignableFrom(LogTableBlock.class)){
             STONE_NATURAL_TABLES.add(new FurnitureBlock(this, "natural_table"));
         }
     }

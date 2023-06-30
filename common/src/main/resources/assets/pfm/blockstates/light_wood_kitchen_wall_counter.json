@@ -1,8 +1,0 @@
-{
-   "variants": {
-     "facing=north": { "model": "pfm:block/light_wood_kitchen_wall_counter", "y":0, "uvlock":"true" },
-     "facing=south": { "model": "pfm:block/light_wood_kitchen_wall_counter", "y":180, "uvlock":"true" },
-     "facing=east": { "model": "pfm:block/light_wood_kitchen_wall_counter", "y":90, "uvlock":"true" },
-     "facing=west": { "model": "pfm:block/light_wood_kitchen_wall_counter", "y":270, "uvlock":"true" }
-   }
-}

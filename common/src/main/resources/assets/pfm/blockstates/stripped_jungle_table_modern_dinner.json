@@ -1,6 +1,0 @@
-{
-    "variants": {
-      "axis=z": { "model": "pfm:block/stripped_jungle_dinner_table", "y":90 },
-      "axis=x": { "model": "pfm:block/stripped_jungle_dinner_table", "y":0 }
-    }
-}

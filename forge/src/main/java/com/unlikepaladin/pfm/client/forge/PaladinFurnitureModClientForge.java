@@ -1,9 +1,14 @@
 package com.unlikepaladin.pfm.client.forge;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
+import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
 import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedIronFridgeModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenDrawer.UnbakedKitchenDrawerModel;
@@ -20,6 +25,7 @@ import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
 import com.unlikepaladin.pfm.registry.forge.ScreenHandlerRegistryForge;
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -86,5 +92,9 @@ public class PaladinFurnitureModClientForge {
         UnbakedKitchenWallDrawerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedKitchenCabinetModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        UnbakedFridgeModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        UnbakedFreezerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        UnbakedClassicNightstandModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
     }
 }

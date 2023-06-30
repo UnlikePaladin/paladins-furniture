@@ -35,7 +35,7 @@ import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class XboxFridgeBlock extends FridgeBlock
 {
-    public XboxFridgeBlock(Settings settings, Supplier<Block> freezer) {
+    public XboxFridgeBlock(Settings settings, Supplier<FreezerBlock> freezer) {
         super(settings, freezer);
     }
     public static final EnumProperty<DoubleBlockHalf> HALF = Properties.DOUBLE_BLOCK_HALF;

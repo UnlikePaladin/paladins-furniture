@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.blocks.models.dinnerTable.fabric;
 
-import com.unlikepaladin.pfm.blocks.models.dinnerTable.BakedDinnerTableModel;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;

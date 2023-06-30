@@ -2,3 +2,9 @@ accessWidener v1 named
 
 accessible class net/minecraft/recipe/CookingRecipeSerializer$RecipeFactory
 accessible class net/minecraft/block/entity/BlockEntityType$BlockEntityFactory
+accessible field net/minecraft/world/poi/PointOfInterestType BED_STATES Ljava/util/Set;
+accessible method net/minecraft/world/poi/PointOfInterestType setup (Lnet/minecraft/world/poi/PointOfInterestType;)Lnet/minecraft/world/poi/PointOfInterestType;
+mutable field net/minecraft/world/poi/PointOfInterestType HOME Lnet/minecraft/world/poi/PointOfInterestType;
+accessible method net/minecraft/data/server/BlockLootTableGenerator drops (Lnet/minecraft/item/ItemConvertible;)Lnet/minecraft/loot/LootTable$Builder;
+accessible method net/minecraft/data/server/BlockLootTableGenerator dropsWithProperty (Lnet/minecraft/block/Block;Lnet/minecraft/state/property/Property;Ljava/lang/Comparable;)Lnet/minecraft/loot/LootTable$Builder;
+accessible class net/minecraft/data/server/AbstractTagProvider$ObjectBuilder

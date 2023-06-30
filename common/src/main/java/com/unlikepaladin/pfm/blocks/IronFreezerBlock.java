@@ -23,14 +23,14 @@ import java.util.function.Supplier;
 import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class IronFreezerBlock extends FreezerBlock {
-    private Supplier<Block> fridge;
-    public IronFreezerBlock(Settings settings, Supplier<Block> fridge) {
+    private Supplier<FridgeBlock> fridge;
+    public IronFreezerBlock(Settings settings, Supplier<FridgeBlock> fridge) {
         super(settings, fridge);
         this.fridge = fridge;
     }
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return world.getBlockState(pos.up()).getBlock() == this.fridge.get();
+        return super.canPlaceAt(state, world, pos);
     }
 
     protected static final VoxelShape FREEZER = VoxelShapes.union(createCuboidShape(0.7, 1, 2,14.7, 16, 3),createCuboidShape(14.3, 1, 2.3,15.3, 16, 3.3),createCuboidShape(0.7, 0, 3,15.7, 16, 16),createCuboidShape(1.7, 14, 1.06,2.7, 15, 2.06),createCuboidShape(1.7, 14, 0.06,14.2, 15, 1.06));
@@ -72,21 +72,8 @@ public class IronFreezerBlock extends FreezerBlock {
     }
     @Override
     public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-        BlockPos blockPos;
-        BlockState blockState = world.getBlockState(blockPos = pos.up());
-        if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof FridgeBlock) {
-            ItemScatterer.spawn((World) world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(this.fridge.get().asItem()));
-            BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, NOTIFY_ALL | SKIP_DROPS);
-        }
+        super.onBroken(world, pos, state);
     }
     protected void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        BlockPos blockPos;
-        BlockState blockState = world.getBlockState(blockPos = pos.up());
-        if (blockState.isOf(state.getBlock()) || blockState.getBlock() instanceof FridgeBlock) {
-            BlockState blockState2 = blockState.contains(Properties.WATERLOGGED) && blockState.get(Properties.WATERLOGGED) ? Blocks.WATER.getDefaultState() : Blocks.AIR.getDefaultState();
-            world.setBlockState(blockPos, blockState2, NOTIFY_ALL | SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, getRawIdFromState(blockState));
-        }
     }
 }

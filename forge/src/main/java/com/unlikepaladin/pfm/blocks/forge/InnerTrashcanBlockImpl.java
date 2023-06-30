@@ -17,7 +17,6 @@ import net.minecraftforge.fmllegacy.network.NetworkHooks;
 public class InnerTrashcanBlockImpl {
     public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
         return new TrashcanBlockEntityImpl(BlockEntities.TRASHCAN_BLOCK_ENTITY, pos, state);
-
     }
 
     public static void openScreen(PlayerEntity player, BlockState state, World world, BlockPos pos) {

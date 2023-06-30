@@ -1,8 +1,0 @@
-{
-    "variants": {
-      "facing=north": { "model": "pfm:block/light_wood_dinner_table", "y":90 },
-      "facing=south": { "model": "pfm:block/light_wood_dinner_table", "y":270 },
-      "facing=east": { "model": "pfm:block/light_wood_dinner_table", "y":0 },
-      "facing=west": { "model": "pfm:block/light_wood_dinner_table", "y":180 }
-    }
-  }

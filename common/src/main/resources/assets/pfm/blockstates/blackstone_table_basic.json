@@ -1,6 +1,0 @@
-{
-    "variants": {
-      "axis=x": { "model": "pfm:block/blackstone_table_basic" , "y":90 },
-      "axis=z": { "model": "pfm:block/blackstone_table_basic"}
-    }
-  }

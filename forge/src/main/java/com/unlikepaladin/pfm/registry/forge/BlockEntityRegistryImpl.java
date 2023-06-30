@@ -1,9 +1,5 @@
 package com.unlikepaladin.pfm.registry.forge;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.blockentities.BathtubBlockEntity;
-import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;

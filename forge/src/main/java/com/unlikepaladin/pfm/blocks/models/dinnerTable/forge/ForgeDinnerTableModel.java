@@ -1,7 +1,8 @@
 package com.unlikepaladin.pfm.blocks.models.dinnerTable.forge;
 
 import com.unlikepaladin.pfm.blocks.DinnerTableBlock;
-import com.unlikepaladin.pfm.blocks.models.dinnerTable.BakedDinnerTableModel;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -17,15 +18,14 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.function.Predicate;
 
-public class ForgeDinnerTableModel extends BakedDinnerTableModel {
+public class ForgeDinnerTableModel extends AbstractBakedModel {
     public ForgeDinnerTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         super(frame, settings, bakedModels);
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;
-    public static ModelProperty<TableConnections> CONNECTIONS = new ModelProperty<>();
+    public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
 
     @NotNull
     @Override
@@ -39,7 +39,7 @@ public class ForgeDinnerTableModel extends BakedDinnerTableModel {
             BitSet set = new BitSet();
             set.set(0, left);
             set.set(1, right);
-            builder.withInitial(CONNECTIONS, new TableConnections(set));
+            builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set));
         }
         return builder.build();
     }
@@ -66,17 +66,5 @@ public class ForgeDinnerTableModel extends BakedDinnerTableModel {
             }
         }
         return quads;
-    }
-}
-class TableConnections implements Predicate<TableConnections>
-{
-    public TableConnections(BitSet connections) {
-        this.connections = connections;
-    }
-
-    protected BitSet connections;
-    @Override
-    public boolean test(TableConnections tableConnections) {
-        return connections.equals(tableConnections.connections);
     }
 }
