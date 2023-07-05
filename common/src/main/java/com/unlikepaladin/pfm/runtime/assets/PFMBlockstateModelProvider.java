@@ -470,14 +470,13 @@ public class PFMBlockstateModelProvider {
         private static BlockStateSupplier createKitchenSink(Block block, List<Identifier> modelIdentifiers) {
             Map<Direction, VariantSettings.Rotation> rotationMap = new HashMap<>();
             Integer[] rotation = new Integer[]{0, 90, 180, 270};
-
             rotationMap.put(Direction.NORTH, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[0])));
             rotationMap.put(Direction.EAST, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[1])));
             rotationMap.put(Direction.SOUTH, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[2])));
             rotationMap.put(Direction.WEST, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[3])));
 
             return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(net.minecraft.state.property.Properties.HORIZONTAL_FACING, AbstractSinkBlock.LEVEL_4).register((facing, level) -> {
-                return BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(level)).put(VariantSettings.Y, rotationMap.get(facing));
+                return BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(level)).put(VariantSettings.Y, rotationMap.get(facing)).put(VariantSettings.UVLOCK, true);
             }));
         }
 
@@ -486,15 +485,15 @@ public class PFMBlockstateModelProvider {
             Map<Direction, BlockStateVariant> variantMapOpen = new HashMap<>();
             Integer[] rotation = new Integer[]{0, 90, 180, 270};
 
-            variantMap.put(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[0]))));
-            variantMap.put(Direction.EAST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[1]))));
-            variantMap.put(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[2]))));
-            variantMap.put(Direction.WEST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[3]))));
+            variantMap.put(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[0]))).put(VariantSettings.UVLOCK, true));
+            variantMap.put(Direction.EAST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[1]))).put(VariantSettings.UVLOCK, true));
+            variantMap.put(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[2]))).put(VariantSettings.UVLOCK, true));
+            variantMap.put(Direction.WEST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[3]))).put(VariantSettings.UVLOCK, true));
 
-            variantMapOpen.put(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[0]))));
-            variantMapOpen.put(Direction.EAST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[1]))));
-            variantMapOpen.put(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[2]))));
-            variantMapOpen.put(Direction.WEST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[3]))));
+            variantMapOpen.put(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[0]))).put(VariantSettings.UVLOCK, true));
+            variantMapOpen.put(Direction.EAST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[1]))).put(VariantSettings.UVLOCK, true));
+            variantMapOpen.put(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[2]))).put(VariantSettings.UVLOCK, true));
+            variantMapOpen.put(Direction.WEST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[3]))).put(VariantSettings.UVLOCK, true));
 
             return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(net.minecraft.state.property.Properties.HORIZONTAL_FACING, net.minecraft.state.property.Properties.OPEN).register((facing, open) -> {
                 for (Direction direction : variantMap.keySet()) {

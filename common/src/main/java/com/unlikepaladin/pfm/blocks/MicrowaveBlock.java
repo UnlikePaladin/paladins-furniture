@@ -9,6 +9,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.mob.PiglinBrain;
@@ -38,7 +39,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.ClassicChairBlock.rotateShape;
 
-public class MicrowaveBlock extends HorizontalFacingBlockWithEntity {
+public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements DynamicRenderLayerInterface {
     public static final BooleanProperty OPEN = Properties.OPEN;
     public static final BooleanProperty POWERED = Properties.POWERED;
     private final Block baseBlock;
@@ -190,5 +191,10 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity {
     @Override
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
+    }
+
+    @Override
+    public RenderLayer getCustomRenderLayer() {
+        return RenderLayer.getTranslucent();
     }
 }

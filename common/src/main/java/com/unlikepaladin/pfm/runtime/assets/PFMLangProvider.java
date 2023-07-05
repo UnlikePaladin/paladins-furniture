@@ -148,7 +148,7 @@ public class PFMLangProvider {
     }
 
     public static String bedFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
-        String color = block instanceof SimpleBedBlock ? ((SimpleBedBlock) block).getPFMColor().asString() : "";
+        String color = block instanceof SimpleBedBlock ? translate("color.minecraft."+((SimpleBedBlock) block).getPFMColor().asString()) : "";
         return translate(furnitureKey, translatedVariantName, color);
     }
 
@@ -203,7 +203,7 @@ public class PFMLangProvider {
     //TODO: look into cooking mod compatibility
     //TODO: delete BiomesOP and terrestria from build.gradle
     //TODO: translate color names properly
-
+    //TODO: Make blocks non translucent if Shaders are on, look at convo with IMS
     public String getTranslatedVariantName(VariantBase<?> variant) {
         AtomicReference<String> variantName = new AtomicReference<>(translate(variant.getSecondaryBlock().getTranslationKey()));
         String oakVariantName = translate(WoodVariantRegistry.OAK.getSecondaryBlock().getTranslationKey());

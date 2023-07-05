@@ -28,25 +28,10 @@ public class ColorRegistry {
     }
 
     public static void registerBlockRenderLayers() {
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.IRON_MICROWAVE, RenderLayer.getTranslucent());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.GLASS_MODERN_PENDANT, RenderLayer.getTranslucent());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.WHITE_MODERN_PENDANT, RenderLayer.getTranslucent());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.GRAY_MODERN_PENDANT, RenderLayer.getTranslucent());
         registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.IRON_CHAIN, RenderLayer.getCutout());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.GRAY_STOVE, RenderLayer.getTranslucent());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.WHITE_STOVE, RenderLayer.getTranslucent());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.IRON_STOVE, RenderLayer.getTranslucent());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.XBOX_FRIDGE, RenderLayer.getCutout());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.GRAY_FRIDGE, RenderLayer.getCutout());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, RenderLayer.getCutout());
         registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.MESH_TRASHCAN, RenderLayer.getCutout());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.WHITE_MIRROR, RenderLayer.getTranslucent());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.GRAY_MIRROR, RenderLayer.getTranslucent());
-
-        List<Block> ovens = new ArrayList<>();
-        KitchenCounterOvenBlock.streamStoneCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
-        KitchenCounterOvenBlock.streamWoodCounterOvens().map(FurnitureBlock::getBlock).forEach(ovens::add);
-        ovens.forEach(oven -> registerBlockToRenderLayer(oven, RenderLayer.getTranslucent()));
+        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.WHITE_MIRROR, RenderLayer.getCutout());
+        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.GRAY_MIRROR, RenderLayer.getCutout());
     }
 
     public static void registerItemColors() {

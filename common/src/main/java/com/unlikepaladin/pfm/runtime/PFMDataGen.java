@@ -103,6 +103,7 @@ public class PFMDataGen {
         List<String> oldHash = Files.readAllLines(hashPath);
         List<String> modList = Files.readAllLines(modListPath);
         if (!hashToCompare.toString().equals(oldHash.toString()) || !modList.toString().equals(PaladinFurnitureMod.getModList().toString())) {
+            LOGGER.info("Starting PFM Data and Asset Gen, this might take a bit.");
             PFMFileUtil.deleteDir(PFMRuntimeResources.getResourceDirectory().toFile());
             DataCache dataCache = new DataCache(this.output, "cache");
             dataCache.ignore(this.output.resolve("version.json"));
@@ -130,6 +131,12 @@ public class PFMDataGen {
             log("{} finished after {} ms", "PFM Recipes", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
             stopwatch2.reset();
 
+            log("Starting provider: {}", "PFM MC Meta");
+            stopwatch2.start();
+            new PFMMCMetaProvider().run();
+            stopwatch2.stop();
+            log("{} finished after {} ms", "PFM MC Meta", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+
             if (PaladinFurnitureMod.isClient) {
                 log("Starting provider: {}", "PFM Blockstates and Models");
                 stopwatch2.start();
@@ -145,13 +152,8 @@ public class PFMDataGen {
                 log("{} finished after {} ms", "PFM Lang", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                 stopwatch2.reset();
             }
-            log("Starting provider: {}", "PFM MC Meta");
-            stopwatch2.start();
-            new PFMMCMetaProvider().run();
-            stopwatch2.stop();
-            log("{} finished after {} ms", "PFM MC Meta", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
 
-            log("All providers took: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+            LOGGER.info("All providers took: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
             dataCache.write();
 

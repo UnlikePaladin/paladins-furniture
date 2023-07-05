@@ -29,6 +29,7 @@ public class PaladinFurnitureModConfig {
     public PaladinFurnitureModConfig(Path propertiesPath) {
         this.addOptions(
             checkForUpdates = new BooleanConfigOption(new TranslatableText("pfm.option.checkForUpdates"), new TranslatableText("pfm.option.checkForUpdates.tooltip"), MOD_OPTIONS, true, Side.CLIENT),
+            shaderSolidFix = new BooleanConfigOption(new TranslatableText("pfm.option.shaderSolidFix"), new TranslatableText("pfm.option.shaderSolidFix.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
             doChairsFacePlayer = new BooleanConfigOption(new TranslatableText("pfm.option.chairsFacePlayer"), new TranslatableText("pfm.option.chairsFacePlayer.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
             foodPopsOffStove = new BooleanConfigOption(new TranslatableText("pfm.option.foodPopsOffStove"), new TranslatableText("pfm.option.foodPopsOffStove.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
             countersOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
@@ -92,8 +93,13 @@ public class PaladinFurnitureModConfig {
     public boolean doMobsSitOnChairs() {
         return mobsSitOnChairs.getValue();
     }
+    public boolean isShaderSolidFixOn() {
+        return shaderSolidFix.getValue();
+    }
 
     private BooleanConfigOption checkForUpdates;
+
+    private BooleanConfigOption shaderSolidFix;
 
     private BooleanConfigOption doChairsFacePlayer;
 
@@ -129,6 +135,7 @@ public class PaladinFurnitureModConfig {
             properties.load(is);
         }
         checkForUpdates.setValue("true".equals(properties.getProperty("checkForUpdates")));
+        shaderSolidFix.setValue(!"false".equals(properties.getProperty("shaderSolidFix")));
         doChairsFacePlayer.setValue("true".equals(properties.getProperty("chairsFacePlayer")));
         countersOfDifferentMaterialsConnect.setValue(!"false".equals(properties.getProperty("countersOfDifferentMaterialsConnect")));
         tablesOfDifferentMaterialsConnect.setValue(!"false".equals(properties.getProperty("tablesOfDifferentMaterialsConnect")));
@@ -154,6 +161,7 @@ public class PaladinFurnitureModConfig {
     public void save() throws IOException {
         Properties properties = new Properties();
         properties.setProperty("checkForUpdates", checkForUpdates.getValue() ? "true" : "false");
+        properties.setProperty("shaderSolidFix", shaderSolidFix.getValue() ? "true" : "false");
         properties.setProperty("chairsFacePlayer", doChairsFacePlayer.getValue() ? "true" : "false");
         properties.setProperty("countersOfDifferentMaterialsConnect", countersOfDifferentMaterialsConnect.getValue() ? "true" : "false");
         properties.setProperty("foodPopsOffStove", foodPopsOffStove.getValue() ? "true" : "false");

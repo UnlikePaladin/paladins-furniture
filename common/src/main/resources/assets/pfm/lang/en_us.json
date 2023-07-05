@@ -1186,6 +1186,8 @@
   "pfm.option.differentMirrorsConnect.tooltip": "Mirrors of different materials connect when they're adjacent to each other.",
   "pfm.option.mobsSitOnChairs": "Mobs Sit On Chairs",
   "pfm.option.mobsSitOnChairs.tooltip": "If true non-player mobs will sit on chairs on contact.",
+  "pfm.option.shaderSolidFix": "Translucent Shader Fix",
+  "pfm.option.shaderSolidFix.tooltip": "Makes furniture with translucent parts opaque to prevent rendering issues with shaders like Seus if shaders are on. Works both with Optifine and Iris/Oculus.",
 
   "pfm.config.title": "Paladin's Furniture Mod Config",
   "pfm.option.resetAll": "Reset All Options",
@@ -1232,6 +1234,8 @@
   "block.pfm.kitchen_counter_oven": "%s %s Kitchen Oven",
   "block.pfm.kitchen_wall_counter": "%s %s Kitchen Filler Cabinet",
   "block.pfm.kitchen_wall_drawer": "%s %s Kitchen Cabinet",
-  "block.pfm.kitchen_wall_small_drawer": "%s %s Kitchen Small Cabinet"
+  "block.pfm.kitchen_wall_small_drawer": "%s %s Kitchen Small Cabinet",
+
+  "message.pfm.toilet_use": "To use the toilet you must first fill it with water, use a water bucket or a water bottle on it. To automatically fill it, you must place a water source 1 block under the floor."
 
 }

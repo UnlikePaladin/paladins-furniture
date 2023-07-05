@@ -8,6 +8,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -31,7 +32,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
-public class KitchenCounterOvenBlock extends SmokerBlock implements Waterloggable {
+public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRenderLayerInterface {
     private static final List<FurnitureBlock> WOOD_COUNTER_OVENS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_COUNTER_OVENS = new ArrayList<>();
 
@@ -80,8 +81,6 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements Waterloggabl
 
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        World world = ctx.getWorld();
-        BlockPos blockPos = ctx.getBlockPos();
         return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
     }
 
@@ -151,5 +150,10 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements Waterloggabl
     @Override
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
+    }
+
+    @Override
+    public RenderLayer getCustomRenderLayer() {
+        return RenderLayer.getTranslucent();
     }
 }

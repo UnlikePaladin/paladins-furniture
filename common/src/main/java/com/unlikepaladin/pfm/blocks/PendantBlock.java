@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import net.minecraft.block.*;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
@@ -24,7 +25,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.stream.Stream;
 
-public class PendantBlock extends PowerableBlock  {
+public class PendantBlock extends PowerableBlock implements DynamicRenderLayerInterface {
     public static final BooleanProperty UP = Properties.UP;
     public static final BooleanProperty DOWN = Properties.DOWN;
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
@@ -158,5 +159,10 @@ public class PendantBlock extends PowerableBlock  {
     @Override
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
+    }
+
+    @Override
+    public RenderLayer getCustomRenderLayer() {
+        return RenderLayer.getTranslucent();
     }
 }

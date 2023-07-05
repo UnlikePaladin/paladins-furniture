@@ -9,6 +9,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -46,7 +47,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
-public class StoveBlock extends SmokerBlock {
+public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterface {
     private static final List<FurnitureBlock> STOVES = new ArrayList<>();
     public static final BooleanProperty OPEN = Properties.OPEN;
     public StoveBlock(Settings settings) {
@@ -199,5 +200,10 @@ public class StoveBlock extends SmokerBlock {
     @Override
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
+    }
+
+    @Override
+    public RenderLayer getCustomRenderLayer() {
+        return RenderLayer.getTranslucent();
     }
 }

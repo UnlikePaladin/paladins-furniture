@@ -16,7 +16,8 @@
   ],
   "client": [
     "PFMLanguageManagerAccessor",
-    "PFMMixinClientPacketListener"
+    "PFMMixinClientPacketListener",
+    "PFMRenderLayersMixin"
   ],
   "injectors": {
     "defaultRequire": 1
