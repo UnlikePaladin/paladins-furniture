@@ -3,7 +3,10 @@ package com.unlikepaladin.pfm.runtime.data;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
 import com.unlikepaladin.pfm.blocks.*;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.data.materials.StoneVariant;
+import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGen;
@@ -26,6 +29,7 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.registry.Registry;
 
 import java.io.BufferedWriter;
@@ -378,7 +382,8 @@ public class PFMRecipeProvider {
 
         PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
             if (!generatedRecipes.contains(getId(block))) {
-                offerCounterRecipe(block.asItem(), Ingredient.ofItems(variantBase.getSecondaryBlock()), Ingredient.ofItems(variantBase.getBaseBlock()), exporter);
+                Pair<Block, Block> materials = getCounterMaterials(variantBase);
+                offerCounterRecipe(block.asItem(), Ingredient.ofItems(materials.getLeft()), Ingredient.ofItems(materials.getRight()), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
@@ -390,7 +395,8 @@ public class PFMRecipeProvider {
         });
         PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
             if (!generatedRecipes.contains(getId(block))) {
-                offerKitchenSinkRecipe(block.asItem(), Ingredient.ofItems(variantBase.getSecondaryBlock()), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
+                Pair<Block, Block> materials = getCounterMaterials(variantBase);
+                offerKitchenSinkRecipe(block.asItem(), Ingredient.ofItems(materials.getLeft()), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(Items.BUCKET), Ingredient.ofItems(Items.IRON_INGOT), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
@@ -402,7 +408,8 @@ public class PFMRecipeProvider {
         });
         PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
             if (!generatedRecipes.contains(getId(block))) {
-                offerCounterApplianceRecipe(block.asItem(), Ingredient.ofItems(variantBase.getSecondaryBlock()), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems(Items.CHEST), exporter);
+                Pair<Block, Block> materials = getCounterMaterials(variantBase);
+                offerCounterApplianceRecipe(block.asItem(), Ingredient.ofItems(materials.getLeft()), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(Items.CHEST), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
@@ -414,7 +421,8 @@ public class PFMRecipeProvider {
         });
         PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
             if (!generatedRecipes.contains(getId(block))) {
-                offerCounterApplianceRecipe(block.asItem(), Ingredient.ofItems(variantBase.getSecondaryBlock()), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems(Items.FURNACE), exporter);
+                Pair<Block, Block> materials = getCounterMaterials(variantBase);
+                offerCounterApplianceRecipe(block.asItem(), Ingredient.ofItems(materials.getLeft()), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(Items.FURNACE), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
@@ -426,7 +434,8 @@ public class PFMRecipeProvider {
         });
         PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
             if (!generatedRecipes.contains(getId(block))) {
-                offerCounterRecipe(block.asItem(), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems(variantBase.getBaseBlock()), exporter);
+                Pair<Block, Block> materials = getCounterMaterials(variantBase);
+                offerCounterRecipe(block.asItem(), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(materials.getRight()), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
@@ -438,7 +447,8 @@ public class PFMRecipeProvider {
         });
         PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
             if (!generatedRecipes.contains(getId(block))) {
-                offerWallDrawerRecipe(block.asItem(), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems(Items.CHEST), exporter);
+                Pair<Block, Block> materials = getCounterMaterials(variantBase);
+                offerWallDrawerRecipe(block.asItem(), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(Items.CHEST), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
@@ -450,7 +460,8 @@ public class PFMRecipeProvider {
         });
         PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
             if (!generatedRecipes.contains(getId(block))) {
-                offerWallDrawerSmallRecipe(block.asItem(), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems(Items.CHEST), exporter);
+                Pair<Block, Block> materials = getCounterMaterials(variantBase);
+                offerWallDrawerSmallRecipe(block.asItem(), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(Items.CHEST), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
@@ -591,6 +602,29 @@ public class PFMRecipeProvider {
         }
     }
 
+    public static Pair<Block, Block> getCounterMaterials(VariantBase<?> variantBase) {
+        Block counterTop = variantBase.getSecondaryBlock();
+        Block counterBase = variantBase.getBaseBlock();
+
+        if (variantBase == StoneVariant.GRANITE) {
+            counterTop = Blocks.POLISHED_GRANITE;
+            counterBase = Blocks.WHITE_TERRACOTTA;
+        } else if (variantBase == StoneVariant.CALCITE || variantBase == StoneVariant.NETHERITE) {
+            Block temp = counterBase;
+            counterBase = counterTop;
+            counterTop  = temp;
+        } else if (variantBase == StoneVariant.ANDESITE) {
+            counterTop = Blocks.POLISHED_ANDESITE;
+            counterBase = Blocks.STRIPPED_OAK_LOG;
+        } else if (variantBase == StoneVariant.DEEPSLATE) {
+            counterTop = Blocks.POLISHED_DEEPSLATE;
+            counterBase = Blocks.DARK_OAK_PLANKS;
+        } else if (variantBase == StoneVariant.BLACKSTONE) {
+            counterTop = Blocks.POLISHED_BLACKSTONE;
+            counterBase = Blocks.CRIMSON_PLANKS;
+        }
+        return new Pair<>(counterTop, counterBase);
+    }
     public Block getVanillaBed(Block block) {
         if (block instanceof SimpleBedBlock){
             String color = ((SimpleBedBlock) block).getPFMColor().getName();

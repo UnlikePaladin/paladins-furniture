@@ -163,7 +163,7 @@ dependencies {
         transitive = false
     }
 
-    modImplementation("com.terraformersmc:terrestria:${rootProject.terrestria}")
+   // modRuntimeOnly("com.terraformersmc:terrestria:${rootProject.terrestria}")
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
 
     modCompileOnly("maven.modrinth:iris:${rootProject.iris_version}")
