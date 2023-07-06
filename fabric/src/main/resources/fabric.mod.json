@@ -27,7 +27,7 @@
       "com.unlikepaladin.pfm.client.fabric.PaladinFurnitureModClientFabric"
     ],
     "rei": [
-      "com.unlikepaladin.pfm.compat.fabric.rei.PaladinFurnitureModREIPlugin"
+      "com.unlikepaladin.pfm.compat.rei.fabric.PaladinFurnitureModREIPlugin"
     ],
     "modmenu": [
       "com.unlikepaladin.pfm.compat.fabric.PaladinFurnitureModMenu"

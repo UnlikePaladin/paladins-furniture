@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.compat.fabric.rei;
+package com.unlikepaladin.pfm.compat.rei;
 
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -58,8 +58,8 @@ public class FreezingCategory implements DisplayCategory<FreezingDisplay> {
         widgets.add(createFreezing(new Point(startPoint.x + 1, startPoint.y + 20)).animationDurationMS(10000.0D));
         widgets.add(Widgets.createLabel(new Point(bounds.x + bounds.width - 5, bounds.y + 5), new TranslatableText("category.rei.cooking.time&xp", new Object[]{df.format((double)display.getXp()), df.format(cookingTime / 20.0D)})).noShadow().rightAligned().color(-12566464, -4473925));
         widgets.add(Widgets.createArrow(new Point(startPoint.x + 24, startPoint.y + 8)).animationDurationTicks(cookingTime));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + 61, startPoint.y + 9)).entries((Collection)display.getOutputEntries().get(0)).disableBackground().markOutput());
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + 1, startPoint.y + 1)).entries((Collection)display.getInputEntries().get(0)).markInput());
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 61, startPoint.y + 9)).entries(display.getOutputEntries().get(0)).disableBackground().markOutput());
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 1, startPoint.y + 1)).entries(display.getInputEntries().get(0)).markInput());
         return widgets;
     }
 }

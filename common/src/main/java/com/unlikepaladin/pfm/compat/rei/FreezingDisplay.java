@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.compat.fabric.rei;
+package com.unlikepaladin.pfm.compat.rei;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;

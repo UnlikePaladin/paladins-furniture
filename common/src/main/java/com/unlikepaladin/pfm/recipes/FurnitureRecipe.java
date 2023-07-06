@@ -166,13 +166,13 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
         }
 
         @Override
-        public void write(PacketByteBuf packetByteBuf, FurnitureRecipe shapelessRecipe) {
-            packetByteBuf.writeString(shapelessRecipe.group);
-            packetByteBuf.writeVarInt(shapelessRecipe.input.size());
-            for (Ingredient ingredient : shapelessRecipe.input) {
+        public void write(PacketByteBuf packetByteBuf, FurnitureRecipe furnitureRecipe) {
+            packetByteBuf.writeString(furnitureRecipe.group);
+            packetByteBuf.writeVarInt(furnitureRecipe.input.size());
+            for (Ingredient ingredient : furnitureRecipe.input) {
                 ingredient.write(packetByteBuf);
             }
-            packetByteBuf.writeItemStack(shapelessRecipe.output);
+            packetByteBuf.writeItemStack(furnitureRecipe.output);
         }
     }
 }

@@ -93,8 +93,8 @@ public class WorkbenchScreenHandler extends ScreenHandler {
                 for (Ingredient ingredient : ingredients) {
                     for (ItemStack stack : ingredient.getMatchingStacks()) {
                         if (playerInventory.indexOf(stack) != -1) {
-                            if (playerInventory.getStack(playerInventory.indexOf(stack)).getCount() >= stack.getCount()) {
-                                int indexOfStack = playerInventory.indexOf(stack);
+                            int indexOfStack = playerInventory.indexOf(stack);
+                            if (playerInventory.getStack(indexOfStack).getCount() >= stack.getCount()) {
                                 ItemStack stack1 = playerInventory.getStack(indexOfStack);
                                 stack1.decrement(stack.getCount());
                                 playerInventory.setStack(indexOfStack, stack1);

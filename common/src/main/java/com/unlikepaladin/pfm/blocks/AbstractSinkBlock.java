@@ -183,7 +183,8 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     }
 
     protected void onFireCollision(BlockState state, World world, BlockPos pos) {
-        AbstractSinkBlock.decrementFluidLevel(state, world, pos);
+        if (state.get(LEVEL_4) > 0)
+            AbstractSinkBlock.decrementFluidLevel(state, world, pos);
     }
 
     @Override

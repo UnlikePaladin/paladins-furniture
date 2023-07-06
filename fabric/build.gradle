@@ -86,17 +86,7 @@ else {
 
 if (rootProject.rei_compatibility == "true"){
     dependencies {
-        modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"){
-            exclude(group: "net.fabricmc.fabric-api")
-        }
         modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"){
-            exclude(group: "net.fabricmc.fabric-api")
-        }
-    }
-}
-else {
-    dependencies {
-        modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"){
             exclude(group: "net.fabricmc.fabric-api")
         }
     }
@@ -174,6 +164,7 @@ dependencies {
     }
 
     modImplementation("com.terraformersmc:terrestria:${rootProject.terrestria}")
+    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
 
     modCompileOnly("maven.modrinth:iris:${rootProject.iris_version}")
 }

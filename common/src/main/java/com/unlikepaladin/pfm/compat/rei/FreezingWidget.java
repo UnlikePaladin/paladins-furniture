@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.compat.fabric.rei;
+package com.unlikepaladin.pfm.compat.rei;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;

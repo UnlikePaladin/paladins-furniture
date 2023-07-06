@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.compat.fabric.rei;
+package com.unlikepaladin.pfm.compat.rei;
 
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -11,6 +11,7 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.DisplayMerger;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.InputIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
@@ -19,9 +20,7 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class FurnitureCategory implements DisplayCategory<FurnitureDisplay> {
     public static final EntryStack<ItemStack> ICON = EntryStacks.of(PaladinFurnitureModBlocksItems.WORKING_TABLE);
@@ -45,7 +44,7 @@ public class FurnitureCategory implements DisplayCategory<FurnitureDisplay> {
         widgets.add(Widgets.createRecipeBase(bounds));
         widgets.add(Widgets.createArrow(new Point(startPoint.x + 60, startPoint.y + 18)));
         widgets.add(Widgets.createResultSlotBackground(new Point(startPoint.x + 95, startPoint.y + 19)));
-        List<InputIngredient<EntryStack<?>>> input = display.getInputIngredients(3, 3);
+        List<EntryIngredient> input = display.getInputEntries();
         List<Slot> slots = Lists.newArrayList();
 
         for (int y = 0; y < 3; ++y) {
@@ -53,16 +52,11 @@ public class FurnitureCategory implements DisplayCategory<FurnitureDisplay> {
                 slots.add(Widgets.createSlot(new Point(startPoint.x + 1 + x * 18, startPoint.y + 1 + y * 18)).markInput());
             }
         }
-
-        Iterator var9 = input.iterator();
-
-        while (var9.hasNext()) {
-            InputIngredient<EntryStack<?>> ingredient = (InputIngredient) var9.next();
-            slots.get(ingredient.getIndex()).entries(ingredient.get());
-        }
+        for (int z = 0; z < input.size(); z++)
+            slots.get(z).entries(input.get(z));
 
         widgets.addAll(slots);
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + 95, startPoint.y + 19)).entries((Collection) display.getOutputEntries().get(0)).disableBackground().markOutput());
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + 95, startPoint.y + 19)).entries(display.getOutputEntries().get(0)).disableBackground().markOutput());
         return widgets;
     }
 
