@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.ToiletBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.SoundIDs;
 import com.unlikepaladin.pfm.registry.Statistics;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -9,6 +10,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
@@ -27,6 +29,7 @@ import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
@@ -93,7 +96,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
                 }
                 world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
                 return ActionResult.SUCCESS;
-            } else {
+            } else if (world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers).isEmpty()) {
                 player.sendMessage(new TranslatableText("message.pfm.toilet_use"), false);
             }
         }

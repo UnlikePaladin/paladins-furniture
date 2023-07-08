@@ -1,21 +1,14 @@
 package com.unlikepaladin.pfm.registry;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.registry.Registry;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Stream;
 
 public class BlockEntityRegistry {
@@ -40,6 +33,7 @@ public class BlockEntityRegistry {
         BlockEntities.SHOWER_HEAD_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("shower_head_block_entity", new Block[]{PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD}, ShowerHeadBlockEntity.getFactory());
         BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("shower_handle_block_entity", new Block[]{PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE}, ShowerHandleBlockEntity::new);
         BlockEntities.BATHTUB_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("bathtub_block_entity", new Block[]{PaladinFurnitureModBlocksItems.BASIC_BATHTUB}, BathtubBlockEntity::new);
+        BlockEntities.LAMP_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("lamp_block_entity", new Block[]{}, LampBlockEntity.getFactory());
     }
 
     @ExpectPlatform

@@ -18,7 +18,9 @@ import net.minecraft.client.resource.language.LanguageDefinition;
 import net.minecraft.client.resource.language.LanguageManager;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.client.resource.metadata.LanguageResourceMetadata;
+import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.resource.*;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Language;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -123,6 +125,7 @@ public class PFMLangProvider {
             generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_wall_small_drawer", PFMLangProvider::simpleStrippedFurnitureTranslation);
             generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_wall_small_drawer", PFMLangProvider::simpleStrippedFurnitureTranslation);
 
+            generateTranslationForLampBlock(writer);
             writer.write("    \"pfm.dummy.entry\": \"dummy entry\"\n");
             writer.write("}");
         }
@@ -201,12 +204,26 @@ public class PFMLangProvider {
     //TODO: check if the mod version's different and regen assets
     //TODO: make the toaster mod independent
     //TODO: look into cooking mod compatibility
-    //TODO: delete BiomesOP and terrestria from build.gradle
-    //TODO: translate color names properly
-    //TODO: Make blocks non translucent if Shaders are on, look at convo with IMS
+    //TODO: Waterlog chairs and tables only
+    public void generateTranslationForLampBlock(BufferedWriter writer) {
+        for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
+            for (DyeColor color : DyeColor.values()) {
+                try {
+                    String translatedVariantName = getTranslatedVariantName(variant);
+                    String translatedColor = translate("color.minecraft."+color.getName());
+                    String translatedFurnitureName = StringUtils.normalizeSpace(translate("block.pfm.basic_lamp", translatedColor, translatedVariantName));
+                    writer.write(String.format("    \"%1$s\": \"%2$s\",", String.format("block.pfm.basic_%s_%s_lamp", color.asString(), variant.asString()), translatedFurnitureName));
+                    writer.write("\n");
+                } catch (IOException e) {
+                    PFMDataGen.LOGGER.error("Writer exception: " + e);
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+    }
     public String getTranslatedVariantName(VariantBase<?> variant) {
         AtomicReference<String> variantName = new AtomicReference<>(translate(variant.getSecondaryBlock().getTranslationKey()));
-        String oakVariantName = translate(WoodVariantRegistry.OAK.getSecondaryBlock().getTranslationKey());
+        String oakVariantName = translate(variant != WoodVariantRegistry.getVariantFromVanillaWoodType(BoatEntity.Type.JUNGLE) ? WoodVariantRegistry.getVariantFromVanillaWoodType(BoatEntity.Type.JUNGLE).getSecondaryBlock().getTranslationKey() : WoodVariantRegistry.OAK.getSecondaryBlock().getTranslationKey());
         List<String> common = findCommonWords(variantName.get(), oakVariantName);
         common.forEach(s -> variantName.set(variantName.get().replace(s, "").trim()));
         return variantName.get();

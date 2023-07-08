@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.client.fabric;
 
+import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
@@ -43,6 +44,6 @@ public class PFMExtraModelProvider implements ExtraModelProvider {
         UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(out::accept);
-
+        UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(out::accept);
     }
 }

@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
+import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGen;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
@@ -18,16 +19,18 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.item.*;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.entity.EntityPredicate;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.tag.Tag;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.registry.Registry;
@@ -598,6 +601,22 @@ public class PFMRecipeProvider {
             if (!generatedRecipes.contains(getId(towel.getBlock()))) {
                 offerShowerTowelRecipe(towel.getBlock(),  Ingredient.ofItems(towel.getWoolColor()), exporter);
                 generatedRecipes.add(getId(towel.getBlock()));
+            }
+        }
+
+        offerLampRecipes(exporter);
+    }
+
+    public static void offerLampRecipes(Consumer<RecipeJsonProvider> exporter) {
+        for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
+            for (DyeColor color : DyeColor.values()) {
+                NbtCompound beTag = new NbtCompound();
+                beTag.putString("color", color.asString());
+                beTag.putString("variant", variant.getIdentifier().toString());
+                NbtCompound tag = new NbtCompound();
+                tag.put("BlockEntityTag", beTag);
+
+                FurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.BASIC_LAMP, tag).input(ModelHelper.getWoolColor(color.asString()), 3).input((Block)variant.getChild("stripped_log"), 2).offerTo(exporter, new Identifier("pfm", String.format("basic_%s_%s_lamp", color.asString(), variant.asString())));
             }
         }
     }

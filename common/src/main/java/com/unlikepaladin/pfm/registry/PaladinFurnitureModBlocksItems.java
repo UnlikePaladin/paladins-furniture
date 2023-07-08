@@ -81,6 +81,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final LightSwitchBlock LIGHT_SWITCH = new LightSwitchBlock(AbstractBlock.Settings.copy(Blocks.WHITE_CONCRETE).sounds(BlockSoundGroup.STONE).nonOpaque().mapColor(MapColor.WHITE));
     public static Item LIGHT_SWITCH_ITEM;
     public static Item FURNITURE_BOOK;
+    public static final Block BASIC_LAMP = new BasicLampBlock(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).luminance(createLightLevelFromLitBlockState(15)));
 
     private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
         return state -> state.get(Properties.LIT) ? litLevel : 0;
@@ -104,6 +105,8 @@ public class PaladinFurnitureModBlocksItems {
     public static final BasicShowerHeadBlock BASIC_SHOWER_HEAD = new BasicShowerHeadBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque());
     public static final BasicShowerHandleBlock BASIC_SHOWER_HANDLE = new BasicShowerHandleBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque());
     public static Item BASIC_SHOWER_HANDLE_ITEM;
+    public static Item BASIC_LAMP_ITEM;
+
     public static final BasicSinkBlock BASIC_SINK = new BasicSinkBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque(), LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final List<BedBlock> beds = new ArrayList<>();
 

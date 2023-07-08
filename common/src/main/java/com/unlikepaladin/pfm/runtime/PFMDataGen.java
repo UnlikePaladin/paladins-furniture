@@ -80,6 +80,7 @@ import static net.minecraft.data.server.BlockLootTableGenerator.dropsWithPropert
 
 public class PFMDataGen {
     public static final Logger LOGGER = LogManager.getLogger("PFM-DataGen");
+    public static boolean frozen = false;
     public static final HashFunction SHA1 = Hashing.sha1();
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private final Path output;
@@ -89,85 +90,88 @@ public class PFMDataGen {
         this.logOrDebug = logOrDebug;
     }
     public void run() throws IOException {
-        Path modListPath = PFMRuntimeResources.getPFMDirectory().resolve("modsList");
-        Path hashPath = PFMRuntimeResources.getPFMDirectory().resolve("dataHash");
-        if (!modListPath.toFile().isFile()) {
-            Files.deleteIfExists(modListPath);
-            Files.createFile(modListPath);
-        }
-        if (!hashPath.toFile().isFile()) {
-            Files.deleteIfExists(hashPath);
-            Files.createFile(hashPath);
-        }
-        List<String> hashToCompare = hashDirectory(PFMRuntimeResources.getResourceDirectory().toFile(), true);
-        List<String> oldHash = Files.readAllLines(hashPath);
-        List<String> modList = Files.readAllLines(modListPath);
-        if (!hashToCompare.toString().equals(oldHash.toString()) || !modList.toString().equals(PaladinFurnitureMod.getModList().toString())) {
-            LOGGER.info("Starting PFM Data and Asset Gen, this might take a bit.");
-            PFMFileUtil.deleteDir(PFMRuntimeResources.getResourceDirectory().toFile());
-            DataCache dataCache = new DataCache(this.output, "cache");
-            dataCache.ignore(this.output.resolve("version.json"));
-            Stopwatch stopwatch = Stopwatch.createStarted();
-            Stopwatch stopwatch2 = Stopwatch.createUnstarted();
-
-            log("Starting provider: {}", "PFM Tags");
-            stopwatch2.start();
-            new PFMTagProvider().run(dataCache);
-            stopwatch2.stop();
-            log("{} finished after {} ms", "PFM Tags", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
-            stopwatch2.reset();
-
-            log("Starting provider: {}", "PFM Drops");
-            stopwatch2.start();
-            new PFMLootTableProvider().run(dataCache);
-            stopwatch2.stop();
-            log("{} finished after {} ms", "PFM Drops", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
-            stopwatch2.reset();
-
-            log("Starting provider: {}", "PFM Recipes");
-            stopwatch2.start();
-            new PFMRecipeProvider().run(dataCache);
-            stopwatch2.stop();
-            log("{} finished after {} ms", "PFM Recipes", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
-            stopwatch2.reset();
-
-            log("Starting provider: {}", "PFM MC Meta");
-            stopwatch2.start();
-            new PFMMCMetaProvider().run();
-            stopwatch2.stop();
-            log("{} finished after {} ms", "PFM MC Meta", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
-
-            if (PaladinFurnitureMod.isClient) {
-                log("Starting provider: {}", "PFM Blockstates and Models");
-                stopwatch2.start();
-                new PFMBlockstateModelProvider().run(dataCache);
-                stopwatch2.stop();
-                log("{} finished after {} ms", "PFM Blockstates and Models", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
-                stopwatch2.reset();
-
-                log("Starting provider: {}", "PFM Lang");
-                stopwatch2.start();
-                new PFMLangProvider().run();
-                stopwatch2.stop();
-                log("{} finished after {} ms", "PFM Lang", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
-                stopwatch2.reset();
+        if (!frozen) {
+            Path modListPath = PFMRuntimeResources.getPFMDirectory().resolve("modsList");
+            Path hashPath = PFMRuntimeResources.getPFMDirectory().resolve("dataHash");
+            if (!modListPath.toFile().isFile()) {
+                Files.deleteIfExists(modListPath);
+                Files.createFile(modListPath);
             }
+            if (!hashPath.toFile().isFile()) {
+                Files.deleteIfExists(hashPath);
+                Files.createFile(hashPath);
+            }
+            List<String> hashToCompare = hashDirectory(PFMRuntimeResources.getResourceDirectory().toFile(), true);
+            List<String> oldHash = Files.readAllLines(hashPath);
+            List<String> modList = Files.readAllLines(modListPath);
+            if (!hashToCompare.toString().equals(oldHash.toString()) || !modList.toString().equals(PaladinFurnitureMod.getModList().toString())) {
+                LOGGER.info("Starting PFM Data and Asset Gen, this might take a bit.");
+                PFMFileUtil.deleteDir(PFMRuntimeResources.getResourceDirectory().toFile());
+                DataCache dataCache = new DataCache(this.output, "cache");
+                dataCache.ignore(this.output.resolve("version.json"));
+                Stopwatch stopwatch = Stopwatch.createStarted();
+                Stopwatch stopwatch2 = Stopwatch.createUnstarted();
 
-            LOGGER.info("All providers took: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+                log("Starting provider: {}", "PFM Tags");
+                stopwatch2.start();
+                new PFMTagProvider().run(dataCache);
+                stopwatch2.stop();
+                log("{} finished after {} ms", "PFM Tags", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+                stopwatch2.reset();
 
-            dataCache.write();
+                log("Starting provider: {}", "PFM Drops");
+                stopwatch2.start();
+                new PFMLootTableProvider().run(dataCache);
+                stopwatch2.stop();
+                log("{} finished after {} ms", "PFM Drops", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+                stopwatch2.reset();
 
-            Files.deleteIfExists(hashPath);
-            Files.createFile(hashPath);
-            List<String> newDataHash = hashDirectory(PFMRuntimeResources.getResourceDirectory().toFile(), true);
-            Files.writeString(PFMRuntimeResources.createDirIfNeeded(hashPath), newDataHash.toString().replace("[", "").replace("]", ""), StandardOpenOption.APPEND);
+                log("Starting provider: {}", "PFM Recipes");
+                stopwatch2.start();
+                new PFMRecipeProvider().run(dataCache);
+                stopwatch2.stop();
+                log("{} finished after {} ms", "PFM Recipes", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+                stopwatch2.reset();
 
-            Files.deleteIfExists(modListPath);
-            Files.createFile(modListPath);
-            Files.writeString(PFMRuntimeResources.createDirIfNeeded(modListPath), PaladinFurnitureMod.getModList().toString().replace("[", "").replace("]", ""), StandardOpenOption.APPEND);
-        } else {
-            log("Data Hash and Mod list matched, skipping generation");
+                log("Starting provider: {}", "PFM MC Meta");
+                stopwatch2.start();
+                new PFMMCMetaProvider().run();
+                stopwatch2.stop();
+                log("{} finished after {} ms", "PFM MC Meta", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+
+                if (PaladinFurnitureMod.isClient) {
+                    log("Starting provider: {}", "PFM Blockstates and Models");
+                    stopwatch2.start();
+                    new PFMBlockstateModelProvider().run(dataCache);
+                    stopwatch2.stop();
+                    log("{} finished after {} ms", "PFM Blockstates and Models", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+                    stopwatch2.reset();
+
+                    log("Starting provider: {}", "PFM Lang");
+                    stopwatch2.start();
+                    new PFMLangProvider().run();
+                    stopwatch2.stop();
+                    log("{} finished after {} ms", "PFM Lang", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+                    stopwatch2.reset();
+                }
+
+                LOGGER.info("All providers took: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
+
+                dataCache.write();
+
+                Files.deleteIfExists(hashPath);
+                Files.createFile(hashPath);
+                List<String> newDataHash = hashDirectory(PFMRuntimeResources.getResourceDirectory().toFile(), true);
+                Files.writeString(PFMRuntimeResources.createDirIfNeeded(hashPath), newDataHash.toString().replace("[", "").replace("]", ""), StandardOpenOption.APPEND);
+
+                Files.deleteIfExists(modListPath);
+                Files.createFile(modListPath);
+                Files.writeString(PFMRuntimeResources.createDirIfNeeded(modListPath), PaladinFurnitureMod.getModList().toString().replace("[", "").replace("]", ""), StandardOpenOption.APPEND);
+            } else {
+                log("Data Hash and Mod list matched, skipping generation");
+            }
         }
+        frozen = true;
     }
 
     public void log(String s, Object p0) {

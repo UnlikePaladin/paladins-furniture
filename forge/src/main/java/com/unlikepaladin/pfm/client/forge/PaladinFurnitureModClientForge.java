@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.client.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
@@ -96,5 +97,6 @@ public class PaladinFurnitureModClientForge {
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedClassicNightstandModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
     }
 }

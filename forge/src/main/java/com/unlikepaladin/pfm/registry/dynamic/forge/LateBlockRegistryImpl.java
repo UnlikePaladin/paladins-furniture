@@ -61,4 +61,14 @@ public class LateBlockRegistryImpl {
     public static void registerItems(RegistryEvent.Register<Item> blockRegisterEvent) {
         blockRegisterEvent.getRegistry().registerAll(items.values().toArray(new Item[0]));
     }
+
+    public static <T extends Block> T registerLateBlockClassic(String blockId, T block, boolean registerItem, ItemGroup group) {
+        if (registerItem) {
+            PaladinFurnitureModBlocksItems.BLOCKS.add(block);
+            registerBlockItemPlatformSpecific(blockId, block, group);
+        }
+        block.setRegistryName(blockId);
+        blocks.add(block);
+        return block;
+    }
 }

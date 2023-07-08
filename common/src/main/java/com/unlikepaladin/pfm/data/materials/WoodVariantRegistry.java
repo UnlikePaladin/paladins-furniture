@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.data.materials;
 
 import net.minecraft.block.*;
+import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
-    public static final WoodVariant OAK = new WoodVariant(new Identifier("oak"), Blocks.OAK_PLANKS, Blocks.OAK_LOG);
+    public static final WoodVariant OAK = new WoodVariant(new Identifier("oak"), Blocks.OAK_PLANKS, Blocks.OAK_LOG, BoatEntity.Type.OAK);
     public static final WoodVariantRegistry INSTANCE = new WoodVariantRegistry();
     public static Collection<WoodVariant> getVariants() {
         return Collections.unmodifiableCollection(INSTANCE.variants.values());
@@ -16,6 +17,15 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
     @Nullable
     public static WoodVariant getVariant(Identifier name) {
         return INSTANCE.variants.get(name);
+    }
+
+    @Nullable
+    public static  WoodVariant getVariantFromVanillaWoodType(BoatEntity.Type type) {
+        for (WoodVariant woodVariant : INSTANCE.variants.values()) {
+            if (woodVariant.getVanillaWoodType() == type)
+                return woodVariant;
+        }
+        return null;
     }
     /**
      * Simplified Wood/Block detection based on MoonlightLib<a href="https://github.com/MehVahdJukaar/Moonlight/blob/multi-loader/common/src/main/java/net/mehvahdjukaar/moonlight/api/set/BlockTypeRegistry.java#L18">...</a>

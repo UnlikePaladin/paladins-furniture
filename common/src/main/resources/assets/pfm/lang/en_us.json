@@ -1236,6 +1236,8 @@
   "block.pfm.kitchen_wall_drawer": "%s %s Kitchen Cabinet",
   "block.pfm.kitchen_wall_small_drawer": "%s %s Kitchen Small Cabinet",
 
+  "block.pfm.basic_lamp": "Basic %s %s Lamp",
+
   "message.pfm.toilet_use": "To use the toilet you must first fill it with water, use a water bucket or a water bottle on it. To automatically fill it, you must place a water source 1 block under the floor."
 
 }

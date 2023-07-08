@@ -35,4 +35,13 @@ public class LateBlockRegistryImpl {
     public static Item registerLateItem(String itemName, Supplier<Item> item) {
         return Registry.register(Registry.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item.get());
     }
+
+    public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, ItemGroup group) {
+        Registry.register(Registry.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), block);
+        if (registerItem) {
+            PaladinFurnitureModBlocksItems.BLOCKS.add(block);
+            registerLateBlockItem(blockName, block, group);
+        }
+        return block;
+    }
 }

@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.mixin.forge;
 
 
+import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
@@ -138,6 +139,12 @@ public abstract class PFMModelLoaderMixin {
         }
         else if (ModelHelper.containsIdentifier(UnbakedFreezerModel.FREEZER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
             UnbakedModel model = new UnbakedFreezerModel(resourceId);
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (ModelHelper.containsIdentifier(UnbakedBasicLampModel.LAMP_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            UnbakedModel model = new UnbakedBasicLampModel();
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.forge;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
@@ -14,5 +15,9 @@ public class PaladinFurnitureModImpl {
 
     public static List<String> getModList() {
         return ModList.get().getMods().stream().map(IModInfo::getModId).filter(s -> !s.contains("generated_")).sorted().collect(Collectors.toList());
+    }
+
+    public static PaladinFurnitureMod.Loader getLoader() {
+        return PaladinFurnitureMod.Loader.FORGE;
     }
 }

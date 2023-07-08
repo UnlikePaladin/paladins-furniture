@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.DyeableFurniture;
 import com.unlikepaladin.pfm.data.materials.*;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.runtime.PFMDataGen;
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.model.Texture;
@@ -103,6 +104,14 @@ public class ModelHelper {
         if (!identifier.getPath().contains(color.getName()))
             return new Identifier("minecraft", "block/white_concrete");
         return new Identifier("minecraft", "block/"+ color.getName() + "_concrete");
+    }
+
+    public static Block getWoolColor(String string) {
+        Block block = Registry.BLOCK.get(new Identifier("minecraft", string+"_wool"));
+        if (block != Blocks.AIR) {
+            return block;
+        }
+        return Blocks.WHITE_WOOL;
     }
 
     public static Identifier getTextureId(Block block) {

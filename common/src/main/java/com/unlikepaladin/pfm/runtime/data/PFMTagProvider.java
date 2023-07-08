@@ -186,7 +186,8 @@ public class PFMTagProvider {
                 .add(woodWallCounters)
                 .add(woodWallSmallDrawers)
                 .add(simpleBunkLadders)
-                .add(classicBeds);
+                .add(classicBeds)
+                .add(PaladinFurnitureModBlocksItems.BASIC_LAMP);
 
         this.getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
                 .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);

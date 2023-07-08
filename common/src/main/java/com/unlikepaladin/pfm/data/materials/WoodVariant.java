@@ -9,6 +9,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.client.render.block.BlockModels;
+import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
@@ -23,12 +24,27 @@ public class WoodVariant extends VariantBase<WoodVariant> {
     private final Block plankBlock;
     private final Block logBlock;
     private final Material vanillaMaterial;
+    @Nullable
+    private final BoatEntity.Type vanillaWoodType;
 
     WoodVariant(Identifier identifier, Block plankBlock, Block logBlock) {
         super(identifier);
         this.plankBlock = plankBlock;
         this.logBlock = logBlock;
         this.vanillaMaterial = plankBlock.getDefaultState().getMaterial();
+        this.vanillaWoodType = BoatEntity.Type.getType(identifier.getPath()) != BoatEntity.Type.OAK &&  BoatEntity.Type.getType(identifier.getPath()).getBaseBlock() == plankBlock ? BoatEntity.Type.getType(identifier.getPath()) : null;
+    }
+
+    WoodVariant(Identifier identifier, Block plankBlock, Block logBlock, BoatEntity.@Nullable Type vanillaWoodType) {
+        super(identifier);
+        this.plankBlock = plankBlock;
+        this.logBlock = logBlock;
+        this.vanillaMaterial = plankBlock.getDefaultState().getMaterial();
+        this.vanillaWoodType = vanillaWoodType;
+    }
+
+    public BoatEntity.@Nullable Type getVanillaWoodType() {
+        return vanillaWoodType;
     }
 
     @Override
@@ -40,6 +56,11 @@ public class WoodVariant extends VariantBase<WoodVariant> {
     @Environment(EnvType.CLIENT)
     @Override
     public Identifier getTexture(BlockType type) {
+        if (type == BlockType.STRIPPED_LOG) {
+            return ModelHelper.getTextureId((Block) this.getChild("stripped_log"));
+        } else if (type == BlockType.LOG) {
+            return ModelHelper.getTextureId(this.logBlock);
+        }
         return ModelHelper.getTextureId(plankBlock);
     }
 

@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.data.materials.*;
+import com.unlikepaladin.pfm.items.LampItem;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.ShowerHandleItem;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
@@ -27,6 +28,13 @@ public class LateBlockRegistry {
     {
         return block.get();
     }
+
+    @ExpectPlatform
+    public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, ItemGroup group)
+    {
+        return block;
+    }
+
     @ExpectPlatform
     public static Item registerLateItem(String itemName, Supplier<Item> item) {
         return item.get();
@@ -375,5 +383,10 @@ public class LateBlockRegistry {
         }
         registerLateBlock("white_mirror",() -> PaladinFurnitureModBlocksItems.WHITE_MIRROR, true, PaladinFurnitureMod.FURNITURE_GROUP);
         registerLateBlock("gray_mirror",() -> PaladinFurnitureModBlocksItems.GRAY_MIRROR, true, PaladinFurnitureMod.FURNITURE_GROUP);
+        PaladinFurnitureModBlocksItems.furnitureEntryMap.put(BasicLampBlock.class, new FurnitureEntry<>() {{
+            addBlock(registerLateBlockClassic("basic_lamp", PaladinFurnitureModBlocksItems.BASIC_LAMP, false, PaladinFurnitureMod.FURNITURE_GROUP));
+        }});
+        PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM = LampItem.getItemFactory(PaladinFurnitureModBlocksItems.BASIC_LAMP, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+        LateBlockRegistry.registerLateItem( "basic_lamp", () -> PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM);
     }
 }

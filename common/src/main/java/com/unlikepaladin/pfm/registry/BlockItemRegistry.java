@@ -14,8 +14,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 
 public class BlockItemRegistry {
-    //TODO: Look at armor trim system and exploit it for custom wood textures, need to backport
-    //TODO: REI, JEI, EMI Plugin
     public static void registerCommonBlocks() {
         registerFurniture("working_table", PaladinFurnitureModBlocksItems.WORKING_TABLE, true);
 

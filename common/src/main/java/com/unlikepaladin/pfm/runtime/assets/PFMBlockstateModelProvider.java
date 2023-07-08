@@ -6,8 +6,11 @@ import com.google.gson.JsonElement;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
+import com.unlikepaladin.pfm.data.materials.WoodVariant;
+import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.mixin.PFMTextureKeyFactory;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
@@ -20,6 +23,7 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.client.model.*;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -115,6 +119,7 @@ public class PFMBlockstateModelProvider {
             registerBeds();
             registerLadders();
             registerCounters();
+            registerLamp();
         }
 
         public void registerTuckableChairs() {
@@ -201,7 +206,20 @@ public class PFMBlockstateModelProvider {
             generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMap(), "kitchen_sink", TEMPLATE_KITCHEN_SINK, PFMBlockStateModelGenerator::createKitchenSink, PFMBlockStateModelGenerator::createCounterBlockTexture);
             generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMapNonBase(), "kitchen_sink", TEMPLATE_KITCHEN_SINK, PFMBlockStateModelGenerator::createKitchenSink, PFMBlockStateModelGenerator::createCounterBlockTexture);
         }
-        //TODO: Fix counter, drawers, etc recipes
+
+        public void registerLamp() {
+            Identifier modelID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.BASIC_LAMP);
+            for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
+                Texture blockTexture = createRawBlockTexture(true, variant);
+                for (Model model : TEMPLATE_LAMP_ARRAY) {
+                    Identifier id = new Identifier(modelID.getNamespace(), ModelIDS.get(model).getPath().replace("template_", "").replace("template", "").replaceAll("basic_lamp", variant.asString() + "_basic_lamp").replace("block/", "block/basic_lamp/").replace("//", "/"));
+                    model.upload(id, blockTexture, this.modelCollector);
+                }
+            }
+            this.blockStateCollector.accept(createSingleStateBlockState(PaladinFurnitureModBlocksItems.BASIC_LAMP, List.of(modelID)));
+            PFMBlockstateModelProvider.modelPathMap.put(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.getItemModelId());
+        }
+
         public static Texture createPlankBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
             Identifier top = ModelHelper.getTextureId(variantBase.getBaseBlock());
             Identifier legs =  ModelHelper.getTextureId(variantBase.getBaseBlock());
@@ -337,6 +355,7 @@ public class PFMBlockstateModelProvider {
         public static final Model[] TEMPLATE_KITCHEN_WALL_DRAWER_SMALL = new Model[]{block("kitchen_wall_drawer_small/kitchen_wall_drawer_small", TextureKey.TEXTURE, LOG_KEY), block("kitchen_wall_drawer_small/kitchen_wall_drawer_small", "_open", TextureKey.TEXTURE, LOG_KEY)};
         public static final Model[] TEMPLATE_KITCHEN_COUNTER_OVEN = new Model[]{block("kitchen_counter_oven/kitchen_counter_oven", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter_oven/kitchen_counter_oven_middle",TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter_oven/kitchen_counter_oven", "_open", TextureKey.TEXTURE, LOG_KEY), block("kitchen_counter_oven/kitchen_counter_oven_middle", "_open", TextureKey.TEXTURE, LOG_KEY)};
         public static final Model[] TEMPLATE_KITCHEN_SINK = new Model[]{block("kitchen_sink/kitchen_sink", TextureKey.TEXTURE, LOG_KEY), block("kitchen_sink/kitchen_sink_level1",TextureKey.TEXTURE, LOG_KEY), block("kitchen_sink/kitchen_sink_level2", TextureKey.TEXTURE, LOG_KEY), block("kitchen_sink/kitchen_sink_full", TextureKey.TEXTURE, LOG_KEY)};
+        public static final Model[] TEMPLATE_LAMP_ARRAY = new Model[]{block("basic_lamp/basic_lamp_bottom", TextureKey.TEXTURE), block("basic_lamp/basic_lamp_middle", TextureKey.TEXTURE),  block("basic_lamp/basic_lamp_single", TextureKey.TEXTURE), block("basic_lamp/basic_lamp_top", TextureKey.TEXTURE)};
 
         private static Model make(TextureKey ... requiredTextures) {
             return new Model(Optional.empty(), Optional.empty(), requiredTextures);

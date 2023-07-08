@@ -122,7 +122,6 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
         } else {
             this.handler.updateInput();
             SearchableContainer<ItemStack> searchable;
-            //TODO: fix searching with tags
             if (string.startsWith("#")) {
                 string = string.substring(1);
                 searchable = this.client.getSearchableContainer(SearchManager.ITEM_TAG);

@@ -13,6 +13,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.StringIdentifiable;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -68,4 +69,23 @@ public class PaladinFurnitureMod {
 
 	@ExpectPlatform
 	public static List<String> getModList() {throw new AssertionError();}
+
+	@ExpectPlatform
+	public static Loader getLoader() {
+		throw new AssertionError();
+	}
+
+	public enum Loader implements StringIdentifiable {
+		FORGE("forge"),
+		FABRIC_LIKE("fabric_like");
+		final String name;
+		Loader(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String asString() {
+			return name;
+		}
+	}
 }

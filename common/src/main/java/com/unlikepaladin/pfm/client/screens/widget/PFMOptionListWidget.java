@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
+import com.unlikepaladin.pfm.runtime.PFMDataGen;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.fabricmc.api.EnvType;
@@ -54,6 +55,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         this.addEntry(new CategoryEntry(new LiteralText("")));
         this.addEntry(new ButtonEntry(Side.CLIENT, new TranslatableText("pfm.option.regenAssets"), new TranslatableText("pfm.config.regen"), new TranslatableText("pfm.option.regenAssets.tooltip"), button -> {
             PFMFileUtil.deleteDir(PFMRuntimeResources.getResourceDirectory().toFile());
+            PFMDataGen.frozen = false;
             PFMRuntimeResources.prepareAsyncResourceGen(true);
             PFMRuntimeResources.runAsyncResourceGen();
             MinecraftClient.getInstance().reloadResourcesConcurrently();

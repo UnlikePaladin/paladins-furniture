@@ -98,16 +98,16 @@ public class PendantBlock extends PowerableBlock implements DynamicRenderLayerIn
     private static final VoxelShape down = VoxelShapes.union(createCuboidShape(7.5, 0, 7.5,8.5, 15.5, 8.5),createCuboidShape(6.5, 15.5, 6.5,9.5, 16, 9.5));
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-    if (state.get(UP) && state.get(DOWN)) {
-        return middle;
-    }
-    else if (state.get(UP)){
-        return up;}
-    else if (state.get(DOWN)){
-        return down;}
-
-    return single;
-
+        if (state.get(UP) && state.get(DOWN)) {
+            return middle;
+        }
+        else if (state.get(UP)){
+            return up;
+        }
+        else if (state.get(DOWN)){
+            return down;
+        }
+        return single;
     }
 
     @Nullable

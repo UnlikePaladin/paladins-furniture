@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.client.fabric;
 
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
@@ -78,6 +79,9 @@ public class PFMModelProvider implements ModelResourceProvider {
         }
         else if (ModelHelper.containsIdentifier(UnbakedFreezerModel.FREEZER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
             return new UnbakedFreezerModel(resourceId);
+        }
+        else if (ModelHelper.containsIdentifier(UnbakedBasicLampModel.LAMP_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+            return new UnbakedBasicLampModel();
         }
         else
             return null;

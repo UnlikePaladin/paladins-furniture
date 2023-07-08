@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
-//TODO: Dynamic Block registry, conc, dynamic recipes, tags and drops. Fix EMI/JEI/REI Furniture Recipe Screen.
 public class DynamicBlockRegistry {
     private static final Map<Class<? extends VariantBase<?>>, VariantRegistryBase<?>> BLOCK_SET_CONTAINERS = new ConcurrentHashMap<>();
     private static final ConcurrentLinkedDeque<Runnable> FINDER_ADDER = new ConcurrentLinkedDeque<>();
