@@ -1,10 +1,9 @@
 package com.unlikepaladin.pfm.blocks.models;
 
-import com.unlikepaladin.pfm.blocks.DyeableFurniture;
+import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.*;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.runtime.PFMDataGen;
-import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.model.Texture;
@@ -83,7 +82,7 @@ public class ModelHelper {
     }
 
     public static DyeColor getColor(Identifier identifier) {
-        if (Registry.BLOCK.get(identifier) instanceof DyeableFurniture block) {
+        if (Registry.BLOCK.get(identifier) instanceof DyeableFurnitureBlock block) {
             return block.getPFMColor();
         }
         for (DyeColor color : DyeColor.values()) {

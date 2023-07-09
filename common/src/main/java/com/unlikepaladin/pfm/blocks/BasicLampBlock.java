@@ -8,21 +8,17 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.state.property.Property;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
@@ -37,8 +33,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Random;
 
 public class BasicLampBlock extends PowerableBlock implements BlockEntityProvider {
     private static final BooleanProperty LIT = Properties.LIT;
@@ -62,9 +56,8 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
             if (blockEntity instanceof LampBlockEntity && nbtCompound != null) {
                 DyeColor color = DyeColor.byName(nbtCompound.getString("color"), DyeColor.WHITE);
                 WoodVariant variant = WoodVariantRegistry.getVariant(Identifier.tryParse(nbtCompound.getString("variant")));
-                ((LampBlockEntity) blockEntity).setColor(color);
+                ((LampBlockEntity) blockEntity).setPFMColor(color);
                 ((LampBlockEntity) blockEntity).setVariant(variant);
-                ((LampBlockEntity)blockEntity).writeNbt(nbtCompound);
             }
         }
         super.onPlaced(world, pos, state, placer, itemStack);

@@ -37,7 +37,7 @@ public class ColorRegistry {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity != null) {
                 if (entity instanceof LampBlockEntity) {
-                    DyeColor color = ((LampBlockEntity)entity).getColor();
+                    DyeColor color = ((LampBlockEntity)entity).getPFMColor();
                     return color.getFireworkColor();
                 }
             }

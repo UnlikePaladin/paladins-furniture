@@ -12,8 +12,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.EnumProperty;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
@@ -38,7 +36,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.LogTableBlock.rotateShape;
 
-public class SimpleBedBlock extends BedBlock implements DyeableFurniture {
+public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock {
     private static final List<FurnitureBlock> SIMPLE_BEDS = new ArrayList<>();
     private final DyeColor color;
     public SimpleBedBlock(DyeColor color, Settings settings) {

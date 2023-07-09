@@ -21,7 +21,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.DinnerTableBlock.rotateShape;
 
-public class ShowerTowelBlock extends HorizontalFacingBlock implements DyeableFurniture {
+public class ShowerTowelBlock extends HorizontalFacingBlock implements DyeableFurnitureBlock {
     private static final List<FurnitureBlock> SHOWER_TOWELS = new ArrayList<>();
     private final DyeColor color;
     public ShowerTowelBlock(DyeColor color, Settings settings) {

@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
-public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurniture {
+public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnitureBlock {
     public static final EnumProperty<ArmChairShape> SHAPE = EnumProperty.of("shape", ArmChairShape.class);
     private static final List<FurnitureBlock> COLORED_ARMCHAIRS = new ArrayList<>();
     private final DyeColor color;

@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import net.minecraft.util.DyeColor;
 
-public interface DyeableFurniture {
+public interface DyeableFurnitureBlock {
     DyeColor getPFMColor();
 
 }

@@ -1,8 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.DyeableFurniture;
-import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -16,7 +14,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 
-public class LampBlockEntity extends BlockEntity {
+public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBlockEntity {
     protected WoodVariant variant;
     protected DyeColor color;
 
@@ -53,12 +51,22 @@ public class LampBlockEntity extends BlockEntity {
 
 
     public NbtCompound writeColorAndVariant(NbtCompound nbt) {
+        NbtCompound newNBT = writeColor(nbt);
+        newNBT.putString("variant", variant.getIdentifier().toString());
+        return newNBT;
+    }
+
+    public NbtCompound writeColor(NbtCompound nbt) {
         nbt.putString("color", color.asString());
-        nbt.putString("variant", variant.getIdentifier().toString());
         return nbt;
     }
 
-    public DyeColor getColor() {
+    @Override
+    public BlockEntity getEntity() {
+        return this;
+    }
+
+    public DyeColor getPFMColor() {
         return color;
     }
 
@@ -66,7 +74,7 @@ public class LampBlockEntity extends BlockEntity {
         return variant;
     }
 
-    public void setColor(DyeColor color) {
+    public void setPFMColor(DyeColor color) {
         this.color = color;
     }
 

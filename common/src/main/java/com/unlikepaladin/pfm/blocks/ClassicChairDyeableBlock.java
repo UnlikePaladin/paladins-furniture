@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 
-public class ClassicChairDyeableBlock extends ClassicChairBlock implements DyeableFurniture {
+public class ClassicChairDyeableBlock extends ClassicChairBlock implements DyeableFurnitureBlock {
 
     private final DyeColor color;
     private static final List<FurnitureBlock> WOOD_DYEABLE_CLASSIC_CHAIRS = new ArrayList<>();
