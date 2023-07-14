@@ -4,7 +4,8 @@
   "package": "com.unlikepaladin.pfm.mixin.forge",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "PFMModelLoaderMixin"
+    "PFMModelLoaderMixin",
+    "PFMRenderLayersForgeMixin"
   ],
   "mixins": [
   ],
