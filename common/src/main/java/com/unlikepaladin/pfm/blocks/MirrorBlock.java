@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.ItemPlacementContext;
@@ -20,12 +21,24 @@ import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
 import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 
 public class MirrorBlock extends HorizontalFacingBlock {
+
+    protected static List<FurnitureBlock> mirrorBlockList = new ArrayList<>();
     public MirrorBlock(Settings settings) {
         super(settings);
+        mirrorBlockList.add(new FurnitureBlock(this, "mirror"));
     }
+
+    public static Stream<FurnitureBlock> streamMirrorBlocks() {
+        return mirrorBlockList.stream();
+    }
+
     @Override
     protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
         super.appendProperties(builder);

@@ -1,24 +1,25 @@
-package com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.blockentities;
+package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.PFMToasterBlock;
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.PFMSandwichableRegistry;
-import io.github.foundationgames.sandwichable.Sandwichable;
-import io.github.foundationgames.sandwichable.blocks.ToasterBlock;
-import io.github.foundationgames.sandwichable.items.ItemsRegistry;
-import io.github.foundationgames.sandwichable.recipe.ToastingRecipe;
-import io.github.foundationgames.sandwichable.util.Util;
-import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.PFMToasterBlock;
+import com.unlikepaladin.pfm.registry.BlockEntities;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
@@ -33,8 +34,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 import java.util.UUID;
 
-public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory, BlockEntityClientSerializable {
-    private DefaultedList<ItemStack> items = DefaultedList.ofSize(2, ItemStack.EMPTY);
+public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory {
+    protected DefaultedList<ItemStack> items = DefaultedList.ofSize(2, ItemStack.EMPTY);
     private @Nullable UUID lastUser;
     private static int toastTime = 240;
     private int toastProgress = 0;
@@ -47,7 +48,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     private boolean updateNeighbors = false;
 
     public PFMToasterBlockEntity(BlockPos pos, BlockState state) {
-        super(PFMSandwichableRegistry.IRON_TOASTER_BLOCKENTITY, pos, state);
+        super(BlockEntities.TOASTER_BLOCK_ENTITY, pos, state);
     }
 
     @Override
@@ -78,16 +79,6 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         return nbt;
     }
 
-    @Override
-    public void fromClientTag(NbtCompound NbtCompound) {
-        this.readNbt(NbtCompound);
-    }
-
-    @Override
-    public NbtCompound toClientTag(NbtCompound NbtCompound) {
-        return this.writeNbt(NbtCompound);
-    }
-
     private void explode() {
         if(!world.isClient) {
             world.removeBlock(pos, true);
@@ -96,7 +87,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     }
 
     public Direction getToasterFacing() {
-        if(this.world.getBlockState(this.pos).getBlock() instanceof ToasterBlock) {
+        if(this.world.getBlockState(this.pos).getBlock() instanceof PFMToasterBlock) {
             return this.world.getBlockState(this.pos).get(Properties.HORIZONTAL_FACING);
         }
         return Direction.NORTH;
@@ -106,6 +97,10 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         return items;
     }
 
+    public void setItem(int i, ItemStack stack) {
+        items.set(i, stack);
+        sync(this, world);
+    }
     public Optional<PlayerEntity> getLastUser() {
         return Optional.ofNullable(this.lastUser).map(this.world::getPlayerByUuid);
     }
@@ -141,41 +136,49 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         } return false;
     }
 
+    @ExpectPlatform
+    public static boolean isMetal(ItemStack stack) {
+        throw new AssertionError();
+    }
+
     public boolean hasMetalInside() {
-        return Sandwichable.METAL_ITEMS.contains(items.get(0).getItem()) || Sandwichable.METAL_ITEMS.contains(items.get(1).getItem());
+        if (PaladinFurnitureMod.getModList().contains("sandwichable"))
+            return isMetal(items.get(0)) || isMetal(items.get(1));
+        return items.get(0).getTranslationKey().contains("iron") || items.get(1).getTranslationKey().contains("iron");
+    }
+
+    @ExpectPlatform
+    public static void sandwichableToast(PFMToasterBlockEntity pfmToasterBlockEntity) {
+
     }
 
     private void toastItems() {
-        for (int i = 0; i < 2; i++) {
-            SimpleInventory inv = new SimpleInventory(items.get(i));
-            Optional<ToastingRecipe> match = world.getRecipeManager().getFirstMatch(ToastingRecipe.Type.INSTANCE, inv, world);
+        if (PaladinFurnitureMod.getModList().contains("sandwichable")) {
+            sandwichableToast(this);
+        }
+        else {
+            for (int i = 0; i < 2; i++) {
+                SimpleInventory inv = new SimpleInventory(items.get(i));
+                Optional<CampfireCookingRecipe> match = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inv, world);
 
-            boolean changed = false;
-            if(match.isPresent()) {
-                items.set(i, match.get().getOutput().copy());
-                changed = true;
-            } else {
-                if(items.get(i).isFood()) {
-                    Item item = Sandwichable.SMALL_FOODS.contains(items.get(i).getItem()) ? ItemsRegistry.BURNT_MORSEL : ItemsRegistry.BURNT_FOOD;
-                    items.set(i, new ItemStack(item, 1));
+                boolean changed = false;
+                if(match.isPresent()) {
+                    items.set(i, match.get().getOutput().copy());
                     changed = true;
-                }
-            }
-
-            if (!world.isClient() && changed) {
-                ItemStack advStack = items.get(i);
-                this.getLastUser().ifPresent(player -> {
-                    if (player instanceof ServerPlayerEntity) {
-                        Sandwichable.TOAST_ITEM.trigger((ServerPlayerEntity) player, advStack);
+                } else {
+                    if(items.get(i).isFood()) {
+                        Item item = Items.COAL;
+                        items.set(i, new ItemStack(item, 1));
+                        changed = true;
                     }
-                });
+                }
             }
         }
     }
 
     public void startToasting(@Nullable PlayerEntity player) {
         if(this.world.getBlockState(this.pos).getBlock() instanceof PFMToasterBlock) {
-            this.world.setBlockState(pos, this.world.getBlockState(this.pos).with(ToasterBlock.ON, true));
+            this.world.setBlockState(pos, this.world.getBlockState(this.pos).with(PFMToasterBlock.ON, true));
         }
         world.playSound(null, pos, SoundEvents.BLOCK_WOODEN_BUTTON_CLICK_ON, SoundCategory.BLOCKS, 0.5F, 0.8F);
         toastProgress = 0;
@@ -186,7 +189,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
 
     public void stopToasting(@Nullable PlayerEntity player) {
         if(this.world.getBlockState(this.pos).getBlock() instanceof PFMToasterBlock) {
-            this.world.setBlockState(pos, this.world.getBlockState(this.pos).with(ToasterBlock.ON, false));
+            this.world.setBlockState(pos, this.world.getBlockState(this.pos).with(PFMToasterBlock.ON, false));
         }
         world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BELL, SoundCategory.BLOCKS, 0.8F, 4);
         toastProgress = 0;
@@ -228,7 +231,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
                 world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.05F, blockEntity.tickPitch ? 2.0F : 1.9F);
                 blockEntity.tickPitch = !blockEntity.tickPitch;
             }
-            if(blockEntity.hasMetalInside() || world.getBlockState(blockEntity.pos).get(Properties.WATERLOGGED)) {
+            if(blockEntity.hasMetalInside()){
                 blockEntity.explode();
             }
         }
@@ -260,7 +263,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return !world.getBlockState(pos).get(ToasterBlock.ON);
+        return !world.getBlockState(pos).get(PFMToasterBlock.ON);
     }
 
     @Override
@@ -288,7 +291,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         ItemStack stack = items.get(slot).copy();
         items.set(slot, ItemStack.EMPTY);
         setLastUser(null);
-        Util.sync(this, world);
+        sync(this, world);
         return stack;
     }
 
@@ -296,7 +299,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     public void setStack(int slot, ItemStack stack) {
         items.set(slot, stack);
         setLastUser(null);
-        Util.sync(this, world);
+        sync(this, world);
     }
 
     @Override
@@ -307,6 +310,16 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     @Override
     public void clear() {
         items.clear();
-        Util.sync(this, world);
+        sync(this, world);
+    }
+
+    public static void sync(PFMToasterBlockEntity blockEntity, World world) {
+        if (!world.isClient)
+            ((ServerWorld) world).getChunkManager().markForUpdate(blockEntity.getPos());
+    }
+
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends PFMToasterBlockEntity> getFactory() {
+        throw new AssertionError();
     }
 }

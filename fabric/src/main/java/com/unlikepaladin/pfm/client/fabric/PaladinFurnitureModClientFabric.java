@@ -6,7 +6,6 @@ import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.compat.fabric.imm_ptl.client.PFMImmPtlRegistryClient;
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.client.PFMSandwichableClient;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
@@ -63,10 +62,6 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         ModelLoadingRegistry.INSTANCE.registerModelProvider(new PFMExtraModelProvider());
         ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new PFMModelProvider());
         ParticleProviderRegistryFabric.registerParticleFactories();
-        if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
-            PFMSandwichableClient.register();
-        }
-
         if (FabricLoader.getInstance().isModLoaded("imm_ptl_core")) {
             PFMImmPtlRegistryClient.register();
         }

@@ -327,6 +327,9 @@ public class LateBlockRegistry {
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(KitchenStovetopBlock.class, new FurnitureEntry<KitchenStovetopBlock>() {{
             this.addBlock( LateBlockRegistry.registerLateBlock( "kitchen_stovetop",() -> PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP, true, PaladinFurnitureMod.FURNITURE_GROUP));
         }});
+        PaladinFurnitureModBlocksItems.furnitureEntryMap.put(PFMToasterBlock.class, new FurnitureEntry<>() {{
+            addBlock(registerLateBlockClassic("iron_toaster", PaladinFurnitureModBlocksItems.TOASTER_BLOCK, true, PaladinFurnitureMod.FURNITURE_GROUP));
+        }});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(PlateBlock.class, new FurnitureEntry<PlateBlock>() {{
             this.addBlock(LateBlockRegistry.registerLateBlock( "basic_plate",() -> PaladinFurnitureModBlocksItems.BASIC_PLATE, true, PaladinFurnitureMod.FURNITURE_GROUP));
         }});

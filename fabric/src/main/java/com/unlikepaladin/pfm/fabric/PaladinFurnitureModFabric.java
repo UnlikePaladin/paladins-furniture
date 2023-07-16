@@ -8,7 +8,6 @@ import com.unlikepaladin.pfm.blocks.BasicChairBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.compat.fabric.MissingDependencyScreen;
 import com.unlikepaladin.pfm.compat.fabric.imm_ptl.PFMImmPtlRegistry;
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.PFMSandwichableRegistry;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.mixin.PFMMixinPointOfInterestTypeFactory;
@@ -106,9 +105,6 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         PaladinFurnitureModFabric.initializeItemGroup();
         BlockItemRegistryFabric.registerItems();
         BlockItemRegistryFabric.registerBlocks();
-        if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
-            PFMSandwichableRegistry.register();
-        }
         if (FabricLoader.getInstance().isModLoaded("imm_ptl_core")) {
             PFMImmPtlRegistry.register();
         }

@@ -20,6 +20,7 @@ public class EntityRenderRegistry {
         registerBlockEntityRender(BlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
         registerBlockEntityRender(BlockEntities.STOVE_BLOCK_ENTITY, getStoveBlockEntityRenderer());
         registerBlockEntityRender(BlockEntities.TRASHCAN_BLOCK_ENTITY, TrashcanBlockEntityRenderer::new);
+        registerBlockEntityRender(BlockEntities.TOASTER_BLOCK_ENTITY, PFMToasterBlockEntityRenderer::new);
     }
 
     public static void registerEntityRenderers() {

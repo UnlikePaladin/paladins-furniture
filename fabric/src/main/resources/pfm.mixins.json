@@ -3,7 +3,6 @@
   "package": "com.unlikepaladin.pfm.mixin.fabric",
   "compatibilityLevel": "JAVA_8",
   "client": [
-    "PFMMixinTitleScreen"
   ],
   "mixins": [
   ],

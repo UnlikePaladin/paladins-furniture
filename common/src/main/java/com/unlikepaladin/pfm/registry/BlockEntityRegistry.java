@@ -33,7 +33,9 @@ public class BlockEntityRegistry {
         BlockEntities.SHOWER_HEAD_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("shower_head_block_entity", new Block[]{PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD}, ShowerHeadBlockEntity.getFactory());
         BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("shower_handle_block_entity", new Block[]{PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE}, ShowerHandleBlockEntity::new);
         BlockEntities.BATHTUB_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("bathtub_block_entity", new Block[]{PaladinFurnitureModBlocksItems.BASIC_BATHTUB}, BathtubBlockEntity::new);
-        BlockEntities.LAMP_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("lamp_block_entity", new Block[]{}, LampBlockEntity.getFactory());
+        BlockEntities.LAMP_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("lamp_block_entity", new Block[]{PaladinFurnitureModBlocksItems.BASIC_LAMP}, LampBlockEntity.getFactory());
+        BlockEntities.TOASTER_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("iron_toaster", new Block[]{PaladinFurnitureModBlocksItems.TOASTER_BLOCK}, PFMToasterBlockEntity.getFactory());
+
     }
 
     @ExpectPlatform

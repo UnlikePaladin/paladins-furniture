@@ -604,6 +604,14 @@ public class PFMRecipeProvider {
             }
         }
 
+        FurnitureBlock[] mirrors = MirrorBlock.streamMirrorBlocks().toList().toArray(new FurnitureBlock[0]);
+        for (FurnitureBlock mirror : mirrors) {
+            if (!generatedRecipes.contains(getId(mirror.getBlock()))) {
+                offerMirrorRecipe(mirror.getBlock(), Ingredient.ofItems(mirror.getBaseMaterial()), exporter);
+                generatedRecipes.add(getId(mirror.getBlock()));
+            }
+        }
+
         offerLampRecipes(exporter);
     }
 
@@ -829,6 +837,10 @@ public class PFMRecipeProvider {
 
     public static void offerShowerTowelRecipe(ItemConvertible output, Ingredient base, Consumer<RecipeJsonProvider> exporter) {
         FurnitureRecipeJsonFactory.create(output, 2).group("bathroom").criterion("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base,4).input(Ingredient.ofItems(Items.LIGHT_GRAY_CONCRETE), 2).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+
+    public static void offerMirrorRecipe(ItemConvertible output, Ingredient base, Consumer<RecipeJsonProvider> exporter) {
+        FurnitureRecipeJsonFactory.create(output, 2).group("bathroom").criterion("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base,3).input(Ingredient.ofItems(Items.GLASS), 2).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     private static InventoryChangedCriterion.Conditions conditionsFromItem(NumberRange.IntRange count, ItemConvertible item) {

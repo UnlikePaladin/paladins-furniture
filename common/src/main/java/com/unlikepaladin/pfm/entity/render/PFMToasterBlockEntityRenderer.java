@@ -1,7 +1,7 @@
-package com.unlikepaladin.pfm.compat.fabric.sandwichable.client.render;
+package com.unlikepaladin.pfm.entity.render;
 
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.blockentities.PFMToasterBlockEntity;
-import io.github.foundationgames.sandwichable.blocks.ToasterBlock;
+import com.unlikepaladin.pfm.blocks.PFMToasterBlock;
+import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
@@ -15,18 +15,18 @@ import net.minecraft.util.math.Vec3f;
 
 import java.util.Objects;
 
-public class PFMToasterBlockEntityRenderer implements BlockEntityRenderer<PFMToasterBlockEntity> {
+public class PFMToasterBlockEntityRenderer <T extends PFMToasterBlockEntity> implements BlockEntityRenderer<T> {
 
         public PFMToasterBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
         }
         @Override
-        public void render(PFMToasterBlockEntity blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
             matrices.push();
             DefaultedList<ItemStack> items = blockEntity.getItems();
             Direction dir = Direction.NORTH;
-            if (blockEntity.getWorld().getBlockState(blockEntity.getPos()).getBlock() instanceof ToasterBlock) {
+            if (blockEntity.getWorld().getBlockState(blockEntity.getPos()).getBlock() instanceof PFMToasterBlock) {
                 dir = Objects.requireNonNull(blockEntity.getToasterFacing());
-                if (blockEntity.isToasting() || blockEntity.getWorld().getBlockState(blockEntity.getPos()).get(ToasterBlock.ON)) {
+                if (blockEntity.isToasting() || blockEntity.getWorld().getBlockState(blockEntity.getPos()).get(PFMToasterBlock.ON)) {
                     matrices.translate(0.0D, -0.11D, 0.0D);
                 }
             }

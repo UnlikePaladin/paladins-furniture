@@ -82,7 +82,7 @@ public class PaladinFurnitureModBlocksItems {
     public static Item LIGHT_SWITCH_ITEM;
     public static Item FURNITURE_BOOK;
     public static final Block BASIC_LAMP = new BasicLampBlock(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).luminance(createLightLevelFromLitBlockState(15)));
-
+    public static final Block TOASTER_BLOCK = new PFMToasterBlock(AbstractBlock.Settings.copy(IRON_STOVE));
     private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
         return state -> state.get(Properties.LIT) ? litLevel : 0;
     }

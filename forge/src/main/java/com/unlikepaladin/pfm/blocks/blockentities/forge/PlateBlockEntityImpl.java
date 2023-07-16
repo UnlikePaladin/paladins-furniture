@@ -18,7 +18,6 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
         super(blockPos, blockState);
     }
 
-
     @Nullable
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {

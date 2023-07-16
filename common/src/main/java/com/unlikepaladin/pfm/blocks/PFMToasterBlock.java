@@ -1,11 +1,10 @@
-package com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks;
+package com.unlikepaladin.pfm.blocks;
 
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.PFMSandwichableRegistry;
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.blocks.blockentities.PFMToasterBlockEntity;
-import io.github.foundationgames.sandwichable.blocks.BlocksRegistry;
-import io.github.foundationgames.sandwichable.blocks.ToasterBlock;
-import io.github.foundationgames.sandwichable.util.Util;
+import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
+import com.unlikepaladin.pfm.registry.BlockEntities;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
@@ -14,9 +13,15 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -29,34 +34,61 @@ import org.jetbrains.annotations.Nullable;
 
 import static com.unlikepaladin.pfm.blocks.LogTableBlock.rotateShape;
 
-public class PFMToasterBlock extends ToasterBlock {
+public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
+    public static final BooleanProperty ON = BooleanProperty.of("on");;
     public PFMToasterBlock(Settings settings) {
         super(settings);
     }
+
+    @Override
+    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
+        stateManager.add(FACING, ON);
+    }
+
     public static final VoxelShape IRON_TOASTER = VoxelShapes.union(createCuboidShape(4.8, 0, 3.8,11.2, 1, 12.2),createCuboidShape(5, 1, 4,11, 6, 12));
     public static final VoxelShape IRON_TOASTER_WEST_EAST = rotateShape(Direction.NORTH, Direction.WEST, IRON_TOASTER);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext ctx) {
-        Direction dir = state.get(Properties.HORIZONTAL_FACING);
+        Direction dir = state.get(FACING);
         return switch (dir) {
             case EAST, WEST -> IRON_TOASTER_WEST_EAST;
             default -> IRON_TOASTER;
         };
     }
 
+    @Override
+    public BlockRenderType getRenderType(BlockState state) {
+        return BlockRenderType.MODEL;
+    }
+
     @Nullable
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new PFMToasterBlockEntity(pos, state);
+        return PFMToasterBlockEntity.getFactory().create(pos, state);
     }
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, PFMSandwichableRegistry.IRON_TOASTER_BLOCKENTITY, PFMToasterBlockEntity::tick);
+        return checkType(type, BlockEntities.TOASTER_BLOCK_ENTITY, PFMToasterBlockEntity::tick);
     }
 
 
     public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
         return world.getBlockEntity(pos) instanceof PFMToasterBlockEntity ? ((PFMToasterBlockEntity)world.getBlockEntity(pos)).getComparatorOutput() : 0;
+    }
+
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        return this.getDefaultState().with(Properties.HORIZONTAL_FACING, ctx.getPlayerFacing().getOpposite());
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(Properties.HORIZONTAL_FACING, rotation.rotate(state.get(Properties.HORIZONTAL_FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(state.get(Properties.HORIZONTAL_FACING)));
     }
 
     @Override
@@ -98,13 +130,14 @@ public class PFMToasterBlock extends ToasterBlock {
 
     }
 
+    @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof PFMToasterBlockEntity) {
             PFMToasterBlockEntity blockEntity = (PFMToasterBlockEntity) world.getBlockEntity(pos);
             if (!player.isSneaking()) {
                 if (!blockEntity.isToasting()) {
                     ItemEntity itemEntity;
-                    if (!player.getStackInHand(hand).isEmpty() && !player.getStackInHand(hand).getItem().equals(BlocksRegistry.SANDWICH.asItem())) {
+                    if (!player.getStackInHand(hand).isEmpty() && !isSandwich(player.getStackInHand(hand))) {
                         if (!blockEntity.addItem(hand, player)) {
                             itemEntity = new ItemEntity(world, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.8D, (double)pos.getZ() + 0.5D, blockEntity.takeItem(player));
                             world.spawnEntity(itemEntity);
@@ -114,8 +147,7 @@ public class PFMToasterBlock extends ToasterBlock {
                         world.spawnEntity(itemEntity);
                     }
                 }
-
-                Util.sync(blockEntity, world);
+                PFMToasterBlockEntity.sync(blockEntity, blockEntity.getWorld());
             } else if (!blockEntity.isToasting()) {
                 blockEntity.startToasting(player);
             } else {
@@ -124,6 +156,16 @@ public class PFMToasterBlock extends ToasterBlock {
         }
 
         return ActionResult.success(world.isClient());
+    }
+
+    @ExpectPlatform
+    public static boolean isSandwich(ItemStack stack) {
+        throw new AssertionError();
+    }
+
+    @Override
+    public boolean hasComparatorOutput(BlockState state) {
+        return true;
     }
 
 }
