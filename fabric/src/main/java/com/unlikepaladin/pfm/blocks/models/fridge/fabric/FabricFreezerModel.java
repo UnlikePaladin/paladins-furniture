@@ -36,9 +36,9 @@ public class FabricFreezerModel extends AbstractBakedModel implements FabricBake
         boolean hasFridge = world.getBlockState(pos.down()).getBlock() instanceof FridgeBlock && !(world.getBlockState(pos.down()).getBlock() instanceof IronFridgeBlock);
         int openOffset = state.get(FreezerBlock.OPEN) ? 2 : 0;
         if (hasFridge) {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(1+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(1+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         }
     }
 

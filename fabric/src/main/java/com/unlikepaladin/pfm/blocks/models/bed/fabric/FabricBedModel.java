@@ -44,31 +44,31 @@ public class FabricBedModel extends AbstractBakedModel implements FabricBakedMod
             boolean bunk = isBed(blockView, pos, Direction.DOWN, dir, state, isClassic);
             BedPart part = state.get(BedBlock.PART);
             if (part == BedPart.HEAD) {
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(1))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(3))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(1))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(3))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 if (!right){
-                    ((FabricBakedModel)getBakedModels().get(modelParts.get(6))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getBakedModels().get(modelParts.get(6))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
                 if (!left){
-                    ((FabricBakedModel)getBakedModels().get(modelParts.get(7))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getBakedModels().get(modelParts.get(7))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
                 if (bunk && !(state.getBlock() instanceof ClassicBedBlock)){
-                    ((FabricBakedModel)getBakedModels().get(modelParts.get(10))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getBakedModels().get(modelParts.get(10))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
             } else {
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(0))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(2))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(0))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(2))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 if (!right){
-                    ((FabricBakedModel)getBakedModels().get(modelParts.get(4))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getBakedModels().get(modelParts.get(4))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
                 if (!left){
-                    ((FabricBakedModel)getBakedModels().get(modelParts.get(5))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getBakedModels().get(modelParts.get(5))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
                 if (!right && bunk){
-                    ((FabricBakedModel)getBakedModels().get(modelParts.get(8))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getBakedModels().get(modelParts.get(8))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
                 if (!left && bunk){
-                    ((FabricBakedModel)getBakedModels().get(modelParts.get(9))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getBakedModels().get(modelParts.get(9))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
                 }
             }
         }

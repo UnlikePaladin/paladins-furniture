@@ -37,16 +37,16 @@ public class FabricModernDinnerTableModel extends AbstractBakedModel implements 
             boolean left = block.isTable(world, pos, dir, -1);
             boolean right = block.isTable(world, pos, dir, 1);
             if (left && right) {
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
             if (!left && right) {
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(1))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(1))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
             if (!right && left) {
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(2))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(2))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
             if (!right && !left) {
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(3))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(3))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
         }
     }

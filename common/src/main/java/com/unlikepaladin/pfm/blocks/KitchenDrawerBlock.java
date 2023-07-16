@@ -454,7 +454,7 @@ public class KitchenDrawerBlock extends KitchenCounterBlock implements BlockEnti
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new GenericStorageBlockEntity9x3(pos,state);
+        return GenericStorageBlockEntity9x3.getFactory().create(pos,state);
     }
 
     @Override

@@ -314,30 +314,6 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
         return this.getDefaultState().with(FACING, ctx.getPlayerFacing());
     }
 
-    private CounterShape getShape(BlockState state, BlockView world, BlockPos pos) {
-        Direction direction3 = null;
-        Object direction2;
-        Direction direction = state.get(FACING);
-        BlockState blockState = world.getBlockState(pos.offset(direction));
-        if (isCabinet(blockState) && ((Direction)(direction2 = blockState.get(FACING))).getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, ((Direction)direction2).getOpposite())) {
-            if (direction2 == direction.rotateYCounterclockwise()) {
-                return CounterShape.OUTER_LEFT;
-            }
-            return CounterShape.OUTER_RIGHT;
-        }
-        direction2 = world.getBlockState(pos.offset(direction.getOpposite()));
-        boolean innerCorner = isCabinet((BlockState)direction2) && (direction3 = (Direction) ((State)direction2).get(FACING)).getAxis() != state.get(FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3);
-        if (innerCorner) {
-            if (direction3 == direction.rotateYCounterclockwise()) {
-                return CounterShape.INNER_LEFT;
-            }
-            return CounterShape.INNER_RIGHT;
-        }
-        return CounterShape.STRAIGHT;
-    }
-
-
-
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (world.isClient) {
@@ -372,7 +348,7 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new GenericStorageBlockEntity9x3(pos,state);
+        return GenericStorageBlockEntity9x3.getFactory().create(pos, state);
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {

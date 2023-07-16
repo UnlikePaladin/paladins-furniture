@@ -97,7 +97,7 @@ public class KitchenWallDrawerSmallBlock extends KitchenWallDrawerBlock {
 
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new GenericStorageBlockEntity3x3(pos, state);
+        return GenericStorageBlockEntity3x3.getFactory().create(pos, state);
     }
 
     @Override

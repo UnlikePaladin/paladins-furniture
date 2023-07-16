@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -67,49 +68,54 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
     }
     @Override
     protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof StoveBlockEntity) {
-            player.openHandledScreen((NamedScreenHandlerFactory) blockEntity);
-            player.incrementStat(Statistics.STOVE_OPENED);
-        }
+        openMenuScreen(world, pos, player);
+    }
+
+    @ExpectPlatform
+    public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
+
     }
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
-        }
-        if (hit.getSide() == Direction.UP) {
-            ItemStack itemStack;
-            StoveBlockEntity stoveBlockEntity;
-            Optional<CampfireCookingRecipe> optional;
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof StoveBlockEntity && (optional = (stoveBlockEntity = (StoveBlockEntity)blockEntity).getRecipeFor(itemStack = player.getStackInHand(hand))).isPresent()) {
-                if (stoveBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
-                    player.incrementStat(Statistics.STOVE_OPENED);
-                    return ActionResult.SUCCESS;
-                }
+        if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
+            return onUseCookingForBlockheads(state, world, pos, player, hand, hit);
+        } else {
+            if (world.isClient) {
+                return ActionResult.SUCCESS;
             }
-            if(blockEntity instanceof StoveBlockEntity){
-                stoveBlockEntity = (StoveBlockEntity)blockEntity;
-                for (int i = 0; i < stoveBlockEntity.getItemsBeingCooked().size(); i++) {
-                    ItemStack stack = stoveBlockEntity.getItemsBeingCooked().get(i);
-                    if (stack.isEmpty()) continue;
-                    if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) {
-                        ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stoveBlockEntity.removeStack(i));
-                        world.spawnEntity(itemEntity);
+            if (hit.getSide() == Direction.UP && world.getBlockEntity(pos) instanceof StoveBlockEntity) {
+                ItemStack itemStack;
+                StoveBlockEntity stoveBlockEntity;
+                Optional<CampfireCookingRecipe> optional;
+                BlockEntity blockEntity = world.getBlockEntity(pos);
+                if (blockEntity instanceof StoveBlockEntity && (optional = (stoveBlockEntity = (StoveBlockEntity)blockEntity).getRecipeFor(itemStack = player.getStackInHand(hand))).isPresent()) {
+                    if (stoveBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
                         player.incrementStat(Statistics.STOVE_OPENED);
                         return ActionResult.SUCCESS;
                     }
                 }
-                return ActionResult.CONSUME;
+                if(blockEntity instanceof StoveBlockEntity){
+                    stoveBlockEntity = (StoveBlockEntity)blockEntity;
+                    for (int i = 0; i < stoveBlockEntity.getItemsBeingCooked().size(); i++) {
+                        ItemStack stack = stoveBlockEntity.getItemsBeingCooked().get(i);
+                        if (stack.isEmpty()) continue;
+                        if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) {
+                            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stoveBlockEntity.removeStack(i));
+                            world.spawnEntity(itemEntity);
+                            player.incrementStat(Statistics.STOVE_OPENED);
+                            return ActionResult.SUCCESS;
+                        }
+                    }
+                    return ActionResult.CONSUME;
+                }
+                return ActionResult.PASS;
             }
-            return ActionResult.PASS;
+            else{
+                this.openScreen(world, pos, player);
+            }
+            return ActionResult.CONSUME;
         }
-        else{
-            this.openScreen(world, pos, player);
-        }
-        return ActionResult.CONSUME;
     }
 
 
@@ -170,15 +176,19 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (world.isClient) {
-                return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::clientTick);
-        } else {
-                return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::litServerTick);
-        }
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+        return getModdedTicker(world, state, type);
     }
 
+    @ExpectPlatform
+    public static <T extends BlockEntity> BlockEntityTicker<T> getModdedTicker(World world, BlockState state, BlockEntityType<T> type){
+        throw new AssertionError();
+    }
 
+    @ExpectPlatform
+    public static ActionResult onUseCookingForBlockheads(BlockState blockState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult){
+        throw new AssertionError();
+    }
     @Override
     public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (state.isOf(newState.getBlock())) {

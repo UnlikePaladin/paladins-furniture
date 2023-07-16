@@ -1,5 +1,8 @@
 package com.unlikepaladin.pfm.client.forge;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.compat.forge.cookingforblockheads.PFMCookingForBlockHeadsCompat;
+import com.unlikepaladin.pfm.entity.render.StoveBlockEntityRenderer;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.model.TexturedModelData;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
@@ -25,5 +28,13 @@ public class EntityRenderRegistryImpl {
 
     public static void registerModelLayer(EntityModelLayer entityType, TexturedModelData texturedModelData) {
         entityModelLayerTexturedModelDataMap.put(entityType, texturedModelData);
+    }
+
+    public static BlockEntityRendererFactory getStoveBlockEntityRenderer() {
+        if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
+            return PFMCookingForBlockHeadsCompat.getStoveRenderer();
+        } else {
+            return StoveBlockEntityRenderer::new;
+        }
     }
 }

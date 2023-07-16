@@ -31,7 +31,7 @@ import java.util.Random;
 
 public class StovetopBlockEntity extends BlockEntity implements Clearable {
 
-    protected final DefaultedList<ItemStack> itemsBeingCooked = DefaultedList.ofSize(4, ItemStack.EMPTY);
+    public final DefaultedList<ItemStack> itemsBeingCooked = DefaultedList.ofSize(4, ItemStack.EMPTY);
     private final int[] cookingTimes = new int[4];
     private final int[] cookingTotalTimes = new int[4];
     public StovetopBlockEntity( BlockPos pos, BlockState state) {

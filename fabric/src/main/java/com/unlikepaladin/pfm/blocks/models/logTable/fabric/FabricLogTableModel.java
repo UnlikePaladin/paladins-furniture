@@ -36,17 +36,17 @@ public class FabricLogTableModel extends AbstractBakedModel implements FabricBak
             Direction dir = state.get(LogTableBlock.FACING);
             boolean left = block.isTable(world, pos, dir.rotateYCounterclockwise(), dir);
             boolean right = block.isTable(world, pos, dir.rotateYClockwise(), dir);
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
             if (!left && right) {
                 int index = dir == Direction.NORTH || dir == Direction.WEST ? 1 : 2;
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(index))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(index))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
             if (!right && left) {
                 int index = dir == Direction.NORTH || dir == Direction.WEST ? 2 : 1;
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(index))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(index))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
             if (!right && !left) {
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(3))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(3))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
         }
     }

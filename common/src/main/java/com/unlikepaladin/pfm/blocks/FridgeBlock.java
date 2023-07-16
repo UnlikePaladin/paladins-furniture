@@ -240,7 +240,7 @@ public class FridgeBlock extends HorizontalFacingBlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new FridgeBlockEntity(pos, state);
+        return FridgeBlockEntity.getFactory().create(pos, state);
     }
 
     @Override

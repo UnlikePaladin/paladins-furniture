@@ -205,6 +205,7 @@ public class PFMLangProvider {
     //TODO: make the toaster mod independent
     //TODO: look into cooking mod compatibility
     //TODO: Waterlog chairs and tables only
+    //TODO: Mirror recipes
     public void generateTranslationForLampBlock(BufferedWriter writer) {
         for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
             for (DyeColor color : DyeColor.values()) {

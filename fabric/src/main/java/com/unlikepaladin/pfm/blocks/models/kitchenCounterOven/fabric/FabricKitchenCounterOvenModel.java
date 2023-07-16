@@ -9,9 +9,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 
 import java.util.List;
@@ -38,9 +36,9 @@ public class FabricKitchenCounterOvenModel extends AbstractBakedModel implements
             boolean down = KitchenCounterOvenBlock.connectsVertical(world.getBlockState(pos.down()).getBlock());
             int openOffset = state.get(KitchenCounterOvenBlock.OPEN) ? 2 : 0;
             if (up || down) {
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(1 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(1 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
             } else {
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
         }
     }

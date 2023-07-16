@@ -15,7 +15,7 @@ public class ScreenRegistry {
     public static void registerScreens() {
         registerScreen(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
         registerScreen(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, WorkbenchScreen::new);
-        registerScreen(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, StoveScreen::new);
+        registerScreen(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, getStoveFactory());
         registerScreen(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
         registerScreen(ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
         registerScreen(ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER, TrashcanScreen::new);
@@ -24,5 +24,10 @@ public class ScreenRegistry {
     @ExpectPlatform
     public static <T extends ScreenHandler, J extends Screen & ScreenHandlerProvider<T>> void registerScreen(ScreenHandlerType<T> screenType, TriFunc<T, PlayerInventory, Text, J> factory) {
         throw new RuntimeException();
+    }
+
+    @ExpectPlatform
+    public static <T extends ScreenHandler, J extends Screen & ScreenHandlerProvider<T>> TriFunc<T, PlayerInventory, Text, J> getStoveFactory() {
+        throw new AssertionError();
     }
 }

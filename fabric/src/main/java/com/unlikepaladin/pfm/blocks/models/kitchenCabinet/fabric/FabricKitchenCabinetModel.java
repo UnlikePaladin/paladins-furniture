@@ -44,20 +44,20 @@ public class FabricKitchenCabinetModel extends AbstractBakedModel implements Fab
             BlockState blockState = world.getBlockState(pos.offset(direction));
             if (block.isCabinet(blockState) && (direction2 = blockState.get(KitchenCabinetBlock.FACING)).getAxis() != state.get(KitchenCabinetBlock.FACING).getAxis() && block.isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
                 if (direction2 == direction.rotateYCounterclockwise()) {
-                    ((FabricBakedModel)getBakedModels().get(modelParts.get(3 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getBakedModels().get(modelParts.get(3 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                 }
                 else {
-                    ((FabricBakedModel)getBakedModels().get(modelParts.get(4 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getBakedModels().get(modelParts.get(4 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                 }
             }
             else if (innerCorner) {
                 if (direction3 == direction.rotateYCounterclockwise()) {
-                    ((FabricBakedModel)getBakedModels().get(modelParts.get(2 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getBakedModels().get(modelParts.get(2 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                 } else {
-                    ((FabricBakedModel)getBakedModels().get(modelParts.get(1 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getBakedModels().get(modelParts.get(1 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                 }
             } else {
-                ((FabricBakedModel)getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
         }
     }

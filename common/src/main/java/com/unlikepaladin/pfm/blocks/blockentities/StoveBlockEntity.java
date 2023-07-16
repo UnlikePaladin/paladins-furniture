@@ -8,6 +8,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -188,32 +189,35 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_ALL);
     }
 
-    public static void litServerTick(World world, BlockPos pos, BlockState state, StoveBlockEntity stoveBlockEntity) {
-        boolean bl = false;
-        for (int i = 0; i < stoveBlockEntity.itemsBeingCooked.size(); ++i) {
-            ItemStack itemStack = stoveBlockEntity.itemsBeingCooked.get(i);
-            if (itemStack.isEmpty()) continue;
-            bl = true;
-            int n = i;
-            if (stoveBlockEntity.cookingTimes[n] < 600){
-                stoveBlockEntity.cookingTimes[n] = stoveBlockEntity.cookingTimes[n] + 2;
+    public static void litServerTick(World world, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+        if (blockEntity instanceof StoveBlockEntity) {
+            StoveBlockEntity stoveBlockEntity = (StoveBlockEntity) blockEntity;
+            boolean bl = false;
+            for (int i = 0; i < stoveBlockEntity.itemsBeingCooked.size(); ++i) {
+                ItemStack itemStack = stoveBlockEntity.itemsBeingCooked.get(i);
+                if (itemStack.isEmpty()) continue;
+                bl = true;
+                int n = i;
+                if (stoveBlockEntity.cookingTimes[n] < 600){
+                    stoveBlockEntity.cookingTimes[n] = stoveBlockEntity.cookingTimes[n] + 2;
+                }
+                if (stoveBlockEntity.cookingTimes[i] < stoveBlockEntity.cookingTotalTimes[i]) continue;
+                SimpleInventory inventory = new SimpleInventory(itemStack);
+                ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.craft(inventory)).orElse(itemStack);
+                    if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
+                        ItemScatterer.spawn(world, pos.getX(), pos.up().getY(), pos.getZ(), itemStack2);
+                        stoveBlockEntity.itemsBeingCooked.set(i, ItemStack.EMPTY);
+                    }
+                    else {
+                        stoveBlockEntity.itemsBeingCooked.set(i, itemStack2);
+                    }
+                world.updateListeners(pos, state, state, Block.NOTIFY_ALL);
             }
-            if (stoveBlockEntity.cookingTimes[i] < stoveBlockEntity.cookingTotalTimes[i]) continue;
-            SimpleInventory inventory = new SimpleInventory(itemStack);
-            ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.craft(inventory)).orElse(itemStack);
-                if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
-                    ItemScatterer.spawn(world, pos.getX(), pos.up().getY(), pos.getZ(), itemStack2);
-                    stoveBlockEntity.itemsBeingCooked.set(i, ItemStack.EMPTY);
-                }
-                else {
-                    stoveBlockEntity.itemsBeingCooked.set(i, itemStack2);
-                }
-            world.updateListeners(pos, state, state, Block.NOTIFY_ALL);
+            if (bl) {
+                markDirty(world, pos, state);
+            }
+            tick(world, pos, state, stoveBlockEntity);
         }
-        if (bl) {
-            markDirty(world, pos, state);
-        }
-        tick(world, pos, state, stoveBlockEntity);
     }
 
     public static void unlitServerTick(World world, BlockPos pos, BlockState state, StoveBlockEntity stoveBlockEntity) {
@@ -229,21 +233,24 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         tick(world, pos, state, stoveBlockEntity);
     }
 
-    public static void clientTick(World world, BlockPos pos, BlockState state, StoveBlockEntity stoveBlockEntity) {
-        int i;
-        Random random = world.random;
-        i = state.get(StoveBlock.FACING).rotateYClockwise().getHorizontal();
-        for (int j = 0; j < stoveBlockEntity.itemsBeingCooked.size(); ++j) {
-            ItemStack stack = stoveBlockEntity.itemsBeingCooked.get(j);
-            if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) continue;
-            Direction direction = Direction.fromHorizontal(Math.floorMod(j + i, 4));
-            float f = 0.2125f;
-            double x = pos.getX() + 0.5 - ((direction.getOffsetX() * f) + (direction.rotateYClockwise().getOffsetX() * f));
-            double y = pos.getY() + 1.1;
-            double z = pos.getZ() + 0.5 - ((direction.getOffsetZ() * f) + (direction.rotateYClockwise().getOffsetZ() * f));
-            for (int k = 0; k < 4; ++k) {
-                if (!(random.nextFloat() < 0.9f))
-                    world.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 5.0E-4, 0.0);
+    public static void clientTick(World world, BlockPos pos, BlockState state, BlockEntity blockEntity) {
+        if (blockEntity instanceof StoveBlockEntity) {
+            StoveBlockEntity stoveBlockEntity = (StoveBlockEntity) blockEntity;
+            int i;
+            Random random = world.random;
+            i = state.get(StoveBlock.FACING).rotateYClockwise().getHorizontal();
+            for (int j = 0; j < stoveBlockEntity.itemsBeingCooked.size(); ++j) {
+                ItemStack stack = stoveBlockEntity.itemsBeingCooked.get(j);
+                if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) continue;
+                Direction direction = Direction.fromHorizontal(Math.floorMod(j + i, 4));
+                float f = 0.2125f;
+                double x = pos.getX() + 0.5 - ((direction.getOffsetX() * f) + (direction.rotateYClockwise().getOffsetX() * f));
+                double y = pos.getY() + 1.1;
+                double z = pos.getZ() + 0.5 - ((direction.getOffsetZ() * f) + (direction.rotateYClockwise().getOffsetZ() * f));
+                for (int k = 0; k < 4; ++k) {
+                    if (!(random.nextFloat() < 0.9f))
+                        world.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 5.0E-4, 0.0);
+                }
             }
         }
     }
@@ -262,7 +269,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @ExpectPlatform
-    public static BlockEntityType.BlockEntityFactory<? extends StoveBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntityFactory<? extends BlockEntity> getFactory() {
         throw new UnsupportedOperationException();
     }
 }

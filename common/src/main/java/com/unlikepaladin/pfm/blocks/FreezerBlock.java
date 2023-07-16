@@ -171,7 +171,7 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new FreezerBlockEntity(BlockEntities.FREEZER_BLOCK_ENTITY, pos,state);
+        return FreezerBlockEntity.getFactory().create(pos,state);
     }
     @Override
     @Nullable

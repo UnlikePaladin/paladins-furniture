@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.client.fabric;
 
+import com.unlikepaladin.pfm.entity.render.StoveBlockEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
@@ -21,5 +22,9 @@ public class EntityRenderRegistryImpl {
 
     public static void registerModelLayer(EntityModelLayer entityType, TexturedModelData texturedModelData) {
         EntityModelLayerRegistry.registerModelLayer(entityType, () -> texturedModelData);
+    }
+
+    public static BlockEntityRendererFactory getStoveBlockEntityRenderer() {
+        return StoveBlockEntityRenderer::new;
     }
 }

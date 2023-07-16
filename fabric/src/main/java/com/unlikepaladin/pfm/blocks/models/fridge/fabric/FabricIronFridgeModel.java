@@ -11,7 +11,6 @@ import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 
 import java.util.List;
@@ -38,15 +37,15 @@ public class FabricIronFridgeModel extends AbstractBakedModel implements FabricB
         boolean hasFreezer = world.getBlockState(pos.down()).getBlock() instanceof IronFreezerBlock;
         int openOffset = state.get(IronFridgeBlock.OPEN) ? 5 : 0;
         if (top && bottom) {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(2+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(2+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else if (bottom) {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(3+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(3+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else if (top) {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(1+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(1+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else if (hasFreezer) {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(4+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(4+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         }
     }
     @Override

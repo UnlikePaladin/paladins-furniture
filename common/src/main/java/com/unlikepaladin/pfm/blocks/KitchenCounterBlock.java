@@ -6,10 +6,8 @@ import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.BlockRotation;
-import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -71,7 +69,11 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
     public boolean canConnect(BlockView world, BlockPos pos, Direction direction)
     {
         BlockState state = world.getBlockState(pos.offset(direction));
-        return (isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock);
+        return (isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock) || isCookingForBlockHeadsBlock(state.getBlock().getTranslationKey());
+    }
+
+    public static boolean isCookingForBlockHeadsBlock(String key) {
+        return key.contains("cookingforblockheads") && (key.contains("cooking_table") || key.contains("oven") || key.contains("sink") || key.contains("corner") || key.contains("cabinet") || key.contains("counter"));
     }
 
     public boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
@@ -80,7 +82,7 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
     }
 
     public boolean canConnectToCounter(BlockState state) {
-        return isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock;
+        return isCounter(state) || state.getBlock() instanceof AbstractFurnaceBlock || state.getBlock() instanceof AbstractCauldronBlock || isCookingForBlockHeadsBlock(state.getBlock().getTranslationKey());
     }
 
     public boolean isCounter(BlockState state) {
@@ -275,31 +277,5 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
             return 20;
         }
         return 0;
-    }
-}
-
-enum CounterShape implements StringIdentifiable
-{
-    STRAIGHT("straight"),
-    INNER_LEFT("inner_left"),
-    INNER_RIGHT("inner_right"),
-    OUTER_LEFT("outer_left"),
-    OUTER_RIGHT("outer_right"),
-    LEFT_EDGE("left_edge"),
-    RIGHT_EDGE("right_edge");
-
-    private final String name;
-
-    CounterShape(String name) {
-        this.name = name;
-    }
-
-    public String toString() {
-        return this.name;
-    }
-
-    @Override
-    public String asString() {
-        return this.name;
     }
 }

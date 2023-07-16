@@ -2,8 +2,10 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -133,6 +135,11 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
         double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
         this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
+    }
+
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends FridgeBlockEntity> getFactory() {
+        throw new AssertionError();
     }
 }
 

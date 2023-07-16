@@ -69,27 +69,4 @@ public class IronStoveBlock extends StoveBlock {
             world.playSound(x, y, z, SoundEvents.BLOCK_SMOKER_SMOKE, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
         }
     }
-
-    @Override
-    @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (world.isClient) {
-                return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::clientTick);
-        } else {
-                return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::litServerTick);
-        }
-    }
-
-    @Override
-    public void openScreen(World world, BlockPos pos, PlayerEntity player) {
-        //This is called by the onUse method inside AbstractFurnaceBlock so
-        //it is a little bit different of how you open the screen for normal container
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof StoveBlockEntity) {
-            player.openHandledScreen((NamedScreenHandlerFactory)blockEntity);
-            // Optional: increment player's stat
-            player.incrementStat(Stats.INTERACT_WITH_FURNACE);
-        }
-    }
-
 }

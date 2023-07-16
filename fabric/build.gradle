@@ -61,6 +61,13 @@ repositories {
             includeGroup "curse.maven"
         }
     }
+    maven {
+        url "https://maven.twelveiterations.com/repository/maven-public/"
+
+        content {
+            includeGroup "net.blay09.mods"
+        }
+    }
 }
 
 if (rootProject.sandwichable_compatibility == "true") {
@@ -165,8 +172,10 @@ dependencies {
 
    // modRuntimeOnly("com.terraformersmc:terrestria:${rootProject.terrestria}")
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
-
     modCompileOnly("maven.modrinth:iris:${rootProject.iris_version}")
+
+    //modImplementation "curse.maven:balm-fabric-500525:${rootProject.balm_version_fabric}"
+    //modImplementation "curse.maven:cooking-for-blockheads-fabric-634546:${rootProject.cookingforblockheads_version_fabric}"
 }
 
 dependencies {

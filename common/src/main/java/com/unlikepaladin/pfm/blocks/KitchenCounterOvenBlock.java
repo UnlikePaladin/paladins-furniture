@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -58,8 +59,14 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
 
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new CounterOvenBlockEntity(pos, state);
+        return getFactory().create(pos, state);
     }
+
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends CounterOvenBlockEntity> getFactory() {
+        throw new AssertionError();
+    }
+
     @Override
     public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
     }

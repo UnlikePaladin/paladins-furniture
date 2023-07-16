@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.blocks.models.fridge.fabric;
 
 import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.blocks.FridgeBlock;
-import com.unlikepaladin.pfm.blocks.IronFreezerBlock;
 import com.unlikepaladin.pfm.blocks.IronFridgeBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
@@ -39,18 +38,18 @@ public class FabricFridgeModel extends AbstractBakedModel implements FabricBaked
         boolean hasFreezer = world.getBlockState(pos.up()).getBlock() instanceof FreezerBlock && !(world.getBlockState(pos.up()).getBlock() instanceof IronFridgeBlock);
         int openOffset = state.get(FridgeBlock.OPEN) ? 6 : 0;
         if (top && hasFreezer) {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(5+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(5+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         }
         else if (top && bottom) {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(2+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(2+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else if (bottom) {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(3+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(3+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else if (top) {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(1+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(1+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else if (hasFreezer) {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(4+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(4+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else {
-            ((FabricBakedModel)getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         }
     }
     @Override

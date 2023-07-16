@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -44,12 +45,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker,
-        RecipeInputProvider {
-    public FreezerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
-        super(blockEntityType, pos, state);
-        this.recipeType = RecipeTypes.FREEZING_RECIPE;
-    }
+public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker, RecipeInputProvider {
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.FREEZER_BLOCK_ENTITY, pos, state);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
@@ -471,5 +467,9 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         }
     }
 
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends FreezerBlockEntity> getFactory() {
+        throw new AssertionError();
+    }
 }
 

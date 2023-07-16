@@ -113,7 +113,7 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new GenericStorageBlockEntity9x3(pos, state);
+        return GenericStorageBlockEntity9x3.getFactory().create(pos, state);
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {

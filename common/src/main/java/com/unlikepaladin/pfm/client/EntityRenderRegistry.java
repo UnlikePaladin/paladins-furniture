@@ -18,7 +18,7 @@ public class EntityRenderRegistry {
         registerBlockEntityRender(BlockEntities.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);
         registerBlockEntityRender(BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntityRenderer::new);
         registerBlockEntityRender(BlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
-        registerBlockEntityRender(BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityRenderer::new);
+        registerBlockEntityRender(BlockEntities.STOVE_BLOCK_ENTITY, getStoveBlockEntityRenderer());
         registerBlockEntityRender(BlockEntities.TRASHCAN_BLOCK_ENTITY, TrashcanBlockEntityRenderer::new);
     }
 
@@ -43,5 +43,10 @@ public class EntityRenderRegistry {
     @ExpectPlatform
     public static void registerModelLayer(EntityModelLayer entityType, TexturedModelData texturedModelData) {
         throw new RuntimeException();
+    }
+
+    @ExpectPlatform
+    public static BlockEntityRendererFactory getStoveBlockEntityRenderer() {
+        throw new AssertionError();
     }
 }
