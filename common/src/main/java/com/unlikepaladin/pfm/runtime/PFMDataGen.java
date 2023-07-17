@@ -104,7 +104,10 @@ public class PFMDataGen {
             List<String> hashToCompare = hashDirectory(PFMRuntimeResources.getResourceDirectory().toFile(), true);
             List<String> oldHash = Files.readAllLines(hashPath);
             List<String> modList = Files.readAllLines(modListPath);
-            if (!hashToCompare.toString().equals(oldHash.toString()) || !modList.toString().equals(PaladinFurnitureMod.getModList().toString())) {
+            if (!hashToCompare.toString().equals(oldHash.toString()) || !modList.toString().replace("[", "").replace("]", "").equals(PaladinFurnitureMod.getVersionMap().toString())) {
+                System.out.println(modList.toString().replace("[", "").replace("]", ""));
+                System.out.println(PaladinFurnitureMod.getVersionMap().toString());
+
                 LOGGER.info("Starting PFM Data and Asset Gen, this might take a bit.");
                 PFMFileUtil.deleteDir(PFMRuntimeResources.getResourceDirectory().toFile());
                 DataCache dataCache = new DataCache(this.output, "cache");
@@ -166,7 +169,7 @@ public class PFMDataGen {
 
                 Files.deleteIfExists(modListPath);
                 Files.createFile(modListPath);
-                Files.writeString(PFMRuntimeResources.createDirIfNeeded(modListPath), PaladinFurnitureMod.getModList().toString().replace("[", "").replace("]", ""), StandardOpenOption.APPEND);
+                Files.writeString(PFMRuntimeResources.createDirIfNeeded(modListPath), PaladinFurnitureMod.getVersionMap().toString().replace("[", "").replace("]", ""), StandardOpenOption.APPEND);
             } else {
                 log("Data Hash and Mod list matched, skipping generation");
             }

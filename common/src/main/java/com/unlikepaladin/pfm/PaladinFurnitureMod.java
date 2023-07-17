@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
+import com.unlikepaladin.pfm.utilities.Version;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.sound.SoundEvent;
@@ -19,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
+import java.util.Map;
 
 public class PaladinFurnitureMod {
 
@@ -69,6 +71,9 @@ public class PaladinFurnitureMod {
 
 	@ExpectPlatform
 	public static List<String> getModList() {throw new AssertionError();}
+
+	@ExpectPlatform
+	public static Map<String, String> getVersionMap() {throw new AssertionError();}
 
 	@ExpectPlatform
 	public static Loader getLoader() {

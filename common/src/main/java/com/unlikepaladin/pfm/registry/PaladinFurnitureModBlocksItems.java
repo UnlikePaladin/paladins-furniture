@@ -110,8 +110,6 @@ public class PaladinFurnitureModBlocksItems {
     public static final BasicSinkBlock BASIC_SINK = new BasicSinkBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque(), LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final List<BedBlock> beds = new ArrayList<>();
 
-    //TODO: Fix light switch crashing with Create :pain:
-
     public static Block[] getBeds() {
         List<Block> blocks = new ArrayList<>(furnitureEntryMap.get(SimpleBedBlock.class).getAllBlocks());
         blocks.addAll(furnitureEntryMap.get(ClassicBedBlock.class).getAllBlocks());

@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.forgespi.language.IModInfo;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class PaladinFurnitureModImpl {
@@ -19,5 +19,11 @@ public class PaladinFurnitureModImpl {
 
     public static PaladinFurnitureMod.Loader getLoader() {
         return PaladinFurnitureMod.Loader.FORGE;
+    }
+
+    public static Map<String, String> getVersionMap() {
+        Map<String, String> map = new LinkedHashMap<>();
+        ModList.get().getMods().stream().sorted(Comparator.comparing(IModInfo::getModId)).filter(modContainer -> !modContainer.getModId().contains("generated_")).forEach(iModInfo -> map.put(iModInfo.getModId(), iModInfo.getVersion().toString()));
+        return map;
     }
 }
