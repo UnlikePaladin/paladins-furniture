@@ -52,11 +52,11 @@ public class ForgeLogTableModel extends AbstractBakedModel {
             boolean right = set.get(1);
             Direction dir = state.get(LogTableBlock.FACING);
             quads.addAll(getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData));
-            if (!left) {
+            if (!left && right) {
                 int index = dir == Direction.NORTH || dir == Direction.WEST ? 1 : 2;
                 quads.addAll(getBakedModels().get(modelParts.get(index)).getQuads(state, side, rand, extraData));
             }
-            if (!right) {
+            if (!right && left) {
                 int index = dir == Direction.NORTH || dir == Direction.WEST ? 2 : 1;
                 quads.addAll(getBakedModels().get(modelParts.get(index)).getQuads(state, side, rand, extraData));
             }
