@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.entity.render;
 
-import com.unlikepaladin.pfm.blocks.Plate;
+import com.unlikepaladin.pfm.blocks.PlateBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
@@ -22,12 +22,12 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
     }
     @Override
     public void render(PlateBlockEntity plateBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
-        Direction direction = plateBlockEntity.getCachedState().get(Plate.FACING);
+        Direction direction = plateBlockEntity.getCachedState().get(PlateBlock.FACING);
         itemStack = plateBlockEntity.getItemInPlate();
         matrices.push();
         Direction direction2 = Direction.fromHorizontal((direction.getHorizontal()) % 4);
         float g = -direction2.asRotation();
-        Direction dir = plateBlockEntity.getCachedState().get(Plate.FACING);
+        Direction dir = plateBlockEntity.getCachedState().get(PlateBlock.FACING);
         switch (dir) {
             case NORTH -> matrices.translate(0.5, 0.08, 0.65);
             case SOUTH -> matrices.translate(0.5, 0.08, 0.35);

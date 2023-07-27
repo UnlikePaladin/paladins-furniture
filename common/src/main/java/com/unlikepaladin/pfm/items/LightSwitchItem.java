@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.PendantBlock;
 import com.unlikepaladin.pfm.blocks.PowerableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.item.TooltipContext;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
@@ -13,6 +14,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtLong;
+import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -22,6 +24,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class LightSwitchItem extends BlockItem {
     private Block block;
@@ -47,11 +53,10 @@ public class LightSwitchItem extends BlockItem {
 
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
-        super.useOnBlock(context);
         BlockPos pos = context.getBlockPos();
         BlockState state = context.getWorld().getBlockState(context.getBlockPos());
         Block block = state.getBlock();
-       if(block instanceof PowerableBlock){
+        if(block instanceof PowerableBlock){
            if (block instanceof PendantBlock){
                boolean isSingle = (!state.get(PendantBlock.DOWN) && !state.get(PendantBlock.UP));
                boolean isRoot = (state.get(PendantBlock.DOWN) && !state.get(PendantBlock.UP));
@@ -63,52 +68,58 @@ public class LightSwitchItem extends BlockItem {
                     if (context.getWorld().isClient)
                         context.getPlayer().sendMessage(new TranslatableText("message.pfm.light_switch_not_canopy"), false);
                }
-
            }
            else {
                addLight(context.getStack(), pos);
            }
             return ActionResult.SUCCESS;
         }
-
-        return ActionResult.SUCCESS;
+        return super.useOnBlock(context);
     }
 
     @Override
     protected boolean canPlace(ItemPlacementContext context, BlockState state) {
         BlockPos pos = context.getBlockPos();
         WorldView world = context.getWorld();
-        if (getLights(context.getStack()) != null) {
-            NbtList lights = getLights(context.getStack());
+        Direction side = context.getSide();
+        NbtList lights = getLights(context.getStack());
+        if (lights != null) {
+            ArrayList<BlockPos> removedLights = new ArrayList<>();
             Direction facing = context.getPlayerFacing();
-                for(int i = 0; i < lights.size(); i++)
-                {
-                    NbtElement nbtElement = lights.get(i);
-                    BlockPos lightPos = BlockPos.fromLong(((NbtLong) nbtElement).longValue());
-                    BlockPos placedPos = pos.offset(facing);
-                    double distance = Math.sqrt(lightPos.getSquaredDistance(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5, true));
-                    return !(distance > 16) && state.getBlock().canPlaceAt(state, world, pos);
-                }
 
+            for (Iterator<NbtElement> iterator = lights.iterator(); iterator.hasNext();) {
+                NbtElement nbtElement = iterator.next();
+                BlockPos lightPos = BlockPos.fromLong(((NbtLong) nbtElement).longValue());
+                BlockPos placedPos = pos.offset(facing);
+                double distance = Math.sqrt(lightPos.getSquaredDistance(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5, true));
+                if (distance > 16) {
+                    removedLights.add(BlockPos.fromLong(((NbtLong) nbtElement).longValue()));
+                    iterator.remove();
+                }
+            }
+
+            if (!removedLights.isEmpty() && context.getWorld().isClient){
+                context.getPlayer().sendMessage(new TranslatableText("message.pfm.light_switch_far", removedLights.toString()), false);
+            }
         }
-        return state.getBlock().canPlaceAt(state, world, pos);
+        return state.getBlock().canPlaceAt(state, world, pos) && side.getAxis().isHorizontal();
     }
 
     private void addLight(ItemStack stack, BlockPos pos)
     {
-        NbtCompound tagCompound = createTag(stack);
-        if(!tagCompound.contains("BlockEntityTag", NbtElement.COMPOUND_TYPE))
+        NbtCompound nbtCompound = createTag(stack);
+        if(!nbtCompound.contains("BlockEntityTag", NbtElement.COMPOUND_TYPE))
         {
-            tagCompound.put("BlockEntityTag", new NbtCompound());
+            nbtCompound.put("BlockEntityTag", new NbtCompound());
         }
 
-        NbtCompound entityTagCompound = tagCompound.getCompound("BlockEntityTag");
-        if(!entityTagCompound.contains("lights", NbtElement.LIST_TYPE))
+        NbtCompound blockEntityTag = nbtCompound.getCompound("BlockEntityTag");
+        if(!blockEntityTag.contains("lights", NbtElement.LIST_TYPE))
         {
-            entityTagCompound.put("lights", new NbtList());
+            blockEntityTag.put("lights", new NbtList());
         }
 
-        NbtList tagList = (NbtList) entityTagCompound.get("lights");
+        NbtList tagList = (NbtList) blockEntityTag.get("lights");
         if(!containsLight(tagList, pos))
         {
             tagList.add(NbtLong.of(pos.asLong()));
@@ -131,13 +142,15 @@ public class LightSwitchItem extends BlockItem {
     @Nullable
     public static NbtList getLights(ItemStack stack)
     {
-        NbtCompound tagCompound = createTag(stack);
-        if(tagCompound.contains("BlockEntityTag", NbtElement.COMPOUND_TYPE))
-        {
-            NbtCompound entityTagCompound = tagCompound.getCompound("BlockEntityTag");
-            if(entityTagCompound.contains("lights", NbtElement.LIST_TYPE))
+        if(stack.hasNbt()) {
+            NbtCompound nbtCompound = stack.getNbt();
+            if(nbtCompound.contains("BlockEntityTag", NbtElement.COMPOUND_TYPE))
             {
-                return (NbtList) entityTagCompound.get("lights");
+                NbtCompound blockEntityTag = nbtCompound.getCompound("BlockEntityTag");
+                if(blockEntityTag.contains("lights", NbtElement.LIST_TYPE))
+                {
+                    return (NbtList) blockEntityTag.get("lights");
+                }
             }
         }
         return null;
@@ -152,4 +165,12 @@ public class LightSwitchItem extends BlockItem {
         return stack.getNbt();
     }
 
+    @Override
+    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+        if (stack.hasNbt() && getLights(stack) != null) {
+            int lightNum = getLights(stack).size();
+            tooltip.add(new TranslatableText("tooltip.pfm.light_switch_connected", lightNum));
+        }
+        super.appendTooltip(stack, world, tooltip, context);
+    }
 }

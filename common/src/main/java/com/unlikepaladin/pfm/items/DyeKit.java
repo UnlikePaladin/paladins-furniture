@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.items;
 
-import com.unlikepaladin.pfm.blocks.DyeableFurniture;
+import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
+import com.unlikepaladin.pfm.blocks.blockentities.DyeableFurnitureBlockEntity;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.passive.SheepEntity;
@@ -8,6 +10,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsageContext;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -37,16 +40,21 @@ public class DyeKit extends Item {
         World world = context.getWorld();
         BlockState blockState = world.getBlockState(blockPos);
         if (playerEntity.isSneaking()) {
-            if(blockState.getBlock() instanceof DyeableFurniture) {
-                if (stack.getItem() instanceof DyeKit) {
-                    world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                    String newBlock= blockState.getBlock().toString();
-                    newBlock = newBlock.replace(((DyeableFurniture) blockState.getBlock()).getColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
-                    BlockState blockState1 = Registry.BLOCK.get(new Identifier(newBlock)).getStateWithProperties(blockState);
-                    world.setBlockState(blockPos, blockState1, 3);
-                    stack.decrement(1);
-                    return ActionResult.CONSUME;
-                }
+            if(blockState.getBlock() instanceof DyeableFurnitureBlock && stack.getItem() instanceof DyeKit) {
+                world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                String newBlock= blockState.getBlock().toString();
+                newBlock = newBlock.replace(((DyeableFurnitureBlock) blockState.getBlock()).getPFMColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
+                BlockState blockState1 = Registry.BLOCK.get(new Identifier(newBlock)).getStateWithProperties(blockState);
+                world.setBlockState(blockPos, blockState1, 3);
+                stack.decrement(1);
+                return ActionResult.CONSUME;
+            } else if (world.getBlockEntity(blockPos) instanceof DyeableFurnitureBlockEntity && stack.getItem() instanceof DyeKit) {
+                world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                DyeableFurnitureBlockEntity dyeableFurnitureBlockEntity = (DyeableFurnitureBlockEntity) world.getBlockEntity(blockPos);
+                dyeableFurnitureBlockEntity.setPFMColor(getColor());
+                world.updateListeners(blockPos, blockState, blockState, Block.NOTIFY_ALL);
+                stack.decrement(1);
+                return ActionResult.CONSUME;
             }
         }
         return ActionResult.PASS;

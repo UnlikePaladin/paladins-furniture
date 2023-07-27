@@ -26,14 +26,14 @@
     "client": [
       "com.unlikepaladin.pfm.client.fabric.PaladinFurnitureModClientFabric"
     ],
-    "fabric-datagen": [
-      "com.unlikepaladin.pfm.data.fabric.PaladinFurnitureModDataEntrypoint"
-    ],
     "rei": [
-      "com.unlikepaladin.pfm.compat.fabric.rei.PaladinFurnitureModREIPlugin"
+      "com.unlikepaladin.pfm.compat.rei.fabric.PaladinFurnitureModREIPlugin"
     ],
     "modmenu": [
       "com.unlikepaladin.pfm.compat.fabric.PaladinFurnitureModMenu"
+    ],
+    "server": [
+      "com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric"
     ]
   },
   "mixins": [
@@ -42,8 +42,7 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": "1.18.x",
-    "cloth-config2": ">=6.2.57"
+    "minecraft": "1.18.1",
   },
   "suggests": {
     "patchouli": "*"

@@ -1,45 +1,66 @@
 package com.unlikepaladin.pfm.fabric;
 
+import com.google.common.collect.ImmutableSet;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.compat.PaladinFurnitureModConfig;
+import com.unlikepaladin.pfm.advancements.PFMCriteria;
+import com.unlikepaladin.pfm.advancements.fabric.CriteriaRegistryFabric;
+import com.unlikepaladin.pfm.blocks.BasicChairBlock;
+import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.compat.fabric.MissingDependencyScreen;
-import com.unlikepaladin.pfm.compat.fabric.PaladinFurnitureModConfigImpl;
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.PFMSandwichableRegistry;
+import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmPtlRegistry;
+import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
+import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
+import com.unlikepaladin.pfm.mixin.PFMMixinPointOfInterestTypeFactory;
 import com.unlikepaladin.pfm.registry.*;
 import com.unlikepaladin.pfm.registry.fabric.*;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.ConfigHolder;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import me.shedaniel.autoconfig.serializer.Toml4jConfigSerializer;
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.fabricmc.fabric.api.event.server.ServerStartCallback;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.enums.BedPart;
+import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.registry.Registry;
+import net.minecraft.world.poi.PointOfInterestType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
-public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer {
+public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer, DedicatedServerModInitializer {
 
     public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
     public static SoundEvent FURNITURE_DYED_EVENT = new SoundEvent(FURNITURE_DYED_ID);
-
     public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 
-    public static ConfigHolder<PaladinFurnitureModConfigImpl> pfmConfig;
+
+    public static PaladinFurnitureModConfig pfmConfig;
     @Override
     public void onInitialize() {
         // This code runs as soon as Minecraft is in a mod-load-ready state.
         // However, some things (like resources) may still be uninitialized.
         // Proceed with mild caution.
+        pfmConfig = new PaladinFurnitureModConfig(FabricLoader.getInstance().getConfigDir().resolve("pfm.properties"));
+        try {
+            pfmConfig.initialize();
+        } catch (IOException e) {
+            GENERAL_LOGGER.error("Failed to initialize Paladin's Furniture configuration, default values will be used instead");
+            GENERAL_LOGGER.error("", e);
+        }
 
         ServerLifecycleEvents.SERVER_STARTED.register((server) ->
         {
@@ -80,26 +101,58 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                 })
                 .build();
 
-        PaladinFurnitureMod.FURNITURE_GROUP = FabricItemGroupBuilder.build(
-                new Identifier(MOD_ID, "furniture"),
-                () -> new ItemStack(PaladinFurnitureModBlocksItems.OAK_CHAIR));
-
         EntityRegistryFabric.registerEntities();
+        PaladinFurnitureModFabric.initializeItemGroup();
+        BlockItemRegistryFabric.registerItems();
         BlockItemRegistryFabric.registerBlocks();
-        if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
-            PFMSandwichableRegistry.register();
-        }
-        if (FabricLoader.getInstance().isModLoaded("cloth-config2")) {
-            pfmConfig = AutoConfig.register(PaladinFurnitureModConfigImpl.class, Toml4jConfigSerializer::new);
+        if (FabricLoader.getInstance().isModLoaded("imm_ptl_core")) {
+            PFMImmPtlRegistry.register();
         }
         this.commonInit();
+        //PFMRuntimeResources.prepareAsyncResourceGen(); No async gen because Forge won't behave, blame it.
+        PFMRuntimeResources.ready = true;
         StatisticsRegistryFabric.registerStatistics();
         SoundRegistryFabric.registerSounds();
-        BlockEntityRegistryFabric.registerBlockEntities();
         NetworkRegistryFabric.registerPackets();
         ScreenHandlerRegistryFabric.registerScreenHandlers();
         RecipeRegistryFabric.registerRecipes();
+        ParticleTypeRegistryFabric.registerParticleTypes();
+        CriteriaRegistryFabric.registerCriteria();
+        ServerPlayConnectionEvents.JOIN.register(PaladinFurnitureModFabric::onServerJoin);
     }
 
 
+    public static void onServerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
+        //Give book
+        if (getPFMConfig().shouldGiveGuideBook()) {
+            PFMCriteria.GUIDE_BOOK_CRITERION.trigger(handler.getPlayer());
+        }
+
+        //Sync Config
+        PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
+        Collection<AbstractConfigOption> configOptions = PaladinFurnitureMod.getPFMConfig().options.values();
+        buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
+        sender.sendPacket(NetworkIDs.CONFIG_SYNC_ID, buffer);
+    }
+
+    public static void initializeItemGroup() {
+        PaladinFurnitureMod.FURNITURE_GROUP = FabricItemGroupBuilder.build(
+                new Identifier(MOD_ID, "furniture"),
+                () -> PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getFromVanillaWoodType(BoatEntity.Type.OAK, true).asItem().getDefaultStack());
+    }
+
+    public static void replaceHomePOI() {
+        Set<BlockState> addedBedStates = PaladinFurnitureModBlocksItems.beds.stream().flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+        Set<BlockState> newBedStates = new HashSet<>();
+        newBedStates.addAll(PaladinFurnitureModBlocksItems.originalHomePOIBedStates);
+        newBedStates.addAll(addedBedStates);
+        newBedStates = newBedStates.stream().collect(ImmutableSet.toImmutableSet());
+        PointOfInterestType.HOME = PointOfInterestType.setup(Registry.register(Registry.POINT_OF_INTEREST_TYPE, Registry.POINT_OF_INTEREST_TYPE.getRawId(PointOfInterestType.HOME), "home", PFMMixinPointOfInterestTypeFactory.newPoi("home", newBedStates, 1, 1)));
+    }
+    @Override
+    public void onInitializeServer() {
+        PaladinFurnitureMod.isClient = false;
+        registerLateEntries();
+        replaceHomePOI();
+    }
 }

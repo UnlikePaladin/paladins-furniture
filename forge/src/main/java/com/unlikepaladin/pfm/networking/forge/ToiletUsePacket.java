@@ -1,8 +1,7 @@
 package com.unlikepaladin.pfm.networking.forge;
 
-import com.unlikepaladin.pfm.blocks.BasicToilet;
+import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
 import com.unlikepaladin.pfm.blocks.ToiletState;
-import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.registry.SoundIDs;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -29,7 +28,7 @@ public class ToiletUsePacket {
             World world = Objects.requireNonNull(player).getEntityWorld();
             ctx.get().enqueueWork(() -> {
                 if (world.isChunkLoaded(blockPos)) {
-                    world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToilet.TOILET_STATE, ToiletState.DIRTY));
+                    world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
                     world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
                 }
                 else {

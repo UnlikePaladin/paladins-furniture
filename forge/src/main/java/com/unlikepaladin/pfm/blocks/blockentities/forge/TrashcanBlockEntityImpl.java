@@ -49,4 +49,8 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
         Inventories.readNbt(pkt.getNbt(), this.inventory);
     }
 
+    public static BlockEntityType.BlockEntityFactory<? extends TrashcanBlockEntity> getFactory() {
+        return TrashcanBlockEntityImpl::new;
+    }
+
 }

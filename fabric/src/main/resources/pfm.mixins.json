@@ -1,11 +1,11 @@
 {
   "required": true,
   "package": "com.unlikepaladin.pfm.mixin.fabric",
-  "compatibilityLevel": "JAVA_16",
+  "compatibilityLevel": "JAVA_8",
   "client": [
-    "MixinTitleScreen"
   ],
   "mixins": [
+    "PFMCookingPotBlockEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/shower_towel/light_blue_shower_towel","y":180},
+    "facing=east":{"model":"pfm:block/shower_towel/light_blue_shower_towel","y":270},
+    "facing=south":{"model":"pfm:block/shower_towel/light_blue_shower_towel","y":0},
+    "facing=west":{"model":"pfm:block/shower_towel/light_blue_shower_towel","y":90}
+
+}
+
+}

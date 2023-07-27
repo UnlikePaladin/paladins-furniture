@@ -1,7 +1,7 @@
 {
   "criteria": {
     "tick": {
-      "trigger": "minecraft:tick"
+      "trigger": "pfm:give_book"
     }
   },
   "rewards": {

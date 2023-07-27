@@ -1,0 +1,13 @@
+{"variants":
+    {
+        "powered=false,facing=north":{"model":"pfm:block/shower/shower_handle","y":0},
+        "powered=false,facing=east":{"model":"pfm:block/shower/shower_handle","y":90},
+        "powered=false,facing=south":{"model":"pfm:block/shower/shower_handle","y":180},
+        "powered=false,facing=west":{"model":"pfm:block/shower/shower_handle","y":270},
+
+        "powered=true,facing=north":{"model":"pfm:block/shower/shower_handle_open","y":0},
+        "powered=true,facing=east":{"model":"pfm:block/shower/shower_handle_open","y":90},
+        "powered=true,facing=south":{"model":"pfm:block/shower/shower_handle_open","y":180},
+        "powered=true,facing=west":{"model":"pfm:block/shower/shower_handle_open","y":270}
+    }
+}

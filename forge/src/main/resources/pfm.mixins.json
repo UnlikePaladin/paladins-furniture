@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.unlikepaladin.pfm.mixin.forge",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "PFMModelLoaderMixin",
+    "PFMRenderLayersForgeMixin"
+  ],
+  "mixins": [
+    "PFMCookingPotBlockEntityMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

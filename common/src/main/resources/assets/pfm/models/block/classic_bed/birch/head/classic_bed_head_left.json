@@ -1,9 +1,0 @@
-{
-	"credit": "By UnlikePaladin",
-    "parent": "pfm:block/classic_bed/oak/head/classic_bed_head_left",
-	"textures": {
-		"0": "block/birch_planks",
-		"particle": "block/birch_planks"
-	}
-    
-}

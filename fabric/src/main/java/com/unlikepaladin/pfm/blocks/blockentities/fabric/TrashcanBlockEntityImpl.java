@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketByteBuf;
@@ -33,5 +34,9 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity implements Exte
     @Override
     public Packet<ClientPlayPacketListener> toUpdatePacket() {
         return BlockEntityUpdateS2CPacket.create(this);
+    }
+
+    public static BlockEntityType.BlockEntityFactory<? extends TrashcanBlockEntity> getFactory() {
+        return TrashcanBlockEntityImpl::new;
     }
 }

@@ -1,0 +1,9 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/fridge/fridge_top_open",
+	"textures": {
+		"particle": "block/gray_concrete",
+		"base": "block/gray_concrete",
+		"legs": "pfm:block/raw_concrete"
+	}    
+}
