@@ -22,6 +22,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
@@ -172,6 +173,11 @@ public class BasicBathtubBlock extends BedBlock {
         BathtubBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
         if (sinkBehavior != null && itemStack.getItem() != Items.AIR) {
             return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
+        }
+        if (state.get(LEVEL_8) > 0 && player.isSneaking() && player.getStackInHand(hand).isEmpty()) {
+            world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            decrementFluidLevel(state, world, pos);
+            return ActionResult.SUCCESS;
         }
         if (state.get(LEVEL_8) < 8) {
             BlockState sourceState = world.getBlockState(sourcePos);
