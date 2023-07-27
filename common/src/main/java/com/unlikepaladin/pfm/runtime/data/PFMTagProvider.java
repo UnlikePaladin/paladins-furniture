@@ -2,7 +2,9 @@ package com.unlikepaladin.pfm.runtime.data;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonObject;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
+import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.Tags;
 import com.unlikepaladin.pfm.mixin.PFMAbstractTagProvider$ObjectBuilderMixin;
@@ -75,7 +77,7 @@ public class PFMTagProvider {
         BasicSinkBlock[] sinkBlocks = BasicSinkBlock.streamSinks().toList().toArray(new BasicSinkBlock[0]);
         ShowerTowelBlock[] showerTowels = ShowerTowelBlock.streamShowerTowels().map(FurnitureBlock::getBlock).toArray(ShowerTowelBlock[]::new);
 
-        this.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                 .add(showerTowels)
                 .add(stoneCounters)
                 .add(stoneCabinets)
@@ -154,7 +156,7 @@ public class PFMTagProvider {
         HerringbonePlankBlock[] herringbonePlanks = HerringbonePlankBlock.streamPlanks().map(FurnitureBlock::getBlock).toArray(HerringbonePlankBlock[]::new);
         SimpleBunkLadderBlock[] simpleBunkLadders = SimpleBunkLadderBlock.streamSimpleBunkLadder().map(FurnitureBlock::getBlock).toArray(SimpleBunkLadderBlock[]::new);
 
-        this.getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
                 .add(showerTowels)
                 .add(woodCounters)
                 .add(woodCabinets)
@@ -189,17 +191,17 @@ public class PFMTagProvider {
                 .add(classicBeds)
                 .add(PaladinFurnitureModBlocksItems.BASIC_LAMP);
 
-        this.getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
                 .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
 
-        this.getOrCreateTagBuilder(BlockTags.BEDS)
+        getOrCreateTagBuilder(BlockTags.BEDS)
                 .add(simpleBeds)
                 .add(classicBeds);
 
-        this.getOrCreateTagBuilder(BlockTags.CLIMBABLE)
+        getOrCreateTagBuilder(BlockTags.CLIMBABLE)
                 .add(simpleBunkLadders);
 
-        this.getOrCreateTagBuilder(Tags.getTuckableBlocks())
+        getOrCreateTagBuilder(Tags.getTuckableBlocks())
                 .add(woodBasicTables)
                 .add(stoneBasicTables)
                 .add(woodClassicTables)
@@ -211,22 +213,24 @@ public class PFMTagProvider {
                 .add(woodLogTables)
                 .add(stoneNaturalTables)
                 .add(logTables);
+
+        PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::generateTags);
     }
 
-    protected AbstractTagProvider.ObjectBuilder<Block> getOrCreateTagBuilder(Tag.Identified<Block> tag) {
-        Tag.Builder builder = this.getTagBuilder(tag);
+    public static AbstractTagProvider.ObjectBuilder<Block> getOrCreateTagBuilder(Tag.Identified<Block> tag) {
+        Tag.Builder builder = getTagBuilder(tag);
         return PFMAbstractTagProvider$ObjectBuilderMixin.newTagProvider(builder, Registry.BLOCK, "pfm");
     }
-    private final Map<Identifier, Tag.Builder> tagBuilders = Maps.newLinkedHashMap();
+    private static final Map<Identifier, Tag.Builder> tagBuilders = Maps.newLinkedHashMap();
 
-    protected <T> Tag.Builder getTagBuilder(Tag.Identified<T> tag) {
-        return this.tagBuilders.computeIfAbsent(tag.getId(), (id) -> new Tag.Builder());
+    public static <T> Tag.Builder getTagBuilder(Tag.Identified<T> tag) {
+        return tagBuilders.computeIfAbsent(tag.getId(), (id) -> new Tag.Builder());
     }
 
     public void run(DataCache cache) {
-        this.tagBuilders.clear();
+        tagBuilders.clear();
         this.generateTags();
-        this.tagBuilders.forEach((id, builder) -> {
+        tagBuilders.forEach((id, builder) -> {
             List list = builder.streamEntries().filter(trackedEntry -> !trackedEntry.getEntry().canAdd(Registry.BLOCK::containsId, this.tagBuilders::containsKey)).collect(Collectors.toList());
             if (!list.isEmpty()) {
                 throw new IllegalArgumentException(String.format("Couldn't define tag %s as it is missing following references: %s", id, list.stream().map(Objects::toString).collect(Collectors.joining(","))));

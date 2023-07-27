@@ -5,6 +5,7 @@
   "client": [
   ],
   "mixins": [
+    "PFMCookingPotBlockEntityMixin"
   ],
   "injectors": {
     "defaultRequire": 1

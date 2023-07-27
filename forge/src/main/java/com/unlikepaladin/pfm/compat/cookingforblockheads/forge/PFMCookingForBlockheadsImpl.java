@@ -20,6 +20,10 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     @Override
+    public void generateTags() {
+    }
+
+    @Override
     public String getModId() {
         return CookingForBlockheads.MOD_ID;
     }

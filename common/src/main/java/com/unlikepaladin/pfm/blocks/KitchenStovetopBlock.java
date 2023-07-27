@@ -47,7 +47,7 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
 
     public KitchenStovetopBlock(Settings settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
+        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(LIT, true));
         KITCHEN_STOVETOPS.add(this);
     }
 

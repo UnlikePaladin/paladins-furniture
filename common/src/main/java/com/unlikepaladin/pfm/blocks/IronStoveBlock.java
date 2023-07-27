@@ -57,16 +57,4 @@ public class IronStoveBlock extends StoveBlock {
             default -> IRON_STOVE_WEST;
         };
     }
-    @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (!state.get(LIT)) {
-            return;
-        }
-        double x = (double)pos.getX() + 0.5;
-        double y = pos.getY();
-        double z = (double)pos.getZ() + 0.5;
-        if (random.nextDouble() < 0.1) {
-            world.playSound(x, y, z, SoundEvents.BLOCK_SMOKER_SMOKE, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
-        }
-    }
 }

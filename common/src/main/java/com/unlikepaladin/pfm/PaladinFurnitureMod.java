@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
+import com.unlikepaladin.pfm.compat.farmersdelight.PFMFarmersDelight;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
@@ -49,6 +50,8 @@ public class PaladinFurnitureMod {
 		DynamicBlockRegistry.addBlockSetContainer(WoodVariantRegistry.INSTANCE.getType(), WoodVariantRegistry.INSTANCE);
 		if (getModList().contains("cookingforblockheads"))
 			pfmModCompatibilities.add(PFMCookingForBlockheads.getInstance());
+		if (getModList().contains("farmersdelight"))
+			pfmModCompatibilities.add(PFMFarmersDelight.getInstance());
 	}
 
 

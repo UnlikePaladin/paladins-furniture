@@ -12,5 +12,6 @@ public interface PFMModCompatibility {
     void registerScreenHandlers();
     void registerScreens();
     void generateRecipes(Consumer<RecipeJsonProvider> exporter);
+    void generateTags();
     String getModId();
 }
