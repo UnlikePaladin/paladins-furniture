@@ -27,16 +27,14 @@ import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.fmlclient.ConfigGuiHandler;
-import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
@@ -77,23 +75,23 @@ public class PaladinFurnitureModClientForge {
 
     @SubscribeEvent
     public static void registerExtraModels(ModelRegistryEvent event) {
-        UnbakedBedModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedBasicTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedClassicTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedLogTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedDinnerTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedModernDinnerTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedKitchenCounterModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedKitchenDrawerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedKitchenWallCounterModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedKitchenWallDrawerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedKitchenCounterOvenModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedKitchenCabinetModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedMirrorModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedFridgeModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedFreezerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedClassicNightstandModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        UnbakedBedModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedBasicTableModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedClassicTableModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedLogTableModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedDinnerTableModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedModernDinnerTableModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedKitchenCounterModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedKitchenDrawerModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedKitchenWallCounterModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedKitchenWallDrawerModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedKitchenCounterOvenModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedKitchenCabinetModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedMirrorModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedFridgeModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedFreezerModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedClassicNightstandModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
+        UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(ForgeModelBakery::addSpecialModel);
     }
 }

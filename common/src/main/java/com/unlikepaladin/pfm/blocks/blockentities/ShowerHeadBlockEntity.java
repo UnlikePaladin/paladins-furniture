@@ -27,10 +27,9 @@ public class ShowerHeadBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putBoolean("isOpen", isOpen);
-        return nbt;
     }
 
     @Override

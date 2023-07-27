@@ -162,7 +162,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
         }
 
         if (this.isDirty) {
-            this.balmSync();
+            this.sync();
             this.isDirty = false;
         }
 
@@ -330,7 +330,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
 
     }
 
-    public NbtCompound writeNbt(NbtCompound tagCompound) {
+    public void writeNbt(NbtCompound tagCompound) {
         super.writeNbt(tagCompound);
         tagCompound.put("ItemHandler", this.container.serialize());
         tagCompound.putShort("BurnTime", (short)this.furnaceBurnTime);
@@ -341,8 +341,6 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
         if (this.customName != null) {
             tagCompound.putString("CustomName", Text.Serializer.toJson(this.customName));
         }
-
-        return tagCompound;
     }
 
     public void balmFromClientTag(NbtCompound tag) {
@@ -471,7 +469,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
     @Nullable
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, 13, this.toInitialChunkDataNbt());
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
     @Override

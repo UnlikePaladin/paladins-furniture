@@ -8,7 +8,6 @@ import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.block.BalmBlockEntityContract;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
-import net.blay09.mods.balm.api.container.DefaultContainer;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.api.provider.BalmProvider;
@@ -18,12 +17,9 @@ import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.tile.CounterBlockEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -56,12 +52,10 @@ public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9
     private boolean capabilitiesInitialized;
     public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         if (!this.capabilitiesInitialized) {
-            List<BalmProviderHolder> providers = new ArrayList();
-            this.balmBuildProviders(providers);
-            Iterator var4 = providers.iterator();
+            List<BalmProviderHolder> providers = new ArrayList<>();
+            this.buildProviders(providers);
 
-            while(var4.hasNext()) {
-                BalmProviderHolder providerHolder = (BalmProviderHolder)var4.next();
+            for (BalmProviderHolder providerHolder : providers) {
                 Iterator var6 = providerHolder.getProviders().iterator();
 
                 while(var6.hasNext()) {
@@ -71,10 +65,10 @@ public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9
 
                 var6 = providerHolder.getSidedProviders().iterator();
 
-                while(var6.hasNext()) {
-                    Pair<Direction, BalmProvider<?>> pair = (Pair)var6.next();
-                    Direction direction = (Direction)pair.getFirst();
-                    BalmProvider<?> provider = (BalmProvider)pair.getSecond();
+                while (var6.hasNext()) {
+                    Pair<Direction, BalmProvider<?>> pair = (Pair) var6.next();
+                    Direction direction = pair.getFirst();
+                    BalmProvider<?> provider = pair.getSecond();
                     Map<Capability<?>, LazyOptional<?>> sidedCapabilities = this.sidedCapabilities.column(direction);
                     this.addCapabilities(provider, sidedCapabilities);
                 }
@@ -85,17 +79,17 @@ public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9
 
         LazyOptional<?> result = null;
         if (side != null) {
-            result = (LazyOptional)this.sidedCapabilities.get(cap, side);
+            result = this.sidedCapabilities.get(cap, side);
         }
 
         if (result == null) {
-            result = (LazyOptional)this.capabilities.get(cap);
+            result = this.capabilities.get(cap);
         }
 
         return result != null ? result.cast() : super.getCapability(cap, side);
     }
 
-    private final Map<Capability<?>, LazyOptional<?>> capabilities = new HashMap();
+    private final Map<Capability<?>, LazyOptional<?>> capabilities = new HashMap<>();
     private final Table<Capability<?>, Direction, LazyOptional<?>> sidedCapabilities = HashBasedTable.create();
     private void addCapabilities(BalmProvider<?> provider, Map<Capability<?>, LazyOptional<?>> capabilities) {
         ForgeBalmProviders forgeProviders = (ForgeBalmProviders) Balm.getProviders();
@@ -113,27 +107,9 @@ public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9
     }
 
     @Override
-    public Box balmGetRenderBoundingBox() {
-        return super.getRenderBoundingBox();
-    }
-
-    @Override
-    public void balmOnLoad() {
-
-    }
-
-    @Override
-    public void balmFromClientTag(NbtCompound nbtCompound) {
-        return;
-    }
-
-    @Override
-    public NbtCompound balmToClientTag(NbtCompound nbtCompound) {
-        return nbtCompound;
-    }
-
-    @Override
-    public void balmSync() {
-
+    public <T> T getProvider(Class<T> clazz) {
+        ForgeBalmProviders forgeProviders = (ForgeBalmProviders)Balm.getProviders();
+        Capability<?> capability = forgeProviders.getCapability(clazz);
+        return (T) this.getCapability(capability).resolve().orElse(null);
     }
 }

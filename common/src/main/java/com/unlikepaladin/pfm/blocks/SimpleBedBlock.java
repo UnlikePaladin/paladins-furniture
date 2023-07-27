@@ -93,7 +93,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock {
         }
         player.trySleep(pos).ifLeft(reason -> {
             if (reason != null) {
-                player.sendMessage(reason.toText(), true);
+                player.sendMessage(reason.getMessage(), true);
             }
         });
         return ActionResult.SUCCESS;

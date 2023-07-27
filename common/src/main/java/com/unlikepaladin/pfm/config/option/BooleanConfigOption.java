@@ -1,9 +1,5 @@
 package com.unlikepaladin.pfm.config.option;
 
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtNull;
-import net.minecraft.nbt.NbtTagSizeTracker;
-import net.minecraft.nbt.NbtType;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 

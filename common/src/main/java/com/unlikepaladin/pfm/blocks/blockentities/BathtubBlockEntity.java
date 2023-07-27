@@ -57,11 +57,10 @@ public class BathtubBlockEntity extends BedBlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putInt("tubTimer", fillTimer);
         nbt.putBoolean("isTubFilling", isFilling);
-        return nbt;
     }
 
     public void setFillTimer(int fillTimer) {

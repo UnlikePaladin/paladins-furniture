@@ -42,11 +42,10 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         nbt.putString("color", color.asString());
         nbt.putString("variant", variant.getIdentifier().toString());
-        return nbt;
     }
 
 

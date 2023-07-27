@@ -9,7 +9,7 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
-import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.common.extensions.IForgeMenuType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +18,7 @@ import java.util.function.BiFunction;
 public class ScreenHandlerRegistryImpl {
     public static final List<ScreenHandlerType<?>> screenHandlerTypeList= new ArrayList<>();
     public static <T extends ScreenHandler> ScreenHandlerType<T> registerScreenHandlerExtended(Identifier id, TriFunc<Integer, PlayerInventory, PacketByteBuf, T> factory) {
-        ScreenHandlerType<T> type = IForgeContainerType.create(factory::apply);
+        ScreenHandlerType<T> type = IForgeMenuType.create(factory::apply);
         type.setRegistryName(id);
         screenHandlerTypeList.add(type);
         return type;

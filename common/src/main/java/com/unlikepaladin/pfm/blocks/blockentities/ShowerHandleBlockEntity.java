@@ -17,13 +17,12 @@ public class ShowerHandleBlockEntity extends BlockEntity {
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
         if (this.showerHead != null) {
             NbtLong showerHeadPos = NbtLong.of(this.showerHead.asLong());
             nbt.put("showerHead", showerHeadPos);
         }
-        return nbt;
     }
 
     @Override
