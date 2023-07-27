@@ -3,7 +3,7 @@ package com.unlikepaladin.pfm.blocks.forge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.forge.StoveBlockEntityImpl;
-import com.unlikepaladin.pfm.compat.forge.cookingforblockheads.PFMCookingForBlockHeadsCompat;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.BlockState;

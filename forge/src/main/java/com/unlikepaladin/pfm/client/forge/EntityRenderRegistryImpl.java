@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.client.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.compat.forge.cookingforblockheads.PFMCookingForBlockHeadsCompat;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.entity.render.StoveBlockEntityRenderer;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.model.TexturedModelData;

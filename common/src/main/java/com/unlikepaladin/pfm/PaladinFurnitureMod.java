@@ -2,6 +2,8 @@ package com.unlikepaladin.pfm;
 
 import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
+import com.unlikepaladin.pfm.compat.PFMModCompatibility;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
@@ -19,6 +21,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +37,7 @@ public class PaladinFurnitureMod {
 	public static ItemGroup DYE_KITS;
 	private static PaladinFurnitureModUpdateChecker updateChecker;
 	public static boolean isClient = false;
-
+	public static List<PFMModCompatibility> pfmModCompatibilities = new ArrayList<>();
 	public void commonInit() {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
@@ -44,6 +47,8 @@ public class PaladinFurnitureMod {
 		updateChecker = new PaladinFurnitureModUpdateChecker();
 		updateChecker.checkForUpdates(getPFMConfig());
 		DynamicBlockRegistry.addBlockSetContainer(WoodVariantRegistry.INSTANCE.getType(), WoodVariantRegistry.INSTANCE);
+		if (getModList().contains("cookingforblockheads"))
+			pfmModCompatibilities.add(PFMCookingForBlockheads.getInstance());
 	}
 
 

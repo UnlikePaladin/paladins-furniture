@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity3x3;
-import com.unlikepaladin.pfm.compat.forge.cookingforblockheads.GenericStorageBlockEntityBalm3x3;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.GenericStorageBlockEntityBalm3x3;
 import net.minecraft.block.entity.BlockEntityType;
 
 public class GenericStorageBlockEntity3x3Impl {

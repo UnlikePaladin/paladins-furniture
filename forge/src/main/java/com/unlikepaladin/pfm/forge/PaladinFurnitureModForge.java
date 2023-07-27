@@ -1,13 +1,12 @@
 package com.unlikepaladin.pfm.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.compat.forge.imm_ptl.PFMImmPtlRegistry;
+import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmPtlRegistry;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.data.forge.TagsImpl;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.dynamic.forge.LateBlockRegistryForge;
 import com.unlikepaladin.pfm.registry.forge.*;
-import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.tag.BlockTags;

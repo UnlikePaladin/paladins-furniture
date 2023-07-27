@@ -105,9 +105,6 @@ public class PFMDataGen {
             List<String> oldHash = Files.readAllLines(hashPath);
             List<String> modList = Files.readAllLines(modListPath);
             if (!hashToCompare.toString().equals(oldHash.toString()) || !modList.toString().replace("[", "").replace("]", "").equals(PaladinFurnitureMod.getVersionMap().toString())) {
-                System.out.println(modList.toString().replace("[", "").replace("]", ""));
-                System.out.println(PaladinFurnitureMod.getVersionMap().toString());
-
                 LOGGER.info("Starting PFM Data and Asset Gen, this might take a bit.");
                 PFMFileUtil.deleteDir(PFMRuntimeResources.getResourceDirectory().toFile());
                 DataCache dataCache = new DataCache(this.output, "cache");

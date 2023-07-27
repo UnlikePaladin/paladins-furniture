@@ -75,8 +75,8 @@ public class ForgeKitchenWallDrawerModel extends AbstractBakedModel {
             BitSet set = extraData.getData(CONNECTIONS).connections;
             Direction direction = state.get(KitchenWallDrawerBlock.FACING);
             KitchenWallDrawerBlock block = (KitchenWallDrawerBlock) state.getBlock();
-            boolean isNeighborStateOppositeFacingDifferentDirection =  set.get(1);
-            boolean isNeighborStateFacingDifferentDirection = set.get(0);
+            boolean isNeighborStateOppositeFacingDifferentDirection =  set.get(0);
+            boolean isNeighborStateFacingDifferentDirection = set.get(1);
             BlockState neighborStateFacing = extraData.getData(NEIGHBOR_FACING);
             BlockState neighborStateOpposite = extraData.getData(NEIGHBOR_OPPOSITE);
             int openOffset = state.get(KitchenWallDrawerBlock.OPEN) ? 5 : 0;
@@ -84,10 +84,10 @@ public class ForgeKitchenWallDrawerModel extends AbstractBakedModel {
                 Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
                 if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateFacingDifferentDirection) {
                     if (direction2 == direction.rotateYCounterclockwise()) {
-                        return getBakedModels().get(modelParts.get(3 + openOffset)).getQuads(state, side, rand, extraData);
+                        return getBakedModels().get(modelParts.get(3+openOffset)).getQuads(state, side, rand, extraData);
                     }
                     else {
-                        return getBakedModels().get(modelParts.get(4 + openOffset)).getQuads(state, side, rand, extraData);
+                        return getBakedModels().get(modelParts.get(4+openOffset)).getQuads(state, side, rand, extraData);
                     }
                 } else {
                     return getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData);
@@ -103,9 +103,9 @@ public class ForgeKitchenWallDrawerModel extends AbstractBakedModel {
                 }
                 if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
                     if (direction3 == direction.rotateYCounterclockwise()) {
-                        return getBakedModels().get(modelParts.get(2 + openOffset)).getQuads(state, side, rand, extraData);
+                        return getBakedModels().get(modelParts.get(2+openOffset)).getQuads(state, side, rand, extraData);
                     } else {
-                        return getBakedModels().get(modelParts.get(1 + openOffset)).getQuads(state, side, rand, extraData);
+                        return getBakedModels().get(modelParts.get(1+openOffset)).getQuads(state, side, rand, extraData);
                     }
                 } else {
                     return getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData);

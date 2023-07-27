@@ -7,7 +7,7 @@ import com.unlikepaladin.pfm.advancements.fabric.CriteriaRegistryFabric;
 import com.unlikepaladin.pfm.blocks.BasicChairBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.compat.fabric.MissingDependencyScreen;
-import com.unlikepaladin.pfm.compat.fabric.imm_ptl.PFMImmPtlRegistry;
+import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmPtlRegistry;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.mixin.PFMMixinPointOfInterestTypeFactory;

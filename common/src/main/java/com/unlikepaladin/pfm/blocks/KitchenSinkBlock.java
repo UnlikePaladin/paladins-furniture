@@ -85,4 +85,10 @@ public class KitchenSinkBlock extends AbstractSinkBlock {
         }
         return 0;
     }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        //if (state.get(LEVEL_4) > 0)
+        return super.onUse(state, world, pos, player, hand, hit);
+    }
 }

@@ -98,7 +98,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
         if (this.isFull(state)) {
             return;
         }
-        world.setBlockState(pos, (BlockState)state.with(LEVEL_4, state.get(LEVEL_4) + 1));
+        world.setBlockState(pos, state.with(LEVEL_4, state.get(LEVEL_4) + 1));
         world.syncWorldEvent(WorldEvents.POINTED_DRIPSTONE_DRIPS_WATER_INTO_CAULDRON, pos, 0);
     }
 

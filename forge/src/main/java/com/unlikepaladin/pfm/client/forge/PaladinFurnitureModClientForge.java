@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.client.forge;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
@@ -22,13 +21,9 @@ import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinner
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
-import com.unlikepaladin.pfm.compat.forge.imm_ptl.client.PFMImmPtlRegistryClient;
+import com.unlikepaladin.pfm.compat.imm_ptl.client.PFMImmPtlRegistryClient;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
-import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
-import com.unlikepaladin.pfm.registry.forge.ScreenHandlerRegistryForge;
-import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraftforge.api.distmarker.Dist;
@@ -40,8 +35,6 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fmlclient.ConfigGuiHandler;
 import net.minecraftforge.fmlclient.registry.ClientRegistry;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.lwjgl.glfw.GLFW;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)

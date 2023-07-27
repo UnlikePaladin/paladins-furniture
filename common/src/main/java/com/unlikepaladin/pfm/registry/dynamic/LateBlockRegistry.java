@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.registry.dynamic;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
+import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.materials.*;
 import com.unlikepaladin.pfm.items.LampItem;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
@@ -391,5 +392,7 @@ public class LateBlockRegistry {
         }});
         PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM = LampItem.getItemFactory(PaladinFurnitureModBlocksItems.BASIC_LAMP, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
         LateBlockRegistry.registerLateItem( "basic_lamp", () -> PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM);
+        PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerBlocks);
+        PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerItems);
     }
 }

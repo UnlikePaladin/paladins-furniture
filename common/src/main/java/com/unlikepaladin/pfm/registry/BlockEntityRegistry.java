@@ -1,7 +1,10 @@
 package com.unlikepaladin.pfm.registry;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.blockentities.*;
+import com.unlikepaladin.pfm.compat.PFMModCompatibility;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
@@ -36,6 +39,7 @@ public class BlockEntityRegistry {
         BlockEntities.LAMP_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("lamp_block_entity", new Block[]{PaladinFurnitureModBlocksItems.BASIC_LAMP}, LampBlockEntity.getFactory());
         BlockEntities.TOASTER_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("iron_toaster", new Block[]{PaladinFurnitureModBlocksItems.TOASTER_BLOCK}, PFMToasterBlockEntity.getFactory());
 
+        PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerBlockEntities);
     }
 
     @ExpectPlatform

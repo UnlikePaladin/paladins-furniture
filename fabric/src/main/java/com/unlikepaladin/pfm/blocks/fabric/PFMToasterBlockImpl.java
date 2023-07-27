@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.PFMSandwichableCompat;
+import com.unlikepaladin.pfm.compat.sandwichable.PFMSandwichableCompat;
 import net.minecraft.item.ItemStack;
 
 public class PFMToasterBlockImpl {

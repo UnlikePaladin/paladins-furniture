@@ -2,8 +2,10 @@ package com.unlikepaladin.pfm.runtime.data;
 
 import com.google.common.collect.Sets;
 import com.google.gson.JsonObject;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
@@ -613,6 +615,7 @@ public class PFMRecipeProvider {
         }
 
         offerLampRecipes(exporter);
+        PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> pfmModCompatibility.generateRecipes(exporter));
     }
 
     public static void offerLampRecipes(Consumer<RecipeJsonProvider> exporter) {
@@ -847,11 +850,11 @@ public class PFMRecipeProvider {
         return conditionsFromItemPredicates(ItemPredicate.Builder.create().items(item).count(count).build());
     }
 
-    private static InventoryChangedCriterion.Conditions conditionsFromItem(ItemConvertible item) {
+    public static InventoryChangedCriterion.Conditions conditionsFromItem(ItemConvertible item) {
         return conditionsFromItemPredicates(ItemPredicate.Builder.create().items(item).build());
     }
 
-    private static InventoryChangedCriterion.Conditions conditionsFromIngredient(Ingredient item) {
+    public static InventoryChangedCriterion.Conditions conditionsFromIngredient(Ingredient item) {
         List<Item> items = new ArrayList<>();
         for (ItemStack item1:
                 item.getMatchingStacks()) {
