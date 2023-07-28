@@ -20,17 +20,18 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.common.util.Size2i;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private final IDrawable BACKGROUND;
-    public static final Identifier TEXTURE_GUI_VANILLA = new Identifier("jei:textures/gui/gui_vanilla.png");
+    public static final Identifier TEXTURE_GUI_VANILLA = new Identifier("pfm:textures/gui/gui_jei.png");
     public final IDrawable ICON;
     public static final TranslatableText TITLE = new TranslatableText("rei.pfm.furniture");
     private final ICraftingGridHelper craftingGridHelper;
-    private static final int craftOutputSlot = 0;
-    private static final int craftInputSlot1 = 1;
+    private static final int craftOutputSlot = 9;
+    private static final int craftInputSlot1 = 0;
 
     public FurnitureCategory(IGuiHelper guiHelper) {
         ICON = guiHelper.createDrawableIngredient(new ItemStack(PaladinFurnitureModBlocksItems.WORKING_TABLE));
@@ -40,12 +41,12 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     public static final Identifier IDENTIFIER = new Identifier(PaladinFurnitureMod.MOD_ID, "furniture");
 
     @Override
-    public Identifier getUid() {
+    public @NotNull Identifier getUid() {
         return IDENTIFIER;
     }
 
     @Override
-    public Class getRecipeClass() {
+    public @NotNull Class<FurnitureRecipe> getRecipeClass() {
         return FurnitureRecipe.class;
     }
 
@@ -67,7 +68,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     @Override
     public void setIngredients(FurnitureRecipe recipe, IIngredients ingredients) {
          List<Ingredient> ingredientsList = recipe.getIngredients();
-         HashMap<Item, Integer> containedItems = new HashMap<>();
+         HashMap<Item, Integer> containedItems = new LinkedHashMap<>();
             for (Ingredient ingredient : ingredientsList) {
                 for (ItemStack stack : ingredient.getMatchingStacks()) {
                     if (!containedItems.containsKey(stack.getItem())) {
