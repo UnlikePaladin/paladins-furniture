@@ -1,7 +1,9 @@
 package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
+import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -24,5 +26,9 @@ public class StovetopBlockEntityImpl extends StovetopBlockEntity {
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         return createNbt();
+    }
+
+    public static BlockEntityType.BlockEntityFactory<? extends StovetopBlockEntity> getFactory() {
+        return StovetopBlockEntityImpl::new;
     }
 }

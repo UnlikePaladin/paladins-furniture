@@ -2,23 +2,22 @@ package com.unlikepaladin.pfm.entity;
 
 import com.google.common.collect.UnmodifiableIterator;
 import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
-import com.unlikepaladin.pfm.blocks.BasicBathtub;
-import com.unlikepaladin.pfm.blocks.BasicToilet;
+import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
+import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
-import com.unlikepaladin.pfm.registry.NetworkIDs;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import io.netty.buffer.Unpooled;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Dismounting;
 import net.minecraft.entity.EntityPose;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributeModifier;
 import net.minecraft.entity.attribute.EntityAttributes;
 import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
@@ -45,13 +44,13 @@ public class ChairEntity extends MobEntity {
                     this.discard();
                 }
             }
-            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicToilet && world.isClient()){
-                if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed() && this.world.getBlockState(this.getBlockPos()).get(BasicToilet.TOILET_STATE) == ToiletState.CLEAN) {
+            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicToiletBlock && world.isClient()){
+                if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed() && this.world.getBlockState(this.getBlockPos()).get(BasicToiletBlock.TOILET_STATE) == ToiletState.CLEAN) {
                     fart(this.getBlockPos());
                 }
                 super.tick();
             }
-            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock || this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicBathtub){
+            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock || this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicBathtubBlock){
                 super.tick();
             }
             else {
@@ -83,6 +82,7 @@ public class ChairEntity extends MobEntity {
         return false;
     }
 
+    @Override
     public Vec3d updatePassengerForDismount(LivingEntity passenger) {
         Direction direction = this.getMovementDirection();
         if (direction.getAxis() == Direction.Axis.Y) {

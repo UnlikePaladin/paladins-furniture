@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -19,7 +20,6 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
     public PlateBlockEntityImpl(BlockPos blockPos, BlockState blockState) {
         super(blockPos, blockState);
     }
-
 
     @Nullable
     @Override
@@ -44,5 +44,9 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
         super.onDataPacket(net, pkt);
         this.itemInPlate.clear();
         Inventories.readNbt(pkt.getNbt(), this.itemInPlate);
+    }
+
+    public static BlockEntityType.BlockEntityFactory<? extends PlateBlockEntity> getFactory() {
+        return PlateBlockEntityImpl::new;
     }
 }

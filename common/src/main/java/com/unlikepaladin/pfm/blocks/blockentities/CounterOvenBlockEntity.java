@@ -1,8 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.KitchenCounterOven;
-import com.unlikepaladin.pfm.blocks.Stove;
-import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
+import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
 import com.unlikepaladin.pfm.menus.IronStoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
@@ -39,14 +37,14 @@ public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
 
 
     protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof KitchenCounterOven){
+        if (state.getBlock() instanceof KitchenCounterOvenBlock){
             CounterOvenBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
             CounterOvenBlockEntity.this.setOpen(state, true);
         }
     }
 
     protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof KitchenCounterOven) {
+        if (state.getBlock() instanceof KitchenCounterOvenBlock) {
             CounterOvenBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
             CounterOvenBlockEntity.this.setOpen(state, false);
         }

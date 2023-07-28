@@ -15,16 +15,8 @@ loom {
         extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
 
         mixinConfig "pfm-common.mixins.json"
+        mixinConfig "pfm.mixins.json"
 
-        dataGen {
-            mod "pfm"
-        }
-    }
-
-    launches {
-        data {
-            arg "--existing", file("src/main/resources").absolutePath
-        }
     }
 }
 
@@ -43,21 +35,79 @@ repositories {
         name = "Progwml6 maven"
         url = "https://dvs1.progwml6.com/files/maven/"
     }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+    maven {
+        url "https://maven.twelveiterations.com/repository/maven-public/"
+
+        content {
+            includeGroup "net.blay09.mods"
+        }
+    }
+
 }
 
 
 dependencies {
     forge "net.minecraftforge:forge:${rootProject.forge_version}"
 
-    modImplementation("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}")
-    modCompileOnly(("mezz.jei:jei-${rootProject.minecraft_version}:${rootProject.jei_version}:api"))
-    modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}:${rootProject.jei_version}")
-
-    modApi("me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_config_version}")
-
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+
+    modImplementation("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}")
+    modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-forge-api:${rootProject.jei_version}")
+    modCompileOnlyApi "me.shedaniel:RoughlyEnoughItems-api-forge:${rootProject.rei_version}"
+    //modRuntimeOnly("curse.maven:biomesop-220318:3562256")
+    modCompileOnly ("maven.modrinth:oculus:${rootProject.oculus_version}")
+
+    modCompileOnly "curse.maven:balm-forge-531761:${rootProject.balm_version_forge}"
+    modCompileOnly "curse.maven:cooking-for-blockheads-forge-231484:${rootProject.cookingforblockheads_version_forge}"
+    modCompileOnly "curse.maven:farmers-delight-forge-398521:${rootProject.farmers_delight_version_forge}"
 }
+
+if(rootProject.jei_compatibility == "true") {
+    dependencies {
+        modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-forge:${rootProject.jei_version}")
+    }
+}
+if (rootProject.immersive_portals_compatibility_forge == "true"){
+    dependencies {
+        modImplementation("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
+            transitive(false)
+        }
+    }
+}
+else {
+    dependencies {
+        modCompileOnly("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
+            transitive(false)
+        }
+    }
+}
+if (rootProject.lazy_dfu_enabled == "true"){
+    dependencies {
+        modRuntimeOnly ("curse.maven:lazydfu-460819:${rootProject.lazy_dfu_version_forge}")
+    }
+}
+
+if (rootProject.rei_compatibility == "true"){
+    dependencies {
+        modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version}")
+    }
+}
+
+
 
 processResources {
     inputs.property "version", project.version

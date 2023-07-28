@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.blocks.behavior;
 
-import com.unlikepaladin.pfm.blocks.BasicBathtub;
-import com.unlikepaladin.pfm.blocks.KitchenSink;
+import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.block.Block;
@@ -13,12 +12,10 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.*;
 import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
-import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Util;
@@ -40,7 +37,7 @@ public interface BathtubBehavior {
     public ActionResult interact(BlockState var1, World var2, BlockPos var3, PlayerEntity var4, Hand var5, ItemStack var6);
 
     BathtubBehavior CLEAN_SHULKER_BOX = (state, world, pos, player, hand, stack) -> {
-        if (state.get(BasicBathtub.LEVEL_8) == 0) {
+        if (state.get(BasicBathtubBlock.LEVEL_8) == 0) {
             return ActionResult.PASS;
         }
         Block block = Block.getBlockFromItem(stack.getItem());
@@ -54,13 +51,13 @@ public interface BathtubBehavior {
             }
             player.setStackInHand(hand, itemStack);
             player.incrementStat(Stats.CLEAN_SHULKER_BOX);
-            BasicBathtub.decrementFluidLevel(state, world, pos);
+            BasicBathtubBlock.decrementFluidLevel(state, world, pos);
         }
         return ActionResult.success(world.isClient);
     };
 
     BathtubBehavior CLEAN_DYEABLE_ITEM = (state, world, pos, player, hand, stack) -> {
-       if (state.get(BasicBathtub.LEVEL_8) == 0) {
+       if (state.get(BasicBathtubBlock.LEVEL_8) == 0) {
            return ActionResult.PASS;
        }
         Item item = stack.getItem();
@@ -74,12 +71,12 @@ public interface BathtubBehavior {
         if (!world.isClient) {
             dyeableItem.removeColor(stack);
             player.incrementStat(Stats.CLEAN_ARMOR);
-            BasicBathtub.decrementFluidLevel(state, world, pos);
+            BasicBathtubBlock.decrementFluidLevel(state, world, pos);
         }
         return ActionResult.success(world.isClient);
 };
     BathtubBehavior CLEAN_BANNER = (state, world, pos, player, hand, stack) -> {
-        if (BannerBlockEntity.getPatternCount(stack) <= 0 || state.get(BasicBathtub.LEVEL_8) == 0) {
+        if (BannerBlockEntity.getPatternCount(stack) <= 0 || state.get(BasicBathtubBlock.LEVEL_8) == 0) {
             return ActionResult.PASS;
         }
         if (!world.isClient) {
@@ -97,7 +94,7 @@ public interface BathtubBehavior {
                 player.dropItem(itemStack, false);
             }
             player.incrementStat(Stats.CLEAN_BANNER);
-            BasicBathtub.decrementFluidLevel(state, world, pos);
+            BasicBathtubBlock.decrementFluidLevel(state, world, pos);
         }
         return ActionResult.success(world.isClient);
     };
@@ -110,11 +107,11 @@ public interface BathtubBehavior {
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.BUCKET)));
                 player.incrementStat(Stats.USED.getOrCreateStat(item));
             }
-            int newLevel = (world.getBlockState(pos).get(BasicBathtub.LEVEL_8) + 4);
+            int newLevel = (world.getBlockState(pos).get(BasicBathtubBlock.LEVEL_8) + 4);
             if (newLevel >= 0 && newLevel <= 8)  {
-                world.setBlockState(pos, state.with(BasicBathtub.LEVEL_8, newLevel));
+                world.setBlockState(pos, state.with(BasicBathtubBlock.LEVEL_8, newLevel));
             } else {
-                world.setBlockState(pos, state.with(BasicBathtub.LEVEL_8, 8));
+                world.setBlockState(pos, state.with(BasicBathtubBlock.LEVEL_8, 8));
             }
             world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0f, 1.0f);
         }
@@ -130,11 +127,11 @@ public interface BathtubBehavior {
             player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, output));
             player.incrementStat(Statistics.USE_BATHTUB);
             player.incrementStat(Stats.USED.getOrCreateStat(item));
-            int newLevel = (world.getBlockState(pos).get(BasicBathtub.LEVEL_8) - 4);
+            int newLevel = (world.getBlockState(pos).get(BasicBathtubBlock.LEVEL_8) - 4);
             if (newLevel >= 0)  {
-                world.setBlockState(pos, state.with(BasicBathtub.LEVEL_8, newLevel));
+                world.setBlockState(pos, state.with(BasicBathtubBlock.LEVEL_8, newLevel));
             } else {
-                world.setBlockState(pos, state.with(BasicBathtub.LEVEL_8, 0));
+                world.setBlockState(pos, state.with(BasicBathtubBlock.LEVEL_8, 0));
             }
             world.playSound(null, pos, soundEvent, SoundCategory.BLOCKS, 1.0f, 1.0f);
         }
@@ -146,30 +143,30 @@ public interface BathtubBehavior {
     }
     static void registerBehavior() {
         BathtubBehavior.registerBucketBehavior(TUB_BEHAVIOR);
-        TUB_BEHAVIOR.put(Items.BUCKET, (state2, world, pos, player, hand, stack) -> BathtubBehavior.emptyTub(state2, world, pos, player, hand, stack, new ItemStack(Items.WATER_BUCKET), state -> state.get(BasicBathtub.LEVEL_8) >= 4, SoundEvents.ITEM_BUCKET_FILL));
+        TUB_BEHAVIOR.put(Items.BUCKET, (state2, world, pos, player, hand, stack) -> BathtubBehavior.emptyTub(state2, world, pos, player, hand, stack, new ItemStack(Items.WATER_BUCKET), state -> state.get(BasicBathtubBlock.LEVEL_8) >= 4, SoundEvents.ITEM_BUCKET_FILL));
         TUB_BEHAVIOR.put(Items.GLASS_BOTTLE, (state, world, pos, player, hand, stack) -> {
             if (!world.isClient) {
-                if (state.get(BasicBathtub.LEVEL_8) == 0) {
+                if (state.get(BasicBathtubBlock.LEVEL_8) == 0) {
                     return ActionResult.PASS;
                 }
                 Item item = stack.getItem();
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, PotionUtil.setPotion(new ItemStack(Items.POTION), Potions.WATER)));
                 player.incrementStat(Statistics.USE_BATHTUB);
                 player.incrementStat(Stats.USED.getOrCreateStat(item));
-                BasicBathtub.decrementFluidLevel(state, world, pos);
+                BasicBathtubBlock.decrementFluidLevel(state, world, pos);
                 world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_FILL, SoundCategory.BLOCKS, 1.0f, 1.0f);
             }
             return ActionResult.success(world.isClient);
         });
         TUB_BEHAVIOR.put(Items.POTION, (state, world, pos, player, hand, stack) -> {
-            if (state.get(BasicBathtub.LEVEL_8) == 8 || PotionUtil.getPotion(stack) != Potions.WATER) {
+            if (state.get(BasicBathtubBlock.LEVEL_8) == 8 || PotionUtil.getPotion(stack) != Potions.WATER) {
                 return ActionResult.PASS;
             }
             if (!world.isClient) {
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
                 player.incrementStat(Statistics.USE_BATHTUB);
                 player.incrementStat(Stats.USED.getOrCreateStat(stack.getItem()));
-                world.setBlockState(pos, state.cycle(BasicBathtub.LEVEL_8));
+                world.setBlockState(pos, state.cycle(BasicBathtubBlock.LEVEL_8));
                 world.playSound(null, pos, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
             }
             return ActionResult.success(world.isClient);

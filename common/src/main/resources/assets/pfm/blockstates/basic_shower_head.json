@@ -1,0 +1,10 @@
+{"variants":
+{
+    "facing=north":{"model":"pfm:block/shower/shower_head","y":180},
+    "facing=east":{"model":"pfm:block/shower/shower_head","y":270},
+    "facing=south":{"model":"pfm:block/shower/shower_head","y":0},
+    "facing=west":{"model":"pfm:block/shower/shower_head","y":90}
+
+}
+
+}

@@ -1,10 +1,11 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.google.common.collect.Maps;
-import com.unlikepaladin.pfm.blocks.Freezer;
+import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -44,12 +45,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 
-public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker,
-        RecipeInputProvider {
-    public FreezerBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state) {
-        super(blockEntityType, pos, state);
-        this.recipeType = RecipeTypes.FREEZING_RECIPE;
-    }
+public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker, RecipeInputProvider {
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.FREEZER_BLOCK_ENTITY, pos, state);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
@@ -59,7 +55,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
         @Override
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Freezer) {
+            if (state.getBlock() instanceof FreezerBlock) {
                 FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
                 FreezerBlockEntity.this.setOpen(state, true);
             }
@@ -67,7 +63,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
         @Override
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Freezer) {
+            if (state.getBlock() instanceof FreezerBlock) {
                 FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
                 FreezerBlockEntity.this.setOpen(state, false);
             }
@@ -317,9 +313,9 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         super.readNbt(nbt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.inventory);
-        this.fuelTime = nbt.getShort("BurnTime");
-        this.freezeTime = nbt.getShort("CookTime");
-        this.freezeTimeTotal = nbt.getShort("CookTimeTotal");
+        this.fuelTime = nbt.getShort("FuelTimeLeft");
+        this.freezeTime = nbt.getShort("FreezeTime");
+        this.freezeTimeTotal = nbt.getShort("FreezeTimeTotal");
         this.fuelTimeTotal = this.getFuelTime(this.inventory.get(1));
         NbtCompound nbtCompound = nbt.getCompound("RecipesUsed");
         for (String string : nbtCompound.getKeys()) {
@@ -330,23 +326,23 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     @Override
     public void writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+        Inventories.writeNbt(nbt, this.inventory);
         nbt.putShort("FuelTimeLeft", (short)this.fuelTime);
         nbt.putShort("FreezeTime", (short)this.freezeTime);
         nbt.putShort("FreezeTimeTotal", (short)this.freezeTimeTotal);
-        Inventories.writeNbt(nbt, this.inventory);
         NbtCompound nbtCompound = new NbtCompound();
-        this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), (int)integer));
+        this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), integer));
         nbt.put("RecipesUsed", nbtCompound);
     }
 
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Freezer.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+        this.world.setBlockState(this.getPos(), state.with(FreezerBlock.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
     }
 
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.get(Freezer.FACING).getVector();
+        Vec3i vec3i = state.get(FreezerBlock.FACING).getVector();
         double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
@@ -470,5 +466,9 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         }
     }
 
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends FreezerBlockEntity> getFactory() {
+        throw new AssertionError();
+    }
 }
 

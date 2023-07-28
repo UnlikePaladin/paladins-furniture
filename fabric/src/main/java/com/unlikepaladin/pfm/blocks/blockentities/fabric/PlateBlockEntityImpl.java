@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
@@ -24,5 +25,9 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         return createNbt();
+    }
+
+    public static BlockEntityType.BlockEntityFactory<? extends PlateBlockEntity> getFactory() {
+        return PlateBlockEntityImpl::new;
     }
 }
