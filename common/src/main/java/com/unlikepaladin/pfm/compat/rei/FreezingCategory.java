@@ -21,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class FreezingCategory implements DisplayCategory<FreezingDisplay> {
-    public static final EntryStack<ItemStack> ICON = EntryStacks.of(PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+    public static final EntryStack<ItemStack> ICON = EntryStacks.of(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
     public static final TranslatableText TITLE = new TranslatableText("rei.pfm.freezer");
 
     @Override

@@ -35,7 +35,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     private final LoadingCache<Integer, IDrawableAnimated> cachedArrows;
 
     public FreezingCategory(IGuiHelper guiHelper) {
-        ICON = guiHelper.createDrawableIngredient(new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FRIDGE));
+        ICON = guiHelper.createDrawableIngredient(new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FREEZER));
         this.BACKGROUND = guiHelper.createDrawable(FREEZE_GUI,55, 16, 82, 54);
         staticFreezeIcon = guiHelper.createDrawable(FREEZE_GUI, 176, 0, 12, 12);
         animatedFreezeIcon = guiHelper.createAnimatedDrawable(staticFreezeIcon, 300, IDrawableAnimated.StartDirection.TOP, true);
