@@ -158,6 +158,8 @@ public class ModelHelper {
             path = path.replace("_planks", "");
             path = "planks_" + path;
             Identifier id = new Identifier(namespace, "block/wood/" + path);
+            path = path.replace("mining", "mine").replace("sorting", "sort").replace("transformation", "trans").replace("dark", "darkwood");
+
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id;
             else
