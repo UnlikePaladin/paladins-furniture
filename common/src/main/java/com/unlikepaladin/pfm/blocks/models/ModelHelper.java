@@ -11,11 +11,13 @@ import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.registry.Registry;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ModelHelper {
@@ -116,25 +118,53 @@ public class ModelHelper {
     public static Identifier getTextureId(Block block) {
         return getTextureId(block, "");
     }
+    private static final Map<Pair<Block, String>, Identifier> blockToTextureMap = new HashMap<>();
     public static Identifier getTextureId(Block block, String postfix) {
+        Pair<Block, String> pair = new Pair<>(block, postfix);
+        if (blockToTextureMap.containsKey(pair))
+            return blockToTextureMap.get(pair);
+        Identifier id;
         if (!postfix.isEmpty() && idExists(Texture.getSubId(block, postfix), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
-            return Texture.getSubId(block, postfix);
-        if (idExists(Texture.getId(block), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
-            return Texture.getId(block);
+            id = Texture.getSubId(block, postfix);
+        else if (idExists(Texture.getId(block), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = Texture.getId(block);
         }
         else if (idExists(Texture.getSubId(block, "_side"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
-            return Texture.getSubId(block, "_side");
+            id = Texture.getSubId(block, "_side");
         }
         else if (idExists(Texture.getSubId(block, "_bottom"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
-            return Texture.getSubId(block, "_bottom");
+            id = Texture.getSubId(block, "_bottom");
         }
         else if (idExists(Texture.getSubId(block, "_top"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
-            return Texture.getSubId(block, "_top");
+            id = Texture.getSubId(block, "_top");
+        }
+        else if(idExists(getPlankId(block), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = getPlankId(block);
         }
         else {
             PFMDataGen.LOGGER.warn("Couldn't find texture for, {}", block);
-            return Texture.getId(Blocks.BEDROCK);
+            id =  Texture.getId(Blocks.BEDROCK);
         }
+        blockToTextureMap.put(pair, id);
+        return id;
+    }
+
+    //For compatibility with Twilight Forest's Planks
+    public static Identifier getPlankId(Block block) {
+        Identifier identifier = Registry.BLOCK.getId(block);
+        String namespace = identifier.getNamespace();
+        String path = identifier.getPath();
+        if (path.contains("planks")) {
+            path = path.replace("_planks", "");
+            path = "planks_" + path;
+            Identifier id = new Identifier(namespace, "block/wood/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+                return id;
+            else
+                return new Identifier(namespace, "block/wood/" + path+ "_0");
+        }
+        else
+            return new Identifier(namespace, "block/" + path);
     }
 
     private static final HashMap<Identifier, Boolean> idCacheMap = new HashMap<>();

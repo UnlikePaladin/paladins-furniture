@@ -1,8 +1,8 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"cook": "cookingforblockheads:block/cooking_table_top"
-	},
+		"cook": "cookingforblockheads:block/cooking_table_top",
+		"particle": "cookingforblockheads:block/cooking_table_top"},
 	"elements": [
 		{
 			"from": [3, 0, 3],

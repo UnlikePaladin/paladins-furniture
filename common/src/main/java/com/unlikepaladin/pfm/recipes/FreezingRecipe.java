@@ -16,7 +16,7 @@ public class FreezingRecipe extends AbstractCookingRecipe {
 
     @Override
     public ItemStack createIcon() {
-        return new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+        return new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
     }
 
     @Override
