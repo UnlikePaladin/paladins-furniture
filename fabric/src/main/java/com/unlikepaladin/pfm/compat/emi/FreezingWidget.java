@@ -1,5 +1,5 @@
 package com.unlikepaladin.pfm.compat.emi;
-/*
+
 import dev.emi.emi.api.render.EmiTexture;
 import net.minecraft.util.Identifier;
 
@@ -16,4 +16,3 @@ public class FreezingWidget extends EmiTexture {
         super(texture, u, v, width, height, regionWidth, regionHeight, textureWidth, textureHeight);
     }
 }
-*/

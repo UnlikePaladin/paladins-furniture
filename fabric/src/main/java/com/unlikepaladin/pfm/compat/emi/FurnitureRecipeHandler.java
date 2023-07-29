@@ -1,5 +1,5 @@
 package com.unlikepaladin.pfm.compat.emi;
-/*
+
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import dev.emi.emi.api.EmiRecipeHandler;
@@ -43,4 +43,3 @@ public class FurnitureRecipeHandler implements EmiRecipeHandler<WorkbenchScreenH
         return recipe.getCategory() == PaladinFurnitureModEMIPlugin.FURNITURE && recipe.supportsRecipeTree();
     }
 }
-*/

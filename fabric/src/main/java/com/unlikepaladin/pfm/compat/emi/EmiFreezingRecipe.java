@@ -1,5 +1,5 @@
 package com.unlikepaladin.pfm.compat.emi;
-/*
+
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
@@ -45,4 +45,3 @@ public class EmiFreezingRecipe extends EmiCookingRecipe {
         widgets.addSlot(output, 56, 0).output(true).recipeContext(this);
     }
 }
-*/

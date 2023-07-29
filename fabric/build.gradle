@@ -98,6 +98,20 @@ if (rootProject.rei_compatibility == "true"){
         }
     }
 }
+if (rootProject.emi_compatibility == "true"){
+    dependencies {
+        modImplementation("dev.emi:emi:${rootProject.emi_version}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
+    }
+}
+else {
+    dependencies {
+        modCompileOnly("dev.emi:emi:${rootProject.emi_version}"){
+            exclude(group: "net.fabricmc.fabric-api")
+        }
+    }
+}
 
 if (rootProject.patchouli_compatibility == "true") {
     dependencies {

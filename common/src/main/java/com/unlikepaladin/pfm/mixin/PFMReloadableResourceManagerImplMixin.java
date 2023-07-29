@@ -19,7 +19,7 @@ public class PFMReloadableResourceManagerImplMixin {
         if (PFMRuntimeResources.ready) {
             PFMRuntimeResources.RESOURCE_PACK_LIST = resourcePacks;
             //PFMRuntimeResources.runAsyncResourceGen(); No async for anyone, too bad forge won't behave
-            PFMRuntimeResources.prepareAndRunResourceGen(true);
+            PFMRuntimeResources.prepareAndRunResourceGen(false);
             resourcePacks.add(PFMRuntimeResources.ASSETS_PACK);
         }
         return resourcePacks;

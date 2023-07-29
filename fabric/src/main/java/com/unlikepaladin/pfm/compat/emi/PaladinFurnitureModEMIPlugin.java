@@ -1,5 +1,5 @@
 package com.unlikepaladin.pfm.compat.emi;
-/*
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
@@ -49,4 +49,4 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
             DrawableHelper.drawTexture(matrices, x, y, u, v, 16, 16, 256, 256);
         };
     }
-}*/
+}

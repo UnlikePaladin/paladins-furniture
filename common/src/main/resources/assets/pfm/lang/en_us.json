@@ -1167,6 +1167,8 @@
   "pfm.compat.failure.arrpDownload": "Download ARRP",
   "pfm.compat.failure.title": "Paladin's Furniture Mod failed to load!",
 
+  "emi.category.pfm.freezer": "Freezing",
+  "emi.category.pfm.furniture": "Workbench",
   "rei.pfm.freezer": "Freezing",
   "rei.pfm.furniture": "Furniture Workbench",
   "pfm.patchouli.guide_book.name": "Paladin's Furniture",
