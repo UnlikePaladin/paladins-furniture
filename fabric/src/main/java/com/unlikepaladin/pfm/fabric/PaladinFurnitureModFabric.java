@@ -6,7 +6,6 @@ import com.unlikepaladin.pfm.advancements.PFMCriteria;
 import com.unlikepaladin.pfm.advancements.fabric.CriteriaRegistryFabric;
 import com.unlikepaladin.pfm.blocks.BasicChairBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
-import com.unlikepaladin.pfm.compat.fabric.MissingDependencyScreen;
 import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmPtlRegistry;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
@@ -61,22 +60,6 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
             GENERAL_LOGGER.error("Failed to initialize Paladin's Furniture configuration, default values will be used instead");
             GENERAL_LOGGER.error("", e);
         }
-
-        ServerLifecycleEvents.SERVER_STARTED.register((server) ->
-        {
-            String reason;
-            String missingMod;
-            if (FabricLoader.getInstance().isModLoaded("sandwichable") && !FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
-                reason = "To use Sandwichable and Paladin's Furniture Mod together you will need to install ARRP. Please download it, place it on your mods folder, then re-launch the game.";
-                missingMod = "ARRP";
-            } else {
-                return;
-            }
-            String url = "https://www.curseforge.com/minecraft/mc-mods/arrp/files/3529149";
-            MissingDependencyScreen.Screen(reason, url);
-            server.shutdown();
-            throw new RuntimeException("Missing Dependency for Paladin's furniture mod:" + missingMod);
-        });
 
         PaladinFurnitureMod.DYE_KITS = FabricItemGroupBuilder.create(
                         new Identifier(MOD_ID, "dye_kits"))
