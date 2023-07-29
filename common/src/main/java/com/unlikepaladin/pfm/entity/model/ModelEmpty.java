@@ -34,7 +34,6 @@ public class ModelEmpty extends AnimalModel<ChairEntity> {
         ModelPartData modelPartData = modelData.getRoot();
         modelPartData.addChild(EntityModelPartNames.CUBE, ModelPartBuilder.create().uv(0, 0).cuboid(0F, 0F, 0F, 0F, 0F, 0F), ModelTransform.pivot(0F, 0F, 0F));
         return TexturedModelData.of(modelData, 16, 16);
-
     }
 
 }

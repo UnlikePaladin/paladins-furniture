@@ -24,14 +24,6 @@ side = "BOTH"
 [[dependencies.pfm]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.19,)"
-ordering = "NONE"
-side = "BOTH"
-
-
-[[dependencies.pfm]]
-modId = "cloth_config"
-mandatory = true
-versionRange = "[8.0.75,)"
+versionRange = "[1.19,1.19.3)"
 ordering = "NONE"
 side = "BOTH"

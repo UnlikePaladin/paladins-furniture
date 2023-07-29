@@ -1,18 +1,15 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.BasicToilet;
-import com.unlikepaladin.pfm.blocks.KitchenSink;
-import com.unlikepaladin.pfm.blocks.Microwave;
+import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
 public class SinkBlockEntity extends BlockEntity {
@@ -58,7 +55,7 @@ public class SinkBlockEntity extends BlockEntity {
                 blockEntity.setFilling(false);
             } else {
                 if (world.isClient) {
-                    KitchenSink.spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
+                    KitchenSinkBlock.spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
                 }
                 blockEntity.sinkTimer++;
             }

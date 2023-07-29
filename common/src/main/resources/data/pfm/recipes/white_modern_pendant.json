@@ -1,23 +1,25 @@
 {
   "type": "pfm:furniture",
-  "pattern": [
-    " Y ",
-    " Y ",
-    "ZXZ"
-],
-   "key": {
-    "X": {
-      "item": "pfm:simple_light"
-    },
-    "Y": {
-      "item": "minecraft:light_gray_concrete"
-    },
-    "Z": {
-      "item": "minecraft:white_concrete"
-    }
-  },
+  "group": "lighting",
+  "ingredients": [
+      {
+        "item": "pfm:simple_light"
+      },
+      {
+        "item": "minecraft:light_gray_concrete"
+      },
+      {
+        "item": "minecraft:light_gray_concrete"
+      },
+      {
+        "item": "minecraft:white_concrete"
+      },
+      {
+        "item": "minecraft:white_concrete"
+      }
+    ], 
   "result": {
-    "item": "pfm:white_modern_pendant",
+    "item": "pfm:glass_modern_pendant",
     "count": 1
   }
 }

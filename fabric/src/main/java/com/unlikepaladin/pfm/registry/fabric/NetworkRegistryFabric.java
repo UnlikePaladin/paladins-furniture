@@ -1,13 +1,18 @@
 package com.unlikepaladin.pfm.registry.fabric;
 
-import com.unlikepaladin.pfm.blocks.BasicToilet;
+import com.google.common.collect.Lists;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.client.screens.MicrowaveScreen;
+import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
+import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
+import com.unlikepaladin.pfm.config.option.Side;
+import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import com.unlikepaladin.pfm.registry.SoundIDs;
-import com.unlikepaladin.pfm.registry.Statistics;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.MinecraftClient;
@@ -17,7 +22,8 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
-import java.util.Objects;
+import java.io.IOException;
+import java.util.*;
 
 public class NetworkRegistryFabric {
     public static void registerPackets() {
@@ -60,7 +66,7 @@ public class NetworkRegistryFabric {
                         // Use the pos in the main thread
                         World world = player.world;
                         if (world.isChunkLoaded(blockPos)) {
-                            world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToilet.TOILET_STATE, ToiletState.DIRTY));
+                            world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
                             world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
                         } else {
                             player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
@@ -86,6 +92,24 @@ public class NetworkRegistryFabric {
                 }
             }
         );
-    }
+        ClientPlayNetworking.registerGlobalReceiver(NetworkIDs.CONFIG_SYNC_ID,
+                (client, handler, buf, responseSender) -> {
+                    ArrayList<AbstractConfigOption> configOptions = buf.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
+                    Map<String, AbstractConfigOption> map = new HashMap<>();
+                    configOptions.forEach(abstractConfigOption -> {
+                        map.put(((TranslatableText)abstractConfigOption.getTitle()).getKey(), abstractConfigOption);
+                    });
 
+                    client.execute(() -> {
+                        map.forEach((title, configOption) -> {
+                            PFMConfigScreen.isOnServer = true;
+                            if (configOption.getSide() == Side.SERVER) {
+                                LeaveEventHandlerFabric.originalConfigValues.put(title, PaladinFurnitureMod.getPFMConfig().options.get(title).getValue());
+                                PaladinFurnitureMod.getPFMConfig().options.get(title).setValue(configOption.getValue());
+                            }
+                        });
+                    });
+                }
+            );
+        }
 }

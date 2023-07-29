@@ -4,7 +4,7 @@ package com.unlikepaladin.pfm;
 import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
-import com.unlikepaladin.pfm.compat.PaladinFurnitureModConfig;
+import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.utilities.Version;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
@@ -33,7 +33,6 @@ import java.nio.file.Files;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -69,7 +68,7 @@ public class PaladinFurnitureModUpdateChecker {
                 try {
                     File updateFile = getUpdateFile();
                     if (DateUtils.isSameDay(new Date(), new Date(updateFile.lastModified()))) {
-                        PaladinFurnitureMod.GENERAL_LOGGER.warn("[Paladin's Furniture Update Check] Cached update file detected, using that!");
+                        PaladinFurnitureMod.GENERAL_LOGGER.info("[Paladin's Furniture Update Check] Cached update file detected, using that!");
                         UpdateInfo updateInfo;
                         try {
                             updateInfo = new Gson().fromJson(FileUtils.readFileToString(updateFile, StandardCharsets.UTF_8), UpdateInfo.class);
@@ -81,7 +80,7 @@ public class PaladinFurnitureModUpdateChecker {
                         try {
                             if (Version.getVersion(updateInfo.semanticVersion)) {
                                 shouldShowUpdateMessage = true;
-                                PaladinFurnitureMod.GENERAL_LOGGER.warn("[Paladin's Furniture Update Check] New update detected, showing update message!");
+                                PaladinFurnitureMod.GENERAL_LOGGER.info("[Paladin's Furniture Update Check] New update detected, showing update message!");
                                 return updateInfo;
                             } else {
                                 return null;
