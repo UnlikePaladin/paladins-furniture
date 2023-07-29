@@ -18,7 +18,8 @@ public class PaladinFurnitureModClientImpl {
             }
             catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException e)
             {
-                PaladinFurnitureMod.GENERAL_LOGGER.info("Couldn't access shaders field: " + e);
+                if (e instanceof IllegalAccessException)
+                    PaladinFurnitureMod.GENERAL_LOGGER.info("Couldn't access shaders field: " + e);
                 return false;
             }
         return false;
