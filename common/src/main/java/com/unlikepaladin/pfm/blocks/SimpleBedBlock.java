@@ -13,7 +13,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.tag.BlockTags;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
@@ -87,7 +87,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock {
         }
         if (state.get(OCCUPIED)) {
             if (!this.isFree(world, pos)) {
-                player.sendMessage(new TranslatableText("block.minecraft.bed.occupied"), true);
+                player.sendMessage(Text.translatable("block.minecraft.bed.occupied"), true);
             }
             return ActionResult.SUCCESS;
         }

@@ -4,7 +4,8 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,15 +29,15 @@ public class PaladinFurnitureModConfig {
 
     public PaladinFurnitureModConfig(Path propertiesPath) {
         this.addOptions(
-            checkForUpdates = new BooleanConfigOption(new TranslatableText("pfm.option.checkForUpdates"), new TranslatableText("pfm.option.checkForUpdates.tooltip"), MOD_OPTIONS, true, Side.CLIENT),
-            shaderSolidFix = new BooleanConfigOption(new TranslatableText("pfm.option.shaderSolidFix"), new TranslatableText("pfm.option.shaderSolidFix.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
-            doChairsFacePlayer = new BooleanConfigOption(new TranslatableText("pfm.option.chairsFacePlayer"), new TranslatableText("pfm.option.chairsFacePlayer.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
-            foodPopsOffStove = new BooleanConfigOption(new TranslatableText("pfm.option.foodPopsOffStove"), new TranslatableText("pfm.option.foodPopsOffStove.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
-            countersOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.countersOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
-            tablesOfDifferentMaterialsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect"), new TranslatableText("pfm.option.tablesOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
-            differentMirrorsConnect = new BooleanConfigOption(new TranslatableText("pfm.option.differentMirrorsConnect"), new TranslatableText("pfm.option.differentMirrorsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
-            enableBook = new BooleanConfigOption(new TranslatableText("pfm.option.enableBook"), new TranslatableText("pfm.option.enableBook.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
-            mobsSitOnChairs = new BooleanConfigOption(new TranslatableText("pfm.option.mobsSitOnChairs"), new TranslatableText("pfm.option.mobsSitOnChairs.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER)
+            checkForUpdates = new BooleanConfigOption(Text.translatable("pfm.option.checkForUpdates"), Text.translatable("pfm.option.checkForUpdates.tooltip"), MOD_OPTIONS, true, Side.CLIENT),
+            shaderSolidFix = new BooleanConfigOption(Text.translatable("pfm.option.shaderSolidFix"), Text.translatable("pfm.option.shaderSolidFix.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
+            doChairsFacePlayer = new BooleanConfigOption(Text.translatable("pfm.option.chairsFacePlayer"), Text.translatable("pfm.option.chairsFacePlayer.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
+            foodPopsOffStove = new BooleanConfigOption(Text.translatable("pfm.option.foodPopsOffStove"), Text.translatable("pfm.option.foodPopsOffStove.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            countersOfDifferentMaterialsConnect = new BooleanConfigOption(Text.translatable("pfm.option.countersOfDifferentMaterialsConnect"), Text.translatable("pfm.option.countersOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            tablesOfDifferentMaterialsConnect = new BooleanConfigOption(Text.translatable("pfm.option.tablesOfDifferentMaterialsConnect"), Text.translatable("pfm.option.tablesOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            differentMirrorsConnect = new BooleanConfigOption(Text.translatable("pfm.option.differentMirrorsConnect"), Text.translatable("pfm.option.differentMirrorsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
+            enableBook = new BooleanConfigOption(Text.translatable("pfm.option.enableBook"), Text.translatable("pfm.option.enableBook.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
+            mobsSitOnChairs = new BooleanConfigOption(Text.translatable("pfm.option.mobsSitOnChairs"), Text.translatable("pfm.option.mobsSitOnChairs.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER)
         );
         this.propertiesPath = propertiesPath;
     }
@@ -46,7 +47,7 @@ public class PaladinFurnitureModConfig {
         configOptions.sort(Comparator.comparing(config1 -> config1.getCategory().substring(22).replace("_options", "")));
         Collections.reverse(configOptions);
         for (AbstractConfigOption configOption : configOptions) {
-            options.put(((TranslatableText)configOption.getTitle()).getKey(), configOption);
+            options.put(((TranslatableTextContent)configOption.getTitle().getContent()).getKey(), configOption);
         }
     }
 

@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.runtime.assets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mojang.logging.LogUtils;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
@@ -19,31 +18,28 @@ import net.minecraft.client.resource.language.LanguageDefinition;
 import net.minecraft.client.resource.language.LanguageManager;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.client.resource.metadata.LanguageResourceMetadata;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.DataWriter;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.resource.*;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
-import net.minecraft.util.Unit;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class PFMLangProvider {
+public class PFMLangProvider implements DataProvider {
 
-    public void run() {
+    public void run(DataWriter dataWriter) {
         try (PFMResourceManager resourceManager = new PFMResourceManager(ResourceType.CLIENT_RESOURCES, PFMRuntimeResources.RESOURCE_PACK_LIST)) {
             loadLanguages(resourceManager);
             resourceManager.close();
@@ -282,6 +278,11 @@ public class PFMLangProvider {
         return list1;
     }
 
+    @Override
+    public String getName() {
+        return "PFM Lang";
+    }
+
     private static final class PFMResourceManager implements ResourceManager,
             AutoCloseable {
         private LifecycledResourceManager activeManager;
@@ -298,7 +299,7 @@ public class PFMLangProvider {
         }
 
         @Override
-        public Resource getResource(Identifier identifier) throws IOException {
+        public Optional<Resource> getResource(Identifier identifier) {
             return this.activeManager.getResource(identifier);
         }
 
@@ -308,17 +309,17 @@ public class PFMLangProvider {
         }
 
         @Override
-        public boolean containsResource(Identifier id) {
-            return this.activeManager.containsResource(id);
-        }
-
-        @Override
-        public List<Resource> getAllResources(Identifier id) throws IOException {
+        public List<Resource> getAllResources(Identifier id) {
             return this.activeManager.getAllResources(id);
         }
 
         @Override
-        public Collection<Identifier> findResources(String startingPath, Predicate<String> pathPredicate) {
+        public Map<Identifier, List<Resource>> findAllResources(String startingPath, Predicate<Identifier> allowedPathPredicate) {
+            return this.activeManager.findAllResources(startingPath, allowedPathPredicate);
+        }
+
+        @Override
+        public Map<Identifier, Resource> findResources(String startingPath, Predicate<Identifier> pathPredicate) {
             return this.activeManager.findResources(startingPath, pathPredicate);
         }
 

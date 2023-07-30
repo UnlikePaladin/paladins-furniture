@@ -7,8 +7,9 @@ import io.netty.handler.codec.EncoderException;
 import net.minecraft.nbt.NbtByte;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutput;
@@ -49,7 +50,7 @@ public abstract class AbstractConfigOption<T> implements Comparable<String> {
     }
     @Override
     public String toString() {
-        return "{Type: " + getType() + ", Title: " + ((TranslatableText)getTitle()).getKey() + ", Category: " + getCategory() +  ", Value: " + getValue() + ", Side:" + getSide() + "}";
+        return "{Type: " + getType() + ", Title: " + ((TranslatableTextContent) getTitle().getContent()).getKey() + ", Category: " + getCategory() +  ", Value: " + getValue() + ", Side:" + getSide() + "}";
     }
 
     public abstract void write(DataOutput output) throws IOException;

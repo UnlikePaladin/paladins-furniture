@@ -24,7 +24,7 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -97,7 +97,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
                 world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
                 return ActionResult.SUCCESS;
             } else if (world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers).isEmpty()) {
-                player.sendMessage(new TranslatableText("message.pfm.toilet_use"), false);
+                player.sendMessage(Text.translatable("message.pfm.toilet_use"), false);
             }
         }
         else if (!world.isClient && (state.get(TOILET_STATE) == ToiletState.DIRTY)) {

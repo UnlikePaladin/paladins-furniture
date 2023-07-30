@@ -11,7 +11,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity {
     public PFMToasterBlockEntityImpl(BlockPos pos, BlockState state) {

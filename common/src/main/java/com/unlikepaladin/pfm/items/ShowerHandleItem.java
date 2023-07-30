@@ -14,7 +14,6 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtLong;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
@@ -73,7 +72,7 @@ public class ShowerHandleItem extends BlockItem {
 
             double distance = Math.sqrt(lightPos.getSquaredDistance(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5));
             if (distance > 16 && world.isClient()){
-                context.getPlayer().sendMessage(new TranslatableText("message.pfm.shower_handle_far", lightPos.toString()), false);
+                context.getPlayer().sendMessage(Text.translatable("message.pfm.shower_handle_far", lightPos.toString()), false);
             }
             if (distance > 16) {
                 context.getStack().setNbt(null);
@@ -132,7 +131,7 @@ public class ShowerHandleItem extends BlockItem {
     @Override
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (stack.hasNbt() && getShowerHead(stack) != null) {
-            tooltip.add(new TranslatableText("tooltip.pfm.shower_handle_connected", 1));
+            tooltip.add(Text.translatable("tooltip.pfm.shower_handle_connected", 1));
         }
         super.appendTooltip(stack, world, tooltip, context);
     }

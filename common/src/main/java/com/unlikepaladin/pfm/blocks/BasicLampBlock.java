@@ -145,7 +145,7 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
             togglePower(state, world, pos);
             float f = state.get(LIT) ? 0.9f : 0.8f;
             world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3f, f);
-            world.emitGameEvent(player, state.get(LIT) ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
+            world.emitGameEvent(player, state.get(LIT) ? GameEvent.BLOCK_ACTIVATE : GameEvent.BLOCK_DEACTIVATE, pos);
             return ActionResult.CONSUME;
         }
         return super.onUse(state, world, pos, player, hand, hit);

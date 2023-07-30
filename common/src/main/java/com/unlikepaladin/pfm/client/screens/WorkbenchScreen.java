@@ -8,7 +8,7 @@ import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.search.SearchManager;
-import net.minecraft.client.search.SearchableContainer;
+import net.minecraft.client.search.SearchProvider;
 import net.minecraft.client.sound.PositionedSoundInstance;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.math.MatrixStack;
@@ -17,12 +17,9 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.sound.SoundEvents;
-import net.minecraft.tag.Tag;
 import net.minecraft.tag.TagKey;
-import net.minecraft.text.LiteralText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
@@ -59,7 +56,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     @Override
     protected void init() {
         super.init();
-        this.searchBox = new TextFieldWidget(this.textRenderer, this.x + 20, this.y + 18, 110, this.textRenderer.fontHeight, new TranslatableText("itemGroup.search"));
+        this.searchBox = new TextFieldWidget(this.textRenderer, this.x + 20, this.y + 18, 110, this.textRenderer.fontHeight, Text.translatable("itemGroup.search"));
         this.searchBox.setMaxLength(50);
         this.searchBox.setDrawsBackground(false);
         this.searchBox.setVisible(true);
@@ -121,13 +118,13 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             this.handler.searching = false;
         } else {
             this.handler.updateInput();
-            SearchableContainer<ItemStack> searchable;
+            SearchProvider<ItemStack> searchable;
             if (string.startsWith("#")) {
                 string = string.substring(1);
-                searchable = this.client.getSearchableContainer(SearchManager.ITEM_TAG);
+                searchable = this.client.getSearchProvider(SearchManager.ITEM_TAG);
                 this.searchForTags(string);
             } else {
-                searchable = this.client.getSearchableContainer(SearchManager.ITEM_TOOLTIP);
+                searchable = this.client.getSearchProvider(SearchManager.ITEM_TOOLTIP);
             }
             List<Item> items = new ArrayList<>();
             searchable.findAll(string.toLowerCase(Locale.ROOT)).forEach(itemStack -> items.add(itemStack.getItem()));
@@ -206,7 +203,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
                 iCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(iCopy));
             }
             tooltip.add(getTooltipFromItem(this.handler.getSortedRecipes().get(iCopy).getOutput()).get(0));
-            tooltip.add(new TranslatableText("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
+            tooltip.add(Text.translatable("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
             HashMap<Item, Integer> itemStackCountMap = new HashMap<>();
             for (Ingredient ingredient : this.handler.getSortedRecipes().get(iCopy).getIngredients()) {
                 for (ItemStack stack : ingredient.getMatchingStacks()) {
@@ -228,7 +225,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
                 if (itemCount < integer) {
                     style = style.withColor(Formatting.RED);
                 }
-                tooltip.add(new LiteralText(integer + " ").append(new LiteralText(getTooltipFromItem(item.getDefaultStack()).get(0).getString())).setStyle(style));
+                tooltip.add(Text.literal(integer + " ").append(Text.literal(getTooltipFromItem(item.getDefaultStack()).get(0).getString())).setStyle(style));
             });
             this.renderTooltip(matrices, tooltip, x, y);
         }

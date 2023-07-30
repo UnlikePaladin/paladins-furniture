@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -13,13 +14,13 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import net.minecraft.util.math.random.Random;
 
 public class ForgeKitchenCounterModel extends AbstractBakedModel {
     public ForgeKitchenCounterModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
@@ -33,8 +34,8 @@ public class ForgeKitchenCounterModel extends AbstractBakedModel {
 
     @NotNull
     @Override
-    public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
-        ModelDataMap.Builder builder = new ModelDataMap.Builder();
+    public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
+        ModelData.Builder builder = ModelData.builder();
         if (state.getBlock() instanceof KitchenCounterBlock) {
             KitchenCounterBlock block = (KitchenCounterBlock) state.getBlock();
             Direction direction = state.get(KitchenCounterBlock.FACING);
@@ -68,35 +69,35 @@ public class ForgeKitchenCounterModel extends AbstractBakedModel {
             set.set(1, right);
             set.set(2, isNeighborStateOppositeFacingDifferentDirection);
             set.set(3, isNeighborStateFacingDifferentDirection);
-            builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set)).withInitial(NEIGHBOR_FACING, neighborStateFacing).withInitial(NEIGHBOR_OPPOSITE, neighborStateOpposite);
+            builder.with(CONNECTIONS, new ModelBitSetProperty(set)).with(NEIGHBOR_FACING, neighborStateFacing).with(NEIGHBOR_OPPOSITE, neighborStateOpposite);
         }
         return builder.build();
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
         if (state.getBlock() instanceof KitchenCounterBlock) {
-            BitSet set = extraData.getData(CONNECTIONS).connections;
+            BitSet set = extraData.get(CONNECTIONS).connections;
             Direction direction = state.get(KitchenCounterBlock.FACING);
             KitchenCounterBlock block = (KitchenCounterBlock) state.getBlock();
             boolean left = set.get(0);
             boolean right = set.get(1);
             boolean isNeighborStateOppositeFacingDifferentDirection =  set.get(2);
             boolean isNeighborStateFacingDifferentDirection = set.get(3);
-            BlockState neighborStateFacing = extraData.getData(NEIGHBOR_FACING);
-            BlockState neighborStateOpposite = extraData.getData(NEIGHBOR_OPPOSITE);
+            BlockState neighborStateFacing = extraData.get(NEIGHBOR_FACING);
+            BlockState neighborStateOpposite = extraData.get(NEIGHBOR_OPPOSITE);
 
             if (block.canConnectToCounter(neighborStateFacing) && neighborStateFacing.contains(Properties.HORIZONTAL_FACING)) {
                 Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
                 if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateFacingDifferentDirection) {
                     if (direction2 == direction.rotateYCounterclockwise()) {
-                        return getBakedModels().get(modelParts.get(5)).getQuads(state, side, rand, extraData);
+                        return getBakedModels().get(modelParts.get(5)).getQuads(state, side, rand, extraData, renderLayer);
                     }
                     else {
-                        return getBakedModels().get(modelParts.get(6)).getQuads(state, side, rand, extraData);
+                        return getBakedModels().get(modelParts.get(6)).getQuads(state, side, rand, extraData, renderLayer);
                     }
                 } else {
-                    return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+                    return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData, renderLayer);
                 }
             }
             else if (block.canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
@@ -109,22 +110,22 @@ public class ForgeKitchenCounterModel extends AbstractBakedModel {
                 }
                 if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
                     if (direction3 == direction.rotateYCounterclockwise()) {
-                        return getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData);
+                        return getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData, renderLayer);
                     } else {
-                        return getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData);
+                        return getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData, renderLayer);
                     }
                 } else {
-                    return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+                    return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData, renderLayer);
                 }
             }
             else if (left && right) {
-                return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+                return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData, renderLayer);
             } else if (left) {
-                return getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData);
+                return getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData, renderLayer);
             } else if (right) {
-                return getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData);
+                return getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData, renderLayer);
             } else {
-                return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+                return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData, renderLayer);
             }
         }
         return Collections.emptyList();

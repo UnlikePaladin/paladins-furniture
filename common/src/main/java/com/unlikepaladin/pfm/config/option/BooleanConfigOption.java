@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.config.option;
 
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -20,7 +20,7 @@ public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
             nbtTagSizeTracker.add(224L + 16L * tooltip.length());
             nbtTagSizeTracker.add(224L + 16L * category.length());
             nbtTagSizeTracker.add(64L);
-            BooleanConfigOption booleanConfigOption = new BooleanConfigOption(new TranslatableText(title), new TranslatableText(tooltip), category, value, side);
+            BooleanConfigOption booleanConfigOption = new BooleanConfigOption(Text.translatable(title), Text.translatable(tooltip), category, value, side);
             return booleanConfigOption;
         }
 
@@ -100,8 +100,8 @@ public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
 
     @Override
     public void write(DataOutput output) throws IOException {
-        output.writeUTF(((TranslatableText)title).getKey());
-        output.writeUTF(((TranslatableText)tooltip).getKey());
+        output.writeUTF(((TranslatableTextContent)title.getContent()).getKey());
+        output.writeUTF(((TranslatableTextContent)tooltip.getContent()).getKey());
         output.writeUTF(category);
         output.writeBoolean(value);
         output.writeUTF(side.asString());

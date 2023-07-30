@@ -10,8 +10,4 @@ import java.util.Set;
 
 @Mixin(value = PointOfInterestType.class)
 public interface PFMMixinPointOfInterestTypeFactory {
-    @Invoker("<init>")
-    static PointOfInterestType newPoi(String id, Set<BlockState> blockStates, int ticketCount, int searchDistance) {
-        throw new AssertionError();
-    }
 }

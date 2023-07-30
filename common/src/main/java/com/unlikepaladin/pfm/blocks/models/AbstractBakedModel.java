@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 
 public abstract class AbstractBakedModel implements BakedModel {
     protected final ModelBakeSettings settings;

@@ -55,7 +55,7 @@ repositories {
             includeGroup "net.blay09.mods"
         }
     }
-
+    maven { url 'https://jitpack.io' }
 }
 
 
@@ -90,7 +90,17 @@ if (rootProject.immersive_portals_compatibility_forge == "true"){
 }
 else {
     dependencies {
+        /*
+        Immersive Portals includes an Access Widener on Forge for some reason, which breaks remapping
         modCompileOnly("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
+            transitive(false)
+        }*/
+        modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
+            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
+        }
+        modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
+            exclude(group: "net.fabricmc.fabric-api")
             transitive(false)
         }
     }

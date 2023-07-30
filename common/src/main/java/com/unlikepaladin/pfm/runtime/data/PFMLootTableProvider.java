@@ -11,8 +11,8 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.enums.BedPart;
-import net.minecraft.data.DataCache;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.DataWriter;
 import net.minecraft.data.server.BlockLootTableGenerator;
 import net.minecraft.loot.LootManager;
 import net.minecraft.loot.LootTable;
@@ -32,10 +32,10 @@ import java.util.function.Supplier;
 
 import static net.minecraft.data.server.BlockLootTableGenerator.dropsWithProperty;
 
-public class PFMLootTableProvider {
+public class PFMLootTableProvider implements DataProvider {
     private final List<Pair<Supplier<Consumer<BiConsumer<Identifier, LootTable.Builder>>>, LootContextType>> lootTypeGenerators = ImmutableList.of(Pair.of(PFMLootTableGenerator::new, LootContextTypes.BLOCK));
 
-    public void run(DataCache cache) {
+    public void run(DataWriter writer) {
         Path path = PFMRuntimeResources.getResourceDirectory();
         HashMap<Identifier, LootTable> map = Maps.newHashMap();
         this.lootTypeGenerators.forEach((pair) -> pair.getFirst().get().accept((identifier, builder) -> {
@@ -46,12 +46,17 @@ public class PFMLootTableProvider {
         map.forEach((identifier, lootTable) -> {
             Path path2 = getOutput(path, identifier);
             try {
-                DataProvider.writeToPath(PFMDataGen.GSON, cache, LootManager.toJson(lootTable), path2);
+                DataProvider.writeToPath(writer, LootManager.toJson(lootTable), path2);
             }
             catch (IOException iOException) {
                 PFMDataGen.LOGGER.error("Couldn't save loot table {}", path2, iOException);
             }
         });
+    }
+
+    @Override
+    public String getName() {
+        return "PFM Loot Tables";
     }
 
     private static Path getOutput(Path rootOutput, Identifier lootTableId) {

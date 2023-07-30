@@ -4,6 +4,8 @@ import com.mojang.bridge.game.PackType;
 import com.unlikepaladin.pfm.runtime.PFMDataGen;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.SharedConstants;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.DataWriter;
 import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedWriter;
@@ -11,8 +13,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
-public class PFMMCMetaProvider {
-    public void run() {
+public class PFMMCMetaProvider implements DataProvider {
+    public void run(DataWriter dataWriter) {
         try(BufferedWriter writer = IOUtils.buffer(new FileWriter(new File(PFMRuntimeResources.createDirIfNeeded(PFMRuntimeResources.getResourceDirectory()).toFile(), "pack.mcmeta")))) {
             writer.write("{\n");
             writer.write("  \"pack\":\n   {\n");
@@ -24,5 +26,10 @@ public class PFMMCMetaProvider {
             PFMDataGen.LOGGER.error("Writer exception: " + e);
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public String getName() {
+        return "PFM Meta Provider";
     }
 }

@@ -6,12 +6,12 @@ import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.Style;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -28,10 +28,10 @@ public class PFMConfigScreen extends Screen {
     public static boolean isOnServer = false;
     private final MutableText TITLE;
     public PFMConfigScreen(MinecraftClient client, Screen parent) {
-        super( new TranslatableText("pfm.config.title"));
+        super(Text.translatable("pfm.config.title"));
         this.parent = parent;
         this.client = client;
-        TITLE = new TranslatableText("pfm.config.title");
+        TITLE = Text.translatable("pfm.config.title");
         this.options = PaladinFurnitureMod.getPFMConfig().options;
     }
 
@@ -53,7 +53,7 @@ public class PFMConfigScreen extends Screen {
         super.init();
         this.optionListWidget = new PFMOptionListWidget(this, this.client);
         this.addSelectableChild(this.optionListWidget);
-        this.resetButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 155, this.height - 29, 150, 20, new TranslatableText("pfm.option.resetAll"), button -> {
+        this.resetButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 155, this.height - 29, 150, 20, Text.translatable("pfm.option.resetAll"), button -> {
             options.forEach((title, option) -> {
                 if (option.getSide() == Side.CLIENT){
                     option.setValue(option.getDefaultValue());

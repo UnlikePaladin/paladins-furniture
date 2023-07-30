@@ -12,9 +12,8 @@ import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.World;
-
-import java.util.Random;
 
 public class ShowerHeadBlockEntity extends BlockEntity {
     public ShowerHeadBlockEntity(BlockPos pos, BlockState state) {

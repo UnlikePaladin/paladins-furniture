@@ -14,12 +14,12 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.*;
 
 import java.util.Collections;
@@ -41,7 +41,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             String configOptionCategory = configOptionEntry.getValue().getCategory();
             if (!configOptionCategory.equals(string)) {
                 string = configOptionCategory;
-                this.addEntry(new CategoryEntry(new TranslatableText(configOptionCategory)));
+                this.addEntry(new CategoryEntry(Text.translatable(configOptionCategory)));
             }
             if ((i = client.textRenderer.getWidth(text = configOptionEntry.getValue().getTitle())) > this.maxKeyNameLength) {
                 this.maxKeyNameLength = i;
@@ -52,8 +52,8 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Unsupported Config Type!");
             }
         }
-        this.addEntry(new CategoryEntry(new LiteralText("")));
-        this.addEntry(new ButtonEntry(Side.CLIENT, new TranslatableText("pfm.option.regenAssets"), new TranslatableText("pfm.config.regen"), new TranslatableText("pfm.option.regenAssets.tooltip"), button -> {
+        this.addEntry(new CategoryEntry(Text.literal("")));
+        this.addEntry(new ButtonEntry(Side.CLIENT, Text.translatable("pfm.option.regenAssets"), Text.translatable("pfm.config.regen"), Text.translatable("pfm.option.regenAssets.tooltip"), button -> {
             PFMFileUtil.deleteDir(PFMRuntimeResources.getResourceDirectory().toFile());
             PFMDataGen.frozen = false;
             PFMRuntimeResources.prepareAsyncResourceGen(true);
@@ -129,9 +129,9 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             this.configOption = configOption;
             this.optionName = optionName;
             this.supplier = new ButtonWidget.TooltipSupplier() {
-                final MutableText sideText = configOption.getSide() == Side.CLIENT ? new TranslatableText("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : new TranslatableText("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+                final MutableText sideText = configOption.getSide() == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
                 final MutableText styledTooltip = ((MutableText)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true));
-                final MutableText combinedText = new LiteralText("").append(sideText).append(new LiteralText("\n")).append(styledTooltip);
+                final MutableText combinedText = Text.literal("").append(sideText).append(Text.literal("\n")).append(styledTooltip);
                 @Override
                 public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
                     PFMOptionListWidget.this.parent.renderOrderedTooltip(matrices, PFMOptionListWidget.this.client.textRenderer.wrapLines(combinedText, Math.max(PFMOptionListWidget.this.width / 2 - 43, 170)), mouseX, mouseY);
@@ -148,13 +148,13 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
                 configOption.setValue(!configOption.getValue());
             }, this.supplier);
 
-            this.resetButton = new ButtonWidget(0, 0, 50, 20, new TranslatableText("controls.reset"), button -> {
+            this.resetButton = new ButtonWidget(0, 0, 50, 20, Text.translatable("controls.reset"), button -> {
                 configOption.setValue(configOption.getDefaultValue());
             }){
 
                 @Override
                 protected MutableText getNarrationMessage() {
-                    return new TranslatableText("narrator.controls.reset", optionName);
+                    return Text.translatable("narrator.controls.reset", optionName);
                 }
             };
         }
@@ -209,9 +209,9 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             this.optionName = optionName;
             this.side = side;
             this.supplier = new ButtonWidget.TooltipSupplier() {
-                final MutableText sideText = side == Side.CLIENT ? new TranslatableText("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : new TranslatableText("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+                final MutableText sideText = side == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
                 final MutableText styledTooltip = ((MutableText)tooltip).setStyle(Style.EMPTY.withItalic(true));
-                final MutableText combinedText = new LiteralText("").append(sideText).append(new LiteralText("\n")).append(styledTooltip);
+                final MutableText combinedText = Text.literal("").append(sideText).append(Text.literal("\n")).append(styledTooltip);
                 @Override
                 public void onTooltip(ButtonWidget button, MatrixStack matrices, int mouseX, int mouseY) {
                     PFMOptionListWidget.this.parent.renderOrderedTooltip(matrices, PFMOptionListWidget.this.client.textRenderer.wrapLines(combinedText, Math.max(PFMOptionListWidget.this.width / 2 - 43, 170)), mouseX, mouseY);

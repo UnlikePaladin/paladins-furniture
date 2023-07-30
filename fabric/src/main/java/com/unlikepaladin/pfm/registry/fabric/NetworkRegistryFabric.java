@@ -19,6 +19,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -97,7 +98,7 @@ public class NetworkRegistryFabric {
                     ArrayList<AbstractConfigOption> configOptions = buf.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
                     Map<String, AbstractConfigOption> map = new HashMap<>();
                     configOptions.forEach(abstractConfigOption -> {
-                        map.put(((TranslatableText)abstractConfigOption.getTitle()).getKey(), abstractConfigOption);
+                        map.put(((TranslatableTextContent)abstractConfigOption.getTitle().getContent()).getKey(), abstractConfigOption);
                     });
 
                     client.execute(() -> {

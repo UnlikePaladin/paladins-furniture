@@ -200,7 +200,7 @@ public class BasicBathtubBlock extends BedBlock {
                 return ActionResult.SUCCESS;
             }
         }
-        if (world.isNight() && world.getDimension().isBedWorking()) {
+        if (world.isNight() && world.getDimension().bedWorks()) {
             super.onUse(state, world, pos, player, hand, hit);
             return ActionResult.SUCCESS;
         }

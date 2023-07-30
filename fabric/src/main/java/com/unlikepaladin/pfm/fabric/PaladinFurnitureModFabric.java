@@ -38,6 +38,7 @@ import net.minecraft.util.registry.MutableRegistry;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.util.registry.RegistryKey;
 import net.minecraft.world.poi.PointOfInterestType;
+import net.minecraft.world.poi.PointOfInterestTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -135,7 +136,8 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         newBedStates.addAll(PaladinFurnitureModBlocksItems.originalHomePOIBedStates);
         newBedStates.addAll(addedBedStates);
         newBedStates = newBedStates.stream().collect(ImmutableSet.toImmutableSet());
-        PointOfInterestType.HOME = Registry.POINT_OF_INTEREST_TYPE.replace(OptionalInt.of(Registry.POINT_OF_INTEREST_TYPE.getRawId(PointOfInterestType.HOME)), Registry.POINT_OF_INTEREST_TYPE.getKey(PointOfInterestType.HOME).or(() -> Optional.of(RegistryKey.of(Registry.POINT_OF_INTEREST_TYPE.getKey(), new Identifier("minecraft:home")))).get(), PFMMixinPointOfInterestTypeFactory.newPoi("home", newBedStates, 1, 1), Lifecycle.stable()).value();
+        PointOfInterestType pointOfInterestType = new PointOfInterestType(newBedStates, 1, 1);
+        PointOfInterestTypes.HOME = (RegistryKey<PointOfInterestType>) ((MutableRegistry)Registry.POINT_OF_INTEREST_TYPE).replace(OptionalInt.of(Registry.POINT_OF_INTEREST_TYPE.getRawId(Registry.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME))), PointOfInterestTypes.HOME, pointOfInterestType, Lifecycle.stable()).getKey().get();
     }
     @Override
     public void onInitializeServer() {

@@ -17,7 +17,7 @@ import net.minecraft.world.BlockRenderView;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
+import net.minecraft.util.math.random.Random;
 import java.util.function.Supplier;
 
 public class FabricKitchenDrawerModel extends AbstractBakedModel implements FabricBakedModel {

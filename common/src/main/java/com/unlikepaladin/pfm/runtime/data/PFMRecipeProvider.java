@@ -15,10 +15,14 @@ import com.unlikepaladin.pfm.runtime.PFMDataGen;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.advancement.Advancement;
+import net.minecraft.advancement.criterion.ImpossibleCriterion;
 import net.minecraft.advancement.criterion.InventoryChangedCriterion;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.DataWriter;
+import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
@@ -38,18 +42,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.function.Consumer;
 
-public class PFMRecipeProvider {
+public class PFMRecipeProvider implements DataProvider {
 
-    public void run(DataCache cache) {
+    public void run(DataWriter writer) {
         Path path = PFMRuntimeResources.getResourceDirectory();
-        HashSet<Identifier> set = Sets.newHashSet();
-        generateRecipes(recipeJsonProvider -> {
+        Set<Identifier> set = Sets.newHashSet();
+        generateRecipes((recipeJsonProvider) -> {
             if (!set.add(recipeJsonProvider.getRecipeId())) {
                 PFMDataGen.LOGGER.error("Duplicate recipe " + recipeJsonProvider.getRecipeId());
                 throw new IllegalStateException("Duplicate recipe " + recipeJsonProvider.getRecipeId());
@@ -57,82 +58,36 @@ public class PFMRecipeProvider {
             if (recipeJsonProvider == null) {
                 PFMDataGen.LOGGER.error("Recipe Json Provider is null");
                 throw new IllegalStateException("Recipe Json Provider is null");
-            }
-            saveRecipe(cache, recipeJsonProvider.toJson(), path.resolve("data/" + recipeJsonProvider.getRecipeId().getNamespace() + "/recipes/" + recipeJsonProvider.getRecipeId().getPath() + ".json"));
-            JsonObject jsonObject = recipeJsonProvider.toAdvancementJson();
-            if (jsonObject != null) {
-                saveRecipeAdvancement(cache, jsonObject, path.resolve("data/" + recipeJsonProvider.getRecipeId().getNamespace() + "/advancements/" + recipeJsonProvider.getAdvancementId().getPath() + ".json"));
+            }else {
+                saveRecipe(writer, recipeJsonProvider.toJson(), path.resolve("data/" + recipeJsonProvider.getRecipeId().getNamespace() + "/recipes/" + recipeJsonProvider.getRecipeId().getPath() + ".json"));
+                JsonObject jsonObject = recipeJsonProvider.toAdvancementJson();
+                if (jsonObject != null) {
+                    saveRecipeAdvancement(writer, jsonObject, path.resolve("data/" + recipeJsonProvider.getRecipeId().getNamespace() + "/advancements/" + recipeJsonProvider.getAdvancementId().getPath() + ".json"));
+                }
+
             }
         });
-        saveRecipeAdvancement(cache, Advancement.Builder.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).toJson(), path.resolve("data/pfm/advancements/recipes/root.json"));
+        saveRecipeAdvancement(writer, Advancement.Builder.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).toJson(), path.resolve("data/pfm/advancements/recipes/root.json"));
     }
 
-    private static void saveRecipe(DataCache cache, JsonObject json, Path path) {
+    @Override
+    public String getName() {
+        return "PFM Recipes";
+    }
+
+    private static void saveRecipe(DataWriter cache, JsonObject json, Path path) {
         try {
-            String string = PFMDataGen.GSON.toJson(json);
-            String string2 = PFMDataGen.SHA1.hashUnencodedChars(string).toString();
-            if (!Objects.equals(cache.getOldSha1(path), string2) || !Files.exists(path, new LinkOption[0])) {
-                Files.createDirectories(path.getParent());
-                BufferedWriter bufferedWriter = Files.newBufferedWriter(path);
-
-                try {
-                    bufferedWriter.write(string);
-                } catch (Throwable var9) {
-                    PFMDataGen.LOGGER.error("Error when saving recipes");
-                    if (bufferedWriter != null) {
-                        try {
-                            PFMDataGen.LOGGER.error("broken var9, {}", var9);
-                            bufferedWriter.close();
-                        } catch (Throwable var8) {
-                            PFMDataGen.LOGGER.error("broken var8, {}", var8);
-                            var9.addSuppressed(var8);
-                        }
-                    }
-                    throw var9;
-                }
-
-                if (bufferedWriter != null) {
-                    bufferedWriter.close();
-                }
-            }
-
-            cache.updateSha1(path, string2);
-        } catch (IOException var10) {
-            PFMDataGen.LOGGER.error("Couldn't save recipe {}", path, var10);
+            DataProvider.writeToPath(cache, json, path);
+        } catch (IOException var4) {
+            PFMDataGen.LOGGER.error("Couldn't save recipe {}", path, var4);
         }
     }
 
-    private static void saveRecipeAdvancement(DataCache cache, JsonObject json, Path path) {
+    private static void saveRecipeAdvancement(DataWriter cache, JsonObject json, Path path) {
         try {
-            String string = PFMDataGen.GSON.toJson(json);
-            String string2 = PFMDataGen.SHA1.hashUnencodedChars(string).toString();
-            if (!Objects.equals(cache.getOldSha1(path), string2) || !Files.exists(path, new LinkOption[0])) {
-                Files.createDirectories(path.getParent());
-                BufferedWriter bufferedWriter = Files.newBufferedWriter(path);
-
-                try {
-                    bufferedWriter.write(string);
-                } catch (Throwable var9) {
-                    PFMDataGen.LOGGER.error("Error when saving recipes");
-                    if (bufferedWriter != null) {
-                        try {
-                            bufferedWriter.close();
-                        } catch (Throwable var8) {
-                            var9.addSuppressed(var8);
-                        }
-                    }
-
-                    throw var9;
-                }
-
-                if (bufferedWriter != null) {
-                    bufferedWriter.close();
-                }
-            }
-
-            cache.updateSha1(path, string2);
-        } catch (IOException var10) {
-            PFMDataGen.LOGGER.error("Couldn't save recipe advancement {}", path, var10);
+            DataProvider.writeToPath(cache, json, path);
+        } catch (IOException var4) {
+            PFMDataGen.LOGGER.error("Couldn't save recipe advancement {}", path, var4);
         }
     }
     @ExpectPlatform

@@ -98,7 +98,7 @@ public class LightSwitchItem extends BlockItem {
             }
 
             if (!removedLights.isEmpty() && context.getWorld().isClient){
-                context.getPlayer().sendMessage(new TranslatableText("message.pfm.light_switch_far", removedLights.toString()), false);
+                context.getPlayer().sendMessage(Text.translatable("message.pfm.light_switch_far", removedLights.toString()), false);
             }
         }
         return state.getBlock().canPlaceAt(state, world, pos) && side.getAxis().isHorizontal();
@@ -168,7 +168,7 @@ public class LightSwitchItem extends BlockItem {
     public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
         if (stack.hasNbt() && getLights(stack) != null) {
             int lightNum = getLights(stack).size();
-            tooltip.add(new TranslatableText("tooltip.pfm.light_switch_connected", lightNum));
+            tooltip.add(Text.translatable("tooltip.pfm.light_switch_connected", lightNum));
         }
         super.appendTooltip(stack, world, tooltip, context);
     }

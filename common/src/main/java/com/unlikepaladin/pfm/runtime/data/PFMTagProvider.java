@@ -1,7 +1,9 @@
 package com.unlikepaladin.pfm.runtime.data;
 
 import com.google.common.collect.Maps;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
@@ -12,28 +14,21 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGen;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.Block;
-import net.minecraft.data.DataCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.data.DataWriter;
 import net.minecraft.data.server.AbstractTagProvider;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.Tag;
-import net.minecraft.tag.TagKey;
+import net.minecraft.tag.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileAttribute;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class PFMTagProvider {
+public class PFMTagProvider implements DataProvider{
     protected void generateTags() {
         KitchenCounterBlock[] stoneCounters = KitchenCounterBlock.streamStoneCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
         KitchenCabinetBlock[] stoneCabinets = KitchenCabinetBlock.streamStoneCabinets().map(FurnitureBlock::getBlock).toArray(KitchenCabinetBlock[]::new);
@@ -220,44 +215,40 @@ public class PFMTagProvider {
     }
 
     public static AbstractTagProvider.ObjectBuilder<Block> getOrCreateTagBuilder(TagKey<Block> tag) {
-        Tag.Builder builder = getTagBuilder(tag);
-        return PFMAbstractTagProvider$ObjectBuilderMixin.newTagProvider(builder, Registry.BLOCK, "pfm");
+        TagBuilder builder = getTagBuilder(tag);
+        return PFMAbstractTagProvider$ObjectBuilderMixin.newTagProvider(builder, Registry.BLOCK);
     }
-    private static final Map<Identifier, Tag.Builder> tagBuilders = Maps.newLinkedHashMap();
+    private static final Map<Identifier, TagBuilder> tagBuilders = Maps.newLinkedHashMap();
 
-    public static <T> Tag.Builder getTagBuilder(TagKey<T> tag) {
-        return tagBuilders.computeIfAbsent(tag.id(), (id) -> new Tag.Builder());
+    public static <T> TagBuilder getTagBuilder(TagKey<T> tag) {
+        return tagBuilders.computeIfAbsent(tag.id(), (id) -> new TagBuilder());
     }
 
-    public void run(DataCache cache) {
+    public void run(DataWriter writer) {
         tagBuilders.clear();
         this.generateTags();
         tagBuilders.forEach((id, builder) -> {
-            List<Tag.TrackedEntry> list = builder.streamEntries().filter((tag) -> {
-                Tag.Entry entry = tag.entry();
-                return !entry.canAdd(Registry.BLOCK::containsId, tagBuilders::containsKey);
-            }).toList();
-            if (!list.isEmpty()) {
+            List<TagEntry> list = builder.build();
+            List<TagEntry> list2 = list.stream().filter((tag) -> !tag.canAdd(Registry.BLOCK::containsId, tagBuilders::containsKey)).toList();
+            if (!list2.isEmpty()) {
                 throw new IllegalArgumentException(String.format("Couldn't define tag %s as it is missing following references: %s", id, list.stream().map(Objects::toString).collect(Collectors.joining(","))));
             } else {
-                JsonObject jsonObject = builder.toJson();
                 Path path = this.getOutput(id);
                 try {
-                    String jsonString = PFMDataGen.GSON.toJson(jsonObject);
-                    String hashCode = PFMDataGen.SHA1.hashUnencodedChars(jsonString).toString();
-                    if (!Objects.equals(cache.getOldSha1(path), hashCode) || !Files.exists(path, new LinkOption[0])) {
-                        Files.createDirectories(path.getParent(), new FileAttribute[0]);
-                        try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, new OpenOption[0]);){
-                            bufferedWriter.write(jsonString);
-                        }
-                    }
-                    cache.updateSha1(path, hashCode);
+                    DataResult<JsonElement> jsonElementDataResult = TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(list, false));
+                    JsonElement jsonElement = jsonElementDataResult.getOrThrow(false, PFMDataGen.LOGGER::error);
+                    DataProvider.writeToPath(writer, jsonElement, path);
                 }
                 catch (IOException iOException) {
                     PFMDataGen.LOGGER.error("Couldn't save tags to {}", path, iOException);
                 }
             }
         });
+    }
+
+    @Override
+    public String getName() {
+        return "PFM Tags for Blocks";
     }
 
     protected Path getOutput(Identifier id) {

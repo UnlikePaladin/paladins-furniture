@@ -20,6 +20,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.DataProvider;
+import net.minecraft.data.DataWriter;
 import net.minecraft.data.client.*;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Properties;
@@ -34,9 +35,9 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class PFMBlockstateModelProvider {
+public class PFMBlockstateModelProvider implements DataProvider {
     public static Map<Block, Identifier> modelPathMap = new HashMap<>();
-    public void run(DataCache cache) {
+    public void run(DataWriter writer) {
         Path path = PFMRuntimeResources.getResourceDirectory();
         HashMap<Block, BlockStateSupplier> blockstates = Maps.newHashMap();
         Consumer<BlockStateSupplier> blockStateSupplierConsumer = blockStateSupplier -> {
@@ -70,8 +71,13 @@ public class PFMBlockstateModelProvider {
                 }
             }
         });
-        this.writeJsons(cache, path, blockstates, PFMBlockstateModelProvider::getBlockStateJsonPath);
-        this.writeJsons(cache, path, models, PFMBlockstateModelProvider::getModelJsonPath);
+        this.writeJsons(writer, path, blockstates, PFMBlockstateModelProvider::getBlockStateJsonPath);
+        this.writeJsons(writer, path, models, PFMBlockstateModelProvider::getModelJsonPath);
+    }
+
+    @Override
+    public String getName() {
+        return "PFM Models and BlockStates";
     }
 
     private static Path getBlockStateJsonPath(Path root, Block block) {
@@ -84,12 +90,12 @@ public class PFMBlockstateModelProvider {
     }
 
 
-    private <T> void writeJsons(DataCache cache, Path root, Map<T, ? extends Supplier<JsonElement>> jsons, BiFunction<Path, T, Path> locator) {
+    private <T> void writeJsons(DataWriter writer, Path root, Map<T, ? extends Supplier<JsonElement>> jsons, BiFunction<Path, T, Path> locator) {
         jsons.forEach((object, supplier) -> {
             Path path2 = locator.apply(root, object);
             if (supplier != null && object != null && path2 != null)
                 try {
-                    DataProvider.writeToPath(PFMDataGen.GSON, cache, supplier.get(), path2);
+                    DataProvider.writeToPath(writer, supplier.get(), path2);
                 }
                 catch (Exception exception) {
                     PFMDataGen.LOGGER.error("Couldn't save {}", path2, exception);
