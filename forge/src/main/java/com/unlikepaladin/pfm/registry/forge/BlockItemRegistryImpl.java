@@ -10,15 +10,12 @@ import net.minecraft.util.Identifier;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
 
 public class BlockItemRegistryImpl {
     public static Map<String, Supplier<Item>> items = new LinkedHashMap<>();
-    public static List<Block> blocks = new ArrayList<>();
+    public static Map<String, Block> blocks = new HashMap<>();
 
     public static void registerItemPlatformSpecific(String itemId, Supplier<Item> item) {
         items.put(itemId,item);
@@ -29,8 +26,7 @@ public class BlockItemRegistryImpl {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerBlockItemPlatformSpecific(blockId, block, ItemGroup.BUILDING_BLOCKS);
         }
-        block.setRegistryName(blockId);
-        blocks.add(block);
+        blocks.put(blockId, block);
     }
 
     public static void registerBlockItemPlatformSpecific(String itemName, Block block, ItemGroup group) {

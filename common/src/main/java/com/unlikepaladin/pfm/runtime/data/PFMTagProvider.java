@@ -9,10 +9,10 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.Tags;
-import com.unlikepaladin.pfm.mixin.PFMAbstractTagProvider$ObjectBuilderMixin;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGen;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
@@ -216,8 +216,14 @@ public class PFMTagProvider implements DataProvider{
 
     public static AbstractTagProvider.ObjectBuilder<Block> getOrCreateTagBuilder(TagKey<Block> tag) {
         TagBuilder builder = getTagBuilder(tag);
-        return PFMAbstractTagProvider$ObjectBuilderMixin.newTagProvider(builder, Registry.BLOCK);
+        return getProviderPlatform(builder, Registry.BLOCK, "pfm");
     }
+
+    @ExpectPlatform
+    private static <T> AbstractTagProvider.ObjectBuilder<T> getProviderPlatform(TagBuilder builder, Registry<T> registry, String modID) {
+        throw new AssertionError();
+    }
+
     private static final Map<Identifier, TagBuilder> tagBuilders = Maps.newLinkedHashMap();
 
     public static <T> TagBuilder getTagBuilder(TagKey<T> tag) {

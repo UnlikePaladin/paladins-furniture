@@ -55,7 +55,7 @@ public class PFMItemRenderer extends BuiltinModelItemRenderer {
             ItemRenderer renderer = MinecraftClient.getInstance().getItemRenderer();
             matrices.pop();
             matrices.push();
-            BakedModel lampShadeModel = (bakedModels.get(variant).get(modelParts.get(4))).handlePerspective(mode, matrices);
+            BakedModel lampShadeModel = (bakedModels.get(variant).get(modelParts.get(4))).applyTransform(mode, matrices, false);
             BakedModel poleModel = (bakedModels.get(variant).get(modelParts.get(2)));
             BakedModel bulbModel = (bakedModels.get(variant).get(modelParts.get(5)));
 

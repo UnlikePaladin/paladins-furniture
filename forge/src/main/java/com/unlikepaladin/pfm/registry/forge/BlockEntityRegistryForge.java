@@ -19,6 +19,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.stream.Stream;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -26,9 +27,9 @@ public class BlockEntityRegistryForge {
 
     @SubscribeEvent
     public static void registerEntities(RegisterEvent event) {
-        BlockEntityRegistry.registerBlockEntities();
         event.register(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES, blockEntityTypeRegisterHelper -> {
-            blockEntityTypeRegisterHelper.registerAll(BlockEntityRegistryImpl.blockEntityTypes.toArray(new BlockEntityType[0]));
-        );
+            BlockEntityRegistry.registerBlockEntities();
+            BlockEntityRegistryImpl.blockEntityTypes.forEach(blockEntityTypeRegisterHelper::register);
+        });
     }
 }

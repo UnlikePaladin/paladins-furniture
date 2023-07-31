@@ -6,12 +6,14 @@ import com.unlikepaladin.pfm.items.forge.FurnitureGuideBookImpl;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.effect.StatusEffect;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.minecraft.world.dimension.DimensionType;
 import net.minecraft.util.registry.Registry;
@@ -33,9 +35,9 @@ import java.util.stream.Stream;
 public class BlockItemRegistryForge {
     @SubscribeEvent
     public static void registerBlocks(RegisterEvent event) {
-        BlockItemRegistry.registerCommonBlocks();
         event.register(ForgeRegistries.Keys.BLOCKS, blockRegisterHelper -> {
-            blockRegisterHelper.registerAll(BlockItemRegistryImpl.blocks.toArray(new Block[0]));
+            BlockItemRegistry.registerCommonBlocks();
+            BlockItemRegistryImpl.blocks.forEach(blockRegisterHelper::register);
         });
     }
 
@@ -46,9 +48,8 @@ public class BlockItemRegistryForge {
             BlockItemRegistry.registerCommonItems();
             BlockItemRegistryImpl.items.forEach((itemId, itemSupplier) -> {
                 Item item = itemSupplier.get();
-                item.setRegistryName(itemId);
-                itemRegisterHelper.register(item);
+                itemRegisterHelper.register(itemId, item);
             });
-        }
+        });
     }
 }

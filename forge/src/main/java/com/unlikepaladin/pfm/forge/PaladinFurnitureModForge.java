@@ -6,19 +6,15 @@ import com.unlikepaladin.pfm.data.forge.TagsImpl;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.dynamic.forge.LateBlockRegistryForge;
 import com.unlikepaladin.pfm.registry.forge.*;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.io.IOException;
-import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 
 @Mod(PaladinFurnitureMod.MOD_ID)
@@ -43,8 +39,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         MinecraftForge.EVENT_BUS.register(SoundRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(NetworkRegistryForge.class);
         NetworkRegistryForge.registerPackets();
-        LateBlockRegistryForge.addDynamicBlockRegistration(Block.class);
-        LateBlockRegistryForge.addDynamicBlockRegistration(Item.class);
+        LateBlockRegistryForge.addDynamicBlockRegistration();
         this.commonInit();
         PaladinFurnitureMod.isClient = FMLEnvironment.dist == Dist.CLIENT;
     }

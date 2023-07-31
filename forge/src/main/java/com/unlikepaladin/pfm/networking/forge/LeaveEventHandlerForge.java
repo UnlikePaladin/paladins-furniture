@@ -15,7 +15,7 @@ public class LeaveEventHandlerForge {
     public static final HashMap<String, Object> originalConfigValues = new HashMap<>();
 
     @SubscribeEvent
-    public static void onServerLeave(ClientPlayerNetworkEvent.LoggedOutEvent event) {
+    public static void onServerLeave(ClientPlayerNetworkEvent.LoggingOut event) {
         PFMConfigScreen.isOnServer = false;
         originalConfigValues.forEach((key, value) -> {
             PaladinFurnitureMod.getPFMConfig().options.get(key).setValue(value);

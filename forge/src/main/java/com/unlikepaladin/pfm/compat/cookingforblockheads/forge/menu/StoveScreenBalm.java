@@ -9,7 +9,6 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Identifier;
 
 public class StoveScreenBalm extends HandledScreen<StoveScreenHandlerBalm> {
@@ -31,7 +30,7 @@ public class StoveScreenBalm extends HandledScreen<StoveScreenHandlerBalm> {
         StoveBlockEntityBalm tileEntity = this.handler.getTileEntity();
         if (tileEntity.hasPowerUpgrade() && mouseX >= this.x + this.backgroundWidth - 25 && mouseY >= this.y + 22 && mouseX < this.x + this.backgroundWidth - 25 + 35 + 18 && mouseY < this.y + 22 + 72) {
             EnergyStorage energyStorage = tileEntity.getEnergyStorage();
-            this.renderTooltip(poseStack, new TranslatableText("tooltip.cookingforblockheads:energy_stored", new Object[]{energyStorage.getEnergy(), energyStorage.getCapacity()}), mouseX, mouseY);
+            this.renderTooltip(poseStack, Text.translatable("tooltip.cookingforblockheads:energy_stored", new Object[]{energyStorage.getEnergy(), energyStorage.getCapacity()}), mouseX, mouseY);
         }
 
     }

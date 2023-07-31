@@ -34,7 +34,6 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -451,7 +450,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
     }
 
     public Text getDefaultName() {
-        return new TranslatableText("container.cookingforblockheads.oven");
+        return Text.translatable("container.cookingforblockheads.oven");
     }
 
     public Inventory getContainer() {

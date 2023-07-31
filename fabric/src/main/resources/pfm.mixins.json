@@ -5,6 +5,7 @@
   "client": [
   ],
   "mixins": [
+    "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMCookingPotBlockEntityMixin",
     "PFMMixinPointOfInterestType"
   ],

@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.mixin;
+package com.unlikepaladin.pfm.mixin.fabric;
 
 import net.minecraft.block.Block;
 import net.minecraft.data.server.AbstractTagProvider;

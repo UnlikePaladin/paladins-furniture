@@ -30,7 +30,7 @@ public class ForgeClassicTableModel extends AbstractBakedModel {
 
     @NotNull
     @Override
-    public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
+    public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
         ModelData.Builder builder = ModelData.builder();
         if (state.getBlock() instanceof ClassicTableBlock) {
             ClassicTableBlock block = (ClassicTableBlock) state.getBlock();

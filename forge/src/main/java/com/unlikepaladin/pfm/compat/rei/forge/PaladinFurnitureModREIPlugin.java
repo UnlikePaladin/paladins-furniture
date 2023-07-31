@@ -9,10 +9,9 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
-import me.shedaniel.rei.forge.REIPlugin;
-import net.minecraftforge.api.distmarker.Dist;
+import me.shedaniel.rei.forge.REIPluginClient;
 
-@REIPlugin(Dist.CLIENT)
+@REIPluginClient
 public class PaladinFurnitureModREIPlugin implements REIClientPlugin {
     @Override
     public void registerCategories(CategoryRegistry registry) {

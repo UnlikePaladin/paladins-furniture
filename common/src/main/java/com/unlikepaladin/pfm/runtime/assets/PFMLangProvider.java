@@ -37,9 +37,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class PFMLangProvider implements DataProvider {
+public class PFMLangProvider {
 
-    public void run(DataWriter dataWriter) {
+    public void run() {
         try (PFMResourceManager resourceManager = new PFMResourceManager(ResourceType.CLIENT_RESOURCES, PFMRuntimeResources.RESOURCE_PACK_LIST)) {
             loadLanguages(resourceManager);
             resourceManager.close();
@@ -278,7 +278,6 @@ public class PFMLangProvider implements DataProvider {
         return list1;
     }
 
-    @Override
     public String getName() {
         return "PFM Lang";
     }

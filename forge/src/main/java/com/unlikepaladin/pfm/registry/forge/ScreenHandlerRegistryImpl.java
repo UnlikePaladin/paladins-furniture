@@ -11,23 +11,21 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.function.BiFunction;
 
 public class ScreenHandlerRegistryImpl {
-    public static final List<ScreenHandlerType<?>> screenHandlerTypeList= new ArrayList<>();
+    public static final Map<Identifier, ScreenHandlerType<?>> screenHandlerMap = new LinkedHashMap<>();
     public static <T extends ScreenHandler> ScreenHandlerType<T> registerScreenHandlerExtended(Identifier id, TriFunc<Integer, PlayerInventory, PacketByteBuf, T> factory) {
         ScreenHandlerType<T> type = IForgeMenuType.create(factory::apply);
-        type.setRegistryName(id);
-        screenHandlerTypeList.add(type);
+        screenHandlerMap.put(id, type);
         return type;
     }
 
     public static <T extends ScreenHandler> ScreenHandlerType<T> registerScreenHandlerSimple(Identifier id, BiFunction<Integer, PlayerInventory, T> factory) {
         ScreenHandlerType<T> type = new ScreenHandlerType<>(factory::apply);
-        type.setRegistryName(id);
-        screenHandlerTypeList.add(type);
+        screenHandlerMap.put(id, type);
         return type;
     }
 

@@ -4,8 +4,7 @@
   "package": "com.unlikepaladin.pfm.mixin",
   "compatibilityLevel": "JAVA_8",
   "mixins": [
-    "PFMAbstractTagProvider$ObjectBuilderMixin",
-    "PFMMixinPointOfInterestTypeFactory",
+    "PFMDataCache$CachedDataMixin",
     "PFMPlayerInventoryMixin",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSaveLoaderMixin",

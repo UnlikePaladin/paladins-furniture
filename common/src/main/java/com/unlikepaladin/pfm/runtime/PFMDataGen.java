@@ -26,12 +26,14 @@ public class PFMDataGen {
     public static boolean frozen = false;
     private final Path output;
     private final boolean logOrDebug;
+    public static boolean running = false;
     public PFMDataGen(Path output, boolean logOrDebug) {
         this.output = output;
         this.logOrDebug = logOrDebug;
     }
     public void run() throws IOException {
         if (!frozen) {
+            running = true;
             frozen = true;
             Path modListPath = PFMRuntimeResources.getPFMDirectory().resolve("modsList");
             Path hashPath = PFMRuntimeResources.getPFMDirectory().resolve("dataHash");
@@ -54,7 +56,6 @@ public class PFMDataGen {
                 dataProviders.add(new PFMMCMetaProvider());
                 if (PaladinFurnitureMod.isClient) {
                     dataProviders.add(new PFMBlockstateModelProvider());
-                    dataProviders.add(new PFMLangProvider());
                 }
                 DataCache dataCache = new DataCache(this.output, dataProviders, SharedConstants.getGameVersion());
                 PFMFileUtil.deleteDir(PFMRuntimeResources.getResourceDirectory().toFile());
@@ -69,9 +70,17 @@ public class PFMDataGen {
                     log("{} finished after {} ms", dataProvider.getName(), stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                     stopwatch2.reset();
                 }
+                dataCache.write();
+
+                log("Starting provider: {}", "PFM Lang");
+                stopwatch2.start();
+                new PFMLangProvider().run();
+                stopwatch2.stop();
+                log("{} finished after {} ms", "PFM Lang", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+                stopwatch2.reset();
+
                 LOGGER.info("All providers took: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
-                dataCache.write();
 
                 Files.deleteIfExists(hashPath);
                 Files.createFile(hashPath);
@@ -81,6 +90,7 @@ public class PFMDataGen {
                 Files.deleteIfExists(modListPath);
                 Files.createFile(modListPath);
                 Files.writeString(PFMRuntimeResources.createDirIfNeeded(modListPath), PaladinFurnitureMod.getVersionMap().toString().replace("[", "").replace("]", ""), StandardOpenOption.APPEND);
+                running = false;
             } else {
                 log("Data Hash and Mod list matched, skipping generation");
             }

@@ -16,8 +16,9 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.world.poi.PointOfInterestType;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraft.world.poi.PointOfInterestTypes;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -26,7 +27,7 @@ import java.util.function.Supplier;
 
 public class LateBlockRegistryImpl {
 
-    public static List<Block> blocks = new ArrayList<>();
+    public static Map<String, Block> blocks = new LinkedHashMap<>();
     public static Map<String, Supplier<Item>> items = new LinkedHashMap<>();
     public static void registerLateItem(String itemName, Supplier<Item> itemSup) {
         items.put(itemName, itemSup);
@@ -38,8 +39,7 @@ public class LateBlockRegistryImpl {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerBlockItemPlatformSpecific(blockId, block, group);
         }
-        block.setRegistryName(blockId);
-        blocks.add(block);
+        blocks.put(blockId, block);
         return block;
     }
 
@@ -56,29 +56,29 @@ public class LateBlockRegistryImpl {
     }
 
 
-    public static void registerBlocks(RegistryEvent.Register<Block> blockRegisterEvent) {
+    public static void registerBlocks(IForgeRegistry<Block> blockRegisterEvent) {
         try {
             LateBlockRegistry.registerBlocks();
         } catch (InvocationTargetException | InstantiationException |
                  IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }
-        blockRegisterEvent.getRegistry().registerAll(blocks.toArray(new Block[0]));
+        blocks.forEach(blockRegisterEvent::register);
 
-        Set<BlockState> originalBedStates = PointOfInterestType.HOME.getBlockStates();
+        Set<BlockState> originalBedStates = ForgeRegistries.POI_TYPES.getValue(PointOfInterestTypes.HOME.getValue()).blockStates();
         Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
         Set<BlockState> newBedStates = new HashSet<>();
         newBedStates.addAll(originalBedStates);
         newBedStates.addAll(addedBedStates);
-        PointOfInterestType.HOME = new PointOfInterestType("home", newBedStates, 1, 1);
-        ForgeRegistries.POI_TYPES.register(PointOfInterestType.HOME.setRegistryName("minecraft:home"));
+        PointOfInterestType pointOfInterestType = new PointOfInterestType(newBedStates, 1, 1);
+        ForgeRegistries.POI_TYPES.register("minecraft:home", pointOfInterestType);
+        PointOfInterestTypes.HOME = ForgeRegistries.POI_TYPES.getHolder(pointOfInterestType).get().getKey().get();
     }
 
-    public static void registerItems(RegistryEvent.Register<Item> itemRegisterEvent) {
+    public static void registerItems(IForgeRegistry<Item> itemIForgeRegistry) {
         items.forEach((itemName, itemSup) -> {
             Item item = itemSup.get();
-            item.setRegistryName(itemName);
-            itemRegisterEvent.getRegistry().register(item);
+            itemIForgeRegistry.register(itemName, item);
         });
     }
 
@@ -87,8 +87,7 @@ public class LateBlockRegistryImpl {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerBlockItemPlatformSpecific(blockId, block, group);
         }
-        block.setRegistryName(blockId);
-        blocks.add(block);
+        blocks.put(blockId, block);
         return block;
     }
 }

@@ -5,10 +5,9 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.util.Identifier;
-import net.minecraftforge.registries.ForgeRegistryEntry;
 import org.jetbrains.annotations.Nullable;
 
-public class FurnitureSerializerForge extends ForgeRegistryEntry<RecipeSerializer<?>> implements RecipeSerializer<FurnitureRecipe> {
+public class FurnitureSerializerForge implements RecipeSerializer<FurnitureRecipe> {
     public FurnitureSerializerForge() {
         serializer = new FurnitureRecipe.Serializer();
     }
