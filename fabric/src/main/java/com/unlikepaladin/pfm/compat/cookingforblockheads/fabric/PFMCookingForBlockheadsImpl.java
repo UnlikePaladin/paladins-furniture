@@ -11,32 +11,12 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     @Override
-    public void generateTags() {
-    }
-
-    @Override
     public String getModId() {
         return "cookingforblockheads";
     }
 
     @Override
     public void registerBlocks() {
-    }
-
-    @Override
-    public void registerBlockEntities() {
-    }
-
-    @Override
-    public void registerItems() {
-    }
-
-    @Override
-    public void registerScreenHandlers() {
-    }
-
-    @Override
-    public void registerScreens() {
     }
 
     public static PFMCookingForBlockheads getInstance() {

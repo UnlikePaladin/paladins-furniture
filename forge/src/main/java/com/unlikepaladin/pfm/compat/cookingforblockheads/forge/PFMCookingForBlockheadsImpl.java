@@ -20,10 +20,6 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     @Override
-    public void generateTags() {
-    }
-
-    @Override
     public String getModId() {
         return CookingForBlockheads.MOD_ID;
     }
@@ -31,22 +27,6 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     @Override
     public void registerBlocks() {
         LateBlockRegistry.registerLateBlockClassic("cooking_table", PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK, true, PaladinFurnitureMod.FURNITURE_GROUP);
-    }
-
-    @Override
-    public void registerBlockEntities() {
-    }
-
-    @Override
-    public void registerItems() {
-    }
-
-    @Override
-    public void registerScreenHandlers() {
-    }
-
-    @Override
-    public void registerScreens() {
     }
 
     public static PFMCookingForBlockheads getInstance() {

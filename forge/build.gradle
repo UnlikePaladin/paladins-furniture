@@ -55,6 +55,7 @@ repositories {
             includeGroup "net.blay09.mods"
         }
     }
+    maven { url 'https://jitpack.io' }
 }
 
 
@@ -82,18 +83,12 @@ if(rootProject.jei_compatibility == "true") {
 }
 if (rootProject.immersive_portals_compatibility_forge == "true"){
     dependencies {
-        modImplementation("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
+        modRuntimeOnly("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
             transitive(false)
         }
     }
 }
-else {
-    dependencies {
-        modCompileOnly("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
-            transitive(false)
-        }
-    }
-}
+
 if (rootProject.lazy_dfu_enabled == "true"){
     dependencies {
         modRuntimeOnly ("curse.maven:lazydfu-460819:${rootProject.lazy_dfu_version_forge}")

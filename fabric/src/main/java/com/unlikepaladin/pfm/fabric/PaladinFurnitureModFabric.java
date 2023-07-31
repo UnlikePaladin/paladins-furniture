@@ -9,8 +9,10 @@ import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmPtlRegistry;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
+import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
 import com.unlikepaladin.pfm.mixin.PFMMixinPointOfInterestTypeFactory;
 import com.unlikepaladin.pfm.registry.*;
+import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.registry.fabric.*;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import io.netty.buffer.Unpooled;
@@ -88,9 +90,6 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         PaladinFurnitureModFabric.initializeItemGroup();
         BlockItemRegistryFabric.registerItems();
         BlockItemRegistryFabric.registerBlocks();
-        if (FabricLoader.getInstance().isModLoaded("imm_ptl_core")) {
-            PFMImmPtlRegistry.register();
-        }
         this.commonInit();
         //PFMRuntimeResources.prepareAsyncResourceGen(); No async gen because Forge won't behave, blame it.
         PFMRuntimeResources.ready = true;
