@@ -133,7 +133,7 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 sourceSets.main.resources {
@@ -143,12 +143,11 @@ sourceSets.main.resources {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
     archiveClassifier = "forge-mc${rootProject.minecraft_version}"
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier = "dev"
 }
 
 sourcesJar {
