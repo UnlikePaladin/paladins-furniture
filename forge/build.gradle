@@ -83,28 +83,12 @@ if(rootProject.jei_compatibility == "true") {
 }
 if (rootProject.immersive_portals_compatibility_forge == "true"){
     dependencies {
-        modImplementation("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
+        modRuntimeOnly("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
             transitive(false)
         }
     }
 }
-else {
-    dependencies {
-        /*
-        Immersive Portals includes an Access Widener on Forge for some reason, which breaks remapping
-        modCompileOnly("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
-            transitive(false)
-        }*/
-        modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
-            exclude(group: "net.fabricmc.fabric-api")
-            transitive(false)
-        }
-        modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
-            exclude(group: "net.fabricmc.fabric-api")
-            transitive(false)
-        }
-    }
-}
+
 if (rootProject.lazy_dfu_enabled == "true"){
     dependencies {
         modRuntimeOnly ("curse.maven:lazydfu-460819:${rootProject.lazy_dfu_version_forge}")

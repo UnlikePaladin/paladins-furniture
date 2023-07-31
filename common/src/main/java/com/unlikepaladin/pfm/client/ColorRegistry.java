@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.client;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
@@ -42,6 +43,11 @@ public class ColorRegistry {
                 }
             }
             return 0xFFFFFF;
+        });
+        PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> {
+            if (pfmModCompatibility.getClientModCompatiblity().isPresent()){
+                pfmModCompatibility.getClientModCompatiblity().get().registerBlockColors();
+            }
         });
     }
 

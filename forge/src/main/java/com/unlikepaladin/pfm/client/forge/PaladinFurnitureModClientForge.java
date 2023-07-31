@@ -21,8 +21,6 @@ import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinner
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
-import com.unlikepaladin.pfm.compat.imm_ptl.client.PFMImmPtlRegistryClient;
-import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -53,9 +51,6 @@ public class PaladinFurnitureModClientForge {
         ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
                 () -> new ConfigGuiHandler.ConfigGuiFactory(
                         (client, parent) -> new PFMConfigScreen(client, parent)));
-        if (BlockItemRegistry.isModLoaded("immersive_portals")) {
-            PFMImmPtlRegistryClient.register();
-        }
     }
 
     private static void registerScreens() {
