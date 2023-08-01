@@ -10,6 +10,7 @@ public interface PFMModCompatibility {
     default void registerBlockEntityTypes() {};
     default void registerEntityTypes() {};
     default void registerItems() {};
+    default void createBlocks() {};
     default void registerScreenHandlers() {};
     default void generateRecipes(Consumer<RecipeJsonProvider> exporter) {};
     default void generateTags() {};

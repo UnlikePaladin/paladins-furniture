@@ -23,11 +23,11 @@ dependencies {
     // Remove the next line if you don't want to depend on the API
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"
 
-    modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
+    modCompileOnly("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
-    modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
+    modCompileOnly("com.github.qouteall.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }

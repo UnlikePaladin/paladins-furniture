@@ -131,28 +131,17 @@ else {
 
 if (rootProject.immersive_portals_compatibility_fabric == "true"){
     dependencies {
-        modImplementation ("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
+        modRuntimeOnly ("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
             exclude(group: "net.fabricmc.fabric-api")
             transitive(false)
         }
-        modImplementation("com.github.qouteall.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
-            exclude(group: "net.fabricmc.fabric-api")
-            transitive(false)
-        }
-    }
-}
-else {
-    dependencies {
-        modCompileOnly("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
-            exclude(group: "net.fabricmc.fabric-api")
-            transitive(false)
-        }
-        modCompileOnly("com.github.qouteall.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
+        modRuntimeOnly("com.github.qouteall.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
             exclude(group: "net.fabricmc.fabric-api")
             transitive(false)
         }
     }
 }
+
 if (rootProject.lazy_dfu_enabled == "true"){
     dependencies {
         modRuntimeOnly ("maven.modrinth:lazydfu:${rootProject.lazy_dfu_version_fabric}")
