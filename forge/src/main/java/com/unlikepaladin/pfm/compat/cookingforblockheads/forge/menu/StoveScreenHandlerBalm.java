@@ -7,7 +7,6 @@ import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOven;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenFuel;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenTool;
-import net.blay09.mods.cookingforblockheads.tile.OvenBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -86,7 +85,7 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
                 slot.onQuickTransfer(slotStack, itemStack);
             } else if (slotIndex >= 20) {
                 ItemStack smeltingResult = this.tileEntity.getSmeltingResult(slotStack);
-                if (OvenBlockEntity.isItemFuel(slotStack)) {
+                if (StoveBlockEntityBalm.isItemFuel(slotStack)) {
                     if (!this.insertItem(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }

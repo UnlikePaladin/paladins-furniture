@@ -1,5 +1,7 @@
 package com.unlikepaladin.pfm.registry.fabric;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.fabricmc.fabric.api.screenhandler.v1.ScreenHandlerRegistry;
@@ -24,6 +26,10 @@ public class ScreenHandlerRegistryImpl {
     }
 
     public static <T extends ScreenHandler> TriFunc<Integer, PlayerInventory, PacketByteBuf, T> getStoveMenuFactory() {
-        return (integer, playerInventory, packetByteBuf) -> (T) new StoveScreenHandler(integer, playerInventory);
+        if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
+            return PFMCookingForBlockHeadsCompat.getStoveScreenHandler();
+        }
+        else
+            return (integer, playerInventory, packetByteBuf) -> (T) new StoveScreenHandler(integer, playerInventory);
     }
 }

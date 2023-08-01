@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.StoveBlockEntityBalm;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -37,7 +39,7 @@ public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedSc
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends BlockEntity> getFactory() {
-        return StoveBlockEntityImpl::new;
+        return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? StoveBlockEntityBalm::new :StoveBlockEntityImpl::new;
     }
 
     @Override

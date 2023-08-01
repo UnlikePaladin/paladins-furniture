@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 
-public class KitchenDrawerBlock extends KitchenCounterBlock implements BlockEntityProvider{
+public class KitchenDrawerBlock extends KitchenCounterBlock implements BlockEntityProvider {
     private float height = 0.36f;
     private final Block baseBlock;
     public static final BooleanProperty OPEN = Properties.OPEN;
