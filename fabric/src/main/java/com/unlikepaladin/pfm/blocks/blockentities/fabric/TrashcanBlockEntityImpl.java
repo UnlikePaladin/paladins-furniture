@@ -13,7 +13,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Nullable;;
 
 public class TrashcanBlockEntityImpl extends TrashcanBlockEntity implements ExtendedScreenHandlerFactory {
     public TrashcanBlockEntityImpl(BlockPos pos, BlockState state) {

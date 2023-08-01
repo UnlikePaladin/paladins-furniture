@@ -49,6 +49,7 @@ public class LateBlockRegistry {
     }
 
     public static void registerBlocks() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+        PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::createBlocks);
         PaladinFurnitureMod.furnitureEntryMap.put(BasicChairBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_chair", () -> new BasicChairBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
