@@ -131,28 +131,17 @@ else {
 
 if (rootProject.immersive_portals_compatibility_fabric == "true"){
     dependencies {
-        modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
+        modRuntimeOnly ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
             exclude(group: "net.fabricmc.fabric-api")
             transitive(false)
         }
-        modImplementation("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
-            exclude(group: "net.fabricmc.fabric-api")
-            transitive(false)
-        }
-    }
-}
-else {
-    dependencies {
-        modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
-            exclude(group: "net.fabricmc.fabric-api")
-            transitive(false)
-        }
-        modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
+        modRuntimeOnly("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
             exclude(group: "net.fabricmc.fabric-api")
             transitive(false)
         }
     }
 }
+
 if (rootProject.lazy_dfu_enabled == "true"){
     dependencies {
         modRuntimeOnly ("maven.modrinth:lazydfu:${rootProject.lazy_dfu_version_fabric}")
@@ -210,19 +199,18 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 remapJar {
     injectAccessWidener = true
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
     archiveClassifier = "fabric-mc${rootProject.minecraft_version}"
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier = "dev"
 }
 
 sourcesJar {

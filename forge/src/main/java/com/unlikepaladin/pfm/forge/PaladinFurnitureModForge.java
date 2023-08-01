@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmPtlRegistry;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.data.forge.TagsImpl;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
@@ -32,10 +31,6 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
             GENERAL_LOGGER.error("", e);
         }
         ItemGroupRegistryForge.registerItemGroups();
-        if (BlockItemRegistry.isModLoaded("immersive_portals")) {
-            PFMImmPtlRegistry.register();
-        }
-
         TagsImpl.TUCKABLE_BLOCKS = BlockTags.createOptional(new Identifier("pfm", "tuckable_blocks"));
         MinecraftForge.EVENT_BUS.register(EntityRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(BlockItemRegistryForge.class);

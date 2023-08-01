@@ -22,36 +22,6 @@ public class PFMFarmersDelightImpl extends PFMFarmersDelight {
     }
 
     @Override
-    public void registerBlocks() {
-
-    }
-
-    @Override
-    public void registerBlockEntities() {
-
-    }
-
-    @Override
-    public void registerItems() {
-
-    }
-
-    @Override
-    public void registerScreenHandlers() {
-
-    }
-
-    @Override
-    public void registerScreens() {
-
-    }
-
-    @Override
-    public void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
-
-    }
-
-    @Override
     public void generateTags() {
         List<Block> stoves = new ArrayList<>(StoveBlock.streamStoves().map(FurnitureBlock::getBlock).toList());
         stoves.addAll(IronStoveBlock.streamIronStoves().map(FurnitureBlock::getBlock).toList());

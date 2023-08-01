@@ -8,6 +8,12 @@ loom {
 
 repositories {
     maven { url "https://maven.shedaniel.me" }
+    maven {
+        // location of the maven that hosts JEI files since January 2023
+        name = "Jared's maven"
+        url = "https://maven.blamejared.com/"
+    }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -16,6 +22,15 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     // Remove the next line if you don't want to depend on the API
     modCompileOnly "me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"
+
+    modCompileOnly("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+    modCompileOnly("com.github.qouteall.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
 }
 
 publishing {

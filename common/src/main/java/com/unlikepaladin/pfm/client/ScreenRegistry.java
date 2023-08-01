@@ -14,6 +14,8 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
 
+import java.util.Optional;
+
 public class ScreenRegistry {
     public static void registerScreens() {
         registerScreen(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
@@ -23,7 +25,11 @@ public class ScreenRegistry {
         registerScreen(ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
         registerScreen(ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER, TrashcanScreen::new);
 
-        PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerScreens);
+        PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> {
+            if (pfmModCompatibility.getClientModCompatiblity().isPresent()){
+                pfmModCompatibility.getClientModCompatiblity().get().registerScreens();
+            }
+        });
     }
 
     @ExpectPlatform

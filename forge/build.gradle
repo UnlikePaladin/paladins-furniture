@@ -55,6 +55,7 @@ repositories {
             includeGroup "net.blay09.mods"
         }
     }
+    maven { url 'https://jitpack.io' }
 }
 
 
@@ -82,18 +83,12 @@ if(rootProject.jei_compatibility == "true") {
 }
 if (rootProject.immersive_portals_compatibility_forge == "true"){
     dependencies {
-        modImplementation("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
+        modRuntimeOnly("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
             transitive(false)
         }
     }
 }
-else {
-    dependencies {
-        modCompileOnly("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
-            transitive(false)
-        }
-    }
-}
+
 if (rootProject.lazy_dfu_enabled == "true"){
     dependencies {
         modRuntimeOnly ("curse.maven:lazydfu-460819:${rootProject.lazy_dfu_version_forge}")
@@ -122,7 +117,7 @@ shadowJar {
     exclude "architectury.common.json"
 
     configurations = [project.configurations.shadowCommon]
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 sourceSets.main.resources {
@@ -132,12 +127,11 @@ sourceSets.main.resources {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier null
     archiveClassifier = "forge-mc${rootProject.minecraft_version}"
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier = "dev"
 }
 
 sourcesJar {
