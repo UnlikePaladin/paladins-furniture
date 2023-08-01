@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.compat.imm_ptl.entity;
 
-import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmPtlRegistry;
+
+import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmersivePortals;
 import com.unlikepaladin.pfm.compat.imm_ptl.PFMMirrorBlockIP;
 import com.unlikepaladin.pfm.compat.imm_ptl.shape.BlockPortalShape;
 import net.minecraft.block.BlockState;
@@ -14,15 +15,15 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
+import org.jetbrains.annotations.Nullable;
 import qouteall.imm_ptl.core.portal.Mirror;
 import qouteall.q_misc_util.my_util.IntBox;
 import qouteall.q_misc_util.Helper;
 
-import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
 public class PFMMirrorEntity extends Mirror {
-    public static EntityType<PFMMirrorEntity> entityType = PFMImmPtlRegistry.MIRROR;
+    public static EntityType<PFMMirrorEntity> entityType = PFMImmersivePortals.MIRROR;
     @Nullable
     public IntBox wallArea;
     @Nullable

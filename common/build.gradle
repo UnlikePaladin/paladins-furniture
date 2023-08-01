@@ -13,6 +13,7 @@ repositories {
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
     }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -23,6 +24,15 @@ dependencies {
     modImplementation "me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"
     modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}") {
         exclude group: "mezz.jei"
+    }
+
+    modCompileOnly("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+    modCompileOnly("com.github.qouteall.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
     }
 
 }

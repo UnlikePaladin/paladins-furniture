@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.compat.farmersdelight.PFMFarmersDelight;
+import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmersivePortals;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
@@ -48,7 +49,9 @@ public class PaladinFurnitureMod {
 			pfmModCompatibilities.add(PFMCookingForBlockheads.getInstance());
 		if (getModList().contains("farmersdelight"))
 			pfmModCompatibilities.add(PFMFarmersDelight.getInstance());
-	}
+		if (getModList().contains("imm_ptl_core"))
+			pfmModCompatibilities.add(new PFMImmersivePortals());
+		}
 
 	@ExpectPlatform
     public static PaladinFurnitureModConfig getPFMConfig() {
