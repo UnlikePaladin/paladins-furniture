@@ -1,21 +1,57 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"top": "pfm:block/small_log_top",
-		"particle": "block/oak_log",
-		"side": "block/oak_log"
+		"top": "#log_top",
+		"particle": "#log",
+		"side": "#log"
 	},
 	"elements": [
 		{
-			"from": [3, 0, 3],
+			"from": [8, 0, 8],
 			"to": [13, 11, 13],
 			"faces": {
-				"north": {"uv": [0, 0, 10, 11], "texture": "#side"},
-				"east": {"uv": [2, 4, 12, 15], "texture": "#side"},
-				"south": {"uv": [3, 3, 13, 14], "texture": "#side"},
-				"west": {"uv": [2, 1, 12, 12], "texture": "#side"},
-				"up": {"uv": [5, 0, 10, 5], "texture": "#top"},
-				"down": {"uv": [5, 0, 10, 5], "texture": "#top"}
+				"east": {"uv": [2, 4, 7, 15], "texture": "#side"},
+				"south": {"uv": [3, 3, 8, 14], "texture": "#side"},
+				"up": {"uv": [11, 11, 16, 16], "texture": "#top"},
+				"down": {"uv": [11, 0, 16, 5], "texture": "#top", "cullface": "down"}
+			}
+		},
+		{
+			"from": [3, 0, 8],
+			"to": [8, 11, 13],
+			"faces": {
+				"south": {"uv": [3, 3, 8, 14], "texture": "#side"},
+				"west": {"uv": [2, 1, 7, 12], "texture": "#side"},
+				"up": {"uv": [0, 11, 5, 16], "texture": "#top"},
+				"down": {"uv": [0, 0, 5, 5], "texture": "#top", "cullface": "down"}
+			}
+		},
+		{
+			"from": [3, 0, 3],
+			"to": [8, 11, 8],
+			"faces": {
+				"north": {"uv": [0, 0, 5, 11], "texture": "#side"},
+				"west": {"uv": [2, 1, 7, 12], "texture": "#side"},
+				"up": {"uv": [0, 0, 5, 5], "texture": "#top"},
+				"down": {"uv": [0, 11, 5, 16], "texture": "#top", "cullface": "down"}
+			}
+		},
+		{
+			"from": [7, -0.001, 7],
+			"to": [9, 11.001, 9],
+			"faces": {
+				"up": {"uv": [7, 7, 9, 9], "texture": "#top"},
+				"down": {"uv": [7, 7, 9, 9], "texture": "#top", "cullface": "down"}
+			}
+		},
+		{
+			"from": [8, 0, 3],
+			"to": [13, 11, 8],
+			"faces": {
+				"north": {"uv": [0, 0, 5, 11], "texture": "#side"},
+				"east": {"uv": [2, 4, 7, 15], "texture": "#side"},
+				"up": {"uv": [11, 0, 16, 5], "texture": "#top"},
+				"down": {"uv": [11, 11, 16, 16], "texture": "#top", "cullface": "down"}
 			}
 		}
 	],
@@ -62,7 +98,7 @@
 			"name": "chair",
 			"origin": [0, 0, 0],
 			"color": 0,
-			"children": [0]
+			"children": [0, 1, 2, 3, 4]
 		}
 	]
 }

@@ -1,12 +1,14 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.ClassicNightstand;
-import com.unlikepaladin.pfm.blocks.KitchenCabinet;
-import com.unlikepaladin.pfm.blocks.KitchenDrawer;
-import com.unlikepaladin.pfm.blocks.KitchenWallDrawerSmall;
+import com.unlikepaladin.pfm.blocks.ClassicNightstandBlock;
+import com.unlikepaladin.pfm.blocks.KitchenCabinetBlock;
+import com.unlikepaladin.pfm.blocks.KitchenDrawerBlock;
+import com.unlikepaladin.pfm.blocks.KitchenWallDrawerSmallBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -36,7 +38,7 @@ public class GenericStorageBlockEntity3x3 extends LootableContainerBlockEntity {
     private final ViewerCountManager stateManager = new ViewerCountManager() {
         @Override
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand){
+            if (state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock){
                 GenericStorageBlockEntity3x3.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
                 GenericStorageBlockEntity3x3.this.setOpen(state, true);
             }
@@ -44,7 +46,7 @@ public class GenericStorageBlockEntity3x3 extends LootableContainerBlockEntity {
 
         @Override
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof KitchenDrawer || state.getBlock() instanceof KitchenCabinet || state.getBlock() instanceof ClassicNightstand) {
+            if (state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock) {
                 GenericStorageBlockEntity3x3.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
                 GenericStorageBlockEntity3x3.this.setOpen(state, false);
             }
@@ -113,7 +115,7 @@ public class GenericStorageBlockEntity3x3 extends LootableContainerBlockEntity {
     }
 
     protected Text getContainerName() {
-        if (this.getCachedState().getBlock() instanceof KitchenWallDrawerSmall)
+        if (this.getCachedState().getBlock() instanceof KitchenWallDrawerSmallBlock)
             return Text.translatable("container.pfm.drawer_small");
         else
             return Text.translatable("container.pfm.small_storage");
@@ -134,6 +136,11 @@ public class GenericStorageBlockEntity3x3 extends LootableContainerBlockEntity {
         double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
         this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
+    }
+
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends GenericStorageBlockEntity3x3> getFactory() {
+        throw new AssertionError();
     }
 }
 

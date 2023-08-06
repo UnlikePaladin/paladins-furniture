@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.registry.forge;
 
-import com.unlikepaladin.pfm.registry.SoundIDs;
+import com.unlikepaladin.pfm.registry.SoundRegistry;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
@@ -9,15 +9,15 @@ import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 
+import java.util.Map;
+
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SoundRegistryForge {
     @SubscribeEvent
     public static void registerSounds(RegisterEvent event) {
-         event.register(ForgeRegistries.Keys.SOUND_EVENTS, soundEventRegisterHelper -> {
-             soundEventRegisterHelper.register(SoundIDs.MICROWAVE_BEEP_ID, SoundIDs.MICROWAVE_BEEP_EVENT);
-             soundEventRegisterHelper.register(SoundIDs.MICROWAVE_RUNNING_ID, SoundIDs.MICROWAVE_RUNNING_EVENT);
-             soundEventRegisterHelper.register(SoundIDs.TOILET_FLUSHING_ID, SoundIDs.TOILET_FLUSHING_EVENT);
-             soundEventRegisterHelper.register(SoundIDs.TOILET_USED_ID, SoundIDs.TOILET_USED_EVENT);
-         });
+        event.register(ForgeRegistries.Keys.SOUND_EVENTS, soundEventRegisterHelper -> {
+            SoundRegistry.registerSounds();
+            SoundRegistryImpl.soundEventMap.forEach(soundEventRegisterHelper::register);
+        });
     }
 }
