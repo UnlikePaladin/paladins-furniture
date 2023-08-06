@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.Microwave;
+import com.unlikepaladin.pfm.blocks.MicrowaveBlock;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.SoundIDs;
@@ -8,6 +8,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.block.entity.ViewerCountManager;
 import net.minecraft.entity.player.PlayerEntity;
@@ -15,6 +16,7 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SidedInventory;
+import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
@@ -48,7 +50,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     private final ViewerCountManager stateManager = new ViewerCountManager() {
         @Override
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Microwave) {
+            if (state.getBlock() instanceof MicrowaveBlock) {
                 MicrowaveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN, 0);
                 MicrowaveBlockEntity.this.setOpen(state, true);
             }
@@ -56,7 +58,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
         @Override
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof Microwave) {
+            if (state.getBlock() instanceof MicrowaveBlock) {
                 MicrowaveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE, 0);
                 MicrowaveBlockEntity.this.setOpen(state, false);
             }
@@ -77,7 +79,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     };
 
     void playSound(BlockState state, SoundEvent soundEvent, int pitch) {
-        Vec3i vec3i = state.get(Microwave.FACING).getVector();
+        Vec3i vec3i = state.get(MicrowaveBlock.FACING).getVector();
         double d = (double) this.pos.getX() + 0.5 + (double) vec3i.getX() / 2.0;
         double e = (double) this.pos.getY() + 0.5 + (double) vec3i.getY() / 2.0;
         double f = (double) this.pos.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
@@ -86,7 +88,6 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     private static final int[] TOP_SLOTS = new int[]{0};
-    private static final int[] BOTTOM_SLOTS = new int[]{1};
     public DefaultedList<ItemStack> inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY);
     int cookTime;
     int cookTimeTotal;
@@ -183,10 +184,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public int[] getAvailableSlots(Direction side) {
-        if (side == Direction.DOWN) {
-            return BOTTOM_SLOTS;
-        }
-        if (side == Direction.UP) {
+        if (side == Direction.UP || side == Direction.DOWN) {
             return TOP_SLOTS;
         }
         return null;
@@ -200,9 +198,8 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new MicrowaveScreenHandler(this,syncId, playerInventory, this, this.propertyDelegate);
+        return new MicrowaveScreenHandler(this, syncId, playerInventory, this, this.propertyDelegate);
     }
-
 
     @Override
     public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
@@ -211,12 +208,16 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return true;
+        return dir == Direction.DOWN && getRecipe(new SimpleInventory(stack)) == null;
+    }
+
+    public Recipe<?> getRecipe(Inventory inventory) {
+        return this.world.getRecipeManager().getFirstMatch(RecipeType.SMOKING, inventory, world).orElse(null);
     }
 
     @Override
     public boolean isValid(int slot, ItemStack stack) {
-        return true;
+        return slot == 0;
     }
 
     @Override
@@ -331,7 +332,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Microwave.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+        this.world.setBlockState(this.getPos(), state.with(MicrowaveBlock.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
         world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
     }
 
@@ -350,7 +351,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
                     blockEntity.cookTimeTotal = getCookTime(world, blockEntity.recipeType, blockEntity);
                     if (craftRecipe(world.getRegistryManager(),recipe, blockEntity.inventory, i)) {
                         blockEntity.setLastRecipe(recipe);
-                        blockEntity.world.setBlockState(pos, state = state.with(Microwave.POWERED, false), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+                        blockEntity.world.setBlockState(pos, state = state.with(MicrowaveBlock.POWERED, false), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
                         blockEntity.playSound(state, SoundIDs.MICROWAVE_BEEP_EVENT, 1);
                         blockEntity.setActiveonClient(blockEntity, false);
                         world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
@@ -380,7 +381,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     public Direction getFacing() {
-        return this.getCachedState().get(Microwave.FACING);
+        return this.getCachedState().get(MicrowaveBlock.FACING);
     }
 
     public void setActive(boolean active) {
@@ -389,12 +390,17 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         nbtCompound.putBoolean("isActive", active);
         this.writeNbt(nbtCompound);
         this.markDirty();
-        world.setBlockState(pos, this.getCachedState().with(Microwave.POWERED, true), Block.NOTIFY_LISTENERS);
+        world.setBlockState(pos, this.getCachedState().with(MicrowaveBlock.POWERED, true), Block.NOTIFY_LISTENERS);
     }
 
     @ExpectPlatform
     public static void setActiveonClient(MicrowaveBlockEntity microwaveBlockEntity, boolean active) {
         throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static BlockEntityType.BlockEntityFactory<? extends MicrowaveBlockEntity> getFactory() {
+        throw new UnsupportedOperationException();
     }
 }
 

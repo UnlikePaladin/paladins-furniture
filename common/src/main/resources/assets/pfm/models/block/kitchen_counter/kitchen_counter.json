@@ -1,30 +1,30 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"particle": "block/oak_planks",
-		"base": "block/oak_planks",
-		"legs": "block/oak_log"
+		"particle": "#texture",
+		"base": "#texture",
+		"legs": "#log"
 	},
 	"elements": [
 		{
 			"from": [0, 0, 0],
 			"to": [16, 1, 12],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 1], "texture": "#base"},
-				"east": {"uv": [0, 0, 12, 1], "texture": "#base"},
+				"north": {"uv": [0, 0, 16, 1], "texture": "#base", "cullface": "north"},
+				"east": {"uv": [0, 0, 12, 1], "texture": "#base", "cullface": "east"},
 				"south": {"uv": [0, 0, 16, 1], "texture": "#base"},
-				"west": {"uv": [0, 0, 12, 1], "texture": "#base"},
-				"down": {"uv": [0, 0, 16, 12], "texture": "#base"}
+				"west": {"uv": [0, 0, 12, 1], "texture": "#base", "cullface": "west"},
+				"down": {"uv": [0, 0, 16, 12], "texture": "#base", "cullface": "down"}
 			}
 		},
 		{
 			"from": [0, 1, 0],
 			"to": [16, 14, 13],
 			"faces": {
-				"north": {"uv": [0, 3, 16, 16], "texture": "#base"},
-				"east": {"uv": [0, 3, 13, 16], "texture": "#base"},
+				"north": {"uv": [0, 3, 16, 16], "texture": "#base", "cullface": "north"},
+				"east": {"uv": [0, 3, 13, 16], "texture": "#base", "cullface": "east"},
 				"south": {"uv": [0, 3, 16, 16], "texture": "#base"},
-				"west": {"uv": [0, 3, 13, 16], "texture": "#base"},
+				"west": {"uv": [0, 3, 13, 16], "texture": "#base", "cullface": "west"},
 				"down": {"uv": [0, 0, 16, 13], "texture": "#base"}
 			}
 		},
@@ -33,11 +33,11 @@
 			"from": [0, 14, 0],
 			"to": [16, 16, 16],
 			"faces": {
-				"north": {"uv": [0, 0, 16, 2], "texture": "#legs"},
-				"east": {"uv": [0, 0, 16, 2], "texture": "#legs"},
-				"south": {"uv": [0, 0, 16, 2], "texture": "#legs"},
-				"west": {"uv": [0, 0, 16, 2], "texture": "#legs"},
-				"up": {"uv": [0, 0, 16, 16], "texture": "#legs"},
+				"north": {"uv": [0, 0, 16, 2], "texture": "#legs", "cullface": "north"},
+				"east": {"uv": [0, 0, 16, 2], "texture": "#legs", "cullface": "east"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#legs", "cullface": "south"},
+				"west": {"uv": [0, 0, 16, 2], "texture": "#legs", "cullface": "west"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#legs", "cullface": "up"},
 				"down": {"uv": [0, 0, 16, 16], "texture": "#legs"}
 			}
 		}

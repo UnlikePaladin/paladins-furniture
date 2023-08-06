@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.entity.render;
 
-import com.unlikepaladin.pfm.blocks.KitchenStovetop;
+import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -28,7 +28,7 @@ public class StoveBlockEntityRenderer<T extends StoveBlockEntity>
 
     @Override
     public void render(StoveBlockEntity stovetopBlockEntity, float f, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
-        Direction direction = stovetopBlockEntity.getCachedState().get(KitchenStovetop.FACING);
+        Direction direction = stovetopBlockEntity.getCachedState().get(KitchenStovetopBlock.FACING);
         DefaultedList<ItemStack> itemList = stovetopBlockEntity.getItemsBeingCooked();
         int k = (int)stovetopBlockEntity.getPos().asLong();
         for (int l = 0; l < itemList.size(); ++l) {
@@ -38,7 +38,7 @@ public class StoveBlockEntityRenderer<T extends StoveBlockEntity>
             Direction direction2 = Direction.fromHorizontal((l + direction.getHorizontal()) % 4);
             float g = -direction2.asRotation();
             int rot = 45;
-            Direction dir = stovetopBlockEntity.getCachedState().get(KitchenStovetop.FACING);
+            Direction dir = stovetopBlockEntity.getCachedState().get(KitchenStovetopBlock.FACING);
             switch(dir) {
                 case NORTH:
                     matrices.translate(0.5, 1.02, 0.45);

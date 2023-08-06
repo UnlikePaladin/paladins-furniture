@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.client.fabric;
 
+import com.unlikepaladin.pfm.client.EntityRenderRegistry;
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import com.unlikepaladin.pfm.entity.render.*;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -13,13 +14,9 @@ import static com.unlikepaladin.pfm.client.EntityRenderIDs.MODEL_CUBE_LAYER;
 public class EntityRenderRegistryFabric {
 
     public static void registerRender() {
-        EntityRendererRegistry.register(Entities.CHAIR, ChairEntityRenderer::new);
-        BlockEntityRendererRegistry.register(BlockEntities.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(BlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
-        BlockEntityRendererRegistry.register(BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityRenderer::new);
-        EntityModelLayerRegistry.registerModelLayer(MODEL_CUBE_LAYER, ModelEmpty::getTexturedModelData);
-        BlockEntityRendererRegistry.register(BlockEntities.TRASHCAN_BLOCK_ENTITY, TrashcanBlockEntityRenderer::new);
+        EntityRenderRegistry.registerBlockEntityRenderers();
+        EntityRenderRegistry.registerEntityRenderers();
+        EntityRenderRegistry.registerModelLayers();
     }
 
 }

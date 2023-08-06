@@ -1,7 +1,10 @@
 package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.nbt.NbtCompound;
@@ -12,7 +15,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;;
 
 public class StoveBlockEntityImpl extends StoveBlockEntity {
 
@@ -49,4 +52,7 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
         Inventories.readNbt(pkt.getNbt(), this.itemsBeingCooked);
     }
 
+    public static BlockEntityType.BlockEntityFactory<? extends BlockEntity> getFactory() {
+        return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? StoveBlockEntityBalm::new :StoveBlockEntityImpl::new;
+    }
 }

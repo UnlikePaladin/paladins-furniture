@@ -1,15 +1,11 @@
 package com.unlikepaladin.pfm.entity.render;
 
-import com.unlikepaladin.pfm.blocks.InnerTrashcan;
-import com.unlikepaladin.pfm.blocks.Plate;
-import com.unlikepaladin.pfm.blocks.Trashcan;
-import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
+import com.unlikepaladin.pfm.blocks.InnerTrashcanBlock;
+import com.unlikepaladin.pfm.blocks.TrashcanBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
@@ -31,10 +27,10 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implemen
 
     @Override
     public void render(T trashcanBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
-        if (!(trashcanBlockEntity.getCachedState().getBlock() instanceof Trashcan)) {
+        if (!(trashcanBlockEntity.getCachedState().getBlock() instanceof TrashcanBlock)) {
             for (int i = 0; i < 9; i++)
             {
-                Direction direction = trashcanBlockEntity.getCachedState().get(InnerTrashcan.FACING);
+                Direction direction = trashcanBlockEntity.getCachedState().get(InnerTrashcanBlock.FACING);
                 matrices.push();
                 Direction direction2 = Direction.fromHorizontal((direction.getHorizontal()) % 4);
                 float g = -direction2.asRotation();

@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.client.forge;
 
 
 import com.unlikepaladin.pfm.client.EntityRenderIDs;
+import com.unlikepaladin.pfm.client.EntityRenderRegistry;
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import com.unlikepaladin.pfm.entity.render.*;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -15,20 +16,19 @@ import net.minecraftforge.fml.common.Mod;
 public class EntityRenderRegistryForge {
     @SubscribeEvent
     public static void registerRender(EntityRenderersEvent.RegisterRenderers renderersEvent){
-        renderersEvent.registerEntityRenderer(Entities.CHAIR, ChairEntityRenderer::new);
+        EntityRenderRegistry.registerEntityRenderers();
+        EntityRenderRegistryImpl.entityRendererFactoryMap.forEach(renderersEvent::registerEntityRenderer);
     }
 
     @SubscribeEvent
     public static void registerBlockEntityRender(EntityRenderersEvent.RegisterRenderers renderersEvent){
-        renderersEvent.registerBlockEntityRenderer(BlockEntities.MICROWAVE_BLOCK_ENTITY, MicrowaveBlockEntityRenderer::new);
-        renderersEvent.registerBlockEntityRenderer(BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntityRenderer::new);
-        renderersEvent.registerBlockEntityRenderer(BlockEntities.PLATE_BLOCK_ENTITY, PlateBlockEntityRenderer::new);
-        renderersEvent.registerBlockEntityRenderer(BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityRenderer::new);
-        renderersEvent.registerBlockEntityRenderer(BlockEntities.TRASHCAN_BLOCK_ENTITY, TrashcanBlockEntityRenderer::new);
+        EntityRenderRegistry.registerBlockEntityRenderers();
+        EntityRenderRegistryImpl.blockEntityRendererFactoryMap.forEach(renderersEvent::registerBlockEntityRenderer);
     }
 
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions registerLayerDefinitions){
-        registerLayerDefinitions.registerLayerDefinition(EntityRenderIDs.MODEL_CUBE_LAYER, ModelEmpty::getTexturedModelData);
+        EntityRenderRegistry.registerModelLayers();
+        EntityRenderRegistryImpl.entityModelLayerTexturedModelDataMap.forEach((entityModelLayer, texturedModelData) -> registerLayerDefinitions.registerLayerDefinition(entityModelLayer, () -> texturedModelData));
     }
 }

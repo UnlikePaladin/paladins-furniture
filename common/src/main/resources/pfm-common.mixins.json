@@ -3,11 +3,22 @@
   "minVersion": "0.8",
   "package": "com.unlikepaladin.pfm.mixin",
   "compatibilityLevel": "JAVA_8",
+  "mixins": [
+    "PFMDataCache$CachedDataMixin",
+    "PFMFeatureFlagFactory",
+    "PFMMinecraftServerMixin",
+    "PFMPlayerInventoryMixin",
+    "PFMReloadableResourceManagerImplMixin",
+    "PFMSaveLoaderMixin",
+    "PFMTextureKeyFactory"
+  ],
   "server": [
     "PFMMixinDedicatedServer"
   ],
   "client": [
-    "MixinClientPacketListener"
+    "PFMLanguageManagerAccessor",
+    "PFMMixinClientPacketListener",
+    "PFMRenderLayersMixin"
   ],
   "injectors": {
     "defaultRequire": 1

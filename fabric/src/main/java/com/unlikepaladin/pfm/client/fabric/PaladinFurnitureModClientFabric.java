@@ -1,16 +1,17 @@
 package com.unlikepaladin.pfm.client.fabric;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
-import com.unlikepaladin.pfm.client.screens.*;
-import com.unlikepaladin.pfm.compat.fabric.sandwichable.client.PFMSandwichableClient;
+import com.unlikepaladin.pfm.client.ScreenRegistry;
+import com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric;
+import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
 import com.unlikepaladin.pfm.registry.fabric.NetworkRegistryFabric;
-import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.screenhandler.v1.ScreenRegistry;
-import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.apache.logging.log4j.LogManager;
@@ -23,6 +24,9 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        PaladinFurnitureMod.isClient = true;
+        PaladinFurnitureModFabric.registerLateEntries();
+        PaladinFurnitureModFabric.replaceHomePOI();
         ColorRegistryFabric.registerAll();
         NetworkRegistryFabric.registerClientPackets();
 
@@ -34,21 +38,10 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         ));
         EntityRenderRegistryFabric.registerRender();
 
-
-        ScreenRegistry.register(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, FreezerScreen::new);
-        ScreenRegistry.register(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, WorkbenchScreen::new);
-        ScreenRegistry.register(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, StoveScreen::new);
-        ScreenRegistry.register(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, IronStoveScreen::new);
-        ScreenRegistry.register(ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, MicrowaveScreen::new);
-        ScreenRegistry.register(ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER, TrashcanScreen::new);
-
-        if (FabricLoader.getInstance().isModLoaded("sandwichable") && FabricLoader.getInstance().isModLoaded("advanced_runtime_resource_pack")) {
-            PFMSandwichableClient.register();
-        }
-
+        ScreenRegistry.registerScreens();
+        ModelLoadingRegistry.INSTANCE.registerModelProvider(new PFMExtraModelProvider());
+        ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new PFMModelProvider());
+        ParticleProviderRegistryFabric.registerParticleFactories();
+        ClientPlayConnectionEvents.DISCONNECT.register(LeaveEventHandlerFabric::onServerLeave);
     }
-
-
-
-
 }

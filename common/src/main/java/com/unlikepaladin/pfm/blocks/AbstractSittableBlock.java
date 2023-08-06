@@ -7,15 +7,14 @@ import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.*;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.passive.IronGolemEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -90,7 +89,7 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
             return ActionResult.SUCCESS;
         }
         else if (sitEntity(world, pos, state, player) == ActionResult.SUCCESS) {
-            if (!(state.getBlock() instanceof BasicToilet))
+            if (!(state.getBlock() instanceof BasicToiletBlock))
                 player.incrementStat(Statistics.CHAIR_USED);
             return ActionResult.SUCCESS;
         }
@@ -101,9 +100,9 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
     public ActionResult sitEntity(World world, BlockPos pos, BlockState state, Entity entityToSit) {
         double px;
         double pz;
-        if (state.getBlock() instanceof BasicChair) {
+        if (state.getBlock() instanceof BasicChairBlock) {
             Direction direction = state.get(FACING);
-            if (state.get(BasicChair.TUCKED)) {
+            if (state.get(BasicChairBlock.TUCKED)) {
                 switch (direction) {
                     case EAST -> {
                         px = pos.getX() + 0.1;
@@ -168,6 +167,9 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
         if (entity instanceof PlayerEntity || entity instanceof IronGolemEntity || entity instanceof AbstractMinecartEntity || entity.hasVehicle() || !(entity instanceof LivingEntity)) {
             return;
         }
+        if (!PaladinFurnitureMod.getPFMConfig().doMobsSitOnChairs())
+            return;
+
         sitEntity(world, pos, state, entity);
     }
 
@@ -178,6 +180,9 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
         return 0;
     }
 
-
+    @Override
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        return false;
+    }
 }
 

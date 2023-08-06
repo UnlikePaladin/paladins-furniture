@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
 import net.minecraft.block.*;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
@@ -23,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class PendantBlock extends PowerableBlock  {
+public class PendantBlock extends PowerableBlock implements DynamicRenderLayerInterface {
     public static final BooleanProperty UP = Properties.UP;
     public static final BooleanProperty DOWN = Properties.DOWN;
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
@@ -96,16 +98,16 @@ public class PendantBlock extends PowerableBlock  {
     private static final VoxelShape down = VoxelShapes.union(createCuboidShape(7.5, 0, 7.5,8.5, 15.5, 8.5),createCuboidShape(6.5, 15.5, 6.5,9.5, 16, 9.5));
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-    if (state.get(UP) && state.get(DOWN)) {
-        return middle;
-    }
-    else if (state.get(UP)){
-        return up;}
-    else if (state.get(DOWN)){
-        return down;}
-
-    return single;
-
+        if (state.get(UP) && state.get(DOWN)) {
+            return middle;
+        }
+        else if (state.get(UP)){
+            return up;
+        }
+        else if (state.get(DOWN)){
+            return down;
+        }
+        return single;
     }
 
     @Nullable
@@ -152,5 +154,15 @@ public class PendantBlock extends PowerableBlock  {
         builder.add(DOWN);
         builder.add(LIT);
         builder.add(POWERLOCKED);
+    }
+
+    @Override
+    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+        return false;
+    }
+
+    @Override
+    public RenderLayer getCustomRenderLayer() {
+        return RenderLayer.getTranslucent();
     }
 }

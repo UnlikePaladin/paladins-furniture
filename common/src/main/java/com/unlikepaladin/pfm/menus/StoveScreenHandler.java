@@ -24,11 +24,6 @@ public class StoveScreenHandler extends AbstractFurnaceScreenHandler {
         inventory.onOpen(playerInventory.player);
     }
 
-    public StoveScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf packetByteBuf) {
-        super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipeBookCategory.SMOKER, syncId, playerInventory);
-        this.inventory = new SimpleInventory(3);
-    }
-
     @Override
     public void onClosed(PlayerEntity player) {
         super.onClosed(player);

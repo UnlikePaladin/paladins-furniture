@@ -1,0 +1,8 @@
+{
+    "variants": {
+      "facing=north": { "model": "pfm:block/white_mirror" },
+      "facing=south": { "model": "pfm:block/white_mirror", "y":180 },
+      "facing=east": { "model": "pfm:block/white_mirror", "y":90 },
+      "facing=west": { "model": "pfm:block/white_mirror", "y":270 }
+    }
+  }

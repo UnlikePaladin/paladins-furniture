@@ -19,10 +19,5 @@ public class FreezerScreenHandler extends AbstractFreezerScreenHandler {
     public FreezerScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
         super(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, RecipeTypes.FREEZING_RECIPE, RecipeBookCategory.FURNACE, syncId, playerInventory, inventory, propertyDelegate);
     }
-
-
-    public FreezerScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf packetByteBuf) {
-        super(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, RecipeTypes.FREEZING_RECIPE, RecipeBookCategory.FURNACE, syncId, playerInventory);
-    }
 }
 

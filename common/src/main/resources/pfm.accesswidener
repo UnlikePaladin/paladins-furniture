@@ -3,3 +3,14 @@ accessWidener v1 named
 accessible class net/minecraft/recipe/CookingRecipeSerializer$RecipeFactory
 accessible field net/minecraft/world/poi/PointOfInterestTypes BED_HEADS Ljava/util/Set;
 mutable field net/minecraft/world/poi/PointOfInterestTypes HOME Lnet/minecraft/registry/RegistryKey;
+accessible class net/minecraft/block/entity/BlockEntityType$BlockEntityFactory
+accessible method net/minecraft/data/server/loottable/BlockLootTableGenerator drops (Lnet/minecraft/item/ItemConvertible;)Lnet/minecraft/loot/LootTable$Builder;
+accessible method net/minecraft/data/server/loottable/BlockLootTableGenerator dropsWithProperty (Lnet/minecraft/block/Block;Lnet/minecraft/state/property/Property;Ljava/lang/Comparable;)Lnet/minecraft/loot/LootTable$Builder;
+accessible class net/minecraft/data/server/tag/ValueLookupTagProvider$ObjectBuilder
+accessible class net/minecraft/data/DataCache$CachedDataWriter
+accessible class net/minecraft/data/DataCache$CachedData
+accessible field net/minecraft/item/ItemGroups BUILDING_BLOCKS Lnet/minecraft/item/ItemGroup;
+accessible field net/minecraft/resource/featuretoggle/FeatureSet universe Lnet/minecraft/resource/featuretoggle/FeatureUniverse;
+accessible field net/minecraft/resource/featuretoggle/FeatureSet featuresMask J
+mutable field net/minecraft/resource/featuretoggle/FeatureFlag mask J
+accessible field net/minecraft/resource/featuretoggle/FeatureFlag mask J

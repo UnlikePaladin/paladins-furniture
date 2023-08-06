@@ -1,7 +1,0 @@
-// 1.19	2022-09-01T18:37:43.113438	Paladin's Furniture Block Tags
-c6fb98b48fc671184dbd29baa1c81c58387cd7cd data/minecraft/tags/blocks/beds.json
-b3240c18afb8540d1f97b755d89f723e431e131a data/minecraft/tags/blocks/climbable.json
-3021c383bc9c3de6005817027f459967e0d0f572 data/minecraft/tags/blocks/mineable/axe.json
-c26728da0af76451c93dd13da66bc37c9c2ba30a data/minecraft/tags/blocks/mineable/pickaxe.json
-eb6d8a47199b221f0d4701526c40c7693bbdd3dc data/minecraft/tags/blocks/mineable/shovel.json
-e5e2ad91ec4422356ec3ae3049df85fe7790707c data/pfm/tags/blocks/tuckable_blocks.json

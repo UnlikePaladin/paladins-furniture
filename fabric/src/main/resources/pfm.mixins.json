@@ -3,10 +3,11 @@
   "package": "com.unlikepaladin.pfm.mixin.fabric",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "MixinTitleScreen",
-    "MixinPointOfInterestType"
   ],
   "mixins": [
+    "PFMAbstractTagProvider$ObjectBuilderMixin",
+    "PFMCookingPotBlockEntityMixin",
+    "PFMMixinPointOfInterestType"
   ],
   "injectors": {
     "defaultRequire": 1
