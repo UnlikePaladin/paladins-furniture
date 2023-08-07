@@ -96,7 +96,7 @@ public class ForgeKitchenCounterModel extends AbstractBakedModel {
                         return getBakedModels().get(modelParts.get(6)).getQuads(state, side, rand, extraData);
                     }
                 } else {
-                    return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+                    return getMiddleQuads(state, side, rand, extraData, left, right);
                 }
             }
             else if (block.canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
@@ -114,19 +114,25 @@ public class ForgeKitchenCounterModel extends AbstractBakedModel {
                         return getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData);
                     }
                 } else {
-                    return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+                    return getMiddleQuads(state, side, rand, extraData, left, right);
                 }
             }
-            else if (left && right) {
-                return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
-            } else if (left) {
-                return getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData);
-            } else if (right) {
-                return getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData);
-            } else {
-                return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+            else {
+                return getMiddleQuads(state, side, rand, extraData, left, right);
             }
         }
         return Collections.emptyList();
+    }
+
+    private List<BakedQuad> getMiddleQuads(BlockState state, Direction side, Random rand, IModelData extraData, boolean left, boolean right) {
+        if (left && right) {
+            return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+        } else if (left) {
+            return getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData);
+        } else if (right) {
+            return getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData);
+        } else {
+            return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+        }
     }
 }

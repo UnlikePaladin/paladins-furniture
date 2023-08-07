@@ -51,7 +51,7 @@ public class FabricKitchenDrawerModel extends AbstractBakedModel implements Fabr
                         ((FabricBakedModel) getBakedModels().get(modelParts.get(6 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                     }
                 } else {
-                    ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    middleCounter(world, state, pos, randomSupplier, context, left, right, openOffset);
                 }
             }
             else if (block.canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
@@ -69,18 +69,23 @@ public class FabricKitchenDrawerModel extends AbstractBakedModel implements Fabr
                         ((FabricBakedModel) getBakedModels().get(modelParts.get(3 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                     }
                 } else {
-                    ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    middleCounter(world, state, pos, randomSupplier, context, left, right, openOffset);
                 }
             }
-            else if (left && right) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
-            } else if (left) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(1 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
-            } else if (right) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(2 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
-            } else {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
-            }
+            else
+                middleCounter(world, state, pos, randomSupplier, context, left, right, openOffset);
+        }
+    }
+
+    private void middleCounter(BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, boolean left, boolean right, int openOffset) {
+        if (left && right) {
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+        } else if (left) {
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(1 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+        } else if (right) {
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(2 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+        } else {
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         }
     }
 
