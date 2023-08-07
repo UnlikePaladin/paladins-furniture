@@ -23,7 +23,7 @@ import java.util.List;
 public class FreezingCategory implements DisplayCategory<FreezingDisplay> {
     public static final EntryStack<ItemStack> ICON = EntryStacks.of(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
     public static final TranslatableText TITLE = new TranslatableText("rei.pfm.freezer");
-
+    public static final EntryStack<ItemStack>[] WORKSTATIONS = new EntryStack[]{EntryStacks.of(PaladinFurnitureModBlocksItems.WHITE_FREEZER), EntryStacks.of(PaladinFurnitureModBlocksItems.GRAY_FREEZER), EntryStacks.of(PaladinFurnitureModBlocksItems.IRON_FREEZER)};
     @Override
     public Renderer getIcon() {
         return ICON;
