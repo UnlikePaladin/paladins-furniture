@@ -33,11 +33,16 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
@@ -489,5 +494,43 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
     public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
         super.onDataPacket(net, pkt);
         this.container.deserialize(pkt.getNbt().getCompound("ItemHandler"));
+    }
+
+    protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
+        if (state.getBlock() instanceof StoveBlock){
+            StoveBlockEntityBalm.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
+            StoveBlockEntityBalm.this.setOpen(state, true);
+        }
+    }
+
+    protected void onContainerClose(World world, BlockPos pos, BlockState state) {
+        if (state.getBlock() instanceof StoveBlock) {
+            StoveBlockEntityBalm.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
+            StoveBlockEntityBalm.this.setOpen(state, false);
+        }
+    }
+
+    void setOpen(BlockState state, boolean open) {
+        this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), 3);
+    }
+
+    public void onClose(PlayerEntity player) {
+        if (!this.removed && !player.isSpectator()) {
+            this.onContainerClose(this.getWorld(), this.getPos(), this.getCachedState());
+        }
+    }
+
+    public void onOpen(PlayerEntity player) {
+        if (!this.removed && !player.isSpectator()) {
+            this.onContainerOpen(this.getWorld(), this.getPos(), this.getCachedState());
+        }
+    }
+
+    void playSound(BlockState state, SoundEvent soundEvent) {
+        Vec3i vec3i = state.get(Properties.HORIZONTAL_FACING).getVector();
+        double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
+        double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
+        double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
+        this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
     }
 }
