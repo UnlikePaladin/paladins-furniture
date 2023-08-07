@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.client.screens;
 
-import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import net.minecraft.client.MinecraftClient;
@@ -24,7 +23,6 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
-import net.minecraft.registry.Registry;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
@@ -130,7 +128,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             List<Item> items = new ArrayList<>();
             searchable.findAll(string.toLowerCase(Locale.ROOT)).forEach(itemStack -> items.add(itemStack.getItem()));
             this.handler.getSortedRecipes().forEach(furnitureRecipe -> {
-                if (items.contains(furnitureRecipe.getOutput().getItem())) {
+                if (items.contains(furnitureRecipe.getOutput(client.world.getRegistryManager()).getItem())) {
                     this.handler.getSearchableRecipes().add(furnitureRecipe);
                 }
             });
@@ -183,7 +181,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
         int yOffsetForIcons = this.y + RECIPE_LIST_OFFSET_Y;
         int scrollOffsetForIcons = this.scrollOffset + 18;
         this.renderRecipeBackground(matrices, mouseX, mouseY, xOffSetForIcons, yOffsetForIcons, scrollOffsetForIcons);
-        this.renderRecipeIcons(xOffSetForIcons, yOffsetForIcons, scrollOffsetForIcons);
+        this.renderRecipeIcons(matrices, xOffSetForIcons, yOffsetForIcons, scrollOffsetForIcons);
         this.searchBox.render(matrices, mouseX, mouseY, delta);
     }
 
@@ -203,7 +201,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             if (this.handler.searching) {
                 iCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(iCopy));
             }
-            tooltip.add(getTooltipFromItem(this.handler.getSortedRecipes().get(iCopy).getOutput()).get(0));
+            tooltip.add(getTooltipFromItem(this.handler.getSortedRecipes().get(iCopy).getOutput(client.world.getRegistryManager())).get(0));
             tooltip.add(Text.translatable("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
             HashMap<Item, Integer> itemStackCountMap = new HashMap<>();
             for (Ingredient ingredient : this.handler.getSortedRecipes().get(iCopy).getIngredients()) {
@@ -255,7 +253,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
         }
     }
 
-    private void renderRecipeIcons(int x, int y, int scrollOffset) {
+    private void renderRecipeIcons(MatrixStack matrices, int x, int y, int scrollOffset) {
         for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getVisibleRecipeCount(); ++i) {
             int iMinusScrollOffset = i - this.scrollOffset;
             int xOffset = x + iMinusScrollOffset % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
@@ -265,7 +263,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             if (this.handler.searching) {
                 iCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(iCopy));
             }
-            this.client.getItemRenderer().renderInGuiWithOverrides(this.handler.getSortedRecipes().get(iCopy).getOutput(), xOffset, yOffset);
+            this.client.getItemRenderer().renderInGuiWithOverrides(matrices,this.handler.getSortedRecipes().get(iCopy).getOutput(client.world.getRegistryManager()), xOffset, yOffset);
         }
     }
 

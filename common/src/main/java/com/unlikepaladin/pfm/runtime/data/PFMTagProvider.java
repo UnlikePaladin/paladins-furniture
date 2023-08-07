@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.data.PFMTag;
 import com.unlikepaladin.pfm.data.Tags;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGen;
@@ -17,13 +18,13 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
+import net.minecraft.data.server.tag.TagProvider;
 import net.minecraft.data.server.tag.ValueLookupTagProvider;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
-import net.minecraft.data.server.tag.AbstractTagProvider;
 import net.minecraft.util.JsonHelper;
 
 import java.io.BufferedWriter;
@@ -199,6 +200,7 @@ public class PFMTagProvider implements DataProvider{
                 .add(woodWallSmallDrawers)
                 .add(simpleBunkLadders)
                 .add(classicBeds)
+                .add(logTables)
                 .add(PaladinFurnitureModBlocksItems.BASIC_LAMP);
 
         getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
@@ -227,13 +229,13 @@ public class PFMTagProvider implements DataProvider{
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::generateTags);
     }
 
-    public static ValueLookupTagProvider.ObjectBuilder<Block> getOrCreateTagBuilder(TagKey<Block> tag) {
+    public static PFMTag<Block> getOrCreateTagBuilder(TagKey<Block> tag) {
         TagBuilder builder = getTagBuilder(tag);
         return getProviderPlatform(builder, Registries.BLOCK, "pfm");
     }
 
     @ExpectPlatform
-    private static <T> ValueLookupTagProvider.ObjectBuilder<T> getProviderPlatform(TagBuilder builder, Registry<T> registry, String modID) {
+    private static <T> PFMTag<T> getProviderPlatform(TagBuilder builder, Registry<T> registry, String modID) {
         throw new AssertionError();
     }
 

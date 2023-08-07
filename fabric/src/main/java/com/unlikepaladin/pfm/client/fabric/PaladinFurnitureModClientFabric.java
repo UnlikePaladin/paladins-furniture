@@ -3,6 +3,8 @@ package com.unlikepaladin.pfm.client.fabric;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
+import com.unlikepaladin.pfm.client.fabric.modelLoaders.PFMModelLoadingV0;
+import com.unlikepaladin.pfm.client.fabric.modelLoaders.PFMModelLoadingV1;
 import com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric;
 import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
 import com.unlikepaladin.pfm.registry.fabric.NetworkRegistryFabric;
@@ -10,8 +12,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.fabricmc.fabric.api.client.model.ModelLoadingRegistry;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.apache.logging.log4j.LogManager;
@@ -39,8 +41,11 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         EntityRenderRegistryFabric.registerRender();
 
         ScreenRegistry.registerScreens();
-        ModelLoadingRegistry.INSTANCE.registerModelProvider(new PFMExtraModelProvider());
-        ModelLoadingRegistry.INSTANCE.registerResourceProvider(rm -> new PFMModelProvider());
+        if (FabricLoader.getInstance().isModLoaded("fabric-model-loading-api-v1")) {
+            PFMModelLoadingV1.registerV1Plugin();
+        } else {
+            PFMModelLoadingV0.registerV0Plugin();
+        }
         ParticleProviderRegistryFabric.registerParticleFactories();
         ClientPlayConnectionEvents.DISCONNECT.register(LeaveEventHandlerFabric::onServerLeave);
     }

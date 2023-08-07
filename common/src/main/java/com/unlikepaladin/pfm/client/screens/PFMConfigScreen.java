@@ -78,7 +78,7 @@ public class PFMConfigScreen extends Screen {
         if (this.optionListWidget != null)
             this.optionListWidget.render(matrices, mouseX, mouseY, delta);
 
-        drawCenteredText(matrices, this.textRenderer, TITLE.setStyle(Style.EMPTY.withColor(0xf77f34).withBold(true)), this.width / 2, 8, 0xFFFFFF);
+        drawCenteredTextWithShadow(matrices, this.textRenderer, TITLE.setStyle(Style.EMPTY.withColor(0xf77f34).withBold(true)), this.width / 2, 8, 0xFFFFFF);
         boolean bl = false;
         for (Map.Entry<String, AbstractConfigOption> optionEntry : options.entrySet()) {
             if (optionEntry.getValue().isDefault()) continue;

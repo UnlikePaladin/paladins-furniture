@@ -63,8 +63,8 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
         return this.tileEntity;
     }
 
-    public void close(PlayerEntity player) {
-        super.close(player);
+    public void onClosed(PlayerEntity player) {
+        super.onClosed(player);
     }
 
     @Override

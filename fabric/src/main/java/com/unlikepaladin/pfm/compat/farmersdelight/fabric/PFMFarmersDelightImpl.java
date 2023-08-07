@@ -29,7 +29,7 @@ public class PFMFarmersDelightImpl extends PFMFarmersDelight {
         stoves.addAll(IronStoveBlock.streamIronStoves().map(FurnitureBlock::getBlock).toList());
         stoves.add(PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP);
         PFMTagProvider.getOrCreateTagBuilder(TagsRegistry.HEAT_SOURCES)
-                .add(stoves.stream().map(block -> Registries.BLOCK.getKey(block).or(null).get()).toArray(RegistryKey[]::new));
+                .addKey(stoves.stream().map(block -> Registries.BLOCK.getKey(block).or(null).get()).toArray(RegistryKey[]::new));
     }
 
     @Override

@@ -39,6 +39,7 @@ import me.shedaniel.rei.api.common.transfer.info.MenuSerializationContext;
 import me.shedaniel.rei.api.common.transfer.info.simple.SimpleGridMenuInfo;
 import me.shedaniel.rei.api.common.util.CollectionUtils;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
@@ -57,7 +58,7 @@ public class FurnitureDisplay implements Display {
     public List<EntryIngredient> output;
     public FurnitureDisplay(FurnitureRecipe recipe) {
         this.recipe = recipe;
-        output = Collections.singletonList(EntryIngredients.of(recipe.getOutput()));
+        output = Collections.singletonList(EntryIngredients.of(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager())));
     }
 
     @Override

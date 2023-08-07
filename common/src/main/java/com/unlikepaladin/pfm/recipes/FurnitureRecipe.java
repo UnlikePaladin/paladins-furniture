@@ -16,6 +16,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtString;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
+import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
@@ -87,7 +88,7 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
     }
 
     @Override
-    public ItemStack craft(PlayerInventory playerInventory) {
+    public ItemStack craft(PlayerInventory playerInventory, DynamicRegistryManager manager) {
         return this.output.copy();
     }
 
@@ -102,7 +103,7 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
     }
 
     @Override
-    public ItemStack getOutput() {
+    public ItemStack getOutput(DynamicRegistryManager manager) {
         return this.output;
     }
 

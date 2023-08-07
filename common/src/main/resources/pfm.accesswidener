@@ -14,3 +14,4 @@ accessible field net/minecraft/resource/featuretoggle/FeatureSet universe Lnet/m
 accessible field net/minecraft/resource/featuretoggle/FeatureSet featuresMask J
 mutable field net/minecraft/resource/featuretoggle/FeatureFlag mask J
 accessible field net/minecraft/resource/featuretoggle/FeatureFlag mask J
+accessible class net/minecraft/data/server/tag/TagProvider$ProvidedTagBuilder

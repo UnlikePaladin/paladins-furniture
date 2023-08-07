@@ -1,11 +1,11 @@
 package com.unlikepaladin.pfm.runtime.data;
 
-import com.mojang.bridge.game.PackType;
 import com.unlikepaladin.pfm.runtime.PFMDataGen;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.SharedConstants;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
+import net.minecraft.resource.ResourceType;
 import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedWriter;
@@ -20,7 +20,7 @@ public class PFMMCMetaProvider implements DataProvider {
             writer.write("{\n");
             writer.write("  \"pack\":\n   {\n");
             writer.write("          \"pack_format\": ");
-            writer.write(String.valueOf(SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE)));
+            writer.write(String.valueOf(SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES)));
             writer.write(",\n           \"description\" : \"Paladin's Furniture Runtime Resources and Data\"\n  }\n");
             writer.write("}");
         } catch (IOException e) {

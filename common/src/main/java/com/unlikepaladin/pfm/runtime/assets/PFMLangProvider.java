@@ -18,8 +18,6 @@ import net.minecraft.client.resource.language.LanguageDefinition;
 import net.minecraft.client.resource.language.LanguageManager;
 import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.client.resource.metadata.LanguageResourceMetadata;
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.DataWriter;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.resource.*;
 import net.minecraft.util.DyeColor;
@@ -162,11 +160,9 @@ public class PFMLangProvider {
         HashMap<String, LanguageDefinition> map = Maps.newHashMap();
         packs.forEach(pack -> {
             try {
-                LanguageResourceMetadata languageResourceMetadata = pack.parseMetadata(LanguageResourceMetadata.READER);
+                LanguageResourceMetadata languageResourceMetadata = pack.parseMetadata(LanguageResourceMetadata.SERIALIZER);
                 if (languageResourceMetadata != null) {
-                    for (LanguageDefinition languageDefinition : languageResourceMetadata.getLanguageDefinitions()) {
-                        map.putIfAbsent(languageDefinition.getCode(), languageDefinition);
-                    }
+                    languageResourceMetadata.definitions().forEach(map::putIfAbsent);
                 }
             }
             catch (IOException | RuntimeException exception) {
@@ -181,13 +177,19 @@ public class PFMLangProvider {
 
     public void loadLanguages(ResourceManager manager) {
         this.languageDefs = loadAvailableLanguages(manager.streamResourcePacks());
+        List<String> list = new ArrayList(2);
+        boolean bl = true;
+        list.add("en_us");
         LanguageDefinition enUSDefinition = this.languageDefs.getOrDefault(LanguageManager.DEFAULT_LANGUAGE_CODE, PFMLanguageManagerAccessor.getEnglish_Us());
-        LanguageDefinition selectedLangDefinition = this.languageDefs.getOrDefault(((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode(), enUSDefinition);
-        ArrayList<LanguageDefinition> list = Lists.newArrayList(enUSDefinition);
-        if (selectedLangDefinition != enUSDefinition) {
-            list.add(selectedLangDefinition);
+        String selectedDef = ((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode();
+        if (!selectedDef.equals("en_us")) {
+            LanguageDefinition languageDefinition = this.languageDefs.getOrDefault(selectedDef, enUSDefinition);
+            if (languageDefinition != null) {
+                list.add(selectedDef);
+                bl = languageDefinition.rightToLeft();
+            }
         }
-        TranslationStorage translationStorage = TranslationStorage.load(manager, list);
+        TranslationStorage translationStorage = TranslationStorage.load(manager, list, bl);
         language = translationStorage;
         Language.setInstance(translationStorage);
     }

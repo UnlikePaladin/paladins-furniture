@@ -12,6 +12,6 @@ public class ParticleProviderRegistryForge {
 
     @SubscribeEvent
     public static void registerParticleFactory(RegisterParticleProvidersEvent event) {
-        event.register(ParticleIDs.WATER_DROP, BlockLeakParticle.FallingWaterFactory::new);
+        event.registerSprite(ParticleIDs.WATER_DROP, BlockLeakParticle::createFallingWater);
     }
 }

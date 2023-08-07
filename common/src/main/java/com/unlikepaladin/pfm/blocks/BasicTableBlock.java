@@ -86,7 +86,7 @@ public class BasicTableBlock extends Block {
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        Direction.Axis facing = ctx.getPlayerFacing().getAxis();
+        Direction.Axis facing = ctx.getHorizontalPlayerFacing().getAxis();
         return this.getDefaultState().with(AXIS, facing);
     }
     @Override

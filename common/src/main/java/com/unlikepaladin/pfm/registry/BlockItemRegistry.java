@@ -31,6 +31,7 @@ public class BlockItemRegistry {
         registerBlock("warped_herringbone_planks", PaladinFurnitureModBlocksItems.WARPED_HERRINGBONE_PLANKS, true);
         registerBlock("mangrove_herringbone_planks", PaladinFurnitureModBlocksItems.MANGROVE_HERRINGBONE_PLANKS, true);
         registerBlock("bamboo_herringbone_planks", PaladinFurnitureModBlocksItems.BAMBOO_HERRINGBONE_PLANKS, true);
+        registerBlock("cherry_herringbone_planks", PaladinFurnitureModBlocksItems.CHERRY_HERRINGBONE_PLANKS, true);
 
         registerBlock("raw_concrete", PaladinFurnitureModBlocksItems.RAW_CONCRETE, true);
         registerBlock("raw_concrete_powder", PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER, true);

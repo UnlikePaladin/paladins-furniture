@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.compat.emi;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
-import dev.emi.emi.EmiPort;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -23,7 +22,7 @@ import java.util.*;
 public class EmiFurnitureRecipe extends EmiCraftingRecipe {
 
     public EmiFurnitureRecipe(FurnitureRecipe recipe) {
-        super(padIngredients(recipe), EmiStack.of(EmiPort.getOutput(recipe)),
+        super(padIngredients(recipe), EmiStack.of(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager())),
                 recipe.getId(), false);
         for (int i = 0; i < input.size(); i++) {
             PlayerInventory playerInventory;

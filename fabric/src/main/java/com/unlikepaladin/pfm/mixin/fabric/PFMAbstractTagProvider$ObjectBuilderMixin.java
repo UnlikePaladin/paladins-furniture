@@ -1,11 +1,9 @@
 package com.unlikepaladin.pfm.mixin.fabric;
 
 import net.minecraft.block.Block;
-import net.minecraft.data.server.tag.AbstractTagProvider;
 import net.minecraft.data.server.tag.ValueLookupTagProvider;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.tag.TagBuilder;
-import net.minecraft.registry.Registry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 

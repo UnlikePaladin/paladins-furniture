@@ -54,8 +54,8 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock {
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        Direction direction = ctx.getPlayerFacing();
+        BlockState blockState = this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+        Direction direction = ctx.getHorizontalPlayerFacing();
         BlockPos blockPos = ctx.getBlockPos();
         BlockPos blockPos2 = blockPos.offset(direction);
         if (ctx.getWorld().getBlockState(blockPos2).canReplace(ctx)) {
@@ -82,7 +82,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock {
             if (world.getBlockState(blockPos).isOf(this)) {
                 world.removeBlock(blockPos, false);
             }
-            world.createExplosion(null, DamageSource.badRespawnPoint(pos.toCenterPos()), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0f, true, World.ExplosionSourceType.BLOCK);
+            world.createExplosion(null, world.getDamageSources().badRespawnPoint(pos.toCenterPos()), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0f, true, World.ExplosionSourceType.BLOCK);
             return ActionResult.SUCCESS;
         }
         if (state.get(OCCUPIED)) {

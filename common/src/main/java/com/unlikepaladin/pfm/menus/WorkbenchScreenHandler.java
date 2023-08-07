@@ -114,7 +114,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     void populateResult(PlayerEntity player) {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe furnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
-            this.outputSlot.setStack(furnitureRecipe.craft(player.getInventory()));
+            this.outputSlot.setStack(furnitureRecipe.craft(player.getInventory(), player.world.getRegistryManager()));
         } else {
             this.outputSlot.setStack(ItemStack.EMPTY);
         }

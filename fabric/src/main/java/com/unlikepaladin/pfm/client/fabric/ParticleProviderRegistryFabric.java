@@ -10,6 +10,6 @@ import net.minecraft.util.Identifier;
 public class ParticleProviderRegistryFabric {
 
     public static void registerParticleFactories() {
-        ParticleFactoryRegistry.getInstance().register(ParticleIDs.WATER_DROP, BlockLeakParticle.FallingWaterFactory::new);
+        ParticleFactoryRegistry.getInstance().register(ParticleIDs.WATER_DROP, BlockLeakParticle::createFallingWater);
     }
 }

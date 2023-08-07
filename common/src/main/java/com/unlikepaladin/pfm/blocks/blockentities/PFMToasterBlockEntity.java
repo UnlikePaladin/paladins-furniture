@@ -179,7 +179,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
 
                 boolean changed = false;
                 if(match.isPresent()) {
-                    items.set(i, match.get().getOutput().copy());
+                    items.set(i, match.get().getOutput(world.getRegistryManager()).copy());
                     changed = true;
                 } else {
                     if(items.get(i).isFood()) {

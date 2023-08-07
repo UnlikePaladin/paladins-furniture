@@ -63,7 +63,7 @@ public class ShowerHandleItem extends BlockItem {
         BlockPos pos = context.getBlockPos();
         WorldView world = context.getWorld();
         NbtLong showerHeadPos = getShowerHead(context.getStack());
-        Direction playerFacing = context.getPlayerFacing();
+        Direction playerFacing = context.getHorizontalPlayerFacing();
         Direction placeDirection = context.getSide();
 
         if (showerHeadPos != null) {

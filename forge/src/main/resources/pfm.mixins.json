@@ -8,8 +8,8 @@
     "PFMRenderLayersForgeMixin"
   ],
   "mixins": [
-    "PFMAbstractTagProvider$ObjectBuilderMixin",
-    "PFMCookingPotBlockEntityMixin"
+    "PFMCookingPotBlockEntityMixin",
+    "PFMMinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

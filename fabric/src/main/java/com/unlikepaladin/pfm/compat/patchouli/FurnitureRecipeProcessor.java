@@ -7,6 +7,8 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
+import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
@@ -14,14 +16,14 @@ import vazkii.patchouli.api.IVariableProvider;
 public class FurnitureRecipeProcessor implements IComponentProcessor {
     private Recipe<?> recipe;
     @Override
-    public void setup(IVariableProvider variables) {
+    public void setup(World level, IVariableProvider variables) {
         String recipeId = variables.get("recipe").asString();
-        RecipeManager manager = MinecraftClient.getInstance().world.getRecipeManager();
+        RecipeManager manager = level.getRecipeManager();
         recipe = manager.get(new Identifier(recipeId)).orElse(null);
     }
 
     @Override
-    public IVariable process(String key) {
+    public @NotNull IVariable process(World level, String key) {
         if (recipe != null) {
             if (key.startsWith("item")) {
                 int index = Integer.parseInt(key.substring(4)) - 1;
@@ -33,21 +35,21 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
                 ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
                 return IVariable.from(stack);
             } else if (key.equals("resultitem")) {
-                ItemStack result = recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager());
+                ItemStack result = recipe.getOutput(level.getRegistryManager());
                 return IVariable.from(result);
             } else if (key.equals("icon")) {
                 ItemStack icon = recipe.createIcon();
                 return IVariable.from(icon);
             } else if (key.equals("text")) {
-                ItemStack out = recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager());
+                ItemStack out = recipe.getOutput(level.getRegistryManager());
                 return IVariable.wrap(out.getCount() + "x$(br)" + out.getName());
             } else if (key.equals("icount")) {
-                return IVariable.wrap(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()).getCount());
+                return IVariable.wrap(recipe.getOutput(level.getRegistryManager()).getCount());
             } else if (key.equals("iname")) {
-                return IVariable.wrap(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()).getName().getString());
+                return IVariable.wrap(recipe.getOutput(level.getRegistryManager()).getName().getString());
             }
         }
-        return null;
+        return IVariable.empty();
     }
 
     @Override

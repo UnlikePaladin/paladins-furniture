@@ -89,7 +89,6 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             PFMOptionListWidget.this.client.textRenderer.draw(matrices, this.text.setStyle(Style.EMPTY.withBold(true)), (float)((PFMOptionListWidget.this.client.currentScreen.width / 2 - this.textWidth / 2)), (float)(y + entryHeight - (PFMOptionListWidget.this).client.textRenderer.fontHeight - 1), 0xFFFFFF);
         }
 
-        @Override
         public boolean changeFocus(boolean lookForwards) {
             return false;
         }

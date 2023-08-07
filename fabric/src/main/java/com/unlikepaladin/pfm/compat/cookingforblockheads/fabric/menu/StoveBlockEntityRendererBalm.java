@@ -33,7 +33,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.push();
                 poseStack.translate(-0.55F, 0.0F, 0.5F);
                 poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer);
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
                 poseStack.pop();
             }
 
@@ -42,7 +42,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.push();
                 poseStack.translate(0.55F, 0.0F, 0.5F);
                 poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer);
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
                 poseStack.pop();
             }
 
@@ -51,7 +51,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.push();
                 poseStack.translate(-0.55F, 0.0F, -0.5F);
                 poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer);
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
                 poseStack.pop();
             }
 
@@ -60,7 +60,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.push();
                 poseStack.translate(0.55F, 0.0F, -0.5F);
                 poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer);
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
                 poseStack.pop();
             }
             poseStack.pop();
