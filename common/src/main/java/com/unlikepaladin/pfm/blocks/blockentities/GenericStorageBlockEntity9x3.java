@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.blocks.ClassicNightstandBlock;
 import com.unlikepaladin.pfm.blocks.KitchenCabinetBlock;
 import com.unlikepaladin.pfm.blocks.KitchenDrawerBlock;
+import com.unlikepaladin.pfm.blocks.KitchenWallDrawerBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
@@ -89,7 +90,6 @@ public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
     @Override
         public void onOpen(PlayerEntity player) {
             if (!this.removed && !player.isSpectator()) {
-
                 this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
             }
         }
@@ -121,12 +121,14 @@ public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
 
     String blockname = this.getCachedState().getBlock().getTranslationKey();
     protected Text getContainerName() {
-    if (this.getCachedState().getBlock() instanceof KitchenDrawerBlock)
-        return Text.translatable("container.pfm.drawer");
-    else if (this.getCachedState().getBlock() instanceof ClassicNightstandBlock)
-        return Text.translatable("container.pfm.nightstand");
-    else
-        return Text.translatable("container.pfm.cabinet");
+        if (this.getCachedState().getBlock() instanceof KitchenWallDrawerBlock)
+            return Text.translatable("container.pfm.kitchen_cabinet");
+        else if (this.getCachedState().getBlock() instanceof KitchenDrawerBlock)
+            return Text.translatable("container.pfm.drawer");
+        else if (this.getCachedState().getBlock() instanceof ClassicNightstandBlock)
+            return Text.translatable("container.pfm.nightstand");
+        else
+            return Text.translatable("container.pfm.cabinet");
     }
 
     void setOpen(BlockState state, boolean open) {

@@ -25,7 +25,7 @@ public class PFMFarmersDelightImpl extends PFMFarmersDelight {
     public void generateTags() {
         List<Block> stoves = new ArrayList<>(StoveBlock.streamStoves().map(FurnitureBlock::getBlock).toList());
         stoves.addAll(IronStoveBlock.streamIronStoves().map(FurnitureBlock::getBlock).toList());
-        //stoves.add(PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP);
+        stoves.add(PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP);
         PFMTagProvider.getOrCreateTagBuilder(ModTags.HEAT_SOURCES)
                 .add(stoves.toArray(new Block[0]));
     }

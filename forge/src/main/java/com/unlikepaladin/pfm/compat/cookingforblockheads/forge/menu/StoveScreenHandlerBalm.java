@@ -21,6 +21,7 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
     public StoveScreenHandlerBalm(int windowId, PlayerInventory playerInventory, StoveBlockEntityBalm oven) {
         super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, windowId);
         this.tileEntity = oven;
+        oven.onOpen(playerInventory.player);
         Inventory container = oven.getContainer();
         int offsetX = oven.hasPowerUpgrade() ? -5 : 0;
 
@@ -61,10 +62,6 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
 
     public StoveBlockEntityBalm getTileEntity() {
         return this.tileEntity;
-    }
-
-    public void close(PlayerEntity player) {
-        super.close(player);
     }
 
     public ItemStack transferSlot(PlayerEntity player, int slotIndex) {
@@ -126,5 +123,11 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
 
     public boolean isTileEntity(BlockEntity blockEntity) {
         return this.tileEntity == blockEntity;
+    }
+
+    @Override
+    public void close(PlayerEntity player){
+        super.close(player);
+        this.tileEntity.onClose(player);
     }
 }

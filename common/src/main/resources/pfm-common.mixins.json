@@ -5,7 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "PFMDataCache$CachedDataMixin",
-    "PFMMinecraftServerMixin",
     "PFMPlayerInventoryMixin",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSaveLoaderMixin",
