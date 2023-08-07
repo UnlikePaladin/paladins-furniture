@@ -23,7 +23,7 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
 
     public static EmiIngredient WORKBENCH_ICON = EmiStack.of(PaladinFurnitureModBlocksItems.WORKING_TABLE);
     public static Identifier WORKBENCH_ID = new Identifier("pfm:furniture");
-    public static EmiIngredient FREEZER_ICON = EmiStack.of(PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+    public static EmiIngredient FREEZER_ICON = EmiStack.of(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
     public static Identifier FREEZER_ID = new Identifier("pfm:freezer");
     @Override
     public void register(EmiRegistry registry) {
@@ -33,6 +33,8 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
         registry.addWorkstation(FURNITURE, WORKBENCH_ICON);
         registry.addCategory(FREEZER);
         registry.addWorkstation(FREEZER, FREEZER_ICON);
+        registry.addWorkstation(FREEZER, EmiStack.of(PaladinFurnitureModBlocksItems.GRAY_FREEZER));
+        registry.addWorkstation(FREEZER, EmiStack.of(PaladinFurnitureModBlocksItems.IRON_FREEZER));
         registry.addRecipeHandler(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, new FurnitureRecipeHandler());
         registry.addRecipeHandler(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, new FreezerRecipeHandler(FREEZER));
 
