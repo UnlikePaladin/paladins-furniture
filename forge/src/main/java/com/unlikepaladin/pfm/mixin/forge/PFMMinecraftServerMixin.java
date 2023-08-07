@@ -15,7 +15,7 @@ import java.util.List;
 @Mixin(MinecraftServer.class)
 public class PFMMinecraftServerMixin {
 
-    @Inject(method = "lambda$reloadResources$15", at = @At(value = "RETURN"), cancellable = true)
+    @Inject(method = "lambda$reloadResources$19", at = @At(value = "RETURN"), cancellable = true)
     private void createReload(CallbackInfoReturnable<ImmutableList<ResourcePack>> cir) {
         List<ResourcePack> resourcePacks = new ArrayList<>(cir.getReturnValue());
         if (PFMRuntimeResources.ready) {
