@@ -45,7 +45,9 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration)
     {
-        registration.addRecipeCatalyst(new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FRIDGE), FreezingCategory.IDENTIFIER);
+        registration.addRecipeCatalyst(new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FREEZER), FreezingCategory.IDENTIFIER);
+        registration.addRecipeCatalyst(new ItemStack(PaladinFurnitureModBlocksItems.IRON_FREEZER), FreezingCategory.IDENTIFIER);
+        registration.addRecipeCatalyst(new ItemStack(PaladinFurnitureModBlocksItems.GRAY_FREEZER), FreezingCategory.IDENTIFIER);
         registration.addRecipeCatalyst(new ItemStack(PaladinFurnitureModBlocksItems.WORKING_TABLE), FurnitureCategory.IDENTIFIER);
     }
 

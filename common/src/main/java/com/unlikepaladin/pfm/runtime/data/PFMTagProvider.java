@@ -189,6 +189,7 @@ public class PFMTagProvider {
                 .add(woodWallSmallDrawers)
                 .add(simpleBunkLadders)
                 .add(classicBeds)
+                .add(logTables)
                 .add(PaladinFurnitureModBlocksItems.BASIC_LAMP);
 
         getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
