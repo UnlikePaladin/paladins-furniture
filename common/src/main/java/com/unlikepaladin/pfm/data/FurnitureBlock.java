@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 
 public class FurnitureBlock extends Material {
@@ -81,10 +82,10 @@ public class FurnitureBlock extends Material {
             secondMaterial = secondMaterial.replace("gray", "");
             secondMaterial = "stripped".concat(secondMaterial);
         }
-        if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.NETHER_WOOD) && (!secondMaterial.contains("stem"))) {
+        if (block.getDefaultState().getSoundGroup().equals(BlockSoundGroup.NETHER_WOOD) && (!secondMaterial.contains("stem"))) {
             secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "stem");
         }
-        else if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.WOOD) && !secondMaterial.contains("log")) {
+        else if (block.getDefaultState().getSoundGroup().equals(BlockSoundGroup.WOOD) && !secondMaterial.contains("log")) {
             secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "log");
         }
         else {
@@ -204,10 +205,10 @@ public class FurnitureBlock extends Material {
         if (secondMaterial.contains("raw_")) {
             secondMaterial = secondMaterial.replace("raw_", "");
         }
-        if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.NETHER_WOOD) && !secondMaterial.contains("stem")) {
+        if (block.getDefaultState().getSoundGroup().equals(BlockSoundGroup.NETHER_WOOD) && !secondMaterial.contains("stem")) {
             secondMaterial = secondMaterial.replace(furnitureName, "stem");
         }
-        else if (block.getDefaultState().getMaterial().equals(net.minecraft.block.Material.WOOD) && !secondMaterial.contains("log")) {
+        else if (block.getDefaultState().getSoundGroup().equals(BlockSoundGroup.WOOD) && !secondMaterial.contains("log")) {
             secondMaterial = secondMaterial.replace(furnitureName, "log");
         }
         else {

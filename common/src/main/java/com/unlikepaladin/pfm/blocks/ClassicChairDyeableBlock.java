@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
@@ -22,7 +21,7 @@ public class ClassicChairDyeableBlock extends ClassicChairBlock implements Dyeab
     public ClassicChairDyeableBlock(DyeColor color, Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ClassicChairDyeableBlock.class)){
+        if(isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(ClassicChairDyeableBlock.class)){
             WOOD_DYEABLE_CLASSIC_CHAIRS.add(new FurnitureBlock(this, "oak_chair_classic"));
         }
         else if (this.getClass().isAssignableFrom(ClassicChairDyeableBlock.class)){

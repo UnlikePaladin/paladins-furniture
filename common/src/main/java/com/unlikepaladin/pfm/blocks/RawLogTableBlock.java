@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.Material;
 
 import java.util.ArrayList;
 import java.util.List;

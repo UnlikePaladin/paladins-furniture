@@ -1,8 +1,10 @@
 package com.unlikepaladin.pfm.data.materials;
 
 import net.minecraft.block.*;
+import net.minecraft.block.enums.Instrument;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.registry.Registries;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
 import org.jetbrains.annotations.Nullable;
@@ -21,7 +23,7 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
     }
 
     @Nullable
-    public static  WoodVariant getVariantFromVanillaWoodType(BoatEntity.Type type) {
+    public static WoodVariant getVariantFromVanillaWoodType(BoatEntity.Type type) {
         for (WoodVariant woodVariant : INSTANCE.variants.values()) {
             if (woodVariant.getVanillaWoodType() == type)
                 return woodVariant;
@@ -31,10 +33,20 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
     /**
      * Simplified Wood/Block detection based on MoonlightLib<a href="https://github.com/MehVahdJukaar/Moonlight/blob/multi-loader/common/src/main/java/net/mehvahdjukaar/moonlight/api/set/BlockTypeRegistry.java#L18">...</a>
      */
-    public Optional<WoodVariant> geVariantFromBlock(Block baseBlock, Identifier blockId) {
+    public Optional<WoodVariant> getVariantFromBlock(Block baseBlock, Identifier blockId) {
         String name = null;
         String path = blockId.getPath();
-
+        if (blockId.getNamespace().equals("tfc")) {
+            if (path.contains("wood/planks/")) {
+                var log = Registries.BLOCK.getOrEmpty(
+                        new Identifier(blockId.getNamespace(), path.replace("planks", "log")));
+                if (log.isPresent()) {
+                    Identifier id = new Identifier(blockId.getNamespace(), path.replace("wood/planks/", ""));
+                    return Optional.of(new WoodVariant(id, baseBlock, log.get()));
+                }
+            }
+            return Optional.empty();
+        }
         if (path.endsWith("_planks")) {
             name = path.substring(0, path.length() - "_planks".length());
         } else if (path.startsWith("planks_")) {
@@ -53,9 +65,10 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
             if (state.getProperties().size() <= 2 && !(baseBlock instanceof SlabBlock)) {
                 //needs to use wood sound type
                 //if (state.getSoundType() == SoundType.WOOD) { //wood from tcon has diff sounds
-                Material mat = state.getMaterial();
+                BlockSoundGroup soundGroup = state.getSoundGroup();
+                Instrument instrument = state.getInstrument();
                 //and have correct material
-                if (mat == Material.WOOD || mat == Material.NETHER_WOOD) {
+                if (soundGroup == BlockSoundGroup.BAMBOO_WOOD || soundGroup == BlockSoundGroup.CHERRY_WOOD || soundGroup == BlockSoundGroup.WOOD || soundGroup == BlockSoundGroup.NETHER_WOOD || instrument == Instrument.BASS) {
                     //we do not allow "/" in the wood name
                     name = name.replace("/", "_");
                     Identifier id = new Identifier(blockId.getNamespace(), name);

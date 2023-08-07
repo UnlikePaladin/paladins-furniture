@@ -32,10 +32,10 @@ public class NetworkRegistryFabric {
             BlockPos pos = attachedData.readBlockPos();
             boolean active = attachedData.readBoolean();
             server.submitAndJoin(() -> {
-                if(Objects.nonNull(player.world.getBlockEntity(pos))){
-                    World world = player.world;
+                if(Objects.nonNull(player.getWorld().getBlockEntity(pos))){
+                    World world = player.getWorld();
                     if (world.isChunkLoaded(pos)) {
-                        MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) player.world.getBlockEntity(pos);
+                        MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(pos);
                         microwaveBlockEntity.setActive(active);
                     } else {
                         player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
@@ -47,10 +47,10 @@ public class NetworkRegistryFabric {
         ServerPlayNetworking.registerGlobalReceiver(NetworkIDs.TRASHCAN_CLEAR, (server, player, handler, attachedData, responseSender) -> {
             BlockPos pos = attachedData.readBlockPos();
             server.submitAndJoin(() -> {
-                if(Objects.nonNull(player.world.getBlockEntity(pos))){
-                    World world = player.world;
+                if(Objects.nonNull(player.getWorld().getBlockEntity(pos))){
+                    World world = player.getWorld();
                     if (world.isChunkLoaded(pos)) {
-                        TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) player.world.getBlockEntity(pos);
+                        TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(pos);
                         trashcanBlockEntity.clear();
                     } else {
                         player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
@@ -65,7 +65,7 @@ public class NetworkRegistryFabric {
                     BlockPos blockPos = attachedData.readBlockPos();
                     server.submitAndJoin(() -> {
                         // Use the pos in the main thread
-                        World world = player.world;
+                        World world = player.getWorld();
                         if (world.isChunkLoaded(blockPos)) {
                             world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
                             world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);

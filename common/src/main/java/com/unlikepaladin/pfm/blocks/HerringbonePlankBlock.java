@@ -4,7 +4,6 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.block.Material;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
@@ -21,7 +20,7 @@ public class HerringbonePlankBlock extends HorizontalFacingBlock {
     private static final List<FurnitureBlock> PLANKS = new ArrayList<>();
     public HerringbonePlankBlock(Settings settings) {
         super(settings);
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(HerringbonePlankBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(HerringbonePlankBlock.class)){
             PLANKS.add(new FurnitureBlock(this, "herringbone_planks"));
         }
     }
@@ -42,7 +41,7 @@ public class HerringbonePlankBlock extends HorizontalFacingBlock {
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
-        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+        if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
         return 0;

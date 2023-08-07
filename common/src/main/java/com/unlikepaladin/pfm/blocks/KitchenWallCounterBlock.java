@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +21,7 @@ public class KitchenWallCounterBlock extends KitchenCounterBlock{
     private static final List<FurnitureBlock> STONE_COUNTERS = new ArrayList<>();
     public KitchenWallCounterBlock(Settings settings) {
         super(settings);
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenWallCounterBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenWallCounterBlock.class)){
             WOOD_COUNTERS.add(new FurnitureBlock(this, "kitchen_wall_counter"));
         }
         else if (this.getClass().isAssignableFrom(KitchenWallCounterBlock.class)){

@@ -146,7 +146,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock {
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
-        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+        if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
         return 0;

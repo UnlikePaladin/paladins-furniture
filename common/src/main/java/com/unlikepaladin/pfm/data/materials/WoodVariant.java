@@ -8,7 +8,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.registry.Registries;
@@ -26,7 +25,6 @@ import java.util.function.Supplier;
 public class WoodVariant extends VariantBase<WoodVariant> {
     private final Block plankBlock;
     private final Block logBlock;
-    private final Material vanillaMaterial;
     @Nullable
     private final BoatEntity.Type vanillaWoodType;
 
@@ -34,7 +32,6 @@ public class WoodVariant extends VariantBase<WoodVariant> {
         super(identifier);
         this.plankBlock = plankBlock;
         this.logBlock = logBlock;
-        this.vanillaMaterial = plankBlock.getDefaultState().getMaterial();
         this.vanillaWoodType = BoatEntity.Type.getType(identifier.getPath()) != BoatEntity.Type.OAK &&  BoatEntity.Type.getType(identifier.getPath()).getBaseBlock() == plankBlock ? BoatEntity.Type.getType(identifier.getPath()) : null;
     }
 
@@ -42,7 +39,6 @@ public class WoodVariant extends VariantBase<WoodVariant> {
         super(identifier);
         this.plankBlock = plankBlock;
         this.logBlock = logBlock;
-        this.vanillaMaterial = plankBlock.getDefaultState().getMaterial();
         this.vanillaWoodType = vanillaWoodType;
     }
 
@@ -119,10 +115,6 @@ public class WoodVariant extends VariantBase<WoodVariant> {
 
     public boolean isNetherWood() {
         return this.identifier.getPath().contains("warped") || this.identifier.getPath().contains("crimson");
-    }
-
-    public Material getVanillaMaterial() {
-        return vanillaMaterial;
     }
 
     @Override

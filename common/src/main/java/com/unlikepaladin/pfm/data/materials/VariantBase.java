@@ -5,7 +5,6 @@ import com.google.common.collect.HashBiMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -40,8 +39,6 @@ public abstract class VariantBase<T> implements StringIdentifiable {
     public abstract Block getSecondaryBlock();
 
     public abstract boolean isNetherWood();
-
-    abstract public Material getVanillaMaterial();
 
     abstract public T getVariantType();
 

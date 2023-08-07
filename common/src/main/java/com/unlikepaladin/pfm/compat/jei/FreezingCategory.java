@@ -18,6 +18,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.Text;
@@ -95,7 +96,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
         return this.cachedArrows.getUnchecked(freezeTime);
     }
 
-    protected void drawFreezeTime(FreezingRecipe recipe, MatrixStack poseStack, int y) {
+    protected void drawFreezeTime(FreezingRecipe recipe, DrawContext context, int y) {
         int freezeTime = recipe.getCookTime();
         if (freezeTime > 0) {
             int freezeTimeSeconds = freezeTime / 20;
@@ -103,29 +104,29 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
             MinecraftClient minecraft = MinecraftClient.getInstance();
             TextRenderer fontRenderer = minecraft.textRenderer;
             int stringWidth = fontRenderer.getWidth(timeString);
-            fontRenderer.draw(poseStack, timeString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080);
+            context.drawText(fontRenderer, timeString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
         }
     }
 
-    protected void drawExperience(FreezingRecipe recipe, MatrixStack poseStack, int y) {
+    protected void drawExperience(FreezingRecipe recipe, DrawContext context, int y) {
         float experience = recipe.getExperience();
         if (experience > 0) {
             Text experienceString = Text.of(experience + " XP");
             MinecraftClient minecraft = MinecraftClient.getInstance();
             TextRenderer fontRenderer = minecraft.textRenderer;
             int stringWidth = fontRenderer.getWidth(experienceString);
-            fontRenderer.draw(poseStack, experienceString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080);
+            context.drawText(fontRenderer, experienceString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
         }
     }
 
     @Override
-    public void draw(FreezingRecipe recipe, IRecipeSlotsView recipeSlotsView, MatrixStack poseStack, double mouseX, double mouseY) {
-        animatedFreezeIcon.draw(poseStack, 1, 20);
+    public void draw(FreezingRecipe recipe, IRecipeSlotsView recipeSlotsView, DrawContext context, double mouseX, double mouseY) {
+        animatedFreezeIcon.draw(context, 1, 20);
 
         IDrawableAnimated arrow = getArrow(recipe);
-        arrow.draw(poseStack, 24, 18);
+        arrow.draw(context, 24, 18);
 
-        drawExperience(recipe, poseStack, 0);
-        drawFreezeTime(recipe, poseStack, 45);
+        drawExperience(recipe, context, 0);
+        drawFreezeTime(recipe, context, 45);
     }
 }

@@ -2,8 +2,9 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.enums.Instrument;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -23,7 +24,7 @@ public class SimpleStoolBlock extends BasicChairBlock {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));
         this.height = 0.5f;
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(SimpleStoolBlock.class)){
+        if(isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(SimpleStoolBlock.class)){
             WOOD_SIMPLE_STOOLS.add(new FurnitureBlock(this, "simple_stool"));
         }
         else if (this.getClass().isAssignableFrom(SimpleStoolBlock.class)){

@@ -88,9 +88,9 @@ public class PFMMirrorEntity extends Mirror {
     @Override
     public void tick() {
         super.tick();
-        if (!world.isClient) {
+        if (!getEntityWorld().isClient) {
             if (!unbreakable) {
-                if (world.getTime() % 10 == getId() % 10) {
+                if (getEntityWorld().getTime() % 10 == getId() % 10) {
                     checkWallIntegrity();
                 }
             }
@@ -104,19 +104,19 @@ public class PFMMirrorEntity extends Mirror {
 
     private void checkWallIntegrity() {
         boolean wallValid;
-        if (this.facing == null && this.world.getBlockState(getBlockPos()).contains(Properties.HORIZONTAL_FACING))
-            this.facing = this.world.getBlockState(getBlockPos()).get(Properties.HORIZONTAL_FACING).getOpposite();
+        if (this.facing == null && this.getEntityWorld().getBlockState(getBlockPos()).contains(Properties.HORIZONTAL_FACING))
+            this.facing = this.getEntityWorld().getBlockState(getBlockPos()).get(Properties.HORIZONTAL_FACING).getOpposite();
         else if (this.facing == null){
             this.facing = Direction.NORTH;
         }
         if (wallArea != null) {
             wallValid = wallArea.fastStream().allMatch(
-                    blockPos -> isMirrorBlock(world, blockPos, this.facing.getOpposite())
+                    blockPos -> isMirrorBlock(getEntityWorld(), blockPos, this.facing.getOpposite())
             );
         }
         else if (blockPortalShape != null) {
             wallValid = blockPortalShape.area.stream().allMatch(
-                    blockPos -> isMirrorBlock(world, blockPos, this.facing.getOpposite())
+                    blockPos -> isMirrorBlock(getEntityWorld(), blockPos, this.facing.getOpposite())
             );
         }
         else {

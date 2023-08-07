@@ -24,11 +24,11 @@ public class PaladinFurnitureModBlocksItems {
     public static final List<Block> BLOCKS = new ArrayList<>();
     public static final Map<Pair<String, ItemGroup>, List<Item>> ITEM_GROUP_LIST_MAP = new LinkedHashMap<>();
     public static Set<BlockState> originalHomePOIBedStates = new HashSet<>();
-    public static final FreezerBlock WHITE_FREEZER = new FreezerBlock(AbstractBlock.Settings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE).mapColor(MapColor.WHITE), () -> PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+    public static final FreezerBlock WHITE_FREEZER = new FreezerBlock(AbstractBlock.Settings.create().resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE).mapColor(MapColor.WHITE), () -> PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
     public static final FridgeBlock WHITE_FRIDGE = new FridgeBlock(AbstractBlock.Settings.copy(WHITE_FREEZER).nonOpaque(), () -> PaladinFurnitureModBlocksItems.WHITE_FREEZER);
-    public static final FreezerBlock GRAY_FREEZER = new FreezerBlock(AbstractBlock.Settings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE).mapColor(MapColor.GRAY), () -> PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
+    public static final FreezerBlock GRAY_FREEZER = new FreezerBlock(AbstractBlock.Settings.create().resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE).mapColor(MapColor.GRAY), () -> PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
     public static final FridgeBlock GRAY_FRIDGE = new FridgeBlock(AbstractBlock.Settings.copy(GRAY_FREEZER).nonOpaque(), () -> PaladinFurnitureModBlocksItems.GRAY_FREEZER);
-    public static final FreezerBlock IRON_FREEZER = new IronFreezerBlock(AbstractBlock.Settings.of(Material.METAL).resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.METAL).mapColor(MapColor.IRON_GRAY), () -> PaladinFurnitureModBlocksItems.IRON_FRIDGE);
+    public static final FreezerBlock IRON_FREEZER = new IronFreezerBlock(AbstractBlock.Settings.create().resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.METAL).mapColor(MapColor.IRON_GRAY), () -> PaladinFurnitureModBlocksItems.IRON_FRIDGE);
     public static final FridgeBlock IRON_FRIDGE = new IronFridgeBlock(AbstractBlock.Settings.copy(IRON_FREEZER).nonOpaque(), () -> PaladinFurnitureModBlocksItems.IRON_FREEZER);
     public static final FridgeBlock XBOX_FRIDGE = new XboxFridgeBlock(AbstractBlock.Settings.copy(WHITE_FREEZER).nonOpaque().mapColor(MapColor.BLACK), null);
 
@@ -98,7 +98,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final CutleryBlock BASIC_CUTLERY = new CutleryBlock(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).nonOpaque());
 
     public static final BasicToiletBlock BASIC_TOILET = new BasicToiletBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque());
-    public static final WallToiletPaperBlock WALL_TOILET_PAPER = new WallToiletPaperBlock(AbstractBlock.Settings.of(Material.WOOL, MapColor.OFF_WHITE).nonOpaque());
+    public static final WallToiletPaperBlock WALL_TOILET_PAPER = new WallToiletPaperBlock(AbstractBlock.Settings.create().mapColor(MapColor.OFF_WHITE).nonOpaque());
     public static final BasicBathtubBlock BASIC_BATHTUB = new BasicBathtubBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque(), BathtubBehavior.TUB_BEHAVIOR, LeveledCauldronBlock.RAIN_PREDICATE);
 
 

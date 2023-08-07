@@ -7,7 +7,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
 import net.minecraft.client.render.block.BlockModels;
 import net.minecraft.resource.featuretoggle.FeatureFlag;
 import net.minecraft.resource.featuretoggle.FeatureSet;
@@ -79,11 +78,6 @@ public class StoneVariant extends VariantBase<StoneVariant> {
     @Override
     public boolean isNetherWood() {
         return false;
-    }
-
-    @Override
-    public Material getVanillaMaterial() {
-        return baseBlock.getDefaultState().getMaterial();
     }
 
     @Override

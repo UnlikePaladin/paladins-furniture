@@ -66,13 +66,13 @@ public class DyeKit extends Item {
         if (entity instanceof SheepEntity) {
             SheepEntity sheepEntity = (SheepEntity)entity;
             if (sheepEntity.isAlive() && !sheepEntity.isSheared() && sheepEntity.getColor() != ((DyeKit) stack.getItem()).getColor()) {
-                sheepEntity.world.playSoundFromEntity(user, sheepEntity, SoundEvents.ITEM_DYE_USE, SoundCategory.PLAYERS, 1.0F, 1.0F);
-                if (!user.world.isClient) {
+                sheepEntity.getEntityWorld().playSoundFromEntity(user, sheepEntity, SoundEvents.ITEM_DYE_USE, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                if (!user.getWorld().isClient) {
                     sheepEntity.setColor(this.color);
                     stack.decrement(1);
                 }
 
-                return ActionResult.success(user.world.isClient);
+                return ActionResult.success(user.getWorld().isClient);
             }
         }
         return ActionResult.PASS;

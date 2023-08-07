@@ -4,9 +4,10 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.Tags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.enums.Instrument;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -34,7 +35,7 @@ public class BasicChairBlock extends AbstractSittableBlock {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));
         this.height = 0.36f;
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(BasicChairBlock.class)){
+        if(isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(BasicChairBlock.class)){
             WOOD_BASIC_CHAIRS.add(new FurnitureBlock(this, "chair"));
         }
         else if (this.getClass().isAssignableFrom(BasicChairBlock.class)){

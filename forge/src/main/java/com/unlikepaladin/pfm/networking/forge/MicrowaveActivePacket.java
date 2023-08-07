@@ -30,7 +30,7 @@ public class MicrowaveActivePacket {
             World world = Objects.requireNonNull(player).getEntityWorld();
             ctx.get().enqueueWork(() -> {
                 if (world.isChunkLoaded(entityPos)) {
-                    MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) player.world.getBlockEntity(entityPos);
+                    MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(entityPos);
                     microwaveBlockEntity.setActive(active);
                 }
                 else {

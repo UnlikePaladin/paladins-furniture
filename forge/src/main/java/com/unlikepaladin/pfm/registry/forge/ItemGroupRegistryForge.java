@@ -13,6 +13,8 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKeys;
 import net.minecraft.resource.featuretoggle.FeatureFlag;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.text.Text;
@@ -20,9 +22,12 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraftforge.common.CreativeModeTabRegistry;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +40,9 @@ import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 public class ItemGroupRegistryForge {
 
     @SubscribeEvent
-    public static void registerItemGroups(CreativeModeTabEvent.Register creativeModeTabEvent){
-        PaladinFurnitureMod.DYE_KITS.setRight(creativeModeTabEvent.registerCreativeModeTab(new Identifier(MOD_ID, "dye_kits"), builder -> {
-                builder.displayName(Text.translatable("itemGroup.pfm.dye_kits"))
+    public static void registerItemGroups(RegisterEvent event){
+        event.register(RegistryKeys.ITEM_GROUP, helper -> {
+            ItemGroup dyeGroup = ItemGroup.builder().displayName(Text.translatable("itemGroup.pfm.dye_kits"))
                         .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
                         .entries((enabledFeatures, stacks) -> {
                             stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED));
@@ -56,20 +61,21 @@ public class ItemGroupRegistryForge {
                             stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_GRAY));
                             stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY));
                             stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLACK));
-                        })
-                        .build();
-            }));
-        PaladinFurnitureMod.FURNITURE_GROUP.setRight(creativeModeTabEvent.registerCreativeModeTab(new Identifier(MOD_ID, "furniture"), builder -> {
-                    builder.displayName(Text.translatable("itemGroup.pfm.furniture"))
-                            .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getFromVanillaWoodType(BoatEntity.Type.OAK, true).asItem().getDefaultStack())
-                            .entries((enabledFeatures, entries) -> {
-                            })
-                            .build();
-                }
-        ));
+                        }).build();
+            helper.register(new Identifier(MOD_ID, "dye_kits"), dyeGroup);
+            PaladinFurnitureMod.DYE_KITS.setRight(dyeGroup);
+
+            ItemGroup furnitureGroup = ItemGroup.builder().displayName(Text.translatable("itemGroup.pfm.furniture"))
+                    .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getFromVanillaWoodType(BoatEntity.Type.OAK, true).asItem().getDefaultStack())
+                    .entries((enabledFeatures, entries) -> {
+                    }).build();
+            helper.register(new Identifier(MOD_ID, "furniture"), furnitureGroup);
+            PaladinFurnitureMod.FURNITURE_GROUP.setRight(furnitureGroup);
+        });
     }
+
     @SubscribeEvent
-    public static void addToVanillaItemGroups(CreativeModeTabEvent.BuildContents creativeModeTabEvent){
+    public static void addToVanillaItemGroups(BuildCreativeModeTabContentsEvent creativeModeTabEvent){
         for (Map.Entry<Pair<String, ItemGroup>, List<Item>> itemGroupListEntry : PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.entrySet()) {
             if (creativeModeTabEvent.getTab() == itemGroupListEntry.getKey().getRight()) {
                 itemGroupListEntry.getValue().forEach(item -> {

@@ -199,7 +199,7 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
             vec3d2 = vec3d2.rotateX(-entity.getPitch() * ((float)Math.PI / 180));
             vec3d2 = vec3d2.rotateY(-entity.getYaw() * ((float)Math.PI / 180));
             vec3d2 = vec3d2.add(entity.getX(), entity.getEyeY(), entity.getZ());
-            entity.world.addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
+            entity.getEntityWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
         }
     }
     @Override

@@ -8,11 +8,11 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.MapColor;
-import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Pair;
 
 import java.util.function.Supplier;
@@ -62,7 +62,7 @@ public class BlockItemRegistry {
     public static void registerBlock(String blockName, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerBlockItemPlatformSpecific(blockName, block, new Pair<>("building_blocks", ItemGroups.BUILDING_BLOCKS));
+            registerBlockItemPlatformSpecific(blockName, block, new Pair<>("building_blocks", Registries.ITEM_GROUP.get(ItemGroups.BUILDING_BLOCKS)));
         }
         registerBlockPlatformSpecific(blockName, block, false);
     }

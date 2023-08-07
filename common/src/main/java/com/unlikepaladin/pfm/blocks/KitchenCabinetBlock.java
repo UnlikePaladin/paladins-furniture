@@ -48,7 +48,7 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCabinetBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenCabinetBlock.class)){
             WOOD_CABINETS.add(new FurnitureBlock(this, "kitchen_cabinet"));
         }
         else if (this.getClass().isAssignableFrom(KitchenCabinetBlock.class)){
@@ -352,7 +352,7 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
-        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+        if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
         return 0;

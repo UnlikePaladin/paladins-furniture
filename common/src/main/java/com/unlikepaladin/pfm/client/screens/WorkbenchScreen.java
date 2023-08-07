@@ -3,9 +3,11 @@ package com.unlikepaladin.pfm.client.screens;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.search.SearchManager;
 import net.minecraft.client.search.SearchProvider;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -161,33 +163,30 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
         }
     }
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+        super.render(context, mouseX, mouseY, delta);
+        this.drawMouseoverTooltip(context, mouseX, mouseY);
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
+    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
+        this.renderBackground(context);
         int x = this.x;
         int y = this.y;
-        this.drawTexture(matrices, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        context.drawTexture(TEXTURE, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
         int k = (int)(41.0f * this.scrollAmount);
-        this.drawTexture(matrices, x + 119, y + 31 + k, 176 + (this.shouldScroll() ? 0 : 12), 0, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
+        context.drawTexture(TEXTURE, x + 119, y + 31 + k, 176 + (this.shouldScroll() ? 0 : 12), 0, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
         int xOffSetForIcons = this.x + RECIPE_LIST_OFFSET_X;
         int yOffsetForIcons = this.y + RECIPE_LIST_OFFSET_Y;
         int scrollOffsetForIcons = this.scrollOffset + 18;
-        this.renderRecipeBackground(matrices, mouseX, mouseY, xOffSetForIcons, yOffsetForIcons, scrollOffsetForIcons);
-        this.renderRecipeIcons(matrices, xOffSetForIcons, yOffsetForIcons, scrollOffsetForIcons);
-        this.searchBox.render(matrices, mouseX, mouseY, delta);
+        this.renderRecipeBackground(context, mouseX, mouseY, xOffSetForIcons, yOffsetForIcons, scrollOffsetForIcons);
+        this.renderRecipeIcons(context, xOffSetForIcons, yOffsetForIcons, scrollOffsetForIcons);
+        this.searchBox.render(context, mouseX, mouseY, delta);
     }
 
     @Override
-    protected void drawMouseoverTooltip(MatrixStack matrices, int x, int y) {
-        super.drawMouseoverTooltip(matrices, x, y);
+    protected void drawMouseoverTooltip(DrawContext context, int x, int y) {
+        super.drawMouseoverTooltip(context, x, y);
         int xOffsetForTooltip = this.x + RECIPE_LIST_OFFSET_X;
         int yOffsetForTooltip = this.y + RECIPE_LIST_OFFSET_Y;
         int scrollOffsetForTooltip = this.scrollOffset + 18;
@@ -217,7 +216,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
                 int itemCount = 0;
                 Style style = Style.EMPTY.withColor(Formatting.GRAY);
                 for (ItemStack stack1 : handler.getPlayerInventory().main) {
-                    if (stack1.isItemEqual(item.getDefaultStack())) {
+                    if (stack1.isOf(item.getDefaultStack().getItem())) {
                         itemCount += stack1.getCount();
                     }
                 }
@@ -226,11 +225,11 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
                 }
                 tooltip.add(Text.literal(integer + " ").append(Text.literal(getTooltipFromItem(item.getDefaultStack()).get(0).getString())).setStyle(style));
             });
-            this.renderTooltip(matrices, tooltip, x, y);
+            context.drawTooltip(this.textRenderer, tooltip, x, y);
         }
     }
 
-    private void renderRecipeBackground(MatrixStack matrices, int mouseX, int mouseY, int x, int y, int scrollOffset) {
+    private void renderRecipeBackground(DrawContext context, int mouseX, int mouseY, int x, int y, int scrollOffset) {
         for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getVisibleRecipeCount(); ++i) {
             int j = i - this.scrollOffset;
             int k = x + j % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
@@ -249,11 +248,11 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             } else if (mouseX >= k && mouseY >= m && mouseX < k + 16 && mouseY < m + 18) {
                 v += 36;
             }
-            this.drawTexture(matrices, k, m - 1, 0, v, 16, 18);
+            context.drawTexture(TEXTURE, k, m - 1, 0, v, 16, 18);
         }
     }
 
-    private void renderRecipeIcons(MatrixStack matrices, int x, int y, int scrollOffset) {
+    private void renderRecipeIcons(DrawContext context, int x, int y, int scrollOffset) {
         for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getVisibleRecipeCount(); ++i) {
             int iMinusScrollOffset = i - this.scrollOffset;
             int xOffset = x + iMinusScrollOffset % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
@@ -263,7 +262,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             if (this.handler.searching) {
                 iCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(iCopy));
             }
-            this.client.getItemRenderer().renderInGuiWithOverrides(matrices,this.handler.getSortedRecipes().get(iCopy).getOutput(client.world.getRegistryManager()), xOffset, yOffset);
+            context.drawItem(this.handler.getSortedRecipes().get(iCopy).getOutput(client.world.getRegistryManager()), xOffset, yOffset);
         }
     }
 

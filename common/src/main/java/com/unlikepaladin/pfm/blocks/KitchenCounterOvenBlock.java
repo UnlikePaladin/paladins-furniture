@@ -39,7 +39,7 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
 
     public KitchenCounterOvenBlock(Settings settings) {
         super(settings);
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenCounterOvenBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenCounterOvenBlock.class)){
             WOOD_COUNTER_OVENS.add(new FurnitureBlock(this, "kitchen_counter_oven"));
         }
         else if (this.getClass().isAssignableFrom(KitchenCounterOvenBlock.class)){
@@ -80,7 +80,7 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
-        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+        if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
         return 0;

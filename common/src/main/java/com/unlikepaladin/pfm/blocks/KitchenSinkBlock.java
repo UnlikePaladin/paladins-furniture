@@ -49,7 +49,7 @@ public class KitchenSinkBlock extends AbstractSinkBlock {
 
     public KitchenSinkBlock(Settings settings, Predicate<Biome.Precipitation> precipitationPredicate, Map<Item, CauldronBehavior> map) {
         super(settings, precipitationPredicate, map);
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenSinkBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenSinkBlock.class)){
             WOOD_SINKS.add(new FurnitureBlock(this, "kitchen_sink"));
         }
         else if (this.getClass().isAssignableFrom(KitchenSinkBlock.class)){
@@ -80,7 +80,7 @@ public class KitchenSinkBlock extends AbstractSinkBlock {
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
-        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+        if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
         return 0;

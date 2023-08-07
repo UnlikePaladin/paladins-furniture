@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -22,7 +21,7 @@ public class KitchenWallDrawerBlock extends KitchenDrawerBlock {
     private static final List<FurnitureBlock> STONE_DRAWERS = new ArrayList<>();
     public KitchenWallDrawerBlock(Settings settings) {
         super(settings);
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenWallDrawerBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenWallDrawerBlock.class)){
             WOOD_DRAWERS.add(new FurnitureBlock(this, "kitchen_wall_drawer"));
         }
         else if (this.getClass().isAssignableFrom(KitchenWallDrawerBlock.class)){

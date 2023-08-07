@@ -32,7 +32,7 @@ public class TrashcanScreenHandler extends ScreenHandler {
         this.trashcanBlockEntity = trashcanBlockEntity;
         TrashcanScreenHandler.checkSize(inventory, 9);
         this.inventory = inventory;
-        this.world = playerInventory.player.world;
+        this.world = playerInventory.player.getWorld();
         inventory.onOpen(playerInventory.player);
         for (i = 0; i < 3; ++i) {
             for (j = 0; j < 3; ++j) {

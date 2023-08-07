@@ -21,7 +21,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.impl.itemgroup.FabricItemGroupBuilderImpl;
-import net.fabricmc.fabric.impl.itemgroup.ItemGroupHelper;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
@@ -101,9 +100,9 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
         sender.sendPacket(NetworkIDs.CONFIG_SYNC_ID, buffer);
     }
-
+//new Identifier(MOD_ID, "dye_kits")
     public static void initializeItemGroup() {
-        PaladinFurnitureMod.DYE_KITS.setRight(FabricItemGroup.builder(new Identifier(MOD_ID, "dye_kits"))
+        PaladinFurnitureMod.DYE_KITS.setRight(Registry.register(Registries.ITEM_GROUP, new Identifier(MOD_ID, "dye_kits"), FabricItemGroup.builder()
                 .displayName(Text.translatable("itemGroup.pfm.dye_kits"))
                 .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
                 .entries((enabledFeatures, stacks) -> {
@@ -124,15 +123,15 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                     stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY));
                     stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLACK));
                 })
-                .build());
+                .build()));
 
-        PaladinFurnitureMod.FURNITURE_GROUP.setRight(FabricItemGroup.builder(new Identifier(MOD_ID, "furniture"))
+        PaladinFurnitureMod.FURNITURE_GROUP.setRight(Registry.register(Registries.ITEM_GROUP, new Identifier(MOD_ID, "furniture"), FabricItemGroup.builder()
                 .displayName(Text.translatable("itemGroup.pfm.furniture"))
                 .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getFromVanillaWoodType(BoatEntity.Type.OAK, true).asItem().getDefaultStack())
                 .entries((displayContext, stacks) -> {
 
                         }
-                ).build());
+                ).build()));
     }
 
     public static void replaceHomePOI() {

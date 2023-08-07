@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +22,7 @@ public class DinnerChairBlock extends BasicChairBlock {
     public DinnerChairBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(DinnerChairBlock.class)){
+        if(isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(DinnerChairBlock.class)){
             WOOD_DINNER_CHAIRS.add(new FurnitureBlock(this.asBlock(), "chair_dinner"));
         }
         else if (this.getClass().isAssignableFrom(DinnerChairBlock.class)){

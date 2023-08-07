@@ -55,7 +55,7 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
             for (ItemStack stack : ingredient.getMatchingStacks()) {
                 int itemCount = 0;
                 for (ItemStack stack1 : playerInventory.main) {
-                    if (stack.isItemEqual(stack1)) {
+                    if (stack.isOf(stack1.getItem())) {
                         itemCount += stack1.getCount();
                     }
                 }

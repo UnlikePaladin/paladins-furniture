@@ -48,7 +48,7 @@ public class KitchenDrawerBlock extends KitchenCounterBlock implements BlockEnti
             setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
         }
         counterFurnitureBlock = new FurnitureBlock(this, "kitchen_drawer");
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(KitchenDrawerBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenDrawerBlock.class)){
             WOOD_DRAWERS.add(counterFurnitureBlock);
         }
         else if (this.getClass().isAssignableFrom(KitchenDrawerBlock.class)){

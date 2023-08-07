@@ -39,21 +39,21 @@ public class ChairEntity extends MobEntity {
     @Override
     public void tick() {
             if (!this.hasPassengers()) {
-                if (!this.world.isClient){
+                if (!this.getWorld().isClient){
                     this.discard();
                 }
             }
-            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicToiletBlock && world.isClient()){
-                if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed() && this.world.getBlockState(this.getBlockPos()).get(BasicToiletBlock.TOILET_STATE) == ToiletState.CLEAN) {
+            else if (this.getWorld().getBlockState(this.getBlockPos()).getBlock() instanceof BasicToiletBlock && getWorld().isClient()){
+                if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed() && this.getWorld().getBlockState(this.getBlockPos()).get(BasicToiletBlock.TOILET_STATE) == ToiletState.CLEAN) {
                     fart(this.getBlockPos());
                 }
                 super.tick();
             }
-            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock || this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicBathtubBlock){
+            else if (this.getWorld().getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock || this.getWorld().getBlockState(this.getBlockPos()).getBlock() instanceof BasicBathtubBlock){
                 super.tick();
             }
             else {
-                if (!this.world.isClient){
+                if (!this.getWorld().isClient){
                     this.removeAllPassengers();
                     this.discard();
                 }
@@ -101,10 +101,10 @@ public class ChairEntity extends MobEntity {
                 for(int var11 = 0; var11 < var10; ++var11) {
                     int[] js = var9[var11];
                     mutable.set(blockPos.getX() + js[0], blockPos.getY() + 0.3, blockPos.getZ() + js[1]);
-                    double d = this.world.getDismountHeight(mutable);
+                    double d = this.getWorld().getDismountHeight(mutable);
                     if (Dismounting.canDismountInBlock(d)) {
                         Vec3d vec3d = Vec3d.ofCenter(mutable, d);
-                        if (Dismounting.canPlaceEntityAt(this.world, passenger, box.offset(vec3d))) {
+                        if (Dismounting.canPlaceEntityAt(this.getWorld(), passenger, box.offset(vec3d))) {
                             passenger.setPose(entityPose);
                             return vec3d;
                         }

@@ -9,7 +9,6 @@ accessible method net/minecraft/data/server/loottable/BlockLootTableGenerator dr
 accessible class net/minecraft/data/server/tag/ValueLookupTagProvider$ObjectBuilder
 accessible class net/minecraft/data/DataCache$CachedDataWriter
 accessible class net/minecraft/data/DataCache$CachedData
-accessible field net/minecraft/item/ItemGroups BUILDING_BLOCKS Lnet/minecraft/item/ItemGroup;
 accessible field net/minecraft/resource/featuretoggle/FeatureSet universe Lnet/minecraft/resource/featuretoggle/FeatureUniverse;
 accessible field net/minecraft/resource/featuretoggle/FeatureSet featuresMask J
 mutable field net/minecraft/resource/featuretoggle/FeatureFlag mask J

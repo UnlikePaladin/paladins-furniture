@@ -38,7 +38,7 @@ public abstract class AbstractFreezerScreenHandler extends AbstractRecipeScreenH
         this.inventory = inventory;
         inventory.onOpen(playerInventory.player);
         this.propertyDelegate = propertyDelegate;
-        this.world = playerInventory.player.world;
+        this.world = playerInventory.player.getEntityWorld();
         this.addSlot(new Slot(inventory, 0, 56, 17));
         this.addSlot(new FreezerFuelSlot(this, inventory, 1, 56, 53));
         this.addSlot(new GenericOutputSlot(playerInventory.player, inventory, 2, 116, 35,0));

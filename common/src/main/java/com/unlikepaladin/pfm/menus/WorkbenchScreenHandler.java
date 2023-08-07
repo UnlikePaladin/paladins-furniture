@@ -42,7 +42,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     public WorkbenchScreenHandler(int syncId, PlayerInventory playerInventory, final ScreenHandlerContext context) {
         super(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, syncId);
         this.context = context;
-        this.world = playerInventory.player.world;
+        this.world = playerInventory.player.getWorld();
         this.playerInventory = playerInventory;
         this.contentsChangedListener = () -> {
         };
@@ -54,8 +54,8 @@ public class WorkbenchScreenHandler extends ScreenHandler {
             @Override
             public void onTakeItem(PlayerEntity player, ItemStack stack) {
                 if (WorkbenchScreenHandler.this.craft()) {
-                    stack.onCraft(player.world, player, stack.getCount());
-                    WorkbenchScreenHandler.this.output.unlockLastRecipe(player);
+                    stack.onCraft(player.getWorld(), player, stack.getCount());
+                    WorkbenchScreenHandler.this.output.unlockLastRecipe(player, List.of());
                     WorkbenchScreenHandler.this.populateResult(player);
                     context.run((world, pos) -> {
                         long l = world.getTime();
@@ -89,7 +89,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     boolean craft() {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe furnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
-            if (furnitureRecipe.matches(playerInventory, playerInventory.player.world)) {
+            if (furnitureRecipe.matches(playerInventory, playerInventory.player.getWorld())) {
                 List<Ingredient> ingredients = furnitureRecipe.getIngredients();
                 for (Ingredient ingredient : ingredients) {
                     for (ItemStack stack : ingredient.getMatchingStacks()) {
@@ -114,7 +114,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     void populateResult(PlayerEntity player) {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe furnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
-            this.outputSlot.setStack(furnitureRecipe.craft(player.getInventory(), player.world.getRegistryManager()));
+            this.outputSlot.setStack(furnitureRecipe.craft(player.getInventory(), player.getWorld().getRegistryManager()));
         } else {
             this.outputSlot.setStack(ItemStack.EMPTY);
         }
@@ -210,7 +210,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
             Item item = itemStack2.getItem();
             itemStack = itemStack2.copy();
             if (index == 0) {
-                item.onCraft(itemStack2, player.world, player);
+                item.onCraft(itemStack2, player.getWorld(), player);
                 if (!this.insertItem(itemStack2, 1, 37, true)) {
                     return ItemStack.EMPTY;
                 }

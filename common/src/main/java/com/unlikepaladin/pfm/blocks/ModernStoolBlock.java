@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -23,7 +22,7 @@ public class ModernStoolBlock extends BasicChairBlock {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));
         this.height = 1.0f;
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(ModernStoolBlock.class)){
+        if(isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(ModernStoolBlock.class)){
             WOOD_MODERN_STOOLS.add(new FurnitureBlock(this, "modern_stool"));
         }
         else if (this.getClass().isAssignableFrom(ModernStoolBlock.class)){

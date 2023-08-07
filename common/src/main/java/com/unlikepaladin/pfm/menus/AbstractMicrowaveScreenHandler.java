@@ -46,7 +46,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
         this.inventory = inventory;
         inventory.onOpen(playerInventory.player);
         this.propertyDelegate = propertyDelegate;
-        this.world = playerInventory.player.world;
+        this.world = playerInventory.player.getEntityWorld();
         this.addSlot(new SizeableSlot(playerInventory.player, inventory, 0, 78, 40));
 
         for (i = 0; i < 3; ++i) {

@@ -260,7 +260,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     @Override
     public void setStack(int slot, ItemStack stack) {
         ItemStack itemStack = this.inventory.get(slot);
-        boolean bl = !stack.isEmpty() && stack.isItemEqual(itemStack) && ItemStack.areNbtEqual(stack, itemStack);
+        boolean bl = !stack.isEmpty() && stack.isOf(itemStack.getItem()) && ItemStack.canCombine(stack, itemStack);
         this.inventory.set(slot, stack);
         if (stack.getCount() > this.getMaxCountPerStack()) {
             stack.setCount(this.getMaxCountPerStack());
@@ -378,7 +378,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         if (itemStack2.isEmpty()) {
             return true;
         }
-        if (!itemStack2.isItemEqual(itemStack)) {
+        if (!itemStack2.isOf(itemStack.getItem())) {
             return false;
         }
         if (itemStack2.getCount() < count && itemStack2.getCount() < itemStack2.getMaxCount()) {

@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.*;
+import net.minecraft.block.enums.Instrument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -14,6 +15,7 @@ import net.minecraft.entity.vehicle.AbstractMinecartEntity;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
@@ -174,7 +176,7 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
-        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+        if (isWoodBased(state)) {
             return 20;
         }
         return 0;
@@ -183,6 +185,12 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
     @Override
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
+    }
+
+    public static boolean isWoodBased(BlockState state) {
+        Instrument instrument = state.getInstrument();
+        BlockSoundGroup soundGroup = state.getSoundGroup();
+        return soundGroup == BlockSoundGroup.BAMBOO_WOOD || soundGroup == BlockSoundGroup.WOOL || soundGroup == BlockSoundGroup.CHERRY_WOOD || soundGroup == BlockSoundGroup.WOOD || soundGroup == BlockSoundGroup.NETHER_WOOD || instrument == Instrument.BASS;
     }
 }
 

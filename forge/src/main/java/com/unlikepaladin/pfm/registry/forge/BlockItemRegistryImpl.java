@@ -1,11 +1,12 @@
 package com.unlikepaladin.pfm.registry.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.item.*;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraftforge.fml.ModList;
@@ -27,13 +28,13 @@ public class BlockItemRegistryImpl {
     public static void registerBlockPlatformSpecific(String blockId, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerBlockItemPlatformSpecific(blockId, block, new Pair<>("building_blocks", ItemGroups.BUILDING_BLOCKS));
+            registerBlockItemPlatformSpecific(blockId, block, new Pair<>("building_blocks", Registries.ITEM_GROUP.get(ItemGroups.BUILDING_BLOCKS)));
         }
         blocks.put(blockId, block);
     }
 
     public static void registerBlockItemPlatformSpecific(String itemName, Block block, Pair<String, ItemGroup> group) {
-        if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
+        if (AbstractSittableBlock.isWoodBased(block.getDefaultState())) {
             registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Settings()) {
                 @Override
                 public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {

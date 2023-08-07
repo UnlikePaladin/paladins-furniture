@@ -32,7 +32,7 @@ public class BasicTableBlock extends Block {
         setDefaultState(this.getStateManager().getDefaultState().with(AXIS, Direction.Axis.X));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
-        if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(BasicTableBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(BasicTableBlock.class)){
             WOOD_BASIC_TABLES.add(new FurnitureBlock(this, "table_basic"));
         }
         else if (this.getClass().isAssignableFrom(BasicTableBlock.class)){
@@ -100,7 +100,7 @@ public class BasicTableBlock extends Block {
     }
 
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
-        if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
+        if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
         return 0;

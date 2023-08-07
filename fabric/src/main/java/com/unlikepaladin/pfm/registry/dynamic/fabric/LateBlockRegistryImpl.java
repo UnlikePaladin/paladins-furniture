@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.registry.dynamic.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -9,7 +10,6 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.Block;
-import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -38,7 +38,7 @@ public class LateBlockRegistryImpl {
     }
     public static void registerLateBlockItem(String itemName, Block block, Pair<String, ItemGroup> group) {
         registerLateItem(itemName, () -> new BlockItem(block, new FabricItemSettings()), group);
-        if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
+        if (AbstractSittableBlock.isWoodBased(block.getDefaultState())) {
             FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
             FuelRegistry.INSTANCE.add(block, 300);
         }
@@ -51,7 +51,7 @@ public class LateBlockRegistryImpl {
         }
         PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.get(group).add(item);
         if (item == PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM) {
-            ItemGroupEvents.modifyEntriesEvent(group.getRight()).register(entries -> {
+            ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group.getRight()).get()).register(entries -> {
                 List<ItemStack> stacks = new ArrayList<>();
                 for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                     boolean variantEnabled = true;
@@ -76,7 +76,7 @@ public class LateBlockRegistryImpl {
                 entries.addAll(stacks);
             } );
         } else {
-            ItemGroupEvents.modifyEntriesEvent(group.getRight()).register(entries -> entries.add(item));
+            ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group.getRight()).get()).register(entries -> entries.add(item));
         }
     }
 
