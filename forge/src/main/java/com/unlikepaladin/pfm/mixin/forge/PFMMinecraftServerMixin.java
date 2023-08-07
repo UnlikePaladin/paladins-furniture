@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.mixin;
+package com.unlikepaladin.pfm.mixin.forge;
 
 import com.google.common.collect.ImmutableList;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
@@ -7,19 +7,15 @@ import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collector;
 
 @Mixin(MinecraftServer.class)
 public class PFMMinecraftServerMixin {
 
-    @Inject(method = "method_29442", at = @At(value = "RETURN"), cancellable = true)
+    @Inject(method = "lambda$reloadResources$15", at = @At(value = "RETURN"), cancellable = true)
     private void createReload(CallbackInfoReturnable<ImmutableList<ResourcePack>> cir) {
         List<ResourcePack> resourcePacks = new ArrayList<>(cir.getReturnValue());
         if (PFMRuntimeResources.ready) {
