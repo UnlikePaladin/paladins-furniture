@@ -169,7 +169,7 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
     protected static final VoxelShape RIGHT_EDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
     protected static final VoxelShape RIGHT_EDGE_WEST = rotateShape(Direction.NORTH, Direction.WEST, RIGHT_EDGE);
     @Override
-        public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
         Direction direction = state.get(KitchenCounterBlock.FACING);
         boolean right = canConnect(world, pos, state.get(KitchenCounterBlock.FACING).rotateYCounterclockwise());
         boolean left = canConnect(world, pos, state.get(KitchenCounterBlock.FACING).rotateYClockwise());
@@ -195,12 +195,7 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
                     }
                 }
             } else {
-                switch (direction) {
-                    case NORTH: return STRAIGHT;
-                    case SOUTH: return STRAIGHT_SOUTH;
-                    case EAST: return STRAIGHT_EAST;
-                    default: return STRAIGHT_WEST;
-                }
+                return getMiddleShape(direction, left, right);
             }
         }
         else if (canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.getProperties().contains(Properties.HORIZONTAL_FACING)) {
@@ -228,15 +223,16 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
                     }
                 }
             } else {
-                switch (direction) {
-                    case NORTH: return STRAIGHT;
-                    case SOUTH: return STRAIGHT_SOUTH;
-                    case EAST: return STRAIGHT_EAST;
-                    default: return STRAIGHT_WEST;
-                }
+                return getMiddleShape(direction, left, right);
             }
         }
-        else if (left && right) {
+        else {
+            return getMiddleShape(direction, left, right);
+        }
+    }
+
+    private VoxelShape getMiddleShape(Direction direction, boolean left, boolean right) {
+        if (left && right) {
             switch (direction) {
                 case NORTH: return STRAIGHT;
                 case SOUTH: return STRAIGHT_SOUTH;

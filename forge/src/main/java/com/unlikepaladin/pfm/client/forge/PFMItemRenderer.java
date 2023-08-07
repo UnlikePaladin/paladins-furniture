@@ -66,7 +66,6 @@ public class PFMItemRenderer extends BuiltinModelItemRenderer {
             renderer.renderBakedItemModel(lampShadeModel, stack, light, overlay, matrices, consumer);
             renderer.renderBakedItemModel(poleModel, stack, light, overlay, matrices, consumer);
             renderer.renderBakedItemModel(bulbModel, stack, light, overlay, matrices, consumer);
-            matrices.pop();
         }
     }
 }
