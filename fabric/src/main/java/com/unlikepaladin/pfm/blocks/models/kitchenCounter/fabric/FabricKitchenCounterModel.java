@@ -50,7 +50,7 @@ public class FabricKitchenCounterModel extends AbstractBakedModel implements Fab
                         ((FabricBakedModel) getBakedModels().get(modelParts.get(6))).emitBlockQuads(world, state, pos, randomSupplier, context);
                     }
                 } else {
-                    ((FabricBakedModel) getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    middleCounter(world, state, pos, randomSupplier, context, left, right);
                 }
             }
             else if (block.canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
@@ -68,21 +68,26 @@ public class FabricKitchenCounterModel extends AbstractBakedModel implements Fab
                         ((FabricBakedModel) getBakedModels().get(modelParts.get(3))).emitBlockQuads(world, state, pos, randomSupplier, context);
                     }
                 } else {
-                    ((FabricBakedModel) getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    middleCounter(world, state, pos, randomSupplier, context, left, right);
                 }
             }
-            else if (left && right) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
-            } else if (left) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(1))).emitBlockQuads(world, state, pos, randomSupplier, context);
-            } else if (right) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(2))).emitBlockQuads(world, state, pos, randomSupplier, context);
-            } else {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            else {
+                middleCounter(world, state, pos, randomSupplier, context, left, right);
             }
         }
     }
 
+    private void middleCounter(BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, boolean left, boolean right) {
+        if (left && right) {
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
+        } else if (left) {
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(1))).emitBlockQuads(world, state, pos, randomSupplier, context);
+        } else if (right) {
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(2))).emitBlockQuads(world, state, pos, randomSupplier, context);
+        } else {
+            ((FabricBakedModel) getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
+        }
+    }
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
 
