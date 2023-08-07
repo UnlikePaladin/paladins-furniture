@@ -6,7 +6,6 @@
   "mixins": [
     "PFMDataCache$CachedDataMixin",
     "PFMFeatureFlagFactory",
-    "PFMMinecraftServerMixin",
     "PFMPlayerInventoryMixin",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSaveLoaderMixin",
