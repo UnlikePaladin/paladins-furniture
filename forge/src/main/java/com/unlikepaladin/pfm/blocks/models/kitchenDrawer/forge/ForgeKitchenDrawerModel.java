@@ -97,7 +97,7 @@ public class ForgeKitchenDrawerModel extends AbstractBakedModel {
                         return getBakedModels().get(modelParts.get(6 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
                     }
                 } else {
-                    return getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData, renderLayer);
+                    return getMiddleQuads(state, side, rand, extraData, renderLayer, left, right, openOffset);
                 }
             }
             else if (block.canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
@@ -115,19 +115,24 @@ public class ForgeKitchenDrawerModel extends AbstractBakedModel {
                         return getBakedModels().get(modelParts.get(3 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
                     }
                 } else {
-                    return getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData, renderLayer);
+                    return getMiddleQuads(state, side, rand, extraData, renderLayer, left, right, openOffset);
                 }
             }
-            else if (left && right) {
-                return getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData, renderLayer);
-            } else if (left) {
-                return getBakedModels().get(modelParts.get(1 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
-            } else if (right) {
-                return getBakedModels().get(modelParts.get(2 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
-            } else {
-                return getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData, renderLayer);
-            }
+            else
+                return getMiddleQuads(state, side, rand, extraData, renderLayer, left, right, openOffset);
         }
         return Collections.emptyList();
+    }
+
+    private List<BakedQuad> getMiddleQuads(BlockState state, Direction side, Random rand, ModelData extraData, RenderLayer renderLayer, boolean left, boolean right, int openOffset) {
+        if (left && right) {
+            return getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData, renderLayer);
+        } else if (left) {
+            return getBakedModels().get(modelParts.get(1 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
+        } else if (right) {
+            return getBakedModels().get(modelParts.get(2 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
+        } else {
+            return getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData, renderLayer);
+        }
     }
 }
