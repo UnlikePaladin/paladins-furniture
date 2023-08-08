@@ -1,9 +1,7 @@
 package com.unlikepaladin.pfm.data.fabric;
 
-import com.unlikepaladin.pfm.blocks.DinnerChair;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import com.unlikepaladin.pfm.data.FurnitureRecipeJsonFactory;
 import com.unlikepaladin.pfm.data.Tags;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.BedBlock;

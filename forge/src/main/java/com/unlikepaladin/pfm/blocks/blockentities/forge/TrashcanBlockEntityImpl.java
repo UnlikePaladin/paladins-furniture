@@ -14,6 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 
+import java.util.function.Supplier;
+
 public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
     public TrashcanBlockEntityImpl(BlockEntityType<? extends TrashcanBlockEntity> trashcanBlockEntity) {
         super(trashcanBlockEntity);
@@ -47,6 +49,10 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
         super.onDataPacket(net, pkt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(pkt.getNbt(), this.inventory);
+    }
+
+    public static Supplier<? extends TrashcanBlockEntity> getFactory() {
+        return TrashcanBlockEntityImpl::new;
     }
 
 }

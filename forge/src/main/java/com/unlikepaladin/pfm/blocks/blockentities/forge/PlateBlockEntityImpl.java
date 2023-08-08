@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -12,11 +13,12 @@ import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.function.Supplier;
+
 public class PlateBlockEntityImpl extends PlateBlockEntity {
     public PlateBlockEntityImpl() {
         super();
     }
-
 
     @Nullable
     @Override
@@ -41,5 +43,9 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
         super.onDataPacket(net, pkt);
         this.itemInPlate.clear();
         Inventories.readNbt(pkt.getNbt(), this.itemInPlate);
+    }
+
+    public static Supplier<? extends PlateBlockEntity> getFactory() {
+        return PlateBlockEntityImpl::new;
     }
 }

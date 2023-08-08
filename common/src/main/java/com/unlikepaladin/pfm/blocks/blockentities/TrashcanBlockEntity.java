@@ -1,8 +1,9 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.Trashcan;
+import com.unlikepaladin.pfm.blocks.TrashcanBlock;
 import com.unlikepaladin.pfm.menus.TrashcanScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
@@ -23,6 +24,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.BlockView;
 
+import java.util.function.Supplier;
+
 public class TrashcanBlockEntity extends LootableContainerBlockEntity {
     public TrashcanBlockEntity() {
         super(BlockEntities.TRASHCAN_BLOCK_ENTITY);
@@ -34,14 +37,14 @@ public class TrashcanBlockEntity extends LootableContainerBlockEntity {
     protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
     protected void onContainerOpen(BlockState state) {
-        if (state.getBlock() instanceof Trashcan){
+        if (state.getBlock() instanceof TrashcanBlock){
             this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
             this.setOpen(state, true);
         }
     }
 
     protected void onContainerClose(BlockState state) {
-        if (state.getBlock() instanceof Trashcan) {
+        if (state.getBlock() instanceof TrashcanBlock) {
             this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
             this.setOpen(state, false);
         }
@@ -143,5 +146,10 @@ public class TrashcanBlockEntity extends LootableContainerBlockEntity {
     public void clear() {
         super.clear();
         this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
+    }
+
+    @ExpectPlatform
+    public static Supplier<? extends TrashcanBlockEntity> getFactory() {
+        throw new UnsupportedOperationException();
     }
 }

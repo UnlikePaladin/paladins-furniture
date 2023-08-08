@@ -10,4 +10,7 @@ public class NetworkIDs {
 
     public static Identifier TOILET_USE_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "toilet_use");
 
-    }
+    public static Identifier CONFIG_SYNC_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "config_sync");
+
+
+}

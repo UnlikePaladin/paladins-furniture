@@ -1,14 +1,13 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.BasicToilet;
-import com.unlikepaladin.pfm.blocks.KitchenSink;
-import com.unlikepaladin.pfm.blocks.Microwave;
+import com.unlikepaladin.pfm.blocks.AbstractSinkBlock;
+import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Tickable;
@@ -54,20 +53,6 @@ public class SinkBlockEntity extends BlockEntity implements Tickable {
         this.isFilling = isFilling;
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, SinkBlockEntity blockEntity) {
-        if (blockEntity.isFilling) {
-            if (blockEntity.sinkTimer >= 30) {
-                blockEntity.setSinkTimer(0);
-                blockEntity.setFilling(false);
-            } else {
-                if (world.isClient) {
-                    KitchenSink.spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
-                }
-                blockEntity.sinkTimer++;
-            }
-        }
-    }
-
     @Override
     public void tick() {
         if (this.isFilling) {
@@ -76,7 +61,7 @@ public class SinkBlockEntity extends BlockEntity implements Tickable {
                 this.setFilling(false);
             } else {
                 if (world.isClient) {
-                    KitchenSink.spawnParticles(this.getCachedState().get(Properties.HORIZONTAL_FACING), this.world, this.getPos());
+                    AbstractSinkBlock.spawnParticles(this.getCachedState().get(Properties.HORIZONTAL_FACING), this.world, this.getPos());
                 }
                 this.sinkTimer++;
             }

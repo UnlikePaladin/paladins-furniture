@@ -1,9 +1,11 @@
 package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.networking.forge.MicrowaveUpdatePacket;
 import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -16,6 +18,7 @@ import net.minecraftforge.fml.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
     public MicrowaveBlockEntityImpl() {
@@ -56,4 +59,7 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
         Inventories.readNbt(pkt.getNbt(), this.inventory);
     }
 
+    public static Supplier<? extends MicrowaveBlockEntity> getFactory() {
+        return MicrowaveBlockEntityImpl::new;
+    }
 }

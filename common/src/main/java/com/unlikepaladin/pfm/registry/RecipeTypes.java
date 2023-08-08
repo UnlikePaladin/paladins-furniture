@@ -12,7 +12,9 @@ public class RecipeTypes {
     public static RecipeSerializer<FreezingRecipe> FREEZING_RECIPE_SERIALIZER;
 
     public static RecipeType<FurnitureRecipe> FURNITURE_RECIPE;
+
     public static RecipeSerializer<FurnitureRecipe> FURNITURE_SERIALIZER;
+
     public static final Identifier FURNITURE_ID = new Identifier(PaladinFurnitureMod.MOD_ID,"furniture");
 
 }

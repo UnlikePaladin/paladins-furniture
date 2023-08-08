@@ -24,7 +24,6 @@ public class LightSwitchBlockEntity extends BlockEntity {
         super.writeNbt(nbt);
         NbtList tagList = new NbtList();
         lights.forEach(blockPos -> tagList.add(NbtLong.of(blockPos.asLong())));
-        System.out.println("Lights in write:" + lights);
         nbt.put("lights", tagList);
         return nbt;
     }

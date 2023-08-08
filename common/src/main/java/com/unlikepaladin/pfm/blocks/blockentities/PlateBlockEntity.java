@@ -1,9 +1,11 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
@@ -14,6 +16,8 @@ import net.minecraft.util.Clearable;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 public class PlateBlockEntity extends BlockEntity implements Clearable {
     protected final DefaultedList<ItemStack> itemInPlate = DefaultedList.ofSize(1, ItemStack.EMPTY);
@@ -77,5 +81,10 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
             inventory.setStack(i, itemInPlate.get(i));
         }
         return inventory;
+    }
+
+    @ExpectPlatform
+    public static Supplier<? extends PlateBlockEntity> getFactory() {
+        throw new UnsupportedOperationException();
     }
 }

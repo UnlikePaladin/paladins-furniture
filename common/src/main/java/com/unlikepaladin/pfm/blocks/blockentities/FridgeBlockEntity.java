@@ -1,9 +1,11 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.Fridge;
+import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,6 +25,8 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 
+import java.util.function.Supplier;
+
 
 public class FridgeBlockEntity extends LootableContainerBlockEntity {
     @Override
@@ -36,14 +40,14 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(54, ItemStack.EMPTY);
 
     protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof Fridge) {
+        if (state.getBlock() instanceof FridgeBlock) {
             FridgeBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
             FridgeBlockEntity.this.setOpen(state, true);
         }
     }
 
     protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof Fridge) {
+        if (state.getBlock() instanceof FridgeBlock) {
             FridgeBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
             FridgeBlockEntity.this.setOpen(state, false);
         }
@@ -99,7 +103,7 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
     }
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Fridge.OPEN, open), 2);
+        this.world.setBlockState(this.getPos(), state.with(FridgeBlock.OPEN, open), 2);
     }
 
     @Override
@@ -108,11 +112,16 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.get(Fridge.FACING).getVector();
+        Vec3i vec3i = state.get(FridgeBlock.FACING).getVector();
         double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
         this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
+    }
+
+    @ExpectPlatform
+    public static Supplier<? extends FridgeBlockEntity> getFactory() {
+        throw new AssertionError();
     }
 }
 

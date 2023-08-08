@@ -1,16 +1,16 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.KitchenCounterOven;
-import com.unlikepaladin.pfm.blocks.Stove;
+import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
+import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -41,6 +41,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Supplier;
 
 public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tickable {
     public StoveBlockEntity() {
@@ -52,7 +53,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
 
     @Override
     protected Text getContainerName() {
-        if (this.getCachedState().getBlock() instanceof KitchenCounterOven) {
+        if (this.getCachedState().getBlock() instanceof KitchenCounterOvenBlock) {
             return new TranslatableText("container.pfm.kitchen_counter_oven");
         }
         String blockname = this.getCachedState().getBlock().getTranslationKey().replace("block.pfm", "");
@@ -65,30 +66,28 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
     }
 
     protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof Stove){
+        if (state.getBlock() instanceof StoveBlock){
             StoveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
             StoveBlockEntity.this.setOpen(state, true);
         }
     }
 
     protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-        if (state.getBlock() instanceof Stove) {
+        if (state.getBlock() instanceof StoveBlock) {
             StoveBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
             StoveBlockEntity.this.setOpen(state, false);
         }
     }
+
+    void setOpen(BlockState state, boolean open) {
+        this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), 3);
+    }
+
     @Override
     public void onClose(PlayerEntity player) {
         if (!this.removed && !player.isSpectator()) {
             this.onContainerClose(this.getWorld(), this.getPos(), this.getCachedState());
         }
-    }
-    void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.get(Properties.HORIZONTAL_FACING).getVector();
-        double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
-        double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
-        double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
-        this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
     }
 
     @Override
@@ -97,8 +96,13 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
             this.onContainerOpen(this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
-    void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), 3);
+
+    void playSound(BlockState state, SoundEvent soundEvent) {
+        Vec3i vec3i = state.get(Properties.HORIZONTAL_FACING).getVector();
+        double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
+        double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
+        double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
+        this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
     }
 
     protected final DefaultedList<ItemStack> itemsBeingCooked = DefaultedList.ofSize(4, ItemStack.EMPTY);
@@ -245,7 +249,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
     public void clientTick() {
         int i;
         Random random = world.random;
-        i = getCachedState().get(Stove.FACING).rotateYClockwise().getHorizontal();
+        i = getCachedState().get(StoveBlock.FACING).rotateYClockwise().getHorizontal();
         for (int j = 0; j < this.itemsBeingCooked.size(); ++j) {
             ItemStack stack = this.itemsBeingCooked.get(j);
             if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || !world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isPresent()) continue;
@@ -274,4 +278,8 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
         return false;
     }
 
+    @ExpectPlatform
+    public static Supplier<? extends BlockEntity> getFactory() {
+        throw new UnsupportedOperationException();
+    }
 }

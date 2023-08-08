@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.BasicToilet;
+import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
@@ -42,9 +42,9 @@ public class ToiletBlockEntity extends BlockEntity implements Tickable {
     @Override
     public void tick() {
         BlockState state = this.getCachedState();
-        if (state.get(BasicToilet.TOILET_STATE) == ToiletState.FLUSHING) {
+        if (state.get(BasicToiletBlock.TOILET_STATE) == ToiletState.FLUSHING) {
             if (this.flushTimer >= 120) {
-                BasicToilet.setClean(state, world, pos);
+                BasicToiletBlock.setClean(state, world, pos);
                 this.setFlushTimer(0);
             } else {
                 this.flushTimer++;

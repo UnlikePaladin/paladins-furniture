@@ -1,10 +1,11 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.google.common.collect.Maps;
-import com.unlikepaladin.pfm.blocks.Freezer;
+import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -42,15 +43,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 
-public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker,
-        RecipeInputProvider, Tickable {
-
-    public FreezerBlockEntity(BlockEntityType<?> blockEntityType) {
-        super(blockEntityType);
-        this.recipeType = RecipeTypes.FREEZING_RECIPE;
-    }
+public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker, RecipeInputProvider, Tickable {
     public FreezerBlockEntity() {
         super(BlockEntities.FREEZER_BLOCK_ENTITY);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
@@ -312,9 +308,9 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         super.fromTag(state, nbt);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.inventory);
-        this.fuelTime = nbt.getShort("BurnTime");
-        this.freezeTime = nbt.getShort("CookTime");
-        this.freezeTimeTotal = nbt.getShort("CookTimeTotal");
+        this.fuelTime = nbt.getShort("FuelTimeLeft");
+        this.freezeTime = nbt.getShort("FreezeTime");
+        this.freezeTimeTotal = nbt.getShort("FreezeTimeTotal");
         this.fuelTimeTotal = this.getFuelTime(this.inventory.get(1));
         NbtCompound nbtCompound = nbt.getCompound("RecipesUsed");
         for (String string : nbtCompound.getKeys()) {
@@ -325,24 +321,24 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
+        Inventories.writeNbt(nbt, this.inventory);
         nbt.putShort("FuelTimeLeft", (short)this.fuelTime);
         nbt.putShort("FreezeTime", (short)this.freezeTime);
         nbt.putShort("FreezeTimeTotal", (short)this.freezeTimeTotal);
-        Inventories.writeNbt(nbt, this.inventory);
         NbtCompound nbtCompound = new NbtCompound();
-        this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), (int)integer));
+        this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), integer));
         nbt.put("RecipesUsed", nbtCompound);
         return nbt;
     }
 
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Freezer.OPEN, open), 3);
+        this.world.setBlockState(this.getPos(), state.with(FreezerBlock.OPEN, open), 3);
     }
 
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.get(Freezer.FACING).getVector();
+        Vec3i vec3i = state.get(FreezerBlock.FACING).getVector();
         double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
@@ -467,5 +463,9 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         }
     }
 
+    @ExpectPlatform
+    public static Supplier<? extends FreezerBlockEntity> getFactory() {
+        throw new AssertionError();
+    }
 }
 

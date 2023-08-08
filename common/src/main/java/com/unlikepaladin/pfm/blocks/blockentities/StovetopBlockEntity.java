@@ -1,20 +1,19 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.KitchenStovetop;
+import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.KitchenStovetop;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import com.unlikepaladin.pfm.registry.BlockEntities;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeType;
@@ -26,15 +25,15 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Random;
+import java.util.function.Supplier;
 
 
 public class StovetopBlockEntity extends BlockEntity implements Clearable, Tickable {
 
-    protected final DefaultedList<ItemStack> itemsBeingCooked = DefaultedList.ofSize(4, ItemStack.EMPTY);
+    public final DefaultedList<ItemStack> itemsBeingCooked = DefaultedList.ofSize(4, ItemStack.EMPTY);
     private final int[] cookingTimes = new int[4];
     private final int[] cookingTotalTimes = new int[4];
     public StovetopBlockEntity() {
@@ -82,7 +81,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
     public void clientTick() {
         int i;
         Random random = world.random;
-        i = getCachedState().get(KitchenStovetop.FACING).rotateYClockwise().getHorizontal();
+        i = getCachedState().get(KitchenStovetopBlock.FACING).rotateYClockwise().getHorizontal();
         for (int j = 0; j < this.itemsBeingCooked.size(); ++j) {
             ItemStack stack = this.itemsBeingCooked.get(j);
             if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || !world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isPresent()) continue;
@@ -182,17 +181,22 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
     public void tick() {
         BlockState state = getCachedState();
         if (world.isClient) {
-            if (getCachedState().get(KitchenStovetop.LIT)) {
+            if (getCachedState().get(KitchenStovetopBlock.LIT)) {
                 clientTick();
             }
         } else {
-            if (state.get(KitchenStovetop.LIT)) {
+            if (state.get(KitchenStovetopBlock.LIT)) {
                 litServerTick();
             }
             else {
                 unlitServerTick();
             }
         }
+    }
+
+    @ExpectPlatform
+    public static Supplier<? extends StovetopBlockEntity> getFactory() {
+        throw new UnsupportedOperationException();
     }
 }
 
