@@ -1,28 +1,12 @@
 package com.unlikepaladin.pfm.runtime;
 
 import com.google.common.base.Stopwatch;
-import com.google.common.collect.*;
+import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.*;
-import com.unlikepaladin.pfm.data.FurnitureBlock;
-import com.unlikepaladin.pfm.data.Tags;
-import com.unlikepaladin.pfm.data.materials.StoneVariant;
-import com.unlikepaladin.pfm.data.materials.VariantBase;
-import com.unlikepaladin.pfm.data.materials.WoodVariant;
-import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import com.unlikepaladin.pfm.mixin.PFMAbstractTagProvider$ObjectBuilderMixin;
-import com.unlikepaladin.pfm.mixin.PFMTextureKeyFactory;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.registry.TriFunc;
-import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.runtime.assets.PFMBlockstateModelProvider;
 import com.unlikepaladin.pfm.runtime.assets.PFMLangProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMLootTableProvider;
@@ -30,53 +14,14 @@ import com.unlikepaladin.pfm.runtime.data.PFMMCMetaProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.criterion.ImpossibleCriterion;
-import net.minecraft.advancement.criterion.InventoryChangedCriterion;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.enums.BedPart;
 import net.minecraft.data.DataCache;
-import net.minecraft.data.DataProvider;
-import net.minecraft.data.client.model.*;
-import net.minecraft.data.server.*;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.loot.LootManager;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
-import net.minecraft.loot.context.LootContextType;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.predicate.NumberRange;
-import net.minecraft.predicate.entity.EntityPredicate;
-import net.minecraft.predicate.item.ItemPredicate;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.resource.ResourcePack;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.state.property.Properties;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
-import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
 import java.nio.file.*;
-import java.nio.file.attribute.FileAttribute;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
-import java.util.function.*;
-import java.util.stream.Collectors;
-
-import static net.minecraft.data.server.BlockLootTableGenerator.dropsWithProperty;
 
 public class PFMDataGen {
     public static final Logger LOGGER = LogManager.getLogger("PFM-DataGen");
@@ -211,7 +156,7 @@ public class PFMDataGen {
                         collectFiles(file, hashList, includeHiddenFiles);
                     } else {
                         FileInputStream stream = new FileInputStream(file);
-                        hashList.add(DigestUtils.md5Hex(stream));
+                        hashList.add(HashCode.fromBytes(stream.readAllBytes()).toString());
                         stream.close();
                     }
                 }
