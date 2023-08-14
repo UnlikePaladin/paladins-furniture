@@ -1221,7 +1221,7 @@
   "block.pfm.table_dinner" : "%s %s Dining Table",
   "block.pfm.table_modern_dinner" : "%s %s Modern Dining Table",
 
-  "block.pfm.log_stool" : "%s Log Stool",
+  "block.pfm.log_stool" : "%s %s %s Stool",
   "block.pfm.simple_stool" : "%s %s Simple Stool",
   "block.pfm.classic_stool" : "%s %s Classic Stool",
   "block.pfm.modern_stool" : "%s %s Modern Stool",
