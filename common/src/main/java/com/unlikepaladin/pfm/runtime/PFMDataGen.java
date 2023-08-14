@@ -76,13 +76,14 @@ public class PFMDataGen {
                     stopwatch2.reset();
                 }
                 dataCache.write();
-
-                log("Starting provider: {}", "PFM Lang");
-                stopwatch2.start();
-                new PFMLangProvider().run();
-                stopwatch2.stop();
-                log("{} finished after {} ms", "PFM Lang", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
-                stopwatch2.reset();
+                if (PaladinFurnitureMod.isClient) {
+                    log("Starting provider: {}", "PFM Lang");
+                    stopwatch2.start();
+                    new PFMLangProvider().run();
+                    stopwatch2.stop();
+                    log("{} finished after {} ms", "PFM Lang", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+                    stopwatch2.reset();
+                }
 
                 LOGGER.info("All providers took: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
