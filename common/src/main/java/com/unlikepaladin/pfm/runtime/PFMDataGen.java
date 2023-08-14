@@ -1,6 +1,11 @@
 package com.unlikepaladin.pfm.runtime;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.HashFunction;
+import com.google.common.hash.Hashing;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.runtime.assets.PFMBlockstateModelProvider;
 import com.unlikepaladin.pfm.runtime.assets.PFMLangProvider;
@@ -134,7 +139,7 @@ public class PFMDataGen {
                         collectFiles(file, hashList, includeHiddenFiles);
                     } else {
                         FileInputStream stream = new FileInputStream(file);
-                        hashList.add(DigestUtils.md5Hex(stream));
+                        hashList.add(HashCode.fromBytes(stream.readAllBytes()).toString());
                         stream.close();
                     }
                 }

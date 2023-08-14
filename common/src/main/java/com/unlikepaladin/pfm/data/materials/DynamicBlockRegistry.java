@@ -60,7 +60,7 @@ public class DynamicBlockRegistry {
         addBlockTypeFinder(WoodVariant.class, WoodVariant.Finder.simple(
                 "terraqueous", "dense_cloud", "dense_cloud", "dense_cloud_column"));
 
-        var embur = WoodVariant.Finder.simple(
+        WoodVariant.Finder embur = WoodVariant.Finder.simple(
                 "byg", "embur", "embur_planks", "embur_pedu");
         embur.addChild("stripped_log", "stripped_embur_pedu");
         embur.addChild("wood", "embur_pedu_top");
@@ -73,7 +73,7 @@ public class DynamicBlockRegistry {
                 "nethers_exoticism", "jabuticaba", "jaboticaba_planks", "jabuticaba_log"));
 
 
-        var verdant = WoodVariant.Finder.simple(
+        WoodVariant.Finder verdant = WoodVariant.Finder.simple(
                 "nourished_end", "verdant", "verdant_planks", "verdant_stalk");
         verdant.addChild("wood", "verdant_hyphae");
         verdant.addChild("stripped_wood", "stripped_verdant_hyphae");
@@ -81,13 +81,13 @@ public class DynamicBlockRegistry {
         addBlockTypeFinder(WoodVariant.class, verdant);
 
 
-        var cerulean = WoodVariant.Finder.simple(
+        WoodVariant.Finder cerulean = WoodVariant.Finder.simple(
                 "nourished_end", "cerulean", "cerulean_planks", "cerulean_stem_thick");
         cerulean.addChild("stripped_wood", "stripped_cerulean_hyphae");
         cerulean.addChild("stripped_log", "cerulean_stem_stripped");
         addBlockTypeFinder(WoodVariant.class, cerulean);
 
-        var soulblight = WoodVariant.Finder.simple(
+        WoodVariant.Finder soulblight = WoodVariant.Finder.simple(
                 "gardens_of_the_dead", "soulblight", "soulblight_planks", "soulblight_stem");
         cerulean.addChild("stripped_wood", "stripped_soulblight_hyphae");
         cerulean.addChild("wood", "soulblight_hyphae");
@@ -95,7 +95,7 @@ public class DynamicBlockRegistry {
         addBlockTypeFinder(WoodVariant.class, soulblight);
 
 
-        var bamboo = WoodVariant.Finder.simple(
+        WoodVariant.Finder bamboo = WoodVariant.Finder.simple(
                 "twigs", "bamboo", "stripped_bamboo_planks", "bundled_bamboo");
 
         bamboo.addChild("stripped_log", "stripped_bundled_bamboo");
@@ -105,7 +105,7 @@ public class DynamicBlockRegistry {
         addBlockTypeFinder(WoodVariant.class, WoodVariant.Finder.simple(
                 "habitat", "fairy_ring_mushroom", "fairy_ring_mushroom_planks", "enhanced_fairy_ring_mushroom_stem"));
 
-        var floweringAzalea = WoodVariant.Finder.simple(
+        WoodVariant.Finder floweringAzalea = WoodVariant.Finder.simple(
                 "ecologics", "flowering_azalea", "flowering_azalea_planks", "flowering_azalea_log");
         floweringAzalea.addChild("stripped_log", "stripped_azalea_log");
         floweringAzalea.addChild("leaves", new Identifier("minecraft:flowering_azalea_leaves"));
@@ -113,17 +113,22 @@ public class DynamicBlockRegistry {
         addBlockTypeFinder(WoodVariant.class, floweringAzalea);
 
 
-        var azalea = WoodVariant.Finder.simple(
+        WoodVariant.Finder azalea = WoodVariant.Finder.simple(
                 "ecologics", "azalea", "azalea_planks", "azalea_log");
         azalea.addChild("leaves", new Identifier("minecraft:azalea_leaves"));
 
         addBlockTypeFinder(WoodVariant.class, azalea);
 
-        var quarkAzalea = WoodVariant.Finder.simple(
+        WoodVariant.Finder quarkAzalea = WoodVariant.Finder.simple(
                 "quark", "azalea", "azalea_planks", "azalea_log");
         quarkAzalea.addChild("leaves", new Identifier("minecraft:azalea_leaves"));
 
         addBlockTypeFinder(WoodVariant.class, quarkAzalea);
+
+        WoodVariant.Finder netherReed = WoodVariant.Finder.simple(
+                "betternether", "nether_reed", "nether_reed_planks", "nether_reed_roof");
+
+        addBlockTypeFinder(WoodVariant.class, netherReed);
     }
 }
 
