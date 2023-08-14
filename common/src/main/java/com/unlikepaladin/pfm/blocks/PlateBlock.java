@@ -68,6 +68,7 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
         }
         if(Registry.BLOCK.get(Registry.ITEM.getId(itemStack.getItem())) instanceof CutleryBlock) {
             world.setBlockState(pos, state.with(CUTLERY, true));
+            itemStack.decrement(1);
             return ActionResult.SUCCESS;
         }
         if (player.isSneaking() && blockEntity instanceof PlateBlockEntity) {

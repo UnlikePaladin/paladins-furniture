@@ -156,6 +156,9 @@ public class WoodVariant extends VariantBase<WoodVariant> {
         this.addChild("sign", this.findRelatedEntry("sign", Registry.ITEM));
     }
 
+    public boolean hasStripped() {
+        return this.getChild("stripped_log") != null;
+    }
     @Override
     public Block mainChild() {
         return this.plankBlock;
