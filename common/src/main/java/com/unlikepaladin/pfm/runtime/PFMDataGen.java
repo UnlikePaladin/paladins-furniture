@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.runtime;
 
 import com.google.common.base.Stopwatch;
+import com.google.common.hash.HashCode;
+import com.google.common.hash.Hashing;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.runtime.assets.PFMBlockstateModelProvider;
 import com.unlikepaladin.pfm.runtime.assets.PFMLangProvider;
@@ -69,12 +71,14 @@ public class PFMDataGen {
                     log("{} finished after {} ms", dataProvider.getName(), stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                     stopwatch2.reset();
                 }
-                log("Starting provider: {}", "PFM Lang");
-                stopwatch2.start();
-                new PFMLangProvider().run();
-                stopwatch2.stop();
-                log("{} finished after {} ms", "PFM Lang", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
-                stopwatch2.reset();
+                if (PaladinFurnitureMod.isClient) {
+                    log("Starting provider: {}", "PFM Lang");
+                    stopwatch2.start();
+                    new PFMLangProvider().run();
+                    stopwatch2.stop();
+                    log("{} finished after {} ms", "PFM Lang", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+                    stopwatch2.reset();
+                }
 
                 LOGGER.info("All providers took: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
@@ -131,7 +135,7 @@ public class PFMDataGen {
                         collectFiles(file, hashList, includeHiddenFiles);
                     } else {
                         FileInputStream stream = new FileInputStream(file);
-                        hashList.add(DigestUtils.md5Hex(stream));
+                        hashList.add(HashCode.fromBytes(stream.readAllBytes()).toString());
                         stream.close();
                     }
                 }
