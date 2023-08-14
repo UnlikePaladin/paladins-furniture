@@ -130,6 +130,11 @@ public class DynamicBlockRegistry {
         vanillaBamboo.addChild("stripped_log", new Identifier("minecraft:stripped_bamboo_block"));
 
         addBlockTypeFinder(WoodVariant.class, vanillaBamboo);
+
+        WoodVariant.Finder netherReed = WoodVariant.Finder.simple(
+                "betternether", "nether_reed", "nether_reed_planks", "nether_reed_roof");
+
+        addBlockTypeFinder(WoodVariant.class, netherReed);
     }
 }
 

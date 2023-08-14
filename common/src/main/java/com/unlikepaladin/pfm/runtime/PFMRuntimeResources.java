@@ -42,7 +42,7 @@ public class PFMRuntimeResources {
     private static CompletableFuture<Void> future;
     public static CompletableFuture<Void> prepareAsyncResourceGen(boolean logOrDebug) {
         return future = CompletableFuture.runAsync(() -> {
-            PFMDataGen dataGen = new PFMDataGen(PFMRuntimeResources.getAssetsDirectory(), logOrDebug);
+            PFMDataGen dataGen = new PFMDataGen(PFMRuntimeResources.getResourceDirectory(), logOrDebug);
             try {
                 dataGen.run();
             } catch (IOException e) {
@@ -53,7 +53,7 @@ public class PFMRuntimeResources {
     }
     public static boolean ready = false;
     public static void prepareAndRunResourceGen(boolean logOrDebug) {
-        PFMDataGen dataGen = new PFMDataGen(PFMRuntimeResources.getAssetsDirectory(), logOrDebug);
+        PFMDataGen dataGen = new PFMDataGen(PFMRuntimeResources.getResourceDirectory(), logOrDebug);
         try {
             dataGen.run();
         } catch (IOException e) {
