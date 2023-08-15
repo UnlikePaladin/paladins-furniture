@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.data.fabric;
 import com.unlikepaladin.pfm.blocks.DinnerChairBlock;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import com.unlikepaladin.pfm.data.Tags;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.data.FurnitureRecipeJsonFactory;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
