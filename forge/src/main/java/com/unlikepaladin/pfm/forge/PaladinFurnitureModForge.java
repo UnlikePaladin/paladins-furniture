@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
-import com.unlikepaladin.pfm.data.forge.TagsImpl;
+import com.unlikepaladin.pfm.data.forge.PFMTagsImpl;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.dynamic.forge.LateBlockRegistryForge;
 import com.unlikepaladin.pfm.registry.forge.*;
@@ -29,7 +29,6 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
             GENERAL_LOGGER.error("Failed to initialize Paladin's Furniture configuration, default values will be used instead");
             GENERAL_LOGGER.error("", e);
         }
-        TagsImpl.TUCKABLE_BLOCKS = BlockTags.create(new Identifier("pfm", "tuckable_blocks"));
         MinecraftForge.EVENT_BUS.register(EntityRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(BlockItemRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(StatisticsRegistryForge.class);

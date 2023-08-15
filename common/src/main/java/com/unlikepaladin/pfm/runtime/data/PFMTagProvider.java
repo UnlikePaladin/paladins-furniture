@@ -9,7 +9,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import com.unlikepaladin.pfm.data.Tags;
+import com.unlikepaladin.pfm.data.PFMTags;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGen;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
@@ -212,7 +212,7 @@ public class PFMTagProvider implements DataProvider{
         getOrCreateTagBuilder(BlockTags.CLIMBABLE)
                 .add(simpleBunkLadders);
 
-        getOrCreateTagBuilder(Tags.getTuckableBlocks())
+        getOrCreateTagBuilder(PFMTags.TUCKABLE_BLOCKS)
                 .add(woodBasicTables)
                 .add(stoneBasicTables)
                 .add(woodClassicTables)
