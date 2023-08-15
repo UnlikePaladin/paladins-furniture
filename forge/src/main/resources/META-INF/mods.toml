@@ -11,6 +11,7 @@ authors = "UnlikePaladin"
 description = '''
 A Brand-New Furniture mod for Modern Minecraft where things are functional!
 '''
+itemIcon = "pfm:oak_chair"
 logoFile = "icon.png"
 credits = "Translators: lzyzl6, MIHONO, WrenXing"
 
@@ -27,3 +28,7 @@ mandatory = true
 versionRange = "[1.19.4,1.20)"
 ordering = "NONE"
 side = "BOTH"
+
+[modproperties.pfm]
+catalogueBackground="pfm_background.png"
+catalogueImageIcon=""
