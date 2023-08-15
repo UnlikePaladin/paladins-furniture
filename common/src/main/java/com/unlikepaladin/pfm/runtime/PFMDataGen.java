@@ -84,11 +84,11 @@ public class PFMDataGen {
                 Stopwatch stopwatch = Stopwatch.createStarted();
                 Stopwatch stopwatch2 = Stopwatch.createUnstarted();
 
-                log("Starting provider: {}", "PFM Tags");
+                log("Starting provider: {}", "PFM PFMTags");
                 stopwatch2.start();
                 new PFMTagProvider().run(dataCache);
                 stopwatch2.stop();
-                log("{} finished after {} ms", "PFM Tags", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
+                log("{} finished after {} ms", "PFM PFMTags", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                 stopwatch2.reset();
 
                 log("Starting provider: {}", "PFM Drops");

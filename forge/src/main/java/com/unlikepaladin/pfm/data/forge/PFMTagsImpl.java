@@ -5,12 +5,9 @@ import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.tag.TagKey;
 import net.minecraft.util.Identifier;
-import net.minecraftforge.event.RegistryEvent;
 
-public class TagsImpl {
-    public static TagKey<Block> TUCKABLE_BLOCKS;
-
-    public static TagKey<Block> getTuckableBlocks() {
-        return TUCKABLE_BLOCKS;
+public class PFMTagsImpl {
+    public static TagKey<Block> createTag(Identifier identifier) {
+        return BlockTags.create(new Identifier("pfm", "tuckable_blocks"));
     }
 }
