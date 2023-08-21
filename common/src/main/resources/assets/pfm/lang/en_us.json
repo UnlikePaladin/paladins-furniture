@@ -1264,8 +1264,8 @@
   "keybindings.category.pfm": "Paladin's Furniture",
   "key.pfm.toiletUse": "Use Toilet",
 
-  "pfm.compat.failure.reason.arrpNotFound": "To use Sandwichable and Paladin's Furniture Mod together you will need to install ARRP. Please download it, place it on your mods folder, then re-launch the game.",
-  "pfm.compat.failure.arrpDownload": "Download ARRP",
+  "pfm.compat.failure.reason.indiumNotFound": "To use Paladin's Furniture mod with Sodium you will need Indium. Please download the latest version of it, place it on your mods folder, then re-launch the game.",
+  "pfm.compat.failure.indiumDownload": "Download Indium",
   "pfm.compat.failure.title": "Paladin's Furniture Mod failed to load!",
 
   "emi.category.pfm.freezer": "Freezing",
