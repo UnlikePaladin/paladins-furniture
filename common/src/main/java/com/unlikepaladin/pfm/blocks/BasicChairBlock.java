@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import com.unlikepaladin.pfm.data.Tags;
+import com.unlikepaladin.pfm.data.PFMTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
@@ -134,7 +134,7 @@ public class BasicChairBlock extends AbstractSittableBlock {
     }
 
     public boolean canTuck(BlockState state) {
-        return state.isIn(Tags.getTuckableBlocks());
+        return state.isIn(PFMTags.TUCKABLE_BLOCKS);
     }
 
     @Override

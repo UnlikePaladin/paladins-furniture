@@ -124,6 +124,11 @@ public class DynamicBlockRegistry {
         quarkAzalea.addChild("leaves", new Identifier("minecraft:azalea_leaves"));
 
         addBlockTypeFinder(WoodVariant.class, quarkAzalea);
+
+        WoodVariant.Finder netherReed = WoodVariant.Finder.simple(
+                "betternether", "nether_reed", "nether_reed_planks", "nether_reed_roof");
+
+        addBlockTypeFinder(WoodVariant.class, netherReed);
     }
 }
 

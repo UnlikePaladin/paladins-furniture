@@ -121,16 +121,24 @@ public class ModelHelper {
     private static final Map<Pair<Block, String>, Identifier> blockToTextureMap = new HashMap<>();
     public static Identifier getTextureId(Block block, String postfix) {
         Pair<Block, String> pair = new Pair<>(block, postfix);
-        if (blockToTextureMap.containsKey(pair))
+        if (blockToTextureMap.containsKey(pair)) {
             return blockToTextureMap.get(pair);
+        }
         Identifier id;
-        if (!postfix.isEmpty() && idExists(Texture.getSubId(block, postfix), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+        if (!postfix.isEmpty() && idExists(Texture.getSubId(block, postfix), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
             id = Texture.getSubId(block, postfix);
+        }
+        else if(idExists(getLogId(block, postfix), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = getLogId(block, postfix);
+        }
         else if (idExists(Texture.getId(block), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = Texture.getId(block);
         }
         else if (idExists(Texture.getSubId(block, "_side"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = Texture.getSubId(block, "_side");
+        }
+        else if (idExists(Texture.getSubId(block, "_side_1"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = Texture.getSubId(block, "_side_1");
         }
         else if (idExists(Texture.getSubId(block, "_bottom"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
             id = Texture.getSubId(block, "_bottom");
@@ -138,8 +146,26 @@ public class ModelHelper {
         else if (idExists(Texture.getSubId(block, "_top"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
             id = Texture.getSubId(block, "_top");
         }
+        else if (idExists(Texture.getSubId(block, "_middle"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+            id = Texture.getSubId(block, "_middle");
+        }
         else if(idExists(getPlankId(block), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getPlankId(block);
+        }
+        else if(idExists(getLogId(block, "_side"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = getLogId(block, "_side");
+        }
+        else if(idExists(getLogId(block, "_side_1"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = getLogId(block, "_side_1");
+        }
+        else if(idExists(getLogId(block, "_top"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = getLogId(block, "_top");
+        }
+        else if(idExists(getLogId(block, "_middle"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = getLogId(block, "_middle");
+        }
+        else if(idExists(getLogId(block, "_bottom"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+            id = getLogId(block, "_bottom");
         }
         else {
             PFMDataGen.LOGGER.warn("Couldn't find texture for, {}", block);
@@ -169,12 +195,70 @@ public class ModelHelper {
             return new Identifier(namespace, "block/" + path);
     }
 
+    public static Identifier getLogId(Block block, String postFix) {
+        Identifier identifier = Registry.BLOCK.getId(block);
+        String namespace = identifier.getNamespace();
+        String path = identifier.getPath();
+        if (path.contains("log")) {
+            path = path.replace("log", "bark");
+            path += postFix;
+            Identifier id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+
+            path = path.replace("stripped", "striped");
+            id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            path = path.replace("striped", "stripped");
+            path = path.replace("bark", "log");
+            id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            path = path.replace("stripped", "striped");
+            id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+
+            path = path.contains("striped") ? "stripped_"+path.replace("_striped", "") : path;
+            id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            path = path.replace("stripped", "striped");
+            id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+        } else if (path.contains("reed")) {
+            path = path.replace("nether_", "").replace("reed", "reeds");
+            Identifier id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+                return id;
+            }
+            path += postFix;
+            id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/" + path.replace("planks", "roof"));
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+        }
+        return new Identifier(namespace, "block/" + path);
+    }
+
     private static final HashMap<Identifier, Boolean> idCacheMap = new HashMap<>();
     public static boolean idExists(Identifier id, ResourceType resourceType, IdLocation idLocation) {
-        Identifier id2 = new Identifier(id.getNamespace(), idLocation.asString() + "/" + id.getPath() + idLocation.getFileType());
         if (idCacheMap.containsKey(id)) {
             return idCacheMap.get(id);
         }
+        Identifier id2 = new Identifier(id.getNamespace(), idLocation.asString() + "/" + id.getPath() + idLocation.getFileType());
         for (ResourcePack rp : PFMRuntimeResources.RESOURCE_PACK_LIST) {
             if (rp.contains(resourceType, id2)) {
                 idCacheMap.put(id, true);
