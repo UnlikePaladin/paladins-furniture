@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
+import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingResultInventory;
@@ -94,7 +95,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
             if (furnitureRecipe.matches(playerInventory, playerInventory.player.world)) {
                 List<Ingredient> ingredients = furnitureRecipe.getIngredients();
                 for (Ingredient ingredient : ingredients) {
-                    for (ItemStack stack : ((PFMIngredientMatchingStacksAccessor)(Object)ingredient).getMatchingStacks()) {
+                    for (ItemStack stack : PFMRecipeProvider.pfm$getMatchingStacks(ingredient)) {
                         if (playerInventory.getSlotWithStack(stack) != -1) {
                             int indexOfStack = playerInventory.getSlotWithStack(stack);
                             if (playerInventory.getStack(indexOfStack).getCount() >= stack.getCount()) {

@@ -105,7 +105,6 @@ public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
         return nbt;
     }
 
-    String blockname = this.getCachedState().getBlock().getTranslationKey();
     protected Text getContainerName() {
         if (this.getCachedState().getBlock() instanceof KitchenWallDrawerBlock)
             return new TranslatableText("container.pfm.kitchen_cabinet");

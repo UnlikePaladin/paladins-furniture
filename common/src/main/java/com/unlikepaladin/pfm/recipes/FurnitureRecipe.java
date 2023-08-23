@@ -7,6 +7,7 @@ import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.mixin.PFMIngredientMatchingStacksAccessor;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
+import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -53,7 +54,7 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
         HashMap<Item, Integer> containedItems = new HashMap<>();
         for (int i = 0; i < ingredients.size(); i++) {
             Ingredient ingredient = ingredients.get(i);
-            for (ItemStack stack : ((PFMIngredientMatchingStacksAccessor)(Object)ingredient).getMatchingStacks()) {
+            for (ItemStack stack : PFMRecipeProvider.pfm$getMatchingStacks(ingredient)) {
                 int itemCount = 0;
                 for (ItemStack stack1 : playerInventory.main) {
                     if (stack.isItemEqual(stack1)) {

@@ -49,6 +49,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class PFMRecipeProvider {
 
@@ -183,14 +184,14 @@ public class PFMRecipeProvider {
                 generatedRecipes.add(getId(block));
             }
         });
-        FurnitureBlock[] froggyChairs = (FurnitureBlock[]) FroggyChairBlock.streamFroggyChair().toArray();
+        List<FurnitureBlock> froggyChairs = FroggyChairBlock.streamFroggyChair().collect(Collectors.toList());
         for (FurnitureBlock froggyChair : froggyChairs) {
             if (!generatedRecipes.contains(getId(froggyChair.getBlock()))) {
                 offerFroggyChairRecipe(froggyChair.getBlock(), Ingredient.ofItems(froggyChair.getFroggyChairMaterial().asItem()), exporter);
                 generatedRecipes.add(getId(froggyChair.getBlock()));
             }
         }
-        FurnitureBlock[] woolClassicChairs = (FurnitureBlock[]) ClassicChairDyeableBlock.streamWoodDyeableChair().toArray();
+        List<FurnitureBlock> woolClassicChairs = ClassicChairDyeableBlock.streamWoodDyeableChair().collect(Collectors.toList());
         for (FurnitureBlock classicChair : woolClassicChairs) {
             if (!generatedRecipes.contains(getId(classicChair.getBlock()))) {
                 offerClassicChairRecipe(classicChair.getBlock(), Ingredient.ofItems(Items.OAK_LOG), Ingredient.ofItems(classicChair.getArmChairMaterial()), exporter);
@@ -209,21 +210,21 @@ public class PFMRecipeProvider {
                 generatedRecipes.add(getId(block));
             }
         });
-        FurnitureBlock[] armChairs = (FurnitureBlock[]) ArmChairColoredBlock.streamArmChairColored().toArray();
+        List<FurnitureBlock> armChairs = ArmChairColoredBlock.streamArmChairColored().collect(Collectors.toList());
         for (FurnitureBlock armChair : armChairs) {
             if (!generatedRecipes.contains(getId(armChair.getBlock()))) {
                 offerArmChairRecipe(armChair.getBlock(), Ingredient.ofItems(Items.OAK_LOG), Ingredient.ofItems(armChair.getArmChairMaterial().asItem()), exporter);
                 generatedRecipes.add(getId(armChair.getBlock()));
             }
         }
-        FurnitureBlock[] simpleSofas = (FurnitureBlock[]) SimpleSofaBlock.streamSimpleSofas().toArray();
+        List<FurnitureBlock> simpleSofas = SimpleSofaBlock.streamSimpleSofas().collect(Collectors.toList());
         for (FurnitureBlock sofa : simpleSofas) {
             if (!generatedRecipes.contains(getId(sofa.getBlock()))) {
                 offerSimpleSofaRecipe(sofa.getBlock(), Ingredient.ofItems(Items.OAK_LOG), Ingredient.ofItems(sofa.getArmChairMaterial().asItem()), exporter);
                 generatedRecipes.add(getId(sofa.getBlock()));
             }
         }
-        FurnitureBlock[] leatherArmChairs = (FurnitureBlock[]) ArmChairBlock.streamArmChairs().toArray();
+        List<FurnitureBlock> leatherArmChairs = ArmChairBlock.streamArmChairs().collect(Collectors.toList());
         for (FurnitureBlock armChair : leatherArmChairs) {
             if (!generatedRecipes.contains(getId(armChair.getBlock()))) {
                 offerArmChairRecipe(armChair.getBlock(), Ingredient.ofItems(Items.OAK_LOG), Ingredient.ofItems(armChair.getArmChairMaterial().asItem()), exporter);
@@ -491,69 +492,69 @@ public class PFMRecipeProvider {
                 generatedRecipes.add(getId(block));
             }
         });
-        FurnitureBlock[] herringbonePlanks = (FurnitureBlock[]) HerringbonePlankBlock.streamPlanks().toArray();
+        List<FurnitureBlock> herringbonePlanks = HerringbonePlankBlock.streamPlanks().collect(Collectors.toList());
         for (FurnitureBlock herringbonePlank : herringbonePlanks) {
             if (!generatedRecipes.contains(getId(herringbonePlank.getBlock()))) {
                 offerHerringbonePlanks(herringbonePlank.getBlock(), herringbonePlank.getSlab().asItem(), exporter);
             }
         }
-        FurnitureBlock[] fridges = (FurnitureBlock[]) FridgeBlock.streamFridges().toArray();
+        List<FurnitureBlock> fridges = FridgeBlock.streamFridges().collect(Collectors.toList());
         for (FurnitureBlock fridge : fridges) {
             if (!generatedRecipes.contains(getId(fridge.getBlock()))) {
                 offerFridgeRecipe(fridge.getBlock(), Ingredient.ofItems(fridge.getFridgeMaterial().asItem()), Ingredient.ofItems(Items.CHEST), exporter);
                 generatedRecipes.add(getId(fridge.getBlock()));
             }
         }
-        FurnitureBlock[] freezers = (FurnitureBlock[]) FreezerBlock.streamFreezers().toArray();
+        List<FurnitureBlock> freezers = FreezerBlock.streamFreezers().collect(Collectors.toList());
         for (FurnitureBlock freezer : freezers) {
             if (!generatedRecipes.contains(getId(freezer.getBlock()))) {
                 offerFreezerRecipe(freezer.getBlock(), Ingredient.ofItems(freezer.getFridgeMaterial().asItem()), exporter);
                 generatedRecipes.add(getId(freezer.getBlock()));
             }
         }
-        FurnitureBlock[] microwaves = (FurnitureBlock[]) MicrowaveBlock.streamMicrowaves().toArray();
+        List<FurnitureBlock> microwaves = MicrowaveBlock.streamMicrowaves().collect(Collectors.toList());
         for (FurnitureBlock microwave : microwaves) {
             if (!generatedRecipes.contains(getId(microwave.getBlock()))) {
                 offerMicrowaveRecipe(microwave.getBlock(),  Ingredient.ofItems(microwave.getFridgeMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
                 generatedRecipes.add(getId(microwave.getBlock()));
             }
         }
-        FurnitureBlock[] rangeHoods = (FurnitureBlock[]) KitchenRangeHoodBlock.streamOvenRangeHoods().toArray();
+        List<FurnitureBlock> rangeHoods = KitchenRangeHoodBlock.streamOvenRangeHoods().collect(Collectors.toList());
         for (FurnitureBlock rangeHood : rangeHoods) {
             if (!generatedRecipes.contains(getId(rangeHood.getBlock()))) {
                 offerRangeHoodRecipe(rangeHood.getBlock(),  Ingredient.ofItems(rangeHood.getFridgeMaterial().asItem()), Ingredient.ofItems(Items.REDSTONE_LAMP), exporter);
                 generatedRecipes.add(getId(rangeHood.getBlock()));
             }
         }
-        FurnitureBlock[] stoves = (FurnitureBlock[]) StoveBlock.streamStoves().toArray();
+        List<FurnitureBlock> stoves = StoveBlock.streamStoves().collect(Collectors.toList());
         for (FurnitureBlock stove : stoves) {
             if (!generatedRecipes.contains(getId(stove.getBlock()))) {
                 offerStoveRecipe(stove.getBlock(),  Ingredient.ofItems(stove.getFridgeMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
                 generatedRecipes.add(getId(stove.getBlock()));
             }
         }
-        FurnitureBlock[] ironStove = (FurnitureBlock[]) IronStoveBlock.streamIronStoves().toArray();
+        List<FurnitureBlock> ironStove = IronStoveBlock.streamIronStoves().collect(Collectors.toList());
         for (FurnitureBlock stove : ironStove) {
             if (!generatedRecipes.contains(getId(stove.getBlock()))) {
                 offerStoveRecipe(stove.getBlock(),  Ingredient.ofItems(stove.getFridgeMaterial().asItem()), Ingredient.ofItems(Items.FURNACE), exporter);
                 generatedRecipes.add(getId(stove.getBlock()));
             }
         }
-        KitchenStovetopBlock[] stovetopBlocks = (KitchenStovetopBlock[]) KitchenStovetopBlock.streamKitchenStovetop().toArray();
+        List<KitchenStovetopBlock> stovetopBlocks = KitchenStovetopBlock.streamKitchenStovetop().collect(Collectors.toList());
         for (KitchenStovetopBlock stove : stovetopBlocks) {
             if (!generatedRecipes.contains(getId(stove))) {
                 offerStovetopRecipe(stove, Ingredient.ofItems(Items.IRON_INGOT), Ingredient.ofItems(Blocks.GRAY_CONCRETE), exporter);
                 generatedRecipes.add(getId(stove));
             }
         }
-        FurnitureBlock[] plates = (FurnitureBlock[]) PlateBlock.streamPlates().toArray();
+        List<FurnitureBlock> plates = PlateBlock.streamPlates().collect(Collectors.toList());
         for (FurnitureBlock plate : plates) {
             if (!generatedRecipes.contains(getId(plate.getBlock()))) {
                 offerPlateRecipe(plate.getBlock(), Ingredient.ofItems(plate.getPlateMaterial()), Ingredient.ofItems(Items.ITEM_FRAME), Ingredient.ofItems(plate.getPlateDecoration()), exporter);
                 generatedRecipes.add(getId(plate.getBlock()));
             }
         }
-        FurnitureBlock[] cutleries = (FurnitureBlock[]) CutleryBlock.streamCutlery().toArray();
+        List<FurnitureBlock> cutleries = CutleryBlock.streamCutlery().collect(Collectors.toList());
         for (FurnitureBlock cutlery : cutleries) {
             if (!generatedRecipes.contains(getId(cutlery.getBlock()))) {
                 offerCutleryRecipe(cutlery.getBlock(), Ingredient.ofItems(cutlery.getCutleryMaterial()), exporter);
@@ -579,7 +580,7 @@ public class PFMRecipeProvider {
             generatedRecipes.add(Registry.ITEM.getId(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM));
         }
 
-        FurnitureBlock[] basicToilets = (FurnitureBlock[]) BasicToiletBlock.streamBasicToilet().toArray();
+        List<FurnitureBlock> basicToilets = BasicToiletBlock.streamBasicToilet().collect(Collectors.toList());
         for (FurnitureBlock toilet : basicToilets) {
             if (!generatedRecipes.contains(getId(toilet.getBlock()))) {
                 offerToiletRecipe(toilet.getBlock(), Ingredient.ofItems(Items.STONE_BUTTON), Ingredient.ofItems(Blocks.QUARTZ_BLOCK), exporter);
@@ -618,7 +619,7 @@ public class PFMRecipeProvider {
             generatedRecipes.add(getId(PaladinFurnitureModBlocksItems.TRASHCAN));
         }
 
-        FurnitureBlock[] showerTowels = (FurnitureBlock[]) ShowerTowelBlock.streamShowerTowels().toArray();
+        List<FurnitureBlock> showerTowels = ShowerTowelBlock.streamShowerTowels().collect(Collectors.toList());
         for (FurnitureBlock towel : showerTowels) {
             if (!generatedRecipes.contains(getId(towel.getBlock()))) {
                 offerShowerTowelRecipe(towel.getBlock(),  Ingredient.ofItems(towel.getWoolColor()), exporter);
@@ -626,7 +627,7 @@ public class PFMRecipeProvider {
             }
         }
 
-        FurnitureBlock[] mirrors = (FurnitureBlock[]) MirrorBlock.streamMirrorBlocks().toArray();
+        List<FurnitureBlock> mirrors = MirrorBlock.streamMirrorBlocks().collect(Collectors.toList());
         for (FurnitureBlock mirror : mirrors) {
             if (!generatedRecipes.contains(getId(mirror.getBlock()))) {
                 offerMirrorRecipe(mirror.getBlock(), Ingredient.ofItems(mirror.getBaseMaterial()), exporter);
@@ -882,12 +883,19 @@ public class PFMRecipeProvider {
     public static InventoryChangedCriterion.Conditions conditionsFromIngredient(Ingredient item) {
         List<Item> items = new ArrayList<>();
         for (ItemStack item1:
-                ((PFMIngredientMatchingStacksAccessor)(Object)item).getMatchingStacks()) {
+                pfm$getMatchingStacks(item)) {
             if (items.contains(item1.getItem()))
                 continue;
             items.add(item1.getItem());
         }
         return conditionsFromItemPredicates(ItemPredicate.Builder.create().item(items.get(0)).build());
+    }
+
+    public static ItemStack[] pfm$getMatchingStacks(Ingredient ingredient) {
+        PFMIngredientMatchingStacksAccessor accessor = (PFMIngredientMatchingStacksAccessor)(Object)ingredient;
+        if (accessor.getMatchingStacks() == null)
+            accessor.invokeCacheMatchingStacks();
+        return accessor.getMatchingStacks();
     }
 
     private static InventoryChangedCriterion.Conditions conditionsFromTag(Tag<Item> tag) {
@@ -899,7 +907,7 @@ public class PFMRecipeProvider {
     }
 
     private static String getItemPath(Ingredient item) {
-        return Registry.ITEM.getId(((PFMIngredientMatchingStacksAccessor)(Object)item).getMatchingStacks()[0].getItem()).getPath();
+        return Registry.ITEM.getId((pfm$getMatchingStacks(item)[0].getItem())).getPath();
     }
     private static String getItemPath(ItemConvertible item) {
         return Registry.ITEM.getId(item.asItem()).getPath();

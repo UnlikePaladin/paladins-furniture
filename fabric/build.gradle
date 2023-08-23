@@ -9,18 +9,6 @@ architectury {
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
-
-    runs {
-        datagen {
-            server()
-
-            name "Data Generation"
-            vmArg "-Dfabric-api.datagen"
-            vmArg "-Dfabric-api.datagen.output-dir=${file("src/main/generated")}"
-
-            runDir "build/datagen"
-        }
-    }
 }
 
 configurations {
@@ -97,6 +85,12 @@ if (rootProject.rei_compatibility == "true"){
         modImplementation("me.shedaniel:RoughlyEnoughItems:${rootProject.rei_version_fabric}"){
             exclude(group: "net.fabricmc.fabric-api")
             transitive(false)
+        }
+        modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
+        }
+        modRuntimeOnly("me.shedaniel.cloth.api:cloth-api:${rootProject.cloth_api_version}") {
+            exclude(group: "net.fabricmc.fabric-api")
         }
     }
 }
