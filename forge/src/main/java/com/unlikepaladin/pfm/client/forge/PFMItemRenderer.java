@@ -6,12 +6,9 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
-import net.minecraft.client.render.entity.model.EntityModelLoader;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
@@ -29,17 +26,16 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = PaladinFurnitureMod.MOD_ID, value = Dist.CLIENT)
 public class PFMItemRenderer extends BuiltinModelItemRenderer {
-    public static final PFMItemRenderer INSTANCE = new PFMItemRenderer();
     public PFMItemRenderer() {
-        super(MinecraftClient.getInstance().getBlockEntityRenderDispatcher(), MinecraftClient.getInstance().getEntityModelLoader());
+        super();
     }
 
     @Override
     public void render(ItemStack stack, ModelTransformation.Mode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        if (stack.isOf(PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM)) {
+        if (stack.getItem() == PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM) {
             WoodVariant variant = WoodVariantRegistry.OAK;
-            if (stack.hasNbt()) {
-                variant = WoodVariantRegistry.getVariant(Identifier.tryParse(stack.getSubNbt("BlockEntityTag").getString("variant")));
+            if (stack.hasTag()) {
+                variant = WoodVariantRegistry.getVariant(Identifier.tryParse(stack.getSubTag("BlockEntityTag").getString("variant")));
             }
             Map<WoodVariant, Map<String, BakedModel>> bakedModels = new LinkedHashMap<>();
             List<String> modelParts = new ArrayList<>(UnbakedBasicLampModel.MODEL_PARTS_BASE);

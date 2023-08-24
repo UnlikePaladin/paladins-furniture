@@ -5,8 +5,10 @@ import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.CounterOvenBlockEntityBalm;
 import net.minecraft.block.entity.BlockEntityType;
 
+import java.util.function.Supplier;
+
 public class KitchenCounterOvenBlockImpl {
-    public static BlockEntityType.BlockEntityFactory<? extends CounterOvenBlockEntity> getFactory() {
+    public static Supplier<? extends CounterOvenBlockEntity> getFactory() {
         return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? CounterOvenBlockEntityBalm::new : CounterOvenBlockEntity::new;
     }
 }

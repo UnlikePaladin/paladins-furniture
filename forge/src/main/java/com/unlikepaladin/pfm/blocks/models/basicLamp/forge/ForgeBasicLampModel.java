@@ -90,8 +90,8 @@ public class ForgeBasicLampModel extends AbstractBakedModel {
     }
 
     @Override
-    public Sprite getParticleSprite() {
-        return bakedModels.get(WoodVariantRegistry.OAK).get(modelParts.get(4)).getParticleSprite();
+    public Sprite getSprite() {
+        return bakedModels.get(WoodVariantRegistry.OAK).get(modelParts.get(4)).getSprite();
     }
 
     @Override

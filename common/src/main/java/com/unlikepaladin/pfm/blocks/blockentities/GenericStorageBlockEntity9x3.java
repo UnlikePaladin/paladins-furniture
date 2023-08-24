@@ -38,7 +38,7 @@ public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
         super(BlockEntities.DRAWER_BLOCK_ENTITY);
     }
 
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
+    protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
 
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock){

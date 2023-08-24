@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
-import net.blay09.mods.balm.api.energy.EnergyStorage;
+import net.blay09.mods.cookingforblockheads.tile.util.EnergyStorageModifiable;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
@@ -30,8 +30,8 @@ public class StoveScreenBalm extends HandledScreen<StoveScreenHandlerBalm> {
         this.drawMouseoverTooltip(poseStack, mouseX, mouseY);
         StoveBlockEntityBalm tileEntity = this.handler.getTileEntity();
         if (tileEntity.hasPowerUpgrade() && mouseX >= this.x + this.backgroundWidth - 25 && mouseY >= this.y + 22 && mouseX < this.x + this.backgroundWidth - 25 + 35 + 18 && mouseY < this.y + 22 + 72) {
-            EnergyStorage energyStorage = tileEntity.getEnergyStorage();
-            this.renderTooltip(poseStack, new TranslatableText("tooltip.cookingforblockheads:energy_stored", new Object[]{energyStorage.getEnergy(), energyStorage.getCapacity()}), mouseX, mouseY);
+            EnergyStorageModifiable energyStorage = tileEntity.getEnergyStorage();
+            this.renderTooltip(poseStack, new TranslatableText("tooltip.cookingforblockheads:energy_stored", energyStorage.getEnergyStored(), energyStorage.getMaxEnergyStored()), mouseX, mouseY);
         }
 
     }
@@ -52,8 +52,8 @@ public class StoveScreenBalm extends HandledScreen<StoveScreenHandlerBalm> {
     }
 
     protected void drawBackground(MatrixStack poseStack, float partialTicks, int mouseX, int mouseY) {
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, texture);
+        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        this.getMinecraft().getTextureManager().bindTexture(texture);
         this.drawTexture(poseStack, this.x + 22, this.y, 0, 0, this.backgroundWidth - 22, this.backgroundHeight);
         this.drawTexture(poseStack, this.x, this.y + 10, 176, 30, 25, 87);
         StoveBlockEntityBalm tileEntity = this.handler.getTileEntity();
@@ -67,8 +67,8 @@ public class StoveScreenBalm extends HandledScreen<StoveScreenHandlerBalm> {
 
         if (tileEntity.hasPowerUpgrade()) {
             this.drawTexture(poseStack, this.x + this.backgroundWidth - 25, this.y + 22, 205, 0, 18, 72);
-            EnergyStorage energyStorage = tileEntity.getEnergyStorage();
-            float energyPercentage = (float)energyStorage.getEnergy() / (float)energyStorage.getCapacity();
+            EnergyStorageModifiable energyStorage = tileEntity.getEnergyStorage();
+            float energyPercentage = (float)energyStorage.getEnergyStored() / (float)energyStorage.getMaxEnergyStored();
             this.drawTexture(poseStack, this.x + this.backgroundWidth - 25 + 1, this.y + 22 + 1 + 70 - (int)(energyPercentage * 70.0F), 223, 0, 16, (int)(energyPercentage * 70.0F));
         }
 

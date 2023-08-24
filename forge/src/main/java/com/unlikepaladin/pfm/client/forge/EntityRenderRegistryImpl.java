@@ -19,18 +19,18 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class EntityRenderRegistryImpl {
-    public static Map<BlockEntityType, Function<BlockEntityRenderDispatcher, BlockEntityRenderer<? super BlockEntity>>> blockEntityRendererFactoryMap = new HashMap<>();
-    public static Map<EntityType, Function<EntityRenderDispatcher, EntityRenderer<? super Entity>>> entityRendererFactoryMap = new HashMap<>();
+    public static Map<BlockEntityType, Function<BlockEntityRenderDispatcher, BlockEntityRenderer>> blockEntityRendererFactoryMap = new HashMap<>();
+    public static Map<EntityType, Function<EntityRenderDispatcher, EntityRenderer>> entityRendererFactoryMap = new HashMap<>();
 
     public static <E extends BlockEntity> void registerBlockEntityRender(BlockEntityType blockEntityType, Function<BlockEntityRenderDispatcher, BlockEntityRenderer<? super E>> blockEntityRendererFactory) {
-        blockEntityRendererFactoryMap.put(blockEntityType, (Function<BlockEntityRenderDispatcher, BlockEntityRenderer<? super BlockEntity>>) blockEntityRendererFactory);
+        blockEntityRendererFactoryMap.put(blockEntityType, (Function<BlockEntityRenderDispatcher, BlockEntityRenderer>)(Object)blockEntityRendererFactory);
     }
 
     public static <E extends Entity> void registerEntityRender(EntityType entityType, Function<EntityRenderDispatcher, EntityRenderer<? super E>> entityRendererFactory) {
-        entityRendererFactoryMap.put(entityType, (Function<EntityRenderDispatcher, EntityRenderer<? super Entity>>) entityRendererFactory);
+        entityRendererFactoryMap.put(entityType, (Function<EntityRenderDispatcher, EntityRenderer>)(Object) entityRendererFactory);
     }
 
-    public static <E extends BlockEntity> Function<BlockEntityRenderDispatcher, BlockEntityRenderer<? super E>> getStoveBlockEntityRenderer() {
+    public static <E extends StoveBlockEntity> Function<BlockEntityRenderDispatcher, BlockEntityRenderer<? super E>> getStoveBlockEntityRenderer() {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             return PFMCookingForBlockHeadsCompat.getStoveRenderer();
         } else {

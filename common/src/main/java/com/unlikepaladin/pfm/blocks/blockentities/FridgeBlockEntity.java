@@ -37,7 +37,7 @@ public class FridgeBlockEntity extends LootableContainerBlockEntity {
     public FridgeBlockEntity() {
         super(BlockEntities.FRIDGE_BLOCK_ENTITY);
     }
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(54, ItemStack.EMPTY);
+    protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(54, ItemStack.EMPTY);
 
     protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
         if (state.getBlock() instanceof FridgeBlock) {

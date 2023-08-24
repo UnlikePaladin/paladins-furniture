@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.compat.rei;
+package com.unlikepaladin.pfm.compat.rei.forge;
 
 /*
  * This file is licensed under the MIT License, part of Roughly Enough Items.
@@ -23,9 +23,10 @@ package com.unlikepaladin.pfm.compat.rei;
  * SOFTWARE.
  */
 
+
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
-/**
+import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
@@ -51,12 +52,12 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class FurnitureDisplay implements TransferRecipeDisplay {
+public class FurnitureDisplay extends BasicDisplay implements SimpleGridMenuDisplay {
     protected FurnitureRecipe recipe;
     public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"));
-    public List<EntryIngredient> input;
     public List<EntryIngredient> output;
     public FurnitureDisplay(FurnitureRecipe recipe) {
+        super(Collections.emptyList(), Collections.singletonList(EntryIngredients.of(recipe.getOutput())));
         this.recipe = recipe;
         output = Collections.singletonList(EntryIngredients.of(recipe.getOutput()));
     }
@@ -66,7 +67,7 @@ public class FurnitureDisplay implements TransferRecipeDisplay {
         List<Ingredient> ingredients = recipe.getIngredients();
         HashMap<Item, Integer> containedItems = new HashMap<>();
         for (Ingredient ingredient : ingredients) {
-            for (ItemStack stack : ingredient.getMatchingStacks()) {
+            for (ItemStack stack : PFMRecipeProvider.pfm$getMatchingStacks(ingredient)) {
                 if (!containedItems.containsKey(stack.getItem())) {
                     containedItems.put(stack.getItem(), 1);
                 } else {
@@ -78,13 +79,9 @@ public class FurnitureDisplay implements TransferRecipeDisplay {
         for (Map.Entry<Item, Integer> entry: containedItems.entrySet()) {
             finalList.add(Ingredient.ofStacks(new ItemStack(entry.getKey(), entry.getValue())));
         }
-        finalList.sort(Comparator.comparing(o -> o.getMatchingStacks()[0].getItem().toString()));
-        return EntryIngredients.ofIngredients(finalList);
-    }
+        finalList.sort(Comparator.comparing(o -> PFMRecipeProvider.pfm$getMatchingStacks(o)[0].getItem().toString()));
 
-    @Override
-    public List<EntryIngredient> getOutputEntries() {
-        return output;
+        return EntryIngredients.ofIngredients(finalList);
     }
 
     @Override
@@ -92,4 +89,24 @@ public class FurnitureDisplay implements TransferRecipeDisplay {
         return IDENTIFIER;
     }
 
-}*/
+
+    @Override
+    public int getWidth() {
+        return getSize(getInputEntries().size());
+    }
+
+    @Override
+    public int getHeight() {
+        return getSize(getInputEntries().size());
+    }
+
+    private static int getSize(int total) {
+        if (total > 4) {
+            return 3;
+        } else if (total > 1) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+}

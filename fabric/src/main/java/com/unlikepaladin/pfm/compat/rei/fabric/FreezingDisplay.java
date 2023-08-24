@@ -1,5 +1,5 @@
-package com.unlikepaladin.pfm.compat.rei;
-/**
+package com.unlikepaladin.pfm.compat.rei.fabric;
+
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import me.shedaniel.rei.plugin.DefaultPlugin;
@@ -22,4 +22,4 @@ public class FreezingDisplay extends DefaultCookingDisplay {
         return IDENTIFIER;
     }
     public static Identifier IDENTIFIER = new Identifier(PaladinFurnitureMod.MOD_ID, "plugins/freezing");
-}*/
+}

@@ -12,27 +12,25 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenB
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.cookingforblockheads.KitchenMultiBlock;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.entity.EntityRenderer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
@@ -41,6 +39,8 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.function.Function;
 
@@ -72,7 +72,7 @@ public class PFMCookingForBlockHeadsCompat {
     public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
         StoveBlockEntityBalm stove = (StoveBlockEntityBalm)world.getBlockEntity(pos);
         if (!world.isClient) {
-            Balm.getNetworking().openGui(player, stove);
+            NetworkHooks.openGui((ServerPlayerEntity)player, stove, pos);
         }
     }
 
@@ -112,33 +112,33 @@ public class PFMCookingForBlockHeadsCompat {
                 index = 2;
             }
             if (index != -1) {
-                StoveBlockEntityBalm tileOven = (StoveBlockEntityBalm)level.getBlockEntity(pos);
-                if (tileOven != null && tileOven.getToolItem(index).isEmpty()) {
+                StoveBlockEntityBalm stove = (StoveBlockEntityBalm)level.getBlockEntity(pos);
+                if (stove != null && stove.getToolItem(index).isEmpty()) {
                     ItemStack toolItem = heldItem.split(1);
-                    tileOven.setToolItem(index, toolItem);
+                    stove.setToolItem(index, toolItem);
                 }
             }
             return ActionResult.SUCCESS;
         } else {
-            StoveBlockEntityBalm oven = (StoveBlockEntityBalm)level.getBlockEntity(pos);
-            if (hit.getSide() == state.get(Properties.HORIZONTAL_FACING) && oven != null) {
+            StoveBlockEntityBalm stove = (StoveBlockEntityBalm)level.getBlockEntity(pos);
+            if (hit.getSide() == state.get(Properties.HORIZONTAL_FACING) && stove != null) {
                 if (player.isSneaking()) {
                     return ActionResult.SUCCESS;
                 }
 
-                if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem) != ItemStack.EMPTY) {
-                    heldItem = ContainerUtils.insertItemStacked(oven.getInputContainer(), heldItem, false);
+                if (!heldItem.isEmpty() && stove.getSmeltingResult(heldItem) != ItemStack.EMPTY) {
+                    heldItem = ItemHandlerHelper.insertItemStacked(stove.getInputContainer(), heldItem, false);
                     player.setStackInHand(hand, heldItem);
 
                     return ActionResult.SUCCESS;
                 } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(heldItem)) {
-                    heldItem = ContainerUtils.insertItemStacked(oven.getFuelContainer(), heldItem, false);
+                    heldItem = ItemHandlerHelper.insertItemStacked(stove.getFuelContainer(), heldItem, false);
                     player.setStackInHand(hand, heldItem);
                     return ActionResult.SUCCESS;
                 }
             }
             if (!level.isClient) {
-                Balm.getNetworking().openGui(player, oven);
+                NetworkHooks.openGui((ServerPlayerEntity)player, stove, pos);
             }
             return ActionResult.SUCCESS;
         }

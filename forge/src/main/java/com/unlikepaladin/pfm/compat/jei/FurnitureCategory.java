@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.compat.jei;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import mezz.jei.api.constants.VanillaTypes;
@@ -70,7 +71,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
          List<Ingredient> ingredientsList = recipe.getIngredients();
          HashMap<Item, Integer> containedItems = new LinkedHashMap<>();
             for (Ingredient ingredient : ingredientsList) {
-                for (ItemStack stack : ingredient.getMatchingStacks()) {
+                for (ItemStack stack : PFMRecipeProvider.pfm$getMatchingStacks(ingredient)) {
                     if (!containedItems.containsKey(stack.getItem())) {
                         containedItems.put(stack.getItem(), 1);
                     } else {
@@ -82,7 +83,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
             for (Map.Entry<Item, Integer> entry: containedItems.entrySet()) {
                 finalList.add(Ingredient.ofStacks(new ItemStack(entry.getKey(), entry.getValue())));
             }
-        finalList.sort(Comparator.comparing(o -> o.getMatchingStacks()[0].getItem().toString()));
+        finalList.sort(Comparator.comparing(o -> PFMRecipeProvider.pfm$getMatchingStacks(o)[0].getItem().toString()));
 
         ingredients.setInputIngredients(finalList);
         ingredients.setOutput(VanillaTypes.ITEM, recipe.getOutput());
@@ -106,5 +107,4 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
 
         guiItemStacks.set(craftOutputSlot, outputs.get(0));
     }
-
 }

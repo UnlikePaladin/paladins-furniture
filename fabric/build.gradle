@@ -61,7 +61,6 @@ repositories {
 dependencies {
     modCompileOnly("me.shedaniel:RoughlyEnoughItems:${rootProject.rei_version_fabric}") {
         exclude(group: "net.fabricmc.fabric-api")
-        transitive(false)
     }
 }
 

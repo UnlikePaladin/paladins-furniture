@@ -1,5 +1,5 @@
-package com.unlikepaladin.pfm.compat.rei;
-/**
+package com.unlikepaladin.pfm.compat.rei.fabric;
+
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class FurnitureCategory implements TransferRecipeCategory<FurnitureDisplay> {
-    public static final EntryStack<ItemStack> ICON = EntryStacks.of(PaladinFurnitureModBlocksItems.WORKING_TABLE);
+    public static final EntryStack ICON = EntryStack.create(PaladinFurnitureModBlocksItems.WORKING_TABLE);
 
     public static int getSlotWithSize(FurnitureDisplay recipeDisplay, int num, int craftingGridWidth) {
         int x = num % recipeDisplay.getWidth();
@@ -62,7 +62,7 @@ public class FurnitureCategory implements TransferRecipeCategory<FurnitureDispla
         widgets.add(Widgets.createRecipeBase(bounds));
         widgets.add(Widgets.createArrow(new Point(startPoint.x + 60, startPoint.y + 18)));
         widgets.add(Widgets.createResultSlotBackground(new Point(startPoint.x + 95, startPoint.y + 19)));
-        List<EntryIngredient> input = display.getInputEntries();
+        List<List<EntryStack>> input = display.getInputEntries();
         List<Slot> slots = Lists.newArrayList();
 
         for (int y = 0; y < 3; ++y) {
@@ -97,4 +97,3 @@ public class FurnitureCategory implements TransferRecipeCategory<FurnitureDispla
         matrices.pop();
     }
 }
-*/

@@ -1,19 +1,19 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot;
 
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.cookingforblockheads.api.event.OvenItemSmeltedEvent;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.screen.slot.Slot;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.SlotItemHandler;
 
-public class StoveResultSlot extends Slot {
+public class StoveResultSlot extends SlotItemHandler {
     private final PlayerEntity player;
     private final StoveBlockEntityBalm tileEntity;
     private int removeCount;
 
-    public StoveResultSlot(PlayerEntity player, StoveBlockEntityBalm tileEntity, Inventory container, int i, int x, int y) {
+    public StoveResultSlot(PlayerEntity player, StoveBlockEntityBalm tileEntity, IItemHandler container, int i, int x, int y) {
         super(container, i, x, y);
         this.player = player;
         this.tileEntity = tileEntity;
@@ -39,9 +39,9 @@ public class StoveResultSlot extends Slot {
 
     }
 
-    public void onTakeItem(PlayerEntity player, ItemStack itemStack) {
+    public ItemStack onTakeItem(PlayerEntity player, ItemStack itemStack) {
         this.onCrafted(itemStack);
-        super.onTakeItem(player, itemStack);
+        return super.onTakeItem(player, itemStack);
     }
 
     protected void onCrafted(ItemStack stack, int amount) {
@@ -53,7 +53,7 @@ public class StoveResultSlot extends Slot {
         stack.onCraft(this.player.world, this.player, this.removeCount);
         this.removeCount = 0;
         if (this.tileEntity.getWorld() != null && !stack.isEmpty()) {
-            Balm.getEvents().fireEvent(new OvenItemSmeltedEvent(this.player, this.tileEntity.getWorld(), this.tileEntity.getPos(), stack));
+            MinecraftForge.EVENT_BUS.post(new OvenItemSmeltedEvent(this.player, this.tileEntity.getWorld(), this.tileEntity.getPos(), stack));
         }
 
     }

@@ -16,10 +16,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+import java.util.function.Supplier;
 
 public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
-    public PFMToasterBlockEntityImpl(BlockPos pos, BlockState state) {
-        super(pos, state);
+    public PFMToasterBlockEntityImpl() {
+        super();
     }
 
     public static boolean isMetal(ItemStack stack) {
@@ -29,14 +30,14 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
     public static void sandwichableToast(PFMToasterBlockEntity pfmToasterBlockEntity) {
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends PFMToasterBlockEntity> getFactory() {
+    public static Supplier<? extends PFMToasterBlockEntity> getFactory() {
         return PFMToasterBlockEntityImpl::new;
     }
 
     @Nullable
     @Override
     public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, BlockEntityUpdateS2CPacket.CAMPFIRE, this.toInitialChunkDataNbt());
+        return new BlockEntityUpdateS2CPacket(this.pos, 13, this.toInitialChunkDataNbt());
     }
 
     protected NbtCompound saveInitialChunkData(NbtCompound nbt) {
@@ -51,8 +52,8 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag) {
-        this.readNbt(tag);
+    public void handleUpdateTag(BlockState state, NbtCompound tag) {
+        this.fromTag(state, tag);
     }
 
     @Override

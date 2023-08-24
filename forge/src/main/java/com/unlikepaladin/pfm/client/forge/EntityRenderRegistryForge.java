@@ -13,7 +13,6 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class EntityRenderRegistryForge {
@@ -28,6 +27,8 @@ public class EntityRenderRegistryForge {
     @SubscribeEvent
     public static void registerBlockEntityRender(FMLClientSetupEvent event){
         EntityRenderRegistry.registerBlockEntityRenderers();
-        EntityRenderRegistryImpl.blockEntityRendererFactoryMap.forEach(ClientRegistry::bindTileEntityRenderer);
+        EntityRenderRegistryImpl.blockEntityRendererFactoryMap.forEach((type, blockEntityRenderDispatcherBlockEntityRendererFunction) -> {
+            ClientRegistry.bindTileEntityRenderer(type, blockEntityRenderDispatcherBlockEntityRendererFunction::apply);
+        });
     }
 }

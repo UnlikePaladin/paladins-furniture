@@ -35,7 +35,8 @@ public class LateBlockRegistryForge {
                     eventConsumer = e -> {
                         Runnable blockEvent = () -> {
                             IForgeRegistry<?> registry = e.getRegistry();
-                            if (registry instanceof ForgeRegistry<?> fr) {
+                            if (registry instanceof ForgeRegistry<?>) {
+                                ForgeRegistry<?> fr = (ForgeRegistry<?>) registry;
                                 boolean frozen = fr.isLocked();
                                 fr.unfreeze();
                                 try {

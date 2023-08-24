@@ -1,9 +1,8 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
-import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.cookingforblockheads.ItemUtils;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
-import net.blay09.mods.cookingforblockheads.tile.CookingTableBlockEntity;
+import net.blay09.mods.cookingforblockheads.tile.CookingTableTileEntity;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -11,6 +10,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -19,7 +19,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import net.minecraftforge.fmllegacy.network.NetworkHooks;
+import net.minecraftforge.fml.network.NetworkHooks;
 import org.jetbrains.annotations.Nullable;
 
 public class PFMCookingTableBlock extends BlockWithEntity {
@@ -29,7 +29,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         ItemStack heldItem = player.getStackInHand(hand);
-        CookingTableBlockEntity blockEntity = (CookingTableBlockEntity)world.getBlockEntity(pos);
+        CookingTableTileEntity blockEntity = (CookingTableTileEntity)world.getBlockEntity(pos);
         if (!heldItem.isEmpty()) {
             if (blockEntity != null) {
                 if (!blockEntity.hasNoFilterBook() && heldItem.getItem() == ModItems.noFilterBook) {
@@ -40,7 +40,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
         } else if (player.isSneaking() && blockEntity != null) {
             ItemStack noFilterBook = blockEntity.getNoFilterBook();
             if (!noFilterBook.isEmpty()) {
-                if (!player.getInventory().insertStack(noFilterBook)) {
+                if (!player.inventory.insertStack(noFilterBook)) {
                     player.dropItem(noFilterBook, false);
                 }
                 blockEntity.setNoFilterBook(ItemStack.EMPTY);
@@ -48,13 +48,13 @@ public class PFMCookingTableBlock extends BlockWithEntity {
             }
         }
         if (!world.isClient) {
-            Balm.getNetworking().openGui(player, blockEntity);
+            NetworkHooks.openGui((ServerPlayerEntity)player, blockEntity, pos);
         }
         return ActionResult.SUCCESS;
     }
 
     public void onStateReplaced(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
-        CookingTableBlockEntity tileEntity = (CookingTableBlockEntity) level.getBlockEntity(pos);
+        CookingTableTileEntity tileEntity = (CookingTableTileEntity) level.getBlockEntity(pos);
         if (tileEntity != null && !state.isOf(newState.getBlock())) {
             ItemUtils.spawnItemStack(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, tileEntity.getNoFilterBook());
         }
@@ -63,8 +63,8 @@ public class PFMCookingTableBlock extends BlockWithEntity {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new CookingTableBlockEntity(pos, state);
+    public BlockEntity createBlockEntity(BlockView blockView) {
+        return new CookingTableTileEntity();
     }
 
     private static final VoxelShape SHAPE = VoxelShapes.union(createCuboidShape(3, 0, 3, 13,1,13));

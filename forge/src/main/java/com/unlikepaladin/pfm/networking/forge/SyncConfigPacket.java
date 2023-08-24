@@ -6,8 +6,9 @@ import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.TranslatableText;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkEvent;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +26,20 @@ public class SyncConfigPacket {
     }
 
     public static void encode(SyncConfigPacket packet, PacketByteBuf buffer) {
+        //Sync Config
         Collection<AbstractConfigOption> configOptions = packet.configOptions.values();
-        buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
+        //Write length
+        buffer.writeInt(configOptions.size());
+        //Write Options
+        configOptions.forEach(abstractConfigOption -> AbstractConfigOption.writeConfigOption(buffer, abstractConfigOption));
     }
 
-    public static SyncConfigPacket decode(PacketByteBuf buffer) {
-        Collection<AbstractConfigOption> configOptions = buffer.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
+    public static SyncConfigPacket decode(PacketByteBuf buf) {
+        int configTotalNum = buf.readInt();
+        ArrayList<AbstractConfigOption> configOptions = Lists.newArrayListWithCapacity(configTotalNum); // buf.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
+        for (int i = 0; i < configTotalNum; i++){
+            configOptions.add(AbstractConfigOption.readConfigOption(buf));
+        }
         Map<String, AbstractConfigOption> map = new HashMap<>();
         configOptions.forEach(abstractConfigOption -> {
             map.put(((TranslatableText)abstractConfigOption.getTitle()).getKey(), abstractConfigOption);

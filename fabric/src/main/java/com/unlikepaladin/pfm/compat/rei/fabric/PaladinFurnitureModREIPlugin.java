@@ -1,9 +1,7 @@
 package com.unlikepaladin.pfm.compat.rei.fabric;
-/*
-import com.unlikepaladin.pfm.compat.rei.FreezingCategory;
-import com.unlikepaladin.pfm.compat.rei.FreezingDisplay;
-import com.unlikepaladin.pfm.compat.rei.FurnitureCategory;
-import com.unlikepaladin.pfm.compat.rei.FurnitureDisplay;
+
+import com.unlikepaladin.pfm.client.screens.FreezerScreen;
+import com.unlikepaladin.pfm.client.screens.WorkbenchScreen;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -29,19 +27,28 @@ import net.minecraft.recipe.SmokingRecipe;
 import net.minecraft.util.Identifier;
 
 
-public class PaladinFurnitureModREIPlugin implements REIClientPlugin {
+public class PaladinFurnitureModREIPlugin implements REIPluginV0 {
+
     @Override
-    public void registerCategories(CategoryRegistry registry) {
-        registry.add(new FurnitureCategory());
-        registry.addWorkstations(FurnitureDisplay.IDENTIFIER, FurnitureCategory.ICON);
-        registry.add(new FreezingCategory());
-        registry.addWorkstations(FreezingDisplay.IDENTIFIER, FreezingCategory.WORKSTATIONS);
+    public void registerPluginCategories(RecipeHelper recipeHelper) {
+        recipeHelper.registerCategories(
+                new FurnitureCategory(),
+                new FreezingCategory()
+        );
     }
 
     @Override
-    public void registerDisplays(DisplayRegistry registry) {
-        registry.registerFiller(FurnitureRecipe.class, FurnitureDisplay::new);
-        registry.registerFiller(FreezingRecipe.class, FreezingDisplay::new);
+    public void registerRecipeDisplays(RecipeHelper recipeHelper) {
+        recipeHelper.registerRecipes(FurnitureDisplay.IDENTIFIER, FurnitureRecipe.class , FurnitureDisplay::new);
+        recipeHelper.registerRecipes(FreezingDisplay.IDENTIFIER, FreezingRecipe.class, FreezingDisplay::new);
+    }
+
+    @Override
+    public void registerOthers(RecipeHelper recipeHelper) {
+        recipeHelper.registerWorkingStations(FurnitureDisplay.IDENTIFIER, EntryStack.create(PaladinFurnitureModBlocksItems.WORKING_TABLE));
+        recipeHelper.registerWorkingStations(FreezingDisplay.IDENTIFIER, EntryStack.create(PaladinFurnitureModBlocksItems.WHITE_FRIDGE));
+        recipeHelper.registerContainerClickArea(new Rectangle(88, 32, 28, 23), WorkbenchScreen.class, FurnitureDisplay.IDENTIFIER);
+        recipeHelper.registerContainerClickArea(new Rectangle(78, 32, 28, 23), FreezerScreen.class, FreezingDisplay.IDENTIFIER);
     }
 
     @Override
@@ -49,4 +56,3 @@ public class PaladinFurnitureModREIPlugin implements REIClientPlugin {
         return new Identifier("pfm:pfm");
     }
 }
-*/

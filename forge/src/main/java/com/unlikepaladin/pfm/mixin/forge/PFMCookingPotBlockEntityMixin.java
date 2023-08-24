@@ -9,13 +9,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
-import vectorwing.farmersdelight.common.block.entity.CookingPotBlockEntity;
-import vectorwing.farmersdelight.common.block.entity.HeatableBlockEntity;
-import vectorwing.farmersdelight.common.tag.ModTags;
+import vectorwing.farmersdelight.tile.CookingPotTileEntity;
+import vectorwing.farmersdelight.tile.IHeatableTileEntity;
+import vectorwing.farmersdelight.utils.tags.ModTags;
 
 @Pseudo
-@Mixin(CookingPotBlockEntity.class)
-public abstract class PFMCookingPotBlockEntityMixin implements HeatableBlockEntity {
+@Mixin(CookingPotTileEntity.class)
+public abstract class PFMCookingPotBlockEntityMixin implements IHeatableTileEntity {
     @Override
     public boolean isHeated(World world, BlockPos pos) {
         Block checkBlock = world.getBlockState(pos.down()).getBlock();

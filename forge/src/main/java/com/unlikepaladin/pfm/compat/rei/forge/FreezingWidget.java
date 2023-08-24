@@ -1,12 +1,11 @@
-package com.unlikepaladin.pfm.compat.rei;
-/**
+package com.unlikepaladin.pfm.compat.rei.forge;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import me.shedaniel.clothconfig2.api.animator.NumberAnimator;
 import me.shedaniel.clothconfig2.api.animator.ValueAnimator;
 import me.shedaniel.math.Rectangle;
-import me.shedaniel.rei.api.REIHelper;
-import me.shedaniel.rei.api.widgets.BurningFire;
+import me.shedaniel.rei.api.client.gui.widgets.BurningFire;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.util.math.MatrixStack;
@@ -70,4 +69,4 @@ public class FreezingWidget extends BurningFire {
     public List<? extends Element> children() {
         return Collections.emptyList();
     }
-}*/
+}
