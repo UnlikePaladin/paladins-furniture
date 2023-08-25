@@ -9,6 +9,8 @@ import com.unlikepaladin.pfm.blocks.forge.StoveBlockImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveBlockEntityRendererBalm;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenBalm;
+import com.unlikepaladin.pfm.data.PFMBlockSettings;
+import com.unlikepaladin.pfm.data.ToolType;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
@@ -52,7 +54,7 @@ public class PFMCookingForBlockHeadsCompat {
         PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getAllBlocks().forEach(KitchenMultiBlock::registerConnectorBlock);
     }
 
-    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(AbstractBlock.Settings.copy(PaladinFurnitureModBlocksItems.GRAY_STOVE));
+    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(PaladinFurnitureModBlocksItems.GRAY_STOVE), ToolType.PICKAXE));
     public static <T extends ScreenHandler> TriFunc<Integer, PlayerInventory, PacketByteBuf, T> getStoveScreenHandler() {
         return (integer, playerInventory, packetByteBuf) -> {
             BlockPos pos = packetByteBuf.readBlockPos();

@@ -72,6 +72,16 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
     }
 
     @Override
+    public Material getBaseMaterial() {
+        return baseBlock.getDefaultState().getMaterial();
+    }
+
+    @Override
+    public Material getSecondaryMaterial() {
+        return secondaryBlock.getDefaultState().getMaterial();
+    }
+
+    @Override
     public ExtraStoolVariant getVariantType() {
         return this;
     }

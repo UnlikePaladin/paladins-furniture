@@ -70,6 +70,16 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
     }
 
     @Override
+    public Material getBaseMaterial() {
+        return baseBlock.getDefaultState().getMaterial();
+    }
+
+    @Override
+    public Material getSecondaryMaterial() {
+        return secondaryBlock.getDefaultState().getMaterial();
+    }
+
+    @Override
     public ExtraCounterVariant getVariantType() {
         return this;
     }

@@ -80,6 +80,16 @@ public class StoneVariant extends VariantBase<StoneVariant> {
     }
 
     @Override
+    public Material getBaseMaterial() {
+        return baseBlock.getDefaultState().getMaterial();
+    }
+
+    @Override
+    public Material getSecondaryMaterial() {
+        return secondaryBlock.getDefaultState().getMaterial();
+    }
+
+    @Override
     public StoneVariant getVariantType() {
         return this;
     }

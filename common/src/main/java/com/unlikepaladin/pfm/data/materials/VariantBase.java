@@ -40,6 +40,8 @@ public abstract class VariantBase<T> implements StringIdentifiable {
     public abstract boolean isNetherWood();
 
     abstract public Material getVanillaMaterial();
+    abstract public Material getBaseMaterial();
+    abstract public Material getSecondaryMaterial();
 
     abstract public T getVariantType();
 

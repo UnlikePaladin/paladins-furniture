@@ -123,6 +123,16 @@ public class WoodVariant extends VariantBase<WoodVariant> {
     }
 
     @Override
+    public Material getBaseMaterial() {
+        return plankBlock.getDefaultState().getMaterial();
+    }
+
+    @Override
+    public Material getSecondaryMaterial() {
+        return logBlock.getDefaultState().getMaterial();
+    }
+
+    @Override
     public boolean isVanilla() {
         return identifier.getNamespace().equals("") || identifier.getNamespace().equals("minecraft");
     }
