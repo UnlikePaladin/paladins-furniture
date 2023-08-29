@@ -19,19 +19,23 @@ import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.*;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.Entry> {
     final PFMConfigScreen parent;
     int maxKeyNameLength;
-
+    public BitSet hasChanges;
+    public Map<AbstractConfigOption, Boolean> newConfigValues;
+    public Map<AbstractConfigOption, Integer> configOptionToIndexForHasChanges;
     public PFMOptionListWidget(PFMConfigScreen parent, MinecraftClient client) {
         super(client, parent.width + 125, parent.height, 43, parent.height - 32, 20);
         this.parent = parent;
         String string = null;
+        int index = 0;
+        hasChanges = new BitSet(PaladinFurnitureMod.getPFMConfig().options.size());
+        newConfigValues = new HashMap<>(PaladinFurnitureMod.getPFMConfig().options.size());
+        configOptionToIndexForHasChanges = new HashMap<>(PaladinFurnitureMod.getPFMConfig().options.size());
         for(Map.Entry<String, AbstractConfigOption> configOptionEntry : PaladinFurnitureMod.getPFMConfig().options.entrySet()) {
             Text text;
             int i;
@@ -44,10 +48,13 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
                 this.maxKeyNameLength = i;
             }
             if (configOptionEntry.getValue().getType() == Boolean.class) {
-                this.addEntry(new BooleanEntry((BooleanConfigOption)configOptionEntry.getValue(), text));
+                PFMOptionListWidget.this.newConfigValues.put(configOptionEntry.getValue(), (Boolean) configOptionEntry.getValue().getValue());
+                this.addEntry(new BooleanEntry((BooleanConfigOption)configOptionEntry.getValue(), text, index));
             } else {
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Unsupported Config Type!");
             }
+            configOptionToIndexForHasChanges.put(configOptionEntry.getValue(), index);
+            index++;
         }
         this.addEntry(new CategoryEntry(new LiteralText("")));
         this.addEntry(new ButtonEntry(Side.CLIENT, new TranslatableText("pfm.option.regenAssets"), new TranslatableText("pfm.config.regen"), new TranslatableText("pfm.option.regenAssets.tooltip"), button -> {
@@ -57,6 +64,13 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             PFMRuntimeResources.runAsyncResourceGen();
             MinecraftClient.getInstance().reloadResourcesConcurrently();
         }));
+    }
+
+    public void save() {
+        for (Map.Entry<AbstractConfigOption, Boolean> entry : newConfigValues.entrySet()) {
+            if (entry.getKey().getType() == Boolean.class)
+                entry.getKey().setValue(entry.getValue());
+        }
     }
 
     @Override
@@ -105,10 +119,12 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         private final ButtonWidget resetButton;
 
         private final ButtonWidget.TooltipSupplier supplier;
-
-        BooleanEntry(final BooleanConfigOption configOption, final Text optionName) {
+        int index;
+        boolean hasChanges = false;
+        BooleanEntry(final BooleanConfigOption configOption, final Text optionName, int index) {
             this.configOption = configOption;
             this.optionName = optionName;
+            this.index = index;
             this.supplier = new ButtonWidget.TooltipSupplier() {
                 final MutableText sideText = configOption.getSide() == Side.CLIENT ? new TranslatableText("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(TextColor.fromRgb(0xf77f34))) : new TranslatableText("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(TextColor.fromRgb(0xf77f34))));
                 final MutableText styledTooltip = ((MutableText)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true));
@@ -121,11 +137,15 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
 
             this.valueButton = new ButtonWidget(0, 0, 75, 20, optionName, button -> {
                 PFMOptionListWidget.this.parent.focusedConfigOption = configOption;
-                configOption.setValue(!configOption.getValue());
+                PFMOptionListWidget.this.newConfigValues.put(configOption, !PFMOptionListWidget.this.newConfigValues.get(configOption));
+                hasChanges = !hasChanges;
+                PFMOptionListWidget.this.hasChanges.set(index, hasChanges);
             }, this.supplier);
 
             this.resetButton = new ButtonWidget(0, 0, 50, 20, new TranslatableText("controls.reset"), button -> {
-                configOption.setValue(configOption.getDefaultValue());
+                PFMOptionListWidget.this.newConfigValues.put(configOption, configOption.getDefaultValue());
+                hasChanges = true;
+                PFMOptionListWidget.this.hasChanges.set(index, true);
             }){
 
                 @Override
@@ -140,11 +160,11 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             PFMOptionListWidget.this.client.textRenderer.draw(matrices, this.optionName, (float)(x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (float)(y + entryHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), 0xFFFFFF);
             this.resetButton.x = x + 190;
             this.resetButton.y = y;
-            this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !this.configOption.isDefault() : !this.configOption.isDefault();;
+            this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption)) : !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption));;
             this.resetButton.render(matrices, mouseX, mouseY, tickDelta);
             this.valueButton.x = x + 105;
             this.valueButton.y = y;
-            this.valueButton.setMessage(this.configOption.getValue() ? ScreenTexts.YES : ScreenTexts.NO);
+            this.valueButton.setMessage(PFMOptionListWidget.this.newConfigValues.get(configOption) ? ScreenTexts.YES : ScreenTexts.NO);
             this.valueButton.active = this.configOption.getSide() != Side.SERVER || !PFMConfigScreen.isOnServer;
             this.valueButton.render(matrices, mouseX, mouseY, tickDelta);
         }
