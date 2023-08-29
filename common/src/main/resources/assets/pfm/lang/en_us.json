@@ -1201,6 +1201,8 @@
   "pfm.option.regenAssets": "Recreate Assets",
   "pfm.config.regen": "Recreate",
   "pfm.option.regenAssets.tooltip": "Re-creates mod assets and triggers a resource reload, leaving and entering the world may be necessary for some changes to take effect.",
+  "gui.pfm.saveChanges": "Do you wish to save your changes?",
+  "gui.pfm.changesMightNotBeSaved": "Closing without Saving Changes!",
 
   "block.type.stripped": "Stripped",
   "block.type.raw": "Raw",
