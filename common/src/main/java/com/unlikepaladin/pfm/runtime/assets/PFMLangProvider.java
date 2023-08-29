@@ -228,9 +228,10 @@ public class PFMLangProvider {
     }
     public String getTranslatedVariantName(VariantBase<?> variant) {
         AtomicReference<String> variantName = new AtomicReference<>(translate(variant.getSecondaryBlock().getTranslationKey()));
-        String oakVariantName = translate(variant != WoodVariantRegistry.getVariantFromVanillaWoodType(BoatEntity.Type.JUNGLE) ? WoodVariantRegistry.getVariantFromVanillaWoodType(BoatEntity.Type.JUNGLE).getSecondaryBlock().getTranslationKey() : WoodVariantRegistry.OAK.getSecondaryBlock().getTranslationKey());
-        List<String> common = findCommonWords(variantName.get(), oakVariantName);
-        common.forEach(s -> variantName.set(variantName.get().replace(s, "").trim()));
+        String baseBlockName = translate(variant.getBaseBlock().getTranslationKey());
+        List<String> common = findCommonWords(variantName.get(), baseBlockName);
+        variantName.set("");
+        common.forEach(s -> variantName.set(String.join(!variantName.get().isEmpty() ? variantName.get() + " " : variantName.get(), s)));
         return variantName.get();
     }
 

@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.client.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.PFMCookingForBlockHeadsCompat;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.client.PFMCookingForBlockheadsClient;
 import com.unlikepaladin.pfm.entity.render.StoveBlockEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockEntityRendererRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
@@ -28,7 +29,7 @@ public class EntityRenderRegistryImpl {
 
     public static BlockEntityRendererFactory getStoveBlockEntityRenderer() {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
-            return PFMCookingForBlockHeadsCompat.getStoveRenderer();
+            return PFMCookingForBlockheadsClient.getStoveRenderer();
         } else {
             return StoveBlockEntityRenderer::new;
         }
