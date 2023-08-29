@@ -6,9 +6,7 @@ import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.blocks.KitchenWallCounterBlock;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.blocks.forge.StoveBlockImpl;
-import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveBlockEntityRendererBalm;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenHandlerBalm;
-import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenBalm;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.blay09.mods.balm.api.Balm;
@@ -20,16 +18,12 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -52,14 +46,6 @@ public class PFMCookingForBlockHeadsCompat {
             BlockEntity blockEntity = playerInventory.player.world.getBlockEntity(pos);
             return (T) new StoveScreenHandlerBalm(integer, playerInventory, (StoveBlockEntityBalm)blockEntity);
         };
-    }
-
-    public static <T extends ScreenHandler, J extends Screen & ScreenHandlerProvider<T>> TriFunc<T, PlayerInventory, Text,J> getStoveScreen() {
-        return (t, playerInventory, text) -> (J) new StoveScreenBalm((StoveScreenHandlerBalm) t, playerInventory, text);
-    }
-
-    public static BlockEntityRendererFactory getStoveRenderer() {
-        return StoveBlockEntityRendererBalm::new;
     }
 
     public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
