@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.client.forge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.PFMCookingForBlockHeadsCompat;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.client.PFMCookingForBlockheadsClient;
 import com.unlikepaladin.pfm.entity.render.StoveBlockEntityRenderer;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
@@ -32,7 +33,7 @@ public class EntityRenderRegistryImpl {
 
     public static <E extends StoveBlockEntity> Function<BlockEntityRenderDispatcher, BlockEntityRenderer<? super E>> getStoveBlockEntityRenderer() {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
-            return PFMCookingForBlockHeadsCompat.getStoveRenderer();
+            return PFMCookingForBlockheadsClient.getStoveRenderer();
         } else {
             return StoveBlockEntityRenderer::new;
         }

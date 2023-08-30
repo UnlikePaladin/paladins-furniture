@@ -19,7 +19,6 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.*;
 
-//TODO: oven and freezer support, make the freezer always provide ice, custom crafting counter
 public class FridgeBlockEntityBalm extends FridgeBlockEntity {
     private final InventoryHandler inventoryHandler;
     private final KitchenItemProvider itemProvider;

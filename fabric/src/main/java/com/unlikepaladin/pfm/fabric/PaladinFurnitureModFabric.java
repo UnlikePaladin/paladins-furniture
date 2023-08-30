@@ -62,6 +62,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
             GENERAL_LOGGER.error("", e);
         }
         this.commonInit();
+
         PaladinFurnitureMod.DYE_KITS = FabricItemGroupBuilder.create(
                         new Identifier(MOD_ID, "dye_kits"))
                 .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
@@ -84,6 +85,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                     stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLACK));
                 })
                 .build();
+
         EntityRegistryFabric.registerEntities();
         PaladinFurnitureModFabric.initializeItemGroup();
         BlockItemRegistryFabric.registerItems();

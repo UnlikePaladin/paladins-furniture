@@ -201,8 +201,6 @@ public class PFMLangProvider {
         }
     }
 
-    //TODO: check if the mod version's different and regen assets
-    //TODO: Waterlog chairs and tables only
     public void generateTranslationForLampBlock(BufferedWriter writer) {
         for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
             for (DyeColor color : DyeColor.values()) {

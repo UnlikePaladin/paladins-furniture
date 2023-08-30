@@ -6,9 +6,7 @@ import com.unlikepaladin.pfm.blocks.KitchenWallCounterBlock;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.blocks.forge.StoveBlockImpl;
-import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveBlockEntityRendererBalm;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenHandlerBalm;
-import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenBalm;
 import com.unlikepaladin.pfm.data.PFMBlockSettings;
 import com.unlikepaladin.pfm.data.ToolType;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -34,7 +32,6 @@ import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -61,14 +58,6 @@ public class PFMCookingForBlockHeadsCompat {
             BlockEntity blockEntity = playerInventory.player.world.getBlockEntity(pos);
             return (T) new StoveScreenHandlerBalm(integer, playerInventory, (StoveBlockEntityBalm)blockEntity);
         };
-    }
-
-    public static <T extends ScreenHandler, J extends Screen & ScreenHandlerProvider<T>> TriFunc<T, PlayerInventory, Text,J> getStoveScreen() {
-        return (t, playerInventory, text) -> (J) new StoveScreenBalm((StoveScreenHandlerBalm) t, playerInventory, text);
-    }
-
-    public static <E extends BlockEntity> Function<BlockEntityRenderDispatcher, BlockEntityRenderer<? super E>> getStoveRenderer() {
-        return blockEntityRenderDispatcher -> (BlockEntityRenderer<? super E>) new StoveBlockEntityRendererBalm(blockEntityRenderDispatcher);
     }
 
     public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
