@@ -4,7 +4,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.TitleScreen;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Util;
 import org.spongepowered.asm.mixin.Mixin;
@@ -50,9 +50,9 @@ public class PFMTitleScreenMixin {
                         MinecraftClient.getInstance().stop();
                     }
                 },
-                new TranslatableText("pfm.compat.failure.title").formatted(Formatting.RED),
-                new TranslatableText(reason),
-                new TranslatableText("pfm.compat.failure.indiumNotFound"),
-                new TranslatableText("menu.quit")));
+                Text.translatable("pfm.compat.failure.title").formatted(Formatting.RED),
+                Text.translatable(reason),
+                Text.translatable("pfm.compat.failure.indiumNotFound"),
+                Text.translatable("menu.quit")));
     }
 }
