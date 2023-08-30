@@ -29,6 +29,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
             GENERAL_LOGGER.error("Failed to initialize Paladin's Furniture configuration, default values will be used instead");
             GENERAL_LOGGER.error("", e);
         }
+        this.commonInit();
         ItemGroupRegistryForge.registerItemGroups();
         MinecraftForge.EVENT_BUS.register(EntityRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(BlockItemRegistryForge.class);
@@ -41,7 +42,6 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         NetworkRegistryForge.registerPackets();
         LateBlockRegistryForge.addDynamicBlockRegistration(Block.class);
         LateBlockRegistryForge.addDynamicBlockRegistration(Item.class);
-        this.commonInit();
         PaladinFurnitureMod.isClient = FMLEnvironment.dist == Dist.CLIENT;
     }
 }
