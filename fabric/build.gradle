@@ -111,13 +111,9 @@ else {
 
 if (rootProject.immersive_portals_compatibility_fabric == "true"){
     dependencies {
-        modRuntimeOnly ("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
-            exclude(group: "net.fabricmc.fabric-api")
-            transitive(false)
-        }
-        modRuntimeOnly("com.github.qouteall.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
-            exclude(group: "net.fabricmc.fabric-api")
-            transitive(false)
+        modRuntimeOnly("com.github.qouteall.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}") {
+            exclude group: "net.fabricmc.fabric-api"
+            exclude group: "com.github.Virtuoel"
         }
     }
 }

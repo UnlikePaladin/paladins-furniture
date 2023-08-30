@@ -1,9 +1,11 @@
 package com.unlikepaladin.pfm.compat.imm_ptl.entity;
 
 
+import com.qouteall.immersive_portals.my_util.IntBox;
+import com.qouteall.immersive_portals.portal.Mirror;
 import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmersivePortals;
 import com.unlikepaladin.pfm.compat.imm_ptl.PFMMirrorBlockIP;
-//import com.unlikepaladin.pfm.compat.imm_ptl.shape.BlockPortalShape;
+import com.unlikepaladin.pfm.compat.imm_ptl.shape.BlockPortalShape;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
@@ -16,10 +18,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
-/*
-import qouteall.imm_ptl.core.portal.Mirror;
-import qouteall.q_misc_util.my_util.IntBox;
-import qouteall.q_misc_util.Helper;
+import com.qouteall.immersive_portals.Helper;
 
 import java.util.stream.Stream;
 
@@ -91,7 +90,7 @@ public class PFMMirrorEntity extends Mirror {
         super.tick();
         if (!world.isClient) {
             if (!unbreakable) {
-                if (world.getTime() % 10 == getId() % 10) {
+                if (world.getTime() % 10 == getEntityId() % 10) {
                     checkWallIntegrity();
                 }
             }
@@ -124,7 +123,7 @@ public class PFMMirrorEntity extends Mirror {
             wallValid = false;
         }
         if (!wallValid) {
-            remove(RemovalReason.DISCARDED);
+            remove();
         }
     }
 
@@ -197,4 +196,4 @@ public class PFMMirrorEntity extends Mirror {
             return collisionShape.getBoundingBox().offset(Vec3d.of(blockPos));
         }).filter(b -> b != null).reduce(Box::union).orElse(null);
     }
-}*/
+}

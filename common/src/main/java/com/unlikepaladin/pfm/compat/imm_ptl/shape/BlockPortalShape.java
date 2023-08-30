@@ -10,11 +10,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
-/*
-import qouteall.imm_ptl.core.portal.GeometryPortalShape;
-import qouteall.imm_ptl.core.portal.Portal;
-import qouteall.q_misc_util.Helper;
-import qouteall.q_misc_util.my_util.IntBox;
+import com.qouteall.immersive_portals.Helper;
+import com.qouteall.immersive_portals.my_util.IntBox;
+import com.qouteall.immersive_portals.portal.GeometryPortalShape;
+import com.qouteall.immersive_portals.portal.Portal;
 
 import java.util.ArrayDeque;
 import java.util.Comparator;
@@ -29,7 +28,7 @@ import java.util.stream.Stream;
  * Backported to 1.17 from <a href="https://github.com/iPortalTeam/ImmersivePortalsMod/blob/1.19/imm_ptl_core/src/main/java/qouteall/imm_ptl/core/portal/nether_portal/BlockPortalShape.java">...</a>
  * */
 
-/*
+
 public class BlockPortalShape {
     public BlockPos anchor;
     public Set<BlockPos> area;
@@ -535,4 +534,3 @@ public class BlockPortalShape {
         return Objects.hash(area, axis);
     }
 }
-*/

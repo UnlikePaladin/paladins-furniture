@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.compat.imm_ptl.client;
 
+import com.qouteall.immersive_portals.render.PortalEntityRenderer;
 import com.unlikepaladin.pfm.client.EntityRenderRegistry;
 import com.unlikepaladin.pfm.compat.PFMClientModCompatibility;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
@@ -17,6 +18,6 @@ public class PFMImmersivePortalsClient implements PFMClientModCompatibility {
 
     @Override
     public void registerEntityRenderer() {
-        //EntityRenderRegistry.registerEntityRender(PFMImmersivePortals.MIRROR, PortalEntityRenderer::new);
+        EntityRenderRegistry.registerEntityRender(PFMImmersivePortals.MIRROR, PortalEntityRenderer::new);
     }
 }

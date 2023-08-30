@@ -61,7 +61,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
             GENERAL_LOGGER.error("Failed to initialize Paladin's Furniture configuration, default values will be used instead");
             GENERAL_LOGGER.error("", e);
         }
-
+        this.commonInit();
         PaladinFurnitureMod.DYE_KITS = FabricItemGroupBuilder.create(
                         new Identifier(MOD_ID, "dye_kits"))
                 .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
@@ -84,12 +84,10 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                     stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLACK));
                 })
                 .build();
-
         EntityRegistryFabric.registerEntities();
         PaladinFurnitureModFabric.initializeItemGroup();
         BlockItemRegistryFabric.registerItems();
         BlockItemRegistryFabric.registerBlocks();
-        this.commonInit();
         //PFMRuntimeResources.prepareAsyncResourceGen(); No async gen because Forge won't behave, blame it.
         PFMRuntimeResources.ready = true;
         StatisticsRegistryFabric.registerStatistics();

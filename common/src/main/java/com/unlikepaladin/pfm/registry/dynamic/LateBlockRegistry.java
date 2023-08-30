@@ -50,7 +50,7 @@ public class LateBlockRegistry {
         return block;
     }
 
-    //TODO: implement tools
+
     public static void registerBlocks() throws InvocationTargetException, InstantiationException, IllegalAccessException {
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::createBlocks);
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(BasicChairBlock.class, new FurnitureEntry<BasicChairBlock>() {{
@@ -368,7 +368,7 @@ public class LateBlockRegistry {
                 this.addBlock(registerLateBlock(color.getName() + "_shower_towel", () -> new ShowerTowelBlock(color, PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.WOOL, color.getMapColor()).strength(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL), ToolType.PICKAXE)), true, PaladinFurnitureMod.FURNITURE_GROUP));
             }
         }});
-        if (!BlockItemRegistry.isModLoaded("imm_ptl_core")) {
+        if (!BlockItemRegistry.isModLoaded("imm_ptl_core") && !BlockItemRegistry.isModLoaded("immersive_portals")) {
             PaladinFurnitureModBlocksItems.WHITE_MIRROR = new MirrorBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.STONE, MapColor.WHITE).nonOpaque(), ToolType.PICKAXE));
             PaladinFurnitureModBlocksItems.GRAY_MIRROR = new MirrorBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.STONE, MapColor.GRAY).nonOpaque(), ToolType.PICKAXE));
         }
