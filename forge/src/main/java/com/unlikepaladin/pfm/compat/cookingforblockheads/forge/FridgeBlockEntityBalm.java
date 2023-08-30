@@ -34,7 +34,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-//TODO: oven and freezer support, make the freezer always provide ice, custom crafting counter
 public class FridgeBlockEntityBalm extends FridgeBlockEntity implements BalmContainerProvider, BalmProviderHolder, BalmBlockEntityContract {
     private final DefaultKitchenItemProvider itemProvider;
 
