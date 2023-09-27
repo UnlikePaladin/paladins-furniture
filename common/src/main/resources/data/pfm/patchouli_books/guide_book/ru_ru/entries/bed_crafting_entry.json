@@ -1,1 +1,25 @@
-
+{
+  "name": "Создание: Кровати",
+  "icon": "minecraft:oak_planks",
+  "category": "pfm:bed_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Существует множество вариаций кровати. Для её изготовлени¤ Вам понадобится одна ванильная кровать, несколько досок и забор, в зависимости от типа кровати, который Вы хотите.."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_red_simple_bed",
+      "recipe2": "pfm:spruce_cyan_classic_bed"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "При желании Вы можете сделать двухъярусную лестницу и разместить её на двухъярусной кровати. Её также можно использовать как обычную лестницу в другом месте."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_simple_bunk_ladder",
+      "recipe2": "pfm:warped_simple_bunk_ladder"
+    }
+  ]
+}
