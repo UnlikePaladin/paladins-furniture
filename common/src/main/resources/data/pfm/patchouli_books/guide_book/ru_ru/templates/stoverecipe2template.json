@@ -1,0 +1,40 @@
+{
+  "include": [
+    {
+      "template": "pfm:stoverecipetemplate",
+      "as": "nn",
+      "using": {
+        "recipe": "#recipe",
+        "customicon": "#customicon"
+      },
+      "y": 5
+    },
+    {
+      "template": "pfm:stoverecipetemplate",
+      "as": "uu",
+      "using": {
+        "recipe": "#recipe2",
+        "customicon": "#customicon"
+      },
+      "y": 45
+    },
+    {
+      "template": "pfm:stoverecipetemplate",
+      "as": "uu",
+      "using": {
+        "recipe": "#recipe3",
+        "customicon": "#customicon"
+      },
+      "y": 85
+    }
+  ],
+
+  "components": [
+    {
+      "type": "patchouli:text",
+      "text": "#text",
+      "x": 20,
+      "y": 75
+    }
+  ]
+}

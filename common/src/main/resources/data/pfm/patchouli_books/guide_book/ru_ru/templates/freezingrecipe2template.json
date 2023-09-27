@@ -1,0 +1,37 @@
+{
+  "include": [
+    {
+      "template": "pfm:freezingrecipetemplate",
+      "as": "nn",
+      "using": {
+        "recipe": "#recipe"
+      },
+      "y": 5
+    },
+    {
+      "template": "pfm:freezingrecipetemplate",
+      "as": "uu",
+      "using": {
+        "recipe": "#recipe2"
+      },
+      "y": 45
+    },
+    {
+      "template": "pfm:freezingrecipetemplate",
+      "as": "uu",
+      "using": {
+        "recipe": "#recipe3"
+      },
+      "y": 85
+    }
+  ],
+
+  "components": [
+    {
+      "type": "patchouli:text",
+      "text": "#text",
+      "x": 20,
+      "y": 75
+    }
+  ]
+}
