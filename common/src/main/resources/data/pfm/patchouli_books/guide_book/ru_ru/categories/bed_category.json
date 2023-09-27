@@ -1,1 +1,5 @@
-
+{
+  "name": "Кровати",
+  "description": "Всё, что связано с кроватями",
+  "icon": "pfm:oak_red_classic_bed"
+}
