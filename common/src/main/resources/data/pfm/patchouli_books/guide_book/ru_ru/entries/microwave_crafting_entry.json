@@ -1,0 +1,15 @@
+{
+  "name": "Создание: Микроволновые печи",
+  "icon": "minecraft:iron_block",
+  "category": "pfm:microwave_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Для изготовления микроволновой печи Вам понадобится редстоун, сундук и материал для неё, всё это поместите на деревянный рабочий стол в указанном порядке."
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:iron_microwave"
+    }
+  ]
+}

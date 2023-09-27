@@ -1,0 +1,101 @@
+{
+  "name": "Создание: Стулья",
+  "icon": "minecraft:oak_log",
+  "category": "pfm:chair_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Существует много видов стульев, Вам понадобятся доски и брёвна в зависимости от того, какой вид стула Вы создаёте. Чтобы изменить материал стула, просто замените дуб тем типом дерева, из которого Вы хотите, чтобы он был."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_chair",
+      "recipe2": "pfm:stripped_oak_chair"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_chair_dinner",
+      "recipe2": "pfm:stripped_oak_chair_dinner"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:froggy_chair",
+      "recipe2": "pfm:froggy_chair_pink"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:froggy_chair_light_blue",
+      "recipe2": "pfm:froggy_chair_blue"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:froggy_chair_orange",
+      "recipe2": "pfm:froggy_chair_yellow"
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:oak_chair_classic_red",
+      "custom_text": "Вы можете изменить цвет, используя другую шерсть или используя набор красителей после его создания."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_chair_classic",
+      "recipe2": "pfm:stripped_oak_chair_classic"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_chair_modern",
+      "recipe2": "pfm:stripped_oak_chair_modern"
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:white_arm_chair",
+      "custom_text": "Вы можете изменить цвет, используя другую шерсть или используя набор красителей после его создания."
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:orange_simple_sofa",
+      "custom_text": "Вы можете изменить цвет, используя другую шерсть или используя набор красителей после его создания."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:arm_chair_leather",
+      "recipe2": "pfm:oak_log_stool"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_simple_stool",
+      "recipe2": "pfm:stripped_oak_simple_stool"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_classic_stool",
+      "recipe2": "pfm:stripped_oak_classic_stool"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_simple_stool",
+      "recipe2": "pfm:stripped_oak_simple_stool"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_modern_stool",
+      "recipe2": "pfm:stripped_oak_modern_stool"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:white_modern_stool",
+      "recipe2": "pfm:gray_modern_stool"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:dark_wood_modern_stool",
+      "recipe2": "pfm:gray_dark_oak_modern_stool"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:light_gray_dark_oak_modern_stool",
+      "recipe2": "pfm:light_wood_modern_stool"
+    }
+  ]
+}

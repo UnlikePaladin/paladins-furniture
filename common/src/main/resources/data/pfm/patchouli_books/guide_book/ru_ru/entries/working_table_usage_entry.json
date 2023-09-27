@@ -1,0 +1,14 @@
+{
+  "name": "Использование: Рабочий стол",
+  "icon": "pfm:working_table",
+  "category": "pfm:working_table_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Деревянный рабочий стол работает как верстак, за исключением того, что на нём можно изготавливать мебель."
+    },
+    {
+      "type": "pfm:craftinggridimage"
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "name": "Создание: Кухонные печи",
+  "icon": "minecraft:white_concrete",
+  "category": "pfm:stove_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Кухонную печь можно создать из печи и материала: бетон или железо, поместите их на деревянный рабочий стол в указанном пор¤дке для изготовлени¤."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:white_stove",
+      "recipe2": "pfm:iron_stove"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Вместо этого можно создать встроенную духовку и отдельную варочную панель. Чтобы изменить тип духовки, просто измените ингредиенты в соответствии с материалом столешницы. Варочная панель выполняет функции костра, а духовка - коптильни."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_kitchen_counter_oven",
+      "recipe2": "pfm:kitchen_stovetop"
+    }
+  ]
+}

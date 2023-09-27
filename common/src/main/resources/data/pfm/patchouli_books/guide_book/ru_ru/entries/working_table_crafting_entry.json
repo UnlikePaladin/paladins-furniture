@@ -1,0 +1,15 @@
+{
+  "name": "Создание: Рабочий стол",
+  "icon": "minecraft:spruce_planks",
+  "category": "pfm:working_table_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Деревянный рабочий стол можно создать на ванильном верстаке. Вам понадобится 8 любых деревянных досок и 1 железный слиток."
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:working_table"
+    }
+  ]
+}

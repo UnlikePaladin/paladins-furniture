@@ -1,0 +1,15 @@
+{
+  "name": "Использование: Тумбочки",
+  "icon": "pfm:oak_classic_nightstand",
+  "category": "pfm:nightstand_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Чтобы открыть тумбочку, просто щёлкните ПКМ по ней, Вы можете хранить в ней всё, что захотите. Если Вы разместите две или более тумбочки рядом друг с другом, они соединятся."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}
