@@ -156,7 +156,12 @@ public class PFMDataGen {
                         collectFiles(file, hashList, includeHiddenFiles);
                     } else {
                         FileInputStream stream = new FileInputStream(file);
-                        hashList.add(HashCode.fromBytes(stream.readAllBytes()).toString());
+                        try {
+                            HashCode code = HashCode.fromBytes(stream.readAllBytes());
+                            hashList.add(code.toString());
+                        } catch (Exception e) {
+                            LOGGER.warn("File {} was less than 1 byte or invalid, skipping, {}", file.getName(), e);
+                        }
                         stream.close();
                     }
                 }

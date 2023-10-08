@@ -36,9 +36,8 @@ public class UnbakedKitchenCounterOvenModel implements UnbakedModel {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven/" + variant.asString() + "_kitchen_counter_oven"));
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven/stripped_" + variant.asString() + "_kitchen_counter_oven"));
+                if (variant.hasStripped())
+                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven/stripped_" + variant.asString() + "_kitchen_counter_oven"));
             }
             for(StoneVariant variant : StoneVariant.values()){
                 if (variant.equals(StoneVariant.QUARTZ))
@@ -58,12 +57,11 @@ public class UnbakedKitchenCounterOvenModel implements UnbakedModel {
                     String newPart = part.replace("template", variant.asString());
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                 }
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                for (String part : OVEN_MODEL_PARTS_BASE) {
-                    String newPart = part.replace("template", "stripped_" + variant.asString());
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
-                }
+                if (variant.hasStripped())
+                    for (String part : OVEN_MODEL_PARTS_BASE) {
+                        String newPart = part.replace("template", "stripped_" + variant.asString());
+                        add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
+                    }
             }
             for(StoneVariant variant : StoneVariant.values()){
                 if (variant.equals(StoneVariant.QUARTZ))

@@ -129,6 +129,18 @@ public class DynamicBlockRegistry {
                 "betternether", "nether_reed", "nether_reed_planks", "nether_reed_roof");
 
         addBlockTypeFinder(WoodVariant.class, netherReed);
+
+        WoodVariant.Finder clutteredFloweringYellow = WoodVariant.Finder.simple(
+                "luphieclutteredmod", "luphie_flowering_yellow", "luphie_flowering_yellow_planks", "luphie_flowering_yellow_log");
+        clutteredFloweringYellow.addChild("wood", "luphie_flowering_yellow_wood");
+        clutteredFloweringYellow.addChild("stripped_log", "stripped_luphie_flowering_log");
+        clutteredFloweringYellow.addChild("stripped_wood", "stripped_luphie_flowering_wood");
+        clutteredFloweringYellow.addChild("slab", "luphie_flowering_yellow_slab");
+        clutteredFloweringYellow.addChild("fence", "luphie_flowering_yellow_fence");
+        clutteredFloweringYellow.addChild("fence_gate", "luphie_flowering_yellow_fence_gate");
+        clutteredFloweringYellow.addChild("button", "luphie_flowering_yellow_button");
+
+        addBlockTypeFinder(WoodVariant.class, clutteredFloweringYellow);
     }
 }
 
