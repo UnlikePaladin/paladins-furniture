@@ -186,9 +186,13 @@ public class ModelHelper {
         String namespace = identifier.getNamespace();
         String path = identifier.getPath().replace("luphie_", "");
         if (path.contains("planks")) {
-            path = path.replace("_planks", "");
+            path = path.replace("_planks", "").replace("plank_", "");
+            Identifier id = new Identifier(namespace, "block/" + path +"/planks");
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+                return id;
+
             path = "planks_" + path;
-            Identifier id = new Identifier(namespace, "block/" + path);
+            id = new Identifier(namespace, "block/" + path);
             path = path.replace("mining", "mine").replace("sorting", "sort").replace("transformation", "trans").replace("dark", "darkwood").replace("alpha_", "alpha_oak_").replace("flowering_pink", "flowerypink").replace("flowering_purple", "floweringpurple");
             Identifier id2 = new Identifier(namespace, "block/wood/" + path);
             Identifier id3 = new Identifier(namespace, "block/" + path.replace("planks_", "") + "planks");
@@ -222,11 +226,13 @@ public class ModelHelper {
         if (namespace.contains("luphieclutteredmod") && path.contains("flowering_log")) {
             path = path.replace("flowering_log", "flowering_yellow_log");
         }
-        if (path.contains("log")) {
+        if (namespace.equals("byg") && path.contains("pedu"))
+            path = path.replace("pedu", "log");
+        if (path.contains("log") || path.contains("stem")) {
             if (!path.contains("_log")) {
                 path = path.replace("log", "_log");
             }
-            path = path.replace("log", "bark");
+            path = path.replace("stem", "log").replace("log", "bark");
             path += postFix;
             Identifier id = new Identifier(namespace, "block/" + path);
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
@@ -257,6 +263,26 @@ public class ModelHelper {
             }
             path = path.replace("stripped", "striped");
             id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            String loc = identifier.getPath().contains("stripped") || identifier.getPath().contains("striped") ? "stripped_log" : "log";
+            path = path.replace("striped_", "").replace(postFix, "").replace("_log", "");
+            if (!identifier.getPath().contains("stripped") && namespace.equals("byg"))
+                System.out.println("paused");
+            id = new Identifier(namespace, "block/" + path+ "/" + loc + postFix);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/" + path+ "/" + loc.replace("log", "stem") + postFix);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/" + path+ "/" + loc);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/" + path+ "/" + loc.replace("log", "stem"));
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
