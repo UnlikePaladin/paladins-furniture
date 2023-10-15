@@ -34,9 +34,8 @@ public class UnbakedModernDinnerTableModel implements UnbakedModel {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/" + variant.asString() + "_table_modern_dinner"));
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/stripped_" + variant.asString() + "_table_modern_dinner"));
+                if (variant.hasStripped())
+                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/stripped_" + variant.asString() + "_table_modern_dinner"));
             }
             for(StoneVariant variant : StoneVariant.values()){
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/" + variant.asString() + "_table_modern_dinner"));
@@ -51,12 +50,11 @@ public class UnbakedModernDinnerTableModel implements UnbakedModel {
                     String newPart = part.replace("template", variant.asString());
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                 }
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                for (String part : MODERN_DINNER_MODEL_PARTS_BASE) {
-                    String newPart = part.replace("template", "stripped_" + variant.asString());
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
-                }
+                if (variant.hasStripped())
+                    for (String part : MODERN_DINNER_MODEL_PARTS_BASE) {
+                        String newPart = part.replace("template", "stripped_" + variant.asString());
+                        add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
+                    }
             }
             for(StoneVariant variant : StoneVariant.values()){
                 for (String part : MODERN_DINNER_MODEL_PARTS_BASE) {

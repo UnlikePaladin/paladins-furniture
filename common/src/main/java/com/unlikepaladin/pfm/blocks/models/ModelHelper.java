@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.runtime.PFMDataGen;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.data.client.model.Texture;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
@@ -14,6 +15,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.registry.Registry;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -45,38 +47,41 @@ public class ModelHelper {
 
     public static VariantBase getVariant(Identifier identifier) {
         VariantBase var = getExtraCounterType(identifier);
-        if (!identifier.getPath().contains("deepslate_tile")) {
+        if (var == null) {
             var = getStoneType(identifier);
         }
-        if ((var == StoneVariant.STONE && !identifier.getPath().contains("stone"))) {
+        if (var == null) {
             var = getWoodType(identifier);
         }
         return var;
     }
 
+    @Nullable
     public static ExtraCounterVariant getExtraCounterType(Identifier identifier) {
         for (ExtraCounterVariant variant:
                 ExtraCounterVariant.values()) {
-            if (identifier.getPath().contains(variant.getPath())) {
+            if (identifier.getPath().contains(variant.getPath()) && getBlockType(identifier) == BlockType.BLOCK) {
                 return variant;
             }
         }
-        return ExtraCounterVariant.DARK_CONCRETE;
+        return null;
     }
+
+    @Nullable
     public static StoneVariant getStoneType(Identifier identifier) {
         for (StoneVariant variant:
              StoneVariant.values()) {
-            if (identifier.getPath().contains(variant.getPath())) {
+            if (identifier.getPath().contains(variant.getPath()) && getBlockType(identifier) == BlockType.BLOCK) {
                 return variant;
             }
         }
-        return StoneVariant.STONE;
+        return null;
     }
     public static WoodVariant getWoodType(Identifier identifier){
         WoodVariant selectedVariant = null;
         for (WoodVariant woodVariant : WoodVariantRegistry.getVariants())
             if (identifier.getPath().contains(woodVariant.identifier.getPath())) {
-                if (identifier.getPath().contains("dark") && !woodVariant.identifier.getPath().contains("dark"))
+                if (identifier.getPath().contains("dark") && !woodVariant.identifier.getPath().contains("dark") || (!identifier.getPath().contains(woodVariant.getNamespace()) && !woodVariant.isVanilla()))
                     continue;
                 selectedVariant = woodVariant;
         }
@@ -169,7 +174,7 @@ public class ModelHelper {
         }
         else {
             PFMDataGen.LOGGER.warn("Couldn't find texture for, {}", block);
-            id =  Texture.getId(Blocks.BEDROCK);
+            id = MissingSprite.getMissingSpriteId();
         }
         blockToTextureMap.put(pair, id);
         return id;
@@ -179,15 +184,34 @@ public class ModelHelper {
     public static Identifier getPlankId(Block block) {
         Identifier identifier = Registry.BLOCK.getId(block);
         String namespace = identifier.getNamespace();
-        String path = identifier.getPath();
+        String path = identifier.getPath().replace("luphie_", "");
         if (path.contains("planks")) {
-            path = path.replace("_planks", "");
+            path = path.replace("_planks", "").replace("plank_", "");
+            Identifier id = new Identifier(namespace, "block/" + path +"/planks");
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+                return id;
+
             path = "planks_" + path;
-            Identifier id = new Identifier(namespace, "block/wood/" + path);
-            path = path.replace("mining", "mine").replace("sorting", "sort").replace("transformation", "trans").replace("dark", "darkwood");
+            id = new Identifier(namespace, "block/" + path);
+            path = path.replace("mining", "mine").replace("sorting", "sort").replace("transformation", "trans").replace("dark", "darkwood").replace("alpha_", "alpha_oak_").replace("flowering_pink", "flowerypink").replace("flowering_purple", "floweringpurple");
+            Identifier id2 = new Identifier(namespace, "block/wood/" + path);
+            Identifier id3 = new Identifier(namespace, "block/" + path.replace("planks_", "") + "planks");
+            Identifier id4 = new Identifier(namespace, "block/" + path.replace("planks_", "") + "_planks");
+            Identifier id5 = new Identifier(namespace, "block/" + path.replace("planks_", "") + "plankstext");
+            Identifier id6 = new Identifier(namespace, "block/" + path.replace("planks_", "") + "plankretext");
 
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id;
+            else if (idExists(id2, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+                return id2;
+            else if (idExists(id3, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+                return id3;
+            else if (idExists(id4, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+                return id4;
+            else if (idExists(id5, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+                return id5;
+            else if (idExists(id6, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+                return id6;
             else
                 return new Identifier(namespace, "block/wood/" + path+ "_0");
         }
@@ -198,9 +222,17 @@ public class ModelHelper {
     public static Identifier getLogId(Block block, String postFix) {
         Identifier identifier = Registry.BLOCK.getId(block);
         String namespace = identifier.getNamespace();
-        String path = identifier.getPath();
-        if (path.contains("log")) {
-            path = path.replace("log", "bark");
+        String path = identifier.getPath().replace("luphie_", "");
+        if (namespace.contains("luphieclutteredmod") && path.contains("flowering_log")) {
+            path = path.replace("flowering_log", "flowering_yellow_log");
+        }
+        if (namespace.equals("byg") && path.contains("pedu"))
+            path = path.replace("pedu", "log");
+        if (path.contains("log") || path.contains("stem")) {
+            if (!path.contains("_log")) {
+                path = path.replace("log", "_log");
+            }
+            path = path.replace("stem", "log").replace("log", "bark");
             path += postFix;
             Identifier id = new Identifier(namespace, "block/" + path);
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
@@ -234,6 +266,26 @@ public class ModelHelper {
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
+            String loc = identifier.getPath().contains("stripped") || identifier.getPath().contains("striped") ? "stripped_log" : "log";
+            path = path.replace("striped_", "").replace(postFix, "").replace("_log", "");
+            if (!identifier.getPath().contains("stripped") && namespace.equals("byg"))
+                System.out.println("paused");
+            id = new Identifier(namespace, "block/" + path+ "/" + loc + postFix);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/" + path+ "/" + loc.replace("log", "stem") + postFix);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/" + path+ "/" + loc);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/" + path+ "/" + loc.replace("log", "stem"));
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
         } else if (path.contains("reed")) {
             path = path.replace("nether_", "").replace("reed", "reeds");
             Identifier id = new Identifier(namespace, "block/" + path);
@@ -246,6 +298,18 @@ public class ModelHelper {
                 return id;
             }
             id = new Identifier(namespace, "block/" + path.replace("planks", "roof"));
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+        }
+        if (path.contains("alpha_")) {
+            path = path.replace("alpha", "alpha_oak");
+            Identifier id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+                return id;
+            }
+            path += postFix;
+            id = new Identifier(namespace, "block/" + path);
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }

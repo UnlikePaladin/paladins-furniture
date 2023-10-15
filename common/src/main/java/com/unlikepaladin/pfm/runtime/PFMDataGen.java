@@ -156,10 +156,16 @@ public class PFMDataGen {
                     if (file.isDirectory()) {
                         collectFiles(file, hashList, includeHiddenFiles);
                     } else {
-                        hashList.add(HashCode.fromBytes(Files.readAllBytes(file.toPath())).toString());
+                        try {
+                            HashCode code = HashCode.fromBytes(Files.readAllBytes(file.toPath()));
+                            hashList.add(code.toString());
+                        } catch (Exception e) {
+                            LOGGER.warn("File {} was less than 1 byte or invalid, skipping, {}", file.getName(), e);
+                        }
                     }
                 }
             }
         }
     }
+
 }
