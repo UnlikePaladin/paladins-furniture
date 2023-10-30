@@ -5,13 +5,13 @@ import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.text.TranslatableTextContent;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.ForgePacketHandler;
 
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class SyncConfigPacket {
     public final Map<String, AbstractConfigOption> configOptions;
@@ -19,9 +19,9 @@ public class SyncConfigPacket {
         this.configOptions = configOptions;
     }
 
-    public static void handle(SyncConfigPacket msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSyncConfigPacketHandler.handlePacket(msg, ctx)));
-        ctx.get().setPacketHandled(true);
+    public static void handle(ForgePacketHandler forgePacketHandler, SyncConfigPacket msg, CustomPayloadEvent.Context ctx) {
+        ctx.enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientSyncConfigPacketHandler.handlePacket(msg, ctx)));
+        ctx.setPacketHandled(true);
     }
 
     public static void encode(SyncConfigPacket packet, PacketByteBuf buffer) {

@@ -31,7 +31,7 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
         microwaveBlockEntity.setActive(active);
         BlockPos pos = microwaveBlockEntity.getPos();
         WorldChunk chunk = Objects.requireNonNull(microwaveBlockEntity.getWorld()).getWorldChunk(pos);
-        NetworkRegistryForge.PFM_CHANNEL.send(PacketDistributor.TRACKING_CHUNK.with(() -> chunk), new MicrowaveUpdatePacket(pos, active));
+        NetworkRegistryForge.PFM_CHANNEL.send(new MicrowaveUpdatePacket(pos, active), PacketDistributor.TRACKING_CHUNK.with(chunk));
     }
 
     @Nullable

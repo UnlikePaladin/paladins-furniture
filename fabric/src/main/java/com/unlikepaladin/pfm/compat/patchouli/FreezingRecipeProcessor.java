@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.world.World;
@@ -19,7 +20,7 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
     public void setup(World level, IVariableProvider variables) {
         String recipeId = variables.get("recipe").asString();
         RecipeManager manager = level.getRecipeManager();
-        recipe = manager.get(new Identifier(recipeId)).orElse(null);
+        recipe = manager.get(new Identifier(recipeId)).map(RecipeEntry::value).orElse(null);
     }
 
     @Override
@@ -33,18 +34,18 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
 
                     return IVariable.from(stack);
                 case "output":
-                    ItemStack result = recipe.getOutput(level.getRegistryManager());
+                    ItemStack result = recipe.getResult(level.getRegistryManager());
                     return IVariable.from(result);
                 case "icon":
                     ItemStack icon = recipe.createIcon();
                     return IVariable.from(icon);
                 case "text":
-                    ItemStack out = recipe.getOutput(level.getRegistryManager());
+                    ItemStack out = recipe.getResult(level.getRegistryManager());
                     return IVariable.wrap(out.getCount() + "x$(br)" + out.getName());
                 case "icount":
-                    return IVariable.wrap(recipe.getOutput(level.getRegistryManager()).getCount());
+                    return IVariable.wrap(recipe.getResult(level.getRegistryManager()).getCount());
                 case "iname":
-                    return IVariable.wrap(recipe.getOutput(level.getRegistryManager()).getName().getString());
+                    return IVariable.wrap(recipe.getResult(level.getRegistryManager()).getName().getString());
             }
         }
         return IVariable.empty();

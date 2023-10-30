@@ -10,10 +10,8 @@ import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.util.Identifier;
-
-import java.util.function.Consumer;
 
 public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     private final PFMClientModCompatibility clientModCompatibility;
@@ -23,7 +21,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     @Override
-    public void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
+    public void generateRecipes(RecipeExporter exporter) {
         FurnitureRecipeJsonFactory.create(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK, 4).group("kitchen").criterion(PFMRecipeProvider.getCriterionNameFromOutput(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK), PFMRecipeProvider.conditionsFromItem(ModItems.recipeBook)).input(ModItems.recipeBook).input(Blocks.WHITE_CONCRETE, 2).input(Blocks.GRAY_CONCRETE).offerTo(exporter, new Identifier("pfm", PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 

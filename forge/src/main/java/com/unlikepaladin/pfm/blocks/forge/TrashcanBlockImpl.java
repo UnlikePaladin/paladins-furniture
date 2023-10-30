@@ -12,7 +12,6 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.network.NetworkHooks;
 
 public class TrashcanBlockImpl {
     public static BlockEntity getBlockEntity(BlockPos pos, BlockState state) {
@@ -23,9 +22,11 @@ public class TrashcanBlockImpl {
         if (world.isChunkLoaded(pos) && world.getBlockEntity(pos) instanceof TrashcanBlockEntityImpl){
             TrashcanBlockEntityImpl trashcanScreenHandler = (TrashcanBlockEntityImpl) world.getBlockEntity(pos);
             NamedScreenHandlerFactory namedScreenHandlerFactory = new SimpleNamedScreenHandlerFactory(((syncId, inv, player1) -> new TrashcanScreenHandler(trashcanScreenHandler, syncId, inv, trashcanScreenHandler)), Text.translatable("container.pfm.trashcan"));
-            NetworkHooks.openScreen((ServerPlayerEntity) player, namedScreenHandlerFactory, packetByteBuf -> {
-                packetByteBuf.writeBlockPos(trashcanScreenHandler.getPos());
-            } );
+            if (player instanceof ServerPlayerEntity) {
+                ((ServerPlayerEntity)player).openMenu(namedScreenHandlerFactory, packetByteBuf -> {
+                    packetByteBuf.writeBlockPos(trashcanScreenHandler.getPos());
+                } );
+            }
         }
     }
 }

@@ -67,8 +67,8 @@ public abstract class AbstractFreezerScreenHandler extends AbstractRecipeScreenH
     }
 
     @Override
-    public boolean matches(Recipe<? super Inventory> recipe) {
-        return recipe.matches(this.inventory, this.world);
+    public boolean matches(RecipeEntry<? extends Recipe<Inventory>> recipe) {
+        return recipe.value().matches(this.inventory, this.world);
     }
 
     @Override

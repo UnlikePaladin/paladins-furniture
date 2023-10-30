@@ -1,19 +1,19 @@
 package com.unlikepaladin.pfm.recipes;
 
 import com.google.gson.*;
-import com.mojang.datafixers.DataFixUtils;
-import com.mojang.datafixers.DataFixerUpper;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
+import com.mojang.datafixers.util.Either;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.NbtString;
+import net.minecraft.nbt.*;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -21,20 +21,18 @@ import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.JsonHelper;
 import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.registry.Registry;
+import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<FurnitureRecipe> {
-    private final Identifier id;
     final String group;
-    final ItemStack output;
+    protected final ItemStack output;
     final DefaultedList<Ingredient> input;
 
-    public FurnitureRecipe(Identifier id, String group, ItemStack output, DefaultedList<Ingredient> input) {
-        this.id = id;
+    public FurnitureRecipe(String group, ItemStack output, DefaultedList<Ingredient> input) {
         this.group = group;
         this.output = output;
         this.input = input;
@@ -98,18 +96,13 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
     }
 
     @Override
-    public String getGroup() {
-        return this.group;
-    }
-
-    @Override
-    public ItemStack getOutput(DynamicRegistryManager manager) {
+    public ItemStack getResult(DynamicRegistryManager registryManager) {
         return this.output;
     }
 
     @Override
-    public Identifier getId() {
-        return this.id;
+    public String getGroup() {
+        return this.group;
     }
 
     @Override
@@ -139,26 +132,6 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
 
     public static class Serializer
             implements RecipeSerializer<FurnitureRecipe> {
-        @Override
-        public FurnitureRecipe read(Identifier identifier, JsonObject jsonObject) {
-            String string = JsonHelper.getString(jsonObject, "group", "");
-            DefaultedList<Ingredient> defaultedList = getIngredients(JsonHelper.getArray(jsonObject, "ingredients"));
-            if (defaultedList.isEmpty()) {
-                throw new JsonParseException("No ingredients for furniture recipe");
-            }
-            ItemStack itemStack = outputFromJson(JsonHelper.getObject(jsonObject, "result"));
-            return new FurnitureRecipe(identifier, string, itemStack, defaultedList);
-        }
-
-        private static DefaultedList<Ingredient> getIngredients(JsonArray json) {
-            DefaultedList<Ingredient> defaultedList = DefaultedList.of();
-            for (int i = 0; i < json.size(); ++i) {
-                Ingredient ingredient = Ingredient.fromJson(json.get(i));
-                if (ingredient.isEmpty()) continue;
-                defaultedList.add(ingredient);
-            }
-            return defaultedList;
-        }
 
         public static ItemStack outputFromJson(JsonObject json) {
             Item item = getItem(json);
@@ -194,7 +167,7 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
         }
 
         @Override
-        public FurnitureRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
+        public FurnitureRecipe read(PacketByteBuf packetByteBuf) {
             String string = packetByteBuf.readString();
             int i = packetByteBuf.readVarInt();
             DefaultedList<Ingredient> defaultedList = DefaultedList.ofSize(i, Ingredient.EMPTY);
@@ -202,7 +175,14 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
                 defaultedList.set(j, Ingredient.fromPacket(packetByteBuf));
             }
             ItemStack itemStack = packetByteBuf.readItemStack();
-            return new FurnitureRecipe(identifier, string, itemStack, defaultedList);
+            NbtCompound compound = packetByteBuf.readNbt();
+            itemStack.setNbt(compound);
+            return new FurnitureRecipe(string, itemStack, defaultedList);
+        }
+
+        @Override
+        public Codec<FurnitureRecipe> codec() {
+            return CODEC;
         }
 
         @Override
@@ -213,6 +193,63 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
                 ingredient.write(packetByteBuf);
             }
             packetByteBuf.writeItemStack(furnitureRecipe.output);
+            packetByteBuf.writeNbt(furnitureRecipe.output.getNbt());
         }
+
+        private static final Codec<FurnitureRecipe> CODEC = RecordCodecBuilder.create((instance) ->
+                instance.group(Codecs.createStrictOptionalFieldCodec(Codec.STRING, "group", "").forGetter(FurnitureRecipe::getGroup), FURNITURE_RESULT.fieldOf("result").forGetter((recipe) -> recipe.output), Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("ingredients").flatXmap((ingredients) -> {
+            Ingredient[] ingredients2 = ingredients.stream().filter((ingredient) -> {
+                return !ingredient.isEmpty();
+            }).toArray(Ingredient[]::new);
+            if (ingredients2.length == 0) {
+                return DataResult.error(() -> {
+                    return "No ingredients for furniture recipe";
+                });
+            } else {
+                return DataResult.success(DefaultedList.copyOf(Ingredient.EMPTY, ingredients2));
+            }
+        }, DataResult::success).forGetter(FurnitureRecipe::getIngredients)).apply(instance, FurnitureRecipe::new));
     }
+
+    private static final Codec<NbtCompound> NBT_CODEC = Codecs.xor(
+            Codec.STRING, NbtCompound.CODEC
+    ).flatXmap(either -> either.map(s -> {
+        try {
+            return DataResult.success(StringNbtReader.parse(s));
+        } catch (CommandSyntaxException e) {
+            return DataResult.error(e::getMessage);
+        }
+    }, DataResult::success), nbtCompound -> DataResult.success(Either.left(nbtCompound.asString())));
+
+    public static final Codec<NbtCompound> OUTPUT_TAGS = Codec.unboundedMap(Codec.STRING, NBT_CODEC).comapFlatMap(stringNbtCompoundMap -> {
+        NbtCompound compound = new NbtCompound();
+        stringNbtCompoundMap.forEach(compound::put);
+        return DataResult.success(compound);
+    }, nbtCompound -> {
+        Map<String, NbtCompound> map = new HashMap<>();
+        Set<String> keys = nbtCompound.getKeys();
+        keys.forEach(s -> {
+            NbtCompound compound = new NbtCompound();
+            if (nbtCompound.get(s) instanceof NbtCompound) {
+                compound = nbtCompound.getCompound(s);
+            } else {
+                compound.put(s, nbtCompound.get(s));
+            }
+            map.put(s, compound);
+        });
+        return map;
+    });
+
+    private static final Codec<Item> CRAFTING_RESULT_ITEM = Codecs.validate(Registries.ITEM.getCodec(), (item) -> {
+        return item == Items.AIR ? DataResult.error(() -> {
+            return "Crafting result must not be minecraft:air";
+        }) : DataResult.success(item);
+    });
+    public static final Codec<ItemStack> FURNITURE_RESULT = RecordCodecBuilder.create((instance) -> {
+        return instance.group(CRAFTING_RESULT_ITEM.fieldOf("item").forGetter(ItemStack::getItem), Codecs.createStrictOptionalFieldCodec(Codecs.POSITIVE_INT, "count", 1).forGetter(ItemStack::getCount), Codecs.createStrictOptionalFieldCodec(OUTPUT_TAGS, "tag", new NbtCompound()).forGetter(ItemStack::getNbt)).apply(instance, (item, integer, nbtElement) -> {
+            ItemStack stack = new ItemStack(item, integer);
+            stack.setNbt(nbtElement);
+            return stack;
+        });
+    });
 }

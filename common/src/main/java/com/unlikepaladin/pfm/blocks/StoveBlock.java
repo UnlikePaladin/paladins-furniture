@@ -19,6 +19,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.world.ServerWorld;
@@ -87,10 +88,10 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
             if (hit.getSide() == Direction.UP && world.getBlockEntity(pos) instanceof StoveBlockEntity) {
                 ItemStack itemStack;
                 StoveBlockEntity stoveBlockEntity;
-                Optional<CampfireCookingRecipe> optional;
+                Optional<RecipeEntry<CampfireCookingRecipe>> optional;
                 BlockEntity blockEntity = world.getBlockEntity(pos);
                 if (blockEntity instanceof StoveBlockEntity && (optional = (stoveBlockEntity = (StoveBlockEntity)blockEntity).getRecipeFor(itemStack = player.getStackInHand(hand))).isPresent()) {
-                    if (stoveBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+                    if (stoveBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().value().getCookingTime())) {
                         player.incrementStat(Statistics.STOVE_OPENED);
                         return ActionResult.SUCCESS;
                     }

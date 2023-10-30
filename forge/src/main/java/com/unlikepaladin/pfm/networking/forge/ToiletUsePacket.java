@@ -9,7 +9,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.network.ForgePacketHandler;
 
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -20,13 +21,13 @@ public class ToiletUsePacket {
         this.blockPos = blockPos;
     }
 
-    public static void handle(ToiletUsePacket msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayerEntity player = ctx.get().getSender(); // the client that sent this packet
+    public static void handle(ForgePacketHandler forgePacketHandler, ToiletUsePacket msg, CustomPayloadEvent.Context ctx) {
+        ctx.enqueueWork(() -> {
+            ServerPlayerEntity player = ctx.getSender(); // the client that sent this packet
 
             BlockPos blockPos = msg.blockPos;
             World world = Objects.requireNonNull(player).getEntityWorld();
-            ctx.get().enqueueWork(() -> {
+            ctx.enqueueWork(() -> {
                 if (world.isChunkLoaded(blockPos)) {
                     world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
                     world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
@@ -36,7 +37,7 @@ public class ToiletUsePacket {
                 }
             });
         });
-        ctx.get().setPacketHandled(true);
+        ctx.setPacketHandled(true);
     }
 
     public static void encode(ToiletUsePacket packet, PacketByteBuf buffer) {

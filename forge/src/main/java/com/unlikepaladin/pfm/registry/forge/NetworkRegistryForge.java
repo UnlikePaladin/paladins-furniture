@@ -3,34 +3,32 @@ package com.unlikepaladin.pfm.registry.forge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
 import com.unlikepaladin.pfm.networking.forge.*;
+import io.netty.util.AttributeKey;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.network.NetworkRegistry;
-import net.minecraftforge.network.PacketDistributor;
-import net.minecraftforge.network.simple.SimpleChannel;
-import org.apache.logging.log4j.core.jmx.Server;
+import net.minecraftforge.network.*;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class NetworkRegistryForge {
 
     private static final String PROTOCOL_VERSION = "1";
-    public static final SimpleChannel PFM_CHANNEL = NetworkRegistry.newSimpleChannel(
-            new Identifier(PaladinFurnitureMod.MOD_ID, "main_channel"),
-            () -> PROTOCOL_VERSION,
-            PROTOCOL_VERSION::equals,
-            PROTOCOL_VERSION::equals
-    );
+    public static final SimpleChannel PFM_CHANNEL = ChannelBuilder.named(
+            new Identifier(PaladinFurnitureMod.MOD_ID, "main_channel")
+    ).networkProtocolVersion(Integer.parseInt(PROTOCOL_VERSION)).simpleChannel();
+    public static final AttributeKey<ForgePacketHandler> CONTEXT = AttributeKey.newInstance("pfm:handshake");
+
 
     public static void registerPackets() {
         int id = 0;
-        PFM_CHANNEL.registerMessage(++id, MicrowaveUpdatePacket.class, MicrowaveUpdatePacket::encode, MicrowaveUpdatePacket::decode, MicrowaveUpdatePacket::handle);
-        PFM_CHANNEL.registerMessage(++id, MicrowaveActivePacket.class, MicrowaveActivePacket::encode, MicrowaveActivePacket::decode, MicrowaveActivePacket::handle);
-        PFM_CHANNEL.registerMessage(++id, ToiletUsePacket.class, ToiletUsePacket::encode, ToiletUsePacket::decode, ToiletUsePacket::handle);
-        PFM_CHANNEL.registerMessage(++id, TrashcanClearPacket.class, TrashcanClearPacket::encode, TrashcanClearPacket::decode, TrashcanClearPacket::handle);
-        PFM_CHANNEL.registerMessage(++id, SyncConfigPacket.class, SyncConfigPacket::encode, SyncConfigPacket::decode, SyncConfigPacket::handle);
+
+        PFM_CHANNEL.messageBuilder(MicrowaveUpdatePacket.class, ++id).encoder(MicrowaveUpdatePacket::encode).decoder(MicrowaveUpdatePacket::decode).consumerNetworkThread(CONTEXT, MicrowaveUpdatePacket::handle);
+        PFM_CHANNEL.messageBuilder(MicrowaveActivePacket.class, ++id).encoder(MicrowaveActivePacket::encode).decoder(MicrowaveActivePacket::decode).consumerNetworkThread(CONTEXT, MicrowaveActivePacket::handle);
+        PFM_CHANNEL.messageBuilder(ToiletUsePacket.class, ++id).encoder(ToiletUsePacket::encode).decoder(ToiletUsePacket::decode).consumerNetworkThread(CONTEXT, ToiletUsePacket::handle);
+        PFM_CHANNEL.messageBuilder(TrashcanClearPacket.class, ++id).encoder(TrashcanClearPacket::encode).decoder(TrashcanClearPacket::decode).consumerNetworkThread(CONTEXT, TrashcanClearPacket::handle);
+        PFM_CHANNEL.messageBuilder(SyncConfigPacket.class, ++id).encoder(SyncConfigPacket::encode).decoder(SyncConfigPacket::decode).consumerNetworkThread(CONTEXT, SyncConfigPacket::handle);
         //PFM_CHANNEL.registerMessage(++id, ResetConfigPacket.class, ResetConfigPacket::encode, ResetConfigPacket::decode, ResetConfigPacket::handle);
     }
 
@@ -42,7 +40,7 @@ public class NetworkRegistryForge {
                 PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayerEntity) event.getEntity());
 
                 //Sync Config
-                NetworkRegistryForge.PFM_CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event::getEntity), new SyncConfigPacket(PaladinFurnitureMod.getPFMConfig().options));
+                NetworkRegistryForge.PFM_CHANNEL.send(new SyncConfigPacket(PaladinFurnitureMod.getPFMConfig().options), PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event.getEntity()));
             }
         }
    }

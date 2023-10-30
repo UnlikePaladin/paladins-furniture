@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.recipes.forge;
 
 import com.google.gson.JsonObject;
+import com.mojang.serialization.Codec;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.RecipeSerializer;
@@ -13,14 +14,13 @@ public class FurnitureSerializerForge implements RecipeSerializer<FurnitureRecip
     }
     FurnitureRecipe.Serializer serializer;
     @Override
-    public FurnitureRecipe read(Identifier id, JsonObject json) {
-        return serializer.read(id, json);
+    public Codec<FurnitureRecipe> codec() {
+        return serializer.codec();
     }
 
-    @Nullable
     @Override
-    public FurnitureRecipe read(Identifier id, PacketByteBuf buf) {
-        return serializer.read(id, buf);
+    public @Nullable FurnitureRecipe read(PacketByteBuf buf) {
+        return serializer.read(buf);
     }
 
     @Override

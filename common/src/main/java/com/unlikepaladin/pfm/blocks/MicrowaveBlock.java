@@ -139,7 +139,7 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
 
     @Nullable
     protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends MicrowaveBlockEntity> expectedType) {
-        return world.isClient ? null : MicrowaveBlock.checkType(givenType, expectedType, MicrowaveBlockEntity::tick);
+        return world.isClient ? null : validateTicker(givenType, expectedType, MicrowaveBlockEntity::tick);
     }
 
     @Override

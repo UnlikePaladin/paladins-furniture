@@ -38,9 +38,8 @@ public class TrashcanScreen extends HandledScreen<TrashcanScreenHandler> {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context);
         if (this.narrow) {
-            this.drawBackground(context, delta, mouseX, mouseY);
+            this.renderBackground(context, mouseX, mouseY, delta);
         } else {
             super.render(context, mouseX, mouseY, delta);
         }

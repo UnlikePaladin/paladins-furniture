@@ -153,7 +153,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     private static int getCookTime(World world, RecipeType<? extends AbstractCookingRecipe> recipeType, Inventory inventory) {
-        return world.getRecipeManager().getFirstMatch(recipeType, inventory, world).map(AbstractCookingRecipe::getCookTime).orElse(200);
+        return world.getRecipeManager().getFirstMatch(recipeType, inventory, world).map(RecipeEntry::value).map(AbstractCookingRecipe::getCookingTime).orElse(200);
     }
 
     @Override
@@ -212,7 +212,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     public Recipe<?> getRecipe(Inventory inventory) {
-        return this.world.getRecipeManager().getFirstMatch(RecipeType.SMOKING, inventory, world).orElse(null);
+        return this.world.getRecipeManager().getFirstMatch(RecipeType.SMOKING, inventory, world).orElse(null).value();
     }
 
     @Override
@@ -284,20 +284,19 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         return player.squaredDistanceTo((double) this.pos.getX() + 0.5, (double) this.pos.getY() + 0.5, (double) this.pos.getZ() + 0.5) <= 64.0;
     }
 
-    @Nullable
     @Override
-    public Recipe<?> getLastRecipe() {
+    public RecipeEntry<?> getLastRecipe() {
         return null;
     }
 
-    public Recipe<?> getRecipe() {
+    public RecipeEntry<?> getRecipe() {
         return world.getRecipeManager().getFirstMatch(this.recipeType, this, world).orElse(null);
     }
     public static boolean canAcceptRecipeOutput(DynamicRegistryManager registryManager, @Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
         if (slots.get(0).isEmpty() || recipe == null) {
             return false;
         }
-        ItemStack itemStack = recipe.getOutput(registryManager);
+        ItemStack itemStack = recipe.getResult(registryManager);
         if (itemStack.isEmpty()) {
             return false;
         }
@@ -315,9 +314,9 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     @Override
-    public void setLastRecipe(@Nullable Recipe<?> recipe) {
+    public void setLastRecipe(@Nullable RecipeEntry<?> recipe) {
         if (recipe != null) {
-            Identifier identifier = recipe.getId();
+            Identifier identifier = recipe.id();
             this.recipesUsed.addTo(identifier, 1);
         }
     }
@@ -326,7 +325,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         if (recipe == null || !MicrowaveBlockEntity.canAcceptRecipeOutput(recipeManager, recipe, slots, count)) {
             return false;
         }
-        ItemStack itemStack2 = recipe.getOutput(recipeManager);
+        ItemStack itemStack2 = recipe.getResult(recipeManager);
         slots.set(0, itemStack2.copy());
         return true;
     }
@@ -342,14 +341,14 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         boolean bl2 = false;
         ItemStack itemStack = blockEntity.inventory.get(0);
         if (blockEntity.isActive || !itemStack.isEmpty()) {
-            Recipe recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
+            RecipeEntry<? extends AbstractCookingRecipe> recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
             int i = blockEntity.getMaxCountPerStack();
-            if (blockEntity.isActive && canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {
+            if (blockEntity.isActive && canAcceptRecipeOutput(world.getRegistryManager(), recipe.value(), blockEntity.inventory, i)) {
                 ++blockEntity.cookTime;
                 if (blockEntity.cookTime == blockEntity.cookTimeTotal) {
                     blockEntity.cookTime = 0;
                     blockEntity.cookTimeTotal = getCookTime(world, blockEntity.recipeType, blockEntity);
-                    if (craftRecipe(world.getRegistryManager(),recipe, blockEntity.inventory, i)) {
+                    if (craftRecipe(world.getRegistryManager(),recipe.value(), blockEntity.inventory, i)) {
                         blockEntity.setLastRecipe(recipe);
                         blockEntity.world.setBlockState(pos, state = state.with(MicrowaveBlock.POWERED, false), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
                         blockEntity.playSound(state, SoundIDs.MICROWAVE_BEEP_EVENT, 1);

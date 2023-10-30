@@ -23,8 +23,8 @@ public class FreezingDisplay implements Display {
 
     public FreezingDisplay(FreezingRecipe recipe) {
         input = EntryIngredients.ofIngredients(recipe.getIngredients());
-        output = Collections.singletonList(EntryIngredients.of(recipe.getOutput(BasicDisplay.registryAccess())));
-        cookTime = recipe.getCookTime();
+        output = Collections.singletonList(EntryIngredients.of(recipe.getResult(BasicDisplay.registryAccess())));
+        cookTime = recipe.getCookingTime();
         xp = recipe.getExperience();
     }
     @Override

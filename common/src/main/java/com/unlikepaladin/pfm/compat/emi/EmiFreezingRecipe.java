@@ -9,6 +9,7 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.tooltip.TooltipComponent;
 import net.minecraft.recipe.AbstractCookingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -49,11 +50,12 @@ public class EmiFreezingRecipe implements EmiRecipe {
         return 38;
     }
 
-    public EmiFreezingRecipe(FreezingRecipe recipe) {
+    public EmiFreezingRecipe(RecipeEntry<FreezingRecipe> entry) {
+        FreezingRecipe recipe = entry.value();
         input = EmiIngredient.of(recipe.getIngredients().get(0));
-        output = EmiStack.of(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()));
+        output = EmiStack.of(recipe.getResult(MinecraftClient.getInstance().world.getRegistryManager()));
         this.recipe = recipe;
-        this.id = recipe.getId();
+        this.id = entry.id();
         this.fuelMultiplier = 2;
         this.infiniBurn = false;
     }
@@ -65,8 +67,8 @@ public class EmiFreezingRecipe implements EmiRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        widgets.addFillingArrow(24, 5, 50 * recipe.getCookTime()).tooltip((mx, my) -> {
-            return List.of(TooltipComponent.of(Text.translatable("emi.cooking.time", recipe.getCookTime() / 20f).asOrderedText()));
+        widgets.addFillingArrow(24, 5, 50 * recipe.getCookingTime()).tooltip((mx, my) -> {
+            return List.of(TooltipComponent.of(Text.translatable("emi.cooking.time", recipe.getCookingTime() / 20f).asOrderedText()));
         });
         if (infiniBurn) {
             widgets.addTexture(FreezingWidget.FULL_FREEZER, 1, 24);

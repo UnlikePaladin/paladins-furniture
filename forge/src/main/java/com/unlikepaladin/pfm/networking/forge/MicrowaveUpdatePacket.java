@@ -9,11 +9,9 @@ import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.network.NetworkEvent;
-
-import java.util.Objects;
-import java.util.function.Supplier;
+import net.minecraftforge.network.ForgePacketHandler;
 
 public class MicrowaveUpdatePacket {
     public final BlockPos entityPos;
@@ -25,12 +23,12 @@ public class MicrowaveUpdatePacket {
     }
 
     // In Packet class
-    public static void handle(MicrowaveUpdatePacket msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() ->
+    public static void handle(ForgePacketHandler forgePacketHandler, MicrowaveUpdatePacket msg, CustomPayloadEvent.Context ctx) {
+        ctx.enqueueWork(() ->
                 // Make sure it's only executed on the physical client
                 DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientMicrowaveUpdatePackeHandler.handlePacket(msg, ctx))
         );
-        ctx.get().setPacketHandled(true);
+        ctx.setPacketHandled(true);
     }
 
     public static void encode(MicrowaveUpdatePacket packet, PacketByteBuf buffer) {

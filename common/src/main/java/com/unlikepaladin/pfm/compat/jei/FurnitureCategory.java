@@ -81,7 +81,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
             List<ItemStack> expandedInput = List.of(stacks);
             inputLists.add(expandedInput);
         }
-        ItemStack resultItem = recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager());
+        ItemStack resultItem = recipe.getResult(MinecraftClient.getInstance().world.getRegistryManager());
 
         int width = getSize(inputLists.size());
         int height = width;

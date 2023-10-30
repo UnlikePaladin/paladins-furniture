@@ -14,6 +14,7 @@ import net.minecraft.inventory.CraftingInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Identifier;
 
@@ -21,9 +22,9 @@ import java.util.*;
 
 public class EmiFurnitureRecipe extends EmiCraftingRecipe {
 
-    public EmiFurnitureRecipe(FurnitureRecipe recipe) {
-        super(padIngredients(recipe), EmiStack.of(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager())),
-                recipe.getId(), false);
+    public EmiFurnitureRecipe(RecipeEntry<FurnitureRecipe> entry) {
+        super(padIngredients(entry.value()), EmiStack.of(entry.value().getResult(MinecraftClient.getInstance().world.getRegistryManager())),
+                entry.id(), false);
         for (int i = 0; i < input.size(); i++) {
             PlayerInventory playerInventory;
             if (PaladinFurnitureMod.isClient) {
@@ -54,7 +55,7 @@ public class EmiFurnitureRecipe extends EmiCraftingRecipe {
             List<EmiStack> stacks = input.get(i).getEmiStacks();
             for (EmiStack stack : stacks) {
                 inv.setStack(i, stack.getItemStack().copy());
-                ItemStack remainder = recipe.getRemainder(playerInventory).get(i);
+                ItemStack remainder = entry.value().getRemainder(playerInventory).get(i);
                 if (!remainder.isEmpty()) {
                     stack.setRemainder(EmiStack.of(remainder));
                 }

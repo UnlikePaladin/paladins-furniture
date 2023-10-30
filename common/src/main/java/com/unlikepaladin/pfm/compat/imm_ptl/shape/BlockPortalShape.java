@@ -15,6 +15,8 @@ import qouteall.q_misc_util.Helper;
 import qouteall.q_misc_util.my_util.IntBox;
 
 import org.jetbrains.annotations.Nullable;
+import qouteall.q_misc_util.my_util.Mesh2D;
+
 import java.util.ArrayDeque;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -396,7 +398,7 @@ public class BlockPortalShape {
             portal.specialShape = null;
         }
         else {
-            GeometryPortalShape shape = new GeometryPortalShape();
+            GeometryPortalShape shape = new GeometryPortalShape(new Mesh2D());
             
             IntBox rectanglePart = Helper.expandRectangle(
                 anchor,
@@ -430,9 +432,9 @@ public class BlockPortalShape {
             double p1LocalY = p1.subtract(center).dotProduct(portal.axisH);
             double p2LocalX = p2.subtract(center).dotProduct(portal.axisW);
             double p2LocalY = p2.subtract(center).dotProduct(portal.axisH);
-            portal.initCullableRange(
-                p1LocalX, p2LocalX,
-                p1LocalY, p2LocalY
+            shape.addTriangleForRectangle(
+                    p1LocalX, p1LocalY,
+                    p2LocalX, p2LocalY
             );
         }
     }

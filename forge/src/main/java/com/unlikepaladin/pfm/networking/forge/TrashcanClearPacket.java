@@ -8,10 +8,10 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
+import net.minecraftforge.network.ForgePacketHandler;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class TrashcanClearPacket {
     private final BlockPos blockPos;
@@ -19,12 +19,12 @@ public class TrashcanClearPacket {
         this.blockPos = blockPos;
     }
 
-    public static void handle(TrashcanClearPacket msg, Supplier<NetworkEvent.Context> ctx) {
-        ctx.get().enqueueWork(() -> {
-            ServerPlayerEntity player = ctx.get().getSender();
+    public static void handle(ForgePacketHandler forgePacketHandler, TrashcanClearPacket msg, CustomPayloadEvent.Context ctx) {
+        ctx.enqueueWork(() -> {
+            ServerPlayerEntity player = ctx.getSender();
             BlockPos entityPos = msg.blockPos;
             World world = Objects.requireNonNull(player).getEntityWorld();
-            ctx.get().enqueueWork(() -> {
+            ctx.enqueueWork(() -> {
                 if (world.isChunkLoaded(entityPos)) {
                     TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(entityPos);
                     trashcanBlockEntity.clear();
@@ -34,7 +34,7 @@ public class TrashcanClearPacket {
                 }
             });
         });
-        ctx.get().setPacketHandled(true);
+        ctx.setPacketHandled(true);
     }
 
 

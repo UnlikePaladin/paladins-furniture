@@ -130,7 +130,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             List<Item> items = new ArrayList<>();
             searchable.findAll(string.toLowerCase(Locale.ROOT)).forEach(itemStack -> items.add(itemStack.getItem()));
             this.handler.getSortedRecipes().forEach(furnitureRecipe -> {
-                if (items.contains(furnitureRecipe.getOutput(client.world.getRegistryManager()).getItem())) {
+                if (items.contains(furnitureRecipe.getResult(client.world.getRegistryManager()).getItem())) {
                     this.handler.getSearchableRecipes().add(furnitureRecipe);
                 }
             });
@@ -159,7 +159,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     public void handledScreenTick() {
         super.handledScreenTick();
         if (this.searchBox != null) {
-            this.searchBox.tick();
+            //this.searchBox.tick();
         }
     }
     @Override
@@ -170,7 +170,6 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
 
     @Override
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        this.renderBackground(context);
         int x = this.x;
         int y = this.y;
         context.drawTexture(TEXTURE, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
@@ -200,7 +199,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             if (this.handler.searching) {
                 iCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(iCopy));
             }
-            tooltip.add(getTooltipFromItem(this.handler.getSortedRecipes().get(iCopy).getOutput(client.world.getRegistryManager())).get(0));
+            tooltip.add(getTooltipFromItem(this.handler.getSortedRecipes().get(iCopy).getResult(client.world.getRegistryManager())).get(0));
             tooltip.add(Text.translatable("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
             HashMap<Item, Integer> itemStackCountMap = new HashMap<>();
             for (Ingredient ingredient : this.handler.getSortedRecipes().get(iCopy).getIngredients()) {
@@ -262,7 +261,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             if (this.handler.searching) {
                 iCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(iCopy));
             }
-            context.drawItem(this.handler.getSortedRecipes().get(iCopy).getOutput(client.world.getRegistryManager()), xOffset, yOffset);
+            context.drawItem(this.handler.getSortedRecipes().get(iCopy).getResult(client.world.getRegistryManager()), xOffset, yOffset);
         }
     }
 
@@ -312,10 +311,10 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         if (this.shouldScroll()) {
             int i = this.getMaxScroll();
-            this.scrollAmount = (float)((double)this.scrollAmount - amount / (double)i);
+            this.scrollAmount = (float)((double)this.scrollAmount - verticalAmount / (double)i);
             this.scrollAmount = MathHelper.clamp(this.scrollAmount, 0.0f, 1.0f);
             this.scrollOffset = (int)((double)(this.scrollAmount * (float)i) + 0.5) * RECIPE_LIST_COLUMNS;
         }

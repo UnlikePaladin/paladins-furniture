@@ -11,7 +11,9 @@ public class IronStoveScreen extends AbstractFurnaceScreen<IronStoveScreenHandle
     //You can replace the background with whatever you like, just remember there will always be the recipe book button
     private static final Identifier BACKGROUND = new Identifier("textures/gui/container/smoker.png");
 
+    private static final Identifier LIT_PROGRESS_TEXTURE = new Identifier("container/smoker/lit_progress");
+    private static final Identifier BURN_PROGRESS_TEXTURE = new Identifier("container/smoker/burn_progress");
     public IronStoveScreen(IronStoveScreenHandler handler, PlayerInventory inventory, Text title) {
-        super(handler, new SmokerRecipeBookScreen(), inventory, title, BACKGROUND);
+        super(handler, new SmokerRecipeBookScreen(), inventory, title, BACKGROUND, LIT_PROGRESS_TEXTURE, BURN_PROGRESS_TEXTURE);
     }
 }

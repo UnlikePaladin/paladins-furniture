@@ -57,7 +57,7 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
         }
         matrices.translate(x, y ,z);
         matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-facing.asRotation()));
-        if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getWorld().getRegistryManager(),blockEntity.getRecipe(), blockEntity.inventory ,blockEntity.getMaxCountPerStack())) {
+        if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getWorld().getRegistryManager(),blockEntity.getRecipe().value(), blockEntity.inventory ,blockEntity.getMaxCountPerStack())) {
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((blockEntity.getWorld().getTime() + tickDelta) * 4));}
         matrices.scale(0.5f, 0.5f, 0.5f);
         this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getWorld(), 0);

@@ -180,7 +180,7 @@ public class PFMLangProvider {
         List<String> list = new ArrayList(2);
         boolean bl = true;
         list.add("en_us");
-        LanguageDefinition enUSDefinition = this.languageDefs.getOrDefault(LanguageManager.DEFAULT_LANGUAGE_CODE, PFMLanguageManagerAccessor.getEnglish_Us());
+        LanguageDefinition enUSDefinition = this.languageDefs.getOrDefault("en_us", PFMLanguageManagerAccessor.getEnglish_Us());
         String selectedDef = ((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode();
         if (!selectedDef.equals("en_us")) {
             LanguageDefinition languageDefinition = this.languageDefs.getOrDefault(selectedDef, enUSDefinition);

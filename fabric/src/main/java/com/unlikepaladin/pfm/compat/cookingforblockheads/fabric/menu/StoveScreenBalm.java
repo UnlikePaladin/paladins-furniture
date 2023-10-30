@@ -26,7 +26,6 @@ public class StoveScreenBalm extends HandledScreen<StoveScreenHandlerBalm> {
     }
 
     public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(context);
         super.render(context, mouseX, mouseY, partialTicks);
         this.drawMouseoverTooltip(context, mouseX, mouseY);
         StoveBlockEntityBalm tileEntity = this.handler.getTileEntity();

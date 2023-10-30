@@ -11,6 +11,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 public class CriteriaRegistryForge {
     @SubscribeEvent
     public static void registerCriteria(FMLCommonSetupEvent event) {
-        PFMCriteria.GUIDE_BOOK_CRITERION = Criteria.register(new GiveGuideBookCriterion());
+        PFMCriteria.GUIDE_BOOK_CRITERION = Criteria.register(GiveGuideBookCriterion.ID.toString(), new GiveGuideBookCriterion());
     }
 }

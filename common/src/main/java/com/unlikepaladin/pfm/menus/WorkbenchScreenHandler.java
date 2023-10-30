@@ -13,6 +13,7 @@ import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.screen.*;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.sound.SoundCategory;
@@ -81,7 +82,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
         }
         this.addProperty(this.selectedRecipe);
         if (allRecipes.isEmpty())
-            allRecipes.addAll(world.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE).stream().sorted().toList());
+            allRecipes.addAll(world.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeEntry::value).sorted().toList());
         this.updateInput();
         selectedRecipe.set(-1);
     }

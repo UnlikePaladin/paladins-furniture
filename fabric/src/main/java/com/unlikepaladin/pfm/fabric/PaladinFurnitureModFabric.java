@@ -29,16 +29,13 @@ import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.registry.Registries;
+import net.minecraft.registry.*;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
-import net.minecraft.registry.MutableRegistry;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraft.world.poi.PointOfInterestTypes;
 import org.apache.logging.log4j.LogManager;
@@ -141,7 +138,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         newBedStates.addAll(addedBedStates);
         newBedStates = newBedStates.stream().collect(ImmutableSet.toImmutableSet());
         PointOfInterestType pointOfInterestType = new PointOfInterestType(newBedStates, 1, 1);
-        PointOfInterestTypes.HOME = (RegistryKey<PointOfInterestType>) ((MutableRegistry)Registries.POINT_OF_INTEREST_TYPE).set(Registries.POINT_OF_INTEREST_TYPE.getRawId(Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME)), PointOfInterestTypes.HOME, pointOfInterestType, Lifecycle.stable()).getKey().get();
+        PointOfInterestTypes.HOME = ((SimpleRegistry<PointOfInterestType>)Registries.POINT_OF_INTEREST_TYPE).set(Registries.POINT_OF_INTEREST_TYPE.getRawId(Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME)), PointOfInterestTypes.HOME, pointOfInterestType, Lifecycle.stable()).getKey().get();
     }
     @Override
     public void onInitializeServer() {

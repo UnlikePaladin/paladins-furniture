@@ -15,6 +15,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -65,10 +66,10 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack itemStack;
         StovetopBlockEntity stovetopBlockEntity;
-        Optional<CampfireCookingRecipe> optional;
+        Optional<RecipeEntry<CampfireCookingRecipe>> optional;
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof StovetopBlockEntity && (optional = (stovetopBlockEntity = (StovetopBlockEntity)blockEntity).getRecipeFor(itemStack = player.getStackInHand(hand))).isPresent()) {
-            if (!world.isClient && stovetopBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().getCookTime())) {
+            if (!world.isClient && stovetopBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().value().getCookingTime())) {
                 player.incrementStat(Statistics.STOVETOP_USED);
                 return ActionResult.SUCCESS;
             }
@@ -141,13 +142,13 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
         if (world.isClient) {
             if (state.get(LIT)) {
-                return checkType(type, BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::clientTick);
+                return BasicToiletBlock.checkType(type, BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::clientTick);
             }
         } else {
             if (state.get(LIT)) {
-                return checkType(type, BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::litServerTick);
+                return BasicToiletBlock.checkType(type, BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::litServerTick);
             }
-            return checkType(type, BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::unlitServerTick);
+            return BasicToiletBlock.checkType(type, BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::unlitServerTick);
         }
         return null;
     }

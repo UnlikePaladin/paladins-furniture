@@ -12,8 +12,8 @@ import net.minecraft.util.Identifier;
 
 public class FreezingRecipe extends AbstractCookingRecipe {
 
-    public FreezingRecipe(Identifier id, String group, CookingRecipeCategory category, Ingredient input, ItemStack output, float experience, int cookTime) {
-        super(RecipeTypes.FREEZING_RECIPE, id, group, category, input, output, experience, cookTime);
+    public FreezingRecipe(String group, CookingRecipeCategory category, Ingredient input, ItemStack output, float experience, int cookTime) {
+        super(RecipeTypes.FREEZING_RECIPE, group, category, input, output, experience, cookTime);
     }
 
     @Override

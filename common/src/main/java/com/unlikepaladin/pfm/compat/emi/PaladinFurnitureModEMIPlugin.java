@@ -14,6 +14,7 @@ import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Identifier;
 
 @EmiEntrypoint
@@ -38,10 +39,10 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
         registry.addRecipeHandler(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, new FurnitureRecipeHandler());
         registry.addRecipeHandler(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, new FreezerRecipeHandler(FREEZER));
 
-        for (FurnitureRecipe recipe : registry.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE)) {
+        for (RecipeEntry<FurnitureRecipe> recipe : registry.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE)) {
             registry.addRecipe(new EmiFurnitureRecipe(recipe));
         }
-        for (FreezingRecipe recipe : registry.getRecipeManager().listAllOfType(RecipeTypes.FREEZING_RECIPE)) {
+        for (RecipeEntry<FreezingRecipe> recipe : registry.getRecipeManager().listAllOfType(RecipeTypes.FREEZING_RECIPE)) {
             registry.addRecipe(new EmiFreezingRecipe(recipe));
         }
     }

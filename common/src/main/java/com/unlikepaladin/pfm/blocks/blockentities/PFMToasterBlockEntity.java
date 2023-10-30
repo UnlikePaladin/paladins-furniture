@@ -21,6 +21,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
@@ -175,11 +176,11 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         else {
             for (int i = 0; i < 2; i++) {
                 SimpleInventory inv = new SimpleInventory(items.get(i));
-                Optional<CampfireCookingRecipe> match = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inv, world);
+                Optional<RecipeEntry<CampfireCookingRecipe>> match = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inv, world);
 
                 boolean changed = false;
                 if(match.isPresent()) {
-                    items.set(i, match.get().getOutput(world.getRegistryManager()).copy());
+                    items.set(i, match.get().value().getResult(world.getRegistryManager()).copy());
                     changed = true;
                 } else {
                     if(items.get(i).isFood()) {

@@ -9,18 +9,20 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.SmokingRecipe;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.world.World;
 
 import java.util.Objects;
+import java.util.Optional;
 
 public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
     private final Identifier background = new Identifier(PaladinFurnitureMod.MOD_ID,"textures/gui/container/microwave.png");
@@ -49,10 +51,9 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context);
         // if (this.recipeBook.isOpen() && this.narrow) {
         if (this.narrow) {
-            this.drawBackground(context, delta, mouseX, mouseY);
+            this.renderBackground(context, mouseX, mouseY, delta);
             //this.recipeBook.render(context, mouseX, mouseY, delta);
         } else {
             //this.recipeBook.render(context, mouseX, mouseY, delta);
@@ -77,8 +78,8 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
         context.drawTexture(this.background, i + 147, j + 66 + -k, 176, 40 - k, 13, k +1);
     }
 
-    public Recipe<?> getRecipe(World world, Inventory inventory) {
-        return world.getRecipeManager().getFirstMatch(RecipeType.SMOKING, inventory, world).orElse(null);
+    public Optional<RecipeEntry<SmokingRecipe>> getRecipe(World world, Inventory inventory) {
+        return world.getRecipeManager().getFirstMatch(RecipeType.SMOKING, inventory, world);
     }
 
     @Override
@@ -86,8 +87,8 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
         super.handledScreenTick();
         this.isActive = handler.isActive;
         DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1,handler.getInventory().getStack(0));
-        Recipe<?> recipe = getRecipe(Objects.requireNonNull(handler.microwaveBlockEntity.getWorld()), handler.getInventory());
-        if(!MicrowaveBlockEntity.canAcceptRecipeOutput(microwaveBlockEntity.getWorld().getRegistryManager(),recipe, inventory ,microwaveBlockEntity.getMaxCountPerStack()) && !this.handler.isActive()) {
+        Optional<RecipeEntry<SmokingRecipe>> recipe = getRecipe(Objects.requireNonNull(handler.microwaveBlockEntity.getWorld()), handler.getInventory());
+        if(recipe.isPresent() && microwaveBlockEntity.getWorld() != null && !MicrowaveBlockEntity.canAcceptRecipeOutput(microwaveBlockEntity.getWorld().getRegistryManager(), recipe.get().value(), inventory ,microwaveBlockEntity.getMaxCountPerStack()) && !this.handler.isActive()) {
             this.startButton.active = false;
         }
         else {

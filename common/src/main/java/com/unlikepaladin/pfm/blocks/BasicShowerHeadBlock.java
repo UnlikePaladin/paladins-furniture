@@ -72,7 +72,7 @@ public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(type, BlockEntities.SHOWER_HEAD_BLOCK_ENTITY, ShowerHeadBlockEntity::tick);
+        return BasicToiletBlock.checkType(type, BlockEntities.SHOWER_HEAD_BLOCK_ENTITY, ShowerHeadBlockEntity::tick);
     }
 
     @Nullable

@@ -181,7 +181,7 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
 
     @Nullable
     protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends FreezerBlockEntity> expectedType) {
-        return world.isClient ? null : FreezerBlock.checkType(givenType, expectedType, FreezerBlockEntity::tick);
+        return world.isClient ? null : validateTicker(givenType, expectedType, FreezerBlockEntity::tick);
     }
 
     @Override

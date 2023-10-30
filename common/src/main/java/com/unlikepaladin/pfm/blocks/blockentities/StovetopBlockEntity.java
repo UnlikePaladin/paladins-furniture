@@ -16,6 +16,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Clearable;
 import net.minecraft.util.ItemScatterer;
@@ -49,7 +50,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         }
             if (stovetopBlockEntity.cookingTimes[i] < stovetopBlockEntity.cookingTotalTimes[i]) continue;
             SimpleInventory inventory = new SimpleInventory(itemStack);
-            ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.craft(inventory, world.getRegistryManager())).orElse(itemStack);
+            ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.value().craft(inventory, world.getRegistryManager())).orElse(itemStack);
                 if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
                     ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), itemStack2);
                     stovetopBlockEntity.itemsBeingCooked.set(i, ItemStack.EMPTY);
@@ -143,7 +144,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         return stack;
     }
 
-    public Optional<CampfireCookingRecipe> getRecipeFor(ItemStack item) {
+    public Optional<RecipeEntry<CampfireCookingRecipe>> getRecipeFor(ItemStack item) {
         if (this.itemsBeingCooked.stream().noneMatch(ItemStack::isEmpty)) {
             return Optional.empty();
         }

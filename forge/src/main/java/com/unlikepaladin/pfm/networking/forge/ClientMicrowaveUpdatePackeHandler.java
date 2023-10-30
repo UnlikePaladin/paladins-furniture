@@ -6,13 +6,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import java.util.Objects;
-import java.util.function.Supplier;
 
 public class ClientMicrowaveUpdatePackeHandler {
-    public static void handlePacket(MicrowaveUpdatePacket msg, Supplier<NetworkEvent.Context> ctx) {
+    public static void handlePacket(MicrowaveUpdatePacket msg, CustomPayloadEvent.Context ctx) {
         BlockPos blockPos = msg.entityPos;
         boolean active = msg.active;
         World world = MinecraftClient.getInstance().world;
@@ -23,7 +22,7 @@ public class ClientMicrowaveUpdatePackeHandler {
             }
         }
         else {
-            Objects.requireNonNull(ctx.get().getSender()).sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+            Objects.requireNonNull(ctx.getSender()).sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
         }
     }
 }

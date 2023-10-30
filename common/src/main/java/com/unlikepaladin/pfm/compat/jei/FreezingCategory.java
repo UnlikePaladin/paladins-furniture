@@ -85,11 +85,11 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
                 .addIngredients(recipe.getIngredients().get(inputSlot));
 
         builder.addSlot(OUTPUT, 61, 19)
-                .addItemStack(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()));
+                .addItemStack(recipe.getResult(MinecraftClient.getInstance().world.getRegistryManager()));
     }
 
     protected IDrawableAnimated getArrow(FreezingRecipe recipe) {
-        int freezeTime = recipe.getCookTime();
+        int freezeTime = recipe.getCookingTime();
         if (freezeTime <= 0) {
             freezeTime = regularFreezeTime;
         }
@@ -97,7 +97,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     }
 
     protected void drawFreezeTime(FreezingRecipe recipe, DrawContext context, int y) {
-        int freezeTime = recipe.getCookTime();
+        int freezeTime = recipe.getCookingTime();
         if (freezeTime > 0) {
             int freezeTimeSeconds = freezeTime / 20;
             Text timeString = Text.of(freezeTimeSeconds + "s");

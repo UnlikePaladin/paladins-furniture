@@ -1,9 +1,8 @@
 package com.unlikepaladin.pfm.compat;
 
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.data.server.recipe.RecipeExporter;
 
 import java.util.Optional;
-import java.util.function.Consumer;
 
 public interface PFMModCompatibility {
     default void registerBlocks() {};
@@ -12,7 +11,7 @@ public interface PFMModCompatibility {
     default void registerItems() {};
     default void createBlocks() {};
     default void registerScreenHandlers() {};
-    default void generateRecipes(Consumer<RecipeJsonProvider> exporter) {};
+    default void generateRecipes(RecipeExporter exporter) {};
     default void generateTags() {};
     String getModId();
     default Optional<PFMClientModCompatibility> getClientModCompatiblity() {
