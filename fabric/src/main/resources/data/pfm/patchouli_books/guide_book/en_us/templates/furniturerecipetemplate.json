@@ -1,5 +1,5 @@
 {
-  "processor": "com.unlikepaladin.pfm.compat.fabric.patchouli.FurnitureRecipeProcessor",
+  "processor": "com.unlikepaladin.pfm.compat.patchouli.FurnitureRecipeProcessor",
   "include": [
     {
       "template": "namenumber",

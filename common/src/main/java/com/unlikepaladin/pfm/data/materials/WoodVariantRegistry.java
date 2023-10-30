@@ -13,7 +13,7 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
     public static final WoodVariant OAK = new WoodVariant(new Identifier("oak"), Blocks.OAK_PLANKS, Blocks.OAK_LOG, BoatEntity.Type.OAK);
     public static final WoodVariantRegistry INSTANCE = new WoodVariantRegistry();
     public static Collection<String> getNamespaces() {
-        return INSTANCE.variants.values().stream().map(VariantBase::getNamespace).collect(Collectors.toUnmodifiableList());
+        return INSTANCE.variants.values().stream().map(VariantBase::getNamespace).collect(Collectors.toList());
     };
 
     public static Collection<WoodVariant> getVariants() {
