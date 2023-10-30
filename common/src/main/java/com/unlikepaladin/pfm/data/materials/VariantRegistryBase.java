@@ -46,7 +46,7 @@ public abstract class VariantRegistryBase<T extends VariantBase<T>> {
         builder.add(newType);
     }
 
-    public abstract Optional<T> geVariantFromBlock(Block baseBlock, Identifier blockId);
+    public abstract Optional<T> getVariantFromBlock(Block baseBlock, Identifier blockId);
 
     public void buildAll() {
         //adds default
@@ -54,7 +54,7 @@ public abstract class VariantRegistryBase<T extends VariantBase<T>> {
         //adds finders
         finders.stream().map(VariantBase.SetFinder::get).forEach(f -> f.ifPresent(this::registerBlockType));
         for (Block block : Registries.BLOCK) {
-            this.geVariantFromBlock(block, Registries.BLOCK.getId(block)).ifPresent(this::registerBlockType);
+            this.getVariantFromBlock(block, Registries.BLOCK.getId(block)).ifPresent(this::registerBlockType);
         }
         this.finalizeAndFreeze();
     }

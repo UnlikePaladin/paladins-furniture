@@ -8,10 +8,15 @@ import net.minecraft.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
     public static final WoodVariant OAK = new WoodVariant(new Identifier("oak"), Blocks.OAK_PLANKS, Blocks.OAK_LOG, BoatEntity.Type.OAK);
     public static final WoodVariantRegistry INSTANCE = new WoodVariantRegistry();
+    public static Collection<String> getNamespaces() {
+        return INSTANCE.variants.values().stream().map(VariantBase::getNamespace).collect(Collectors.toUnmodifiableList());
+    };
+
     public static Collection<WoodVariant> getVariants() {
         return Collections.unmodifiableCollection(INSTANCE.variants.values());
     }
@@ -21,7 +26,7 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
     }
 
     @Nullable
-    public static  WoodVariant getVariantFromVanillaWoodType(BoatEntity.Type type) {
+    public static WoodVariant getVariantFromVanillaWoodType(BoatEntity.Type type) {
         for (WoodVariant woodVariant : INSTANCE.variants.values()) {
             if (woodVariant.getVanillaWoodType() == type)
                 return woodVariant;
@@ -31,10 +36,20 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
     /**
      * Simplified Wood/Block detection based on MoonlightLib<a href="https://github.com/MehVahdJukaar/Moonlight/blob/multi-loader/common/src/main/java/net/mehvahdjukaar/moonlight/api/set/BlockTypeRegistry.java#L18">...</a>
      */
-    public Optional<WoodVariant> geVariantFromBlock(Block baseBlock, Identifier blockId) {
+    public Optional<WoodVariant> getVariantFromBlock(Block baseBlock, Identifier blockId) {
         String name = null;
         String path = blockId.getPath();
-
+        if (blockId.getNamespace().equals("tfc")) {
+            if (path.contains("wood/planks/")) {
+                Optional<Block> log = Registry.BLOCK.getOrEmpty(
+                        new Identifier(blockId.getNamespace(), path.replace("planks", "log")));
+                if (log.isPresent()) {
+                    Identifier id = new Identifier(blockId.getNamespace(), path.replace("wood/planks/", ""));
+                    return Optional.of(new WoodVariant(id, baseBlock, log.get()));
+                }
+            }
+            return Optional.empty();
+        }
         if (path.endsWith("_planks")) {
             name = path.substring(0, path.length() - "_planks".length());
         } else if (path.startsWith("planks_")) {
@@ -84,8 +99,10 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
         Identifier[] test = {
                 new Identifier(id.getNamespace(), id.getPath() + "_log"),
                 new Identifier(id.getNamespace(), "log_" + id.getPath()),
+                new Identifier(id.getNamespace(), id.getPath() + "log"),
                 new Identifier(id.getPath() + "_log"),
                 new Identifier("log_" + id.getPath()),
+                new Identifier(id.getPath() + "log"),
                 new Identifier(id.getNamespace(), id.getPath() + "_stem"),
                 new Identifier(id.getNamespace(), "stem_" + id.getPath()),
                 new Identifier(id.getPath() + "_stem"),
