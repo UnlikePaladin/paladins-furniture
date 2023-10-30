@@ -41,7 +41,7 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
         String path = blockId.getPath();
         if (blockId.getNamespace().equals("tfc")) {
             if (path.contains("wood/planks/")) {
-                Optional<Block> log = Registry.BLOCK.getOrEmpty(
+                Optional<Block> log = Registries.BLOCK.getOrEmpty(
                         new Identifier(blockId.getNamespace(), path.replace("planks", "log")));
                 if (log.isPresent()) {
                     Identifier id = new Identifier(blockId.getNamespace(), path.replace("wood/planks/", ""));
