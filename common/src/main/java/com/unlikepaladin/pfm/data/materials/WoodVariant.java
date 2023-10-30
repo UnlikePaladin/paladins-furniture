@@ -237,7 +237,7 @@ public class WoodVariant extends VariantBase<WoodVariant> {
                     if (plank != d && log != d && plank != null && log != null) {
                         WoodVariant w = new WoodVariant(id, plank, log);
                         for (Map.Entry<String, Identifier> entry : childNames.entrySet()){
-                            Object child = Registry.BLOCK.getOrEmpty(entry.getValue()).isPresent() ? Registry.BLOCK.get(entry.getValue()) : Registry.ITEM.get(entry.getValue());
+                            Object child = Registries.BLOCK.getOrEmpty(entry.getValue()).isPresent() ? Registries.BLOCK.get(entry.getValue()) : Registries.ITEM.get(entry.getValue());
                             w.addChild(entry.getKey(), child);
                         }
                         return Optional.of(w);
