@@ -230,7 +230,7 @@ public class PFMLangProvider {
         if (variant == WoodVariantRegistry.getVariantFromVanillaWoodType(BoatEntity.Type.BAMBOO)) {
             variantName.set(variantName.get().replace("Block of", ""));
         }
-        common.forEach(s -> variantName.set(String.join(!variantName.get().isEmpty() ? variantName.get() + " " : variantName.get(), s)));
+        variantName.set(String.join(" ", common));
         return variantName.get();
     }
 
@@ -257,7 +257,7 @@ public class PFMLangProvider {
 
     public void generateTranslationForVariantBlockMap(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, BufferedWriter writer, String furnitureKey, QuadFunc<Block, String, String, String, String> blockStringStringStringStringQuadFunc) {
         variantBaseHashMap.forEach((variant, block) -> {
-            if (variant instanceof WoodVariant) {
+            if (variant instanceof WoodVariant && !variant.isVanilla()) {
                 String translatedVariantName = getTranslatedVariantName(variant);
                 String strippedKey = block.getTranslationKey().contains("stripped") ? translate("block.type.stripped") : "";
                 String translatedFurnitureName = StringUtils.normalizeSpace(blockStringStringStringStringQuadFunc.apply(block, furnitureKey, strippedKey, translatedVariantName));
