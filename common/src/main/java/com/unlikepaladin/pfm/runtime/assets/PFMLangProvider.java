@@ -229,7 +229,7 @@ public class PFMLangProvider {
         String baseBlockName = translate(variant.getBaseBlock().getTranslationKey());
         List<String> common = findCommonWords(variantName.get(), baseBlockName);
         variantName.set("");
-        common.forEach(s -> variantName.set(String.join(!variantName.get().isEmpty() ? variantName.get() + " " : variantName.get(), s)));
+        variantName.set(String.join(" ", common));
         return variantName.get();
     }
 
