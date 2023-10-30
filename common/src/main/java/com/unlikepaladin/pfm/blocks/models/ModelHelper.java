@@ -173,8 +173,10 @@ public class ModelHelper {
             id = getLogId(block, "_bottom");
         }
         else {
-            PFMDataGen.LOGGER.warn("Couldn't find texture for, {}", block);
-            id = MissingSprite.getMissingSpriteId();
+            if (!Registry.BLOCK.getId(block).getNamespace().equals("quark")) {
+                PFMDataGen.LOGGER.warn("Couldn't find texture for, {}", block);
+            }
+            id = Texture.getSubId(block, postfix);
         }
         blockToTextureMap.put(pair, id);
         return id;
