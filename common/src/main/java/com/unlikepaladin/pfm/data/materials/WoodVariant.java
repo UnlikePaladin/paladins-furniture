@@ -70,23 +70,45 @@ public class WoodVariant extends VariantBase<WoodVariant> {
 
     @Nullable
     protected Block findLogRelatedBlock(String append, String postpend) {
-        if (this.isNetherWood() && postpend.equals("log") || postpend.equals("wood")) {
-            switch (postpend) {
-                case "log" -> postpend = "stem";
-                case "wood" -> postpend = "hyphae";
-            }
-        }
         String post = postpend.isEmpty() ? "" : "_" + postpend;
-        var id = this.getIdentifier();
+        Identifier id = this.getIdentifier();
         String logN = Registries.BLOCK.getId(this.logBlock).getPath();
         Identifier[] targets = {
                 new Identifier(id.getNamespace(), logN + "_" + append + post),
+                new Identifier(id.getNamespace(), logN + "_" + append + post.replace("_", "")),
                 new Identifier(id.getNamespace(), append + "_" + logN + post),
+                new Identifier(id.getNamespace(), append + "_" + logN + post.replace("_", "")),
                 new Identifier(id.getNamespace(), id.getPath() + "_" + append + post),
-                new Identifier(id.getNamespace(), append + "_" + id.getPath() + post)
+                new Identifier(id.getNamespace(), id.getPath() + "_" + append + post.replace("_", "")),
+                new Identifier(id.getNamespace(), append + "_" + id.getPath() + post),
+                new Identifier(id.getNamespace(), append + "_" + id.getPath() + post.replace("_", ""))
         };
+        String postNether = "";
+        switch (postpend) {
+            case "log" -> postNether = "stem";
+            case "wood" -> postNether = "hyphae";
+        }
+        postNether = postpend.isEmpty() ? "" : "_" + postNether;
         Block found = null;
-        for (var r : targets) {
+        if (!postNether.isEmpty()) {
+            Identifier[] nether_targets = {
+                    new Identifier(id.getNamespace(), logN + "_" + append + postNether),
+                    new Identifier(id.getNamespace(), logN + "_" + append + postNether.replace("_", "")),
+                    new Identifier(id.getNamespace(), append + "_" + logN + postNether),
+                    new Identifier(id.getNamespace(), append + "_" + logN + postNether.replace("_", "")),
+                    new Identifier(id.getNamespace(), id.getPath() + "_" + append + postNether),
+                    new Identifier(id.getNamespace(), id.getPath() + "_" + append + postNether.replace("_", "")),
+                    new Identifier(id.getNamespace(), append + "_" + id.getPath() + postNether),
+                    new Identifier(id.getNamespace(), append + "_" + id.getPath() + postNether.replace("_", ""))
+            };
+            for (Identifier r : nether_targets) {
+                if (Registries.BLOCK.containsId(r)) {
+                    found = Registries.BLOCK.get(r);
+                    break;
+                }
+            }
+        }
+        for (Identifier r : targets) {
             if (Registries.BLOCK.containsId(r)) {
                 found = Registries.BLOCK.get(r);
                 break;
@@ -159,7 +181,8 @@ public class WoodVariant extends VariantBase<WoodVariant> {
     }
 
     public boolean hasStripped() {
-        return this.getChild("stripped_log") != null;
+        Object child = this.getChild("stripped_log");
+        return child != null && child != this.getBaseBlock();
     }
     @Override
     public Block mainChild() {
@@ -205,6 +228,10 @@ public class WoodVariant extends VariantBase<WoodVariant> {
                     Block d = Registries.BLOCK.get(new Identifier("minecraft","air"));
                     if (plank != d && log != d && plank != null && log != null) {
                         WoodVariant w = new WoodVariant(id, plank, log);
+                        for (Map.Entry<String, Identifier> entry : childNames.entrySet()){
+                            Object child = Registry.BLOCK.getOrEmpty(entry.getValue()).isPresent() ? Registry.BLOCK.get(entry.getValue()) : Registry.ITEM.get(entry.getValue());
+                            w.addChild(entry.getKey(), child);
+                        }
                         return Optional.of(w);
                     }
                 } catch (Exception ignored) {
