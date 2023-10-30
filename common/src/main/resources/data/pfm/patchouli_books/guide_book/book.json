@@ -7,5 +7,6 @@
   "model": "pfm:book_orange",
   "dont_generate_book": "true",
   "custom_book_item": "pfm:furniture_book",
-  "show_progress": "false"
+  "show_progress": "false",
+  "use_resource_pack": "true"
 }
