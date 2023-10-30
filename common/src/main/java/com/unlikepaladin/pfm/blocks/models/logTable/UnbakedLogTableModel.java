@@ -32,18 +32,11 @@ public class UnbakedLogTableModel implements UnbakedModel {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 String logType = variant.isNetherWood() ? "stem" : "log";
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/" + variant.asString() + "_" + logType+ "_table"));
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                String logType = variant.isNetherWood() ? "stem" : "log";
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/" + variant.asString() + "_raw_" + logType+ "_table"));
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                String logType = variant.isNetherWood() ? "stem" : "log";
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/stripped_" + variant.asString() + "_" + logType+ "_table"));
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                String logType = variant.isNetherWood() ? "stem" : "log";
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/stripped_" + variant.asString() + "_raw_" + logType+ "_table"));
+                if (variant.hasStripped()) {
+                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/stripped_" + variant.asString() + "_" + logType+ "_table"));
+                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/stripped_" + variant.asString() + "_raw_" + logType+ "_table"));
+                }
             }
             for(StoneVariant variant : StoneVariant.values()){
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/log_table/" + variant.asString() + "_natural_table"));
@@ -60,29 +53,25 @@ public class UnbakedLogTableModel implements UnbakedModel {
                         newPart = newPart.replace(variant.asString() + "_log", variant.asString() + "_stem");
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                 }
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 for (String part : LOG_MODEL_PARTS_BASE) {
                     String newPart = part.replace("template", variant.asString() + "_raw");
                     if (variant.isNetherWood())
                         newPart = newPart.replace(variant.asString() + "_raw_log", variant.asString() + "_raw_stem");
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                 }
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                for (String part : LOG_MODEL_PARTS_BASE) {
-                    String newPart = part.replace("template", "stripped_" + variant.asString() + "_raw");
-                    if (variant.isNetherWood())
-                        newPart = newPart.replace(variant.asString() + "_raw_log", variant.asString() + "_raw_stem");
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
-                }
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                for (String part : LOG_MODEL_PARTS_BASE) {
-                    String newPart = part.replace("template", "stripped_" + variant.asString());
-                    if (variant.isNetherWood())
-                        newPart = newPart.replace(variant.asString() + "_log", variant.asString() + "_stem");
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
+                if (variant.hasStripped()) {
+                    for (String part : LOG_MODEL_PARTS_BASE) {
+                        String newPart = part.replace("template", "stripped_" + variant.asString() + "_raw");
+                        if (variant.isNetherWood())
+                            newPart = newPart.replace(variant.asString() + "_raw_log", variant.asString() + "_raw_stem");
+                        add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
+                    }
+                    for (String part : LOG_MODEL_PARTS_BASE) {
+                        String newPart = part.replace("template", "stripped_" + variant.asString());
+                        if (variant.isNetherWood())
+                            newPart = newPart.replace(variant.asString() + "_log", variant.asString() + "_stem");
+                        add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
+                    }
                 }
             }
             for(StoneVariant variant : StoneVariant.values()){
