@@ -176,7 +176,7 @@ public class ModelHelper {
             if (!Registry.BLOCK.getId(block).getNamespace().equals("quark")) {
                 PFMDataGen.LOGGER.warn("Couldn't find texture for, {}", block);
             }
-            id = Texture.getSubId(block, postfix);
+            id = TextureMap.getSubId(block, postfix);
         }
         blockToTextureMap.put(pair, id);
         return id;
