@@ -52,10 +52,8 @@ public class UnbakedClassicNightstandModel implements UnbakedModel {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/" + variant.asString() + "_classic_nightstand"));
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/stripped_" + variant.asString() + "_classic_nightstand"));
+                if (variant.hasStripped())
+                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/stripped_" + variant.asString() + "_classic_nightstand"));
             }
             for(StoneVariant variant : StoneVariant.values()){
                 
@@ -72,13 +70,11 @@ public class UnbakedClassicNightstandModel implements UnbakedModel {
                     String newPart = part.replace("template", variant.asString());
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
                 }
-            }
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                
-                for (String part : NIGHTSTAND_MODEL_PARTS_BASE) {
-                    String newPart = part.replace("template", "stripped_" + variant.asString());
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
-                }
+                if (variant.hasStripped())
+                    for (String part : NIGHTSTAND_MODEL_PARTS_BASE) {
+                        String newPart = part.replace("template", "stripped_" + variant.asString());
+                        add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
+                    }
             }
             for(StoneVariant variant : StoneVariant.values()){
                 
