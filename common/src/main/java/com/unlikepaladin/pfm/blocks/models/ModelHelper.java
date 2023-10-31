@@ -284,6 +284,14 @@ public class ModelHelper {
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
+            id = new Identifier(namespace, "block/" + path+ "/" + loc + "/" + postFix.replace("_", ""));
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/" + path+ "/" + loc.replace("log", "stem") + "/" + postFix.replace("_", ""));
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
             id = new Identifier(namespace, "block/" + path+ "/" + loc);
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
