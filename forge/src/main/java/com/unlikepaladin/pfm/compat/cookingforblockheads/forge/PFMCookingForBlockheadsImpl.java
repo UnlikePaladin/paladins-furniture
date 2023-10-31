@@ -13,6 +13,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.util.Identifier;
 
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
@@ -39,5 +40,10 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
 
     public static PFMCookingForBlockheads getInstance() {
         return new PFMCookingForBlockheadsImpl();
+    }
+
+    @Override
+    public Optional<PFMClientModCompatibility> getClientModCompatiblity() {
+        return Optional.of(clientModCompatibility);
     }
 }
