@@ -332,14 +332,18 @@ public class ModelHelper {
                 return id;
             }
         }
-        if (path.contains("alpha_")) {
-            path = path.replace("alpha", "alpha_oak");
+        if (path.contains("alpha_") && namespace.contains("regions")) {
+            path = !path.contains("alpha_oak") ? path.replace("alpha", "alpha_oak") : path;
             Identifier id = new Identifier(namespace, "block/" + path);
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
                 return id;
             }
             path += postFix;
             id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/alpha_oak_log" + postFix);
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
