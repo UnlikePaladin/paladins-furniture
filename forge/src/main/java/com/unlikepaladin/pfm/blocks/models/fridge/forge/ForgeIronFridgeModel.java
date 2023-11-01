@@ -33,21 +33,23 @@ public class ForgeIronFridgeModel extends AbstractBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
         List<BakedQuad> quads = new ArrayList<>();
-        BitSet data = extraData.get(CONNECTIONS).connections;
-        boolean bottom = data.get(0);
-        boolean top = data.get(1);
-        boolean hasFreezer = data.get(2);
-        int openOffset = state.get(FridgeBlock.OPEN) ? 5 : 0;
-        if (top && bottom) {
-            quads.addAll(getBakedModels().get(modelParts.get(2+openOffset)).getQuads(state, side, rand, extraData, renderLayer));
-        } else if (bottom) {
-            quads.addAll(getBakedModels().get(modelParts.get(3+openOffset)).getQuads(state, side, rand, extraData, renderLayer));
-        } else if (top) {
-            quads.addAll(getBakedModels().get(modelParts.get(1+openOffset)).getQuads(state, side, rand, extraData, renderLayer));
-        } else if (hasFreezer) {
-            quads.addAll(getBakedModels().get(modelParts.get(4+openOffset)).getQuads(state, side, rand, extraData, renderLayer));
-        } else {
-            quads.addAll(getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+        if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
+            BitSet data = extraData.get(CONNECTIONS).connections;
+            boolean bottom = data.get(0);
+            boolean top = data.get(1);
+            boolean hasFreezer = data.get(2);
+            int openOffset = state.get(FridgeBlock.OPEN) ? 5 : 0;
+            if (top && bottom) {
+                quads.addAll(getBakedModels().get(modelParts.get(2+openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+            } else if (bottom) {
+                quads.addAll(getBakedModels().get(modelParts.get(3+openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+            } else if (top) {
+                quads.addAll(getBakedModels().get(modelParts.get(1+openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+            } else if (hasFreezer) {
+                quads.addAll(getBakedModels().get(modelParts.get(4+openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+            } else {
+                quads.addAll(getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+            }
         }
         return quads;
     }

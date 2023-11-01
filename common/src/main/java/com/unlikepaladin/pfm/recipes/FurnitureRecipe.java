@@ -13,7 +13,6 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.NbtString;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
@@ -49,27 +48,30 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
     public boolean matches(PlayerInventory playerInventory, World world) {
         List<Ingredient> ingredients = this.getIngredients();
         BitSet hasIngredients = new BitSet(ingredients.size());
+        if (this.output.getItem().equals(PaladinFurnitureModBlocksItems.GLASS_MODERN_PENDANT.asItem())) {
+            System.out.println("wtf");
+        }
         HashMap<Item, Integer> containedItems = new HashMap<>();
         for (int i = 0; i < ingredients.size(); i++) {
             Ingredient ingredient = ingredients.get(i);
             for (ItemStack stack : ingredient.getMatchingStacks()) {
                 int itemCount = 0;
                 for (ItemStack stack1 : playerInventory.main) {
-                    if (stack.isItemEqual(stack1)) {
+                    if (stack.isOf(stack1.getItem())) {
                         itemCount += stack1.getCount();
                     }
                 }
                 if (itemCount == 0)
                     break;
 
-                if (playerInventory.indexOf(stack) != -1){
+                if (getSlotWithStackIgnoreNBT(playerInventory, stack) != -1){
                     if (!containedItems.containsKey(stack.getItem())) {
                         if (itemCount >= stack.getCount()) {
                             hasIngredients.set(i, true);
                             containedItems.put(stack.getItem(), 1);
                         }
                     } else {
-                        if (itemCount > containedItems.get(stack.getItem())) {
+                        if (itemCount >= (containedItems.get(stack.getItem()) + 1)) {
                             hasIngredients.set(i, true);
                             containedItems.put(stack.getItem(), containedItems.get(stack.getItem()) + 1);
                         }
@@ -87,8 +89,23 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
         return matches;
     }
 
+    public static int getSlotWithStackIgnoreNBT(PlayerInventory inventory, ItemStack stack) {
+        for(int i = 0; i < inventory.main.size(); ++i) {
+            if (!inventory.main.get(i).isEmpty() && stack.isOf(inventory.main.get(i).getItem())) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+
     @Override
     public ItemStack craft(PlayerInventory playerInventory, DynamicRegistryManager manager) {
+        if (this.output.getNbt() != null && this.output.getNbt().isEmpty()) {
+            ItemStack stack = this.output.copy();
+            stack.setNbt(null);
+            return stack;
+        }
         return this.output.copy();
     }
 
