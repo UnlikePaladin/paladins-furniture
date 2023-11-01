@@ -204,6 +204,8 @@ public class ModelHelper {
             Identifier id4 = new Identifier(namespace, "block/" + path.replace("planks_", "") + "_planks");
             Identifier id5 = new Identifier(namespace, "block/" + path.replace("planks_", "") + "plankstext");
             Identifier id6 = new Identifier(namespace, "block/" + path.replace("planks_", "") + "plankretext");
+            Identifier id7 = new Identifier(namespace, "block/" + path.replace("planks_", "") + "_planks0");
+            Identifier id8 = new Identifier(namespace, "block/" + path.replace("planks_", "") + "_planks1");
 
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id;
@@ -217,6 +219,10 @@ public class ModelHelper {
                 return id5;
             else if (idExists(id6, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
                 return id6;
+            else if (idExists(id7, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+                return id7;
+            else if (idExists(id8, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES))
+                return id8;
             else
                 return new Identifier(namespace, "block/wood/" + path+ "_0");
         }
@@ -273,8 +279,7 @@ public class ModelHelper {
             }
             String loc = identifier.getPath().contains("stripped") || identifier.getPath().contains("striped") ? "stripped_log" : "log";
             path = path.replace("striped_", "").replace(postFix, "").replace("_log", "");
-            if (!identifier.getPath().contains("stripped") && namespace.equals("byg"))
-                System.out.println("paused");
+
             id = new Identifier(namespace, "block/" + path+ "/" + loc + postFix);
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
@@ -283,11 +288,35 @@ public class ModelHelper {
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
+            id = new Identifier(namespace, "block/" + path+ "/" + loc + "/" + postFix.replace("_", ""));
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/" + path+ "/" + loc.replace("log", "stem") + "/" + postFix.replace("_", ""));
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
             id = new Identifier(namespace, "block/" + path+ "/" + loc);
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
             id = new Identifier(namespace, "block/" + path+ "/" + loc.replace("log", "stem"));
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/stripped_" + path+ "_log");
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/stripped_" + path+ "_stem");
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/" + path+ "_log_stripped");
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/" + path+ "_stem_stripped");
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
@@ -307,14 +336,18 @@ public class ModelHelper {
                 return id;
             }
         }
-        if (path.contains("alpha_")) {
-            path = path.replace("alpha", "alpha_oak");
+        if (path.contains("alpha_") && namespace.contains("regions")) {
+            path = !path.contains("alpha_oak") ? path.replace("alpha", "alpha_oak") : path;
             Identifier id = new Identifier(namespace, "block/" + path);
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
                 return id;
             }
             path += postFix;
             id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
+            id = new Identifier(namespace, "block/alpha_oak_log" + postFix);
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }

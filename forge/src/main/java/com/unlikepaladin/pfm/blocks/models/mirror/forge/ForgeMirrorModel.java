@@ -37,7 +37,7 @@ public class ForgeMirrorModel extends AbstractBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
         List<BakedQuad> quads = new ArrayList<>(getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData, renderLayer));
-        if (state.getBlock() instanceof MirrorBlock) {
+        if (state != null && state.getBlock() instanceof MirrorBlock && extraData.get(DIRECTIONS) != null && extraData.get(DIRECTIONS).connections != null) {
             BitSet connections = extraData.get(DIRECTIONS).connections;
             if (!connections.get(0)) {
                 quads.addAll(getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData, renderLayer));

@@ -32,18 +32,20 @@ public class ForgeClassicNightstandModel extends AbstractBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
         List<BakedQuad> quads = new ArrayList<>();
-        BitSet data = extraData.get(CONNECTIONS).connections;
-        boolean left = data.get(0);
-        boolean right = data.get(1);
-        int openIndexOffset = state.get(ClassicNightstandBlock.OPEN) ? 4 : 0;
-        if (left && right) {
-            quads.addAll(getBakedModels().get(modelParts.get(openIndexOffset)).getQuads(state, side, rand, extraData, renderType));
-        } else if (!left && right) {
-            quads.addAll(getBakedModels().get(modelParts.get(1+openIndexOffset)).getQuads(state, side, rand, extraData, renderType));
-        } else if (left) {
-            quads.addAll(getBakedModels().get(modelParts.get(2+openIndexOffset)).getQuads(state, side, rand, extraData, renderType));
-        } else {
-            quads.addAll(getBakedModels().get(modelParts.get(3+openIndexOffset)).getQuads(state, side, rand, extraData, renderType));
+        if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
+            BitSet data = extraData.get(CONNECTIONS).connections;
+            boolean left = data.get(0);
+            boolean right = data.get(1);
+            int openIndexOffset = state.get(ClassicNightstandBlock.OPEN) ? 4 : 0;
+            if (left && right) {
+                quads.addAll(getBakedModels().get(modelParts.get(openIndexOffset)).getQuads(state, side, rand, extraData, renderType));
+            } else if (!left && right) {
+                quads.addAll(getBakedModels().get(modelParts.get(1+openIndexOffset)).getQuads(state, side, rand, extraData, renderType));
+            } else if (left) {
+                quads.addAll(getBakedModels().get(modelParts.get(2+openIndexOffset)).getQuads(state, side, rand, extraData, renderType));
+            } else {
+                quads.addAll(getBakedModels().get(modelParts.get(3+openIndexOffset)).getQuads(state, side, rand, extraData, renderType));
+            }
         }
         return quads;
     }
