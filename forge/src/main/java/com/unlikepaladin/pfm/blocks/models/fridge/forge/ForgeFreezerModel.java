@@ -34,12 +34,14 @@ public class ForgeFreezerModel extends AbstractBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
         List<BakedQuad> quads = new ArrayList<>();
-        Boolean hasFridge = extraData.getData(HAS_FRIDGE_PROPERTY);
-        int openOffset = state.get(FreezerBlock.OPEN) ? 2 : 0;
-        if (Boolean.TRUE.equals(hasFridge)) {
-            quads.addAll(getBakedModels().get(modelParts.get(1+openOffset)).getQuads(state, side, rand, extraData));
-        } else {
-            quads.addAll(getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData));
+        if (state != null) {
+            Boolean hasFridge = extraData.getData(HAS_FRIDGE_PROPERTY);
+            int openOffset = state.get(FreezerBlock.OPEN) ? 2 : 0;
+            if (Boolean.TRUE.equals(hasFridge)) {
+                quads.addAll(getBakedModels().get(modelParts.get(1+openOffset)).getQuads(state, side, rand, extraData));
+            } else {
+                quads.addAll(getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData));
+            }
         }
         return quads;
     }

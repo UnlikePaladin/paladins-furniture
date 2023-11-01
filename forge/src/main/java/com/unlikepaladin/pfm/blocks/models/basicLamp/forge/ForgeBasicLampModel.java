@@ -63,23 +63,25 @@ public class ForgeBasicLampModel extends AbstractBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
         List<BakedQuad> quads = new ArrayList<>();
-        int onOffset = state.get(Properties.LIT) ? 1 : 0;
-        WoodVariant variant = extraData.getData(VARIANT);
-        BitSet set = extraData.getData(CONNECTIONS).connections;
-        if (set.get(0) && set.get(1)) {
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(1)).getQuads(state, side, rand, extraData));
-        } else if (set.get(0)) {
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(0)).getQuads(state, side, rand, extraData));
-        } else if (set.get(1))
-        {
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(3)).getQuads(state, side, rand, extraData));
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(5+onOffset)).getQuads(state, side, rand, extraData));
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(4)).getQuads(state, side, rand, extraData));
-        }
-        else {
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(4)).getQuads(state, side, rand, extraData));
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(2)).getQuads(state, side, rand, extraData));
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(5+onOffset)).getQuads(state, side, rand, extraData));
+        if (state != null && extraData.getData(CONNECTIONS) != null && extraData.getData(CONNECTIONS).connections != null) {
+            int onOffset = state.get(Properties.LIT) ? 1 : 0;
+            WoodVariant variant = extraData.getData(VARIANT);
+            BitSet set = extraData.getData(CONNECTIONS).connections;
+            if (set.get(0) && set.get(1)) {
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(1)).getQuads(state, side, rand, extraData));
+            } else if (set.get(0)) {
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(0)).getQuads(state, side, rand, extraData));
+            } else if (set.get(1))
+            {
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(3)).getQuads(state, side, rand, extraData));
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(5+onOffset)).getQuads(state, side, rand, extraData));
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(4)).getQuads(state, side, rand, extraData));
+            }
+            else {
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(4)).getQuads(state, side, rand, extraData));
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(2)).getQuads(state, side, rand, extraData));
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(5+onOffset)).getQuads(state, side, rand, extraData));
+            }
         }
         return quads;
     }

@@ -73,9 +73,10 @@ public class ForgeKitchenCounterModel extends AbstractBakedModel {
         return builder.build();
     }
 
+    @NotNull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
-        if (state.getBlock() instanceof KitchenCounterBlock) {
+        if (state != null && state.getBlock() instanceof KitchenCounterBlock && extraData.getData(CONNECTIONS) != null && extraData.getData(CONNECTIONS).connections != null) {
             BitSet set = extraData.getData(CONNECTIONS).connections;
             Direction direction = state.get(KitchenCounterBlock.FACING);
             KitchenCounterBlock block = (KitchenCounterBlock) state.getBlock();

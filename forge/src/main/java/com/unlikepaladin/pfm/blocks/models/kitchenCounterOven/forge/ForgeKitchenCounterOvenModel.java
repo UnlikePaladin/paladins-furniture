@@ -30,7 +30,7 @@ public class ForgeKitchenCounterOvenModel extends AbstractBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
         List<BakedQuad> quads = new ArrayList<>();
-        if (state.getBlock() instanceof KitchenCounterOvenBlock) {
+        if (state != null && state.getBlock() instanceof KitchenCounterOvenBlock && extraData.getData(CONNECTIONS) != null && extraData.getData(CONNECTIONS).connections != null) {
             BitSet data = extraData.getData(CONNECTIONS).connections;
             int openOffset = state.get(KitchenCounterOvenBlock.OPEN) ? 2 : 0;
             if (data.get(0) || data.get(1)) {
