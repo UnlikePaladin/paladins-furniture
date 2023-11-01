@@ -57,28 +57,30 @@ public class ForgeBasicLampModel extends AbstractBakedModel {
         builder.with(VARIANT, variant);
         return builder.build();
     }
-    
+
     @NotNull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, @Nullable RenderLayer renderType) {
         List<BakedQuad> quads = new ArrayList<>();
-        int onOffset = state.get(Properties.LIT) ? 1 : 0;
-        WoodVariant variant = extraData.get(VARIANT);
-        BitSet set = extraData.get(CONNECTIONS).connections;
-        if (set.get(0) && set.get(1)) {
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(1)).getQuads(state, side, rand, extraData, renderType));
-        } else if (set.get(0)) {
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(0)).getQuads(state, side, rand, extraData, renderType));
-        } else if (set.get(1))
-        {
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(3)).getQuads(state, side, rand, extraData, renderType));
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(5+onOffset)).getQuads(state, side, rand, extraData, renderType));
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(4)).getQuads(state, side, rand, extraData, renderType));
-        }
-        else {
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(4)).getQuads(state, side, rand, extraData, renderType));
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(2)).getQuads(state, side, rand, extraData, renderType));
-            quads.addAll(bakedModels.get(variant).get(modelParts.get(5+onOffset)).getQuads(state, side, rand, extraData, renderType));
+        if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
+            int onOffset = state.get(Properties.LIT) ? 1 : 0;
+            WoodVariant variant = extraData.get(VARIANT);
+            BitSet set = extraData.get(CONNECTIONS).connections;
+            if (set.get(0) && set.get(1)) {
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(1)).getQuads(state, side, rand, extraData, renderType));
+            } else if (set.get(0)) {
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(0)).getQuads(state, side, rand, extraData, renderType));
+            } else if (set.get(1))
+            {
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(3)).getQuads(state, side, rand, extraData, renderType));
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(5+onOffset)).getQuads(state, side, rand, extraData, renderType));
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(4)).getQuads(state, side, rand, extraData, renderType));
+            }
+            else {
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(4)).getQuads(state, side, rand, extraData, renderType));
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(2)).getQuads(state, side, rand, extraData, renderType));
+                quads.addAll(bakedModels.get(variant).get(modelParts.get(5+onOffset)).getQuads(state, side, rand, extraData, renderType));
+            }
         }
         return quads;
     }

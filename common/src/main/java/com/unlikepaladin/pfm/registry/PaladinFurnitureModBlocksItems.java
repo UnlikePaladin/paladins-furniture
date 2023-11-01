@@ -30,7 +30,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final FridgeBlock GRAY_FRIDGE = new FridgeBlock(AbstractBlock.Settings.copy(GRAY_FREEZER).nonOpaque(), () -> PaladinFurnitureModBlocksItems.GRAY_FREEZER);
     public static final FreezerBlock IRON_FREEZER = new IronFreezerBlock(AbstractBlock.Settings.create().resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.METAL).mapColor(MapColor.IRON_GRAY), () -> PaladinFurnitureModBlocksItems.IRON_FRIDGE);
     public static final FridgeBlock IRON_FRIDGE = new IronFridgeBlock(AbstractBlock.Settings.copy(IRON_FREEZER).nonOpaque(), () -> PaladinFurnitureModBlocksItems.IRON_FREEZER);
-    public static final FridgeBlock XBOX_FRIDGE = new XboxFridgeBlock(AbstractBlock.Settings.copy(WHITE_FREEZER).nonOpaque().mapColor(MapColor.BLACK), null);
+    public static final FridgeBlock XBOX_FRIDGE = new XboxFridgeBlock(AbstractBlock.Settings.copy(WHITE_FREEZER).resistance(1200.0F).nonOpaque().mapColor(MapColor.BLACK), null);
 
     public static final StoveBlock WHITE_STOVE = new StoveBlock(AbstractBlock.Settings.copy(WHITE_FREEZER));
     public static final KitchenRangeHoodBlock WHITE_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(AbstractBlock.Settings.copy(WHITE_FREEZER).nonOpaque());

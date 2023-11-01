@@ -47,7 +47,7 @@ public class ForgeLogTableModel extends AbstractBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
         List<BakedQuad> quads = new ArrayList<>();
-        if (state.getBlock() instanceof LogTableBlock) {
+        if (state != null && state.getBlock() instanceof LogTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             BitSet set = extraData.get(CONNECTIONS).connections;
             boolean left = set.get(0);
             boolean right = set.get(1);

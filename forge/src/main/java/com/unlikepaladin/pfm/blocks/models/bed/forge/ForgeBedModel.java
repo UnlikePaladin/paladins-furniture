@@ -37,37 +37,39 @@ public class ForgeBedModel extends AbstractBakedModel implements BedInterface {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
         List<BakedQuad> quads = new ArrayList<>();
-        BedPart part = state.get(BedBlock.PART);
-        BitSet data = extraData.get(CONNECTIONS).connections;
-        boolean left = data.get(0);
-        boolean right = data.get(1);
-        boolean bunk = data.get(2);
-        if (part == BedPart.HEAD) {
-            quads.addAll(getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData, renderType));
-            quads.addAll(getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData, renderType));
-            if (!right){
-                quads.addAll(getBakedModels().get(modelParts.get(6)).getQuads(state, side, rand, extraData, renderType));
-            }
-            if (!left){
-                quads.addAll(getBakedModels().get(modelParts.get(7)).getQuads(state, side, rand, extraData, renderType));
-            }
-            if (bunk && !(state.getBlock() instanceof ClassicBedBlock)){
-                quads.addAll(getBakedModels().get(modelParts.get(10)).getQuads(state, side, rand, extraData, renderType));
-            }
-        } else {
-            quads.addAll(getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData, renderType));
-            quads.addAll(getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData, renderType));
-            if (!right){
-                quads.addAll(getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData, renderType));
-            }
-            if (!left){
-                quads.addAll(getBakedModels().get(modelParts.get(5)).getQuads(state, side, rand, extraData, renderType));
-            }
-            if (!right && bunk){
-                quads.addAll(getBakedModels().get(modelParts.get(8)).getQuads(state, side, rand, extraData, renderType));
-            }
-            if (!left && bunk){
-                quads.addAll(getBakedModels().get(modelParts.get(9)).getQuads(state, side, rand, extraData, renderType));
+        if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
+            BedPart part = state.get(BedBlock.PART);
+            BitSet data = extraData.get(CONNECTIONS).connections;
+            boolean left = data.get(0);
+            boolean right = data.get(1);
+            boolean bunk = data.get(2);
+            if (part == BedPart.HEAD) {
+                quads.addAll(getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData, renderType));
+                quads.addAll(getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData, renderType));
+                if (!right){
+                    quads.addAll(getBakedModels().get(modelParts.get(6)).getQuads(state, side, rand, extraData, renderType));
+                }
+                if (!left){
+                    quads.addAll(getBakedModels().get(modelParts.get(7)).getQuads(state, side, rand, extraData, renderType));
+                }
+                if (bunk && !(state.getBlock() instanceof ClassicBedBlock)){
+                    quads.addAll(getBakedModels().get(modelParts.get(10)).getQuads(state, side, rand, extraData, renderType));
+                }
+            } else {
+                quads.addAll(getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData, renderType));
+                quads.addAll(getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData, renderType));
+                if (!right){
+                    quads.addAll(getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData, renderType));
+                }
+                if (!left){
+                    quads.addAll(getBakedModels().get(modelParts.get(5)).getQuads(state, side, rand, extraData, renderType));
+                }
+                if (!right && bunk){
+                    quads.addAll(getBakedModels().get(modelParts.get(8)).getQuads(state, side, rand, extraData, renderType));
+                }
+                if (!left && bunk){
+                    quads.addAll(getBakedModels().get(modelParts.get(9)).getQuads(state, side, rand, extraData, renderType));
+                }
             }
         }
         return quads;

@@ -51,7 +51,7 @@ public class ForgeClassicTableModel extends AbstractBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
         List<BakedQuad> quads = new ArrayList<>();
-        if (state.getBlock() instanceof ClassicTableBlock) {
+        if (state != null && state.getBlock() instanceof ClassicTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             BitSet set = extraData.get(CONNECTIONS).connections;
             boolean north = set.get(0);
             boolean east = set.get(1);
