@@ -31,7 +31,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final FridgeBlock GRAY_FRIDGE = new FridgeBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(GRAY_FREEZER).nonOpaque(), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.GRAY_FREEZER);
     public static final FreezerBlock IRON_FREEZER = new IronFreezerBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.METAL, MapColor.IRON_GRAY).strength(5.0f,3.5f).sounds(BlockSoundGroup.METAL), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.IRON_FRIDGE);
     public static final FridgeBlock IRON_FRIDGE = new IronFridgeBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(IRON_FREEZER).nonOpaque(), ToolType.PICKAXE), () -> PaladinFurnitureModBlocksItems.IRON_FREEZER);
-    public static final FridgeBlock XBOX_FRIDGE = new XboxFridgeBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.METAL, MapColor.BLACK).strength(5.0f, 3.5f).sounds(BlockSoundGroup.STONE).nonOpaque(), ToolType.PICKAXE), null);
+    public static final FridgeBlock XBOX_FRIDGE = new XboxFridgeBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.METAL, MapColor.BLACK).strength(5.0f, 1200.0f).sounds(BlockSoundGroup.STONE).nonOpaque(), ToolType.PICKAXE), null);
 
     public static final StoveBlock WHITE_STOVE = new StoveBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(WHITE_FREEZER), ToolType.PICKAXE));
     public static final KitchenRangeHoodBlock WHITE_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(WHITE_FREEZER).nonOpaque(), ToolType.PICKAXE));

@@ -16,9 +16,8 @@ import net.minecraft.entity.SpawnGroup;
 import java.util.Optional;
 
 public class PFMImmersivePortals implements PFMModCompatibility {
-    private final PFMClientModCompatibility clientModCompatibility;
+    private PFMClientModCompatibility clientModCompatibility;
     public PFMImmersivePortals(){
-        clientModCompatibility = new PFMImmersivePortalsClient(this);
     }
     public static final EntityType<PFMMirrorEntity> MIRROR = EntityType.Builder.create(PFMMirrorEntity::new, SpawnGroup.MISC).setDimensions(0.0F, 0.0F).makeFireImmune().disableSummon().build("mirror_entity");
 
@@ -40,6 +39,8 @@ public class PFMImmersivePortals implements PFMModCompatibility {
 
     @Override
     public Optional<PFMClientModCompatibility> getClientModCompatiblity() {
+        if (clientModCompatibility == null)
+            clientModCompatibility = new PFMImmersivePortalsClient(this);
         return Optional.of(clientModCompatibility);
     }
 }

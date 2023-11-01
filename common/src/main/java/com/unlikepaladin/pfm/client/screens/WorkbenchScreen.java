@@ -219,7 +219,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
                 int itemCount = 0;
                 Style style = Style.EMPTY.withColor(Formatting.GRAY);
                 for (ItemStack stack1 : handler.getPlayerInventory().main) {
-                    if (stack1.isItemEqual(item.getDefaultStack())) {
+                    if (stack1.getItem() == item) {
                         itemCount += stack1.getCount();
                     }
                 }

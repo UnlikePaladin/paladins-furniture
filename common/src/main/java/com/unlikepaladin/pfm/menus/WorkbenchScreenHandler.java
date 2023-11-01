@@ -96,8 +96,8 @@ public class WorkbenchScreenHandler extends ScreenHandler {
                 List<Ingredient> ingredients = furnitureRecipe.getIngredients();
                 for (Ingredient ingredient : ingredients) {
                     for (ItemStack stack : PFMRecipeProvider.pfm$getMatchingStacks(ingredient)) {
-                        if (playerInventory.getSlotWithStack(stack) != -1) {
-                            int indexOfStack = playerInventory.getSlotWithStack(stack);
+                        if (FurnitureRecipe.getSlotWithStackIgnoreNBT(playerInventory, stack) != -1) {
+                            int indexOfStack = FurnitureRecipe.getSlotWithStackIgnoreNBT(playerInventory, stack);
                             if (playerInventory.getStack(indexOfStack).getCount() >= stack.getCount()) {
                                 ItemStack stack1 = playerInventory.getStack(indexOfStack);
                                 stack1.decrement(stack.getCount());

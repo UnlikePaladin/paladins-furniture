@@ -39,10 +39,9 @@ public class NetworkRegistryForge {
             if (PaladinFurnitureMod.getPFMConfig().shouldGiveGuideBook()) {
                 //Give book
                 PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayerEntity) event.getPlayer());
-
-                //Sync Config
-                NetworkRegistryForge.PFM_CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event::getPlayer), new SyncConfigPacket(PaladinFurnitureMod.getPFMConfig().options));
             }
+            //Sync Config
+            NetworkRegistryForge.PFM_CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event::getPlayer), new SyncConfigPacket(PaladinFurnitureMod.getPFMConfig().options));
         }
    }
 }

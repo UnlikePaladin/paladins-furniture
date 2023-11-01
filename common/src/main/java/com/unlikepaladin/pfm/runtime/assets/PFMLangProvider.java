@@ -230,7 +230,7 @@ public class PFMLangProvider {
         variantBaseHashMap.forEach((variant, list) -> {
             list.forEach(block1 -> {
                 Block block = (Block) block1;
-                if (variant instanceof WoodVariant && !variant.isVanilla()) {
+                if (variant instanceof WoodVariant) {
                     String translatedVariantName = getTranslatedVariantName(variant);
                     String strippedKey = block.getTranslationKey().contains("stripped") ? translate("block.type.stripped") : "";
                     String translatedFurnitureName = StringUtils.normalizeSpace(blockStringStringStringStringQuadFunc.apply(block, furnitureKey, strippedKey, translatedVariantName));
@@ -249,7 +249,7 @@ public class PFMLangProvider {
 
     public void generateTranslationForVariantBlockMap(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, BufferedWriter writer, String furnitureKey, QuadFunc<Block, String, String, String, String> blockStringStringStringStringQuadFunc) {
         variantBaseHashMap.forEach((variant, block) -> {
-            if (variant instanceof WoodVariant && !variant.isVanilla()) {
+            if (variant instanceof WoodVariant) {
                 String translatedVariantName = getTranslatedVariantName(variant);
                 String strippedKey = block.getTranslationKey().contains("stripped") ? translate("block.type.stripped") : "";
                 String translatedFurnitureName = StringUtils.normalizeSpace(blockStringStringStringStringQuadFunc.apply(block, furnitureKey, strippedKey, translatedVariantName));
