@@ -17,10 +17,9 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
-    private final PFMClientModCompatibility clientModCompatibility;
+    private PFMClientModCompatibility clientModCompatibility;
 
     public PFMCookingForBlockheadsImpl() {
-        clientModCompatibility = new PFMCookingForBlockheadsClient(this);
     }
 
     @Override
@@ -44,6 +43,8 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
 
     @Override
     public Optional<PFMClientModCompatibility> getClientModCompatiblity() {
+        if (clientModCompatibility == null)
+            clientModCompatibility = new PFMCookingForBlockheadsClient(this);
         return Optional.of(clientModCompatibility);
     }
 }
