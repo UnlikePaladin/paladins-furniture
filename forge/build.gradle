@@ -128,7 +128,7 @@ sourceSets.main.resources {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    archiveClassifier = "forge-mc${rootProject.minecraft_version}"
+    archiveClassifier = "minecraftforge-mc${rootProject.minecraft_version}"
 }
 
 jar {

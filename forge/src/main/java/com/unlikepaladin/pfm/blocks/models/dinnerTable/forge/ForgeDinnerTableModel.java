@@ -48,7 +48,7 @@ public class ForgeDinnerTableModel extends AbstractBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
         List<BakedQuad> quads = new ArrayList<>();
-        if (state.getBlock() instanceof DinnerTableBlock) {
+        if (state != null && state.getBlock() instanceof DinnerTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             BitSet set = extraData.get(CONNECTIONS).connections;
             boolean left = set.get(0);
             boolean right = set.get(1);

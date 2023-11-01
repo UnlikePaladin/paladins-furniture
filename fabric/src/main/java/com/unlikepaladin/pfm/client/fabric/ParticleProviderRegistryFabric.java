@@ -11,6 +11,14 @@ import net.minecraft.util.Identifier;
 public class ParticleProviderRegistryFabric {
 
     public static void registerParticleFactories() {
-        ParticleFactoryRegistry.getInstance().register(ParticleIDs.WATER_DROP, BlockLeakParticle::createFallingWater);
+        ParticleFactoryRegistry.getInstance().register(ParticleIDs.WATER_DROP, provider -> {
+            return (parameters, world, x, y, z, velocityX, velocityY, velocityZ) -> {
+                SpriteBillboardParticle spriteBillboardParticle = BlockLeakParticle.createFallingWater(parameters, world, x, y, z, velocityX, velocityY, velocityZ);
+                if (provider != null) {
+                    spriteBillboardParticle.setSprite(provider);
+                }
+                return spriteBillboardParticle;
+            };
+        });
     }
 }

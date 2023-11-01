@@ -76,7 +76,7 @@ public class ForgeKitchenDrawerModel extends AbstractBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
-        if (state.getBlock() instanceof KitchenDrawerBlock) {
+        if (state != null && state.getBlock() instanceof KitchenDrawerBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             BitSet set = extraData.get(CONNECTIONS).connections;
             Direction direction = state.get(KitchenDrawerBlock.FACING);
             KitchenDrawerBlock block = (KitchenDrawerBlock) state.getBlock();
