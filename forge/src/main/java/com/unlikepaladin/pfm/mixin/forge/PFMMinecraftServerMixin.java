@@ -9,7 +9,6 @@ import net.minecraft.SharedConstants;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.metadata.PackResourceMetadata;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -21,13 +20,10 @@ import java.util.List;
 @Mixin(MinecraftServer.class)
 public class PFMMinecraftServerMixin {
 
-    @Inject(method = "lambda$reloadResources$19", at = @At(value = "RETURN"), cancellable = true, remap = false)
+    @Inject(method = "lambda$reloadResources$19", at = @At(value = "RETURN"), remap = false)
     private void createReload(CallbackInfoReturnable<ImmutableList<ResourcePack>> cir) {
-        PFMRuntimeResources.RESOURCE_PACK_LIST = new ArrayList<>(cir.getReturnValue());
         List<ResourcePack> resourcePacks = new ArrayList<>(cir.getReturnValue());
-        PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("pfm-runtime-resources"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
-        resourcePacks.add(new PathPackRPWrapper(Suppliers.memoize(() -> {
-            PFMRuntimeResources.prepareAndRunResourceGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata));
-        cir.setReturnValue(ImmutableList.copyOf(resourcePacks));
+        resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);
+        PFMRuntimeResources.RESOURCE_PACK_LIST = resourcePacks;
     }
 }
