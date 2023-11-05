@@ -41,7 +41,7 @@ public class PFMMirrorBlockIP extends MirrorBlock {
         List<PFMMirrorEntity> mirrorBlockEntities;
             if (!world.isClient && !(mirrorBlockEntities = world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos))).isEmpty()) {
                 mirrorBlockEntities.forEach(pfmMirrorEntity -> {
-                    pfmMirrorEntity.remove(Entity.RemovalReason.KILLED);
+                    ((PFMMirrorEntity)pfmMirrorEntity).remove(Entity.RemovalReason.KILLED);
                 });
                 world.updateNeighbors(pos, state.getBlock());
             }
@@ -58,7 +58,7 @@ public class PFMMirrorBlockIP extends MirrorBlock {
             if (!(world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos)).isEmpty())) {
                 mirrorBlockEntities.addAll(world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos)));
                 mirrorBlockEntities.forEach(pfmMirrorEntity -> {
-                   pfmMirrorEntity.remove(Entity.RemovalReason.KILLED);
+                    ((Entity)pfmMirrorEntity).remove(Entity.RemovalReason.KILLED);
                 });
             }
             PFMMirrorEntity.createMirror((ServerWorld) world, pos, state.get(FACING).getOpposite());
