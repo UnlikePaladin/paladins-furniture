@@ -347,6 +347,10 @@ public class ModelHelper {
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }
+            id = new Identifier(namespace, "block/alpha_oak_log");
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
         }
         return new Identifier(namespace, "block/" + path);
     }
