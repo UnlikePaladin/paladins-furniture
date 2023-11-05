@@ -8,8 +8,6 @@
     "PFMMixinPointOfInterestType",
     "PFMMixinPointOfInterestTypeFactory",
     "PFMPlayerInventoryMixin",
-    "PFMReloadableResourceManagerImplMixin",
-    "PFMSaveLoaderMixin",
     "PFMTextureKeyFactory"
   ],
   "server": [
