@@ -51,7 +51,7 @@ public class PaladinFurnitureMod {
 		if (getModList().contains("farmersdelight"))
 			pfmModCompatibilities.add(PFMFarmersDelight.getInstance());
 		if (getModList().contains("imm_ptl_core"))
-			pfmModCompatibilities.add(new PFMImmersivePortals());
+			pfmModCompatibilities.add(PFMImmersivePortals.getInstance());
 		}
 
 	@ExpectPlatform
