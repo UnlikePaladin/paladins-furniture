@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.compat.imm_ptl.client;
+package com.unlikepaladin.pfm.compat.imm_ptl.forge.client;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import net.minecraft.client.render.VertexConsumerProvider;
