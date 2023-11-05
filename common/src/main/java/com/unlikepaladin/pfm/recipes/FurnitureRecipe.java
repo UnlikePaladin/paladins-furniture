@@ -45,9 +45,6 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
     public boolean matches(PlayerInventory playerInventory, World world) {
         List<Ingredient> ingredients = this.getIngredients();
         BitSet hasIngredients = new BitSet(ingredients.size());
-        if (this.output.getItem().equals(PaladinFurnitureModBlocksItems.GLASS_MODERN_PENDANT.asItem())) {
-            System.out.println("wtf");
-        }
         HashMap<Item, Integer> containedItems = new HashMap<>();
         for (int i = 0; i < ingredients.size(); i++) {
             Ingredient ingredient = ingredients.get(i);
