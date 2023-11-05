@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmersivePortals;
 import com.unlikepaladin.pfm.compat.imm_ptl.PFMMirrorBlockIP;
 import com.unlikepaladin.pfm.compat.imm_ptl.shape.BlockPortalShape;
 import net.minecraft.block.BlockState;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
@@ -123,7 +124,7 @@ public class PFMMirrorEntity extends Mirror {
             wallValid = false;
         }
         if (!wallValid) {
-            remove(RemovalReason.DISCARDED);
+            ((Entity)this).remove(RemovalReason.DISCARDED);
         }
     }
 
@@ -135,13 +136,9 @@ public class PFMMirrorEntity extends Mirror {
         return false;
     }
 
-    public static PFMMirrorEntity createMirror(
-            ServerWorld world,
-            BlockPos glassPos,
-            Direction facing
-    ) {
+    public static void createMirror(ServerWorld world, BlockPos glassPos, Direction facing) {
         if (!isMirrorBlock(world, glassPos, facing.getOpposite())) {
-            return null;
+            return;
         }
 
         BlockPortalShape shape = BlockPortalShape.findArea(
@@ -151,7 +148,7 @@ public class PFMMirrorEntity extends Mirror {
         );
 
         if (shape == null) {
-            return null;
+            return;
         }
 
         PFMMirrorEntity pfmMirrorEntity = PFMMirrorEntity.entityType.create(world);
@@ -159,7 +156,7 @@ public class PFMMirrorEntity extends Mirror {
 
         Box wallBox = getWallBox(world, shape.area.stream());
         if (wallBox == null) {
-            return null;
+            return;
         }
         pfmMirrorEntity.facing = facing;
         Vec3d pos = Helper.getBoxSurfaceInversed(wallBox, facing.getOpposite()).getCenter();
@@ -172,7 +169,7 @@ public class PFMMirrorEntity extends Mirror {
                         facing.getAxis()
                 )
         );
-        pfmMirrorEntity.setPosition(pos);
+        ((Entity)pfmMirrorEntity).setPos(pos.x, pos.y, pos.z);
         pfmMirrorEntity.setDestination(pos);
         pfmMirrorEntity.dimensionTo = world.getRegistryKey();
 
@@ -181,7 +178,6 @@ public class PFMMirrorEntity extends Mirror {
         pfmMirrorEntity.blockPortalShape = shape;
         world.spawnEntity(pfmMirrorEntity);
 
-        return pfmMirrorEntity;
     }
 
     @Nullable
