@@ -1,5 +1,6 @@
-package com.unlikepaladin.pfm.mixin;
+package com.unlikepaladin.pfm.mixin.forge;
 
+import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
 import net.minecraft.resource.ResourcePack;
@@ -12,16 +13,12 @@ import java.util.List;
 
 @Mixin(value = ReloadableResourceManagerImpl.class)
 public class PFMReloadableResourceManagerImplMixin {
-    private static int count = 0;
+
     @ModifyVariable(at = @At(value = "HEAD"), method = "reload", argsOnly = true)
     private List<ResourcePack> createReload(List<ResourcePack> packs) {
         List<ResourcePack> resourcePacks = new ArrayList<>(packs);
-        if (PFMRuntimeResources.ready) {
-            PFMRuntimeResources.RESOURCE_PACK_LIST = resourcePacks;
-            //PFMRuntimeResources.runAsyncResourceGen(); No async for anyone, too bad forge won't behave
-            PFMRuntimeResources.prepareAndRunResourceGen(false);
-            resourcePacks.add(PFMRuntimeResources.ASSETS_PACK);
-        }
-        return resourcePacks;
+        resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);
+        PFMRuntimeResources.RESOURCE_PACK_LIST = resourcePacks;
+        return packs;
     }
 }

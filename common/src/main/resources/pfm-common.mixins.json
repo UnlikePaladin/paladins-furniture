@@ -7,7 +7,6 @@
     "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMMixinPointOfInterestTypeFactory",
     "PFMPlayerInventoryMixin",
-    "PFMReloadableResourceManagerImplMixin",
     "PFMSaveLoaderMixin",
     "PFMTextureKeyFactory"
   ],
