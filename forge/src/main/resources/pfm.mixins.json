@@ -10,8 +10,9 @@
   "mixins": [
     "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMCookingPotBlockEntityMixin",
+    "PFMMinecraftServerMixin",
     "PFMReloadableResourceManagerImplMixin",
-    "PFMMinecraftServerMixin"
+    "PFMSaveLoaderMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -1,4 +1,5 @@
-package com.unlikepaladin.pfm.mixin;
+package com.unlikepaladin.pfm.mixin.fabric;
+
 
 import com.google.common.base.Suppliers;
 import com.mojang.bridge.game.PackType;
@@ -26,7 +27,9 @@ public class PFMSaveLoaderMixin {
         List<ResourcePack> resourcePacks = new ArrayList<>(packs);
         PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("pfm-runtime-resources"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
         resourcePacks.add(new PathPackRPWrapper(Suppliers.memoize(() -> {
-            PFMRuntimeResources.prepareAndRunResourceGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata));
+            PFMRuntimeResources.prepareAndRunResourceGen(false);
+            return PFMRuntimeResources.ASSETS_PACK;
+        }), packResourceMetadata));
         return resourcePacks;
     }
 }
