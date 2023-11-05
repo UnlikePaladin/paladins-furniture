@@ -15,6 +15,10 @@ import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.minecraft.data.DataCache;
+import net.minecraft.data.DataProvider;
+import net.minecraft.resource.ResourcePack;
+import net.minecraft.resource.ResourceType;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,12 +35,22 @@ public class PFMDataGen {
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private final Path output;
     private final boolean logOrDebug;
+    public static boolean running = false;
     public PFMDataGen(Path output, boolean logOrDebug) {
         this.output = output;
         this.logOrDebug = logOrDebug;
     }
     public void run() throws IOException {
         if (!frozen) {
+            log("Packs:");
+            for (ResourcePack pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
+                log("\tPack {}", pack.getName());
+                for (String namespace : pack.getNamespaces(ResourceType.CLIENT_RESOURCES)) {
+                    log("\t\tNamespace {}", namespace);
+                }
+            }
+            running = true;
+            frozen = true;
             Path modListPath = PFMRuntimeResources.getPFMDirectory().resolve("modsList");
             Path hashPath = PFMRuntimeResources.getPFMDirectory().resolve("dataHash");
             if (!modListPath.toFile().isFile()) {
@@ -113,11 +127,11 @@ public class PFMDataGen {
                 Files.deleteIfExists(modListPath);
                 Files.createFile(modListPath);
                 Files.write(PFMRuntimeResources.createDirIfNeeded(modListPath), PaladinFurnitureMod.getVersionMap().toString().replace("[", "").replace("]", "").getBytes(StandardCharsets.UTF_8), StandardOpenOption.APPEND);
+                running = false;
             } else {
                 log("Data Hash and Mod list matched, skipping generation");
             }
         }
-        frozen = true;
     }
 
     public void log(String s, Object p0) {

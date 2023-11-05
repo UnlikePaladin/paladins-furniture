@@ -8,7 +8,8 @@
     "PFMRenderLayersForgeMixin"
   ],
   "mixins": [
-    "PFMCookingPotBlockEntityMixin"
+    "PFMCookingPotBlockEntityMixin",
+    "PFMReloadableResourceManagerImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1

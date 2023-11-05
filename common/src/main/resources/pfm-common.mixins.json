@@ -9,7 +9,6 @@
     "PFMMixinPointOfInterestType",
     "PFMMixinPointOfInterestTypeFactory",
     "PFMPlayerInventoryMixin",
-    "PFMReloadableResourceManagerImplMixin",
     "PFMTextureKeyFactory"
   ],
   "server": [

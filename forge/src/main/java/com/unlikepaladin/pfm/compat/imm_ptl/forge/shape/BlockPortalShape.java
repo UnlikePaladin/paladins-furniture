@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.compat.imm_ptl.shape;
+package com.unlikepaladin.pfm.compat.imm_ptl.forge.shape;
 
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtInt;

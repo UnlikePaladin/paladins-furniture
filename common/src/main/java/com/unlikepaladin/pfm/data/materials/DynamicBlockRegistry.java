@@ -66,7 +66,14 @@ public class DynamicBlockRegistry {
         embur.addChild("wood", "embur_pedu_top");
         embur.addChild("stripped_wood", "stripped_embur_pedu_top");
         addBlockTypeFinder(WoodVariant.class, embur);
-
+        WoodVariant.Finder emburOld = WoodVariant.Finder.simple(
+                "byg", "embur", "embur_planks", "embur_pedu");
+        emburOld.addChild("stripped_log", "stripped_embur_pedu");
+        emburOld.addChild("wood", "embur_pedu_hyphae");
+        emburOld.addChild("stripped_wood", "stripped_embur_pedu_hyphae");
+        emburOld.addChild("fence", "embur_fence");
+        emburOld.addChild("slab", "embur_slab");
+        addBlockTypeFinder(WoodVariant.class, emburOld);
 
         //mcreator mod with typos...
         addBlockTypeFinder(WoodVariant.class, WoodVariant.Finder.simple(
