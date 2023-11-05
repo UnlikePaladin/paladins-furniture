@@ -14,6 +14,8 @@ import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.minecraft.SharedConstants;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.DataProvider;
+import net.minecraft.resource.ResourcePack;
+import net.minecraft.resource.ResourceType;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +37,13 @@ public class PFMDataGen {
     }
     public void run() throws IOException {
         if (!frozen) {
+            log("Packs:");
+            for (ResourcePack pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
+                log("\tPack {}", pack.getName());
+                for (String namespace : pack.getNamespaces(ResourceType.CLIENT_RESOURCES)) {
+                    log("\t\tNamespace {}", namespace);
+                }
+            }
             running = true;
             frozen = true;
             Path modListPath = PFMRuntimeResources.getPFMDirectory().resolve("modsList");
