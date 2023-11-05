@@ -1,8 +1,8 @@
-package com.unlikepaladin.pfm.compat.imm_ptl;
+package com.unlikepaladin.pfm.compat.imm_ptl.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.MirrorBlock;
-import com.unlikepaladin.pfm.compat.imm_ptl.entity.PFMMirrorEntity;
+import com.unlikepaladin.pfm.compat.imm_ptl.forge.entity.PFMMirrorEntity;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
