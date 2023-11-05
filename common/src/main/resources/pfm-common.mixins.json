@@ -6,7 +6,6 @@
   "mixins": [
     "PFMDataCache$CachedDataMixin",
     "PFMPlayerInventoryMixin",
-    "PFMReloadableResourceManagerImplMixin",
     "PFMSaveLoaderMixin",
     "PFMTextureKeyFactory"
   ],

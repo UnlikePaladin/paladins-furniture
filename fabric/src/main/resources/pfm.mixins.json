@@ -9,7 +9,8 @@
     "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMCookingPotBlockEntityMixin",
     "PFMMinecraftServerMixin",
-    "PFMMixinPointOfInterestType"
+    "PFMMixinPointOfInterestType",
+    "PFMReloadableResourceManagerImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1

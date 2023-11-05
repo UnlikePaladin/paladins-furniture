@@ -1,19 +1,40 @@
-![Paladin's Furniture Mod Banner](https://github.com/UnlikePaladin/paladin-furniture-mod/blob/main/docs/banner.png?raw=true)
+![Paladin's Furniture Mod Banner](./docs/banner.png?raw=true)
+
+<p align="center">
+  <img alt="fabric" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/fabric_vector.svg">
+  <img alt="forge" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/forge_vector.svg">
+  <img alt="quilt" height="56" src="https://cdn.jsdelivr.net/npm/@intergrav/devins-badges@3/assets/cozy/supported/quilt_vector.svg">
+</p>
+
 
 ## Description
-A Brand-New Furniture mod for Modern Minecraft where things are functional! It contains over 1,000 New Pieces of Furniture that you can use to furnish your build, while being functional and nice to look at. Everything is craftable and obtainable in Survival so it's friendly, and nice to look at, it has Compatibility with Sandwichable, REI, EMI and Patchouli. The mod has been in development for roughly 1 year but I don't plan on stopping with new updates, adding new furniture and mod compat with other mods!
+A Brand-New Furniture mod for Modern Minecraft where things are functional! It contains over 1,000 New Pieces of Furniture that you can use to furnish your build, while being functional and nice to look at. Everything is craftable and obtainable in Survival so it's friendly, and nice to look at, it has compatibility with Sandwichable, REI, JEI, EMI, Patchouli, CookingForBlockHeads, Farmer's Delight and features modded wood type support. The mod has been in development for roughly 2 years but I don't plan on stopping with new updates, adding new furniture and mod compat with other mods!
 
 ![A Kitchen](https://cdn.discordapp.com/attachments/930656475741814804/1010808630683115611/2022-08-18_23.34.12.png)
 
 ## Installation
 
-You will need Fabric Loader 0.14.6 or newer installed in your game in order to load this mod. If you haven't installed Fabric mods before, you can find a variety of community guides for doing so [here](https://fabricmc.net/wiki/install).
+You will need Fabric Loader, Quilt Loader, NeoForge or MinecraftForge installed in your game in order to load this mod. If you haven't installed mods before, you can find a variety of community guides for doing so [here for Fabric](https://fabricmc.net/wiki/install) and [here for Forge](https://www.wikihow.com/Install-Minecraft-Forge).
 
-You will also need Fabric API and Cloth Config installed to use the mod, you can get that [here](https://modrinth.com/mod/fabric-api) and [here](https://modrinth.com/mod/cloth-config). 
+You will also need Fabric API installed if you're playing on Fabric to use the mod, you can get it [here](https://modrinth.com/mod/fabric-api). If you're playing with Sodium installed you will need [Indium](https://modrinth.com/mod/indium). 
 
-The mod is avaialbe for versions 1.16.5 through 1.19.2 and can be downloaded off of [CurseForge](https://www.curseforge.com/minecraft/mc-mods/paladins-furniture), [Modrinth](https://modrinth.com/mod/paladins-furniture), [PlanetMC](https://www.planetminecraft.com/mod/paladin-s-furniture-mod/) and the [Minecraft Forum](https://www.minecraftforum.net/forums/mapping-and-modding-java-edition/minecraft-mods/3159314-paladins-furniture-mod).
+The mod is available for versions 1.16.5 through 1.20.2 find the links further below.
 
-I've made a [Discord](https://discord.gg/zbMDUPB), you can join to ask for help or support, or to give any feedback, I'll also be providing compiled builds for testing new features before they make their way into public releases.
+I have a [Discord](https://discord.gg/zbMDUPB) server that you can join if you need help or support with the mod, or if you would like to give me any feedback, I also provide compiled builds for testing new features before they make their way into public releases in it, so join if you'd like to keep up with the latest developments.
+
+## Links
+[discord]: https://discord.com/api/guilds/695034549045952592/widget.png
+[modrinth]: https://img.shields.io/badge/Modrinth-1bd96a?logo=modrinth&logoColor=ffffff
+[curseforge]: https://img.shields.io/badge/CurseForge-f16436?logo=curseforge&logoColor=ffffff
+[github]: https://img.shields.io/badge/GitHub-181717?logo=github
+[kofi]: https://img.shields.io/badge/Ko--fi-00b9fe?logo=kofi&logoColor=ffffff
+[mcforum]: https://img.shields.io/badge/Minecraft-Forum-white?style=flat&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8%2F9hAAAAAXNSR0IArs4c6QAAAUBJREFUOE9jZGBgYGRAA%2FFdKq4gIS5toe0g%2BtvVd54gemHZnd3oakGa4Qaga0RXjM0gsAGENOIzCGxA5lazP%2BiKiOFP9z7FQrYBT8%2B8YdpUf48JbIBfo9I%2FaRORf8TYClID0vzl%2BjeGfSteIAxA1ozLMJBGkDqQZhCAG9AY5%2FT3rPIDRpAEjyYXA7oBMBuRLdF4w%2Fdn2p5bbGAvgAyASR78dQ0crSCDkAHMVpBGmDhWA0CSnz9%2F%2Fg2iz7E%2FZgPRyJrACYyX%2F9%2B3zx%2BZ4AaUBJr%2B4OXlZYVphrFB%2FJfPnvyFaUDWDBLrWX%2BaA%2B4FkK3IGmHOBImDbMMWQ3AXgFKi0hW5HdgMgbkAZDiIDTPoq9s%2Fb1DegOcFWHKGGQRSiK4JJAbTCDMIJTOBBEEGiR4X3IzNAJCT8eZGZEmYQbDQxpVKAZ8ywSEpbPKhAAAAAElFTkSuQmCC&labelColor=52a435&color=52a435
+[pmc]: https://img.shields.io/badge/Planet-Minecraft-white?style=flat&logo=data%3Aimage%2Fpng%3Bbase64%2CiVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAMAAABEpIrGAAAATlBMVEX%2F%2F%2F8BV6kBV6kAAAAqVAEqVAFXsQ8nju1uwxBXqv89ov9LqP9EgAH%2F%2F%2F8vXAExmPcNdNMulfQBJkdYrgEBTpYTLi8BJkcTLi8Odcw8Kh1AKvelAAAAGnRSTlMA%2FwAAAP%2F%2F%2F%2F%2F%2F%2F%2F%2F%2F%2FwD%2F%2F%2F%2F%2F%2F%2F%2F%2FAAD%2FAHaBDEMAAADwSURBVHgBrNAHloQgEEVRlGhW0sz%2BVzp8quEYJ7%2BOWNfIdjW1lrNjIrcDAu2UzCmkEa3Zt0EeGdQZ0%2Ff9MGg9pqQUe4B56gZwAqgCiD1IswlVgAD4CZgb0Lbt7gimACTlLAQeHy5gdwpqWZY1HUN%2BC5hXZToM6Sud4t9BTw2IwLgH%2FRcAo68BRjTetu1yDY%2FAWts0zrm0oRydpuvqZQiBRQCtIQzaA28rSLlb8MYYi02TVmmbKmFKILJ78H4E1vrcWKO1tV%2BCCADhc%2Bt6AYy%2FBMpMIo8VHR%2BgCo8w93VOAAL5XAZYMgK8RoehYtn4MUkA1WIkb6ajLTUAAAAASUVORK5CYII%3D&labelColor=6fa1ce&color=6fa1ce
+### Social: [ ![discord] ](https://discord.gg/zbMDUPB)
+### Download: [ ![modrinth] ](https://modrinth.com/mod/paladins-furniture) [ ![curseforge] ](https://www.curseforge.com/minecraft/mc-mods/paladins-furniture) [![pmc]](https://www.planetminecraft.com/mod/paladin-s-furniture-mod/) [ ![mcforum] ](https://www.curseforge.com/minecraft/mc-mods/paladins-furniture)
+### Donate: [ ![kofi] ](https://ko-fi.com/unlikepaladin)
+
+
 
 ## License
 
