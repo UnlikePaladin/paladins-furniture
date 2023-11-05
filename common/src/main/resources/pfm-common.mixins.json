@@ -7,7 +7,6 @@
     "PFMDataCache$CachedDataMixin",
     "PFMFeatureFlagFactory",
     "PFMPlayerInventoryMixin",
-    "PFMSaveLoaderMixin",
     "PFMTextureKeyFactory"
   ],
   "server": [
