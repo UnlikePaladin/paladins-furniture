@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.forge;
 
 import com.google.common.base.Suppliers;
-import com.mojang.bridge.game.PackType;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
@@ -10,6 +9,7 @@ import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.dynamic.forge.LateBlockRegistryForge;
 import com.unlikepaladin.pfm.registry.forge.*;
 import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.util.Identifier;
@@ -60,10 +60,10 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
 
     @SubscribeEvent
     public static void generateResources(AddPackFindersEvent event) {
-        PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("pfm-runtime-resources"), SharedConstants.getGameVersion().getPackVersion(event.getPackType().packType));
+        PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("pfm-runtime-resources"), SharedConstants.getGameVersion().getResourceVersion(event.getPackType()));
         ResourcePackProfile.PackFactory packFactory = name -> new PathPackRPWrapper(Suppliers.memoize(() -> {
             PFMRuntimeResources.prepareAndRunResourceGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata);
-        ResourcePackProfile.Metadata metadata = new ResourcePackProfile.Metadata(Text.literal("pfm-runtime-resources"), SharedConstants.getGameVersion().getPackVersion(PackType.DATA), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE), FeatureFlags.DEFAULT_ENABLED_FEATURES, false);
+        ResourcePackProfile.Metadata metadata = new ResourcePackProfile.Metadata(Text.literal("pfm-runtime-resources"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.SERVER_DATA), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES), FeatureFlags.DEFAULT_ENABLED_FEATURES, false);
         event.addRepositorySource(profileAdder -> {
             profileAdder.accept(ResourcePackProfile.of("pfm-resources", Text.literal("PFM Resources"), true,  packFactory, metadata, event.getPackType(), ResourcePackProfile.InsertionPosition.BOTTOM, true, ResourcePackSource.NONE));
         });
