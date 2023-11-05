@@ -7,7 +7,6 @@
     "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMMixinPointOfInterestTypeFactory",
     "PFMPlayerInventoryMixin",
-    "PFMSaveLoaderMixin",
     "PFMTextureKeyFactory"
   ],
   "server": [
