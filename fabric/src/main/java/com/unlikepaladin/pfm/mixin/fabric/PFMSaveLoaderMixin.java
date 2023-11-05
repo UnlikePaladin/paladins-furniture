@@ -17,6 +17,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Mixin(SaveLoading.DataPacks.class)
 public class PFMSaveLoaderMixin {
@@ -25,11 +26,9 @@ public class PFMSaveLoaderMixin {
     private List<ResourcePack> createReload(List<ResourcePack> packs) {
         PFMRuntimeResources.RESOURCE_PACK_LIST = packs;
         List<ResourcePack> resourcePacks = new ArrayList<>(packs);
-        PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("pfm-runtime-resources"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES));
+        PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("pfm-runtime-resources"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
         resourcePacks.add(new PathPackRPWrapper(Suppliers.memoize(() -> {
-            PFMRuntimeResources.prepareAndRunResourceGen(false);
-            return PFMRuntimeResources.ASSETS_PACK;
-        }), packResourceMetadata));
+            PFMRuntimeResources.prepareAndRunResourceGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata));
         return resourcePacks;
     }
 }

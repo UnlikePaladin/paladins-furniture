@@ -75,6 +75,7 @@ dependencies {
     modCompileOnly "curse.maven:balm-forge-531761:${rootProject.balm_version_forge}"
     modCompileOnly "curse.maven:cooking-for-blockheads-forge-231484:${rootProject.cookingforblockheads_version_forge}"
     modCompileOnly "curse.maven:farmers-delight-forge-398521:${rootProject.farmers_delight_version_forge}"
+    modCompileOnly(files("../libs/immersive-portals-2.5.4-mc1.19.3-forge.jar"))
 }
 
 if(rootProject.jei_compatibility == "true") {
@@ -84,9 +85,7 @@ if(rootProject.jei_compatibility == "true") {
 }
 if (rootProject.immersive_portals_compatibility_forge == "true"){
     dependencies {
-        modRuntimeOnly("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}"){
-            transitive(false)
-        }
+        modImplementation("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}")
     }
 }
 
