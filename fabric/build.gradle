@@ -131,11 +131,11 @@ else {
 
 if (rootProject.immersive_portals_compatibility_fabric == "true"){
     dependencies {
-        modRuntimeOnly ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
+        modImplementation ("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
             exclude(group: "net.fabricmc.fabric-api")
             transitive(false)
         }
-        modRuntimeOnly("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
+        modImplementation("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
             exclude(group: "net.fabricmc.fabric-api")
             transitive(false)
         }
@@ -167,6 +167,15 @@ dependencies {
 
     //modImplementation "curse.maven:balm-fabric-500525:${rootProject.balm_version_fabric}"
     //modImplementation "curse.maven:cooking-for-blockheads-fabric-634546:${rootProject.cookingforblockheads_version_fabric}"
+
+    modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
+    modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
+        exclude(group: "net.fabricmc.fabric-api")
+        transitive(false)
+    }
 }
 
 dependencies {
