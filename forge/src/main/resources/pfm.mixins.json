@@ -9,6 +9,7 @@
   ],
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
+    "PFMReloadableResourceManagerImplMixin",
     "PFMMinecraftServerMixin"
   ],
   "injectors": {
