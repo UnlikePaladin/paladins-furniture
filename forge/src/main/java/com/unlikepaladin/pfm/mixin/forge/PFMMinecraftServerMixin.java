@@ -21,13 +21,10 @@ import java.util.List;
 @Mixin(MinecraftServer.class)
 public class PFMMinecraftServerMixin {
 
-    @Inject(method = "lambda$reloadResources$15", at = @At(value = "RETURN"), cancellable = true, remap = false)
+    @Inject(method = "lambda$reloadResources$15", at = @At(value = "RETURN"), remap = false)
     private void createReload(CallbackInfoReturnable<ImmutableList<ResourcePack>> cir) {
-        PFMRuntimeResources.RESOURCE_PACK_LIST = new ArrayList<>(cir.getReturnValue());
         List<ResourcePack> resourcePacks = new ArrayList<>(cir.getReturnValue());
-        PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("pfm-runtime-resources"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
-        resourcePacks.add(new PathPackRPWrapper(Suppliers.memoize(() -> {
-            PFMRuntimeResources.prepareAndRunResourceGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata));
-        cir.setReturnValue(ImmutableList.copyOf(resourcePacks));
+        resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);
+        PFMRuntimeResources.RESOURCE_PACK_LIST = resourcePacks;
     }
 }
