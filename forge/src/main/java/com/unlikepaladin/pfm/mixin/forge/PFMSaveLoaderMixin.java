@@ -16,7 +16,7 @@ import java.util.List;
 public class PFMSaveLoaderMixin {
 
     @ModifyArg(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/LifecycledResourceManagerImpl;<init>(Lnet/minecraft/resource/ResourceType;Ljava/util/List;)V"), index = 1)
-    private static List<ResourcePack> createReload(List<ResourcePack> packs) {
+    private List<ResourcePack> createReload(List<ResourcePack> packs) {
         List<ResourcePack> resourcePacks = new ArrayList<>(packs);
         resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);
         PFMRuntimeResources.RESOURCE_PACK_LIST = resourcePacks;
