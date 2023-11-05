@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.compat.imm_ptl;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.compat.imm_ptl.entity.PFMMirrorEntity;
 import net.minecraft.block.BlockState;
@@ -26,26 +27,30 @@ public class PFMMirrorBlockIP extends MirrorBlock {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
-        if (!world.isClient && world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos)).isEmpty()) {
-            PFMMirrorEntity.createMirror((ServerWorld) world, pos, state.get(FACING).getOpposite());
+        if (PaladinFurnitureMod.getPFMConfig().doImmersivePortalsMirrorsSpawn()) {
+            if (!world.isClient && world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos)).isEmpty()) {
+                PFMMirrorEntity.createMirror((ServerWorld) world, pos, state.get(FACING).getOpposite());
+            }
         }
     }
 
     @Override
     public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         super.onBreak(world, pos, state, player);
+        if (PaladinFurnitureMod.getPFMConfig().doImmersivePortalsMirrorsSpawn()) {
         List<PFMMirrorEntity> mirrorBlockEntities;
-        if (!world.isClient && !(mirrorBlockEntities = world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos))).isEmpty()) {
-            mirrorBlockEntities.forEach(pfmMirrorEntity -> {
-                pfmMirrorEntity.remove(Entity.RemovalReason.KILLED);
-            });
-            world.updateNeighbors(pos, state.getBlock());
+            if (!world.isClient && !(mirrorBlockEntities = world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos))).isEmpty()) {
+                mirrorBlockEntities.forEach(pfmMirrorEntity -> {
+                    pfmMirrorEntity.remove(Entity.RemovalReason.KILLED);
+                });
+                world.updateNeighbors(pos, state.getBlock());
+            }
         }
     }
 
     @Override
     public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!world.isClient()) {
+        if (PaladinFurnitureMod.getPFMConfig().doImmersivePortalsMirrorsSpawn() && !world.isClient()) {
             List<PFMMirrorEntity> mirrorBlockEntities = new ArrayList<>();
             if (canConnect(neighborState, state)) {
                 mirrorBlockEntities.addAll(world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(neighborPos)));

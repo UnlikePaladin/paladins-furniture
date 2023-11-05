@@ -172,7 +172,7 @@ public class PFMMirrorEntity extends Mirror {
                         facing.getAxis()
                 )
         );
-        pfmMirrorEntity.setPosition(pos.x, pos.y, pos.z);
+        pfmMirrorEntity.setPosition(pos);
         pfmMirrorEntity.setDestination(pos);
         pfmMirrorEntity.dimensionTo = world.getRegistryKey();
 

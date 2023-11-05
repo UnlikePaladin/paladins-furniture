@@ -37,7 +37,9 @@ public class PaladinFurnitureModConfig {
             tablesOfDifferentMaterialsConnect = new BooleanConfigOption(Text.translatable("pfm.option.tablesOfDifferentMaterialsConnect"), Text.translatable("pfm.option.tablesOfDifferentMaterialsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
             differentMirrorsConnect = new BooleanConfigOption(Text.translatable("pfm.option.differentMirrorsConnect"), Text.translatable("pfm.option.differentMirrorsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
             enableBook = new BooleanConfigOption(Text.translatable("pfm.option.enableBook"), Text.translatable("pfm.option.enableBook.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
-            mobsSitOnChairs = new BooleanConfigOption(Text.translatable("pfm.option.mobsSitOnChairs"), Text.translatable("pfm.option.mobsSitOnChairs.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER)
+            mobsSitOnChairs = new BooleanConfigOption(Text.translatable("pfm.option.mobsSitOnChairs"), Text.translatable("pfm.option.mobsSitOnChairs.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
+            renderImmersivePortalsMirrors = new BooleanConfigOption(Text.translatable("pfm.option.renderImmersivePortalsMirrors"), Text.translatable("pfm.option.renderImmersivePortalsMirrors.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
+            spawnImmersivePortalsMirror  = new BooleanConfigOption(Text.translatable("pfm.option.spawnImmersivePortalsMirror"), Text.translatable("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.CLIENT)
         );
         this.propertiesPath = propertiesPath;
     }
@@ -97,6 +99,12 @@ public class PaladinFurnitureModConfig {
     public boolean isShaderSolidFixOn() {
         return shaderSolidFix.getValue();
     }
+    public boolean doImmersivePortalsMirrorsRender() {
+        return renderImmersivePortalsMirrors.getValue();
+    }
+    public boolean doImmersivePortalsMirrorsSpawn() {
+        return spawnImmersivePortalsMirror.getValue();
+    }
 
     private BooleanConfigOption checkForUpdates;
 
@@ -114,6 +122,8 @@ public class PaladinFurnitureModConfig {
 
     private BooleanConfigOption enableBook;
     private BooleanConfigOption mobsSitOnChairs;
+    private BooleanConfigOption renderImmersivePortalsMirrors;
+    private BooleanConfigOption spawnImmersivePortalsMirror;
 
 
     public Path getPath() {
@@ -144,6 +154,8 @@ public class PaladinFurnitureModConfig {
         enableBook.setValue("true".equals(properties.getProperty("enableBook")));
         differentMirrorsConnect.setValue(!"false".equals(properties.getProperty("differentMirrorsConnect")));
         mobsSitOnChairs.setValue("true".equals(properties.getProperty("mobsSitOnChairs")));
+        renderImmersivePortalsMirrors.setValue("true".equals(properties.getProperty("renderImmersivePortalsMirrors")));
+        spawnImmersivePortalsMirror.setValue("true".equals(properties.getProperty("spawnImmersivePortalsMirror")));
 
         for (String key : options.keySet()) {
             if (!properties.containsKey(key.replace("pfm.option.", ""))){
@@ -170,6 +182,8 @@ public class PaladinFurnitureModConfig {
         properties.setProperty("enableBook",enableBook.getValue() ? "true" : "false");
         properties.setProperty("differentMirrorsConnect", differentMirrorsConnect.getValue() ? "true" : "false");
         properties.setProperty("mobsSitOnChairs", mobsSitOnChairs.getValue() ? "true" : "false");
+        properties.setProperty("renderImmersivePortalsMirrors", renderImmersivePortalsMirrors.getValue() ? "true" : "false");
+        properties.setProperty("spawnImmersivePortalsMirror", spawnImmersivePortalsMirror.getValue() ? "true" : "false");
 
         // NB: This uses ISO-8859-1 with unicode escapes as the encoding
         try (OutputStream os = Files.newOutputStream(propertiesPath)) {

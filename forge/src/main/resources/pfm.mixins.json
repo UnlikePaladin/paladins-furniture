@@ -9,7 +9,9 @@
   ],
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
-    "PFMMinecraftServerMixin"
+    "PFMMinecraftServerMixin",
+    "PFMReloadableResourceManagerImplMixin",
+    "PFMSaveLoaderMixin"
   ],
   "injectors": {
     "defaultRequire": 1
