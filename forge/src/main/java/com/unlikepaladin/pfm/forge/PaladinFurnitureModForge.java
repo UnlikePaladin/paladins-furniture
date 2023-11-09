@@ -13,6 +13,7 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.SharedConstants;
 import net.minecraft.resource.ResourcePackProfile;
 import net.minecraft.resource.ResourcePackSource;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.PackResourceMetadata;
 import net.minecraft.text.LiteralText;
 import net.minecraftforge.api.distmarker.Dist;
@@ -20,6 +21,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddPackFindersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 
@@ -51,14 +53,23 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         LateBlockRegistryForge.addDynamicBlockRegistration(Block.class);
         LateBlockRegistryForge.addDynamicBlockRegistration(Item.class);
         PaladinFurnitureMod.isClient = FMLEnvironment.dist == Dist.CLIENT;
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(PaladinFurnitureModForge::generateResources);
     }
 
     @SubscribeEvent
     public static void generateResources(AddPackFindersEvent event) {
-        PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("pfm-runtime-resources"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
-        event.addRepositorySource((profileAdder, factory) -> profileAdder.accept(factory.create("pfm-resources", new LiteralText("PFM Resources"), true,
-                () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
-                    PFMRuntimeResources.prepareAndRunResourceGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata)
-                , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE, true)));
+        if (event.getPackType() == ResourceType.CLIENT_RESOURCES) {
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("pfm-runtime-resources"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
+            event.addRepositorySource((profileAdder, factory) -> profileAdder.accept(factory.create("pfm-asset-resources", new LiteralText("PFM Assets"), true,
+                    () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
+                        PFMRuntimeResources.prepareAndRunAssetGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata)
+                    , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE, true)));
+        } else if (event.getPackType() == ResourceType.SERVER_DATA) {
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("pfm-runtime-data"), SharedConstants.getGameVersion().getPackVersion(PackType.DATA));
+            event.addRepositorySource((profileAdder, factory) -> profileAdder.accept(factory.create("pfm-data-resources", new LiteralText("PFM Data"), true,
+                    () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
+                        PFMRuntimeResources.prepareAndRunDataGen(false); return PFMRuntimeResources.DATA_PACK;}), packResourceMetadata)
+                    , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE, true)));
+        }
     }
 }

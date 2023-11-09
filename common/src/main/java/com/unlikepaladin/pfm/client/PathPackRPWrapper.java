@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class PathPackRPWrapper  implements ResourcePack {
+public class PathPackRPWrapper implements ResourcePack {
     private final Supplier<ResourcePack> delegate;
     private final PackResourceMetadata packResourceMetadata;
 

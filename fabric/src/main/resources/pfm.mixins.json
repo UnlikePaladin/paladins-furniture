@@ -7,7 +7,8 @@
   ],
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
-    "PFMReloadableResourceManagerImplMixin"
+    "PFMReloadableResourceManagerImplMixin",
+    "PFMModResourcePackCreatorMixin"
   ],
   "injectors": {
     "defaultRequire": 1

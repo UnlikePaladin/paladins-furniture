@@ -6,7 +6,9 @@ import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
+import com.unlikepaladin.pfm.runtime.PFMGenerator;
+import com.unlikepaladin.pfm.runtime.PFMProvider;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
@@ -32,11 +34,15 @@ import java.util.function.Supplier;
 
 import static net.minecraft.data.server.BlockLootTableGenerator.dropsWithProperty;
 
-public class PFMLootTableProvider {
+public class PFMLootTableProvider extends PFMProvider {
     private final List<Pair<Supplier<Consumer<BiConsumer<Identifier, LootTable.Builder>>>, LootContextType>> lootTypeGenerators = ImmutableList.of(Pair.of(PFMLootTableGenerator::new, LootContextTypes.BLOCK));
 
+    public PFMLootTableProvider(PFMGenerator parent) {
+        super(parent);
+    }
+
     public void run(DataCache cache) {
-        Path path = PFMRuntimeResources.getResourceDirectory();
+        Path path = getParent().getOutput();
         HashMap<Identifier, LootTable> map = Maps.newHashMap();
         this.lootTypeGenerators.forEach((pair) -> pair.getFirst().get().accept((identifier, builder) -> {
             if (map.put(identifier, builder.type(pair.getSecond()).build()) != null) {
@@ -46,10 +52,10 @@ public class PFMLootTableProvider {
         map.forEach((identifier, lootTable) -> {
             Path path2 = getOutput(path, identifier);
             try {
-                DataProvider.writeToPath(PFMDataGen.GSON, cache, LootManager.toJson(lootTable), path2);
+                DataProvider.writeToPath(PFMDataGenerator.GSON, cache, LootManager.toJson(lootTable), path2);
             }
             catch (IOException iOException) {
-                PFMDataGen.LOGGER.error("Couldn't save loot table {}", path2, iOException);
+                getParent().getLogger().error("Couldn't save loot table {}", path2, iOException);
             }
         });
     }

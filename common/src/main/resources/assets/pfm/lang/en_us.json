@@ -1203,8 +1203,10 @@
   "pfm.config.categories.mod_options": "Mod Options",
   "pfm.config.categories.gameplay_options": "Gameplay Options",
   "pfm.option.regenAssets": "Recreate Assets",
+  "pfm.option.regenData": "Recreate Data",
   "pfm.config.regen": "Recreate",
-  "pfm.option.regenAssets.tooltip": "Re-creates mod assets and triggers a resource reload, leaving and entering the world may be necessary for some changes to take effect.",
+  "pfm.option.regenAssets.tooltip": "Re-creates the mod's visual assets and triggers a resource reload. Client only",
+  "pfm.option.regenData.tooltip": "Re-creates the mod's data resources, must leave the world to do this. Server host only",
   "gui.pfm.saveChanges": "Do you wish to save your changes?",
   "gui.pfm.changesMightNotBeSaved": "Closing without Saving Changes!",
 
