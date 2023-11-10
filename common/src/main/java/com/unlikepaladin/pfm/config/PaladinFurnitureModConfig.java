@@ -38,8 +38,8 @@ public class PaladinFurnitureModConfig {
             differentMirrorsConnect = new BooleanConfigOption(Text.translatable("pfm.option.differentMirrorsConnect"), Text.translatable("pfm.option.differentMirrorsConnect.tooltip"), GAMEPLAY_OPTIONS, false, Side.SERVER),
             enableBook = new BooleanConfigOption(Text.translatable("pfm.option.enableBook"), Text.translatable("pfm.option.enableBook.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
             mobsSitOnChairs = new BooleanConfigOption(Text.translatable("pfm.option.mobsSitOnChairs"), Text.translatable("pfm.option.mobsSitOnChairs.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
-            renderImmersivePortalsMirrors = new BooleanConfigOption(Text.translatable("pfm.option.renderImmersivePortalsMirrors"), Text.translatable("pfm.option.renderImmersivePortalsMirrors.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
-            spawnImmersivePortalsMirror  = new BooleanConfigOption(Text.translatable("pfm.option.spawnImmersivePortalsMirror"), Text.translatable("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.CLIENT)
+            renderImmersivePortalsMirrors = new BooleanConfigOption(Text.translatable("pfm.option.renderImmersivePortalsMirrors"), Text.translatable("pfm.option.renderImmersivePortalsMirrors.tooltip"), GAMEPLAY_OPTIONS, true, Side.CLIENT),
+            spawnImmersivePortalsMirror  = new BooleanConfigOption(Text.translatable("pfm.option.spawnImmersivePortalsMirror"), Text.translatable("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER)
         );
         this.propertiesPath = propertiesPath;
     }
