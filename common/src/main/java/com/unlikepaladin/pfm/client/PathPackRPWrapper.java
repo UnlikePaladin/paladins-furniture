@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.client;
 
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.PackResourceMetadata;
@@ -14,7 +15,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class PathPackRPWrapper  implements ResourcePack {
+public class PathPackRPWrapper implements ResourcePack {
     private final Supplier<ResourcePack> delegate;
     private final PackResourceMetadata packResourceMetadata;
 
@@ -26,27 +27,38 @@ public class PathPackRPWrapper  implements ResourcePack {
     @Nullable
     @Override
     public InputStream openRoot(String fileName) throws IOException {
+        if (PFMRuntimeResources.ready && fileName.equals("pack.png")) {
+            return delegate.get().openRoot(fileName);
+        }
         return null;
     }
 
     @Override
     public InputStream open(ResourceType type, Identifier id) throws IOException {
-        return delegate.get().open(type, id);
+        if (PFMRuntimeResources.ready)
+            return delegate.get().open(type, id);
+        return null;
     }
 
     @Override
     public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth, Predicate<String> pathFilter) {
-        return delegate.get().findResources(type, namespace, prefix, maxDepth, pathFilter);
+        if (PFMRuntimeResources.ready)
+            return delegate.get().findResources(type, namespace, prefix, maxDepth, pathFilter);
+        return null;
     }
 
     @Override
     public boolean contains(ResourceType type, Identifier id) {
-        return delegate.get().contains(type, id);
+        if (PFMRuntimeResources.ready)
+            return delegate.get().contains(type, id);
+        return false;
     }
 
     @Override
     public Set<String> getNamespaces(ResourceType type) {
-        return delegate.get().getNamespaces(type);
+        if (PFMRuntimeResources.ready)
+            return delegate.get().getNamespaces(type);
+        return null;
     }
 
     @Nullable
@@ -65,6 +77,7 @@ public class PathPackRPWrapper  implements ResourcePack {
 
     @Override
     public void close() {
-        delegate.get().close();
+        if (PFMRuntimeResources.ready)
+            delegate.get().close();
     }
 }

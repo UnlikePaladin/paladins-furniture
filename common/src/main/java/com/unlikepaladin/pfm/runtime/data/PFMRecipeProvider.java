@@ -5,7 +5,6 @@ import com.google.gson.JsonObject;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
-import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
@@ -13,7 +12,9 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.mixin.PFMIngredientMatchingStacksAccessor;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
+import com.unlikepaladin.pfm.runtime.PFMGenerator;
+import com.unlikepaladin.pfm.runtime.PFMProvider;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.advancement.Advancement;
@@ -23,7 +24,6 @@ import net.minecraft.block.Blocks;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
-import net.minecraft.enchantment.Enchantment;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.NumberRange;
@@ -32,8 +32,6 @@ import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.tag.ItemTags;
 import net.minecraft.tag.Tag;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
@@ -51,18 +49,22 @@ import java.util.Objects;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-public class PFMRecipeProvider {
+public class PFMRecipeProvider extends PFMProvider {
+
+    public PFMRecipeProvider(PFMGenerator parent) {
+        super(parent);
+    }
 
     public void run(DataCache cache) {
-        Path path = PFMRuntimeResources.getResourceDirectory();
+        Path path = getParent().getOutput();
         HashSet<Identifier> set = Sets.newHashSet();
         generateRecipes(recipeJsonProvider -> {
             if (!set.add(recipeJsonProvider.getRecipeId())) {
-                PFMDataGen.LOGGER.error("Duplicate recipe " + recipeJsonProvider.getRecipeId());
+                getParent().getLogger().error("Duplicate recipe " + recipeJsonProvider.getRecipeId());
                 throw new IllegalStateException("Duplicate recipe " + recipeJsonProvider.getRecipeId());
             }
             if (recipeJsonProvider == null) {
-                PFMDataGen.LOGGER.error("Recipe Json Provider is null");
+                getParent().getLogger().error("Recipe Json Provider is null");
                 throw new IllegalStateException("Recipe Json Provider is null");
             }
             saveRecipe(cache, recipeJsonProvider.toJson(), path.resolve("data/" + recipeJsonProvider.getRecipeId().getNamespace() + "/recipes/" + recipeJsonProvider.getRecipeId().getPath() + ".json"));
@@ -74,10 +76,10 @@ public class PFMRecipeProvider {
         saveRecipeAdvancement(cache, Advancement.Task.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).toJson(), path.resolve("data/pfm/advancements/recipes/root.json"));
     }
 
-    private static void saveRecipe(DataCache cache, JsonObject json, Path path) {
+    private void saveRecipe(DataCache cache, JsonObject json, Path path) {
         try {
-            String string = PFMDataGen.GSON.toJson(json);
-            String string2 = PFMDataGen.SHA1.hashUnencodedChars(string).toString();
+            String string = PFMDataGenerator.GSON.toJson(json);
+            String string2 = PFMDataGenerator.SHA1.hashUnencodedChars(string).toString();
             if (!Objects.equals(cache.getOldSha1(path), string2) || !Files.exists(path, new LinkOption[0])) {
                 Files.createDirectories(path.getParent());
                 BufferedWriter bufferedWriter = Files.newBufferedWriter(path);
@@ -85,13 +87,13 @@ public class PFMRecipeProvider {
                 try {
                     bufferedWriter.write(string);
                 } catch (Throwable var9) {
-                    PFMDataGen.LOGGER.error("Error when saving recipes");
+                    getParent().getLogger().error("Error when saving recipes");
                     if (bufferedWriter != null) {
                         try {
-                            PFMDataGen.LOGGER.error("broken var9, {}", var9);
+                            getParent().getLogger().error("broken var9, {}", var9);
                             bufferedWriter.close();
                         } catch (Throwable var8) {
-                            PFMDataGen.LOGGER.error("broken var8, {}", var8);
+                            getParent().getLogger().error("broken var8, {}", var8);
                             var9.addSuppressed(var8);
                         }
                     }
@@ -105,14 +107,14 @@ public class PFMRecipeProvider {
 
             cache.updateSha1(path, string2);
         } catch (IOException var10) {
-            PFMDataGen.LOGGER.error("Couldn't save recipe {}", path, var10);
+            getParent().getLogger().error("Couldn't save recipe {}", path, var10);
         }
     }
 
-    private static void saveRecipeAdvancement(DataCache cache, JsonObject json, Path path) {
+    private void saveRecipeAdvancement(DataCache cache, JsonObject json, Path path) {
         try {
-            String string = PFMDataGen.GSON.toJson(json);
-            String string2 = PFMDataGen.SHA1.hashUnencodedChars(string).toString();
+            String string = PFMDataGenerator.GSON.toJson(json);
+            String string2 = PFMDataGenerator.SHA1.hashUnencodedChars(string).toString();
             if (!Objects.equals(cache.getOldSha1(path), string2) || !Files.exists(path, new LinkOption[0])) {
                 Files.createDirectories(path.getParent());
                 BufferedWriter bufferedWriter = Files.newBufferedWriter(path);
@@ -120,7 +122,7 @@ public class PFMRecipeProvider {
                 try {
                     bufferedWriter.write(string);
                 } catch (Throwable var9) {
-                    PFMDataGen.LOGGER.error("Error when saving recipes");
+                    getParent().getLogger().error("Error when saving recipes");
                     if (bufferedWriter != null) {
                         try {
                             bufferedWriter.close();
@@ -139,7 +141,7 @@ public class PFMRecipeProvider {
 
             cache.updateSha1(path, string2);
         } catch (IOException var10) {
-            PFMDataGen.LOGGER.error("Couldn't save recipe advancement {}", path, var10);
+            getParent().getLogger().error("Couldn't save recipe advancement {}", path, var10);
         }
     }
     @ExpectPlatform

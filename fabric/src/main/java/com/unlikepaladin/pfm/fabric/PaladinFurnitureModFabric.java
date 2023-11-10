@@ -31,6 +31,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 import org.apache.logging.log4j.LogManager;
@@ -91,7 +92,6 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         BlockItemRegistryFabric.registerItems();
         BlockItemRegistryFabric.registerBlocks();
         //PFMRuntimeResources.prepareAsyncResourceGen(); No async gen because Forge won't behave, blame it.
-        PFMRuntimeResources.ready = true;
         StatisticsRegistryFabric.registerStatistics();
         SoundRegistryFabric.registerSounds();
         NetworkRegistryFabric.registerPackets();

@@ -6,9 +6,17 @@ import com.unlikepaladin.pfm.registry.dynamic.forge.LateBlockRegistryForge;
 import com.unlikepaladin.pfm.registry.forge.*;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
+import net.minecraft.SharedConstants;
+import net.minecraft.resource.ResourcePackProfile;
+import net.minecraft.resource.ResourcePackSource;
+import net.minecraft.resource.ResourceType;
+import net.minecraft.resource.metadata.PackResourceMetadata;
+import net.minecraft.text.LiteralText;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
 

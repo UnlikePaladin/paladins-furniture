@@ -4,12 +4,14 @@
   "package": "com.unlikepaladin.pfm.mixin.forge",
   "compatibilityLevel": "JAVA_8",
   "client": [
+    "PFMClientModLoaderMixin",
     "PFMModelLoaderMixin",
     "PFMRenderLayersForgeMixin"
   ],
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
-    "PFMReloadableResourceManagerImplMixin"
+    "PFMReloadableResourceManagerImplMixin",
+    "PFMResourcePackManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

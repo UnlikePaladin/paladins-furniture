@@ -14,8 +14,10 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.mixin.PFMTextureKeyFactory;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
+import com.unlikepaladin.pfm.runtime.PFMGenerator;
+import com.unlikepaladin.pfm.runtime.PFMProvider;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataCache;
@@ -23,7 +25,6 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.client.model.*;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
@@ -35,16 +36,22 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class PFMBlockstateModelProvider {
+public class PFMBlockstateModelProvider extends PFMProvider {
+
     public static Map<Block, Identifier> modelPathMap = new HashMap<>();
+
+    public PFMBlockstateModelProvider(PFMGenerator parent) {
+        super(parent);
+    }
+
     public void run(DataCache cache) {
-        Path path = PFMRuntimeResources.getResourceDirectory();
+        Path path = getParent().getOutput();
         HashMap<Block, BlockStateSupplier> blockstates = Maps.newHashMap();
         Consumer<BlockStateSupplier> blockStateSupplierConsumer = blockStateSupplier -> {
             Block block = blockStateSupplier.getBlock();
             BlockStateSupplier blockStateSupplier2 = blockstates.put(block, blockStateSupplier);
             if (blockStateSupplier2 != null) {
-                PFMDataGen.LOGGER.error("Duplicate blockstate definition for " + block);
+                getParent().getLogger().error("Duplicate blockstate definition for " + block);
                 throw new IllegalStateException("Duplicate blockstate definition for " + block);
             }
         };
@@ -53,7 +60,7 @@ public class PFMBlockstateModelProvider {
         BiConsumer<Identifier, Supplier<JsonElement>> identifierSupplierBiConsumer = (identifier, supplier) -> {
             Supplier<JsonElement> supplier2 = models.put(identifier, supplier);
             if (supplier2 != null) {
-                PFMDataGen.LOGGER.error("Duplicate model definition for " + identifier);
+                getParent().getLogger().error("Duplicate model definition for " + identifier);
                 throw new IllegalStateException("Duplicate model definition for " + identifier);
             }
         };
@@ -90,10 +97,10 @@ public class PFMBlockstateModelProvider {
             Path path2 = locator.apply(root, object);
             if (supplier != null && object != null && path2 != null)
                 try {
-                    DataProvider.writeToPath(PFMDataGen.GSON, cache, supplier.get(), path2);
+                    DataProvider.writeToPath(PFMDataGenerator.GSON, cache, supplier.get(), path2);
                 }
                 catch (Exception exception) {
-                    PFMDataGen.LOGGER.error("Couldn't save {}", path2, exception);
+                    getParent().getLogger().error("Couldn't save {}", path2, exception);
                 }
         });
     }

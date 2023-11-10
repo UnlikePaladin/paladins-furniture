@@ -20,11 +20,10 @@ public class PFMReloadableResourceManagerImplMixin {
 
     @ModifyVariable(at = @At(value = "HEAD"), method = "reload", argsOnly = true)
     private List<ResourcePack> createReload(List<ResourcePack> packs) {
-        PFMRuntimeResources.RESOURCE_PACK_LIST = packs;
         List<ResourcePack> resourcePacks = new ArrayList<>(packs);
-        PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("pfm-runtime-resources"), SharedConstants.getGameVersion().getPackVersion());
-        resourcePacks.add(new PathPackRPWrapper(Suppliers.memoize(() -> {
-            PFMRuntimeResources.prepareAndRunResourceGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata));
-        return resourcePacks;
+        resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);
+        PFMRuntimeResources.RESOURCE_PACK_LIST = resourcePacks;
+        PFMRuntimeResources.ready = true;
+        return packs;
     }
 }
