@@ -55,7 +55,7 @@ public class PFMLangProvider extends PFMProvider {
         catch (Exception e) {
             getParent().getLogger().info(e);
         };
-        try(BufferedWriter writer = IOUtils.buffer(new FileWriter(new File(PFMRuntimeResources.createDirIfNeeded(getParent().getOrCreateSubDirectory("assets").resolve("lang")).toFile(), "en_us.json"))))
+        try(BufferedWriter writer = IOUtils.buffer(new FileWriter(new File(PFMRuntimeResources.createDirIfNeeded(getParent().getOrCreateSubDirectory("assets/pfm").resolve("lang")).toFile(), "en_us.json"))))
         {
             writer.write("{\n");
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap(), writer, "block.pfm.basic_chair", this::simpleStrippedFurnitureTranslation);
