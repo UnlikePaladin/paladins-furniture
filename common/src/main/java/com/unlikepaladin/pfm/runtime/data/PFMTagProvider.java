@@ -9,7 +9,9 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.PFMTags;
 import com.unlikepaladin.pfm.mixin.PFMAbstractTagProvider$ObjectBuilderMixin;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
+import com.unlikepaladin.pfm.runtime.PFMGenerator;
+import com.unlikepaladin.pfm.runtime.PFMProvider;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataCache;
@@ -31,7 +33,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class PFMTagProvider {
+public class PFMTagProvider extends PFMProvider {
+    public PFMTagProvider(PFMGenerator parent) {
+        super(parent);
+    }
+
     protected void generateTags() {
         KitchenCounterBlock[] stoneCounters = KitchenCounterBlock.streamStoneCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
         KitchenCabinetBlock[] stoneCabinets = KitchenCabinetBlock.streamStoneCabinets().map(FurnitureBlock::getBlock).toArray(KitchenCabinetBlock[]::new);
@@ -239,8 +245,8 @@ public class PFMTagProvider {
             JsonObject jsonObject = builder.toJson();
             Path path = this.getOutput(id);
             try {
-                String string = PFMDataGen.GSON.toJson(jsonObject);
-                String string2 = PFMDataGen.SHA1.hashUnencodedChars(string).toString();
+                String string = PFMDataGenerator.GSON.toJson(jsonObject);
+                String string2 = PFMDataGenerator.SHA1.hashUnencodedChars(string).toString();
                 if (!Objects.equals(cache.getOldSha1(path), string2) || !Files.exists(path, new LinkOption[0])) {
                     Files.createDirectories(path.getParent(), new FileAttribute[0]);
                     try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, new OpenOption[0]);){
@@ -250,12 +256,12 @@ public class PFMTagProvider {
                 cache.updateSha1(path, string2);
             }
             catch (IOException iOException) {
-                PFMDataGen.LOGGER.error("Couldn't save tags to {}", path, iOException);
+                getParent().getLogger().error("Couldn't save tags to {}", path, iOException);
             }
         });
     }
 
     protected Path getOutput(Identifier id) {
-        return PFMRuntimeResources.getResourceDirectory().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
+        return getParent().getOutput().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
     }
 }
