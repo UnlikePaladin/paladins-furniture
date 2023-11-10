@@ -62,7 +62,7 @@ public class LateBlockRegistryImpl {
                         }
                     }
                     if (!variantEnabled) {
-                        break;
+                        continue;
                     }
                     for (DyeColor color : DyeColor.values()) {
                         ItemStack stack = new ItemStack(item);

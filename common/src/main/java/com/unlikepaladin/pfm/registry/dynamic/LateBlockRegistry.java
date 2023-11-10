@@ -369,7 +369,7 @@ public class LateBlockRegistry {
                 this.addBlock(registerLateBlock(color.getName() + "_shower_towel", () -> new ShowerTowelBlock(color, AbstractBlock.Settings.create().burnable().strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL).mapColor(color.getMapColor())), true, PaladinFurnitureMod.FURNITURE_GROUP));
             }
         }});
-        if (!BlockItemRegistry.isModLoaded("imm_ptl_core") && PaladinFurnitureMod.getLoader() == PaladinFurnitureMod.Loader.FABRIC_LIKE) {
+        if (!BlockItemRegistry.isModLoaded("imm_ptl_core") || PaladinFurnitureMod.getLoader() == PaladinFurnitureMod.Loader.FORGE) {
             PaladinFurnitureModBlocksItems.WHITE_MIRROR = new MirrorBlock(AbstractBlock.Settings.create().mapColor(MapColor.WHITE).nonOpaque());
             PaladinFurnitureModBlocksItems.GRAY_MIRROR = new MirrorBlock(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).nonOpaque());
         }

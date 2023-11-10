@@ -56,26 +56,47 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         PaladinFurnitureMod.isClient = FMLEnvironment.dist == Dist.CLIENT;
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ItemGroupRegistryForge::registerItemGroups);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ItemGroupRegistryForge::addToVanillaItemGroups);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(PaladinFurnitureModForge::generateResources);
     }
 
     @SubscribeEvent
     public static void generateResources(AddPackFindersEvent event) {
-        PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("pfm-runtime-resources"), SharedConstants.getGameVersion().getResourceVersion(event.getPackType()), Optional.empty());
-        ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
-            @Override
-            public ResourcePack open(String name) {
-                return new PathPackRPWrapper(Suppliers.memoize(() -> {
-                    PFMRuntimeResources.prepareAndRunResourceGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata);
-            }
+        if (event.getPackType() == ResourceType.CLIENT_RESOURCES) {
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
+            ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
+                @Override
+                public ResourcePack open(String name) {
+                    return new PathPackRPWrapper(Suppliers.memoize(() -> {
+                        PFMRuntimeResources.prepareAndRunAssetGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata);
+                }
 
-            @Override
-            public ResourcePack openWithOverlays(String name, ResourcePackProfile.Metadata metadata) {
-                return this.open(name);
-            }
-        };
-        ResourcePackProfile.Metadata metadata = new ResourcePackProfile.Metadata(Text.literal("pfm-runtime-resources"), ResourcePackCompatibility.COMPATIBLE, FeatureFlags.DEFAULT_ENABLED_FEATURES, List.of());
-        event.addRepositorySource(profileAdder -> {
-            profileAdder.accept(ResourcePackProfile.of("pfm-resources", Text.literal("PFM Resources"), true,  packFactory, metadata, ResourcePackProfile.InsertionPosition.BOTTOM, true, ResourcePackSource.NONE));
-        });
+                @Override
+                public ResourcePack openWithOverlays(String name, ResourcePackProfile.Metadata metadata) {
+                    return this.open(name);
+                }
+            };
+            ResourcePackProfile.Metadata metadata = new ResourcePackProfile.Metadata(Text.literal("Runtime Generated Assets for PFM"), ResourcePackCompatibility.COMPATIBLE, FeatureFlags.DEFAULT_ENABLED_FEATURES, List.of(), false);
+            event.addRepositorySource(profileAdder -> {
+                profileAdder.accept(ResourcePackProfile.of("pfm-asset-resources", Text.literal("PFM Assets"), true,  packFactory, metadata, ResourcePackProfile.InsertionPosition.BOTTOM, false, ResourcePackSource.NONE));
+            });
+        } else if (event.getPackType() == ResourceType.SERVER_DATA) {
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.SERVER_DATA), Optional.empty());
+            ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
+                @Override
+                public ResourcePack open(String name) {
+                    return new PathPackRPWrapper(Suppliers.memoize(() -> {
+                        PFMRuntimeResources.prepareAndRunDataGen(false); return PFMRuntimeResources.DATA_PACK;}), packResourceMetadata);
+                }
+
+                @Override
+                public ResourcePack openWithOverlays(String name, ResourcePackProfile.Metadata metadata) {
+                    return this.open(name);
+                }
+            };
+            ResourcePackProfile.Metadata metadata = new ResourcePackProfile.Metadata(Text.literal("Runtime Generated Data for PFM"), ResourcePackCompatibility.COMPATIBLE, FeatureFlags.DEFAULT_ENABLED_FEATURES, List.of(), false);
+            event.addRepositorySource(profileAdder -> {
+                profileAdder.accept(ResourcePackProfile.of("pfm-data-resources", Text.literal("PFM Data"), true,  packFactory, metadata, ResourcePackProfile.InsertionPosition.BOTTOM, false, ResourcePackSource.NONE));
+            });
+        }
     }
 }

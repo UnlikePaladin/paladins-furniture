@@ -9,7 +9,9 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
+import com.unlikepaladin.pfm.runtime.PFMGenerator;
+import com.unlikepaladin.pfm.runtime.PFMProvider;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.Block;
@@ -46,11 +48,15 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-public class PFMLootTableProvider implements DataProvider {
+public class PFMLootTableProvider extends PFMProvider {
     private final List<Pair<Supplier<Consumer<BiConsumer<Identifier, LootTable.Builder>>>, LootContextType>> lootTypeGenerators = ImmutableList.of(Pair.of(PFMLootTableGenerator::new, LootContextTypes.BLOCK));
 
+    public PFMLootTableProvider(PFMGenerator parent) {
+        super(parent);
+    }
+
     public CompletableFuture<?> run(DataWriter writer) {
-        Path path = PFMRuntimeResources.getResourceDirectory();
+        Path path = getParent().getOutput();
         HashMap<Identifier, LootTable> map = Maps.newHashMap();
         this.lootTypeGenerators.forEach((pair) -> pair.getFirst().get().accept((identifier, builder) -> {
             if (map.put(identifier, builder.type(pair.getSecond()).build()) != null) {
@@ -65,19 +71,18 @@ public class PFMLootTableProvider implements DataProvider {
                 Files.createFile(path2);
                 jsonWriter.setSerializeNulls(false);
                 jsonWriter.setIndent("  ");
-                JsonHelper.writeSorted(jsonWriter, LootTable.CODEC.encodeStart(JsonOps.INSTANCE, lootTable).getOrThrow(true, (error) -> {PFMDataGen.LOGGER.warn("Failed to parse Loot table: {}", error);}), JSON_KEY_SORTING_COMPARATOR);
+                JsonHelper.writeSorted(jsonWriter, LootTable.CODEC.encodeStart(JsonOps.INSTANCE, lootTable).getOrThrow(true, (error) -> {getParent().getLogger().warn("Failed to parse Loot table: {}", error);}), JSON_KEY_SORTING_COMPARATOR);
                 jsonWriter.flush();
                 Files.write(path2, byteArrayOutputStream.toByteArray(), StandardOpenOption.WRITE);
                 byteArrayOutputStream.close();
             }
             catch (Exception exception) {
-                PFMDataGen.LOGGER.error("Couldn't save {}", path2, exception);
+                getParent().getLogger().error("Couldn't save {}", path2, exception);
             }
         });
         return CompletableFuture.allOf();
     }
 
-    @Override
     public String getName() {
         return "PFM Loot Tables";
     }
