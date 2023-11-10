@@ -27,11 +27,9 @@ public class PFMMinecraftServerMixin {
 
     @Inject(method = "method_29442", at = @At(value = "RETURN"), cancellable = true, remap = false)
     private void createReload(CallbackInfoReturnable<ImmutableList<ResourcePack>> cir) {
-        PFMRuntimeResources.RESOURCE_PACK_LIST = new ArrayList<>(cir.getReturnValue());
         List<ResourcePack> resourcePacks = new ArrayList<>(cir.getReturnValue());
-        PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("pfm-runtime-resources"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
-        resourcePacks.add(new PathPackRPWrapper(Suppliers.memoize(() -> {
-            PFMRuntimeResources.prepareAndRunResourceGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata));
-        cir.setReturnValue(ImmutableList.copyOf(resourcePacks));
+        resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);
+        PFMRuntimeResources.RESOURCE_PACK_LIST = resourcePacks;
+        PFMRuntimeResources.ready = true;
     }
 }

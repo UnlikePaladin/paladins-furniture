@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.client;
 
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.resource.InputSupplier;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
@@ -10,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -27,22 +29,30 @@ public class PathPackRPWrapper implements ResourcePack {
     @Nullable
     @Override
     public InputSupplier<InputStream> openRoot(String... segments) {
+        if (PFMRuntimeResources.ready && Arrays.asList(segments).contains("pack.png")) {
+            return delegate.get().openRoot(segments);
+        }
         return null;
     }
 
     @Override
     public InputSupplier<InputStream> open(ResourceType type, Identifier id) {
-        return delegate.get().open(type, id);
+        if (PFMRuntimeResources.ready)
+            return delegate.get().open(type, id);
+        return null;
     }
 
     @Override
     public void findResources(ResourceType type, String namespace, String prefix, ResultConsumer consumer) {
-        delegate.get().findResources(type, namespace, prefix, consumer);
+        if (PFMRuntimeResources.ready)
+            delegate.get().findResources(type, namespace, prefix, consumer);
     }
 
     @Override
     public Set<String> getNamespaces(ResourceType type) {
-        return delegate.get().getNamespaces(type);
+        if (PFMRuntimeResources.ready)
+            return delegate.get().getNamespaces(type);
+        return null;
     }
 
     @Nullable
@@ -61,6 +71,7 @@ public class PathPackRPWrapper implements ResourcePack {
 
     @Override
     public void close() {
-        delegate.get().close();
+        if (PFMRuntimeResources.ready)
+            delegate.get().close();
     }
 }
