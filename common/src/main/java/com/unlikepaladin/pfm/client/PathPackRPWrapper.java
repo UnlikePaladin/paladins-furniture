@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class PathPackRPWrapper  implements ResourcePack {
+public class PathPackRPWrapper implements ResourcePack {
     private final Supplier<ResourcePack> delegate;
     private final PackResourceMetadata packResourceMetadata;
 
@@ -26,6 +26,9 @@ public class PathPackRPWrapper  implements ResourcePack {
     @Nullable
     @Override
     public InputStream openRoot(String fileName) throws IOException {
+        if (fileName.equals("pack.png")) {
+            return delegate.get().openRoot(fileName);
+        }
         return null;
     }
 

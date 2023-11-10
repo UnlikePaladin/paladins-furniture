@@ -10,7 +10,8 @@
     "PFMMinecraftServerMixin",
     "PFMMixinPointOfInterestType",
     "PFMReloadableResourceManagerImplMixin",
-    "PFMSaveLoaderMixin"
+    "PFMSaveLoaderMixin",
+    "PFMModResourcePackCreatorMixin"
   ],
   "injectors": {
     "defaultRequire": 1

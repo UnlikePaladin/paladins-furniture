@@ -9,7 +9,9 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.PFMTags;
 import com.unlikepaladin.pfm.mixin.PFMAbstractTagProvider$ObjectBuilderMixin;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
+import com.unlikepaladin.pfm.runtime.PFMGenerator;
+import com.unlikepaladin.pfm.runtime.PFMProvider;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.Block;
 import net.minecraft.data.DataCache;
@@ -33,7 +35,11 @@ import java.util.Objects;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class PFMTagProvider {
+public class PFMTagProvider extends PFMProvider {
+    public PFMTagProvider(PFMGenerator parent) {
+        super(parent);
+    }
+
     protected void generateTags() {
         KitchenCounterBlock[] stoneCounters = KitchenCounterBlock.streamStoneCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
         KitchenCabinetBlock[] stoneCabinets = KitchenCabinetBlock.streamStoneCabinets().map(FurnitureBlock::getBlock).toArray(KitchenCabinetBlock[]::new);
@@ -79,7 +85,7 @@ public class PFMTagProvider {
         BasicSinkBlock[] sinkBlocks = BasicSinkBlock.streamSinks().toList().toArray(new BasicSinkBlock[0]);
         ShowerTowelBlock[] showerTowels = ShowerTowelBlock.streamShowerTowels().map(FurnitureBlock::getBlock).toArray(ShowerTowelBlock[]::new);
 
-       getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                 .add(showerTowels)
                 .add(stoneCounters)
                 .add(stoneCabinets)
@@ -244,8 +250,8 @@ public class PFMTagProvider {
                 JsonObject jsonObject = builder.toJson();
                 Path path = this.getOutput(id);
                 try {
-                    String jsonString = PFMDataGen.GSON.toJson(jsonObject);
-                    String hashCode = PFMDataGen.SHA1.hashUnencodedChars(jsonString).toString();
+                    String jsonString = PFMDataGenerator.GSON.toJson(jsonObject);
+                    String hashCode = PFMDataGenerator.SHA1.hashUnencodedChars(jsonString).toString();
                     if (!Objects.equals(cache.getOldSha1(path), hashCode) || !Files.exists(path, new LinkOption[0])) {
                         Files.createDirectories(path.getParent(), new FileAttribute[0]);
                         try (BufferedWriter bufferedWriter = Files.newBufferedWriter(path, new OpenOption[0]);){
@@ -255,13 +261,13 @@ public class PFMTagProvider {
                     cache.updateSha1(path, hashCode);
                 }
                 catch (IOException iOException) {
-                    PFMDataGen.LOGGER.error("Couldn't save tags to {}", path, iOException);
+                    getParent().getLogger().error("Couldn't save tags to {}", path, iOException);
                 }
             }
         });
     }
 
     protected Path getOutput(Identifier id) {
-        return PFMRuntimeResources.getResourceDirectory().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
+        return getParent().getOutput().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
     }
 }

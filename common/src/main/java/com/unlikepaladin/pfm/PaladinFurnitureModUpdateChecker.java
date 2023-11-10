@@ -5,6 +5,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.utilities.Version;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
@@ -31,6 +32,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
@@ -46,10 +48,9 @@ public class PaladinFurnitureModUpdateChecker {
         public PaladinFurnitureModUpdateChecker() {
         }
 
-        @ExpectPlatform
         public static File getUpdateFile() {
-            PaladinFurnitureMod.GENERAL_LOGGER.error("[Paladin's Furniture Update Check] Unable to get local update file!");
-            return null;
+            Path path = PFMRuntimeResources.getPFMDirectory().resolve("pfmUpdateInfo.json");
+            return path.toFile();
         }
 
         @ExpectPlatform

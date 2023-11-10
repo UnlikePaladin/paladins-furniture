@@ -1,9 +1,10 @@
 package com.unlikepaladin.pfm.blocks.models;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.*;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.client.TextureMap;
@@ -173,7 +174,7 @@ public class ModelHelper {
         }
         else {
             if (!Registry.BLOCK.getId(block).getNamespace().equals("quark")) {
-                PFMDataGen.LOGGER.warn("Couldn't find texture for, {}", block);
+                PaladinFurnitureMod.GENERAL_LOGGER.warn("Couldn't find texture for, {}", block);
             }
             id = TextureMap.getSubId(block, postfix);
         }
