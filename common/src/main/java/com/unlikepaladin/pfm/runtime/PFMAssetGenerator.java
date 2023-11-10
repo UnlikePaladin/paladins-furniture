@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class PFMAssetGenerator extends PFMGenerator {
-    private static boolean FROZEN = false;
+    public static boolean FROZEN = false;
     public PFMAssetGenerator(Path output, boolean logOrDebug) {
         super(output, logOrDebug, LogManager.getLogger("PFM-Asset-Generation"));
     }
@@ -47,7 +47,7 @@ public class PFMAssetGenerator extends PFMGenerator {
                 Files.deleteIfExists(hashPath);
                 Files.createFile(hashPath);
             }
-            List<String> hashToCompare = hashDirectory(output.toFile(), true);
+            List<String> hashToCompare = hashDirectory(output.toFile(), false);
             List<String> oldHash = Files.readAllLines(hashPath);
             List<String> modList = Files.readAllLines(modListPath);
             if (!hashToCompare.toString().equals(oldHash.toString()) || !modList.toString().replace("[", "").replace("]", "").equals(PaladinFurnitureMod.getVersionMap().toString())) {
@@ -81,16 +81,15 @@ public class PFMAssetGenerator extends PFMGenerator {
 
                 getLogger().info("Asset providers took: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
                 dataCache.write();
+                this.createPackIcon();
                 Files.deleteIfExists(hashPath);
                 Files.createFile(hashPath);
-                List<String> newDataHash = hashDirectory(output.toFile(), true);
+                List<String> newDataHash = hashDirectory(output.toFile(), false);
                 Files.writeString(PFMRuntimeResources.createDirIfNeeded(hashPath), newDataHash.toString().replace("[", "").replace("]", ""), StandardOpenOption.APPEND);
 
                 Files.deleteIfExists(modListPath);
                 Files.createFile(modListPath);
                 Files.writeString(PFMRuntimeResources.createDirIfNeeded(modListPath), PaladinFurnitureMod.getVersionMap().toString().replace("[", "").replace("]", ""), StandardOpenOption.APPEND);
-
-                this.createPackIcon();
                 this.setRunning(false);
             } else {
                 log("Data Hash and Mod list matched, skipping generation");

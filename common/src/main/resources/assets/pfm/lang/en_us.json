@@ -1193,8 +1193,8 @@
   "pfm.option.shaderSolidFix.tooltip": "Makes furniture with translucent parts opaque to prevent rendering issues with shaders like Seus if shaders are on. Works both with Optifine and Iris/Oculus.",
   "pfm.option.spawnImmersivePortalsMirror": "Spawn Immersive Portals Mirrors",
   "pfm.option.spawnImmersivePortalsMirror.tooltip": "If true the mod's mirrors work if immersive portals is present, if the server sets this to false, it won't work for the players.",
-  "pfm.option.renderImmersivePortalsMirror": "Immersive Portals Mirror Rendering",
-  "pfm.option.renderImmersivePortalsMirror.tooltip": "If true mirrors will render if immersive portals is installed.",
+  "pfm.option.renderImmersivePortalsMirrors": "Immersive Portals Mirror Rendering",
+  "pfm.option.renderImmersivePortalsMirrors.tooltip": "If true mirrors will render if immersive portals is installed.",
 
   "pfm.config.title": "Paladin's Furniture Mod Config",
   "pfm.option.resetAll": "Reset All Options",

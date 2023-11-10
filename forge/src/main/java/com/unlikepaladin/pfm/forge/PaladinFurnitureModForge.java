@@ -59,17 +59,17 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
     @SubscribeEvent
     public static void generateResources(AddPackFindersEvent event) {
         if (event.getPackType() == ResourceType.CLIENT_RESOURCES) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("pfm-runtime-resources"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
             event.addRepositorySource((profileAdder, factory) -> profileAdder.accept(factory.create("pfm-asset-resources", new LiteralText("PFM Assets"), true,
                     () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
                         PFMRuntimeResources.prepareAndRunAssetGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata)
-                    , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE, true)));
+                    , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE, false)));
         } else if (event.getPackType() == ResourceType.SERVER_DATA) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("pfm-runtime-data"), SharedConstants.getGameVersion().getPackVersion(PackType.DATA));
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().getPackVersion(PackType.DATA));
             event.addRepositorySource((profileAdder, factory) -> profileAdder.accept(factory.create("pfm-data-resources", new LiteralText("PFM Data"), true,
                     () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
                         PFMRuntimeResources.prepareAndRunDataGen(false); return PFMRuntimeResources.DATA_PACK;}), packResourceMetadata)
-                    , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE, true)));
+                    , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE, false)));
         }
     }
 }

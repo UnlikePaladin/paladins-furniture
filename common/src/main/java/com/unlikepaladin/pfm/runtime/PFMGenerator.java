@@ -7,13 +7,13 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.apache.logging.log4j.Logger;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public abstract class PFMGenerator {
     protected final Path output;
@@ -31,9 +31,11 @@ public abstract class PFMGenerator {
     }
 
     protected void createPackIcon() {
-        File file = new File(output.toFile(), "icon.png");
-        try (OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(file))) {
-            outputStream.write(PFMRuntimeResources.getImageData());
+        File file = new File(output.toFile(), "pack.png");
+        try {
+            BufferedImage image = ImageIO.read(new ByteArrayInputStream(PFMRuntimeResources.getImageData()));
+            ImageIO.write(image, "png", file);
+            image.flush();
         } catch (IOException e) {
             logger.warn("Failed to create resource icon {}", e.getMessage());
         }
@@ -88,11 +90,15 @@ public abstract class PFMGenerator {
 
     private void collectFiles(File directory, List<String> hashList,
                                      boolean includeHiddenFiles) throws IOException {
-        File[] files = directory.listFiles();
-        if (files != null) {
-            Arrays.sort(files, Comparator.comparing(File::getName));
+        File[] fileArray = directory.listFiles();
+        if (fileArray != null) {
+            List<File> files = new ArrayList<>(Arrays.asList(fileArray));
+            files.removeIf(file -> file.getName().contains("dataHash") || file.getName().contains("modsList"));
+            files.sort(Comparator.comparing(File::getName));
 
             for (File file : files) {
+                if (file.getName().contains("dataHash") || file.getName().contains("modsList") || file == null)
+                    continue;
                 if (includeHiddenFiles || !Files.isHidden(file.toPath())) {
                     if (file.isDirectory()) {
                         collectFiles(file, hashList, includeHiddenFiles);

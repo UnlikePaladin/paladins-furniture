@@ -29,13 +29,13 @@ public class PFMModResourcePackCreatorMixin {
     @Inject(method = "register(Ljava/util/function/Consumer;Lnet/minecraft/resource/ResourcePackProfile$Factory;)V", at = @At("TAIL"))
     private void addPFMResources(Consumer<ResourcePackProfile> consumer, ResourcePackProfile.Factory factory, CallbackInfo ci) {
         if (type == ResourceType.CLIENT_RESOURCES) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("pfm-runtime-resources"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
             consumer.accept(factory.create("pfm-asset-resources", new LiteralText("PFM Assets"), true,
                     () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
                         PFMRuntimeResources.prepareAndRunAssetGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata)
                     , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE));
         } else if (type == ResourceType.SERVER_DATA) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("pfm-runtime-data"), SharedConstants.getGameVersion().getPackVersion(PackType.DATA));
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().getPackVersion(PackType.DATA));
             consumer.accept(factory.create("pfm-data-resources", new LiteralText("PFM Data"), true,
                     () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
                         PFMRuntimeResources.prepareAndRunDataGen(false); return PFMRuntimeResources.DATA_PACK;}), packResourceMetadata)
