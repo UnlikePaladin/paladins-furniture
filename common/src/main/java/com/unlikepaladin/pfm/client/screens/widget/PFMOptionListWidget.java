@@ -6,7 +6,8 @@ import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
+import com.unlikepaladin.pfm.runtime.PFMAssetGenerator;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.fabricmc.api.EnvType;
@@ -62,12 +63,20 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         }
         this.addEntry(new CategoryEntry(Text.literal("")));
         this.addEntry(new ButtonEntry(Side.CLIENT, Text.translatable("pfm.option.regenAssets"), Text.translatable("pfm.config.regen"), Text.translatable("pfm.option.regenAssets.tooltip"), button -> {
-            PFMFileUtil.deleteDir(PFMRuntimeResources.getResourceDirectory().toFile());
-            PFMDataGen.frozen = false;
-            PFMRuntimeResources.prepareAsyncResourceGen(true);
+            PFMFileUtil.deleteDir(PFMRuntimeResources.getAssetPackDirectory().toFile());
+            PFMAssetGenerator.FROZEN = false;
+            PFMRuntimeResources.prepareAsyncAssetGen(true);
             PFMRuntimeResources.runAsyncResourceGen();
             MinecraftClient.getInstance().reloadResourcesConcurrently();
         }));
+        ButtonEntry entry = new ButtonEntry(Side.SERVER, Text.translatable("pfm.option.regenData"), Text.translatable("pfm.config.regen"), Text.translatable("pfm.option.regenData.tooltip"), button -> {
+            PFMFileUtil.deleteDir(PFMRuntimeResources.getDataPackDirectory().toFile());
+            PFMDataGenerator.FROZEN = false;
+            PFMRuntimeResources.prepareAsyncDataGen(true);
+            PFMRuntimeResources.runAsyncResourceGen();
+        });
+        entry.button.active = !PFMConfigScreen.isOnServer;
+        this.addEntry(entry);
     }
 
     public void save() {

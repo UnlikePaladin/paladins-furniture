@@ -38,6 +38,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.MutableRegistry;
+import net.minecraft.util.Pair;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.world.poi.PointOfInterestType;
@@ -77,7 +78,6 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         BlockItemRegistryFabric.registerItems();
         BlockItemRegistryFabric.registerBlocks();
         //PFMRuntimeResources.prepareAsyncResourceGen(); No async gen because Forge won't behave, blame it.
-        PFMRuntimeResources.ready = true;
         StatisticsRegistryFabric.registerStatistics();
         SoundRegistryFabric.registerSounds();
         NetworkRegistryFabric.registerPackets();

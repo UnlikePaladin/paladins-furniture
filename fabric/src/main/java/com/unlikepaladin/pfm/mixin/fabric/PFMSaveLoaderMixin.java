@@ -6,7 +6,6 @@ import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.SharedConstants;
 import net.minecraft.resource.ResourcePack;
-import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.PackResourceMetadata;
 import net.minecraft.server.SaveLoader;
 import net.minecraft.server.SaveLoading;
@@ -23,13 +22,10 @@ public class PFMSaveLoaderMixin {
 
     @ModifyArg(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/LifecycledResourceManagerImpl;<init>(Lnet/minecraft/resource/ResourceType;Ljava/util/List;)V"), index = 1)
     private List<ResourcePack> createReload(List<ResourcePack> packs) {
-        PFMRuntimeResources.RESOURCE_PACK_LIST = packs;
         List<ResourcePack> resourcePacks = new ArrayList<>(packs);
-        PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("pfm-runtime-resources"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES));
-        resourcePacks.add(new PathPackRPWrapper(Suppliers.memoize(() -> {
-            PFMRuntimeResources.prepareAndRunResourceGen(false);
-            return PFMRuntimeResources.ASSETS_PACK;
-        }), packResourceMetadata));
-        return resourcePacks;
+        resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);
+        PFMRuntimeResources.RESOURCE_PACK_LIST = resourcePacks;
+        PFMRuntimeResources.ready = true;
+        return packs;
     }
 }

@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.mixin;
 
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.data.DataCache;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -14,7 +14,7 @@ import java.nio.file.Path;
 public class PFMDataCache$CachedDataMixin {
     @Inject(method = "write", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", remap = false),cancellable = true, remap = true)
     public void silenceCacheWarning(Path root, Path dataProviderPath, String description, CallbackInfo ci) {
-        if (PFMDataGen.running)
+        if (PFMRuntimeResources.isAnyGeneratorRunning())
             ci.cancel();
     }
 }
