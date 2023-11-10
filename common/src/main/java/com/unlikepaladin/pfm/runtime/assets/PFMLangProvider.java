@@ -10,7 +10,8 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.mixin.PFMLanguageManagerAccessor;
 import com.unlikepaladin.pfm.registry.QuadFunc;
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
+import com.unlikepaladin.pfm.runtime.PFMGenerator;
+import com.unlikepaladin.pfm.runtime.PFMProvider;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
@@ -37,7 +38,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public class PFMLangProvider {
+public class PFMLangProvider extends PFMProvider {
+
+    public PFMLangProvider(PFMGenerator parent) {
+        super(parent);
+    }
 
     public void run() {
         try (PFMResourceManager resourceManager = new PFMResourceManager(ResourceType.CLIENT_RESOURCES, PFMRuntimeResources.RESOURCE_PACK_LIST)) {
@@ -45,88 +50,88 @@ public class PFMLangProvider {
             resourceManager.close();
         }
         catch (Exception e) {
-            PFMDataGen.LOGGER.info(e);
+            getParent().getLogger().info(e);
         };
-        try(BufferedWriter writer = IOUtils.buffer(new FileWriter(new File(PFMRuntimeResources.createDirIfNeeded(PFMRuntimeResources.getAssetsDirectory().resolve("lang")).toFile(), "en_us.json"))))
+        try(BufferedWriter writer = IOUtils.buffer(new FileWriter(new File(PFMRuntimeResources.createDirIfNeeded(getParent().getOrCreateSubDirectory("assets/pfm").resolve("lang")).toFile(), "en_us.json"))))
         {
             writer.write("{\n");
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap(), writer, "block.pfm.basic_chair", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.basic_chair", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap(), writer, "block.pfm.basic_chair", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.basic_chair", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMap(), writer, "block.pfm.dinner_chair", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.dinner_chair", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMap(), writer, "block.pfm.dinner_chair", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.dinner_chair", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMap(), writer, "block.pfm.classic_chair", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.classic_chair", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMap(), writer, "block.pfm.classic_chair", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.classic_chair", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMap(), writer, "block.pfm.modern_chair", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.modern_chair", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMap(), writer, "block.pfm.modern_chair", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.modern_chair", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_basic", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_basic", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_basic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_basic", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_classic", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_classic", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_classic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_classic", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(LogTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_log", PFMLangProvider::logTableFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(LogTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_log", PFMLangProvider::logTableFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(LogTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_log", this::logTableFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(LogTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_log", this::logTableFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(RawLogTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_log", PFMLangProvider::logTableFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(RawLogTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_log", PFMLangProvider::logTableFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(RawLogTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_log", this::logTableFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(RawLogTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_log", this::logTableFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(DinnerTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_dinner", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(DinnerTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_dinner", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(DinnerTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_dinner", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(DinnerTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_dinner", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_modern_dinner", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_modern_dinner", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.table_modern_dinner", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.table_modern_dinner", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(LogStoolBlock.class).getVariantToBlockMap(), writer, "block.pfm.log_stool", PFMLangProvider::logTableFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(LogStoolBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.log_stool", PFMLangProvider::logTableFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(LogStoolBlock.class).getVariantToBlockMap(), writer, "block.pfm.log_stool", this::logTableFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(LogStoolBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.log_stool", this::logTableFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMap(), writer, "block.pfm.simple_stool", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.simple_stool", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMap(), writer, "block.pfm.simple_stool", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.simple_stool", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMap(), writer, "block.pfm.classic_stool", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.classic_stool", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMap(), writer, "block.pfm.classic_stool", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.classic_stool", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMap(), writer, "block.pfm.modern_stool", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.modern_stool", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMap(), writer, "block.pfm.modern_stool", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.modern_stool", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicNightstandBlock.class).getVariantToBlockMap(), writer, "block.pfm.classic_nightstand", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicNightstandBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.classic_nightstand", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicNightstandBlock.class).getVariantToBlockMap(), writer, "block.pfm.classic_nightstand", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicNightstandBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.classic_nightstand", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.simple_bed", PFMLangProvider::bedFurnitureTranslation);
-            generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.simple_bed", PFMLangProvider::bedFurnitureTranslation);
+            generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.simple_bed", this::bedFurnitureTranslation);
+            generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.simple_bed", this::bedFurnitureTranslation);
 
-            generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.classic_bed", PFMLangProvider::bedFurnitureTranslation);
-            generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.classic_bed", PFMLangProvider::bedFurnitureTranslation);
+            generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.classic_bed", this::bedFurnitureTranslation);
+            generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.classic_bed", this::bedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBunkLadderBlock.class).getVariantToBlockMap(), writer, "block.pfm.simple_bunk_ladder", PFMLangProvider::simpleFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBunkLadderBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.simple_bunk_ladder", PFMLangProvider::simpleFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBunkLadderBlock.class).getVariantToBlockMap(), writer, "block.pfm.simple_bunk_ladder", this::simpleFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBunkLadderBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.simple_bunk_ladder", this::simpleFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_counter", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_counter", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_counter", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_counter", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_drawer", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_drawer", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_drawer", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_drawer", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_cabinet", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_cabinet", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_cabinet", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_cabinet", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_sink", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_sink", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_sink", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_sink", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_counter_oven", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_counter_oven", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_counter_oven", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_counter_oven", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_wall_counter", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_wall_counter", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_wall_counter", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_wall_counter", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_wall_drawer", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_wall_drawer", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_wall_drawer", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_wall_drawer", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_wall_small_drawer", PFMLangProvider::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_wall_small_drawer", PFMLangProvider::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMap(), writer, "block.pfm.kitchen_wall_small_drawer", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_wall_small_drawer", this::simpleStrippedFurnitureTranslation);
 
             generateTranslationForLampBlock(writer);
             writer.write("    \"pfm.dummy.entry\": \"dummy entry\"\n");
@@ -134,31 +139,31 @@ public class PFMLangProvider {
         }
         catch(IOException e)
         {
-            PFMDataGen.LOGGER.error("Writer exception: " + e);
+            getParent().getLogger().error("Writer exception: " + e);
             e.printStackTrace();
         }
     }
 
-    public static String simpleStrippedFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
+    public String simpleStrippedFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
         return translate(furnitureKey, strippedKey, translatedVariantName);
     }
 
-    public static String logTableFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
+    public String logTableFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
         String rawFix = block.getTranslationKey().contains("raw") ? translate("block.type.raw") : "";
         String extraLogKey = block.getTranslationKey().contains("stem") ? translate("block.type.stem") : block.getTranslationKey().contains("natural") ? translate("block.type.natural") : translate("block.type.log");
         return translate(furnitureKey, rawFix + (rawFix.isBlank() ? "" : " ") + strippedKey, translatedVariantName, extraLogKey);
     }
 
-    public static String simpleFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
+    public String simpleFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
         return translate(furnitureKey, translatedVariantName);
     }
 
-    public static String bedFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
+    public String bedFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
         String color = block instanceof SimpleBedBlock ? translate("color.minecraft."+((SimpleBedBlock) block).getPFMColor().asString()) : "";
         return translate(furnitureKey, translatedVariantName, color);
     }
 
-    private static Map<String, LanguageDefinition> loadAvailableLanguages(Stream<ResourcePack> packs) {
+    private Map<String, LanguageDefinition> loadAvailableLanguages(Stream<ResourcePack> packs) {
         HashMap<String, LanguageDefinition> map = Maps.newHashMap();
         packs.forEach(pack -> {
             try {
@@ -170,7 +175,7 @@ public class PFMLangProvider {
                 }
             }
             catch (IOException | RuntimeException exception) {
-                PFMDataGen.LOGGER.warn("Unable to parse language metadata section of resourcepack: {}", pack.getName(), exception);
+                getParent().getLogger().warn("Unable to parse language metadata section of resourcepack: {}", pack.getName(), exception);
             }
         });
         return ImmutableMap.copyOf(map);
@@ -193,13 +198,13 @@ public class PFMLangProvider {
     }
 
 
-    public static String translate(String key, Object ... args) {
+    public String translate(String key, Object ... args) {
         String string = language.get(key);
         try {
             return String.format(string, args);
         }
         catch (IllegalFormatException illegalFormatException) {
-            PFMDataGen.LOGGER.error("Format error: " + string + "\n" + illegalFormatException);
+            getParent().getLogger().error("Format error: " + string + "\n" + illegalFormatException);
             return "Format error: " + string;
         }
     }
@@ -214,18 +219,24 @@ public class PFMLangProvider {
                     writer.write(String.format("    \"%1$s\": \"%2$s\",", String.format("block.pfm.basic_%s_%s_lamp", color.asString(), variant.asString()), translatedFurnitureName));
                     writer.write("\n");
                 } catch (IOException e) {
-                    PFMDataGen.LOGGER.error("Writer exception: " + e);
+                    getParent().getLogger().error("Writer exception: " + e);
                     throw new RuntimeException(e);
                 }
             }
         }
     }
+
+    private final HashMap<VariantBase<?>, String> translationMap = new HashMap<>();
     public String getTranslatedVariantName(VariantBase<?> variant) {
+        if (translationMap.containsKey(variant))
+            return translationMap.get(variant);
+
         AtomicReference<String> variantName = new AtomicReference<>(translate(variant.getSecondaryBlock().getTranslationKey()));
         String baseBlockName = translate(variant.getBaseBlock().getTranslationKey());
         List<String> common = findCommonWords(variantName.get(), baseBlockName);
         variantName.set("");
         variantName.set(String.join(" ", common));
+        translationMap.put(variant, variantName.get());
         return variantName.get();
     }
 
@@ -241,7 +252,7 @@ public class PFMLangProvider {
                         writer.write(String.format("    \"%1$s\": \"%2$s\",", block.getTranslationKey(), translatedFurnitureName));
                         writer.write("\n");
                     } catch (IOException e) {
-                        PFMDataGen.LOGGER.error("Writer exception: " + e);
+                        getParent().getLogger().error("Writer exception: " + e);
                         throw new RuntimeException(e);
                     }
                 }
@@ -260,7 +271,7 @@ public class PFMLangProvider {
                     writer.write(String.format("    \"%1$s\": \"%2$s\",", block.getTranslationKey(), translatedFurnitureName));
                     writer.write("\n");
                 } catch (IOException e) {
-                    PFMDataGen.LOGGER.error("Writer exception: " + e);
+                    getParent().getLogger().error("Writer exception: " + e);
                     throw new RuntimeException(e);
                 }
             }
@@ -275,6 +286,11 @@ public class PFMLangProvider {
         List<String>list2 = Arrays.asList(words2);
         list1.retainAll(list2);
         return list1;
+    }
+
+    @Override
+    public void run(DataWriter writer) throws IOException {
+        run();
     }
 
     public String getName() {

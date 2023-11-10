@@ -26,6 +26,9 @@ public class PathPackRPWrapper implements ResourcePack {
     @Nullable
     @Override
     public InputStream openRoot(String fileName) throws IOException {
+        if (fileName.equals("pack.png")) {
+            return delegate.get().openRoot(fileName);
+        }
         return null;
     }
 

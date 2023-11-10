@@ -10,7 +10,9 @@ import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.PFMTags;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
+import com.unlikepaladin.pfm.runtime.PFMGenerator;
+import com.unlikepaladin.pfm.runtime.PFMProvider;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
@@ -28,7 +30,11 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class PFMTagProvider implements DataProvider{
+public class PFMTagProvider extends PFMProvider {
+    public PFMTagProvider(PFMGenerator parent) {
+        super(parent);
+    }
+
     protected void generateTags() {
         KitchenCounterBlock[] stoneCounters = KitchenCounterBlock.streamStoneCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
         KitchenCabinetBlock[] stoneCabinets = KitchenCabinetBlock.streamStoneCabinets().map(FurnitureBlock::getBlock).toArray(KitchenCabinetBlock[]::new);
@@ -74,7 +80,7 @@ public class PFMTagProvider implements DataProvider{
         BasicSinkBlock[] sinkBlocks = BasicSinkBlock.streamSinks().toList().toArray(new BasicSinkBlock[0]);
         ShowerTowelBlock[] showerTowels = ShowerTowelBlock.streamShowerTowels().map(FurnitureBlock::getBlock).toArray(ShowerTowelBlock[]::new);
 
-       getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
                 .add(showerTowels)
                 .add(stoneCounters)
                 .add(stoneCabinets)
@@ -243,22 +249,21 @@ public class PFMTagProvider implements DataProvider{
                 Path path = this.getOutput(id);
                 try {
                     DataResult<JsonElement> jsonElementDataResult = TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(list, false));
-                    JsonElement jsonElement = jsonElementDataResult.getOrThrow(false, PFMDataGen.LOGGER::error);
+                    JsonElement jsonElement = jsonElementDataResult.getOrThrow(false, getParent().getLogger()::error);
                     DataProvider.writeToPath(writer, jsonElement, path);
                 }
                 catch (IOException iOException) {
-                    PFMDataGen.LOGGER.error("Couldn't save tags to {}", path, iOException);
+                    getParent().getLogger().error("Couldn't save tags to {}", path, iOException);
                 }
             }
         });
     }
 
-    @Override
     public String getName() {
         return "PFM Tags for Blocks";
     }
 
     protected Path getOutput(Identifier id) {
-        return PFMRuntimeResources.getResourceDirectory().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
+        return getParent().getOutput().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
     }
 }

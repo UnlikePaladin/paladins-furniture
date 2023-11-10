@@ -11,7 +11,9 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.runtime.PFMDataGen;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
+import com.unlikepaladin.pfm.runtime.PFMGenerator;
+import com.unlikepaladin.pfm.runtime.PFMProvider;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.advancement.Advancement;
@@ -47,18 +49,22 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class PFMRecipeProvider implements DataProvider {
+public class PFMRecipeProvider extends PFMProvider {
+
+    public PFMRecipeProvider(PFMGenerator parent) {
+        super(parent);
+    }
 
     public void run(DataWriter writer) {
-        Path path = PFMRuntimeResources.getResourceDirectory();
+        Path path = getParent().getOutput();
         Set<Identifier> set = Sets.newHashSet();
         generateRecipes((recipeJsonProvider) -> {
             if (!set.add(recipeJsonProvider.getRecipeId())) {
-                PFMDataGen.LOGGER.error("Duplicate recipe " + recipeJsonProvider.getRecipeId());
+                getParent().getLogger().error("Duplicate recipe " + recipeJsonProvider.getRecipeId());
                 throw new IllegalStateException("Duplicate recipe " + recipeJsonProvider.getRecipeId());
             }
             if (recipeJsonProvider == null) {
-                PFMDataGen.LOGGER.error("Recipe Json Provider is null");
+                getParent().getLogger().error("Recipe Json Provider is null");
                 throw new IllegalStateException("Recipe Json Provider is null");
             }else {
                 saveRecipe(writer, recipeJsonProvider.toJson(), path.resolve("data/" + recipeJsonProvider.getRecipeId().getNamespace() + "/recipes/" + recipeJsonProvider.getRecipeId().getPath() + ".json"));
@@ -72,24 +78,23 @@ public class PFMRecipeProvider implements DataProvider {
         saveRecipeAdvancement(writer, Advancement.Builder.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).toJson(), path.resolve("data/pfm/advancements/recipes/root.json"));
     }
 
-    @Override
     public String getName() {
         return "PFM Recipes";
     }
 
-    private static void saveRecipe(DataWriter cache, JsonObject json, Path path) {
+    private void saveRecipe(DataWriter cache, JsonObject json, Path path) {
         try {
             DataProvider.writeToPath(cache, json, path);
         } catch (IOException var4) {
-            PFMDataGen.LOGGER.error("Couldn't save recipe {}", path, var4);
+            getParent().getLogger().error("Couldn't save recipe {}", path, var4);
         }
     }
 
-    private static void saveRecipeAdvancement(DataWriter cache, JsonObject json, Path path) {
+    private void saveRecipeAdvancement(DataWriter cache, JsonObject json, Path path) {
         try {
             DataProvider.writeToPath(cache, json, path);
         } catch (IOException var4) {
-            PFMDataGen.LOGGER.error("Couldn't save recipe advancement {}", path, var4);
+            getParent().getLogger().error("Couldn't save recipe advancement {}", path, var4);
         }
     }
     @ExpectPlatform

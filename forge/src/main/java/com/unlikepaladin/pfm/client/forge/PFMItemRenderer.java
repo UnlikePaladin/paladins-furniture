@@ -51,9 +51,8 @@ public class PFMItemRenderer extends BuiltinModelItemRenderer {
                 }
             }
             boolean glint = stack.hasGlint();
-
-            ItemRenderer renderer = MinecraftClient.getInstance().getItemRenderer();
             matrices.pop();
+            ItemRenderer renderer = MinecraftClient.getInstance().getItemRenderer();
             matrices.push();
             BakedModel lampShadeModel = (bakedModels.get(variant).get(modelParts.get(4))).applyTransform(mode, matrices, false);
             BakedModel poleModel = (bakedModels.get(variant).get(modelParts.get(2)));
