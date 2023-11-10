@@ -68,12 +68,14 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             PFMRuntimeResources.runAsyncResourceGen();
             MinecraftClient.getInstance().reloadResourcesConcurrently();
         }));
-        this.addEntry(new ButtonEntry(Side.SERVER, new TranslatableText("pfm.option.regenData"), new TranslatableText("pfm.config.regen"), new TranslatableText("pfm.option.regenData.tooltip"), button -> {
+        ButtonEntry entry = new ButtonEntry(Side.SERVER, new TranslatableText("pfm.option.regenData"), new TranslatableText("pfm.config.regen"), new TranslatableText("pfm.option.regenData.tooltip"), button -> {
             PFMFileUtil.deleteDir(PFMRuntimeResources.getDataPackDirectory().toFile());
             PFMDataGenerator.FROZEN = false;
             PFMRuntimeResources.prepareAsyncDataGen(true);
             PFMRuntimeResources.runAsyncResourceGen();
-        }));
+        });
+        entry.button.active = !PFMConfigScreen.isOnServer;
+        this.addEntry(entry);
     }
 
     public void save() {
