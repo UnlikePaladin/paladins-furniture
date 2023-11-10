@@ -21,7 +21,7 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
     }
     @Nullable
     public static WoodVariant getVariant(Identifier name) {
-        return INSTANCE.variants.get(name);
+        return INSTANCE.variants.getOrDefault(name, OAK);
     }
 
     @Nullable
