@@ -26,5 +26,6 @@ public class PFMMinecraftServerMixin {
         List<ResourcePack> resourcePacks = new ArrayList<>(cir.getReturnValue());
         resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);
         PFMRuntimeResources.RESOURCE_PACK_LIST = resourcePacks;
+        PFMRuntimeResources.ready = true;
     }
 }
