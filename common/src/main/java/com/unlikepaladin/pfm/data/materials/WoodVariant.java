@@ -100,14 +100,14 @@ public class WoodVariant extends VariantBase<WoodVariant> {
                     new Identifier(id.getNamespace(), append + "_" + id.getPath() + postNether.replace("_", ""))
             };
             for (Identifier r : nether_targets) {
-                if (Registry.BLOCK.containsId(r)) {
+                if (Registry.BLOCK.getOrEmpty(r).isPresent()) {
                     found = Registry.BLOCK.get(r);
                     break;
                 }
             }
         }
         for (Identifier r : targets) {
-            if (Registry.BLOCK.containsId(r)) {
+            if (Registry.BLOCK.getOrEmpty(r).isPresent()) {
                 found = Registry.BLOCK.get(r);
                 break;
             }

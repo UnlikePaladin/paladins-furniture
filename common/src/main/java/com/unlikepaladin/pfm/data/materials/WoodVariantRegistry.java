@@ -112,7 +112,7 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
         };
         Block temp = null;
         for (Identifier r : test) {
-            if (Registry.BLOCK.containsId(r)) {
+            if (Registry.BLOCK.getOrEmpty(r).isPresent()) {
                 temp = Registry.BLOCK.get(r);
                 break;
             }

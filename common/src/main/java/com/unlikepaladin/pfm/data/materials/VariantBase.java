@@ -80,7 +80,7 @@ public abstract class VariantBase<T> implements StringIdentifiable {
         };
         V found = null;
         for (Identifier r : targets) {
-            if (reg.containsId(r)) {
+            if (reg.getOrEmpty(r).isPresent()) {
                 found = reg.get(r);
                 break;
             }
