@@ -12,7 +12,9 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -57,10 +59,12 @@ public class PathPackRPWrapper implements ResourcePack {
 
     @Nullable
     @Override
-    public <T> T parseMetadata(ResourceMetadataReader<T> metaReader) {
+    public <T> T parseMetadata(ResourceMetadataReader<T> metaReader) throws IOException {
         if (metaReader.getKey().equals("pack")) {
             return (T) packResourceMetadata;
         }
+        if (PFMRuntimeResources.ready)
+            return delegate.get().parseMetadata(metaReader);
         return null;
     }
 
