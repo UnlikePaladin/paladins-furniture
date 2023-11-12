@@ -10,7 +10,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -44,7 +46,7 @@ public class PathPackRPWrapper implements ResourcePack {
     public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, int maxDepth, Predicate<String> pathFilter) {
         if (PFMRuntimeResources.ready)
             return delegate.get().findResources(type, namespace, prefix, maxDepth, pathFilter);
-        return null;
+        return new ArrayList<>();
     }
 
     @Override
@@ -56,7 +58,9 @@ public class PathPackRPWrapper implements ResourcePack {
 
     @Override
     public Set<String> getNamespaces(ResourceType type) {
-        return delegate.get().getNamespaces(type);
+        if (PFMRuntimeResources.ready)
+            return delegate.get().getNamespaces(type);
+        return new HashSet<>();
     }
 
     @Nullable
@@ -65,6 +69,8 @@ public class PathPackRPWrapper implements ResourcePack {
         if (metaReader.getKey().equals("pack")) {
             return (T) packResourceMetadata;
         }
+        if (PFMRuntimeResources.ready)
+            return delegate.get().parseMetadata(metaReader);
         return null;
     }
 
