@@ -21,6 +21,7 @@ public class PFMReloadableResourceManagerImplMixin {
         List<ResourcePack> resourcePacks = new ArrayList<>(packs);
         resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);
         PFMRuntimeResources.RESOURCE_PACK_LIST = resourcePacks;
+        PFMRuntimeResources.ready = true;
         return packs;
     }
 }

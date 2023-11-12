@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.client;
 
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.PackResourceMetadata;
@@ -26,7 +27,7 @@ public class PathPackRPWrapper implements ResourcePack {
     @Nullable
     @Override
     public InputStream openRoot(String fileName) throws IOException {
-        if (fileName.equals("pack.png")) {
+        if (PFMRuntimeResources.ready && fileName.equals("pack.png")) {
             return delegate.get().openRoot(fileName);
         }
         return null;
@@ -34,17 +35,23 @@ public class PathPackRPWrapper implements ResourcePack {
 
     @Override
     public InputStream open(ResourceType type, Identifier id) throws IOException {
-        return delegate.get().open(type, id);
+        if (PFMRuntimeResources.ready)
+            return delegate.get().open(type, id);
+        return null;
     }
 
     @Override
     public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, Predicate<Identifier> allowedPathPredicate) {
-        return delegate.get().findResources(type, namespace, prefix, allowedPathPredicate);
+        if (PFMRuntimeResources.ready)
+            return delegate.get().findResources(type, namespace, prefix, allowedPathPredicate);
+        return null;
     }
 
     @Override
     public boolean contains(ResourceType type, Identifier id) {
-        return delegate.get().contains(type, id);
+        if (PFMRuntimeResources.ready)
+            return delegate.get().contains(type, id);
+        return false;
     }
 
     @Override
@@ -68,6 +75,7 @@ public class PathPackRPWrapper implements ResourcePack {
 
     @Override
     public void close() {
-        delegate.get().close();
+        if (PFMRuntimeResources.ready)
+            delegate.get().close();
     }
 }
