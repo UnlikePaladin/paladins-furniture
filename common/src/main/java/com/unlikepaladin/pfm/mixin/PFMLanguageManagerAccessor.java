@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(LanguageManager.class)
 public interface PFMLanguageManagerAccessor {
-    @Accessor
+    @Accessor("currentLanguageCode")
     String getCurrentLanguageCode();
 
     @Accessor("ENGLISH_US")
