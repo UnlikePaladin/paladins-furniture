@@ -92,7 +92,6 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         BlockItemRegistryFabric.registerItems();
         BlockItemRegistryFabric.registerBlocks();
         //PFMRuntimeResources.prepareAsyncResourceGen(); No async gen because Forge won't behave, blame it.
-        PFMRuntimeResources.ready = true;
         StatisticsRegistryFabric.registerStatistics();
         SoundRegistryFabric.registerSounds();
         NetworkRegistryFabric.registerPackets();
