@@ -21,7 +21,7 @@ public abstract class PFMMixinClientPacketListener extends ClientCommonNetworkHa
     }
 
     @Inject(method = "onGameJoin", at = @At("TAIL"))
-    private void pfm$showUpdateMessage(GameJoinS2CPacket par1, CallbackInfo ci) {
+    private void pfm$showModUpdateMessage(GameJoinS2CPacket par1, CallbackInfo ci) {
         if (this.client.player == null) {
             return;
         }
