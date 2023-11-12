@@ -187,10 +187,10 @@ public class PaladinFurnitureModUpdateChecker {
             if (textParts.length > 1) {
                 MutableText component1 = new LiteralText(textParts[0]);
                 MutableText component2 = new LiteralText(textParts[1]);
-                MutableText link = new LiteralText(info.modHost).styled(arg -> arg.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, info.modDownload)).withUnderline(true));
+                MutableText link = new LiteralText(info.modHost).styled(arg -> arg.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, info.modDownload)));
                 return Optional.of(component1.append(link).append(component2));
             } else {
-                MutableText link = new LiteralText(info.modHost).styled(arg -> arg.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, info.modDownload)).withUnderline(true));
+                MutableText link = new LiteralText(info.modHost).styled(arg -> arg.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, info.modDownload)));
                 return Optional.of(new LiteralText(textParts[0]).append(link));
             }
         } else {
