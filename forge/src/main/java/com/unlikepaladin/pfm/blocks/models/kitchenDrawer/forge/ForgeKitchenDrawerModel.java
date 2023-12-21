@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.kitchenDrawer.forge;
 import com.unlikepaladin.pfm.blocks.KitchenDrawerBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
@@ -21,9 +22,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ForgeKitchenDrawerModel extends AbstractBakedModel {
+public class ForgeKitchenDrawerModel extends PFMForgeBakedModel {
     public ForgeKitchenDrawerModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
+        super(settings, bakedModels.values().stream().toList());
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;
@@ -90,10 +91,10 @@ public class ForgeKitchenDrawerModel extends AbstractBakedModel {
                 Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
                 if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateFacingDifferentDirection) {
                     if (direction2 == direction.rotateYCounterclockwise()) {
-                        return getBakedModels().get(modelParts.get(5 + openOffset)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get((5 + openOffset)).getQuads(state, side, rand, extraData);
                     }
                     else {
-                        return getBakedModels().get(modelParts.get(6 + openOffset)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get((6 + openOffset)).getQuads(state, side, rand, extraData);
                     }
                 } else {
                     return getMiddleQuads(state, side, rand, extraData, left, right, openOffset);
@@ -109,9 +110,9 @@ public class ForgeKitchenDrawerModel extends AbstractBakedModel {
                 }
                 if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
                     if (direction3 == direction.rotateYCounterclockwise()) {
-                        return getBakedModels().get(modelParts.get(4 + openOffset)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get((4 + openOffset)).getQuads(state, side, rand, extraData);
                     } else {
-                        return getBakedModels().get(modelParts.get(3 + openOffset)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get((3 + openOffset)).getQuads(state, side, rand, extraData);
                     }
                 } else {
                     return getMiddleQuads(state, side, rand, extraData, left, right, openOffset);
@@ -125,13 +126,13 @@ public class ForgeKitchenDrawerModel extends AbstractBakedModel {
 
     private List<BakedQuad> getMiddleQuads(BlockState state, Direction side, Random rand, IModelData extraData, boolean left, boolean right, int openOffset) {
         if (left && right) {
-            return getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get((openOffset)).getQuads(state, side, rand, extraData);
         } else if (left) {
-            return getBakedModels().get(modelParts.get(1 + openOffset)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get((1 + openOffset)).getQuads(state, side, rand, extraData);
         } else if (right) {
-            return getBakedModels().get(modelParts.get(2 + openOffset)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get((2 + openOffset)).getQuads(state, side, rand, extraData);
         } else {
-            return getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get((openOffset)).getQuads(state, side, rand, extraData);
         }
     }
 }

@@ -22,18 +22,31 @@ import net.fabricmc.fabric.api.client.model.ExtraModelProvider;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 public class PFMExtraModelProvider implements ExtraModelProvider {
     @Override
     public void provideExtraModels(ResourceManager manager, Consumer<Identifier> out) {
         UnbakedBedModel.ALL_MODEL_IDS.forEach(out::accept);
-        UnbakedBasicTableModel.ALL_MODEL_IDS.forEach(out::accept);
-        UnbakedClassicTableModel.ALL_MODEL_IDS.forEach(out::accept);
-        UnbakedClassicNightstandModel.ALL_MODEL_IDS.forEach(out::accept);
-        UnbakedLogTableModel.ALL_MODEL_IDS.forEach(out::accept);
-        UnbakedDinnerTableModel.ALL_MODEL_IDS.forEach(out::accept);
-        UnbakedModernDinnerTableModel.ALL_MODEL_IDS.forEach(out::accept);
+        for (Identifier id : UnbakedBasicTableModel.BASIC_MODEL_PARTS_BASE) {
+            out.accept(id);
+        }
+        for (Identifier id : UnbakedClassicTableModel.CLASSIC_MODEL_PARTS_BASE) {
+            out.accept(id);
+        }
+        for (Identifier id : UnbakedLogTableModel.LOG_MODEL_PARTS_BASE) {
+            out.accept(id);
+        }
+        for (Identifier id : UnbakedDinnerTableModel.DINNER_MODEL_PARTS_BASE) {
+            out.accept(id);
+        }
+        for (Identifier id : UnbakedModernDinnerTableModel.MODERN_DINNER_MODEL_PARTS_BASE) {
+            out.accept(id);
+        }
+        for (Identifier id : UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_PARTS_BASE) {
+            out.accept(id);
+        }
         UnbakedKitchenCounterModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedKitchenDrawerModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedKitchenWallCounterModel.ALL_MODEL_IDS.forEach(out::accept);

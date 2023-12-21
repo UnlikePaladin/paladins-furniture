@@ -91,7 +91,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         PaladinFurnitureModFabric.initializeItemGroup();
         BlockItemRegistryFabric.registerItems();
         BlockItemRegistryFabric.registerBlocks();
-        //PFMRuntimeResources.prepareAsyncResourceGen(); No async gen because Forge won't behave, blame it.
+        // PFMRuntimeResources.prepareAsyncResourceGen(); No async gen because Forge won't behave, blame it.
         StatisticsRegistryFabric.registerStatistics();
         SoundRegistryFabric.registerSounds();
         NetworkRegistryFabric.registerPackets();
@@ -104,12 +104,12 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
 
 
     public static void onServerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
-        //Give book
+        // Give book
         if (getPFMConfig().shouldGiveGuideBook()) {
             PFMCriteria.GUIDE_BOOK_CRITERION.trigger(handler.getPlayer());
         }
 
-        //Sync Config
+        // Sync Config
         PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
         Collection<AbstractConfigOption> configOptions = PaladinFurnitureMod.getPFMConfig().options.values();
         buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);

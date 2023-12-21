@@ -48,9 +48,9 @@ public abstract class VariantRegistryBase<T extends VariantBase<T>> {
     public abstract Optional<T> getVariantFromBlock(Block baseBlock, Identifier blockId);
 
     public void buildAll() {
-        //adds default
+        // adds default
         this.registerBlockType(this.getDefaultType());
-        //adds finders
+        // adds finders
         finders.stream().map(VariantBase.SetFinder::get).forEach(f -> f.ifPresent(this::registerBlockType));
         for (Block block : Registry.BLOCK) {
             this.getVariantFromBlock(block, Registry.BLOCK.getId(block)).ifPresent(this::registerBlockType);

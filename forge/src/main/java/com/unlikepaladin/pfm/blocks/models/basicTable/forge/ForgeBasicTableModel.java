@@ -1,13 +1,15 @@
 package com.unlikepaladin.pfm.blocks.models.basicTable.forge;
 
 import com.unlikepaladin.pfm.blocks.BasicTableBlock;
-import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
+import com.unlikepaladin.pfm.client.forge.PFMBakedModelGetQuadsExtension;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
@@ -19,19 +21,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ForgeBasicTableModel extends AbstractBakedModel {
-    public ForgeBasicTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
-        this.modelParts = MODEL_PARTS;
+public class ForgeBasicTableModel extends PFMForgeBakedModel {
+    public ForgeBasicTableModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        super(settings, modelParts);
     }
-    private final List<String> modelParts;
+
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
+    @Override
+    public void appendProperties(ModelDataMap.Builder builder) {
+        super.appendProperties(builder);
+        builder.withProperty(CONNECTIONS);
+    }
 
     @NotNull
     @Override
     public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
-        ModelDataMap.Builder builder = new ModelDataMap.Builder();
         if (state.getBlock() instanceof BasicTableBlock) {
+            ModelDataMap.Builder builder = new ModelDataMap.Builder();
+            appendProperties(builder);
+
+            IModelData data = builder.build();
+            super.getModelData(world, pos, state, data);
+
             BasicTableBlock block = (BasicTableBlock) state.getBlock();
             boolean north = block.canConnect(world, state, pos.north(), pos);
             boolean east = block.canConnect(world, state, pos.east(), pos);
@@ -50,15 +61,18 @@ public class ForgeBasicTableModel extends AbstractBakedModel {
             set.set(5, cornerNorthEast);
             set.set(6, cornerSouthEast);
             set.set(7, cornerSouthWest);
-            builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set));
+            data.setData(CONNECTIONS, new ModelBitSetProperty(set));
+            return data;
         }
-        return builder.build();
+        return tileData;
     }
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
-        List<BakedQuad> quads = new ArrayList<>();
         if (state != null && state.getBlock() instanceof BasicTableBlock && extraData.getData(CONNECTIONS) != null && extraData.getData(CONNECTIONS).connections != null) {
+            List<BakedQuad> baseQuads = new ArrayList<>();
+            List<BakedQuad> secondaryQuads = new ArrayList<>();
+
             BitSet set = extraData.getData(CONNECTIONS).connections;
             boolean north = set.get(0);
             boolean east = set.get(1);
@@ -69,122 +83,148 @@ public class ForgeBasicTableModel extends AbstractBakedModel {
             boolean cornerSouthEast = set.get(6);
             boolean cornerSouthWest = set.get(7);
             Direction.Axis dir = state.get(BasicTableBlock.AXIS);
-            quads.addAll(getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData));
+            baseQuads.addAll(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData));
             if (!north && !south && !east && !west) {
-                quads.addAll(getBakedModels().get(modelParts.get(8)).getQuads(state, side, rand, extraData));
-                quads.addAll(getBakedModels().get(modelParts.get(7)).getQuads(state, side, rand, extraData));
+                secondaryQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData));
+                secondaryQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData));
             }
             if (dir == Direction.Axis.Z) {
                 if (!north && !east)  {
-                    quads.addAll(getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData));
                 }
                 if (!north && !west)  {
-                    quads.addAll(getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData));
                 }
                 if (!south && !east)  {
-                    quads.addAll(getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
                 }
                 if (!south && !west)  {
-                    quads.addAll(getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
                 }
                 if (!north && south && !east && !west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(7)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData));
                 }
                 if (north && !south && !east && !west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(8)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData));
                 }
                 if (!north && east && !west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(5)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData));
                 }
                 if (!south && !east && west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(10)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(10).getQuads(state, side, rand, extraData));
                 }
                 if (!south && east && !west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(9)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(9).getQuads(state, side, rand, extraData));
                 }
                 if (!north && !east && west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(6)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData));
                 }
                 if (!north && east && west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(12)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(12).getQuads(state, side, rand, extraData));
                 }
                 if (!south && east && west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(11)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(11).getQuads(state, side, rand, extraData));
                 }
                 if (cornerNorthEast) {
-                    quads.addAll(getBakedModels().get(modelParts.get(13)).getQuads(state, side, rand, extraData));
-                    quads.addAll(getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(13).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData));
                 }
                 if (cornerNorthWest) {
-                    quads.addAll(getBakedModels().get(modelParts.get(14)).getQuads(state, side, rand, extraData));
-                    quads.addAll(getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(14).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData));
                 }
                 if (cornerSouthWest) {
-                    quads.addAll(getBakedModels().get(modelParts.get(16)).getQuads(state, side, rand, extraData));
-                    quads.addAll(getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(16).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
                 }
                 if (cornerSouthEast) {
-                    quads.addAll(getBakedModels().get(modelParts.get(15)).getQuads(state, side, rand, extraData));
-                    quads.addAll(getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(15).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
                 }
             } else {
                 if (!north && !east)  {
-                    quads.addAll(getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData));
                 }
                 if (!north && !west)  {
-                    quads.addAll(getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
                 }
                 if (!south && !east)  {
-                    quads.addAll(getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData));
                 }
                 if (!south && !west)  {
-                    quads.addAll(getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
                 }
                 if (!north && south && !west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(9)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(9).getQuads(state, side, rand, extraData));
                 }
                 if (north && !south && !west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(10)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(10).getQuads(state, side, rand, extraData));
                 }
                 if (!north && south && !east) {
-                    quads.addAll(getBakedModels().get(modelParts.get(5)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData));
                 }
                 if (north && !south && !east) {
-                    quads.addAll(getBakedModels().get(modelParts.get(6)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData));
                 }
 
                 if (!north && !south && !east) {
-                    quads.addAll(getBakedModels().get(modelParts.get(7)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData));
                 }
                 if (!north && !south && !west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(8)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData));
                 }
 
                 if (north && south && !east) {
-                    quads.addAll(getBakedModels().get(modelParts.get(12)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(12).getQuads(state, side, rand, extraData));
                 }
                 if (north && south && !west) {
-                    quads.addAll(getBakedModels().get(modelParts.get(11)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(11).getQuads(state, side, rand, extraData));
                 }
 
                 if (cornerNorthEast) {
-                    quads.addAll(getBakedModels().get(modelParts.get(14)).getQuads(state, side, rand, extraData));
-                    quads.addAll(getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(14).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData));
                 }
                 if (cornerSouthEast) {
-                    quads.addAll(getBakedModels().get(modelParts.get(13)).getQuads(state, side, rand, extraData));
-                    quads.addAll(getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(13).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData));
                 }
                 if (cornerNorthWest) {
-                    quads.addAll(getBakedModels().get(modelParts.get(16)).getQuads(state, side, rand, extraData));
-                    quads.addAll(getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(16).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
                 }
                 if (cornerSouthWest) {
-                    quads.addAll(getBakedModels().get(modelParts.get(15)).getQuads(state, side, rand, extraData));
-                    quads.addAll(getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(15).getQuads(state, side, rand, extraData));
+                    secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
                 }
             }
+            List<Sprite> spriteList = getSpriteList(state);
+            List<BakedQuad> quads = getQuadsWithTexture(baseQuads, spriteList.get(0));
+            quads.addAll(getQuadsWithTexture(secondaryQuads, spriteList.get(1)));
+            return quads;
         }
+       return Collections.emptyList();
+    }
+
+
+    @Override
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+        // base
+        List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(state, face, random));
+
+        List<BakedQuad> secondaryQuads = new ArrayList<>();
+        // legs
+        secondaryQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, face, random));
+        // in between pieces
+        secondaryQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, face, random));
+
+        List<Sprite> spriteList = getSpriteList(stack);
+        List<BakedQuad> quads = getQuadsWithTexture(baseQuads, spriteList.get(0));
+        quads.addAll(getQuadsWithTexture(secondaryQuads, spriteList.get(1)));
         return quads;
     }
 }

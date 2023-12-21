@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.kitchenCounter.forge;
 import com.unlikepaladin.pfm.blocks.KitchenCounterBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
@@ -21,12 +22,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ForgeKitchenCounterModel extends AbstractBakedModel {
-    public ForgeKitchenCounterModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
-        this.modelParts = MODEL_PARTS;
+public class ForgeKitchenCounterModel extends PFMForgeBakedModel {
+    public ForgeKitchenCounterModel(Sprite frame, ModelBakeSettings settings, List<BakedModel> modelParts) {
+        super(settings, modelParts);
     }
-    private final List<String> modelParts;
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     public static ModelProperty<BlockState> NEIGHBOR_FACING = new ModelProperty<>();
     public static ModelProperty<BlockState> NEIGHBOR_OPPOSITE = new ModelProperty<>();
@@ -91,10 +90,10 @@ public class ForgeKitchenCounterModel extends AbstractBakedModel {
                 Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
                 if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateFacingDifferentDirection) {
                     if (direction2 == direction.rotateYCounterclockwise()) {
-                        return getBakedModels().get(modelParts.get(5)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData);
                     }
                     else {
-                        return getBakedModels().get(modelParts.get(6)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData);
                     }
                 } else {
                     return getMiddleQuads(state, side, rand, extraData, left, right);
@@ -110,9 +109,9 @@ public class ForgeKitchenCounterModel extends AbstractBakedModel {
                 }
                 if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
                     if (direction3 == direction.rotateYCounterclockwise()) {
-                        return getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData);
                     } else {
-                        return getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData);
                     }
                 } else {
                     return getMiddleQuads(state, side, rand, extraData, left, right);
@@ -127,13 +126,13 @@ public class ForgeKitchenCounterModel extends AbstractBakedModel {
 
     private List<BakedQuad> getMiddleQuads(BlockState state, Direction side, Random rand, IModelData extraData, boolean left, boolean right) {
         if (left && right) {
-            return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData);
         } else if (left) {
-            return getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData);
         } else if (right) {
-            return getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData);
         } else {
-            return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData);
         }
     }
 }

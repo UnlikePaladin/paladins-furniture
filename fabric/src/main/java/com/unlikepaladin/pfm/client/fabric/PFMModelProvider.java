@@ -35,23 +35,23 @@ public class PFMModelProvider implements ModelResourceProvider {
         } else if (ModelHelper.containsIdentifier(UnbakedBedModel.BED_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
             return new UnbakedBedModel(ModelHelper.getWoodType(resourceId), ModelHelper.getColor(resourceId), new ArrayList<>(), resourceId.getPath().contains("classic"));
         }
-        else if (ModelHelper.containsIdentifier(UnbakedBasicTableModel.TABLE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedBasicTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedBasicTableModel.MODEL_IDS.contains(resourceId)){
+            return new UnbakedBasicTableModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedClassicTableModel.TABLE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedClassicTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedClassicTableModel.MODEL_IDS.contains(resourceId)){
+            return new UnbakedClassicTableModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedClassicNightstandModel.NIGHSTAND_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedClassicNightstandModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedLogTableModel.TABLE_MODEL_IDS.contains(resourceId)){
+            return new UnbakedLogTableModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedLogTableModel.TABLE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedLogTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId), resourceId.getPath().contains("raw"));
+        else if (UnbakedDinnerTableModel.TABLE_MODEL_IDS.contains(resourceId)){
+            return new UnbakedDinnerTableModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedDinnerTableModel.TABLE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedDinnerTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedModernDinnerTableModel.TABLE_MODEL_IDS.contains(resourceId)){
+            return new UnbakedModernDinnerTableModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedModernDinnerTableModel.TABLE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedModernDinnerTableModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedClassicNightstandModel.NIGHSTAND_MODEL_IDS.contains(resourceId)){
+            return new UnbakedClassicNightstandModel();
         }
         else if (ModelHelper.containsIdentifier(UnbakedKitchenCounterModel.COUNTER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
             return new UnbakedKitchenCounterModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));

@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.bed.BedInterface;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.BedPart;
@@ -23,9 +24,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ForgeBedModel extends AbstractBakedModel implements BedInterface {
+public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
     public ForgeBedModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
+        super(settings, bakedModels.values().stream().toList());
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;
@@ -43,31 +44,31 @@ public class ForgeBedModel extends AbstractBakedModel implements BedInterface {
             boolean right = data.get(1);
             boolean bunk = data.get(2);
             if (part == BedPart.HEAD) {
-                quads.addAll(getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData));
-                quads.addAll(getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData));
+                quads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData));
+                quads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
                 if (!right){
-                    quads.addAll(getBakedModels().get(modelParts.get(6)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData));
                 }
                 if (!left){
-                    quads.addAll(getBakedModels().get(modelParts.get(7)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData));
                 }
                 if (bunk && !(state.getBlock() instanceof ClassicBedBlock)){
-                    quads.addAll(getBakedModels().get(modelParts.get(10)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(10).getQuads(state, side, rand, extraData));
                 }
             } else {
-                quads.addAll(getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData));
-                quads.addAll(getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData));
+                quads.addAll(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData));
+                quads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData));
                 if (!right){
-                    quads.addAll(getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
                 }
                 if (!left){
-                    quads.addAll(getBakedModels().get(modelParts.get(5)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData));
                 }
                 if (!right && bunk){
-                    quads.addAll(getBakedModels().get(modelParts.get(8)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData));
                 }
                 if (!left && bunk){
-                    quads.addAll(getBakedModels().get(modelParts.get(9)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(9).getQuads(state, side, rand, extraData));
                 }
             }
         }

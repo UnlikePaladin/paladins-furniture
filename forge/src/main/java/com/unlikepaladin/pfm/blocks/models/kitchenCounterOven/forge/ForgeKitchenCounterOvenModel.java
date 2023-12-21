@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.forge;
 import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -19,10 +20,10 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ForgeKitchenCounterOvenModel extends AbstractBakedModel {
+public class ForgeKitchenCounterOvenModel extends PFMForgeBakedModel {
     private final List<String> modelParts;
     public ForgeKitchenCounterOvenModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> modelParts) {
-        super(frame, settings, bakedModels);
+        super(settings, bakedModels.values().stream().toList());
         this.modelParts = modelParts;
     }
 
@@ -34,9 +35,9 @@ public class ForgeKitchenCounterOvenModel extends AbstractBakedModel {
             BitSet data = extraData.getData(CONNECTIONS).connections;
             int openOffset = state.get(KitchenCounterOvenBlock.OPEN) ? 2 : 0;
             if (data.get(0) || data.get(1)) {
-                quads.addAll(getBakedModels().get(modelParts.get(1 + openOffset)).getQuads(state, side, rand, extraData));
+                quads.addAll(getTemplateBakedModels().get(1 + openOffset).getQuads(state, side, rand, extraData));
             } else {
-                quads.addAll(getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData));
+                quads.addAll(getTemplateBakedModels().get(openOffset).getQuads(state, side, rand, extraData));
             }
         }
         return quads;

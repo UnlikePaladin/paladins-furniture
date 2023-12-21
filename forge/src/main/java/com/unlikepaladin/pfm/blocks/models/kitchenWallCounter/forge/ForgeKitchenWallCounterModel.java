@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.forge;
 import com.unlikepaladin.pfm.blocks.KitchenWallCounterBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
@@ -21,9 +22,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ForgeKitchenWallCounterModel extends AbstractBakedModel {
+public class ForgeKitchenWallCounterModel extends PFMForgeBakedModel {
     public ForgeKitchenWallCounterModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
+        super(settings, bakedModels.values().stream().toList());
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;
@@ -84,13 +85,13 @@ public class ForgeKitchenWallCounterModel extends AbstractBakedModel {
                 Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
                 if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateFacingDifferentDirection) {
                     if (direction2 == direction.rotateYCounterclockwise()) {
-                        return getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData);
                     }
                     else {
-                        return getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData);
                     }
                 } else {
-                    return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+                    return getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData);
                 }
             }
             else if (block.canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
@@ -103,16 +104,16 @@ public class ForgeKitchenWallCounterModel extends AbstractBakedModel {
                 }
                 if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
                     if (direction3 == direction.rotateYCounterclockwise()) {
-                        return getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData);
                     } else {
-                        return getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData);
+                        return getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData);
                     }
                 } else {
-                    return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+                    return getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData);
                 }
             }
             else {
-                return getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData);
+                return getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData);
             }
         }
         return Collections.emptyList();

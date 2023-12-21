@@ -36,7 +36,6 @@ public class PFMItemRenderer extends BuiltinModelItemRenderer {
         super(MinecraftClient.getInstance().getBlockEntityRenderDispatcher(), MinecraftClient.getInstance().getEntityModelLoader());
     }
 
-
     static Map<WoodVariant, Map<String, BakedModel>> bakedModels = new LinkedHashMap<>();
     static List<String> modelParts = new ArrayList<>();
     public BakedModel getLampPartFromVariant(WoodVariant variantBase, int index) {

@@ -23,6 +23,7 @@ import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
+import net.minecraft.util.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.model.ModelLoader;
@@ -67,12 +68,26 @@ public class PaladinFurnitureModClientForge {
 
     @SubscribeEvent
     public static void registerExtraModels(ModelRegistryEvent event) {
+
         UnbakedBedModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedBasicTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedClassicTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedLogTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedDinnerTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedModernDinnerTableModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        for (Identifier id : UnbakedBasicTableModel.BASIC_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedClassicTableModel.CLASSIC_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedLogTableModel.LOG_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedDinnerTableModel.DINNER_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedModernDinnerTableModel.MODERN_DINNER_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
         UnbakedKitchenCounterModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedKitchenDrawerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedKitchenWallCounterModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
@@ -83,7 +98,6 @@ public class PaladinFurnitureModClientForge {
         UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedClassicNightstandModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
     }
 }

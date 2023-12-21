@@ -7,9 +7,14 @@ import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.data.client.model.Texture;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
@@ -17,12 +22,20 @@ import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ModelHelper {
+    private static final List<Sprite> OAK_SPRITES_TO_REPLACE = new ArrayList<>();
+    public static List<Sprite> getOakSprites() {
+        if (OAK_SPRITES_TO_REPLACE.isEmpty()) {
+            SpriteIdentifier planksId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.PLANKS));
+            SpriteIdentifier logId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.LOG));
+            OAK_SPRITES_TO_REPLACE.add(planksId.getSprite());
+            OAK_SPRITES_TO_REPLACE.add(logId.getSprite());
+        }
+        return OAK_SPRITES_TO_REPLACE;
+    }
     public static boolean containsIdentifier(Identifier[] modelIds, Identifier comparison) {
         AtomicBoolean contains = new AtomicBoolean(false);
         Arrays.stream(modelIds).forEach(identifier -> {
@@ -182,7 +195,7 @@ public class ModelHelper {
         return id;
     }
 
-    //For compatibility with Twilight Forest's Planks
+    // For compatibility with Twilight Forest's Planks
     public static Identifier getPlankId(Block block) {
         Identifier identifier = Registry.BLOCK.getId(block);
         String namespace = identifier.getNamespace();

@@ -33,7 +33,7 @@ public class ForgeBasicLampModel extends AbstractBakedModel {
     private final Map<WoodVariant, Map<String, BakedModel>> bakedModels;
     private final Map<WoodVariant, Sprite> textureMap;
     public ForgeBasicLampModel(Map<WoodVariant, Sprite> textures, ModelBakeSettings settings, Map<WoodVariant, Map<String, BakedModel>> bakedModels, List<String> modelParts) {
-        super(textures.get(WoodVariantRegistry.OAK), settings, new HashMap<>());
+        super(settings, bakedModels.get(WoodVariantRegistry.OAK).values().stream().toList());
         this.modelParts = modelParts;
         this.textureMap = textures;
         this.bakedModels = bakedModels;

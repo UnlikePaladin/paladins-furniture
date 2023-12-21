@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.kitchenCabinet.fabric;
 import com.unlikepaladin.pfm.blocks.KitchenCabinetBlock;
 import com.unlikepaladin.pfm.blocks.KitchenWallDrawerBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -19,12 +20,10 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class FabricKitchenCabinetModel extends AbstractBakedModel implements FabricBakedModel {
+public class FabricKitchenCabinetModel extends PFMFabricBakedModel {
     public FabricKitchenCabinetModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
-        this.modelParts = MODEL_PARTS;
+        super(settings, bakedModels.values().stream().toList());
     }
-    private final List<String> modelParts;
     @Override
     public boolean isVanillaAdapter() {
         return false;
@@ -44,20 +43,20 @@ public class FabricKitchenCabinetModel extends AbstractBakedModel implements Fab
             BlockState blockState = world.getBlockState(pos.offset(direction));
             if (block.isCabinet(blockState) && (direction2 = blockState.get(KitchenCabinetBlock.FACING)).getAxis() != state.get(KitchenCabinetBlock.FACING).getAxis() && block.isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
                 if (direction2 == direction.rotateYCounterclockwise()) {
-                    ((FabricBakedModel) getBakedModels().get(modelParts.get(3 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get((3 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                 }
                 else {
-                    ((FabricBakedModel) getBakedModels().get(modelParts.get(4 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get((4 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                 }
             }
             else if (innerCorner) {
                 if (direction3 == direction.rotateYCounterclockwise()) {
-                    ((FabricBakedModel) getBakedModels().get(modelParts.get(2 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get((2 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                 } else {
-                    ((FabricBakedModel) getBakedModels().get(modelParts.get(1 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get((1 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                 }
             } else {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getTemplateBakedModels().get((openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
         }
     }
@@ -65,5 +64,10 @@ public class FabricKitchenCabinetModel extends AbstractBakedModel implements Fab
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
 
+    }
+
+    @Override
+    public Sprite pfm$getParticle(BlockState state) {
+        return getSpriteList(state).get(0);
     }
 }

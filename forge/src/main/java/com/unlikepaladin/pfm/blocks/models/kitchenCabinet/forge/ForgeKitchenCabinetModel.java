@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.KitchenCabinetBlock;
 import com.unlikepaladin.pfm.blocks.KitchenWallDrawerBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -21,9 +22,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ForgeKitchenCabinetModel extends AbstractBakedModel {
+public class ForgeKitchenCabinetModel extends PFMForgeBakedModel {
     public ForgeKitchenCabinetModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
+        super(settings, bakedModels.values().stream().toList());
         this.modelParts = MODEL_PARTS;
     }
     private final List<String> modelParts;
@@ -78,20 +79,20 @@ public class ForgeKitchenCabinetModel extends AbstractBakedModel {
             boolean isNeighborStateOppositeFacingDifferentDirection = set.get(1);
             if (block.isCabinet(blockState) && (direction2 = blockState.get(KitchenCabinetBlock.FACING)).getAxis() != state.get(KitchenCabinetBlock.FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
                 if (direction2 == direction.rotateYCounterclockwise()) {
-                    return getBakedModels().get(modelParts.get(3 + openOffset)).getQuads(state, side, rand, extraData);
+                    return getTemplateBakedModels().get(3 + openOffset).getQuads(state, side, rand, extraData);
                 }
                 else {
-                    return getBakedModels().get(modelParts.get(4 + openOffset)).getQuads(state, side, rand, extraData);
+                    return getTemplateBakedModels().get(4 + openOffset).getQuads(state, side, rand, extraData);
                 }
             }
             else if (innerCorner) {
                 if (direction3 == direction.rotateYCounterclockwise()) {
-                    return getBakedModels().get(modelParts.get(2 + openOffset)).getQuads(state, side, rand, extraData);
+                    return getTemplateBakedModels().get(2 + openOffset).getQuads(state, side, rand, extraData);
                 } else {
-                    return getBakedModels().get(modelParts.get(1 + openOffset)).getQuads(state, side, rand, extraData);
+                    return getTemplateBakedModels().get(1 + openOffset).getQuads(state, side, rand, extraData);
                 }
             } else {
-                return getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData);
+                return getTemplateBakedModels().get(openOffset).getQuads(state, side, rand, extraData);
             }
         }
         return Collections.emptyList();
