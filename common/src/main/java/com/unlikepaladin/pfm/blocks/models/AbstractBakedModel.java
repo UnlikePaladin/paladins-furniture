@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
@@ -129,12 +130,12 @@ public abstract class AbstractBakedModel implements BakedModel {
         boolean stripped = state.getBlock().getTranslationKey().contains("stripped");
         List<Sprite> list = new ArrayList<>(3);
         if (!state.getBlock().getTranslationKey().contains("_raw_")) {
-            SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId((Block) variant.getChild("stripped_log"))) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(variant.getBaseBlock()));
-            SpriteIdentifier secondTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(variant.getBaseBlock())) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(variant.getSecondaryBlock()));
+            SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
+            SpriteIdentifier secondTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.SECONDARY));
             list.add(mainTexture.getSprite());
             list.add(secondTexture.getSprite());
         } else {
-            SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId((Block) variant.getChild("stripped_log"))) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(variant.getSecondaryBlock()));
+            SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.SECONDARY));
             list.add(mainTexture.getSprite());
             list.add(mainTexture.getSprite());
         }

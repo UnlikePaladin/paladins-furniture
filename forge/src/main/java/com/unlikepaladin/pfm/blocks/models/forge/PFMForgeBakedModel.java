@@ -12,6 +12,7 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.IntStream;
 
 public abstract class PFMForgeBakedModel extends AbstractBakedModel implements PFMBakedModelGetQuadsExtension {
     @Override
@@ -65,9 +67,14 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
         List<BakedQuad> transformedQuads = new ArrayList<>(quads.size());
         for (Map.Entry<Sprite, List<BakedQuad>> entry : separatedQuads.entrySet()) {
-            if (toReplace.contains(entry.getKey())) {
-                int i = toReplace.indexOf(entry.getKey());
-                Sprite replacement = replacements.get(i);
+            Identifier keyId = entry.getKey().getId();
+            int index = IntStream.range(0, toReplace.size())
+                    .filter(i -> keyId.equals(toReplace.get(i).getId()))
+                    .findFirst()
+                    .orElse(-1);
+
+            if (index != -1) {
+                Sprite replacement = replacements.get(index);
                 transformedQuads.addAll(getQuadsWithTexture(entry.getValue().stream().filter(quads::contains).toList(), replacement));
             } else {
                 transformedQuads.addAll(entry.getValue().stream().filter(quads::contains).toList());

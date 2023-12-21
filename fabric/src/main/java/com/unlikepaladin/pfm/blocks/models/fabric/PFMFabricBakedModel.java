@@ -10,9 +10,11 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.IntStream;
 
 public abstract class PFMFabricBakedModel extends AbstractBakedModel implements FabricBakedModel, PFMBakedModelParticleExtension {
     public PFMFabricBakedModel(ModelBakeSettings settings, List<BakedModel> bakedModels) {
@@ -36,8 +38,14 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
     public void pushTextureTransform(RenderContext context, List<Sprite> toReplace, List<Sprite> replacement) {
         context.pushTransform(quad -> {
             Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getBakedModelManager().getAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)).find(quad, 0);
-            if (toReplace.stream().anyMatch(sprite -> originalSprite.getId().equals(sprite.getId())) && !toReplace.equals(replacement)) {
-                Sprite sprite = replacement.get(toReplace.indexOf(originalSprite));
+            Identifier keyId = originalSprite.getId();
+            int textureIndex = IntStream.range(0, toReplace.size())
+                    .filter(i -> keyId.equals(toReplace.get(i).getId()))
+                    .findFirst()
+                    .orElse(-1);
+
+            if (textureIndex != -1 && !toReplace.equals(replacement)) {
+                Sprite sprite = replacement.get(textureIndex);
                 for (int index = 0; index < 4; index++) {
                     float frameU = originalSprite.method_35804(quad.spriteU(index, 0));
                     float frameV = originalSprite.method_35805(quad.spriteV(index, 0));

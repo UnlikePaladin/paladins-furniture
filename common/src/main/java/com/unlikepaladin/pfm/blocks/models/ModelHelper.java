@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models;
 
+import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.*;
@@ -8,6 +9,8 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -17,8 +20,8 @@ import net.minecraft.resource.ResourceType;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
@@ -136,14 +139,43 @@ public class ModelHelper {
     public static Identifier getTextureId(Block block) {
         return getTextureId(block, "");
     }
-    private static final Map<Pair<Block, String>, Identifier> blockToTextureMap = new HashMap<>();
+    private static final Map<Pair<String, String>, Pair<Identifier, Integer>> blockToTextureMap = new HashMap<>();
     public static Identifier getTextureId(Block block, String postfix) {
-        Pair<Block, String> pair = new Pair<>(block, postfix);
-        if (blockToTextureMap.containsKey(pair)) {
-            return blockToTextureMap.get(pair);
+        if (postfix.isEmpty())
+            postfix = null;
+        Pair<String, String> pair = new Pair<>(block.toString(), postfix);
+        if (blockToTextureMap.containsKey(pair) && (blockToTextureMap.get(pair).getFirst() != MissingSprite.getMissingSpriteId() || blockToTextureMap.get(pair).getSecond() > 3)) {
+            return blockToTextureMap.get(pair).getFirst();
         }
+        int attemptNum = 1;
+        if (blockToTextureMap.containsKey(pair)) {
+            attemptNum += blockToTextureMap.get(pair).getSecond();
+        }
+        if (postfix == null)
+            postfix = "";
+
         Identifier id;
-        if (!postfix.isEmpty() && idExists(Texture.getSubId(block, postfix), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
+        if (postfix.isEmpty() && !PFMDataGenerator.areAssetsRunning()) {
+            BakedModel model = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(block.getDefaultState());
+            if (model != null) {
+                id = model.getQuads(block.getDefaultState(), Direction.NORTH, new Random(42L)).get(0).getSprite().getId();
+                if (id != null) {
+                    blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
+                    return id;
+                }
+            }
+        } else if (postfix.equals("top") && !PFMDataGenerator.areAssetsRunning()) {
+            BakedModel model = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(block.getDefaultState());
+            if (model != null) {
+                id = model.getQuads(block.getDefaultState(), Direction.UP, new Random(42L)).get(0).getSprite().getId();
+                if (id != null) {
+                    blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
+                    return id;
+                }
+            }
+        }
+
+        if (idExists(Texture.getSubId(block, postfix), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)){
             id = Texture.getSubId(block, postfix);
         }
         else if(idExists(getLogId(block, postfix), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
@@ -185,13 +217,13 @@ public class ModelHelper {
         else if(idExists(getLogId(block, "_bottom"), ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getLogId(block, "_bottom");
         }
-        else {
-            if (!Registry.BLOCK.getId(block).getNamespace().equals("quark")) {
-                PaladinFurnitureMod.GENERAL_LOGGER.warn("Couldn't find texture for, {}", block);
-            }
+        else if (Registry.BLOCK.getId(block).getNamespace().equals("quark")) {
             id = Texture.getSubId(block, postfix);
+        } else {
+            PaladinFurnitureMod.GENERAL_LOGGER.warn("Couldn't find texture for, {}, this is attempt {} at finding it", block, attemptNum);
+            id = MissingSprite.getMissingSpriteId();
         }
-        blockToTextureMap.put(pair, id);
+        blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
         return id;
     }
 
@@ -253,9 +285,12 @@ public class ModelHelper {
             if (!path.contains("_log")) {
                 path = path.replace("log", "_log");
             }
+            Identifier id = new Identifier(namespace, "block/" + path);
+            if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
+                return id;
+            }
             path = path.replace("stem", "log").replace("log", "bark");
             path += postFix;
-            Identifier id = new Identifier(namespace, "block/" + path);
             if (idExists(id, ResourceType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
                 return id;
             }

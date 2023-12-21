@@ -33,7 +33,9 @@ public abstract class VariantRegistryBase<T extends VariantBase<T>> {
                 if (Objects.equals(entry.getNamespace(), modId)) {
                     if (!linkedHashMap.containsKey(entry.getIdentifier())) {
                         linkedHashMap.put(entry.getIdentifier(), entry);
-                    }else PaladinFurnitureMod.GENERAL_LOGGER.warn("Found block type with duplicate id ({}), skipping",entry.identifier);
+                    }else if (entry != WoodVariantRegistry.OAK) {
+                        PaladinFurnitureMod.GENERAL_LOGGER.warn("Found block type with duplicate id ({}), skipping",entry.identifier);
+                    }
                 }
             });
         }
