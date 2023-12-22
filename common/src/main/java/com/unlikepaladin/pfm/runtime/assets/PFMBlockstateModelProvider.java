@@ -130,28 +130,28 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         }
 
         public void registerTuckableChairs() {
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap(), "chair", TEMPLATE_CHAIR, PFMBlockStateModelGenerator::createOrientableTuckableBlockState, PFMBlockStateModelGenerator::createPlankLogBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMapNonBase(), "chair", TEMPLATE_CHAIR, PFMBlockStateModelGenerator::createOrientableTuckableBlockState, PFMBlockStateModelGenerator::createPlankLogBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap(), "chair", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMapNonBase(), "chair", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMap(), "chair_dinner", TEMPLATE_CHAIR_DINNER, PFMBlockStateModelGenerator::createOrientableTuckableBlockState, PFMBlockStateModelGenerator::createPlankLogBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMapNonBase(), "chair_dinner", TEMPLATE_CHAIR_DINNER, PFMBlockStateModelGenerator::createOrientableTuckableBlockState, PFMBlockStateModelGenerator::createPlankLogBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMap(), "chair_dinner", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMapNonBase(), "chair_dinner", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMap(), "chair_classic", TEMPLATE_CHAIR_CLASSIC, PFMBlockStateModelGenerator::createOrientableTuckableBlockState, PFMBlockStateModelGenerator::createPlankLogBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMapNonBase(), "chair_classic", TEMPLATE_CHAIR_CLASSIC, PFMBlockStateModelGenerator::createOrientableTuckableBlockState, PFMBlockStateModelGenerator::createPlankLogBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMap(), "chair_modern", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMapNonBase(), "chair_modern", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMap(), "chair_modern", TEMPLATE_CHAIR_MODERN, PFMBlockStateModelGenerator::createOrientableTuckableBlockState, PFMBlockStateModelGenerator::createPlankLogBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMapNonBase(), "chair_modern", TEMPLATE_CHAIR_MODERN, PFMBlockStateModelGenerator::createOrientableTuckableBlockState, PFMBlockStateModelGenerator::createPlankLogBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMap(), "chair_classic", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMapNonBase(), "chair_classic", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(LogStoolBlock.class).getVariantToBlockMap(), "log_stool", TEMPLATE_LOG_STOOL, (block, identifiers) -> createOrientableTuckableBlockState(block, identifiers, 90), PFMBlockStateModelGenerator::createLogLogTopBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(LogStoolBlock.class).getVariantToBlockMap(), "log_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMap(), "simple_stool", TEMPLATE_SIMPLE_STOOL, (block, identifiers) -> createOrientableTuckableBlockState(block, identifiers, 90), PFMBlockStateModelGenerator::createPlankLogBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMapNonBase(), "simple_stool", TEMPLATE_SIMPLE_STOOL, (block, identifiers) -> createOrientableTuckableBlockState(block, identifiers, 90), PFMBlockStateModelGenerator::createPlankLogBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMap(), "simple_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMapNonBase(), "simple_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMap(), "classic_stool", TEMPLATE_CLASSIC_STOOL, (block, identifiers) -> createOrientableTuckableBlockState(block, identifiers, 90), PFMBlockStateModelGenerator::createPlankLogBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMapNonBase(), "classic_stool", TEMPLATE_CLASSIC_STOOL, (block, identifiers) -> createOrientableTuckableBlockState(block, identifiers, 90), PFMBlockStateModelGenerator::createPlankLogBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMap(), "classic_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMapNonBase(), "classic_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMap(), "modern_stool", TEMPLATE_MODERN_STOOL, (block, identifiers) -> createOrientableTuckableBlockState(block, identifiers, 90), PFMBlockStateModelGenerator::createPlankLogBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMapNonBase(), "modern_stool", TEMPLATE_MODERN_STOOL, (block, identifiers) -> createOrientableTuckableBlockState(block, identifiers, 90), PFMBlockStateModelGenerator::createPlankLogBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMap(), "modern_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMapNonBase(), "modern_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
         }
 
         public void registerTables() {

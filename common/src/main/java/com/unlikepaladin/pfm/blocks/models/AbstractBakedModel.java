@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.LogStoolBlock;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -129,7 +130,12 @@ public abstract class AbstractBakedModel implements BakedModel {
         VariantBase<?> variant = getVariant(state);
         boolean stripped = state.getBlock().getTranslationKey().contains("stripped");
         List<Sprite> list = new ArrayList<>(3);
-        if (!state.getBlock().getTranslationKey().contains("_raw_")) {
+        if (state.getBlock() instanceof LogStoolBlock) {
+            SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.LOG));
+            SpriteIdentifier secondTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG_TOP)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.LOG_TOP));
+            list.add(mainTexture.getSprite());
+            list.add(secondTexture.getSprite());
+        } else if (!state.getBlock().getTranslationKey().contains("_raw_")) {
             SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
             SpriteIdentifier secondTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.SECONDARY));
             list.add(mainTexture.getSprite());

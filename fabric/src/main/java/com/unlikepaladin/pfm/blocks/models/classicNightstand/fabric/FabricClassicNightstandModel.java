@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models.classicNightstand.fabric;
 
 import com.unlikepaladin.pfm.blocks.ClassicNightstandBlock;
-import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
@@ -16,7 +15,6 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
@@ -39,7 +37,7 @@ public class FabricClassicNightstandModel extends PFMFabricBakedModel {
             boolean right = block.isStand(world, pos, dir.rotateYClockwise(), dir);
             int openIndexOffset = state.get(ClassicNightstandBlock.OPEN) ? 4 : 0;
             List<Sprite> spriteList = getSpriteList(state);
-            pushTextureTransform(context, ModelHelper.getOakSprites(), spriteList);
+            pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
             if (left && right) {
                 ((FabricBakedModel) getTemplateBakedModels().get((openIndexOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
             } else if (!left && right) {
@@ -56,7 +54,7 @@ public class FabricClassicNightstandModel extends PFMFabricBakedModel {
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
         List<Sprite> spriteList = getSpriteList(stack);
-        pushTextureTransform(context, ModelHelper.getOakSprites(), spriteList);
+        pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
         ((FabricBakedModel) getTemplateBakedModels().get((3))).emitItemQuads(stack, randomSupplier, context);
         context.popTransform();
     }

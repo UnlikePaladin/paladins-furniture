@@ -3,7 +3,12 @@ package com.unlikepaladin.pfm.client.forge;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
+import com.unlikepaladin.pfm.blocks.models.chair.UnbakedChairModel;
+import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel;
+import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
+import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
+import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
 import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
@@ -15,9 +20,12 @@ import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCoun
 import com.unlikepaladin.pfm.blocks.models.kitchenDrawer.UnbakedKitchenDrawerModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.UnbakedKitchenWallCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawer.UnbakedKitchenWallDrawerModel;
+import com.unlikepaladin.pfm.blocks.models.logStool.UnbakedLogStoolModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
+import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
+import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
@@ -86,6 +94,30 @@ public class PaladinFurnitureModClientForge {
             ModelLoader.addSpecialModel(id);
         }
         for (Identifier id : UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedChairModel.CHAIR_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedChairDinnerModel.CHAIR_DINNER_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedChairModernModel.CHAIR_MODERN_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedChairClassicModel.CHAIR_CLASSIC_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedSimpleStoolModel.SIMPLE_STOOL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedClassicStoolModel.CLASSIC_STOOL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedModernStoolModel.MODERN_STOOL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedLogStoolModel.LOG_STOOL_PARTS_BASE) {
             ModelLoader.addSpecialModel(id);
         }
         UnbakedKitchenCounterModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);

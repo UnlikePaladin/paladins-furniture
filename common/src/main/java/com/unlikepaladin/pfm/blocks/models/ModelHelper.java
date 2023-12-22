@@ -12,7 +12,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.data.client.model.Texture;
 import net.minecraft.resource.ResourcePack;
@@ -29,15 +28,25 @@ import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ModelHelper {
-    private static final List<Sprite> OAK_SPRITES_TO_REPLACE = new ArrayList<>();
-    public static List<Sprite> getOakSprites() {
-        if (OAK_SPRITES_TO_REPLACE.isEmpty()) {
+    private static final List<Sprite> OAK_SPRITES_PLANKS_TO_REPLACE = new ArrayList<>();
+    public static List<Sprite> getOakPlankLogSprites() {
+        if (OAK_SPRITES_PLANKS_TO_REPLACE.isEmpty()) {
             SpriteIdentifier planksId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.PLANKS));
             SpriteIdentifier logId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.LOG));
-            OAK_SPRITES_TO_REPLACE.add(planksId.getSprite());
-            OAK_SPRITES_TO_REPLACE.add(logId.getSprite());
+            OAK_SPRITES_PLANKS_TO_REPLACE.add(planksId.getSprite());
+            OAK_SPRITES_PLANKS_TO_REPLACE.add(logId.getSprite());
         }
-        return OAK_SPRITES_TO_REPLACE;
+        return OAK_SPRITES_PLANKS_TO_REPLACE;
+    }
+    private static final List<Sprite> OAK_SPRITES_LOG_TOP_TO_REPLACE = new ArrayList<>();
+    public static List<Sprite> getOakLogLogTopSprites() {
+        if (OAK_SPRITES_LOG_TOP_TO_REPLACE.isEmpty()) {
+            SpriteIdentifier logId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.LOG));
+            SpriteIdentifier logTopId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.LOG_TOP));
+            OAK_SPRITES_LOG_TOP_TO_REPLACE.add(logId.getSprite());
+            OAK_SPRITES_LOG_TOP_TO_REPLACE.add(logTopId.getSprite());
+        }
+        return OAK_SPRITES_LOG_TOP_TO_REPLACE;
     }
     public static boolean containsIdentifier(Identifier[] modelIds, Identifier comparison) {
         AtomicBoolean contains = new AtomicBoolean(false);

@@ -1,9 +1,9 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"particle": "#texture",
-		"base": "#texture",
-		"legs": "#log"
+		"particle": "minecraft:block/oak_planks",
+		"base": "minecraft:block/oak_planks",
+		"legs": "minecraft:block/oak_log"
 	},
 	"elements": [
 		{

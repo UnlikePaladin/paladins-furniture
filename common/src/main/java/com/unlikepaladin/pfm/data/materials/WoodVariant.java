@@ -57,6 +57,10 @@ public class WoodVariant extends VariantBase<WoodVariant> {
             return ModelHelper.getTextureId((Block) this.getChild("stripped_log"));
         } else if (type == BlockType.LOG || type == BlockType.SECONDARY) {
             return ModelHelper.getTextureId(this.logBlock);
+        } else if (type == BlockType.LOG_TOP) {
+            return ModelHelper.getTextureId(this.logBlock, "_top");
+        } else if (type == BlockType.STRIPPED_LOG_TOP) {
+            return ModelHelper.getTextureId((Block) this.getChild("stripped_log"), "_top");
         }
         return ModelHelper.getTextureId(plankBlock);
     }

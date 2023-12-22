@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models.classicNightstand.forge;
 
 import com.unlikepaladin.pfm.blocks.ClassicNightstandBlock;
-import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
@@ -47,7 +46,7 @@ public class ForgeClassicNightstandModel extends PFMForgeBakedModel {
                 originalQuads.addAll(getTemplateBakedModels().get(3+openIndexOffset).getQuads(state, side, rand, extraData));
             }
             List<Sprite> spriteList = getSpriteList(state);
-            return getQuadsWithTexture(originalQuads, ModelHelper.getOakSprites(), spriteList);
+            return getQuadsWithTexture(originalQuads, ModelHelper.getOakPlankLogSprites(), spriteList);
         }
         return Collections.emptyList();
     }
@@ -85,7 +84,7 @@ public class ForgeClassicNightstandModel extends PFMForgeBakedModel {
     @Override
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
         List<Sprite> spriteList = getSpriteList(stack);
-        List<BakedQuad> originalQuads = new ArrayList<>(getTemplateBakedModels().get(3).getQuads(state, face, random));
-        return getQuadsWithTexture(originalQuads, ModelHelper.getOakSprites(), spriteList);
+        List<BakedQuad> originalQuads = getTemplateBakedModels().get(3).getQuads(state, face, random);
+        return getQuadsWithTexture(originalQuads, ModelHelper.getOakPlankLogSprites(), spriteList);
     }
 }

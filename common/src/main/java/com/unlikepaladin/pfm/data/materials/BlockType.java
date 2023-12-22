@@ -5,9 +5,11 @@ import net.minecraft.util.StringIdentifiable;
 public enum BlockType implements StringIdentifiable {
     PLANKS( "planks"),
     LOG( "log"),
+    LOG_TOP( "log_top"),
     PRIMARY( "primary"),
     SECONDARY( "secondary"),
     STRIPPED_LOG("stripped", "log"),
+    STRIPPED_LOG_TOP("stripped", "log_top"),
     BLOCK( "block");
 
     private final String prefix;
