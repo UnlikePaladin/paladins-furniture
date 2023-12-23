@@ -18,8 +18,10 @@ import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetM
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenDrawer.UnbakedKitchenDrawerModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenSink.UnbakedKitchenSinkModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.UnbakedKitchenWallCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawer.UnbakedKitchenWallDrawerModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawerSmall.UnbakedKitchenWallDrawerSmallModel;
 import com.unlikepaladin.pfm.blocks.models.logStool.UnbakedLogStoolModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
@@ -121,12 +123,30 @@ public class PaladinFurnitureModClientForge {
         for (Identifier id : UnbakedLogStoolModel.LOG_STOOL_PARTS_BASE) {
             ModelLoader.addSpecialModel(id);
         }
-        UnbakedKitchenCounterModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedKitchenDrawerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedKitchenWallCounterModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedKitchenWallDrawerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedKitchenCounterOvenModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
-        UnbakedKitchenCabinetModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        for (Identifier id : UnbakedKitchenCounterModel.COUNTER_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedKitchenDrawerModel.COUNTER_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedKitchenCabinetModel.CABINET_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedKitchenWallDrawerModel.COUNTER_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedKitchenWallCounterModel.COUNTER_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedKitchenCounterOvenModel.OVEN_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedKitchenSinkModel.SINK_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);

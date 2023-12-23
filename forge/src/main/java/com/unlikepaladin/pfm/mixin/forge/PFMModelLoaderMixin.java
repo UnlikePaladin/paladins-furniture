@@ -19,8 +19,10 @@ import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetM
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenDrawer.UnbakedKitchenDrawerModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenSink.UnbakedKitchenSinkModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.UnbakedKitchenWallCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawer.UnbakedKitchenWallDrawerModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawerSmall.UnbakedKitchenWallDrawerSmallModel;
 import com.unlikepaladin.pfm.blocks.models.logStool.UnbakedLogStoolModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
@@ -98,32 +100,32 @@ public abstract class PFMModelLoaderMixin {
             this.modelsToBake.put(resourceId, model);
             ci.cancel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedKitchenCounterModel.COUNTER_MODEL_IDS.toArray(new Identifier[0]), modifiedId)){
-            UnbakedModel model = new UnbakedKitchenCounterModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenCounterModel.COUNTER_MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedKitchenCounterModel();
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedKitchenDrawerModel.DRAWER_MODEL_IDS.toArray(new Identifier[0]), modifiedId)){
-            UnbakedModel model = new UnbakedKitchenDrawerModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenDrawerModel.DRAWER_MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedKitchenDrawerModel();
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedKitchenWallCounterModel.COUNTER_MODEL_IDS.toArray(new Identifier[0]), modifiedId)){
-            UnbakedModel model = new UnbakedKitchenWallCounterModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenWallCounterModel.COUNTER_MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedKitchenWallCounterModel();
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedKitchenWallDrawerModel.DRAWER_MODEL_IDS.toArray(new Identifier[0]), modifiedId)){
-            UnbakedModel model = new UnbakedKitchenWallDrawerModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenWallDrawerModel.DRAWER_MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedKitchenWallDrawerModel();
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedKitchenCabinetModel.CABINET_MODEL_IDS.toArray(new Identifier[0]), modifiedId)){
-            UnbakedModel model = new UnbakedKitchenCabinetModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenCabinetModel.CABINET_MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedKitchenCabinetModel();
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();
@@ -134,8 +136,20 @@ public abstract class PFMModelLoaderMixin {
             this.modelsToBake.put(resourceId, model);
             ci.cancel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedKitchenCounterOvenModel.OVEN_MODEL_IDS.toArray(new Identifier[0]), modifiedId)){
-            UnbakedModel model = new UnbakedKitchenCounterOvenModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenCounterOvenModel.OVEN_MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedKitchenCounterOvenModel();
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (UnbakedKitchenSinkModel.SINK_MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedKitchenSinkModel();
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedKitchenWallDrawerSmallModel();
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();

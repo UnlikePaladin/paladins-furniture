@@ -188,29 +188,29 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         }
 
         public void registerCounters() {
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMap(), "kitchen_counter", TEMPLATE_KITCHEN_COUNTER, PFMBlockStateModelGenerator::createOrientableKitchenCounter, PFMBlockStateModelGenerator::createCounterBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter", TEMPLATE_KITCHEN_COUNTER, PFMBlockStateModelGenerator::createOrientableKitchenCounter, PFMBlockStateModelGenerator::createCounterBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMap(), "kitchen_counter", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMap(), "kitchen_drawer", TEMPLATE_KITCHEN_DRAWER, PFMBlockStateModelGenerator::createOrientableKitchenCounter, PFMBlockStateModelGenerator::createCounterBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_drawer", TEMPLATE_KITCHEN_DRAWER, PFMBlockStateModelGenerator::createOrientableKitchenCounter, PFMBlockStateModelGenerator::createCounterBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMap(), "kitchen_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMap(), "kitchen_cabinet", TEMPLATE_KITCHEN_CABINET, PFMBlockStateModelGenerator::createOrientableKitchenCounter, PFMBlockStateModelGenerator::createCounterBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMapNonBase(), "kitchen_cabinet", TEMPLATE_KITCHEN_CABINET, PFMBlockStateModelGenerator::createOrientableKitchenCounter, PFMBlockStateModelGenerator::createCounterBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMap(), "kitchen_cabinet", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMapNonBase(), "kitchen_cabinet", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMap(), "kitchen_drawer", TEMPLATE_KITCHEN_WALL_DRAWER, (block, identifiers) -> createOrientableKitchenCounter(block, identifiers, "_middle", "kitchen_drawer", "kitchen_wall_drawer", 0), PFMBlockStateModelGenerator::createCounterBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_drawer", TEMPLATE_KITCHEN_WALL_DRAWER, (block, identifiers) -> createOrientableKitchenCounter(block, identifiers, "_middle", "kitchen_drawer", "kitchen_wall_drawer", 0), PFMBlockStateModelGenerator::createCounterBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMap(), "kitchen_wall_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMap(), "kitchen_counter", TEMPLATE_KITCHEN_WALL_COUNTER, (block, identifiers) -> createOrientableKitchenCounter(block, identifiers, "_middle", "kitchen_counter", "kitchen_wall_counter", 0), PFMBlockStateModelGenerator::createCounterBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter", TEMPLATE_KITCHEN_WALL_COUNTER, (block, identifiers) -> createOrientableKitchenCounter(block, identifiers, "_middle", "kitchen_counter", "kitchen_wall_counter", 0), PFMBlockStateModelGenerator::createCounterBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMap(), "kitchen_wall_counter", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_counter", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMap(), "kitchen_wall_drawer_small", TEMPLATE_KITCHEN_WALL_DRAWER_SMALL, (block, identifiers) -> createSmallKitchenDrawer(block, identifiers, "", "", ""), PFMBlockStateModelGenerator::createCounterBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_drawer_small", TEMPLATE_KITCHEN_WALL_DRAWER_SMALL, (block, identifiers) -> createSmallKitchenDrawer(block, identifiers, "", "", ""), PFMBlockStateModelGenerator::createCounterBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMap(), "kitchen_wall_small_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_small_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMap(), "kitchen_counter_oven", TEMPLATE_KITCHEN_COUNTER_OVEN, (block, identifiers) -> createOrientableKitchenCounter(block, identifiers, "_middle", "", "", 180), PFMBlockStateModelGenerator::createCounterBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter_oven", TEMPLATE_KITCHEN_COUNTER_OVEN, (block, identifiers) -> createOrientableKitchenCounter(block, identifiers, "_middle", "", "", 180), PFMBlockStateModelGenerator::createCounterBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMap(), "kitchen_counter_oven", (block, identifiers) -> createOrientableKitchenCounter(block, identifiers, "", "", "", 180));
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter_oven", (block, identifiers) -> createOrientableKitchenCounter(block, identifiers, "", "", "", 180));
 
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMap(), "kitchen_sink", TEMPLATE_KITCHEN_SINK, PFMBlockStateModelGenerator::createKitchenSink, PFMBlockStateModelGenerator::createCounterBlockTexture);
-            generateModelAndBlockStateForVariants(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMapNonBase(), "kitchen_sink", TEMPLATE_KITCHEN_SINK, PFMBlockStateModelGenerator::createKitchenSink, PFMBlockStateModelGenerator::createCounterBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMap(), "kitchen_sink", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMapNonBase(), "kitchen_sink", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
         }
 
         public void registerLamp() {
@@ -508,7 +508,12 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             Map<Direction, BlockStateVariant> variantMap = new HashMap<>();
             String path = modelIdentifiers.get(0).getPath().replaceAll(override, "");
             String name = path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/'));
-            Identifier id = new Identifier(modelIdentifiers.get(0).getNamespace(), name.replace(furnitureName, replacement));
+            Identifier id;
+            if (modelIdentifiers.size() == 1) {
+                id = modelIdentifiers.get(0);
+            } else {
+                id = new Identifier(modelIdentifiers.get(0).getNamespace(), name.replace(furnitureName, replacement));
+            }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
             for (int i = 0; rotationArray.length > i; i++) {
                 if (rotationArray[i] + rotation > 270) {

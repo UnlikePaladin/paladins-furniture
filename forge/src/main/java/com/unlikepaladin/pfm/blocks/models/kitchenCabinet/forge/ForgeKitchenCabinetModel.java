@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.kitchenCabinet.forge;
 import com.unlikepaladin.pfm.blocks.KitchenCabinetBlock;
 import com.unlikepaladin.pfm.blocks.KitchenWallDrawerBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
@@ -10,6 +11,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -23,20 +25,31 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class ForgeKitchenCabinetModel extends PFMForgeBakedModel {
-    public ForgeKitchenCabinetModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(settings, bakedModels.values().stream().toList());
-        this.modelParts = MODEL_PARTS;
+    public ForgeKitchenCabinetModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        super(settings, modelParts);
     }
-    private final List<String> modelParts;
+
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     public static ModelProperty<BlockState> NEIGHBOR_OPPOSITE = new ModelProperty<>();
     public static ModelProperty<BlockState> NEIGHBOR_FACING = new ModelProperty<>();
+    @Override
+    public void appendProperties(ModelDataMap.Builder builder) {
+        super.appendProperties(builder);
+        builder.withProperty(CONNECTIONS);
+        builder.withProperty(NEIGHBOR_FACING);
+        builder.withProperty(NEIGHBOR_OPPOSITE);
+    }
 
     @NotNull
     @Override
     public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
-        ModelDataMap.Builder builder = new ModelDataMap.Builder();
         if (state.getBlock() instanceof KitchenCabinetBlock) {
+            ModelDataMap.Builder builder = new ModelDataMap.Builder();
+            appendProperties(builder);
+
+            IModelData data = builder.build();
+            super.getModelData(world, pos, state, data);
+
             KitchenCabinetBlock block = (KitchenCabinetBlock) state.getBlock();
             Direction direction = state.get(KitchenCabinetBlock.FACING);
             BlockState neighborStateOpposite = world.getBlockState(pos.offset(direction.getOpposite()));
@@ -54,9 +67,12 @@ public class ForgeKitchenCabinetModel extends PFMForgeBakedModel {
             BitSet set = new BitSet();
             set.set(0, innerCorner);
             set.set(1, isNeighborStateOppositeFacingDifferentDirection);
-            builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set)).withInitial(NEIGHBOR_OPPOSITE, neighborStateOpposite).withInitial(NEIGHBOR_FACING, blockState);
+            data.setData(CONNECTIONS, new ModelBitSetProperty(set));
+            data.setData(NEIGHBOR_OPPOSITE, neighborStateOpposite);
+            data.setData(NEIGHBOR_FACING, blockState);
+            return data;
         }
-        return builder.build();
+        return tileData;
     }
 
     @NotNull
@@ -67,6 +83,7 @@ public class ForgeKitchenCabinetModel extends PFMForgeBakedModel {
             KitchenCabinetBlock block = (KitchenCabinetBlock) state.getBlock();
             Direction direction = state.get(KitchenCabinetBlock.FACING);
             BlockState neighborStateOpposite = extraData.getData(NEIGHBOR_OPPOSITE);
+            List<Sprite> spriteList = getSpriteList(state);
 
             Direction direction3 = null;
             if (neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
@@ -79,22 +96,28 @@ public class ForgeKitchenCabinetModel extends PFMForgeBakedModel {
             boolean isNeighborStateOppositeFacingDifferentDirection = set.get(1);
             if (block.isCabinet(blockState) && (direction2 = blockState.get(KitchenCabinetBlock.FACING)).getAxis() != state.get(KitchenCabinetBlock.FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
                 if (direction2 == direction.rotateYCounterclockwise()) {
-                    return getTemplateBakedModels().get(3 + openOffset).getQuads(state, side, rand, extraData);
+                    return getQuadsWithTexture(getTemplateBakedModels().get(3 + openOffset).getQuads(state, side, rand, extraData), ModelHelper.getOakPlankLogSprites(), spriteList);
                 }
                 else {
-                    return getTemplateBakedModels().get(4 + openOffset).getQuads(state, side, rand, extraData);
+                    return getQuadsWithTexture(getTemplateBakedModels().get(4 + openOffset).getQuads(state, side, rand, extraData), ModelHelper.getOakPlankLogSprites(), spriteList);
                 }
             }
             else if (innerCorner) {
                 if (direction3 == direction.rotateYCounterclockwise()) {
-                    return getTemplateBakedModels().get(2 + openOffset).getQuads(state, side, rand, extraData);
+                    return getQuadsWithTexture(getTemplateBakedModels().get(2 + openOffset).getQuads(state, side, rand, extraData), ModelHelper.getOakPlankLogSprites(), spriteList);
                 } else {
-                    return getTemplateBakedModels().get(1 + openOffset).getQuads(state, side, rand, extraData);
+                    return getQuadsWithTexture(getTemplateBakedModels().get(1 + openOffset).getQuads(state, side, rand, extraData), ModelHelper.getOakPlankLogSprites(), spriteList);
                 }
             } else {
-                return getTemplateBakedModels().get(openOffset).getQuads(state, side, rand, extraData);
+                return getQuadsWithTexture(getTemplateBakedModels().get(openOffset).getQuads(state, side, rand, extraData), ModelHelper.getOakPlankLogSprites(), spriteList);
             }
         }
         return Collections.emptyList();
+    }
+
+    @Override
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+        List<Sprite> spriteList = getSpriteList(state);
+        return getQuadsWithTexture(getTemplateBakedModels().get(0).getQuads(state, face, random), ModelHelper.getOakPlankLogSprites(), spriteList);
     }
 }

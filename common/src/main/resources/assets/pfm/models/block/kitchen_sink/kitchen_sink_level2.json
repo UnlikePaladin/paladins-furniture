@@ -4,9 +4,9 @@
 		"sink": "block/light_gray_concrete",
 		"hardware": "block/gray_concrete",
 		"fluid": "block/water_still",
-		"particle": "#texture",
-		"base": "#texture",
-		"legs": "#log"
+		"particle": "minecraft:block/oak_planks",
+		"base": "minecraft:block/oak_planks",
+		"legs": "minecraft:block/oak_log"
 	},
 	"elements": [
 		{

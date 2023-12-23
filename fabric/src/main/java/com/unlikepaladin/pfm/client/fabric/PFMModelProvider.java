@@ -19,8 +19,10 @@ import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetM
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenDrawer.UnbakedKitchenDrawerModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenSink.UnbakedKitchenSinkModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.UnbakedKitchenWallCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawer.UnbakedKitchenWallDrawerModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawerSmall.UnbakedKitchenWallDrawerSmallModel;
 import com.unlikepaladin.pfm.blocks.models.logStool.UnbakedLogStoolModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
@@ -85,34 +87,40 @@ public class PFMModelProvider implements ModelResourceProvider {
         else if (UnbakedLogStoolModel.LOG_STOOL_MODEL_IDS.contains(resourceId)){
             return new UnbakedLogStoolModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedKitchenCounterModel.COUNTER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedKitchenCounterModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenCounterModel.COUNTER_MODEL_IDS.contains(resourceId)){
+            return new UnbakedKitchenCounterModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedKitchenDrawerModel.DRAWER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedKitchenDrawerModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenDrawerModel.DRAWER_MODEL_IDS.contains(resourceId)){
+            return new UnbakedKitchenDrawerModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedKitchenWallCounterModel.COUNTER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedKitchenWallCounterModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenWallCounterModel.COUNTER_MODEL_IDS.contains(resourceId)){
+            return new UnbakedKitchenWallCounterModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedKitchenWallDrawerModel.DRAWER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedKitchenWallDrawerModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenWallDrawerModel.DRAWER_MODEL_IDS.contains(resourceId)){
+            return new UnbakedKitchenWallDrawerModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedKitchenCabinetModel.CABINET_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedKitchenCabinetModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenCabinetModel.CABINET_MODEL_IDS.contains(resourceId)){
+            return new UnbakedKitchenCabinetModel();
         }
-       else if (ModelHelper.containsIdentifier(UnbakedKitchenCounterOvenModel.OVEN_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
-            return new UnbakedKitchenCounterOvenModel(ModelHelper.getVariant(resourceId), new ArrayList<>(), ModelHelper.getBlockType(resourceId));
+        else if (UnbakedKitchenCounterOvenModel.OVEN_MODEL_IDS.contains(resourceId)){
+            return new UnbakedKitchenCounterOvenModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedIronFridgeModel.IRON_FRIDGE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+        else if (UnbakedKitchenSinkModel.SINK_MODEL_IDS.contains(resourceId)){
+            return new UnbakedKitchenSinkModel();
+        }
+        else if (UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_IDS.contains(resourceId)){
+            return new UnbakedKitchenWallDrawerSmallModel();
+        }
+        else if (UnbakedIronFridgeModel.IRON_FRIDGE_MODEL_IDS.contains(resourceId)){
             return new UnbakedIronFridgeModel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedFridgeModel.FRIDGE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+        else if (UnbakedFridgeModel.FRIDGE_MODEL_IDS.contains(resourceId)){
             return new UnbakedFridgeModel(resourceId);
         }
-        else if (ModelHelper.containsIdentifier(UnbakedFreezerModel.FREEZER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+        else if (UnbakedFreezerModel.FREEZER_MODEL_IDS.contains(resourceId)){
             return new UnbakedFreezerModel(resourceId);
         }
-        else if (ModelHelper.containsIdentifier(UnbakedBasicLampModel.LAMP_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+        else if (UnbakedBasicLampModel.LAMP_MODEL_IDS.contains(resourceId)){
             return new UnbakedBasicLampModel();
         }
         else

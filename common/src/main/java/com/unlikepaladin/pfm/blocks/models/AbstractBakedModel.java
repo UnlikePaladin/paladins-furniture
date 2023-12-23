@@ -1,13 +1,18 @@
 package com.unlikepaladin.pfm.blocks.models;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.KitchenCounterBlock;
 import com.unlikepaladin.pfm.blocks.LogStoolBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.data.materials.BlockType;
+import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
+import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.model.BakedModel;
@@ -21,6 +26,7 @@ import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Pair;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
@@ -160,6 +166,14 @@ public abstract class AbstractBakedModel implements BakedModel {
             SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.SECONDARY));
             list.add(mainTexture.getSprite());
             list.add(mainTexture.getSprite());
+        }
+        boolean isKitchen = state.getBlock().getTranslationKey().contains("kitchen_");
+        if (isKitchen && !(variant instanceof WoodVariant)) {
+            Pair<Block, Block> counterMaterials = PFMRecipeProvider.getCounterMaterials(variant);
+            SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(counterMaterials.getLeft()));
+            SpriteIdentifier secondTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(counterMaterials.getRight()));
+            list.set(0, mainTexture.getSprite());
+            list.set(1, secondTexture.getSprite());
         }
         spriteList.put(state.getBlock(), list);
         return list;

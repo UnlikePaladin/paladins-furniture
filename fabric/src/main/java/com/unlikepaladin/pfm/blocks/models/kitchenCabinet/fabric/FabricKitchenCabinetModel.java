@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.kitchenCabinet.fabric;
 import com.unlikepaladin.pfm.blocks.KitchenCabinetBlock;
 import com.unlikepaladin.pfm.blocks.KitchenWallDrawerBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -21,8 +22,8 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 public class FabricKitchenCabinetModel extends PFMFabricBakedModel {
-    public FabricKitchenCabinetModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(settings, bakedModels.values().stream().toList());
+    public FabricKitchenCabinetModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        super(settings, modelParts);
     }
     @Override
     public boolean isVanillaAdapter() {
@@ -36,6 +37,8 @@ public class FabricKitchenCabinetModel extends PFMFabricBakedModel {
             Direction direction = state.get(KitchenCabinetBlock.FACING);
             BlockState neighborStateOpposite = world.getBlockState(pos.offset(direction.getOpposite()));
             int openOffset = state.get(KitchenWallDrawerBlock.OPEN) ? 5 : 0;
+            List<Sprite> spriteList = getSpriteList(state);
+            pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
 
             Direction direction3 = null;
             Direction direction2;
@@ -58,12 +61,16 @@ public class FabricKitchenCabinetModel extends PFMFabricBakedModel {
             } else {
                 ((FabricBakedModel) getTemplateBakedModels().get((openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
+            context.popTransform();
         }
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-
+        List<Sprite> spriteList = getSpriteList(stack);
+        pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
+        ((FabricBakedModel) getTemplateBakedModels().get((0))).emitItemQuads(stack, randomSupplier, context);
+        context.popTransform();
     }
 
     @Override

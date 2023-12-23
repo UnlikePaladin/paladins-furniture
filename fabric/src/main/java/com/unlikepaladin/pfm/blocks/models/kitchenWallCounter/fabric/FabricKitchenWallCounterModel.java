@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.fabric;
 
 import com.unlikepaladin.pfm.blocks.KitchenWallCounterBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -22,11 +23,9 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 public class FabricKitchenWallCounterModel extends PFMFabricBakedModel {
-    public FabricKitchenWallCounterModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(settings, bakedModels.values().stream().toList());
-        this.modelParts = MODEL_PARTS;
+    public FabricKitchenWallCounterModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        super(settings, modelParts);
     }
-    private final List<String> modelParts;
     @Override
     public boolean isVanillaAdapter() {
         return false;
@@ -39,6 +38,9 @@ public class FabricKitchenWallCounterModel extends PFMFabricBakedModel {
             Direction direction = state.get(KitchenWallCounterBlock.FACING);
             BlockState neighborStateFacing = world.getBlockState(pos.offset(direction));
             BlockState neighborStateOpposite = world.getBlockState(pos.offset(direction.getOpposite()));
+            List<Sprite> spriteList = getSpriteList(state);
+            pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
+
             if (block.canConnectToCounter(neighborStateFacing) && neighborStateFacing.contains(Properties.HORIZONTAL_FACING)) {
                 Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
                 if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && block.isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
@@ -73,12 +75,16 @@ public class FabricKitchenWallCounterModel extends PFMFabricBakedModel {
             else {
                 ((FabricBakedModel) getTemplateBakedModels().get((0))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
+            context.popTransform();
         }
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-
+        List<Sprite> spriteList = getSpriteList(stack);
+        pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
+        ((FabricBakedModel) getTemplateBakedModels().get((0))).emitItemQuads(stack, randomSupplier, context);
+        context.popTransform();
     }
 
     @Override
