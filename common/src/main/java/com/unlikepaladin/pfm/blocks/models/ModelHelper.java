@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
@@ -37,6 +38,16 @@ public class ModelHelper {
             OAK_SPRITES_PLANKS_TO_REPLACE.add(logId.getSprite());
         }
         return OAK_SPRITES_PLANKS_TO_REPLACE;
+    }
+    private static final List<Sprite> OAK_SPRITES_BED_TO_REPLACE = new ArrayList<>();
+    public static List<Sprite> getOakBedSprites() {
+        if (OAK_SPRITES_BED_TO_REPLACE.isEmpty()) {
+            SpriteIdentifier planksId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.PLANKS));
+            SpriteIdentifier bedId = TexturedRenderLayers.BED_TEXTURES[DyeColor.RED.getId()];
+            OAK_SPRITES_BED_TO_REPLACE.add(planksId.getSprite());
+            OAK_SPRITES_BED_TO_REPLACE.add(bedId.getSprite());
+        }
+        return OAK_SPRITES_BED_TO_REPLACE;
     }
     private static final List<Sprite> OAK_SPRITES_LOG_TOP_TO_REPLACE = new ArrayList<>();
     public static List<Sprite> getOakLogLogTopSprites() {

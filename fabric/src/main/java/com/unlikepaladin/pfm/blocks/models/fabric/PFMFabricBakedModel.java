@@ -34,10 +34,12 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
             return true;
         });
     }
-
     public void pushTextureTransform(RenderContext context, List<Sprite> toReplace, List<Sprite> replacement) {
+        pushTextureTransform(context, toReplace, replacement, PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+    }
+    public void pushTextureTransform(RenderContext context, List<Sprite> toReplace, List<Sprite> replacement, Identifier atlasId) {
         context.pushTransform(quad -> {
-            Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getBakedModelManager().getAtlas(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE)).find(quad, 0);
+            Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getBakedModelManager().getAtlas(atlasId)).find(quad, 0);
             Identifier keyId = originalSprite.getId();
             int textureIndex = IntStream.range(0, toReplace.size())
                     .filter(i -> keyId.equals(toReplace.get(i).getId()))

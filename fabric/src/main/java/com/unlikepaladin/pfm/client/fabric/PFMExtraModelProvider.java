@@ -35,7 +35,9 @@ import java.util.function.Consumer;
 public class PFMExtraModelProvider implements ExtraModelProvider {
     @Override
     public void provideExtraModels(ResourceManager manager, Consumer<Identifier> out) {
-        UnbakedBedModel.ALL_MODEL_IDS.forEach(out::accept);
+        for (Identifier id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
+            out.accept(id);
+        }
         for (Identifier id : UnbakedBasicTableModel.BASIC_MODEL_PARTS_BASE) {
             out.accept(id);
         }

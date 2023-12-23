@@ -17,7 +17,6 @@ import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
-import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.DataCache;
@@ -180,8 +179,8 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         }
 
         public void registerBeds() {
-            generateModelAndBlockStateForBed(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList(), "simple_bed", TEMPLATE_SIMPLE_BED_ARRAY, PFMBlockStateModelGenerator::createBedBlockState, PFMBlockStateModelGenerator::createPlankBlockTexture);
-            generateModelAndBlockStateForBed(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicBedBlock.class).getVariantToBlockMapList(), "classic_bed", TEMPLATE_CLASSIC_BED_ARRAY, PFMBlockStateModelGenerator::createBedBlockState, PFMBlockStateModelGenerator::createPlankBlockTexture);
+            generateModelAndBlockStateForBed(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList(), "simple_bed", PFMBlockStateModelGenerator::createBedBlockState);
+            generateModelAndBlockStateForBed(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicBedBlock.class).getVariantToBlockMapList(), "simple_bed", PFMBlockStateModelGenerator::createBedBlockState);
         }
 
         public void registerLadders() {
@@ -286,6 +285,22 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                     generatedStates.add(Registry.BLOCK.getId(block));
                 }
             });
+        }
+
+        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends Set<?>> variantBaseHashMap, String blockName, BiFunction<Block, List<Identifier>, BlockStateSupplier> stateSupplierBiFunction) {
+            variantBaseHashMap.forEach((variantBase, blockList) -> {
+                blockList.forEach(block1 -> {
+                Block block = (Block) block1;
+                if (!generatedStates.contains(Registry.BLOCK.getId(block))) {
+                    Identifier modelID = ModelIds.getBlockModelId(block);
+                    Identifier id = new Identifier(modelID.getNamespace(), "block/" + blockName);
+                    List<Identifier> ids = new ArrayList<>(1);
+                    ids.add(id);
+                    this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
+                    generatedStates.add(Registry.BLOCK.getId(block));
+                }});
+            });
+
         }
 
         public void generateModelAndBlockStateForVariants(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, Model[] models, BiFunction<Block, List<Identifier>, BlockStateSupplier> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, Texture> textureBiFunction) {
@@ -457,7 +472,12 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         private static BlockStateSupplier createOrientableTableBlockState(Block block, List<Identifier> modelIdentifiers, int rotation) {
             Map<Direction, BlockStateVariant> variantMap = new HashMap<>();
             String path = modelIdentifiers.get(0).getPath();
-            Identifier id = new Identifier(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
+            Identifier id;
+            if (modelIdentifiers.size() == 1) {
+                id = modelIdentifiers.get(0);
+            } else {
+                id = new Identifier(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
+            }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
             for (int i = 0; rotationArray.length > i; i++) {
                 if (rotationArray[i] + rotation > 270) {
@@ -571,9 +591,14 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                     .with(southTrue, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.R180));
         }
 
-        private static BlockStateSupplier createBedBlockState(Block block, List<Identifier> modelIdentifiers, String color) {
+        private static BlockStateSupplier createBedBlockState(Block block, List<Identifier> modelIdentifiers) {
             Map<Direction, BlockStateVariant> variantMap = new HashMap<>();
-            Identifier id = ModelIds.getBlockModelId(block);
+            Identifier id;
+            if (modelIdentifiers.size() == 1) {
+                id = modelIdentifiers.get(0);
+            } else {
+                id = ModelIds.getBlockModelId(block);
+            }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
             variantMap.put(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[0]))));
             variantMap.put(Direction.EAST, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[1]))));

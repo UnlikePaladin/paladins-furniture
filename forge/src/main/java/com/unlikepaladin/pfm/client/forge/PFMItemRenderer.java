@@ -29,7 +29,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD, modid = PaladinFurnitureMod.MOD_ID, value = Dist.CLIENT)
 public class PFMItemRenderer extends BuiltinModelItemRenderer {
     public static final PFMItemRenderer INSTANCE = new PFMItemRenderer();
     public PFMItemRenderer() {

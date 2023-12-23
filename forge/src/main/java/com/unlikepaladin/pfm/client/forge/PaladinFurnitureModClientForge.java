@@ -76,8 +76,9 @@ public class PaladinFurnitureModClientForge {
 
     @SubscribeEvent
     public static void registerExtraModels(ModelRegistryEvent event) {
-
-        UnbakedBedModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        for (Identifier id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
         for (Identifier id : UnbakedBasicTableModel.BASIC_MODEL_PARTS_BASE) {
             ModelLoader.addSpecialModel(id);
         }

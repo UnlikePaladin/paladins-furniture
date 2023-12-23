@@ -2,11 +2,14 @@ package com.unlikepaladin.pfm.blocks.models;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.LogStoolBlock;
+import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BedBlockEntity;
+import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -17,7 +20,9 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -121,7 +126,12 @@ public abstract class AbstractBakedModel implements BakedModel {
         }
         return Collections.singletonList(getTemplateBakedModels().get(0).getParticleSprite());
     }
+    protected List<Sprite> getBedSprites(DyeColor color, BlockState state) {
+        List<Sprite> list = new ArrayList<>(3);
+        VariantBase<?> variant = getVariant(state);
 
+        return list;
+    }
     private final Map<Block, List<Sprite>> spriteList = new HashMap<>();
     private List<Sprite> getSpriteFromState(BlockState state) {
         if (spriteList.containsKey(state.getBlock()))
@@ -130,7 +140,13 @@ public abstract class AbstractBakedModel implements BakedModel {
         VariantBase<?> variant = getVariant(state);
         boolean stripped = state.getBlock().getTranslationKey().contains("stripped");
         List<Sprite> list = new ArrayList<>(3);
-        if (state.getBlock() instanceof LogStoolBlock) {
+        if (state.getBlock() instanceof SimpleBedBlock) {
+            DyeColor color = ModelHelper.getColor(Registry.BLOCK.getId(state.getBlock()));
+            SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PLANKS));
+            SpriteIdentifier spriteIdentifier = TexturedRenderLayers.BED_TEXTURES[color.getId()];
+            list.add(mainTexture.getSprite());
+            list.add(spriteIdentifier.getSprite());
+        }  else if (state.getBlock() instanceof LogStoolBlock) {
             SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.LOG));
             SpriteIdentifier secondTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG_TOP)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.LOG_TOP));
             list.add(mainTexture.getSprite());

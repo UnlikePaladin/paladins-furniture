@@ -83,7 +83,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return transformedQuads;
     }
 
-    Map<Pair<Sprite, BakedQuad>, BakedQuad> quadToTransformedQuad = new ConcurrentHashMap<>();
+    Map<Pair<Identifier, BakedQuad>, BakedQuad> quadToTransformedQuad = new ConcurrentHashMap<>();
     public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, Sprite sprite) {
         List<BakedQuad> transformedQuads = new ArrayList<>(quads.size());
 
@@ -91,8 +91,8 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         int uvVertexIndx = findVertexElement(VertexFormatElement.Type.UV, 0);
 
         quads.forEach(quad -> {
-            Pair<Sprite, BakedQuad> quadKey = new Pair<>(sprite, quad);
-            if (quad.getSprite() == sprite && !quadToTransformedQuad.containsKey(quadKey)) {
+            Pair<Identifier, BakedQuad> quadKey = new Pair<>(sprite.getId(), quad);
+            if (quad.getSprite().getId() == sprite.getId() && !quadToTransformedQuad.containsKey(quadKey)) {
                 quadToTransformedQuad.put(quadKey, quad);
                 transformedQuads.add(quad);
             }
