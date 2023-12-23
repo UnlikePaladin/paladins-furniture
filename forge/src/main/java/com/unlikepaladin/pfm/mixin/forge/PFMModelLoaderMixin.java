@@ -172,7 +172,7 @@ public abstract class PFMModelLoaderMixin {
             this.modelsToBake.put(resourceId, model);
             ci.cancel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedBasicLampModel.LAMP_MODEL_IDS.toArray(new Identifier[0]), modifiedId)){
+        else if (UnbakedBasicLampModel.LAMP_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedBasicLampModel();
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);

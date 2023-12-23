@@ -215,13 +215,6 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
         public void registerLamp() {
             Identifier modelID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.BASIC_LAMP);
-            for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                Texture blockTexture = createRawBlockTexture(true, variant);
-                for (Model model : TEMPLATE_LAMP_ARRAY) {
-                    Identifier id = new Identifier(modelID.getNamespace(), ModelIDS.get(model).getPath().replace("template_", "").replace("template", "").replaceAll("basic_lamp", variant.asString() + "_basic_lamp").replace("block/", "block/basic_lamp/").replace("//", "/"));
-                    model.upload(id, blockTexture, this.modelCollector);
-                }
-            }
             this.blockStateCollector.accept(createSingleStateBlockState(PaladinFurnitureModBlocksItems.BASIC_LAMP, List.of(modelID)));
             PFMBlockstateModelProvider.modelPathMap.put(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.getItemModelId());
         }

@@ -39,19 +39,21 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
     }
     public void pushTextureTransform(RenderContext context, List<Sprite> toReplace, List<Sprite> replacement, Identifier atlasId) {
         context.pushTransform(quad -> {
-            Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getBakedModelManager().getAtlas(atlasId)).find(quad, 0);
-            Identifier keyId = originalSprite.getId();
-            int textureIndex = IntStream.range(0, toReplace.size())
-                    .filter(i -> keyId.equals(toReplace.get(i).getId()))
-                    .findFirst()
-                    .orElse(-1);
+            if (replacement != null && toReplace != null ){
+                Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getBakedModelManager().getAtlas(atlasId)).find(quad, 0);
+                Identifier keyId = originalSprite.getId();
+                int textureIndex = IntStream.range(0, toReplace.size())
+                        .filter(i -> keyId.equals(toReplace.get(i).getId()))
+                        .findFirst()
+                        .orElse(-1);
 
-            if (textureIndex != -1 && !toReplace.equals(replacement)) {
-                Sprite sprite = replacement.get(textureIndex);
-                for (int index = 0; index < 4; index++) {
-                    float frameU = originalSprite.method_35804(quad.spriteU(index, 0));
-                    float frameV = originalSprite.method_35805(quad.spriteV(index, 0));
-                    quad.sprite(index, 0, sprite.getFrameU(frameU), sprite.getFrameV(frameV));
+                if (textureIndex != -1 && !toReplace.equals(replacement)) {
+                    Sprite sprite = replacement.get(textureIndex);
+                    for (int index = 0; index < 4; index++) {
+                        float frameU = originalSprite.method_35804(quad.spriteU(index, 0));
+                        float frameV = originalSprite.method_35805(quad.spriteV(index, 0));
+                        quad.sprite(index, 0, sprite.getFrameU(frameU), sprite.getFrameV(frameV));
+                    }
                 }
             }
             return true;
