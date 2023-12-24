@@ -45,7 +45,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return tileData;
     }
 
-    Map<Sprite, List<BakedQuad>> separatedQuads = new ConcurrentHashMap<>();
+    Map<Identifier, List<BakedQuad>> separatedQuads = new ConcurrentHashMap<>();
     public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, List<Sprite> toReplace, List<Sprite> replacements) {
         if (replacements == null || toReplace == null || toReplace.size() != replacements.size()) {
             PaladinFurnitureMod.GENERAL_LOGGER.warn("Replacement list is not the same size or was null, skipping transformation");
@@ -55,7 +55,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             return quads;
 
         for (BakedQuad quad : quads) {
-            Sprite sprite = quad.getSprite();
+            Identifier sprite = quad.getSprite().getId();
             if (separatedQuads.containsKey(sprite)) {
                 if (!separatedQuads.get(sprite).contains(quad))
                     separatedQuads.get(sprite).add(quad);
@@ -66,8 +66,8 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         }
 
         List<BakedQuad> transformedQuads = new ArrayList<>(quads.size());
-        for (Map.Entry<Sprite, List<BakedQuad>> entry : separatedQuads.entrySet()) {
-            Identifier keyId = entry.getKey().getId();
+        for (Map.Entry<Identifier, List<BakedQuad>> entry : separatedQuads.entrySet()) {
+            Identifier keyId = entry.getKey();
             int index = IntStream.range(0, toReplace.size())
                     .filter(i -> keyId.equals(toReplace.get(i).getId()))
                     .findFirst()
@@ -120,7 +120,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return transformedQuads;
     }
 
-    private static final Map<Pair<VertexFormatElement.Type, Integer>, Integer> ELEMENT_INTEGER_MAP = new HashMap<>();
+    private static final Map<Pair<VertexFormatElement.Type, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
     public static int findVertexElement(VertexFormatElement.Type type, int index) {
         Pair<VertexFormatElement.Type, Integer> pairToFind = new Pair<>(type, index);
         if (ELEMENT_INTEGER_MAP.containsKey(pairToFind))
