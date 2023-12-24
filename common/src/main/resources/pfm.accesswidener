@@ -8,3 +8,4 @@ mutable field net/minecraft/world/poi/PointOfInterestType HOME Lnet/minecraft/wo
 accessible method net/minecraft/data/server/BlockLootTableGenerator drops (Lnet/minecraft/item/ItemConvertible;)Lnet/minecraft/loot/LootTable$Builder;
 accessible method net/minecraft/data/server/BlockLootTableGenerator dropsWithProperty (Lnet/minecraft/block/Block;Lnet/minecraft/state/property/Property;Ljava/lang/Comparable;)Lnet/minecraft/loot/LootTable$Builder;
 accessible class net/minecraft/data/server/AbstractTagProvider$ObjectBuilder
+accessible method net/minecraft/client/render/item/ItemRenderer renderBakedItemModel (Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;)V

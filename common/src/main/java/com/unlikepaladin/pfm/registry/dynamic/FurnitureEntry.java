@@ -7,9 +7,10 @@ import net.minecraft.util.Identifier;
 
 import java.util.*;
 import java.util.function.Supplier;
+import java.util.stream.IntStream;
 
 public class FurnitureEntry<T extends Block> {
-    private final HashMap<VariantBase<?>, List<T>> variantToBlockMapList = new LinkedHashMap<>();
+    private final HashMap<VariantBase<?>, Set<T>> variantToBlockMapList = new LinkedHashMap<>();
 
     private final HashMap<VariantBase<?>, T> variantToBlockMap = new LinkedHashMap<>();
     private final HashMap<VariantBase<?>, T> variantToBlockMapNonBase = new LinkedHashMap<>();
@@ -24,7 +25,7 @@ public class FurnitureEntry<T extends Block> {
                 variantToBlockMapNonBase.put(variantBase, block);
 
             if (!variantToBlockMapList.containsKey(variantBase)) {
-                variantToBlockMapList.put(variantBase, new ArrayList<>());
+                variantToBlockMapList.put(variantBase, new HashSet<>());
             }
             variantToBlockMapList.get(variantBase).add(block);
             allBlocks.add(block);
@@ -36,19 +37,23 @@ public class FurnitureEntry<T extends Block> {
     private Class<T> type;
 
     public VariantBase<?> getVariantFromEntry(Block block) {
-        if (block.getClass() == getTClass())
-            if (variantToBlockMap.containsValue(block)) {
-                for (Map.Entry<VariantBase<?>, T> entry:
-                     variantToBlockMap.entrySet()) {
-                    if (entry.getValue().equals(block))
-                        return entry.getKey();
-                }}
-            else if (variantToBlockMapNonBase.containsValue(block)) {
-                for (Map.Entry<VariantBase<?>, T> entry:
-                        variantToBlockMapNonBase.entrySet()) {
-                    if (entry.getValue().equals(block))
-                        return entry.getKey();
-                }}
+        if (block.getClass() == getTClass()) {
+            for (Map.Entry<VariantBase<?>, T> entry : variantToBlockMap.entrySet()) {
+                if (entry.getValue().equals(block)) {
+                    return entry.getKey();
+                }
+            }
+            for (Map.Entry<VariantBase<?>, T> entry : variantToBlockMapNonBase.entrySet()) {
+                if (entry.getValue().equals(block)) {
+                    return entry.getKey();
+                }
+            }
+            for (Map.Entry<VariantBase<?>, Set<T>> entry : variantToBlockMapList.entrySet()) {
+                if (entry.getValue().contains(block)) {
+                    return entry.getKey();
+                }
+            }
+        }
         return null;
     }
 
@@ -107,7 +112,7 @@ public class FurnitureEntry<T extends Block> {
         return null;
     }
 
-    public HashMap<VariantBase<?>, List<T>> getVariantToBlockMapList() {
+    public HashMap<VariantBase<?>, Set<T>> getVariantToBlockMapList() {
         return variantToBlockMapList;
     }
 

@@ -6,9 +6,15 @@ import net.minecraft.client.texture.Sprite;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UnbakedClassicNightstandModelImpl {
-    public static BakedModel getBakedModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        return new FabricClassicNightstandModel(frame, settings, bakedModels, MODEL_PARTS);
+    static Map<ModelBakeSettings, BakedModel> modelMap = new ConcurrentHashMap<>();
+    public static BakedModel getBakedModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        if (modelMap.containsKey(settings))
+            return modelMap.get(settings);
+        BakedModel model = new FabricClassicNightstandModel(settings, modelParts);
+        modelMap.put(settings, model);
+        return model;
     }
 }

@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.models.mirror.fabric;
 
 import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
@@ -21,17 +22,15 @@ import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class FabricMirrorModel extends AbstractBakedModel implements FabricBakedModel {
+public class FabricMirrorModel extends PFMFabricBakedModel {
     public FabricMirrorModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
-        this.modelParts = MODEL_PARTS;
+        super(settings, bakedModels.values().stream().toList());
         this.glassTex = glassTex;
         this.reflectTex = reflectTex;
     }
     protected final Sprite glassTex;
     protected final Sprite reflectTex;
 
-    private final List<String> modelParts;
     @Override
     public boolean isVanillaAdapter() {
         return false;
@@ -52,42 +51,47 @@ public class FabricMirrorModel extends AbstractBakedModel implements FabricBaked
             boolean cornerLeftDown = block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYClockwise()).down()), state);
             boolean cornerRightUp = block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYCounterclockwise()).up()), state);
 
-            context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(0)));
+            context.fallbackConsumer().accept(getTemplateBakedModels().get((0)));
             if (!down) {
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(2)));
+                context.fallbackConsumer().accept(getTemplateBakedModels().get((2)));
             }
             if (!up) {
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(1)));
+                context.fallbackConsumer().accept(getTemplateBakedModels().get((1)));
             }
             if (!right) {
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(3)));
+                context.fallbackConsumer().accept(getTemplateBakedModels().get((3)));
             }
             if (!left) {
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(4)));
+                context.fallbackConsumer().accept(getTemplateBakedModels().get((4)));
             }
 
             if (!cornerLeftDown) {
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(8)));
+                context.fallbackConsumer().accept(getTemplateBakedModels().get((8)));
             }
             if (!cornerRightDown) {
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(7)));
+                context.fallbackConsumer().accept(getTemplateBakedModels().get((7)));
             }
             if (!cornerLeftUp) {
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(6)));
+                context.fallbackConsumer().accept(getTemplateBakedModels().get((6)));
             }
             if (!cornerRightUp) {
-                context.fallbackConsumer().accept(getBakedModels().get(modelParts.get(5)));
+                context.fallbackConsumer().accept(getTemplateBakedModels().get((5)));
             }
         }
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        context.fallbackConsumer().accept(getBakedModels().get(UnbakedMirrorModel.BASE_MODEL_PARTS[0]));
+        context.fallbackConsumer().accept(getTemplateBakedModels().get(0));
     }
 
     @Override
     public ModelTransformation getTransformation() {
         return ModelHelper.MODEL_TRANSFORM_BLOCK;
+    }
+
+    @Override
+    public Sprite pfm$getParticle(BlockState state) {
+        return getParticleSprite();
     }
 }

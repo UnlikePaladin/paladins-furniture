@@ -3,6 +3,8 @@ package com.unlikepaladin.pfm.blocks.models.basicLamp.fabric;
 import com.unlikepaladin.pfm.blocks.BasicLampBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
+import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
@@ -13,27 +15,21 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.World;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.function.Supplier;
 
-public class FabricBasicLampModel extends AbstractBakedModel implements FabricBakedModel {
-    private final List<String> modelParts;
-    private final Map<WoodVariant, Map<String, BakedModel>> bakedModels;
-    private final Map<WoodVariant, Sprite> textureMap;
-    public FabricBasicLampModel(Map<WoodVariant, Sprite> textures, ModelBakeSettings settings, Map<WoodVariant, Map<String, BakedModel>> bakedModels, List<String> modelParts) {
-        super(textures.get(WoodVariantRegistry.OAK), settings, new HashMap<>());
-        this.modelParts = modelParts;
-        this.textureMap = textures;
-        this.bakedModels = bakedModels;
+public class FabricBasicLampModel extends PFMFabricBakedModel {
+    public FabricBasicLampModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        super(settings, modelParts);
     }
 
     @Override
@@ -51,21 +47,23 @@ public class FabricBasicLampModel extends AbstractBakedModel implements FabricBa
         }
         boolean up = blockView.getBlockState(pos.up()).getBlock() instanceof BasicLampBlock;
         boolean down = blockView.getBlockState(pos.down()).getBlock() instanceof BasicLampBlock;
+        pushTextureTransform(context, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
         if (up && down) {
-            ((FabricBakedModel)bakedModels.get(variant).get(modelParts.get(1))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            ((FabricBakedModel)getTemplateBakedModels().get(1)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
         } else if (up) {
-            ((FabricBakedModel)bakedModels.get(variant).get(modelParts.get(0))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            ((FabricBakedModel)getTemplateBakedModels().get(0)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
         } else if (down)
         {
-            ((FabricBakedModel)bakedModels.get(variant).get(modelParts.get(3))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-            ((FabricBakedModel)bakedModels.get(variant).get(modelParts.get(5+onOffset))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-            ((FabricBakedModel)bakedModels.get(variant).get(modelParts.get(4))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            ((FabricBakedModel)getTemplateBakedModels().get(3)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            ((FabricBakedModel)getTemplateBakedModels().get(5+onOffset)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            ((FabricBakedModel)getTemplateBakedModels().get(4)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
         }
         else {
-            ((FabricBakedModel)bakedModels.get(variant).get(modelParts.get(4))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-            ((FabricBakedModel)bakedModels.get(variant).get(modelParts.get(2))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-            ((FabricBakedModel)bakedModels.get(variant).get(modelParts.get(5+onOffset))).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            ((FabricBakedModel)getTemplateBakedModels().get(4)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            ((FabricBakedModel)getTemplateBakedModels().get(2)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            ((FabricBakedModel)getTemplateBakedModels().get(5+onOffset)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
         }
+        context.popTransform();
     }
 
     @Override
@@ -74,18 +72,51 @@ public class FabricBasicLampModel extends AbstractBakedModel implements FabricBa
         if (stack.hasNbt()) {
             variant = WoodVariantRegistry.getVariant(Identifier.tryParse(stack.getSubNbt("BlockEntityTag").getString("variant")));
         }
-        ((FabricBakedModel)bakedModels.get(variant).get(modelParts.get(4))).emitItemQuads(stack, randomSupplier, context);
-        ((FabricBakedModel)bakedModels.get(variant).get(modelParts.get(2))).emitItemQuads(stack, randomSupplier, context);
-        ((FabricBakedModel)bakedModels.get(variant).get(modelParts.get(5))).emitItemQuads(stack, randomSupplier, context);
-    }
-
-    @Override
-    public Sprite getParticleSprite() {
-        return bakedModels.get(WoodVariantRegistry.OAK).get(modelParts.get(4)).getParticleSprite();
+        pushTextureTransform(context, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
+        ((FabricBakedModel)getTemplateBakedModels().get(4)).emitItemQuads(stack, randomSupplier, context);
+        ((FabricBakedModel)getTemplateBakedModels().get(2)).emitItemQuads(stack, randomSupplier, context);
+        ((FabricBakedModel)getTemplateBakedModels().get(5)).emitItemQuads(stack, randomSupplier, context);
+        context.popTransform();
     }
 
     @Override
     public ModelTransformation getTransformation() {
-        return bakedModels.get(WoodVariantRegistry.OAK).get(modelParts.get(2)).getTransformation();
+        return getTemplateBakedModels().get(2).getTransformation();
+    }
+
+    static List<Sprite> oakSprite = new ArrayList<>();
+    static List<Sprite> getOakStrippedLogSprite() {
+        if (!oakSprite.isEmpty())
+            return oakSprite;
+        Sprite wood = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.STRIPPED_LOG)).getSprite();
+        oakSprite.add(wood);
+        return oakSprite;
+    }
+
+    static Map<WoodVariant, List<Sprite>> sprites = new HashMap<>();
+    static List<Sprite> getVariantStrippedLogSprite(WoodVariant variant) {
+        if (sprites.containsKey(variant))
+            return sprites.get(variant);
+
+        Sprite wood = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)).getSprite();
+        List<Sprite> spriteList = new ArrayList<>();
+        spriteList.add(wood);
+        sprites.put(variant, spriteList);
+        return spriteList;
+    }
+
+    @Override
+    public Sprite pfm$getParticle(BlockState state) {
+        return getTemplateBakedModels().get(4).getParticleSprite();
+    }
+
+    @Override
+    public Sprite pfm$getParticle(World world, BlockPos pos, BlockState state) {
+        BlockEntity entity = world.getBlockEntity(pos);
+        WoodVariant variant = WoodVariantRegistry.OAK;
+        if (world.getBlockEntity(pos) instanceof LampBlockEntity) {
+            variant = ((LampBlockEntity) entity).getVariant();
+        }
+        return getVariantStrippedLogSprite(variant).get(0);
     }
 }

@@ -99,6 +99,8 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
     @Environment(EnvType.CLIENT)
     @Override
     public Identifier getTexture(BlockType type) {
+        if (type == BlockType.SECONDARY)
+            return ModelHelper.getTextureId(secondaryBlock);
         return ModelHelper.getTextureId(baseBlock);
     }
 

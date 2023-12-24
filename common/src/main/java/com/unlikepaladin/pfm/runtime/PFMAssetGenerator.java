@@ -27,6 +27,7 @@ public class PFMAssetGenerator extends PFMGenerator {
 
     public void run() throws IOException {
         if (!FROZEN) {
+            setAssetsRunning(true);
             log("Packs:");
             for (ResourcePack pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
                 log("\tPack {}", pack.getName());
@@ -34,7 +35,6 @@ public class PFMAssetGenerator extends PFMGenerator {
                     log("\t\tNamespace {}", namespace);
                 }
             }
-            this.setRunning(true);
             FROZEN = true;
 
             Path modListPath = output.resolve("modsList");
@@ -90,10 +90,10 @@ public class PFMAssetGenerator extends PFMGenerator {
                 Files.deleteIfExists(modListPath);
                 Files.createFile(modListPath);
                 Files.writeString(PFMRuntimeResources.createDirIfNeeded(modListPath), PaladinFurnitureMod.getVersionMap().toString().replace("[", "").replace("]", ""), StandardOpenOption.APPEND);
-                this.setRunning(false);
             } else {
                 log("Data Hash and Mod list matched, skipping generation");
             }
+            setAssetsRunning(false);
         }
     }
 }
