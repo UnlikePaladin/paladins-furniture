@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
+import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.mixin.PFMMixinPointOfInterestTypeFactory;
 import com.unlikepaladin.pfm.registry.*;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
@@ -119,7 +120,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
     public static void initializeItemGroup() {
         PaladinFurnitureMod.FURNITURE_GROUP = FabricItemGroupBuilder.build(
                 new Identifier(MOD_ID, "furniture"),
-                () -> PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getFromVanillaWoodType(BoatEntity.Type.OAK, true).asItem().getDefaultStack());
+                () -> PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultStack());
     }
 
     public static void replaceHomePOI() {
