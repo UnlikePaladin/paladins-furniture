@@ -22,6 +22,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.World;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -107,5 +108,15 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
     @Override
     public Sprite pfm$getParticle(BlockState state) {
         return getTemplateBakedModels().get(4).getParticleSprite();
+    }
+
+    @Override
+    public Sprite pfm$getParticle(World world, BlockPos pos, BlockState state) {
+        BlockEntity entity = world.getBlockEntity(pos);
+        WoodVariant variant = WoodVariantRegistry.OAK;
+        if (world.getBlockEntity(pos) instanceof LampBlockEntity) {
+            variant = ((LampBlockEntity) entity).getVariant();
+        }
+        return getVariantStrippedLogSprite(variant).get(0);
     }
 }

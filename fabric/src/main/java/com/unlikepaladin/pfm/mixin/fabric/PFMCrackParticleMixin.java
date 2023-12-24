@@ -9,6 +9,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.BlockPos;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,7 +27,7 @@ public abstract class PFMCrackParticleMixin extends SpriteBillboardParticle {
             BlockState defaultState = ((BlockItem)stack.getItem()).getBlock().getDefaultState();
             BakedModel model = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(defaultState);
             if (model instanceof PFMBakedModelParticleExtension) {
-                this.setSprite(((PFMBakedModelParticleExtension) model).pfm$getParticle(defaultState));
+                this.setSprite(((PFMBakedModelParticleExtension) model).pfm$getParticle(world, new BlockPos(x, y, z), defaultState));
             }
         }
     }
