@@ -1,25 +1,10 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"particle": "#texture",
-		"base": "#texture",
-		"legs": "#log"
+		"particle": "block/oak_planks",
+		"legs": "block/oak_log"
 	},
 	"elements": [
-		{
-			"name": "top",
-			"from": [0, 14, 0],
-			"to": [16, 16, 16],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 13, 8]},
-			"faces": {
-				"north": {"uv": [5, 1, 7, 14], "rotation": 90, "texture": "#base"},
-				"east": {"uv": [1, 1, 15, 3], "texture": "#base"},
-				"south": {"uv": [5, 1, 7, 14], "rotation": 90, "texture": "#base"},
-				"west": {"uv": [0, 0, 14, 2], "texture": "#base"},
-				"up": {"uv": [1, 1, 15, 14], "rotation": 270, "texture": "#base"},
-				"down": {"uv": [0, 1, 14, 14], "rotation": 90, "texture": "#base"}
-			}
-		},
 		{
 			"from": [14.00357, -0.51331, 2],
 			"to": [16.00357, 19.48669, 4],
@@ -94,12 +79,11 @@
 			"origin": [0, 0, 0],
 			"color": 0,
 			"children": [
-				0,
 				{
 					"name": "legs",
 					"origin": [0, 0, 0],
 					"color": 0,
-					"children": [1, 2]
+					"children": [0, 1]
 				}
 			]
 		}

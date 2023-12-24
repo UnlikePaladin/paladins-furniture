@@ -243,7 +243,7 @@ public class PFMLangProvider extends PFMProvider {
         return variantName.get();
     }
 
-    public void generateTranslationForBedMap(HashMap<VariantBase<?>, ? extends List<?>> variantBaseHashMap, BufferedWriter writer, String furnitureKey, QuadFunc<Block, String, String, String, String> blockStringStringStringStringQuadFunc) {
+    public void generateTranslationForBedMap(HashMap<VariantBase<?>, ? extends Set<?>> variantBaseHashMap, BufferedWriter writer, String furnitureKey, QuadFunc<Block, String, String, String, String> blockStringStringStringStringQuadFunc) {
         variantBaseHashMap.forEach((variant, list) -> {
             list.forEach(block1 -> {
                 Block block = (Block) block1;

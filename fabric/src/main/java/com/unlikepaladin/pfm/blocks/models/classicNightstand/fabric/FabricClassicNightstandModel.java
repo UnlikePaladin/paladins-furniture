@@ -1,7 +1,8 @@
 package com.unlikepaladin.pfm.blocks.models.classicNightstand.fabric;
 
 import com.unlikepaladin.pfm.blocks.ClassicNightstandBlock;
-import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -14,16 +15,13 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class FabricClassicNightstandModel extends AbstractBakedModel implements FabricBakedModel {
-    public FabricClassicNightstandModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> modelParts) {
-        super(frame, settings, bakedModels);
-        this.modelParts = modelParts;
+public class FabricClassicNightstandModel extends PFMFabricBakedModel {
+    public FabricClassicNightstandModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        super(settings, modelParts);
     }
-    private final List<String> modelParts;
 
     @Override
     public boolean isVanillaAdapter() {
@@ -38,20 +36,31 @@ public class FabricClassicNightstandModel extends AbstractBakedModel implements 
             boolean left = block.isStand(world, pos, dir.rotateYCounterclockwise(), dir);
             boolean right = block.isStand(world, pos, dir.rotateYClockwise(), dir);
             int openIndexOffset = state.get(ClassicNightstandBlock.OPEN) ? 4 : 0;
+            List<Sprite> spriteList = getSpriteList(state);
+            pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
             if (left && right) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(openIndexOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getTemplateBakedModels().get((openIndexOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
             } else if (!left && right) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(1+openIndexOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getTemplateBakedModels().get((1+openIndexOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
             } else if (left) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(2+openIndexOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getTemplateBakedModels().get((2+openIndexOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
             } else {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(3+openIndexOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getTemplateBakedModels().get((3+openIndexOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
+            context.popTransform();
         }
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+        List<Sprite> spriteList = getSpriteList(stack);
+        pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
+        ((FabricBakedModel) getTemplateBakedModels().get((3))).emitItemQuads(stack, randomSupplier, context);
+        context.popTransform();
+    }
 
+    @Override
+    public Sprite pfm$getParticle(BlockState state) {
+        return getSpriteList(state).get(0);
     }
 }

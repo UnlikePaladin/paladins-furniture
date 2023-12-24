@@ -3,11 +3,13 @@ package com.unlikepaladin.pfm.blocks.models.dinnerTable.forge;
 import com.unlikepaladin.pfm.blocks.DinnerTableBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
@@ -19,19 +21,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ForgeDinnerTableModel extends AbstractBakedModel {
-    public ForgeDinnerTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
-        this.modelParts = MODEL_PARTS;
+public class ForgeDinnerTableModel extends PFMForgeBakedModel {
+    public ForgeDinnerTableModel(ModelBakeSettings settings, List<BakedModel> modelList) {
+        super(settings, modelList);
     }
-    private final List<String> modelParts;
+
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
+    @Override
+    public void appendProperties(ModelDataMap.Builder builder) {
+        super.appendProperties(builder);
+        builder.withProperty(CONNECTIONS);
+    }
 
     @NotNull
     @Override
     public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
-        ModelDataMap.Builder builder = new ModelDataMap.Builder();
         if (state.getBlock() instanceof DinnerTableBlock) {
+            ModelDataMap.Builder builder = new ModelDataMap.Builder();
+            appendProperties(builder);
+
+            IModelData data = builder.build();
+            super.getModelData(world, pos, state, data);
+
             DinnerTableBlock block = (DinnerTableBlock) state.getBlock();
             Direction dir = state.get(DinnerTableBlock.FACING);
             boolean left = block.isTable(world, pos, dir.rotateYCounterclockwise(), dir);
@@ -39,32 +50,52 @@ public class ForgeDinnerTableModel extends AbstractBakedModel {
             BitSet set = new BitSet();
             set.set(0, left);
             set.set(1, right);
-            builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set));
+            data.setData(CONNECTIONS, new ModelBitSetProperty(set));
+            return data;
         }
-        return builder.build();
+        return tileData;
     }
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
-        List<BakedQuad> quads = new ArrayList<>();
         if (state != null && state.getBlock() instanceof DinnerTableBlock && extraData.getData(CONNECTIONS) != null && extraData.getData(CONNECTIONS).connections != null) {
+            List<BakedQuad> baseQuads = new ArrayList<>();
+            List<BakedQuad> secondaryQuads = new ArrayList<>();
+
             BitSet set = extraData.getData(CONNECTIONS).connections;
             boolean left = set.get(0);
             boolean right = set.get(1);
             Direction dir = state.get(DinnerTableBlock.FACING);
-            quads.addAll(getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData));
+            baseQuads.addAll(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData));
             if (!left) {
                 int index = dir == Direction.NORTH || dir == Direction.WEST ? 1 : 2;
-                quads.addAll(getBakedModels().get(modelParts.get(index)).getQuads(state, side, rand, extraData));
+                secondaryQuads.addAll(getTemplateBakedModels().get(index).getQuads(state, side, rand, extraData));
             }
             if (!right) {
                 int index = dir == Direction.NORTH || dir == Direction.WEST ? 2 : 1;
-                quads.addAll(getBakedModels().get(modelParts.get(index)).getQuads(state, side, rand, extraData));
+                secondaryQuads.addAll(getTemplateBakedModels().get(index).getQuads(state, side, rand, extraData));
             }
             if (!right && !left) {
-                quads.addAll(getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData));
+                secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
             }
+            List<Sprite> spriteList = getSpriteList(state);
+            List<BakedQuad> quads = getQuadsWithTexture(baseQuads, spriteList.get(0));
+            quads.addAll(getQuadsWithTexture(secondaryQuads, spriteList.get(1)));
+            return quads;
         }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+        // base
+        List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(state, face, random));
+        // legs
+        List<BakedQuad> secondaryQuads = new ArrayList<>(getTemplateBakedModels().get(3).getQuads(state, face, random));
+
+        List<Sprite> spriteList = getSpriteList(stack);
+        List<BakedQuad> quads = getQuadsWithTexture(baseQuads, spriteList.get(0));
+        quads.addAll(getQuadsWithTexture(secondaryQuads, spriteList.get(1)));
         return quads;
     }
 }
