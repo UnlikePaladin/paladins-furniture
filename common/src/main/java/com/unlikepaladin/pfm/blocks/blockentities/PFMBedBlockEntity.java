@@ -10,15 +10,12 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.BlockPos;
 
 public class PFMBedBlockEntity extends BedBlockEntity implements DyeableFurnitureBlockEntity<PFMBedBlockEntity> {
-    private final BlockEntityType<?> type;
     public PFMBedBlockEntity(BlockPos pos, BlockState state, DyeColor color) {
         super(pos, state, color);
-        type = BlockEntities.BED_BLOCK_ENTITY;
     }
 
     public PFMBedBlockEntity(BlockPos pos, BlockState state) {
         super(pos, state);
-        type = BlockEntities.BED_BLOCK_ENTITY;
     }
 
     @Override
@@ -44,6 +41,6 @@ public class PFMBedBlockEntity extends BedBlockEntity implements DyeableFurnitur
 
     @Override
     public BlockEntityType<?> getType() {
-        return type;
+        return BlockEntities.BED_BLOCK_ENTITY;
     }
 }
