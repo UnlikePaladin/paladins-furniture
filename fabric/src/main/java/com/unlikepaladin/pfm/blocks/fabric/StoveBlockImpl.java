@@ -23,7 +23,7 @@ public class StoveBlockImpl {
     public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
         NamedScreenHandlerFactory screenHandlerFactory = world.getBlockState(pos).createScreenHandlerFactory(world, pos);
         if (screenHandlerFactory != null) {
-            //With this call the server will request the client to open the appropriate Screenhandler
+            // With this call the server will request the client to open the appropriate Screenhandler
             player.openHandledScreen(screenHandlerFactory);
             player.incrementStat(Statistics.STOVE_OPENED);
         }

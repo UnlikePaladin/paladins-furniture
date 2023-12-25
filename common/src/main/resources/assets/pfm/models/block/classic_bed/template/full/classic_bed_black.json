@@ -1,8 +1,0 @@
-{
-	"credit": "By UnlikePaladin",
-    "parent": "pfm:block/classic_bed/template/full/classic_bed",
-	"textures": {
-		"1": "entity/bed/black"
-	}
-    
-}

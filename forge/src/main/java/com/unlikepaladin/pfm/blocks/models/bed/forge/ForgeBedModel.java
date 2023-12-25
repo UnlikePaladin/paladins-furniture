@@ -3,8 +3,10 @@ package com.unlikepaladin.pfm.blocks.models.bed.forge;
 import com.unlikepaladin.pfm.blocks.ClassicBedBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.bed.BedInterface;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.BedPart;
@@ -12,6 +14,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
@@ -23,14 +26,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class ForgeBedModel extends AbstractBakedModel implements BedInterface {
-    public ForgeBedModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
-        this.modelParts = MODEL_PARTS;
+public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
+    public ForgeBedModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        super(settings, modelParts);
     }
-    private final List<String> modelParts;
 
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
+    @Override
+    public void appendProperties(ModelDataMap.Builder builder) {
+        super.appendProperties(builder);
+        builder.withProperty(CONNECTIONS);
+    }
 
     @NotNull
     @Override
@@ -42,44 +48,57 @@ public class ForgeBedModel extends AbstractBakedModel implements BedInterface {
             boolean left = data.get(0);
             boolean right = data.get(1);
             boolean bunk = data.get(2);
+            boolean isClassic = state.getBlock().getTranslationKey().contains("classic");
+            int classicOffset = isClassic ? 12 : 0;
             if (part == BedPart.HEAD) {
-                quads.addAll(getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData));
-                quads.addAll(getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData));
+                quads.addAll(getTemplateBakedModels().get(classicOffset+3).getQuads(state, side, rand, extraData));
                 if (!right){
-                    quads.addAll(getBakedModels().get(modelParts.get(6)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(classicOffset+6).getQuads(state, side, rand, extraData));
                 }
                 if (!left){
-                    quads.addAll(getBakedModels().get(modelParts.get(7)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(classicOffset+7).getQuads(state, side, rand, extraData));
                 }
-                if (bunk && !(state.getBlock() instanceof ClassicBedBlock)){
-                    quads.addAll(getBakedModels().get(modelParts.get(10)).getQuads(state, side, rand, extraData));
+                if (bunk && !isClassic){
+                    quads.addAll(getTemplateBakedModels().get(classicOffset+10).getQuads(state, side, rand, extraData));
                 }
             } else {
-                quads.addAll(getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData));
-                quads.addAll(getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData));
+                quads.addAll(getTemplateBakedModels().get(classicOffset+2).getQuads(state, side, rand, extraData));
                 if (!right){
-                    quads.addAll(getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(classicOffset+4).getQuads(state, side, rand, extraData));
                 }
                 if (!left){
-                    quads.addAll(getBakedModels().get(modelParts.get(5)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(classicOffset+5).getQuads(state, side, rand, extraData));
                 }
                 if (!right && bunk){
-                    quads.addAll(getBakedModels().get(modelParts.get(8)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(classicOffset+8).getQuads(state, side, rand, extraData));
                 }
                 if (!left && bunk){
-                    quads.addAll(getBakedModels().get(modelParts.get(9)).getQuads(state, side, rand, extraData));
+                    quads.addAll(getTemplateBakedModels().get(classicOffset+9).getQuads(state, side, rand, extraData));
                 }
             }
+            List<Sprite> spriteList = getSpriteList(state);
+            return getQuadsWithTexture(quads, ModelHelper.getOakBedSprites(), spriteList);
         }
-        return quads;
+        return Collections.emptyList();
     }
 
+    @Override
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+        int classicOffset = stack.getTranslationKey().contains("classic") ? 12 : 0;
+        List<Sprite> spriteList = getSpriteList(stack);
+        return getQuadsWithTexture((getTemplateBakedModels().get((classicOffset+11))).getQuads(state, face, random), ModelHelper.getOakBedSprites(), spriteList);
+    }
 
     @NotNull
     @Override
     public IModelData getModelData(@NotNull BlockRenderView blockView, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
-        ModelDataMap.Builder builder = new ModelDataMap.Builder();
         if (state.getBlock() instanceof SimpleBedBlock) {
+            ModelDataMap.Builder builder = new ModelDataMap.Builder();
+            appendProperties(builder);
+
+            IModelData data = builder.build();
+            super.getModelData(blockView, pos, state, data);
+
             Direction dir = state.get(BedBlock.FACING);
             boolean isClassic = state.getBlock().getTranslationKey().contains("classic");
             boolean left = isBed(blockView, pos, dir.rotateYCounterclockwise(), dir, state, isClassic);
@@ -89,8 +108,9 @@ public class ForgeBedModel extends AbstractBakedModel implements BedInterface {
             set.set(0, left);
             set.set(1, right);
             set.set(2, bunk);
-            builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set));
+            data.setData(CONNECTIONS, new ModelBitSetProperty(set));
+            return data;
         }
-        return builder.build();
+        return tileData;
     }
 }

@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.mixin.fabric;
 
 import com.google.common.base.Suppliers;
 import com.unlikepaladin.pfm.client.PathPackRPWrapper;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.minecraft.SharedConstants;
@@ -30,12 +31,16 @@ public class PFMModResourcePackCreatorMixin {
         if (type == ResourceType.CLIENT_RESOURCES) {
             PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getPackVersion());
             consumer.accept(ResourcePackProfile.of("PFM Assets", true, () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
-                PFMRuntimeResources.prepareAndRunAssetGen(false); return PFMRuntimeResources.ASSETS_PACK;
+                if (!PFMDataGenerator.areAssetsRunning())
+                            PFMRuntimeResources.prepareAndRunAssetGen(false);
+                        return PFMRuntimeResources.ASSETS_PACK;
             }), packResourceMetadata), factory, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.field_25347));
         } else if (type == ResourceType.SERVER_DATA) {
             PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new LiteralText("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().getPackVersion());
             consumer.accept(ResourcePackProfile.of("PFM Data", true, () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
-                PFMRuntimeResources.prepareAndRunDataGen(false); return PFMRuntimeResources.DATA_PACK;
+                if (!PFMDataGenerator.isDataRunning())
+                            PFMRuntimeResources.prepareAndRunDataGen(false);
+                        return PFMRuntimeResources.DATA_PACK;
             }), packResourceMetadata), factory, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.field_25347));
         }
     }

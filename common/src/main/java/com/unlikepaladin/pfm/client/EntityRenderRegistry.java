@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.client;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
 import com.unlikepaladin.pfm.entity.model.ModelEmpty;
 import com.unlikepaladin.pfm.entity.render.*;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -27,6 +28,8 @@ public class EntityRenderRegistry {
         registerBlockEntityRender(BlockEntities.STOVE_BLOCK_ENTITY, getStoveBlockEntityRenderer());
         registerBlockEntityRender(BlockEntities.TRASHCAN_BLOCK_ENTITY, TrashcanBlockEntityRenderer::new);
         registerBlockEntityRender(BlockEntities.TOASTER_BLOCK_ENTITY, PFMToasterBlockEntityRenderer::new);
+        registerBlockEntityRender(BlockEntities.BED_BLOCK_ENTITY, PFMBedBlockEntityRenderer::new);
+
         PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> {
             if (pfmModCompatibility.getClientModCompatiblity().isPresent()){
                 pfmModCompatibility.getClientModCompatiblity().get().registerBlockEntityRenderer();
@@ -41,6 +44,9 @@ public class EntityRenderRegistry {
                 pfmModCompatibility.getClientModCompatiblity().get().registerEntityRenderer();
             }
         });
+    }
+
+    public static void registerModelLayers() {
     }
 
     @ExpectPlatform

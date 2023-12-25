@@ -3,9 +3,9 @@
 	"textures": {
 		"sink": "block/light_gray_concrete",
 		"fluid": "block/water_still",
-		"particle": "#texture",
-		"base": "#texture",
-		"legs": "#log",
+		"particle": "block/oak_planks",
+		"base": "block/oak_planks",
+		"legs": "block/oak_log",
 		"hardware": "block/gray_concrete"
 	},
 	"elements": [

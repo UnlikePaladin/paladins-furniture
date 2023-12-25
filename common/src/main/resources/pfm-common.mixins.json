@@ -15,6 +15,9 @@
     "PFMMixinDedicatedServer"
   ],
   "client": [
+    "BakedQuadAccessor",
+    "PFMBakedModelManagerMixin",
+    "PFMItemRendererMixin",
     "PFMLanguageManagerAccessor",
     "PFMMixinClientPacketListener",
     "PFMRenderLayersMixin"

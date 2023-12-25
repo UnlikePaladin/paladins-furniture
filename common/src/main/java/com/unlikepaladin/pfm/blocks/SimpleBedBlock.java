@@ -1,7 +1,10 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
+import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -34,7 +37,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.LogTableBlock.rotateShape;
 
-public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock {
+public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, PFMBuiltinItemRendererExtension {
     private static final List<FurnitureBlock> SIMPLE_BEDS = new ArrayList<>();
     private final DyeColor color;
     public SimpleBedBlock(DyeColor color, Settings settings) {
@@ -206,5 +209,10 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock {
     @Override
     public DyeColor getPFMColor() {
         return color;
+    }
+
+    @Override
+    public BlockEntity createBlockEntity(BlockView world) {
+        return new PFMBedBlockEntity(this.color);
     }
 }

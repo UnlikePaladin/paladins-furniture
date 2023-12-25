@@ -15,74 +15,35 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class UnbakedClassicNightstandModel implements UnbakedModel {
-    public static final List<String> NIGHTSTAND_MODEL_PARTS_BASE = new ArrayList<String>() {
-        {
-            add("block/classic_nightstand/template_classic_nightstand/template_classic_nightstand_middle");
-            add("block/classic_nightstand/template_classic_nightstand/template_classic_nightstand_right");
-            add("block/classic_nightstand/template_classic_nightstand/template_classic_nightstand_left");
-            add("block/classic_nightstand/template_classic_nightstand/template_classic_nightstand");
-            add("block/classic_nightstand/template_classic_nightstand/template_classic_nightstand_middle_open");
-            add("block/classic_nightstand/template_classic_nightstand/template_classic_nightstand_right_open");
-            add("block/classic_nightstand/template_classic_nightstand/template_classic_nightstand_left_open");
-            add("block/classic_nightstand/template_classic_nightstand/template_classic_nightstand_open");
-
-        }
+    public static final Identifier[] NIGHTSTAND_MODEL_PARTS_BASE = new Identifier[] {
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_middle"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_right"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_left"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_middle_open"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_right_open"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_left_open"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_open")
     };
-    protected final SpriteIdentifier frameTex;
-    private final List<String> MODEL_PARTS;
 
-    public UnbakedClassicNightstandModel(VariantBase<?> variant, List<String> modelParts, BlockType type) {
-        this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(type));
-        
-        for(String modelPartName : NIGHTSTAND_MODEL_PARTS_BASE){
-            String s = modelPartName.replace("template", variant.asString());
-            if (type == BlockType.STRIPPED_LOG) {
-                s = s.replace(variant.asString(), "stripped_" + variant.asString());
-            }
-            modelParts.add(s);
-        }
-        this.MODEL_PARTS = modelParts;
-    }
-
+    public static final Identifier NIGHTSTAND_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand");
     public static final List<Identifier> NIGHSTAND_MODEL_IDS = new ArrayList<Identifier>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/" + variant.asString() + "_classic_nightstand"));
+                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_classic_nightstand"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/stripped_" + variant.asString() + "_classic_nightstand"));
+                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_classic_nightstand"));
             }
             for(StoneVariant variant : StoneVariant.values()){
                 
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/" + variant.asString() + "_classic_nightstand"));
+                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_classic_nightstand"));
             }
-        }
-    };
-
-    public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<Identifier>() {
-        {
-            for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                
-                for (String part : NIGHTSTAND_MODEL_PARTS_BASE) {
-                    String newPart = part.replace("template", variant.asString());
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
-                }
-                if (variant.hasStripped())
-                    for (String part : NIGHTSTAND_MODEL_PARTS_BASE) {
-                        String newPart = part.replace("template", "stripped_" + variant.asString());
-                        add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
-                    }
-            }
-            for(StoneVariant variant : StoneVariant.values()){
-                
-                for (String part : NIGHTSTAND_MODEL_PARTS_BASE) {
-                    String newPart = part.replace("template", variant.asString());
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
-                }
-            }
+            add(NIGHTSTAND_MODEL_ID);
         }
     };
 
@@ -93,24 +54,26 @@ public class UnbakedClassicNightstandModel implements UnbakedModel {
 
     @Override
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        List<SpriteIdentifier> list = new ArrayList<>(1);
-        list.add(frameTex);
-        return list;
+        return Collections.emptyList();
     }
 
+    public static final Map<ModelBakeSettings, List<BakedModel>> CACHED_MODELS = new ConcurrentHashMap<>();
     @Nullable
     @Override
-    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite > textureGetter, ModelBakeSettings
-            rotationContainer, Identifier modelId) {
-        Map<String,BakedModel> bakedModels = new LinkedHashMap<>();
-        for (String modelPart : MODEL_PARTS) {
-            bakedModels.put(modelPart, loader.bake(new Identifier(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
+    public BakedModel bake(ModelLoader loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+        if (CACHED_MODELS.containsKey(rotationContainer))
+            return getBakedModel(rotationContainer, CACHED_MODELS.get(rotationContainer));
+
+        List<BakedModel> bakedModelList = new ArrayList<>();
+        for (Identifier modelPart : NIGHTSTAND_MODEL_PARTS_BASE) {
+            bakedModelList.add(loader.bake(modelPart, rotationContainer));
         }
-        return getBakedModel(textureGetter.apply(frameTex), rotationContainer, bakedModels, MODEL_PARTS);
+        CACHED_MODELS.put(rotationContainer, bakedModelList);
+        return getBakedModel(rotationContainer, bakedModelList);
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Sprite frame, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
+    public static BakedModel getBakedModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 }
