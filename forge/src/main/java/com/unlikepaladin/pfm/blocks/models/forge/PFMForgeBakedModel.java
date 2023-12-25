@@ -62,6 +62,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                 continue;
             }
             List<BakedQuad> list = new ArrayList<>();
+            list.add(quad);
             separatedQuads.put(sprite, list);
         }
 
