@@ -67,7 +67,7 @@ public class ForgeModernDinnerTableModel extends PFMForgeBakedModel {
             boolean right = set.get(1);
             baseQuads.addAll(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData));
             if (left && right) {
-                baseQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
+                secondaryQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
             }
             if (!left && right) {
                 secondaryQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData));
