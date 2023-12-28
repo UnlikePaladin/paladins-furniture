@@ -15,7 +15,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class PFMBlockModelsMixin {
     @Shadow public abstract BakedModel getModel(BlockState state);
 
-    @Inject(method = "getModelParticleSprite", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getSprite", at = @At("HEAD"), cancellable = true)
     public void setCustomModelParticle(BlockState state, CallbackInfoReturnable<Sprite> cir) {
         BakedModel model = this.getModel(state);
         if (model instanceof PFMBakedModelParticleExtension) {
