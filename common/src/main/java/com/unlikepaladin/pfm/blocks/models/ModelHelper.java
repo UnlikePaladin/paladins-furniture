@@ -192,6 +192,11 @@ public class ModelHelper {
                     blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                     return id;
                 }
+                id = model.getQuads(block.getDefaultState(), Direction.DOWN, new Random(42L)).get(0).getSprite().getId();
+                if (id != null) {
+                    blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
+                    return id;
+                }
             }
         }
 
@@ -259,6 +264,10 @@ public class ModelHelper {
                 return id;
 
             path = "planks_" + path;
+            if (namespace.contains("pixelmon") && path.contains("ultra")) {
+                path = path.replace("ultra_", "").replace("_ultra", "");
+                path = "ultra_space/" + path;
+            }
             id = new Identifier(namespace, "block/" + path);
             path = path.replace("mining", "mine").replace("sorting", "sort").replace("transformation", "trans").replace("dark", "darkwood").replace("alpha_", "alpha_oak_").replace("flowering_pink", "flowerypink").replace("flowering_purple", "floweringpurple");
             Identifier id2 = new Identifier(namespace, "block/wood/" + path);
@@ -298,6 +307,10 @@ public class ModelHelper {
         String path = identifier.getPath().replace("luphie_", "");
         if (namespace.contains("luphieclutteredmod") && path.contains("flowering_log")) {
             path = path.replace("flowering_log", "flowering_yellow_log");
+        }
+        if (namespace.contains("pixelmon") && path.contains("ultra")) {
+            path = path.replace("ultra_", "").replace("_ultra", "");
+            path = "ultra_space/" + path;
         }
         if (namespace.equals("byg") && path.contains("pedu"))
             path = path.replace("pedu", "log");
