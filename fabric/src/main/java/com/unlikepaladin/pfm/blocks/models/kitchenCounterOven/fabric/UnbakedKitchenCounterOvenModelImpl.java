@@ -2,13 +2,18 @@ package com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.fabric;
 
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UnbakedKitchenCounterOvenModelImpl {
-    public static BakedModel getBakedModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        return new FabricKitchenCounterOvenModel(frame, settings, bakedModels, MODEL_PARTS);
+    static Map<ModelBakeSettings, BakedModel> modelMap = new ConcurrentHashMap<>();
+    public static BakedModel getBakedModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        if (modelMap.containsKey(settings))
+            return modelMap.get(settings);
+        BakedModel model = new FabricKitchenCounterOvenModel(settings, modelParts);
+        modelMap.put(settings, model);
+        return model;
     }
 }

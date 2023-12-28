@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.mixin.fabric;
 import com.google.common.base.Suppliers;
 import com.mojang.bridge.game.PackType;
 import com.unlikepaladin.pfm.client.PathPackRPWrapper;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.minecraft.SharedConstants;
@@ -32,13 +33,17 @@ public class PFMModResourcePackCreatorMixin {
             PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
             consumer.accept(factory.create("pfm-asset-resources", Text.literal("PFM Assets"), true,
                     () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
-                        PFMRuntimeResources.prepareAndRunAssetGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata)
+                        if (!PFMDataGenerator.areAssetsRunning())
+                            PFMRuntimeResources.prepareAndRunAssetGen(false);
+                        return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata)
                     , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE));
         } else if (type == ResourceType.SERVER_DATA) {
             PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().getPackVersion(PackType.DATA));
             consumer.accept(factory.create("pfm-data-resources", Text.literal("PFM Data"), true,
                     () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
-                        PFMRuntimeResources.prepareAndRunDataGen(false); return PFMRuntimeResources.DATA_PACK;}), packResourceMetadata)
+                        if (!PFMDataGenerator.isDataRunning())
+                            PFMRuntimeResources.prepareAndRunDataGen(false);
+                        return PFMRuntimeResources.DATA_PACK;}), packResourceMetadata)
                     , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE));
         }
     }

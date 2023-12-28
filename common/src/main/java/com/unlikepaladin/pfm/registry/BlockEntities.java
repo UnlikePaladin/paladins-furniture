@@ -23,4 +23,5 @@ public class BlockEntities {
     public static BlockEntityType<BathtubBlockEntity> BATHTUB_BLOCK_ENTITY;
     public static BlockEntityType<? extends LampBlockEntity> LAMP_BLOCK_ENTITY;
     public static BlockEntityType<? extends PFMToasterBlockEntity> TOASTER_BLOCK_ENTITY;
+    public static BlockEntityType<PFMBedBlockEntity> BED_BLOCK_ENTITY;
 }

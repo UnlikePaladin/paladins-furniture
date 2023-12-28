@@ -7,6 +7,9 @@ import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.registry.dynamic.forge.LateBlockRegistryForge;
 import com.unlikepaladin.pfm.registry.forge.*;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.SharedConstants;
 import net.minecraft.resource.ResourcePackProfile;
@@ -59,13 +62,17 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
             PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
             event.addRepositorySource((profileAdder, factory) -> profileAdder.accept(factory.create("pfm-asset-resources", Text.literal("PFM Assets"), true,
                     () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
-                        PFMRuntimeResources.prepareAndRunAssetGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata)
+                        if (!PFMDataGenerator.areAssetsRunning())
+                            PFMRuntimeResources.prepareAndRunAssetGen(false);
+                        return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata)
                     , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE, false)));
         } else if (event.getPackType() == ResourceType.SERVER_DATA) {
             PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().getPackVersion(PackType.DATA));
             event.addRepositorySource((profileAdder, factory) -> profileAdder.accept(factory.create("pfm-data-resources", Text.literal("PFM Data"), true,
                     () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
-                        PFMRuntimeResources.prepareAndRunDataGen(false); return PFMRuntimeResources.DATA_PACK;}), packResourceMetadata)
+                        if (!PFMDataGenerator.isDataRunning())
+                            PFMRuntimeResources.prepareAndRunDataGen(false);
+                        return PFMRuntimeResources.DATA_PACK;}), packResourceMetadata)
                     , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE, false)));
         }
     }

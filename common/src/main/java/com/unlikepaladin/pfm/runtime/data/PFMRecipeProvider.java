@@ -629,7 +629,7 @@ public class PFMRecipeProvider extends PFMProvider {
             counterTop = Blocks.POLISHED_BLACKSTONE;
             counterBase = Blocks.CRIMSON_PLANKS;
         }
-        return new Pair<>(counterTop, counterBase);
+        return new Pair<>(counterBase,counterTop);
     }
     public Block getVanillaBed(Block block) {
         if (block instanceof SimpleBedBlock){

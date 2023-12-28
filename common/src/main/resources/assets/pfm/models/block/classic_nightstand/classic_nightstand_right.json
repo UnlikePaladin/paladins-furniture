@@ -3,9 +3,9 @@
 	"parent": "block/block",
 	"textures": {
 		"2": "block/stone",
-		"base": "#texture",
-		"particle": "#log",
-		"support": "#log"
+		"base": "minecraft:block/oak_planks",
+		"particle": "minecraft:block/oak_log",
+		"support": "minecraft:block/oak_log"
 	},
 	"elements": [
 		{

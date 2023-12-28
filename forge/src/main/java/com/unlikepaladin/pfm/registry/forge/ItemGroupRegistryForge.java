@@ -3,6 +3,8 @@ package com.unlikepaladin.pfm.registry.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.BasicChairBlock;
+import com.unlikepaladin.pfm.data.materials.WoodVariant;
+import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.ItemGroup;
@@ -17,7 +19,7 @@ public class ItemGroupRegistryForge {
         PaladinFurnitureMod.FURNITURE_GROUP = new ItemGroup(MOD_ID + ".furniture") {
             @Override
             public ItemStack createIcon() {
-                return PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getFromVanillaWoodType(BoatEntity.Type.OAK, true).asItem().getDefaultStack();
+                return PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultStack();
             }
         };
         PaladinFurnitureMod.DYE_KITS = new ItemGroup(MOD_ID + ".dye_kits") {
