@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.mirror.forge;
 import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.model.BakedModel;
@@ -20,9 +21,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import net.minecraft.util.math.random.Random;
 
-public class ForgeMirrorModel extends AbstractBakedModel {
+public class ForgeMirrorModel extends PFMForgeBakedModel {
     public ForgeMirrorModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
+        super(settings, bakedModels.values().stream().toList());
         this.modelParts = MODEL_PARTS;
         this.glassTex = glassTex;
         this.reflectTex = reflectTex;
@@ -36,32 +37,32 @@ public class ForgeMirrorModel extends AbstractBakedModel {
     @NotNull
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
-        List<BakedQuad> quads = new ArrayList<>(getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData, renderLayer));
+        List<BakedQuad> quads = new ArrayList<>(getTemplateBakedModels().get((0)).getQuads(state, side, rand, extraData, renderLayer));
         if (state != null && state.getBlock() instanceof MirrorBlock && extraData.get(DIRECTIONS) != null && extraData.get(DIRECTIONS).connections != null) {
             BitSet connections = extraData.get(DIRECTIONS).connections;
             if (!connections.get(0)) {
-                quads.addAll(getBakedModels().get(modelParts.get(1)).getQuads(state, side, rand, extraData, renderLayer));
+                quads.addAll(getTemplateBakedModels().get((1)).getQuads(state, side, rand, extraData, renderLayer));
             }
             if (!connections.get(1)) {
-                quads.addAll(getBakedModels().get(modelParts.get(2)).getQuads(state, side, rand, extraData, renderLayer));
+                quads.addAll(getTemplateBakedModels().get((2)).getQuads(state, side, rand, extraData, renderLayer));
             }
             if (!connections.get(2)) {
-                quads.addAll(getBakedModels().get(modelParts.get(4)).getQuads(state, side, rand, extraData, renderLayer));
+                quads.addAll(getTemplateBakedModels().get((4)).getQuads(state, side, rand, extraData, renderLayer));
             }
             if (!connections.get(3)) {
-                quads.addAll(getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData, renderLayer));
+                quads.addAll(getTemplateBakedModels().get((3)).getQuads(state, side, rand, extraData, renderLayer));
             }
             if (!connections.get(4)) {
-                quads.addAll(getBakedModels().get(modelParts.get(6)).getQuads(state, side, rand, extraData, renderLayer));
+                quads.addAll(getTemplateBakedModels().get((6)).getQuads(state, side, rand, extraData, renderLayer));
             }
             if (!connections.get(5)) {
-                quads.addAll(getBakedModels().get(modelParts.get(8)).getQuads(state, side, rand, extraData, renderLayer));
+                quads.addAll(getTemplateBakedModels().get((8)).getQuads(state, side, rand, extraData, renderLayer));
             }
             if (!connections.get(6)) {
-                quads.addAll(getBakedModels().get(modelParts.get(5)).getQuads(state, side, rand, extraData, renderLayer));
+                quads.addAll(getTemplateBakedModels().get((5)).getQuads(state, side, rand, extraData, renderLayer));
             }
             if (!connections.get(7)) {
-                quads.addAll(getBakedModels().get(modelParts.get(7)).getQuads(state, side, rand, extraData, renderLayer));
+                quads.addAll(getTemplateBakedModels().get((7)).getQuads(state, side, rand, extraData, renderLayer));
             }
         }
         return quads;

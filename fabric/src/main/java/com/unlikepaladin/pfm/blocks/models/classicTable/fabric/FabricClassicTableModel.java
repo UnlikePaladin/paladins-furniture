@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.models.classicTable.fabric;
 
 import com.unlikepaladin.pfm.blocks.ClassicTableBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -17,12 +18,10 @@ import java.util.Map;
 import net.minecraft.util.math.random.Random;
 import java.util.function.Supplier;
 
-public class FabricClassicTableModel extends AbstractBakedModel implements FabricBakedModel {
-    public FabricClassicTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
-        this.modelParts = MODEL_PARTS;
+public class FabricClassicTableModel extends PFMFabricBakedModel {
+    public FabricClassicTableModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        super(settings, modelParts);
     }
-    private final List<String> modelParts;
     @Override
     public boolean isVanillaAdapter() {
         return false;
@@ -36,24 +35,44 @@ public class FabricClassicTableModel extends AbstractBakedModel implements Fabri
             boolean east = block.canConnect(world.getBlockState(pos.east()));
             boolean west = block.canConnect(world.getBlockState(pos.west()));
             boolean south = block.canConnect(world.getBlockState(pos.south()));
-            ((FabricBakedModel) getBakedModels().get(modelParts.get(0))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            pushTextureTransform(context, getSpriteList(state).get(0));
+            ((FabricBakedModel) getTemplateBakedModels().get(0)).emitBlockQuads(world, state, pos, randomSupplier, context);
+            context.popTransform();
+
+            pushTextureTransform(context, getSpriteList(state).get(1));
             if (!north && !east) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(1))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getTemplateBakedModels().get(1)).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
             if (!north && !west) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(2))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getTemplateBakedModels().get(2)).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
             if (!south && !west) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(3))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
             if (!south && !east) {
-                ((FabricBakedModel) getBakedModels().get(modelParts.get(4))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(world, state, pos, randomSupplier, context);
             }
+            context.popTransform();
         }
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+        pushTextureTransform(context, getSpriteList(stack).get(0));
+        ((FabricBakedModel) getTemplateBakedModels().get(0)).emitItemQuads(stack, randomSupplier, context);
+        context.popTransform();
 
+        pushTextureTransform(context, getSpriteList(stack).get(1));
+        // legs
+        ((FabricBakedModel) getTemplateBakedModels().get(1)).emitItemQuads(stack, randomSupplier, context);
+        ((FabricBakedModel) getTemplateBakedModels().get(2)).emitItemQuads(stack, randomSupplier, context);
+        ((FabricBakedModel) getTemplateBakedModels().get(3)).emitItemQuads(stack, randomSupplier, context);
+        ((FabricBakedModel) getTemplateBakedModels().get(4)).emitItemQuads(stack, randomSupplier, context);
+        context.popTransform();
+    }
+
+    @Override
+    public Sprite pfm$getParticle(BlockState state) {
+        return getSpriteList(state).get(0);
     }
 }

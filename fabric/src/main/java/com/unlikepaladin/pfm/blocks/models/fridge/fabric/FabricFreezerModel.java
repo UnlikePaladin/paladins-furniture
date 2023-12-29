@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.blocks.IronFridgeBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -19,9 +20,9 @@ import java.util.Map;
 import net.minecraft.util.math.random.Random;
 import java.util.function.Supplier;
 
-public class FabricFreezerModel extends AbstractBakedModel implements FabricBakedModel {
+public class FabricFreezerModel extends PFMFabricBakedModel {
     public FabricFreezerModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> modelParts) {
-        super(frame, settings, bakedModels);
+        super(settings, bakedModels.values().stream().toList());
         this.modelParts = modelParts;
     }
     private final List<String> modelParts;
@@ -36,14 +37,19 @@ public class FabricFreezerModel extends AbstractBakedModel implements FabricBake
         boolean hasFridge = world.getBlockState(pos.down()).getBlock() instanceof FridgeBlock && !(world.getBlockState(pos.down()).getBlock() instanceof IronFridgeBlock);
         int openOffset = state.get(FreezerBlock.OPEN) ? 2 : 0;
         if (hasFridge) {
-            ((FabricBakedModel) getBakedModels().get(modelParts.get(1+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getTemplateBakedModels().get((1+openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else {
-            ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getTemplateBakedModels().get((openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         }
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
 
+    }
+
+    @Override
+    public Sprite pfm$getParticle(BlockState state) {
+        return getParticleSprite();
     }
 }

@@ -3,12 +3,14 @@ package com.unlikepaladin.pfm.blocks.models.logTable.forge;
 import com.unlikepaladin.pfm.blocks.LogTableBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
@@ -19,19 +21,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import net.minecraft.util.math.random.Random;
 
-public class ForgeLogTableModel extends AbstractBakedModel {
-    public ForgeLogTableModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
-        this.modelParts = MODEL_PARTS;
+public class ForgeLogTableModel extends PFMForgeBakedModel {
+    public ForgeLogTableModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        super(settings, modelParts);
     }
-    private final List<String> modelParts;
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
 
     @NotNull
     @Override
     public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
-        ModelData.Builder builder = ModelData.builder();
         if (state.getBlock() instanceof LogTableBlock) {
+            ModelData.Builder builder = ModelData.builder();
+
+            ModelData data = builder.build();
+            data = super.getModelData(world, pos, state, data);
+
             LogTableBlock block = (LogTableBlock) state.getBlock();
             Direction dir = state.get(LogTableBlock.FACING);
             boolean left = block.isTable(world, pos, dir.rotateYCounterclockwise(), dir);
@@ -39,32 +43,52 @@ public class ForgeLogTableModel extends AbstractBakedModel {
             BitSet set = new BitSet();
             set.set(0, left);
             set.set(1, right);
-            builder.with(CONNECTIONS, new ModelBitSetProperty(set));
+            data = data.derive().with(CONNECTIONS, new ModelBitSetProperty(set)).build();
+            return data;
         }
-        return builder.build();
+        return tileData;
     }
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
-        List<BakedQuad> quads = new ArrayList<>();
         if (state != null && state.getBlock() instanceof LogTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
+            List<BakedQuad> baseQuads = new ArrayList<>();
+            List<BakedQuad> secondaryQuads = new ArrayList<>();
+
             BitSet set = extraData.get(CONNECTIONS).connections;
             boolean left = set.get(0);
             boolean right = set.get(1);
             Direction dir = state.get(LogTableBlock.FACING);
-            quads.addAll(getBakedModels().get(modelParts.get(0)).getQuads(state, side, rand, extraData, renderLayer));
+            baseQuads.addAll(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData, renderLayer));
             if (!left && right) {
                 int index = dir == Direction.NORTH || dir == Direction.WEST ? 1 : 2;
-                quads.addAll(getBakedModels().get(modelParts.get(index)).getQuads(state, side, rand, extraData, renderLayer));
+                secondaryQuads.addAll(getTemplateBakedModels().get(index).getQuads(state, side, rand, extraData, renderLayer));
             }
             if (!right && left) {
                 int index = dir == Direction.NORTH || dir == Direction.WEST ? 2 : 1;
-                quads.addAll(getBakedModels().get(modelParts.get(index)).getQuads(state, side, rand, extraData, renderLayer));
+                secondaryQuads.addAll(getTemplateBakedModels().get(index).getQuads(state, side, rand, extraData, renderLayer));
             }
             if (!right && !left) {
-                quads.addAll(getBakedModels().get(modelParts.get(3)).getQuads(state, side, rand, extraData, renderLayer));
+                secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderLayer));
             }
+            List<Sprite> spriteList = getSpriteList(state);
+            List<BakedQuad> quads = getQuadsWithTexture(baseQuads, spriteList.get(0));
+            quads.addAll(getQuadsWithTexture(secondaryQuads, spriteList.get(1)));
+            return quads;
         }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+        // base
+        List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(state, face, random));
+        // legs
+        List<BakedQuad> secondaryQuads = new ArrayList<>(getTemplateBakedModels().get(3).getQuads(state, face, random));
+
+        List<Sprite> spriteList = getSpriteList(stack);
+        List<BakedQuad> quads = getQuadsWithTexture(baseQuads, spriteList.get(0));
+        quads.addAll(getQuadsWithTexture(secondaryQuads, spriteList.get(1)));
         return quads;
     }
 }

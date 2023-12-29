@@ -5,9 +5,9 @@
 		"3": "block/light_gray_concrete",
 		"4": "block/iron_block",
 		"5": "block/gray_concrete",
-		"particle": "#texture",
-		"base": "#texture",
-		"legs": "#log"
+		"particle": "minecraft:block/oak_planks",
+		"base": "minecraft:block/oak_planks",
+		"legs": "minecraft:block/oak_log"
 	},
 	"elements": [
 		{
