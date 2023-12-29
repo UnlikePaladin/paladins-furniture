@@ -62,8 +62,11 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         for (BakedQuad quad : quads) {
             Identifier sprite = quad.func_187508_a().getId();
             if (separatedQuads.containsKey(sprite)) {
-                if (!separatedQuads.get(sprite).contains(quad))
-                    separatedQuads.get(sprite).add(quad);
+                if (!separatedQuads.get(sprite).contains(quad)) {
+                    List<BakedQuad> newQuadList = new ArrayList<>(separatedQuads.get(sprite));
+                    newQuadList.add(quad);
+                    separatedQuads.put(sprite, newQuadList);
+                }
                 continue;
             }
             List<BakedQuad> list = new ArrayList<>();
