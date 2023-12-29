@@ -47,7 +47,7 @@ public class SkinGetter {
         System.out.println("DEBUG:" + basejson);
         byte[] decodedBytes = Base64.getDecoder().decode(basejson);
         String decodedjson = new String(decodedBytes);
-        //System.out.println("DEBUG:" + decodedjson);
+        // System.out.println("DEBUG:" + decodedjson);
 
         if (decodedjson.contains("url")) {
             String str = decodedjson.substring(decodedjson.lastIndexOf("\"http") + 1, decodedjson.indexOf("}"));

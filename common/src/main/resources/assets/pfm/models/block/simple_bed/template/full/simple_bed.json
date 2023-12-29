@@ -1,9 +1,8 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"0": "#texture",
-		"1": "entity/bed/red",
-		"particle": "#texture"
+		"0": "block/oak_planks",
+		"particle": "block/oak_planks"
 	},
 	"elements": [
 		{
@@ -50,34 +49,6 @@
 			}
 		},
 		{
-			"from": [21, 5, 0],
-			"to": [29, 9, 16],
-			"faces": {
-				"north": {"uv": [5.5, 3.5, 6.5, 1.5], "rotation": 90, "texture": "#1"},
-				"south": {"uv": [1.75, 1.5, 0.5, 3.5], "rotation": 90, "texture": "#1"},
-				"up": {"uv": [2, 1.5, 5, 3.5], "rotation": 90, "texture": "#1"}
-			}
-		},
-		{
-			"from": [21, 9, 1],
-			"to": [29, 10, 15],
-			"faces": {
-				"north": {"uv": [6.5, 3.5, 6.25, 1.5], "rotation": 90, "texture": "#1"},
-				"south": {"uv": [6.5, 3.5, 6.25, 1.5], "rotation": 90, "texture": "#1"},
-				"west": {"uv": [2, 3.25, 5, 3.5], "texture": "#1"},
-				"up": {"uv": [2, 1.5, 5, 3.5], "rotation": 90, "texture": "#1"}
-			}
-		},
-		{
-			"from": [16, 5, 0],
-			"to": [21, 9, 16],
-			"faces": {
-				"north": {"uv": [0.5, 3.875, 1.5, 5.125], "rotation": 270, "texture": "#1"},
-				"south": {"uv": [5.5, 3.875, 6.5, 5.125], "rotation": 90, "texture": "#1"},
-				"up": {"uv": [1.5, 3.875, 5.5, 5.125], "rotation": 90, "texture": "#1"}
-			}
-		},
-		{
 			"from": [3, 2, 0],
 			"to": [16, 5, 16],
 			"faces": {
@@ -118,15 +89,6 @@
 				"west": {"uv": [0, 0, 16, 8], "texture": "#0"},
 				"up": {"uv": [0, 4, 16, 7], "rotation": 90, "texture": "#0"},
 				"down": {"uv": [0, 0, 3, 16], "texture": "#0"}
-			}
-		},
-		{
-			"from": [3, 5, 0],
-			"to": [16, 9, 16],
-			"faces": {
-				"north": {"uv": [0.5, 7.25, 1.5, 10.5], "rotation": 270, "texture": "#1"},
-				"south": {"uv": [5.5, 7.25, 6.5, 10.5], "rotation": 90, "texture": "#1"},
-				"up": {"uv": [1.5, 10.5, 5.5, 7.25], "rotation": 180, "texture": "#1"}
 			}
 		}
 	],
@@ -173,13 +135,13 @@
 			"name": "group",
 			"origin": [0, 0, 0],
 			"color": 0,
-			"children": [0, 1, 2, 3, 4, 5, 6]
+			"children": [0, 1, 2, 3]
 		},
 		{
 			"name": "group",
 			"origin": [0, 0, 0],
 			"color": 0,
-			"children": [7, 8, 9, 10, 11]
+			"children": [4, 5, 6, 7]
 		}
 	]
 }

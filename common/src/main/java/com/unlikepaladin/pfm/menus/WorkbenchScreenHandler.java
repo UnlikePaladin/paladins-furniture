@@ -167,17 +167,17 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     }
 
     public void updateInput() {
-        //Reset the selected recipe and clear the output slot
+        // Reset the selected recipe and clear the output slot
         if (!this.availableRecipes.isEmpty() && getSelectedRecipe() != -1) {
             if (!this.sortedRecipes.get(getSelectedRecipe()).matches(playerInventory, world)){
                 this.selectedRecipe.set(-1);
                 this.outputSlot.setStack(ItemStack.EMPTY);
             }
         }
-        //Reset the available recipes list and add all recipes that can be crafted
+        // Reset the available recipes list and add all recipes that can be crafted
         this.availableRecipes.clear();
         this.availableRecipes.addAll(allRecipes.stream().filter(newFurnitureRecipe -> newFurnitureRecipe.matches(playerInventory, world)).toList());
-        //Clear the visible recipe list and add the craft-able recipes first, then add the rest, checking that it's not present already so that it's not overridden.
+        // Clear the visible recipe list and add the craft-able recipes first, then add the rest, checking that it's not present already so that it's not overridden.
         this.sortedRecipes.clear();
         this.sortedRecipes.addAll(availableRecipes);
         this.sortedRecipes.addAll(allRecipes.stream().filter(furnitureRecipe -> !sortedRecipes.contains(furnitureRecipe)).toList());

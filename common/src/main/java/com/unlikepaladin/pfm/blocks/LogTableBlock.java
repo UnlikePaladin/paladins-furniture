@@ -127,7 +127,7 @@ public class LogTableBlock extends HorizontalFacingBlock {
     final static VoxelShape LOG_TABLE_ONE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, LOG_TABLE_ONE);
     final static VoxelShape LOG_TABLE_ONE_EAST = rotateShape(Direction.NORTH, Direction.EAST, LOG_TABLE_ONE);
     final static VoxelShape LOG_TABLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, LOG_TABLE);
-    //Cursed I know
+    // Cursed I know
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         boolean left = isTable(view, pos, dir.rotateYCounterclockwise(), dir);
