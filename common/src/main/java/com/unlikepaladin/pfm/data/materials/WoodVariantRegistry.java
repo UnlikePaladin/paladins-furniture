@@ -66,15 +66,15 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
                 !namespace.equals("absentbydesign") && !(namespace.equals("terrestria") && path.contains("sakura")) && !(namespace.equals("betternether") && path.contains("nether_mushroom")) && !namespace.equals("chipped") && !(namespace.equals("regions_unexplored") && path.contains("alpha"))) {
 
             BlockState state = baseBlock.getDefaultState();
-            //can't check if the block is a full one, so I do this. Adding some checks here
+            // can't check if the block is a full one, so I do this. Adding some checks here
             if (state.getProperties().size() <= 2 && !(baseBlock instanceof SlabBlock)) {
-                //needs to use wood sound type
-                //if (state.getSoundType() == SoundType.WOOD) { //wood from tcon has diff sounds
+                // needs to use wood sound type
+                // if (state.getSoundType() == SoundType.WOOD) { //wood from tcon has diff sounds
                 BlockSoundGroup soundGroup = state.getSoundGroup();
                 Instrument instrument = state.getInstrument();
-                //and have correct material
+                // and have correct material
                 if (soundGroup == BlockSoundGroup.BAMBOO_WOOD || soundGroup == BlockSoundGroup.CHERRY_WOOD || soundGroup == BlockSoundGroup.WOOD || soundGroup == BlockSoundGroup.NETHER_WOOD || instrument == Instrument.BASS) {
-                    //we do not allow "/" in the wood name
+                    // we do not allow "/" in the wood name
                     name = name.replace("/", "_");
                     Identifier id = new Identifier(blockId.getNamespace(), name);
                     Block logBlock = findLog(id);

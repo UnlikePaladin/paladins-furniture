@@ -13,6 +13,8 @@
     "PFMMixinDedicatedServer"
   ],
   "client": [
+    "PFMBakedModelManagerMixin",
+    "PFMItemRendererMixin",
     "PFMLanguageManagerAccessor",
     "PFMMixinClientPacketListener",
     "PFMRenderLayersMixin"

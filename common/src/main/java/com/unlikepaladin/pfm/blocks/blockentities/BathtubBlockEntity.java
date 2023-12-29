@@ -17,15 +17,13 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class BathtubBlockEntity extends BedBlockEntity {
-    private final BlockEntityType<?> type;
     public BathtubBlockEntity(BlockPos pos, BlockState state) {
         super(pos, state, DyeColor.WHITE);
-        this.type = BlockEntities.BATHTUB_BLOCK_ENTITY;
     }
 
     @Override
     public BlockEntityType<?> getType() {
-        return type;
+        return BlockEntities.BATHTUB_BLOCK_ENTITY;
     }
 
     private int fillTimer = 0;

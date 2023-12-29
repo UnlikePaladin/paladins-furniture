@@ -107,7 +107,7 @@ public class ClassicTableBlock extends Block {
     final static VoxelShape TABLE_CLASSIC_SOUTH_WEST_LEG = createCuboidShape(2, 0, 12, 4, 15, 14);
     final static VoxelShape TABLE_CLASSIC_SOUTH_EAST_LEG = createCuboidShape(12, 0, 12, 14, 15, 14);
 
-    //Cursed I know
+    // Cursed I know
     final static Map<String, VoxelShape> VOXEL_SHAPES = new HashMap<>();
     public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
 

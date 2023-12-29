@@ -81,6 +81,9 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
         }
 
         List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers);
+        if (active == null)
+            return ActionResult.FAIL;
+
         List<Entity> hasPassenger = new ArrayList<>();
         active.forEach(chairEntity -> hasPassenger.add(chairEntity.getFirstPassenger()));
         if (!active.isEmpty() && hasPassenger.stream().anyMatch(Entity::isPlayer)) {
@@ -163,10 +166,10 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
         super.onEntityCollision(state, world, pos, entity);
         List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers);
-        if (!active.isEmpty())
+        if (active == null || !active.isEmpty())
             return;
 
-        if (entity instanceof PlayerEntity || entity instanceof IronGolemEntity || entity instanceof AbstractMinecartEntity || entity.hasVehicle() || !(entity instanceof LivingEntity)) {
+        if (entity instanceof PlayerEntity || entity instanceof IronGolemEntity || entity instanceof AbstractMinecartEntity || entity.hasVehicle() || !(entity instanceof LivingEntity) || entity instanceof ChairEntity) {
             return;
         }
         if (!PaladinFurnitureMod.getPFMConfig().doMobsSitOnChairs())

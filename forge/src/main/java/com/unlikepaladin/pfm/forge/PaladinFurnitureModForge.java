@@ -13,6 +13,9 @@ import net.minecraft.resource.*;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.util.Identifier;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.SharedConstants;
 import net.minecraft.resource.metadata.PackResourceMetadata;
@@ -67,7 +70,9 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
                 @Override
                 public ResourcePack open(String name) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
-                        PFMRuntimeResources.prepareAndRunAssetGen(false); return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata);
+                        if (!PFMDataGenerator.areAssetsRunning())
+                            PFMRuntimeResources.prepareAndRunAssetGen(false);
+                        return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata);
                 }
 
                 @Override
@@ -85,7 +90,9 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
                 @Override
                 public ResourcePack open(String name) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
-                        PFMRuntimeResources.prepareAndRunDataGen(false); return PFMRuntimeResources.DATA_PACK;}), packResourceMetadata);
+                        if (!PFMDataGenerator.isDataRunning())
+                            PFMRuntimeResources.prepareAndRunDataGen(false);
+                        return PFMRuntimeResources.DATA_PACK;}), packResourceMetadata);
                 }
 
                 @Override

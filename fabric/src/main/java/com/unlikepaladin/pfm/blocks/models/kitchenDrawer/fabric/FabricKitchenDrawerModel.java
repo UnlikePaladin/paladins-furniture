@@ -2,6 +2,8 @@ package com.unlikepaladin.pfm.blocks.models.kitchenDrawer.fabric;
 
 import com.unlikepaladin.pfm.blocks.KitchenDrawerBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.AbstractFurnaceBlock;
@@ -20,12 +22,10 @@ import java.util.Map;
 import net.minecraft.util.math.random.Random;
 import java.util.function.Supplier;
 
-public class FabricKitchenDrawerModel extends AbstractBakedModel implements FabricBakedModel {
-    public FabricKitchenDrawerModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
-        super(frame, settings, bakedModels);
-        this.modelParts = MODEL_PARTS;
+public class FabricKitchenDrawerModel extends PFMFabricBakedModel {
+    public FabricKitchenDrawerModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+        super(settings, modelParts);
     }
-    private final List<String> modelParts;
     @Override
     public boolean isVanillaAdapter() {
         return false;
@@ -41,14 +41,17 @@ public class FabricKitchenDrawerModel extends AbstractBakedModel implements Fabr
             BlockState neighborStateFacing = world.getBlockState(pos.offset(direction));
             BlockState neighborStateOpposite = world.getBlockState(pos.offset(direction.getOpposite()));
             int openOffset = state.get(KitchenDrawerBlock.OPEN) ? 7 : 0;
+            List<Sprite> spriteList = getSpriteList(state);
+            pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
+
             if (block.canConnectToCounter(neighborStateFacing) && neighborStateFacing.contains(Properties.HORIZONTAL_FACING)) {
                 Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
                 if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && block.isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
                     if (direction2 == direction.rotateYCounterclockwise()) {
-                        ((FabricBakedModel) getBakedModels().get(modelParts.get(5 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                        ((FabricBakedModel) getTemplateBakedModels().get((5 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                     }
                     else {
-                        ((FabricBakedModel) getBakedModels().get(modelParts.get(6 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                        ((FabricBakedModel) getTemplateBakedModels().get((6 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                     }
                 } else {
                     middleCounter(world, state, pos, randomSupplier, context, left, right, openOffset);
@@ -64,33 +67,43 @@ public class FabricKitchenDrawerModel extends AbstractBakedModel implements Fabr
                 }
                 if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && block.isDifferentOrientation(state, world, pos, direction3)) {
                     if (direction3 == direction.rotateYCounterclockwise()) {
-                        ((FabricBakedModel) getBakedModels().get(modelParts.get(4 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                        ((FabricBakedModel) getTemplateBakedModels().get((4 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                     } else {
-                        ((FabricBakedModel) getBakedModels().get(modelParts.get(3 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                        ((FabricBakedModel) getTemplateBakedModels().get((3 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                     }
                 } else {
                     middleCounter(world, state, pos, randomSupplier, context, left, right, openOffset);
                 }
             }
-            else
+            else {
                 middleCounter(world, state, pos, randomSupplier, context, left, right, openOffset);
+            }
+            context.popTransform();
         }
     }
 
     private void middleCounter(BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, boolean left, boolean right, int openOffset) {
         if (left && right) {
-            ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getTemplateBakedModels().get((openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else if (left) {
-            ((FabricBakedModel) getBakedModels().get(modelParts.get(1 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getTemplateBakedModels().get((1 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else if (right) {
-            ((FabricBakedModel) getBakedModels().get(modelParts.get(2 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getTemplateBakedModels().get((2 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         } else {
-            ((FabricBakedModel) getBakedModels().get(modelParts.get(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getTemplateBakedModels().get((openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         }
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+        List<Sprite> spriteList = getSpriteList(stack);
+        pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
+        ((FabricBakedModel) getTemplateBakedModels().get((0))).emitItemQuads(stack, randomSupplier, context);
+        context.popTransform();
+    }
 
+    @Override
+    public Sprite pfm$getParticle(BlockState state) {
+        return getSpriteList(state).get(0);
     }
 }

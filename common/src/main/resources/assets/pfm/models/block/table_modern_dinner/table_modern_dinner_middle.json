@@ -1,25 +1,9 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"particle": "#texture",
-		"base": "#texture",
-		"legs": "#log"
+		"legs": "block/oak_log"
 	},
 	"elements": [
-		{
-			"name": "Seat",
-			"from": [0, 14, 0],
-			"to": [16, 16, 16],
-			"rotation": {"angle": 0, "axis": "y", "origin": [8, 13, 8]},
-			"faces": {
-				"north": {"uv": [0, 0, 14, 2], "texture": "#base"},
-				"east": {"uv": [5, 1, 7, 14], "rotation": 90, "texture": "#base"},
-				"south": {"uv": [1, 1, 15, 3], "texture": "#base"},
-				"west": {"uv": [5, 1, 7, 14], "rotation": 90, "texture": "#base"},
-				"up": {"uv": [1, 1, 15, 14], "texture": "#base"},
-				"down": {"uv": [0, 1, 14, 14], "texture": "#base"}
-			}
-		},
 		{
 			"from": [0, 2, 7],
 			"to": [16, 4, 9],
@@ -87,12 +71,11 @@
 					"color": 0,
 					"children": []
 				},
-				0,
 				{
 					"name": "legs",
 					"origin": [0, 0, 0],
 					"color": 0,
-					"children": [1]
+					"children": [0]
 				}
 			]
 		}

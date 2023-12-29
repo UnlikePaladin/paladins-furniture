@@ -142,11 +142,11 @@ public abstract class VariantBase<T> implements StringIdentifiable {
         return null;
     }
 
-    //for items
+    // for items
     @Nullable
     public static Item changeItemType(Item current, VariantBase<?> originalMat, VariantBase<?> destinationMat) {
         Object changed = changeType(current, originalMat, destinationMat);
-        //if item swap fails try to swap blocks instead
+        // if item swap fails try to swap blocks instead
         if (changed == null) {
             if (current instanceof BlockItem bi) {
                 var blockChanged = changeType(bi.getBlock(), originalMat, destinationMat);
@@ -160,11 +160,11 @@ public abstract class VariantBase<T> implements StringIdentifiable {
         return null;
     }
 
-    //for blocks
+    // for blocks
     @Nullable
     public static Block changeBlockType(@NotNull Block current, VariantBase<?> originalMat, VariantBase<?> destinationMat) {
         Object changed = changeType(current, originalMat, destinationMat);
-        //if block swap fails try to swap items instead
+        // if block swap fails try to swap items instead
         if (changed == null) {
             if (current.asItem() != Items.AIR) {
                 var itemChanged = changeType(current.asItem(), originalMat, destinationMat);

@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.BasicChairBlock;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Blocks;
 import net.minecraft.entity.vehicle.BoatEntity;
@@ -66,7 +67,7 @@ public class ItemGroupRegistryForge {
             PaladinFurnitureMod.DYE_KITS.setRight(dyeGroup);
 
             ItemGroup furnitureGroup = ItemGroup.builder().displayName(Text.translatable("itemGroup.pfm.furniture"))
-                    .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getFromVanillaWoodType(BoatEntity.Type.OAK, true).asItem().getDefaultStack())
+                    .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultStack())
                     .entries((enabledFeatures, entries) -> {
                     }).build();
             helper.register(new Identifier(MOD_ID, "furniture"), furnitureGroup);

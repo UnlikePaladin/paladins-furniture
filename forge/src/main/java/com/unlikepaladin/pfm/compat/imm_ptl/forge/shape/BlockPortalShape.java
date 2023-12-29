@@ -163,7 +163,7 @@ public class BlockPortalShape {
         firstFramePos = frameAreaWithoutCorner.iterator().next();
     }
 
-    //null for not found
+    // null for not found
     @Nullable
     public static BlockPortalShape findArea(
             BlockPos startingPos,
@@ -230,7 +230,7 @@ public class BlockPortalShape {
                         foundArea.add(curr);
                     }
                     else if (isObsidian.test(curr)) {
-                        //nothing happens
+                        // nothing happens
                     }
                     else {
                         return false;
@@ -282,7 +282,7 @@ public class BlockPortalShape {
                 }
                 else {
                     if (!isObsidian.test(newPos)) {
-                        //abort
+                        // abort
                         return false;
                     }
                 }
@@ -291,7 +291,7 @@ public class BlockPortalShape {
         return true;
     }
 
-    //return null for not match
+    // return null for not match
     public BlockPortalShape matchShape(
             Predicate<BlockPos> isAir,
             Predicate<BlockPos> isObsidian,
@@ -314,7 +314,7 @@ public class BlockPortalShape {
                         blockPos.getY() - anchor.getY() + newAnchor.getY(),
                         blockPos.getZ() - anchor.getZ() + newAnchor.getZ()
                 )
-                //blockPos.subtract(anchor).add(newAnchor)
+                // blockPos.subtract(anchor).add(newAnchor)
         ).allMatch(
                 isAir
         );
@@ -337,7 +337,7 @@ public class BlockPortalShape {
                 blockPos.getZ() - anchor.getZ() + newAnchor.getZ()
         );
 
-        //does this have optimization effect?
+        // does this have optimization effect?
         if (!isObsidian.test(mapper.apply(firstFramePos))) {
             return false;
         }

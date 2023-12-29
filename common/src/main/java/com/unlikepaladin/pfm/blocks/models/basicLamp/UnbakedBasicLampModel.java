@@ -12,6 +12,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class UnbakedBasicLampModel implements UnbakedModel {
@@ -31,10 +32,10 @@ public class UnbakedBasicLampModel implements UnbakedModel {
     }
 
     public static final List<String> MODEL_PARTS_BASE = new ArrayList<>() {{
-       add("block/basic_lamp/template_basic_lamp/template_basic_lamp_bottom");
-       add("block/basic_lamp/template_basic_lamp/template_basic_lamp_middle");
-       add("block/basic_lamp/template_basic_lamp/template_basic_lamp_single");
-        add("block/basic_lamp/template_basic_lamp/template_basic_lamp_top");
+       add("block/basic_lamp/basic_lamp_bottom");
+       add("block/basic_lamp/basic_lamp_middle");
+       add("block/basic_lamp/basic_lamp_single");
+        add("block/basic_lamp/basic_lamp_top");
     }};
 
     public static final List<String> STATIC_PARTS = new ArrayList<>() {{
@@ -45,11 +46,8 @@ public class UnbakedBasicLampModel implements UnbakedModel {
     private static final Identifier PARENT = new Identifier("block/block");
     public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
         {
-            for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                for (String part : MODEL_PARTS_BASE) {
-                    String newPart = part.replaceAll("template", variant.asString());
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, newPart));
-                }
+            for (String part : MODEL_PARTS_BASE) {
+                add(new Identifier(PaladinFurnitureMod.MOD_ID, part));
             }
             for (String part : STATIC_PARTS) {
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, part));
@@ -61,10 +59,7 @@ public class UnbakedBasicLampModel implements UnbakedModel {
     Map<WoodVariant, SpriteIdentifier> textureMap = new HashMap<>();
 
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-            textureMap.put(variant, new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)));
-        }
-        return textureMap.values();
+        return Collections.emptyList();
     }
 
     @Override
@@ -77,27 +72,23 @@ public class UnbakedBasicLampModel implements UnbakedModel {
 
     }
 
+    public static final Map<ModelBakeSettings, List<BakedModel>> CACHED_MODELS = new ConcurrentHashMap<>();
     @Nullable
     @Override
     public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        Map<WoodVariant, Map<String, BakedModel>> bakedModels = new LinkedHashMap<>();
-        List<String> parts = new ArrayList<>(MODEL_PARTS_BASE);
-        parts.addAll(STATIC_PARTS);
-        for (WoodVariant woodVariant : WoodVariantRegistry.getVariants()) {
-            bakedModels.put(woodVariant, new LinkedHashMap<>());
-            for (String part : parts) {
-                bakedModels.get(woodVariant).put(part, loader.bake(new Identifier(PaladinFurnitureMod.MOD_ID, part.replaceAll("template", woodVariant.asString())), rotationContainer));
-            }
+        if (CACHED_MODELS.containsKey(rotationContainer))
+            return getBakedModel(rotationContainer, CACHED_MODELS.get(rotationContainer));
+
+        List<BakedModel> bakedModelList = new ArrayList<>();
+        for (Identifier modelPart : ALL_MODEL_IDS) {
+            bakedModelList.add(loader.bake(modelPart, rotationContainer));
         }
-        Map<WoodVariant, Sprite> spriteMap = new HashMap<>();
-        for (Map.Entry<WoodVariant, SpriteIdentifier> spriteIdentifierEntry : textureMap.entrySet()) {
-            spriteMap.put(spriteIdentifierEntry.getKey(), textureGetter.apply(spriteIdentifierEntry.getValue()));
-        }
-        return getBakedModel(spriteMap, rotationContainer, bakedModels, parts);
+        CACHED_MODELS.put(rotationContainer, bakedModelList);
+        return getBakedModel(rotationContainer, bakedModelList);
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Map<WoodVariant, Sprite> textures, ModelBakeSettings settings, Map<WoodVariant, Map<String, BakedModel>> variantToModelMap, List<String> modelParts) {
+    public static BakedModel getBakedModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 }
