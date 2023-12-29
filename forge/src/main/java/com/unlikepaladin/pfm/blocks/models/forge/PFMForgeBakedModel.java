@@ -47,6 +47,9 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
     Map<Identifier, List<BakedQuad>> separatedQuads = new ConcurrentHashMap<>();
     public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, List<Sprite> toReplace, List<Sprite> replacements) {
+        if (quads == null)
+            return Collections.emptyList();
+
         if (replacements == null || toReplace == null || toReplace.size() != replacements.size()) {
             PaladinFurnitureMod.GENERAL_LOGGER.warn("Replacement list is not the same size or was null, skipping transformation");
             return quads;
