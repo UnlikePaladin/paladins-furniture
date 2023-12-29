@@ -1,8 +1,8 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"particle": "#texture",
-		"texture": "#texture"
+		"particle": "minecraft:block/stripped_oak_log",
+		"texture": "minecraft:block/stripped_oak_log"
 	},
 	"elements": [
 		{

@@ -75,7 +75,7 @@ public class DynamicBlockRegistry {
         emburOld.addChild("slab", "embur_slab");
         addBlockTypeFinder(WoodVariant.class, emburOld);
 
-        //mcreator mod with typos...
+        // mcreator mod with typos...
         addBlockTypeFinder(WoodVariant.class, WoodVariant.Finder.simple(
                 "nethers_exoticism", "jabuticaba", "jaboticaba_planks", "jabuticaba_log"));
 

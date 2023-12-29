@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.blocks.IronFridgeBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.model.BakedModel;
@@ -23,10 +24,10 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.util.math.random.Random;
 
-public class ForgeFreezerModel extends AbstractBakedModel {
+public class ForgeFreezerModel extends PFMForgeBakedModel {
     private final List<String> modelParts;
     public ForgeFreezerModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> modelParts) {
-        super(frame, settings, bakedModels);
+        super(settings, bakedModels.values().stream().toList());
         this.modelParts = modelParts;
     }
 
@@ -38,9 +39,9 @@ public class ForgeFreezerModel extends AbstractBakedModel {
             Boolean hasFridge = extraData.get(HAS_FRIDGE_PROPERTY);
             int openOffset = state.get(FreezerBlock.OPEN) ? 2 : 0;
             if (Boolean.TRUE.equals(hasFridge)) {
-                quads.addAll(getBakedModels().get(modelParts.get(1+openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+                quads.addAll(getTemplateBakedModels().get(1+openOffset).getQuads(state, side, rand, extraData, renderLayer));
             } else {
-                quads.addAll(getBakedModels().get(modelParts.get(openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+                quads.addAll(getTemplateBakedModels().get(openOffset).getQuads(state, side, rand, extraData, renderLayer));
             }
         }
         return quads;

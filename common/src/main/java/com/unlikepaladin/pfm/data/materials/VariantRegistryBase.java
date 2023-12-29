@@ -33,7 +33,9 @@ public abstract class VariantRegistryBase<T extends VariantBase<T>> {
                 if (Objects.equals(entry.getNamespace(), modId)) {
                     if (!linkedHashMap.containsKey(entry.getIdentifier())) {
                         linkedHashMap.put(entry.getIdentifier(), entry);
-                    }else PaladinFurnitureMod.GENERAL_LOGGER.warn("Found block type with duplicate id ({}), skipping",entry.identifier);
+                    }else if (entry.getIdentifier() != WoodVariantRegistry.OAK.getIdentifier()) {
+                        PaladinFurnitureMod.GENERAL_LOGGER.warn("Found block type with duplicate id ({}), skipping",entry.identifier);
+                    }
                 }
             });
         }
@@ -48,9 +50,9 @@ public abstract class VariantRegistryBase<T extends VariantBase<T>> {
     public abstract Optional<T> getVariantFromBlock(Block baseBlock, Identifier blockId);
 
     public void buildAll() {
-        //adds default
+        // adds default
         this.registerBlockType(this.getDefaultType());
-        //adds finders
+        // adds finders
         finders.stream().map(VariantBase.SetFinder::get).forEach(f -> f.ifPresent(this::registerBlockType));
         for (Block block : Registries.BLOCK) {
             this.getVariantFromBlock(block, Registries.BLOCK.getId(block)).ifPresent(this::registerBlockType);

@@ -41,6 +41,7 @@ public class DyeKit extends Item {
         World world = context.getWorld();
         BlockState blockState = world.getBlockState(blockPos);
         if (playerEntity.isSneaking()) {
+            boolean dyed = false;
             if(blockState.getBlock() instanceof DyeableFurnitureBlock && stack.getItem() instanceof DyeKit) {
                 world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 String newBlock= blockState.getBlock().toString();
@@ -48,15 +49,19 @@ public class DyeKit extends Item {
                 BlockState blockState1 = Registries.BLOCK.get(new Identifier(newBlock)).getStateWithProperties(blockState);
                 world.setBlockState(blockPos, blockState1, 3);
                 stack.decrement(1);
-                return ActionResult.CONSUME;
-            } else if (world.getBlockEntity(blockPos) instanceof DyeableFurnitureBlockEntity && stack.getItem() instanceof DyeKit) {
+                dyed = true;
+            }
+            if (world.getBlockEntity(blockPos) instanceof DyeableFurnitureBlockEntity && stack.getItem() instanceof DyeKit) {
                 world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 DyeableFurnitureBlockEntity dyeableFurnitureBlockEntity = (DyeableFurnitureBlockEntity) world.getBlockEntity(blockPos);
                 dyeableFurnitureBlockEntity.setPFMColor(getColor());
                 world.updateListeners(blockPos, blockState, blockState, Block.NOTIFY_ALL);
-                stack.decrement(1);
-                return ActionResult.CONSUME;
+                if (!dyed)
+                    stack.decrement(1);
+                dyed = true;
             }
+            if (dyed)
+                return ActionResult.CONSUME;
         }
         return ActionResult.PASS;
     }

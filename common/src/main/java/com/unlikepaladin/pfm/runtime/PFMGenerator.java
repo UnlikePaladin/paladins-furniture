@@ -13,7 +13,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public abstract class PFMGenerator {
     protected final Path output;
@@ -22,7 +21,8 @@ public abstract class PFMGenerator {
     public static final HashFunction SHA1 = Hashing.sha1();
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
-    private boolean running = false;
+    private static boolean assetsRunning = false;
+    private static boolean dataRunning = false;
 
     protected PFMGenerator(Path output, boolean logOrDebug, Logger logger) {
         this.output = output;
@@ -41,12 +41,18 @@ public abstract class PFMGenerator {
         }
     }
 
-    public boolean isRunning() {
-        return running;
+    public static boolean areAssetsRunning() {
+        return assetsRunning;
     }
 
-    protected void setRunning(boolean running) {
-        this.running = running;
+    public static boolean isDataRunning() {
+        return dataRunning;
+    }
+    protected static void setAssetsRunning(boolean running) {
+        assetsRunning = running;
+    }
+    protected static void setDataRunning(boolean running) {
+        dataRunning = running;
     }
 
     public Logger getLogger() {
