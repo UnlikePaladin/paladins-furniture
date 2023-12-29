@@ -430,9 +430,10 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         }
         ItemStack itemStack = blockEntity.inventory.get(1);
         if (blockEntity.isActive() || !itemStack.isEmpty() && !blockEntity.inventory.get(0).isEmpty()) {
-            RecipeEntry<?> recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
+            RecipeEntry<?> recipEntry = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
+            Recipe recipe = recipEntry != null ? recipEntry.value() : null;
             int i = blockEntity.getMaxCountPerStack();
-            if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.getRegistryManager(), recipe.value(), blockEntity.inventory, i)) {
+            if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {
                 blockEntity.fuelTimeTotal = blockEntity.fuelTime = blockEntity.getFuelTime(itemStack);
                 if (blockEntity.isActive()) {
                     bl2 = true;
@@ -446,13 +447,13 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
                     }
                 }
             }
-            if (blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.getRegistryManager(), recipe.value(), blockEntity.inventory, i)) {
+            if (blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {
                 ++blockEntity.freezeTime;
                 if (blockEntity.freezeTime == blockEntity.freezeTimeTotal) {
                     blockEntity.freezeTime = 0;
                     blockEntity.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(world, blockEntity.recipeType, blockEntity);
-                    if (FreezerBlockEntity.craftRecipe(world.getRegistryManager(),recipe.value(), blockEntity.inventory, i)) {
-                        blockEntity.setLastRecipe(recipe);
+                    if (FreezerBlockEntity.craftRecipe(world.getRegistryManager(),recipe, blockEntity.inventory, i)) {
+                        blockEntity.setLastRecipe(recipEntry);
                     }
                     bl2 = true;
                 }

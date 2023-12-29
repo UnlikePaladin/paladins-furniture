@@ -341,15 +341,16 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         boolean bl2 = false;
         ItemStack itemStack = blockEntity.inventory.get(0);
         if (blockEntity.isActive || !itemStack.isEmpty()) {
-            RecipeEntry<? extends AbstractCookingRecipe> recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
+            RecipeEntry<? extends AbstractCookingRecipe> recipeEntry = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
+            Recipe recipe = recipeEntry != null ? recipeEntry.value() : null;
             int i = blockEntity.getMaxCountPerStack();
-            if (blockEntity.isActive && canAcceptRecipeOutput(world.getRegistryManager(), recipe.value(), blockEntity.inventory, i)) {
+            if (blockEntity.isActive && canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {
                 ++blockEntity.cookTime;
                 if (blockEntity.cookTime == blockEntity.cookTimeTotal) {
                     blockEntity.cookTime = 0;
                     blockEntity.cookTimeTotal = getCookTime(world, blockEntity.recipeType, blockEntity);
-                    if (craftRecipe(world.getRegistryManager(),recipe.value(), blockEntity.inventory, i)) {
-                        blockEntity.setLastRecipe(recipe);
+                    if (craftRecipe(world.getRegistryManager(),recipe, blockEntity.inventory, i)) {
+                        blockEntity.setLastRecipe(recipeEntry);
                         blockEntity.world.setBlockState(pos, state = state.with(MicrowaveBlock.POWERED, false), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
                         blockEntity.playSound(state, SoundIDs.MICROWAVE_BEEP_EVENT, 1);
                         blockEntity.setActiveonClient(blockEntity, false);
