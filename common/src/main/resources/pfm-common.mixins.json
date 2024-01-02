@@ -6,8 +6,6 @@
   "mixins": [
     "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMIngredientMatchingStacksAccessor",
-    "PFMMixinPointOfInterestType",
-    "PFMMixinPointOfInterestTypeFactory",
     "PFMPlayerInventoryMixin",
     "PFMTextureKeyFactory"
   ],

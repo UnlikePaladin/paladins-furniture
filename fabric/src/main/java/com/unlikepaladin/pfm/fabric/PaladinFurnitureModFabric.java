@@ -10,7 +10,6 @@ import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import com.unlikepaladin.pfm.mixin.PFMMixinPointOfInterestTypeFactory;
 import com.unlikepaladin.pfm.registry.*;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.registry.fabric.*;
@@ -39,6 +38,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
@@ -126,14 +126,6 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                 () -> PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultStack());
     }
 
-    public static void replaceHomePOI() {
-        Set<BlockState> addedBedStates = PaladinFurnitureModBlocksItems.beds.stream().flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
-        Set<BlockState> newBedStates = new HashSet<>();
-        newBedStates.addAll(PaladinFurnitureModBlocksItems.originalHomePOIBedStates);
-        newBedStates.addAll(addedBedStates);
-        newBedStates = newBedStates.stream().collect(ImmutableSet.toImmutableSet());
-        PointOfInterestType.HOME = PointOfInterestType.setup(Registry.register(Registry.POINT_OF_INTEREST_TYPE, Registry.POINT_OF_INTEREST_TYPE.getRawId(PointOfInterestType.HOME), "home", PFMMixinPointOfInterestTypeFactory.newPoi("home", newBedStates, 1, 1)));
-    }
     @Override
     public void onInitializeServer() {
         PaladinFurnitureMod.isClient = false;
