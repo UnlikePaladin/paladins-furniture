@@ -26,7 +26,7 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
     public void onInitializeClient() {
         PaladinFurnitureMod.isClient = true;
         PaladinFurnitureMod.registerLateEntries();
-        PaladinFurnitureModFabric.replaceHomePOI();
+        PaladinFurnitureModFabric.replaceHomePOIStates();
         ColorRegistryFabric.registerAll();
         NetworkRegistryFabric.registerClientPackets();
 

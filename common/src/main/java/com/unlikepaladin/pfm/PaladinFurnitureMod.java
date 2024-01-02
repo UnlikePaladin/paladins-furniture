@@ -16,8 +16,6 @@ import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypeAccessor;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import com.unlikepaladin.pfm.utilities.Version;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.block.BlockState;
@@ -77,13 +75,13 @@ public class PaladinFurnitureMod {
 		BlockEntityRegistry.registerBlockEntities();
 	}
 
-	public static void replaceHomePOI() {
-		Set<BlockState> originalBedStates = PointOfInterestType.HOME.blockStates;
+	public static void replaceHomePOIStates() {
+		Set<BlockState> originalBedStates = ((PFMPointOfInterestTypeAccessor)PointOfInterestType.HOME).getBlockStates();
 		Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
 		Set<BlockState> newBedStates = new HashSet<>();
 		newBedStates.addAll(originalBedStates);
 		newBedStates.addAll(addedBedStates);
-		PointOfInterestType.HOME.blockStates = ImmutableSet.copyOf(newBedStates);
+		((PFMPointOfInterestTypeAccessor)PointOfInterestType.HOME).setBlockStates(ImmutableSet.copyOf(newBedStates));
 		addedBedStates.forEach(state -> PFMPointOfInterestTypeAccessor.getBlockStateToPointOfInterestType().put(state, PointOfInterestType.HOME));
 		PFMPointOfInterestTypeAccessor.setRegisteredStates(new ObjectOpenHashSet<>(PFMPointOfInterestTypeAccessor.getBlockStateToPointOfInterestType().keySet()));
 	}

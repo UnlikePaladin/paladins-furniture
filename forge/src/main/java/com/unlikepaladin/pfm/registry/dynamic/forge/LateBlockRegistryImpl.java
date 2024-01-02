@@ -2,9 +2,6 @@ package com.unlikepaladin.pfm.registry.dynamic.forge;
 
 import com.unlikepaladin.pfm.forge.PaladinFurnitureModForge;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import com.unlikepaladin.pfm.registry.forge.BlockItemRegistryImpl;
-import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.block.Block;
 import net.minecraft.block.Material;
 import net.minecraft.item.BlockItem;
@@ -58,7 +55,7 @@ public class LateBlockRegistryImpl {
 
     public static void registerBlocks(RegistryEvent.Register<Block> blockRegisterEvent) {
         blockRegisterEvent.getRegistry().registerAll(blocks.toArray(new Block[0]));
-        PaladinFurnitureModForge.replaceHomePOI();
+        PaladinFurnitureModForge.replaceHomePOIStates();
     }
 
     public static void registerItems(RegistryEvent.Register<Item> blockRegisterEvent) {
