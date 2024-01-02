@@ -5,8 +5,6 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "PFMAbstractTagProvider$ObjectBuilderMixin",
-    "PFMMixinPointOfInterestType",
-    "PFMMixinPointOfInterestTypeFactory",
     "PFMPlayerInventoryMixin",
     "PFMTextureKeyFactory"
   ],
