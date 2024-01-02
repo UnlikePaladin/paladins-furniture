@@ -26,7 +26,7 @@ public class UnbakedLadderModel implements UnbakedModel {
     };
 
     public static final Identifier LADDER_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/simple_bunk_ladder");
-    public static final List<Identifier> LADDER_MODEL_IDS = new ArrayList<>() {
+    public static final List<Identifier> LADDER_MODEL_IDS = new ArrayList<Identifier>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
 
@@ -44,7 +44,7 @@ public class UnbakedLadderModel implements UnbakedModel {
 
     private static final Identifier PARENT = new Identifier("block/block");
     public Collection<Identifier> getModelDependencies() {
-        return List.of(PARENT);
+        return Collections.singletonList(PARENT);
     }
 
     @Override
