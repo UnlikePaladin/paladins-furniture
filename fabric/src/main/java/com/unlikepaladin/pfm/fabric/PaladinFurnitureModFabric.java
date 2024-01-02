@@ -26,9 +26,6 @@ import net.fabricmc.fabric.impl.itemgroup.ItemGroupHelper;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.Registries;
@@ -50,6 +47,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.Collection;
 import java.util.ArrayList;
 
 public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer, DedicatedServerModInitializer {
@@ -136,20 +134,11 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                 ).build());
     }
 
-    public static void replaceHomePOI() {
-        Set<BlockState> addedBedStates = PaladinFurnitureModBlocksItems.beds.stream().flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
-        Set<BlockState> newBedStates = new HashSet<>();
-        newBedStates.addAll(PaladinFurnitureModBlocksItems.originalHomePOIBedStates);
-        newBedStates.addAll(addedBedStates);
-        newBedStates = newBedStates.stream().collect(ImmutableSet.toImmutableSet());
-        PointOfInterestType pointOfInterestType = new PointOfInterestType(newBedStates, 1, 1);
-        PointOfInterestTypes.HOME = (RegistryKey<PointOfInterestType>) ((MutableRegistry)Registries.POINT_OF_INTEREST_TYPE).set(Registries.POINT_OF_INTEREST_TYPE.getRawId(Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME)), PointOfInterestTypes.HOME, pointOfInterestType, Lifecycle.stable()).getKey().get();
-    }
     @Override
     public void onInitializeServer() {
         PaladinFurnitureMod.isClient = false;
         registerLateEntries();
-        replaceHomePOI();
+        replaceHomePOIStates();
     }
 
     public static void registerLateEntries() {
