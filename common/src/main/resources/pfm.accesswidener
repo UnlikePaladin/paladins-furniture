@@ -12,3 +12,4 @@ accessible field net/minecraft/client/resource/language/LanguageManager field_25
 accessible field net/minecraft/block/AbstractBlock$Settings material Lnet/minecraft/block/Material;
 accessible field net/minecraft/world/poi/PointOfInterestType blockStates Ljava/util/Set;
 mutable field net/minecraft/world/poi/PointOfInterestType blockStates Ljava/util/Set;
+accessible field net/minecraft/world/poi/PointOfInterestType BLOCK_STATE_TO_POINT_OF_INTEREST_TYPE Ljava/util/Map;
