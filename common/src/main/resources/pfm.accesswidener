@@ -15,3 +15,5 @@ accessible field net/minecraft/resource/featuretoggle/FeatureSet featuresMask J
 mutable field net/minecraft/resource/featuretoggle/FeatureFlag mask J
 accessible field net/minecraft/resource/featuretoggle/FeatureFlag mask J
 accessible class net/minecraft/data/server/tag/TagProvider$ProvidedTagBuilder
+accessible field net/minecraft/world/poi/PointOfInterestType blockStates Ljava/util/Set;
+mutable field net/minecraft/world/poi/PointOfInterestType blockStates Ljava/util/Set;

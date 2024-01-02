@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.blocks.models.classicTable.forge;
+package com.unlikepaladin.pfm.blocks.models.classicTable.neoforge;
 
 import com.unlikepaladin.pfm.blocks.ClassicTableBlock;
 import com.unlikepaladin.pfm.blocks.models.neoforge.ModelBitSetProperty;

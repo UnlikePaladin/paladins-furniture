@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.registry.dynamic.neoforge;
 
 import com.google.common.collect.ImmutableSet;
+import com.mojang.serialization.Lifecycle;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
@@ -18,6 +19,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.SimpleRegistry;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.world.poi.PointOfInterestType;
@@ -69,14 +71,13 @@ public class LateBlockRegistryImpl {
         }
         blocks.forEach((blockName, block) -> Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), block));
 
-        Set<BlockState> originalBedStates = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME.getValue()).blockStates();
+        Set<BlockState> originalBedStates = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME).blockStates();
         Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
         Set<BlockState> newBedStates = new HashSet<>();
         newBedStates.addAll(originalBedStates);
         newBedStates.addAll(addedBedStates);
-        PointOfInterestType pointOfInterestType = new PointOfInterestType(newBedStates, 1, 1);
-        Registry.register(Registries.POINT_OF_INTEREST_TYPE, new Identifier("minecraft", "home"), pointOfInterestType);
-        PointOfInterestTypes.HOME = Registries.POINT_OF_INTEREST_TYPE.getKey(pointOfInterestType).get();
+        PointOfInterestType homePOI = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME);
+        homePOI.blockStates = ImmutableSet.copyOf(newBedStates);
     }
 
     public static void registerItems(Registry<Item> itemIForgeRegistry) {

@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.registry.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
 import com.unlikepaladin.pfm.networking.neoforge.*;
-import net.minecraft.server.network.ServerPlayerConfigurationTask;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -15,11 +14,13 @@ import net.neoforged.neoforge.network.simple.SimpleChannel;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class NetworkRegistryNeoForge {
-
-    public static final SimpleChannel PFM_CHANNEL = NetworkRegistry.ChannelBuilder.named(
-            new Identifier(PaladinFurnitureMod.MOD_ID, "main_channel")
-    ).networkProtocolVersion(() -> "1").simpleChannel();
-
+    private static final String PROTOCOL_VERSION = "1";
+    public static final SimpleChannel PFM_CHANNEL = NetworkRegistry.newSimpleChannel(
+            new Identifier(PaladinFurnitureMod.MOD_ID, "main_channel"),
+            () -> PROTOCOL_VERSION,
+            PROTOCOL_VERSION::equals,
+            PROTOCOL_VERSION::equals
+    );
 
     public static void registerPackets() {
         int id = 0;

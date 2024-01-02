@@ -18,6 +18,8 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.World;
 
+import java.util.Optional;
+
 public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScreenHandler<Inventory> {
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
@@ -173,8 +175,8 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     }
 
     protected boolean isCookable(ItemStack itemStack) {
-        RecipeEntry<? extends AbstractCookingRecipe> entry = this.world.getRecipeManager().getFirstMatch(this.recipeType, new SimpleInventory(itemStack), this.world).orElseGet(null);
-        return entry != null && entry.value() != null;
+        Optional<? extends RecipeEntry<? extends AbstractCookingRecipe>> optionalRecipeEntry = this.world.getRecipeManager().getFirstMatch(this.recipeType, new SimpleInventory(itemStack), this.world);
+        return optionalRecipeEntry != null && optionalRecipeEntry.isPresent() && optionalRecipeEntry.get().value() != null;
     }
 
     public int getCookProgress() {

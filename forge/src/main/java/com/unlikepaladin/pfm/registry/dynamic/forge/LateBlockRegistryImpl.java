@@ -16,6 +16,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.Registries;
 import net.minecraft.util.Pair;
 import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraft.world.poi.PointOfInterestTypes;
@@ -68,14 +69,13 @@ public class LateBlockRegistryImpl {
         }
         blocks.forEach(blockRegisterEvent::register);
 
-        Set<BlockState> originalBedStates = ForgeRegistries.POI_TYPES.getValue(PointOfInterestTypes.HOME.getValue()).blockStates();
+        Set<BlockState> originalBedStates = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME).blockStates();
         Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
         Set<BlockState> newBedStates = new HashSet<>();
         newBedStates.addAll(originalBedStates);
         newBedStates.addAll(addedBedStates);
-        PointOfInterestType pointOfInterestType = new PointOfInterestType(newBedStates, 1, 1);
-        ForgeRegistries.POI_TYPES.register("minecraft:home", pointOfInterestType);
-        PointOfInterestTypes.HOME = ForgeRegistries.POI_TYPES.getHolder(pointOfInterestType).get().getKey().get();
+        PointOfInterestType homePOI = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME);
+        homePOI.blockStates = ImmutableSet.copyOf(newBedStates);
     }
 
     public static void registerItems(IForgeRegistry<Item> itemIForgeRegistry) {

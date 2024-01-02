@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.blocks.models.classicTable.forge;
+package com.unlikepaladin.pfm.blocks.models.classicTable.neoforge;
 
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;

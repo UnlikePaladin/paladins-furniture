@@ -7,6 +7,10 @@ architectury {
     neoForge()
 }
 
+loom {
+    accessWidenerPath = project(":common").loom.accessWidenerPath
+}
+
 configurations {
     common
     shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
@@ -78,7 +82,7 @@ if (rootProject.immersive_portals_compatibility_forge == "true"){
 
 if (rootProject.lazy_dfu_enabled == "true"){
     dependencies {
-        modRuntimeOnly ("curse.maven:lazydfu-460819:${rootProject.lazy_dfu_version_forge}")
+       // modRuntimeOnly ("curse.maven:lazydfu-460819:${rootProject.lazy_dfu_version_forge}")
     }
 }
 
@@ -112,7 +116,7 @@ sourceSets.main.resources {
 }
 
 remapJar {
-    atAccessWideners.add(project(":common").loom.accessWidenerPath.get().asFile.name)
+    atAccessWideners.add(loom.accessWidenerPath.get().asFile.name)
     input.set shadowJar.archiveFile
     dependsOn shadowJar
     archiveClassifier = "neoforge-mc${rootProject.minecraft_version}"

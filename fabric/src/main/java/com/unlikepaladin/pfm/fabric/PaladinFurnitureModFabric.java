@@ -133,13 +133,13 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
     }
 
     public static void replaceHomePOI() {
-        Set<BlockState> addedBedStates = PaladinFurnitureModBlocksItems.beds.stream().flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+        Set<BlockState> originalBedStates = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME).blockStates();
+        Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
         Set<BlockState> newBedStates = new HashSet<>();
-        newBedStates.addAll(PaladinFurnitureModBlocksItems.originalHomePOIBedStates);
+        newBedStates.addAll(originalBedStates);
         newBedStates.addAll(addedBedStates);
-        newBedStates = newBedStates.stream().collect(ImmutableSet.toImmutableSet());
-        PointOfInterestType pointOfInterestType = new PointOfInterestType(newBedStates, 1, 1);
-        PointOfInterestTypes.HOME = ((SimpleRegistry<PointOfInterestType>)Registries.POINT_OF_INTEREST_TYPE).set(Registries.POINT_OF_INTEREST_TYPE.getRawId(Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME)), PointOfInterestTypes.HOME, pointOfInterestType, Lifecycle.stable()).getKey().get();
+        PointOfInterestType homePOI = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME);
+        homePOI.blockStates = ImmutableSet.copyOf(newBedStates);
     }
     @Override
     public void onInitializeServer() {
