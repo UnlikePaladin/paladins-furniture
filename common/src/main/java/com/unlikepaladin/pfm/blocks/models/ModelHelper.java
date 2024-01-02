@@ -11,6 +11,7 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -179,24 +180,33 @@ public class ModelHelper {
         if (postfix.isEmpty() && !PFMDataGenerator.areAssetsRunning()) {
             BakedModel model = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(block.getDefaultState());
             if (model != null) {
-                id = model.getQuads(block.getDefaultState(), Direction.NORTH, Random.create(42L)).get(0).getSprite().getId();
-                if (id != null) {
-                    blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
-                    return id;
+                List<BakedQuad> quadList = model.getQuads(block.getDefaultState(), Direction.NORTH, Random.create(42L));
+                if (!quadList.isEmpty()) {
+                    id = quadList.get(0).getSprite().getId();
+                    if (id != null && id != MissingSprite.getMissingSpriteId()) {
+                        blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
+                        return id;
+                    }
                 }
             }
         } else if (postfix.equals("top") && !PFMDataGenerator.areAssetsRunning()) {
             BakedModel model = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(block.getDefaultState());
             if (model != null) {
-                id = model.getQuads(block.getDefaultState(), Direction.UP, Random.create(42L)).get(0).getSprite().getId();
-                if (id != null && id != MissingSprite.getMissingSpriteId()) {
-                    blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
-                    return id;
+                List<BakedQuad> quadList = model.getQuads(block.getDefaultState(), Direction.UP, Random.create(42L));
+                if (!quadList.isEmpty()) {
+                    id = quadList.get(0).getSprite().getId();
+                    if (id != null && id != MissingSprite.getMissingSpriteId()) {
+                        blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
+                        return id;
+                    }
                 }
-                id = model.getQuads(block.getDefaultState(), Direction.DOWN, Random.create(42L)).get(0).getSprite().getId();
-                if (id != null && id != MissingSprite.getMissingSpriteId()) {
-                    blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
-                    return id;
+                quadList = model.getQuads(block.getDefaultState(), Direction.DOWN, Random.create(42L));
+                if (!quadList.isEmpty()) {
+                    id = quadList.get(0).getSprite().getId();
+                    if (id != null && id != MissingSprite.getMissingSpriteId()) {
+                        blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
+                        return id;
+                    }
                 }
             }
         }

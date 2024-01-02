@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class SimpleBunkLadderBlock extends LadderBlock {
-    private static final BooleanProperty UP = Properties.UP;
+    public static final BooleanProperty UP = Properties.UP;
     private static final List<FurnitureBlock> SIMPLE_BUNK_LADDER = new ArrayList<>();
     public SimpleBunkLadderBlock(Settings settings) {
         super(settings);

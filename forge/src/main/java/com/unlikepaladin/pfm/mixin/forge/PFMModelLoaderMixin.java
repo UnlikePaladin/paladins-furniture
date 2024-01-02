@@ -23,6 +23,7 @@ import com.unlikepaladin.pfm.blocks.models.kitchenSink.UnbakedKitchenSinkModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.UnbakedKitchenWallCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawer.UnbakedKitchenWallDrawerModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawerSmall.UnbakedKitchenWallDrawerSmallModel;
+import com.unlikepaladin.pfm.blocks.models.ladder.UnbakedLadderModel;
 import com.unlikepaladin.pfm.blocks.models.logStool.UnbakedLogStoolModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
@@ -222,6 +223,12 @@ public abstract class PFMModelLoaderMixin {
         }
         else if (UnbakedLogStoolModel.LOG_STOOL_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedLogStoolModel();
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (UnbakedLadderModel.LADDER_MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedLadderModel();
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();

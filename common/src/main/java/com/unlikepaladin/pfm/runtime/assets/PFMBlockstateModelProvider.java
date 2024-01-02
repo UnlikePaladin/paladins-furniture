@@ -190,7 +190,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         }
 
         public void registerLadders() {
-            generateModelAndBlockStateForVariants(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBunkLadderBlock.class).getVariantToBlockMap(), "simple_bunk_ladder", TEMPLATE_SIMPLE_BUNK_LADDER_ARRAY, PFMBlockStateModelGenerator::createLadderBlockState, PFMBlockStateModelGenerator::createPlankBlockTexture);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBunkLadderBlock.class).getVariantToBlockMap(), "simple_bunk_ladder", PFMBlockStateModelGenerator::createOrientableTableBlockState);
         }
 
         public void registerCounters() {
