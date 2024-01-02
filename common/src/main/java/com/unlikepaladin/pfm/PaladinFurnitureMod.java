@@ -82,6 +82,7 @@ public class PaladinFurnitureMod {
 		newBedStates.addAll(originalBedStates);
 		newBedStates.addAll(addedBedStates);
 		PointOfInterestType.HOME.blockStates = ImmutableSet.copyOf(newBedStates);
+		addedBedStates.forEach(state -> PointOfInterestType.BLOCK_STATE_TO_POINT_OF_INTEREST_TYPE.put(state, PointOfInterestType.HOME));
 	}
 
 	@ExpectPlatform

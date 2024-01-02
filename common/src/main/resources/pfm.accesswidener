@@ -11,3 +11,4 @@ accessible class net/minecraft/data/server/AbstractTagProvider$ObjectBuilder
 accessible method net/minecraft/client/render/item/ItemRenderer renderBakedItemModel (Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;)V
 accessible field net/minecraft/world/poi/PointOfInterestType blockStates Ljava/util/Set;
 mutable field net/minecraft/world/poi/PointOfInterestType blockStates Ljava/util/Set;
+accessible field net/minecraft/world/poi/PointOfInterestType BLOCK_STATE_TO_POINT_OF_INTEREST_TYPE Ljava/util/Map;
