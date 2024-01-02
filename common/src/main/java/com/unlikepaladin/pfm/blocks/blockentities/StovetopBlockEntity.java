@@ -44,10 +44,9 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
             ItemStack itemStack = stovetopBlockEntity.itemsBeingCooked.get(i);
             if (itemStack.isEmpty()) continue;
             bl = true;
-            int n = i;
-        if (stovetopBlockEntity.cookingTimes[n] < 600){
-            stovetopBlockEntity.cookingTimes[n] = stovetopBlockEntity.cookingTimes[n] + 2;
-        }
+            if (stovetopBlockEntity.cookingTimes[i] < 600){
+                stovetopBlockEntity.cookingTimes[i] = stovetopBlockEntity.cookingTimes[i] + 2;
+            }
             if (stovetopBlockEntity.cookingTimes[i] < stovetopBlockEntity.cookingTotalTimes[i]) continue;
             SimpleInventory inventory = new SimpleInventory(itemStack);
             ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.value().craft(inventory, world.getRegistryManager())).orElse(itemStack);

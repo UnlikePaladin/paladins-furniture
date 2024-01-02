@@ -84,7 +84,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
 
     @Override
     public boolean matches(RecipeEntry<? extends Recipe<Inventory>> recipe) {
-        return recipe != null && recipe.value().matches(this.inventory, this.world);
+        return recipe != null && recipe.value() != null && recipe.value().matches(this.inventory, this.world);
     }
 
     @Override
@@ -173,7 +173,8 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     }
 
     protected boolean isCookable(ItemStack itemStack) {
-        return this.world.getRecipeManager().getFirstMatch(this.recipeType, new SimpleInventory(itemStack), this.world).isPresent();
+        RecipeEntry<? extends AbstractCookingRecipe> entry = this.world.getRecipeManager().getFirstMatch(this.recipeType, new SimpleInventory(itemStack), this.world).orElseGet(null);
+        return entry != null && entry.value() != null;
     }
 
     public int getCookProgress() {
