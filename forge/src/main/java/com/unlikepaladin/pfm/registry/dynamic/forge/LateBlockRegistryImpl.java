@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableSet;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
+import com.unlikepaladin.pfm.forge.PaladinFurnitureModForge;
+import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypesAccessor;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.registry.forge.BlockItemRegistryImpl;
@@ -19,14 +21,17 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.util.Pair;
 import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraft.world.poi.PointOfInterestTypes;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegisterEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Supplier;
-
+@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class LateBlockRegistryImpl {
 
     public static Map<String, Block> blocks = new LinkedHashMap<>();
@@ -67,15 +72,6 @@ public class LateBlockRegistryImpl {
             throw new RuntimeException(ex);
         }
         blocks.forEach(blockRegisterEvent::register);
-
-        Set<BlockState> originalBedStates = ForgeRegistries.POI_TYPES.getValue(PointOfInterestTypes.HOME.getValue()).blockStates();
-        Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
-        Set<BlockState> newBedStates = new HashSet<>();
-        newBedStates.addAll(originalBedStates);
-        newBedStates.addAll(addedBedStates);
-        PointOfInterestType pointOfInterestType = new PointOfInterestType(newBedStates, 1, 1);
-        ForgeRegistries.POI_TYPES.register("minecraft:home", pointOfInterestType);
-        PointOfInterestTypes.HOME = ForgeRegistries.POI_TYPES.getHolder(pointOfInterestType).get().getKey().get();
     }
 
     public static void registerItems(IForgeRegistry<Item> itemIForgeRegistry) {
@@ -96,5 +92,20 @@ public class LateBlockRegistryImpl {
         }
         blocks.put(blockId, block);
         return block;
+    }
+
+    @SubscribeEvent
+    public static void registerPOI(RegisterEvent event) {
+        event.register(ForgeRegistries.Keys.POI_TYPES, pointOfInterestTypeRegisterHelper -> {
+            Set<BlockState> originalBedStates = ForgeRegistries.POI_TYPES.getValue(PointOfInterestTypes.HOME.getValue()).blockStates();
+            Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+            Set<BlockState> newBedStates = new HashSet<>();
+            newBedStates.addAll(originalBedStates);
+            newBedStates.addAll(addedBedStates);
+            PointOfInterestType pointOfInterestType = new PointOfInterestType(newBedStates, 1, 1);
+            ForgeRegistries.POI_TYPES.register("minecraft:home", pointOfInterestType);
+            PFMPointOfInterestTypesAccessor.setHome(ForgeRegistries.POI_TYPES.getHolder(pointOfInterestType).get().getKey().get());
+           // PaladinFurnitureModForge.replaceHomePOIStates();
+        });
     }
 }
