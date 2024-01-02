@@ -21,4 +21,11 @@ public interface PFMPointOfInterestTypeAccessor {
     static void setRegisteredStates(Set<BlockState> states) {
         throw new AssertionError();
     }
+
+    @Accessor("blockStates")
+    Set<BlockState> getBlockStates();
+
+    @Mutable
+    @Accessor("blockStates")
+    void setBlockStates(Set<BlockState> states);
 }
