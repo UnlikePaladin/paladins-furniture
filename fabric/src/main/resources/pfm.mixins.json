@@ -10,7 +10,6 @@
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
     "PFMMinecraftServerMixin",
-    "PFMMixinPointOfInterestType",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSaveLoaderMixin",
     "PFMModResourcePackCreatorMixin"
