@@ -112,7 +112,8 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
         state = state.cycle(POWERED);}
         world.setBlockState(pos, state, Block.NOTIFY_ALL);
         this.updateNeighbors(state, world, pos);
-        ((LightSwitchBlockEntity)world.getBlockEntity(pos)).setState(state.get(POWERED));
+        if (world.getBlockEntity(pos) instanceof LightSwitchBlockEntity)
+            ((LightSwitchBlockEntity)world.getBlockEntity(pos)).setState(state.get(POWERED));
         return state;
     }
 
