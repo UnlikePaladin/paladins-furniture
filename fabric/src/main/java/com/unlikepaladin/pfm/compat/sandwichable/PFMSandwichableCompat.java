@@ -26,7 +26,7 @@ public class PFMSandwichableCompat {
 
             boolean changed = false;
             if(match.isPresent()) {
-                pfmToasterBlockEntity.setItem(i, match.get().value().getResult(world.getRegistryManager()).copy());
+                pfmToasterBlockEntity.setCurrentItem(i, match.get().value().getResult(world.getRegistryManager()).copy());
                 changed = true;
             } else {
                 if(items.get(i).isFood()) {
