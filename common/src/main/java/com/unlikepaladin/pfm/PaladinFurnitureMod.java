@@ -1,5 +1,7 @@
 package com.unlikepaladin.pfm;
 
+import com.google.common.collect.ImmutableSet;
+import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
@@ -10,17 +12,30 @@ import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypesAccessor;
 import com.unlikepaladin.pfm.registry.dynamic.FurnitureEntry;
+import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypeAccessor;
+import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.util.StringIdentifiable;
+import net.minecraft.world.poi.PointOfInterestType;
+import net.minecraft.world.poi.PointOfInterestTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import java.util.*;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class PaladinFurnitureMod {
@@ -32,7 +47,6 @@ public class PaladinFurnitureMod {
 
 	public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 	public static Pair<String, ItemGroup> FURNITURE_GROUP = new Pair<>("furniture", null);
-
 	public static Pair<String, ItemGroup> DYE_KITS = new Pair<>("dye_kits", null);;
 	private static PaladinFurnitureModUpdateChecker updateChecker;
 	public static boolean isClient = false;
@@ -53,6 +67,17 @@ public class PaladinFurnitureMod {
 		if (getModList().contains("imm_ptl_core"))
 			pfmModCompatibilities.add(PFMImmersivePortals.getInstance());
 		}
+
+	public static void replaceHomePOIStates() {
+		PointOfInterestType homePOI = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME);
+		Set<BlockState> originalBedStates = ((PFMPointOfInterestTypeAccessor)(Object)homePOI).getBlockStates();
+		Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+		Set<BlockState> newBedStates = new HashSet<>();
+		newBedStates.addAll(originalBedStates);
+		newBedStates.addAll(addedBedStates);
+		((PFMPointOfInterestTypeAccessor) (Object)homePOI).setBlockStates(ImmutableSet.copyOf(newBedStates));
+		addedBedStates.forEach(state -> PFMPointOfInterestTypesAccessor.getBlockStateToPointOfInterestType().put(state, Registries.POINT_OF_INTEREST_TYPE.entryOf(PointOfInterestTypes.HOME)));
+	}
 
 	@ExpectPlatform
     public static PaladinFurnitureModConfig getPFMConfig() {
