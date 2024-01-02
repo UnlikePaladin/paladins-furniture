@@ -12,12 +12,14 @@ import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypeAccessor;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.utilities.Version;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.ItemGroup;
@@ -82,7 +84,8 @@ public class PaladinFurnitureMod {
 		newBedStates.addAll(originalBedStates);
 		newBedStates.addAll(addedBedStates);
 		PointOfInterestType.HOME.blockStates = ImmutableSet.copyOf(newBedStates);
-		addedBedStates.forEach(state -> PointOfInterestType.BLOCK_STATE_TO_POINT_OF_INTEREST_TYPE.put(state, PointOfInterestType.HOME));
+		addedBedStates.forEach(state -> PFMPointOfInterestTypeAccessor.getBlockStateToPointOfInterestType().put(state, PointOfInterestType.HOME));
+		PFMPointOfInterestTypeAccessor.setRegisteredStates(new ObjectOpenHashSet<>(PFMPointOfInterestTypeAccessor.getBlockStateToPointOfInterestType().keySet()));
 	}
 
 	@ExpectPlatform
