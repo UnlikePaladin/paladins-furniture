@@ -86,7 +86,7 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
         super.handledScreenTick();
         this.isActive = handler.isActive;
         DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1,handler.getInventory().getStack(0));
-        Recipe<?> recipe = getRecipe(Objects.requireNonNull(handler.microwaveBlockEntity.getWorld()), handler.getInventory());
+        Recipe<?> recipe = getRecipe(handler.microwaveBlockEntity.getWorld(), handler.getInventory());
         if(!MicrowaveBlockEntity.canAcceptRecipeOutput(recipe, inventory ,microwaveBlockEntity.getMaxCountPerStack()) && !this.handler.isActive()) {
             this.startButton.active = false;
         }
