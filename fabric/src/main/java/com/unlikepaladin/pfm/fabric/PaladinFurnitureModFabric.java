@@ -12,7 +12,6 @@ import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import com.unlikepaladin.pfm.mixin.PFMMixinPointOfInterestTypeFactory;
 import com.unlikepaladin.pfm.registry.*;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.registry.fabric.*;
@@ -25,9 +24,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.server.MinecraftServer;
@@ -45,6 +41,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.Collection;
 
 public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer, DedicatedServerModInitializer {
 
@@ -126,19 +123,11 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                 () -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultStack());
     }
 
-    public static void replaceHomePOI() {
-        Set<BlockState> addedBedStates = PaladinFurnitureModBlocksItems.beds.stream().flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
-        Set<BlockState> newBedStates = new HashSet<>();
-        newBedStates.addAll(PaladinFurnitureModBlocksItems.originalHomePOIBedStates);
-        newBedStates.addAll(addedBedStates);
-        newBedStates = newBedStates.stream().collect(ImmutableSet.toImmutableSet());
-        PointOfInterestType.HOME = Registry.POINT_OF_INTEREST_TYPE.replace(OptionalInt.of(Registry.POINT_OF_INTEREST_TYPE.getRawId(PointOfInterestType.HOME)), Registry.POINT_OF_INTEREST_TYPE.getKey(PointOfInterestType.HOME).or(() -> Optional.of(RegistryKey.of(Registry.POINT_OF_INTEREST_TYPE.getKey(), new Identifier("minecraft:home")))).get(), PFMMixinPointOfInterestTypeFactory.newPoi("home", newBedStates, 1, 1), Lifecycle.stable()).value();
-    }
     @Override
     public void onInitializeServer() {
         PaladinFurnitureMod.isClient = false;
         registerLateEntries();
-        replaceHomePOI();
+        replaceHomePOIStates();
     }
 
     public static void registerLateEntries() {
