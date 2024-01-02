@@ -6,6 +6,8 @@
   "mixins": [
     "PFMDataCache$CachedDataMixin",
     "PFMPlayerInventoryMixin",
+    "PFMPointOfInterestTypeAccessor",
+    "PFMPointOfInterestTypesAccessor",
     "PFMTextureKeyFactory"
   ],
   "server": [
