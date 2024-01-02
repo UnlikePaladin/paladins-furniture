@@ -1,0 +1,150 @@
+plugins {
+    id "com.github.johnrengelman.shadow" version "7.1.2"
+}
+
+architectury {
+    platformSetupLoomIde()
+    neoForge()
+}
+
+configurations {
+    common
+    shadowCommon // Don't use shadow from the shadow plugin because we don't want IDEA to index this.
+    compileClasspath.extendsFrom common
+    runtimeClasspath.extendsFrom common
+    developmentNeoForge.extendsFrom common
+}
+
+repositories {
+    maven { url 'https://maven.blamejared.com' }
+    maven {
+        // location of the maven that hosts JEI files
+        name = "Progwml6 maven"
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
+    maven {
+        url "https://cursemaven.com"
+        content {
+            includeGroup "curse.maven"
+        }
+    }
+    maven {
+        name = "Modrinth"
+        url = "https://api.modrinth.com/maven"
+        content {
+            includeGroup "maven.modrinth"
+        }
+    }
+    maven {
+        url "https://maven.twelveiterations.com/repository/maven-public/"
+
+        content {
+            includeGroup "net.blay09.mods"
+        }
+    }
+    maven { url 'https://jitpack.io' }
+}
+
+
+dependencies {
+    neoForge "net.neoforged:neoforge:${rootProject.neoforge_version}"
+
+    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
+
+    modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}-FORGE")
+    modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-forge-api:${rootProject.jei_version}")
+    modCompileOnlyApi "me.shedaniel:RoughlyEnoughItems-api-neoforge:${rootProject.rei_version}"
+    modCompileOnlyApi "me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}"
+    //modRuntimeOnly("curse.maven:biomesop-220318:3562256")
+    modCompileOnly ("maven.modrinth:oculus:${rootProject.oculus_version}")
+
+    modCompileOnly "curse.maven:balm-neoforge-531761:${rootProject.balm_version_neoforge}"
+    modCompileOnly "curse.maven:cooking-for-blockheads-neoforge-231484:${rootProject.cookingforblockheads_version_neoforge}"
+    modCompileOnly "curse.maven:farmers-delight-forge-398521:${rootProject.farmers_delight_version_forge}"
+    modCompileOnly(files("../libs/immersive-portals-2.5.4-mc1.19.3-forge.jar"))
+}
+
+if(rootProject.jei_compatibility == "true") {
+    dependencies {
+        modRuntimeOnly("mezz.jei:jei-${rootProject.minecraft_version}-forge:${rootProject.jei_version}")
+    }
+}
+if (rootProject.immersive_portals_compatibility_forge == "true"){
+    dependencies {
+        modImplementation("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}")
+    }
+}
+
+if (rootProject.lazy_dfu_enabled == "true"){
+    dependencies {
+        modRuntimeOnly ("curse.maven:lazydfu-460819:${rootProject.lazy_dfu_version_forge}")
+    }
+}
+
+if (rootProject.rei_compatibility == "true"){
+    dependencies {
+        modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}")
+    }
+}
+
+
+
+processResources {
+    inputs.property "version", project.version
+
+    filesMatching("META-INF/mods.toml") {
+        expand "version": project.version
+    }
+    duplicatesStrategy = 'include'
+}
+
+shadowJar {
+    exclude "fabric.mod.json"
+    exclude "architectury.common.json"
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "dev-shadow"
+}
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
+
+remapJar {
+    atAccessWideners.add(project(":common").loom.accessWidenerPath.get().asFile.name)
+    input.set shadowJar.archiveFile
+    dependsOn shadowJar
+    archiveClassifier = "neoforge-mc${rootProject.minecraft_version}"
+}
+
+jar {
+    archiveClassifier = "dev"
+}
+
+sourcesJar {
+    def commonSources = project(":common").sourcesJar
+    dependsOn commonSources
+    from commonSources.archiveFile.map { zipTree(it) }
+    duplicatesStrategy = 'include'
+}
+
+components.java {
+    withVariantsFromConfiguration(project.configurations.shadowRuntimeElements) {
+        skip()
+    }
+}
+
+publishing {
+    publications {
+        mavenNeoForge(MavenPublication) {
+            artifactId = rootProject.archives_base_name + "-" + project.name
+            from components.java
+        }
+    }
+
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+    }
+}

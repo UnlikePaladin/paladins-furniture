@@ -1,0 +1,21 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "com.unlikepaladin.pfm.mixin.neoforge",
+  "compatibilityLevel": "JAVA_8",
+  "client": [
+    "ItemRendererMixin",
+    "PFMModelLoaderMixin",
+    "PFMRenderLayersNeoForgeMixin"
+  ],
+  "mixins": [
+    "PFMCookingPotBlockEntityMixin",
+    "PFMMinecraftServerMixin",
+    "PFMReloadableResourceManagerImplMixin",
+    "PFMSaveLoaderMixin",
+    "SimpleRegistryAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
