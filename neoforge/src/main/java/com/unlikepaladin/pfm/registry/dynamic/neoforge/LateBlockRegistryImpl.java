@@ -5,6 +5,7 @@ import com.mojang.serialization.Lifecycle;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
+import com.unlikepaladin.pfm.neoforge.PaladinFurnitureModNeoForge;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.registry.neoforge.BlockItemRegistryImpl;
@@ -24,12 +25,16 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraft.world.poi.PointOfInterestTypes;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Supplier;
 
+@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class LateBlockRegistryImpl {
 
     public static Map<String, Block> blocks = new LinkedHashMap<>();
@@ -70,14 +75,6 @@ public class LateBlockRegistryImpl {
             throw new RuntimeException(ex);
         }
         blocks.forEach((blockName, block) -> Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), block));
-
-        Set<BlockState> originalBedStates = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME).blockStates();
-        Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
-        Set<BlockState> newBedStates = new HashSet<>();
-        newBedStates.addAll(originalBedStates);
-        newBedStates.addAll(addedBedStates);
-        PointOfInterestType homePOI = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME);
-        homePOI.blockStates = ImmutableSet.copyOf(newBedStates);
     }
 
     public static void registerItems(Registry<Item> itemIForgeRegistry) {
@@ -98,5 +95,12 @@ public class LateBlockRegistryImpl {
         }
         blocks.put(blockId, block);
         return block;
+    }
+
+    @SubscribeEvent
+    public static void registerPOI(RegisterEvent event) {
+        event.register(Registries.POINT_OF_INTEREST_TYPE.getKey(), pointOfInterestTypeRegisterHelper -> {
+            PaladinFurnitureModNeoForge.replaceHomePOIStates();
+        });
     }
 }

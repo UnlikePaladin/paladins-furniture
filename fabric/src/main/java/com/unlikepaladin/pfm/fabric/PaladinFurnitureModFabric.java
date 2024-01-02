@@ -25,9 +25,6 @@ import net.fabricmc.fabric.impl.itemgroup.FabricItemGroupBuilderImpl;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.registry.*;
@@ -46,6 +43,7 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.Collection;
 import java.util.ArrayList;
 
 public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer, DedicatedServerModInitializer {
@@ -132,20 +130,11 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                 ).build()));
     }
 
-    public static void replaceHomePOI() {
-        Set<BlockState> originalBedStates = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME).blockStates();
-        Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
-        Set<BlockState> newBedStates = new HashSet<>();
-        newBedStates.addAll(originalBedStates);
-        newBedStates.addAll(addedBedStates);
-        PointOfInterestType homePOI = Registries.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME);
-        homePOI.blockStates = ImmutableSet.copyOf(newBedStates);
-    }
     @Override
     public void onInitializeServer() {
         PaladinFurnitureMod.isClient = false;
         registerLateEntries();
-        replaceHomePOI();
+        replaceHomePOIStates();
     }
 
     public static void registerLateEntries() {

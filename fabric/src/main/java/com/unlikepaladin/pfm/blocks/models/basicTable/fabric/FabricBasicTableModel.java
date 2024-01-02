@@ -142,7 +142,7 @@ public class FabricBasicTableModel extends PFMFabricBakedModel {
                 }
 
                 if (north && south && !east) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(2)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(12)).emitBlockQuads(world, state, pos, randomSupplier, context);
                 }
                 if (north && south && !west) {
                     ((FabricBakedModel) getTemplateBakedModels().get(11)).emitBlockQuads(world, state, pos, randomSupplier, context);
