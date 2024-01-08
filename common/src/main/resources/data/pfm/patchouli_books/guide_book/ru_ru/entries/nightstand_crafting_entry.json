@@ -1,0 +1,16 @@
+{
+  "name": "Создание: Тумбочки",
+  "icon": "minecraft:oak_planks",
+  "category": "pfm:nightstand_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Чтобы создать тумбочку, Вам понадобится сундук и несколько досок в зависимости от желаемого типа дерева."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_classic_nightstand",
+      "recipe2": "pfm:stripped_birch_classic_nightstand"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+{
+  "name": "Использование: Ящики",
+  "icon": "pfm:oak_kitchen_drawer",
+  "category": "pfm:drawer_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Чтобы открыть ящик, просто нажмите ПКМ по нему. Вы можете хранить в нём всё, что захотите. Как и столешница, он соединяется и меняет форму."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

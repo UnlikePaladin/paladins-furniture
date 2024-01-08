@@ -1,0 +1,15 @@
+{
+  "name": "Использование: Столешницы",
+  "icon": "pfm:oak_kitchen_counter",
+  "category": "pfm:counter_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Столешницы носят чисто декоративный характер, они соединяются друг с другом аналогично лестнице."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

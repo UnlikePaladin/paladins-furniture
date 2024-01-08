@@ -1,0 +1,36 @@
+{
+  "name": "Создание: Столы",
+  "icon": "minecraft:oak_log",
+  "category": "pfm:table_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Существует много видов столов, Вам понадобятся доски и брёвна в зависимости от того, какой вид стола Вы создаёте. Чтобы изменить материал стола, просто замените дуб тем типом дерева, из которого Вы хотите, чтобы он был."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_table_basic",
+      "recipe2": "pfm:stripped_oak_table_basic"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_table_classic",
+      "recipe2": "pfm:stripped_oak_table_classic"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_table_log",
+      "recipe2": "pfm:stripped_oak_table_log"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_raw_table_log",
+      "recipe2": "pfm:stripped_oak_raw_table_log"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_table_dinner",
+      "recipe2": "pfm:stripped_oak_table_dinner"
+    }
+  ]
+}

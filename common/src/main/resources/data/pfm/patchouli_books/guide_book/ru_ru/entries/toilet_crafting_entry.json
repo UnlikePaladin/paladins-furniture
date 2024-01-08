@@ -1,0 +1,15 @@
+{
+  "name": "Создание: Туалеты",
+  "icon": "minecraft:quartz_block",
+  "category": "pfm:toilet_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Унитаз можно сделать из кварца, ведра и кнопки."
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:basic_toilet"
+    }
+  ]
+}

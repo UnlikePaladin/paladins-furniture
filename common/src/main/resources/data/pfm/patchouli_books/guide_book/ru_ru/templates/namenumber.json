@@ -1,0 +1,13 @@
+{
+  "components": [
+    {
+      "type": "patchouli:header",
+      "centered": "true",
+      "text": "#iname",
+      "color": "000000",
+      "y": -3,
+      "x": 60,
+      "scale": 0.8
+    }
+  ]
+}

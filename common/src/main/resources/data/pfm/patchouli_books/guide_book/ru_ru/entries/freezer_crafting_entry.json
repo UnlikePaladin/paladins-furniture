@@ -1,0 +1,25 @@
+{
+  "name": "Создание: Холодильники",
+  "icon": "minecraft:white_concrete",
+  "category": "pfm:freezing_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Морозильник встроен в холодильник, за исключением холодильника Xbox Series X. Для создания холодильника Вам понадобится красная пыль, сундук и материал для него, всё это поместите на деревянный рабочий стол в указанном порядке."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:white_fridge",
+      "recipe2": "pfm:iron_fridge"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:gray_fridge",
+      "recipe2": "pfm:xbox_fridge"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

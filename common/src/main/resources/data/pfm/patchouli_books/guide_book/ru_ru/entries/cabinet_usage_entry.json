@@ -1,0 +1,15 @@
+{
+  "name": "Использование: Шкафы",
+  "icon": "pfm:oak_kitchen_cabinet",
+  "category": "pfm:cabinet_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Чтобы открыть шкаф, просто щёлкните ПКМ по нему, Вы можете хранить в нём всё, что захотите.."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

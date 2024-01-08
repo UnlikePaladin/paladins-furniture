@@ -1,0 +1,25 @@
+{
+  "name": "Рецепт: Холодильник",
+  "icon": "pfm:white_fridge",
+  "category": "pfm:freezing_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "В настоящее время морозильник можно использовать для изготовления льда из воды, обсидиана из лавы, синего льда из снежной пыли и кожи из гнилой плоти.."
+    },
+    {
+      "type": "pfm:freezingrecipe2template",
+      "recipe": "pfm:rottenflesh_to_leather",
+      "recipe2": "pfm:obsidian_recipe",
+      "recipe3": "pfm:ice_recipe"
+    },
+    {
+      "type": "pfm:freezingrecipetemplate",
+      "recipe": "pfm:packed_ice_recipe"
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

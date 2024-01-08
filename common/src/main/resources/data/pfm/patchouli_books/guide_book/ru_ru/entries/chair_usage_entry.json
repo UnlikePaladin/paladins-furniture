@@ -1,0 +1,15 @@
+{
+  "name": "Использование: Стулья",
+  "icon": "pfm:oak_chair",
+  "category": "pfm:chair_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "Чтобы сесть на стул, просто щёлкните ПКМ по нему, чтобы спешиться, нажмите «Shift». Если Вы нажмёте на него пустой рукой, и он окажется перед столом, он задвинется в него."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}
