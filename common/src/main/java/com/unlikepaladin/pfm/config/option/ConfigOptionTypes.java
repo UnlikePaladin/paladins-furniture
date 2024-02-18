@@ -5,7 +5,7 @@ import net.minecraft.nbt.*;
 
 public class ConfigOptionTypes {
 //
-    private static final ConfigOptionType<?>[] VALUES = new ConfigOptionType[]{NullConfigOption.TYPE, BooleanConfigOption.TYPE};
+    private static final ConfigOptionType<?>[] VALUES = new ConfigOptionType[]{NullConfigOption.TYPE, BooleanConfigOption.TYPE, StringConfigOption.TYPE, StringArrayConfigOption.TYPE, ListConfigOption.TYPE};
 
     public static ConfigOptionType<?> byId(int id) {
         if (id < 0 || id >= VALUES.length) {

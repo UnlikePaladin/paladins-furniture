@@ -8,7 +8,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class NullConfigOption extends AbstractConfigOption<ObjectUtils.Null>{
+public class NullConfigOption implements AbstractConfigOption<ObjectUtils.Null>{
     public static final ConfigOptionType<NullConfigOption> TYPE = new ConfigOptionType<NullConfigOption>(){
 
         public NullConfigOption read(DataInput dataInput, int i, ConfigSizeTracker nbtTagSizeTracker, byte n) {

@@ -28,7 +28,7 @@ public interface ConfigOptionType<T extends AbstractConfigOption> {
             }
 
             @Override
-            public /* synthetic */ NullConfigOption read(DataInput input, int depth, ConfigSizeTracker tracker) throws IOException {
+            public NullConfigOption read(DataInput input, int depth, ConfigSizeTracker tracker) throws IOException {
                 throw new IllegalArgumentException("Invalid Config id: " + type);
             }
         };

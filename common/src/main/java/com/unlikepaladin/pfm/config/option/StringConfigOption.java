@@ -1,35 +1,34 @@
 package com.unlikepaladin.pfm.config.option;
 
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtNull;
-import net.minecraft.nbt.NbtTagSizeTracker;
-import net.minecraft.nbt.NbtType;
+
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
 import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
+import java.util.Objects;
 
-public class BooleanConfigOption implements AbstractConfigOption<Boolean>{
-    public static final ConfigOptionType<BooleanConfigOption> TYPE = new ConfigOptionType<>() {
-        public BooleanConfigOption read(DataInput dataInput, int i, ConfigSizeTracker sizeTracker) throws IOException {
+public class StringConfigOption implements AbstractConfigOption<String> {
+    public static final ConfigOptionType<StringConfigOption> TYPE = new ConfigOptionType<>() {
+        public StringConfigOption read(DataInput dataInput, int i, ConfigSizeTracker sizeTracker) throws IOException {
             sizeTracker.add(2400L);
             String title = dataInput.readUTF();
             String tooltip = dataInput.readUTF();
             String category = dataInput.readUTF();
-            boolean value = dataInput.readBoolean();
+            String value = dataInput.readUTF();
             Side side = AbstractConfigOption.getSide(dataInput.readUTF());
             sizeTracker.add(224L + 16L * title.length());
             sizeTracker.add(224L + 16L * tooltip.length());
             sizeTracker.add(224L + 16L * category.length());
+            sizeTracker.add(224L + 16L * value.length());
             sizeTracker.add(64L);
-            BooleanConfigOption booleanConfigOption = new BooleanConfigOption(new TranslatableText(title), new TranslatableText(tooltip), category, value, side);
+            StringConfigOption booleanConfigOption = new StringConfigOption(new TranslatableText(title), new TranslatableText(tooltip), category, value, side);
             return booleanConfigOption;
         }
 
         public String getCrashReportName() {
-            return "BOOL-OPTION";
+            return "STRING-OPTION";
         }
 
         public boolean isImmutable() {
@@ -39,11 +38,11 @@ public class BooleanConfigOption implements AbstractConfigOption<Boolean>{
     private final Text title;
     private final Text tooltip;
     private final String category;
-    private boolean value;
-    private final boolean defaultValue;
+    private String value;
+    private final String defaultValue;
 
     private final Side side;
-    public BooleanConfigOption(Text title, Text tooltip, String category, boolean value, Side side) {
+    public StringConfigOption(Text title, Text tooltip, String category, String value, Side side) {
         this.title = title;
         this.category = category;
         this.tooltip = tooltip;
@@ -63,12 +62,12 @@ public class BooleanConfigOption implements AbstractConfigOption<Boolean>{
     }
 
     @Override
-    public Boolean getValue() {
+    public String getValue() {
         return value;
     }
 
     @Override
-    public Boolean getDefaultValue() {
+    public String getDefaultValue() {
         return defaultValue;
     }
 
@@ -78,18 +77,18 @@ public class BooleanConfigOption implements AbstractConfigOption<Boolean>{
     }
 
     @Override
-    public void setValue(Boolean value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
     @Override
-    public Class<Boolean> getType() {
-        return Boolean.class;
+    public Class<String> getType() {
+        return String.class;
     }
 
     @Override
     public boolean isDefault() {
-        return value == defaultValue;
+        return Objects.equals(value, defaultValue);
     }
 
     @Override
@@ -99,7 +98,7 @@ public class BooleanConfigOption implements AbstractConfigOption<Boolean>{
 
     @Override
     public byte getConfigType() {
-        return BOOL_TYPE;
+        return STRING_TYPE;
     }
 
     @Override
@@ -107,7 +106,7 @@ public class BooleanConfigOption implements AbstractConfigOption<Boolean>{
         output.writeUTF(((TranslatableText)title).getKey());
         output.writeUTF(((TranslatableText)tooltip).getKey());
         output.writeUTF(category);
-        output.writeBoolean(value);
+        output.writeUTF(value);
         output.writeUTF(side.asString());
     }
 }
