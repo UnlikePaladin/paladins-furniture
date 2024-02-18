@@ -221,6 +221,9 @@ public class PFMTagProvider extends PFMProvider {
                 .add(stoneNaturalTables)
                 .add(logTables);
 
+        getOrCreateTagBuilder(PFMTags.FURNITURE)
+                .add(PaladinFurnitureModBlocksItems.BLOCKS.toArray(Block[]::new));
+
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::generateTags);
     }
 
