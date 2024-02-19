@@ -20,7 +20,7 @@ body:
         - **Have you determined the minimum set of instructions to reproduce the issue?** If your problem only occurs
         with other mods installed, then you should narrow down exactly which mods are causing the issue. Please do not
         provide your entire list of mods to us and expect that we will be able to figure out the problem.
-        <br><br>
+        <br>
         
         This issue template was based [off of Sodium's](https://github.com/CaffeineMC/sodium-fabric/blob/dev/.github/ISSUE_TEMPLATE/bug_report.yml)
   - type: textarea
