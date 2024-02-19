@@ -56,7 +56,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         // This code runs as soon as Minecraft is in a mod-load-ready state.
         // However, some things (like resources) may still be uninitialized.
         // Proceed with mild caution.
-        pfmConfig = new PaladinFurnitureModConfig(FabricLoader.getInstance().getConfigDir().resolve("pfm.properties"));
+        pfmConfig = new PaladinFurnitureModConfig(FabricLoader.getInstance().getConfigDir());
         try {
             pfmConfig.initialize();
         } catch (IOException e) {

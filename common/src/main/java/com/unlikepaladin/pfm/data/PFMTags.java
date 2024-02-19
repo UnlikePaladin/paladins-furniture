@@ -7,6 +7,7 @@ import net.minecraft.util.Identifier;
 
 public class PFMTags {
     public static TagKey<Block> TUCKABLE_BLOCKS = createTag(new Identifier("pfm", "tuckable_blocks"));
+    public static TagKey<Block> FURNITURE = createTag(new Identifier("pfm", "furniture"));
 
     @ExpectPlatform
     public static TagKey<Block> createTag(Identifier identifier) {
