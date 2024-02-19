@@ -52,8 +52,7 @@ public class PFMConfigScreen extends Screen {
                 MinecraftClient.getInstance().setScreen(parent);
             }, new TranslatableText("gui.pfm.changesMightNotBeSaved").setStyle(Style.EMPTY.withColor(0xf77f34).withBold(true)), new TranslatableText("gui.pfm.saveChanges")));
             return true;
-        } else if (optionListWidget.keyPressed(keyCode, scanCode, modifiers))
-            return true;
+        }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
@@ -81,24 +80,14 @@ public class PFMConfigScreen extends Screen {
                         if (option.getDefaultValue() != this.optionListWidget.newConfigValues.get(option)) {
                             this.optionListWidget.hasChanges.set(this.optionListWidget.configOptionToIndexForHasChanges.get(option), true);
                         }
-                        this.optionListWidget.newConfigValues.put(option, option.getDefaultValue());
-                    } else if (option.getType() == String.class) {
-                        if (option.getDefaultValue() != this.optionListWidget.newConfigValues.get(option)) {
-                            this.optionListWidget.hasChanges.set(this.optionListWidget.configOptionToIndexForHasChanges.get(option), true);
-                        }
-                        this.optionListWidget.newConfigValues.put(option, option.getDefaultValue());
+                        this.optionListWidget.newConfigValues.put(option, (Boolean) option.getDefaultValue());
                     }
                 } else if (!isOnServer && option.getSide() == Side.SERVER) {
                     if (option.getType() == Boolean.class) {
                         if (option.getDefaultValue() != this.optionListWidget.newConfigValues.get(option)) {
                             this.optionListWidget.hasChanges.set(this.optionListWidget.configOptionToIndexForHasChanges.get(option), true);
                         }
-                        this.optionListWidget.newConfigValues.put(option, option.getDefaultValue());
-                    } else if (option.getType() == String.class) {
-                        if (option.getDefaultValue() != this.optionListWidget.newConfigValues.get(option)) {
-                            this.optionListWidget.hasChanges.set(this.optionListWidget.configOptionToIndexForHasChanges.get(option), true);
-                        }
-                        this.optionListWidget.newConfigValues.put(option, option.getDefaultValue());
+                        this.optionListWidget.newConfigValues.put(option, (Boolean) option.getDefaultValue());
                     }
                 }
             });
@@ -122,7 +111,7 @@ public class PFMConfigScreen extends Screen {
 
         drawCenteredText(matrices, this.textRenderer, TITLE.setStyle(Style.EMPTY.withColor(0xf77f34).withBold(true)), this.width / 2, 8, 0xFFFFFF);
         boolean bl = false;
-        for (Map.Entry<AbstractConfigOption, Object> optionEntry : optionListWidget.newConfigValues.entrySet()) {
+        for (Map.Entry<AbstractConfigOption, Boolean> optionEntry : optionListWidget.newConfigValues.entrySet()) {
             if (optionEntry.getValue() == optionEntry.getKey().getDefaultValue()) continue;
             bl = true;
             break;

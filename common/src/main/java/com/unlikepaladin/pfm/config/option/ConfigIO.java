@@ -8,7 +8,6 @@ import net.minecraft.util.crash.CrashReportSection;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -74,7 +73,7 @@ public class ConfigIO {
 
     protected static void write(AbstractConfigOption element, DataOutput output) throws IOException {
         output.writeByte(element.getConfigType());
-        if (element.getType() != Boolean.class && element.getType() != ArrayList.class && element.getType() != String.class && element.getType() != String[].class) {
+        if (element.getType() != Boolean.class) {
             PaladinFurnitureMod.GENERAL_LOGGER.warn("Unsupported Type: " + element.getType());
             return;
         }

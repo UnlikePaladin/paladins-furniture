@@ -11,25 +11,25 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-public class BooleanConfigOption implements AbstractConfigOption<Boolean>{
+public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
     public static final ConfigOptionType<BooleanConfigOption> TYPE = new ConfigOptionType<>() {
-        public BooleanConfigOption read(DataInput dataInput, int i, ConfigSizeTracker sizeTracker) throws IOException {
-            sizeTracker.add(2400L);
+        public BooleanConfigOption read(DataInput dataInput, int i, ConfigSizeTracker nbtTagSizeTracker) throws IOException {
+            nbtTagSizeTracker.add(2400L);
             String title = dataInput.readUTF();
             String tooltip = dataInput.readUTF();
             String category = dataInput.readUTF();
             boolean value = dataInput.readBoolean();
-            Side side = AbstractConfigOption.getSide(dataInput.readUTF());
-            sizeTracker.add(224L + 16L * title.length());
-            sizeTracker.add(224L + 16L * tooltip.length());
-            sizeTracker.add(224L + 16L * category.length());
-            sizeTracker.add(64L);
+            Side side = getSide(dataInput.readUTF());
+            nbtTagSizeTracker.add(224L + 16L * title.length());
+            nbtTagSizeTracker.add(224L + 16L * tooltip.length());
+            nbtTagSizeTracker.add(224L + 16L * category.length());
+            nbtTagSizeTracker.add(64L);
             BooleanConfigOption booleanConfigOption = new BooleanConfigOption(new TranslatableText(title), new TranslatableText(tooltip), category, value, side);
             return booleanConfigOption;
         }
 
         public String getCrashReportName() {
-            return "BOOL-OPTION";
+            return "END";
         }
 
         public boolean isImmutable() {

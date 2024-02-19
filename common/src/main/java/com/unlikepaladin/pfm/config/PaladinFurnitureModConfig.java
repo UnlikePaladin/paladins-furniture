@@ -3,7 +3,9 @@ package com.unlikepaladin.pfm.config;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.config.option.*;
+import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
+import com.unlikepaladin.pfm.config.option.BooleanConfigOption;
+import com.unlikepaladin.pfm.config.option.Side;
 import net.minecraft.text.TranslatableText;
 
 import java.io.*;
@@ -40,7 +42,6 @@ public class PaladinFurnitureModConfig {
             mobsSitOnChairs = new BooleanConfigOption(new TranslatableText("pfm.option.mobsSitOnChairs"), new TranslatableText("pfm.option.mobsSitOnChairs.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
             renderImmersivePortalsMirrors = new BooleanConfigOption(new TranslatableText("pfm.option.renderImmersivePortalsMirrors"), new TranslatableText("pfm.option.renderImmersivePortalsMirrors.tooltip"), GAMEPLAY_OPTIONS, true, Side.CLIENT),
             spawnImmersivePortalsMirror  = new BooleanConfigOption(new TranslatableText("pfm.option.spawnImmersivePortalsMirror"), new TranslatableText("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER)
-       //     variantBlacklist = new StringArrayConfigOption(new TranslatableText("pfm.option.variantBlacklist"), new TranslatableText("pfm.option.variantBlacklist.tooltip"), GAMEPLAY_OPTIONS, new ArrayList<>(), Side.SERVER) alas it is not ready yet
         );
         this.propertiesPath = propertiesPath.resolve("pfm.json");
         this.directoryPath = propertiesPath;
@@ -126,7 +127,6 @@ public class PaladinFurnitureModConfig {
     private BooleanConfigOption mobsSitOnChairs;
     private BooleanConfigOption renderImmersivePortalsMirrors;
     private BooleanConfigOption spawnImmersivePortalsMirror;
-//    private StringArrayConfigOption variantBlacklist;
 
 
     public Path getPath() {
@@ -165,17 +165,7 @@ public class PaladinFurnitureModConfig {
         mobsSitOnChairs.setValue(getFromJsonElement(config.get("mobsSitOnChairs"), false));
         renderImmersivePortalsMirrors.setValue(getFromJsonElement(config.get("renderImmersivePortalsMirrors"), true));
         spawnImmersivePortalsMirror.setValue(getFromJsonElement(config.get("spawnImmersivePortalsMirror"), true));
-      /*  JsonObject object = getFromJsonElement(config.get("variantBlacklist"), new JsonObject());
-        if (object != null && object.isJsonArray()) {
-            JsonArray variantBlackListArray = object.getAsJsonArray();
 
-            // Extract strings from the array
-            List<String> stringList = new ArrayList<>();
-            for (JsonElement arrayElement : variantBlackListArray) {
-                stringList.add(arrayElement.getAsString());
-            }
-            variantBlacklist.addAll(stringList);
-        }*/
         for (String key : options.keySet()) {
             if (!config.has(key.replace("pfm.option.", ""))){
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Missing Config Option: " +  key.replace("pfm.option.", "") + ", resetting to default value.");
@@ -249,17 +239,9 @@ public class PaladinFurnitureModConfig {
         object.addProperty("mobsSitOnChairs", mobsSitOnChairs.getValue());
         object.addProperty("renderImmersivePortalsMirrors", renderImmersivePortalsMirrors.getValue());
         object.addProperty("spawnImmersivePortalsMirror", spawnImmersivePortalsMirror.getValue());
-      //  object.add("variantBlacklist", toJsonElement(variantBlacklist.getValue()));
+
         try (FileWriter writer = new FileWriter(propertiesPath.toString())) {
             GSON.toJson(object, writer);
         }
-    }
-
-    public JsonElement toJsonElement(String[] stringArray) {
-        JsonArray jsonArray = new JsonArray();
-        for (String value : stringArray) {
-            jsonArray.add(new JsonPrimitive(value));
-        }
-        return jsonArray;
     }
 }
