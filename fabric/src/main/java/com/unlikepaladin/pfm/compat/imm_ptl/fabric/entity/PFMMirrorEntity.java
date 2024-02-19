@@ -24,7 +24,6 @@ import qouteall.q_misc_util.my_util.IntBox;
 import java.util.stream.Stream;
 
 public class PFMMirrorEntity extends Mirror {
-    public static EntityType<PFMMirrorEntity> entityType = PFMImmersivePortalsImpl.MIRROR;
     @Nullable
     public IntBox wallArea;
     @Nullable
@@ -34,7 +33,6 @@ public class PFMMirrorEntity extends Mirror {
 
     public PFMMirrorEntity(EntityType<PFMMirrorEntity> entityType, World world) {
         super(entityType, world);
-        PFMMirrorEntity.entityType = entityType;
     }
 
     @Override
@@ -151,7 +149,7 @@ public class PFMMirrorEntity extends Mirror {
             return;
         }
 
-        PFMMirrorEntity pfmMirrorEntity = PFMMirrorEntity.entityType.create(world);
+        PFMMirrorEntity pfmMirrorEntity = PFMImmersivePortalsImpl.MIRROR.create(world);
         double distanceToCenter = -0.452;
 
         Box wallBox = getWallBox(world, shape.area.stream());

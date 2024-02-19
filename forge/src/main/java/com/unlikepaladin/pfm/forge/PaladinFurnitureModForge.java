@@ -39,7 +39,7 @@ import java.io.IOException;
 public class PaladinFurnitureModForge extends PaladinFurnitureMod {
     public static PaladinFurnitureModConfig pfmConfig;
     public PaladinFurnitureModForge() {
-        pfmConfig = new PaladinFurnitureModConfig(FMLPaths.CONFIGDIR.get().resolve("pfm.properties"));
+        pfmConfig = new PaladinFurnitureModConfig(FMLPaths.CONFIGDIR.get());
         try {
             pfmConfig.initialize();
         } catch (IOException e) {
