@@ -91,6 +91,9 @@ else {
 if (rootProject.rei_compatibility == "true"){
     dependencies {
         modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"){
+            transitive(false)
+        }
+        modRuntimeOnly("me.shedaniel.cloth:cloth-config-api:${rootProject.cloth_config_version}") {
             exclude(group: "net.fabricmc.fabric-api")
         }
     }
