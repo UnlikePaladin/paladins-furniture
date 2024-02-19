@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models.forge;
 
+import com.google.common.collect.Iterables;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
@@ -50,8 +51,13 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         if (quads == null)
             return Collections.emptyList();
 
-        if (replacements == null || toReplace == null || toReplace.size() != replacements.size()) {
-            PaladinFurnitureMod.GENERAL_LOGGER.warn("Replacement list is not the same size or was null, skipping transformation");
+        if (replacements == null || toReplace == null) {
+            PaladinFurnitureMod.GENERAL_LOGGER.warn("Replacement list was null, skipping transformation");
+            return quads;
+        } else if (toReplace.size() != replacements.size()) {
+            PaladinFurnitureMod.GENERAL_LOGGER.warn("Replacement list was not the same size, skipping transformation, expected {} sprites, got {}", toReplace.size(), replacements.size());
+            PaladinFurnitureMod.GENERAL_LOGGER.debug(toReplace);
+            PaladinFurnitureMod.GENERAL_LOGGER.debug(replacements);
             return quads;
         }
         if (toReplace.equals(replacements))
@@ -81,7 +87,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                     .orElse(-1);
 
             if (index != -1) {
-                Sprite replacement = replacements.get(index);
+                Sprite replacement = Iterables.get(replacements, index, toReplace.get(index));
                 transformedQuads.addAll(getQuadsWithTexture(entry.getValue().stream().filter(quads::contains).toList(), replacement));
             } else {
                 transformedQuads.addAll(entry.getValue().stream().filter(quads::contains).toList());
@@ -97,13 +103,14 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         // UV Element index
         int uvVertexIndx = findVertexElement(VertexFormatElement.Type.UV, 0);
 
+        // I basically have to disable caching if Optifine is present, otherwise it breaks uvs
         quads.forEach(quad -> {
             Pair<Identifier, BakedQuad> quadKey = new Pair<>(sprite.getId(), quad);
-            if (quad.getSprite().getId() == sprite.getId() && !quadToTransformedQuad.containsKey(quadKey)) {
+            if (quad.getSprite().getId() == sprite.getId() && !quadToTransformedQuad.containsKey(quadKey) && !PaladinFurnitureMod.isOptifineLoaded()) {
                 quadToTransformedQuad.put(quadKey, quad);
                 transformedQuads.add(quad);
             }
-            else if (quadToTransformedQuad.containsKey(quadKey)) {
+            else if (quadToTransformedQuad.containsKey(quadKey) && !PaladinFurnitureMod.isOptifineLoaded()) {
                 transformedQuads.add(quadToTransformedQuad.get(quadKey));
             }
             else {

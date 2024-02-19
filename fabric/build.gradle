@@ -85,15 +85,15 @@ else {
         modCompileOnly("maven.modrinth:sandwichable:${rootProject.sandwichable_version}"){
             exclude(group: "net.fabricmc.fabric-api")
         }
-        modCompileOnly("dev.lambdaurora:spruceui:${rootProject.spruceui_version}"){
-            exclude(group: "net.fabricmc.fabric-api")
-        }
     }
 }
 
 if (rootProject.rei_compatibility == "true"){
     dependencies {
         modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"){
+            transitive(false)
+        }
+        modRuntimeOnly("me.shedaniel.cloth:cloth-config-api:${rootProject.cloth_config_version}") {
             exclude(group: "net.fabricmc.fabric-api")
         }
     }
@@ -109,21 +109,6 @@ if (rootProject.patchouli_compatibility == "true") {
 else {
     dependencies {
         modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_fabric}"){
-            exclude(group: "net.fabricmc.fabric-api")
-        }
-    }
-}
-
-if (rootProject.arrp_compatibility == "true") {
-    dependencies {
-        modImplementation("curse.maven:arrp-463113:${rootProject.arrp_version}"){
-            exclude(group: "net.fabricmc.fabric-api")
-        }
-    }
-}
-else {
-    dependencies {
-        modCompileOnly("curse.maven:arrp-463113:${rootProject.arrp_version}") {
             exclude(group: "net.fabricmc.fabric-api")
         }
     }
@@ -156,14 +141,18 @@ dependencies {
 
     modImplementation("com.terraformersmc:modmenu:${rootProject.modmenu_version}") {
         exclude(group: "net.fabricmc.fabric-api")
-        transitive = false
+        transitive(false)
     }
 
    // modRuntimeOnly("com.terraformersmc:terrestria:${rootProject.terrestria}")
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}"
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:${rootProject.rei_version}") {
+        transitive(false)
+    }
     modCompileOnly("maven.modrinth:iris:${rootProject.iris_version}")
 
-    modCompileOnly("curse.maven:farmers-delight-fabric-482834:${rootProject.farmers_delight_version_fabric}")
+    modCompileOnly("curse.maven:farmers-delight-fabric-482834:${rootProject.farmers_delight_version_fabric}"){
+        transitive(false)
+    }
 
     //modImplementation "curse.maven:balm-fabric-500525:${rootProject.balm_version_fabric}"
     //modImplementation "curse.maven:cooking-for-blockheads-fabric-634546:${rootProject.cookingforblockheads_version_fabric}"
