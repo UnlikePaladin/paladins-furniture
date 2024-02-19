@@ -21,7 +21,13 @@ dependencies {
     // Do NOT use other classes from fabric loader
     modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
     // Remove the next line if you don't want to depend on the API
-    modImplementation "me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api:${rootProject.rei_version}"){
+        exclude(group: "net.fabricmc.fabric-api")
+        exclude(group: "me.shedaniel.cloth")
+    }
+    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
     modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}") {
         exclude group: "mezz.jei"
     }

@@ -127,7 +127,8 @@ public class PFMTagProvider extends PFMProvider {
                 .add(PaladinFurnitureModBlocksItems.IRON_CHAIN)
                 .add(sinkBlocks)
                 .add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE)
-                .add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD);
+                .add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD)
+                .add(PaladinFurnitureModBlocksItems.BASIC_BATHTUB);
 
         KitchenCounterBlock[] woodCounters = KitchenCounterBlock.streamWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
         KitchenWallCounterBlock[] woodWallCounters = KitchenWallCounterBlock.streamWallWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenWallCounterBlock[]::new);
@@ -222,6 +223,9 @@ public class PFMTagProvider extends PFMProvider {
                 .add(woodLogTables)
                 .add(stoneNaturalTables)
                 .add(logTables);
+
+        getOrCreateTagBuilder(PFMTags.FURNITURE)
+                .add(PaladinFurnitureModBlocksItems.BLOCKS.toArray(Block[]::new));
 
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::generateTags);
     }
