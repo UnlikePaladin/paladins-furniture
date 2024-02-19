@@ -5,6 +5,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.neoforge.FreezerBlockEntityImpl;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.container.ContainerUtils;
@@ -35,7 +36,7 @@ import net.minecraft.item.Items;
 
 import java.util.*;
 
-public class FreezerBlockEntityBalm extends FreezerBlockEntity implements BalmContainerProvider, BalmProviderHolder, BlockEntityContract {
+public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements BalmContainerProvider, BalmProviderHolder, BlockEntityContract {
     private final DefaultKitchenItemProvider itemProvider;
 
     public FreezerBlockEntityBalm(BlockPos pos, BlockState state) {

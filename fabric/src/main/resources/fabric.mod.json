@@ -54,11 +54,13 @@
   "suggests": {
     "patchouli": "*"
   },
-  "modmenu": {
-    "links": {
-      "modmenu.discord": "https://discord.gg/zbMDUPB",
-      "modmenu.kofi": "https://ko-fi.com/unlikepaladin",
-      "modmenu.modrinth": "https://modrinth.com/mod/paladins-furniture/"
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/zbMDUPB",
+        "modmenu.kofi": "https://ko-fi.com/unlikepaladin",
+        "modmenu.modrinth": "https://modrinth.com/mod/paladins-furniture/"
+      }
     }
   }
 }

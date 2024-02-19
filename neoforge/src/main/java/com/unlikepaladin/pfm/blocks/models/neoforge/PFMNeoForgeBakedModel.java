@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models.neoforge;
 
+import com.google.common.collect.Iterables;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
@@ -49,10 +50,16 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         if (quads == null)
             return Collections.emptyList();
 
-        if (replacements == null || toReplace == null || toReplace.size() != replacements.size()) {
-            PaladinFurnitureMod.GENERAL_LOGGER.warn("Replacement list is not the same size or was null, skipping transformation");
+        if (replacements == null || toReplace == null) {
+            PaladinFurnitureMod.GENERAL_LOGGER.warn("Replacement list was null, skipping transformation");
+            return quads;
+        } else if (toReplace.size() != replacements.size()) {
+            PaladinFurnitureMod.GENERAL_LOGGER.warn("Replacement list was not the same size, skipping transformation, expected {} sprites, got {}", toReplace.size(), replacements.size());
+            PaladinFurnitureMod.GENERAL_LOGGER.debug(toReplace);
+            PaladinFurnitureMod.GENERAL_LOGGER.debug(replacements);
             return quads;
         }
+
         if (toReplace.equals(replacements))
             return quads;
 
@@ -80,7 +87,7 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
                     .orElse(-1);
 
             if (index != -1) {
-                Sprite replacement = replacements.get(index);
+                Sprite replacement = Iterables.get(replacements, index, toReplace.get(index));
                 transformedQuads.addAll(getQuadsWithTexture(entry.getValue().stream().filter(quads::contains).toList(), replacement));
             } else {
                 transformedQuads.addAll(entry.getValue().stream().filter(quads::contains).toList());

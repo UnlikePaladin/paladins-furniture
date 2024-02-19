@@ -3,10 +3,50 @@ package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.FreezerBlockEntityBalm;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.neoforged.neoforge.common.capabilities.Capabilities;
+import net.neoforged.neoforge.common.capabilities.Capability;
+import net.neoforged.neoforge.common.util.LazyOptional;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
+import org.jetbrains.annotations.NotNull;
 
-public class FreezerBlockEntityImpl {
+import javax.annotation.Nullable;
+
+public class FreezerBlockEntityImpl extends FreezerBlockEntity {
+    private final LazyOptional<IItemHandlerModifiable>[] handlers;
+
+    public FreezerBlockEntityImpl(BlockPos pos, BlockState state) {
+        super(pos, state);
+        this.handlers = SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
+    }
+
     public static BlockEntityType.BlockEntityFactory<? extends FreezerBlockEntity> getFactory() {
-        return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? FreezerBlockEntityBalm::new : FreezerBlockEntity::new;
+        return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? FreezerBlockEntityBalm::new : FreezerBlockEntityImpl::new;
+    }
+
+    @Override
+    public <T> @NotNull LazyOptional<T> getCapability(Capability<T> cap, @Nullable Direction side) {
+        if (cap == Capabilities.ITEM_HANDLER) {
+            if (side == Direction.UP)
+                return handlers[0].cast();
+            else if (side == Direction.DOWN) {
+                return handlers[1].cast();
+            } else {
+                return handlers[2].cast();
+            }
+        }
+        return LazyOptional.empty();
+    }
+
+    @Override
+    public void invalidateCaps() {
+        super.invalidateCaps();
+        for (LazyOptional<IItemHandlerModifiable> handler : this.handlers) {
+            handler.invalidate();
+        }
     }
 }
