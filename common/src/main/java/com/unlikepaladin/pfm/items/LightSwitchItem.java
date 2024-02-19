@@ -83,19 +83,26 @@ public class LightSwitchItem extends BlockItem {
         WorldView world = context.getWorld();
         Direction side = context.getSide();
         NbtList lights = getLights(context.getStack());
+        if (!side.getAxis().isHorizontal()) {
+            return false;
+        }
         if (lights != null) {
             ArrayList<BlockPos> removedLights = new ArrayList<>();
-            Direction facing = context.getPlayerFacing();
-
+            ArrayList<BlockPos> lightOffsets = new ArrayList<>();
             for (Iterator<NbtElement> iterator = lights.iterator(); iterator.hasNext();) {
                 NbtElement nbtElement = iterator.next();
                 BlockPos lightPos = BlockPos.fromLong(((NbtLong) nbtElement).longValue());
-                BlockPos placedPos = pos.offset(facing);
-                double distance = Math.sqrt(lightPos.getSquaredDistance(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5, true));
+                double distance = Math.sqrt(lightPos.getSquaredDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, true));
                 if (distance > 16) {
                     removedLights.add(BlockPos.fromLong(((NbtLong) nbtElement).longValue()));
                     iterator.remove();
+                } else {
+                    lightOffsets.add(pos.subtract(lightPos));
                 }
+            }
+            context.getStack().setTag(new NbtCompound());
+            for (BlockPos blockPos : lightOffsets) {
+                addLight(context.getStack(), blockPos);
             }
 
             if (!removedLights.isEmpty() && context.getWorld().isClient){

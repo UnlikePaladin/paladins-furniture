@@ -89,7 +89,7 @@ if (rootProject.rei_compatibility == "true"){
             exclude(group: "net.fabricmc.fabric-api")
         }
         modRuntimeOnly("me.shedaniel.cloth.api:cloth-api:${rootProject.cloth_api_version}") {
-            exclude(group: "net.fabricmc.fabric-api")
+            transitive(false)
         }
     }
 }
@@ -132,13 +132,15 @@ dependencies {
 
     modImplementation("com.terraformersmc:modmenu:${rootProject.modmenu_version}") {
         exclude(group: "net.fabricmc.fabric-api")
-        transitive = false
+        transitive(false)
     }
 
    // modRuntimeOnly("com.terraformersmc:terrestria:${rootProject.terrestria}")
     modCompileOnly("maven.modrinth:iris:${rootProject.iris_version}")
 
-    modCompileOnly("maven.modrinth:farmers-delight-fabric:${rootProject.farmers_delight_version_fabric}")
+    modCompileOnly("maven.modrinth:farmers-delight-fabric:${rootProject.farmers_delight_version_fabric}"){
+        transitive(false)
+    }
 
     //modImplementation "curse.maven:balm-fabric-500525:${rootProject.balm_version_fabric}"
     //modImplementation "curse.maven:cooking-for-blockheads-fabric-634546:${rootProject.cookingforblockheads_version_fabric}"

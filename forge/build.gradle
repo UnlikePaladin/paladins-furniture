@@ -67,7 +67,9 @@ dependencies {
 
     modImplementation("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}")
     modCompileOnly(("mezz.jei:jei-${rootProject.minecraft_version}:${rootProject.jei_version}:api"))
-    modCompileOnly "me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version_forge}"
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version_forge}") {
+        transitive(false)
+    }
     //modRuntimeOnly("curse.maven:biomesop-220318:3562256")
     modCompileOnly ("maven.modrinth:oculus:${rootProject.oculus_version}")
 

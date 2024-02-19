@@ -3,7 +3,8 @@
 	"textures": {
 		"2": "pfm:block/fridge/fridge_back",
 		"legs": "block/light_gray_concrete",
-		"base": "block/iron_block"
+		"base": "block/iron_block",
+		"particle": "block/iron_block"
 	},
 	"elements": [
 		{

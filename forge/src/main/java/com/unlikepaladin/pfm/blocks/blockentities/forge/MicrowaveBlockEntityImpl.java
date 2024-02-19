@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Objects;
 import java.util.function.Supplier;
 
-public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
+public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity {
     public MicrowaveBlockEntityImpl() {
         super();
     }

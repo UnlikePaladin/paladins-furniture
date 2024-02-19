@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.InventoryHandler;
 import net.blay09.mods.cookingforblockheads.api.capability.CapabilityKitchenItemProvider;
+import com.unlikepaladin.pfm.blocks.blockentities.forge.FreezerBlockEntityImpl;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IngredientPredicate;
 import net.blay09.mods.cookingforblockheads.api.capability.KitchenItemProvider;
@@ -25,7 +26,7 @@ import net.minecraft.item.Items;
 import javax.annotation.Nonnull;
 import java.util.*;
 
-public class FreezerBlockEntityBalm extends FreezerBlockEntity {
+public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl {
     private final InventoryHandler inventoryHandler;
     private final KitchenItemProvider itemProvider;
     private final LazyOptional<IItemHandler> inventoryHandlerCap;

@@ -46,18 +46,21 @@ public class LightSwitchBlockEntity extends BlockEntity {
         }
     }
 
+
+
     public void setState(boolean powered)
     {
         if(!lights.isEmpty()) {
-            lights.removeIf(lightPos ->
+            lights.removeIf(offset ->
             {
-                BlockState state = world.getBlockState(lightPos);
+                BlockState state = world.getBlockState(this.pos.subtract(offset));
                 return !(state.getBlock() instanceof PowerableBlock);
             });
-            lights.forEach(lightPos ->
+            lights.forEach(offset ->
             {
-                BlockState state = world.getBlockState(lightPos);
-                ((PowerableBlock) state.getBlock()).setPowered(world, lightPos, powered);
+                BlockPos actualPos = this.pos.subtract(offset);
+                BlockState state = world.getBlockState(actualPos);
+                ((PowerableBlock) state.getBlock()).setPowered(world, actualPos, powered);
 
             });
 

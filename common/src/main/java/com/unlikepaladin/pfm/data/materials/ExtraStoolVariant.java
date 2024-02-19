@@ -25,14 +25,13 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
     private final Block secondaryBlock;
     static final List<ExtraStoolVariant> DEFAULT_VARIANTS = new ArrayList<>();
 
-    static {
-        DEFAULT_VARIANTS.add(GRAY_DARK_OAK);
-        DEFAULT_VARIANTS.add(WHITE);
-        DEFAULT_VARIANTS.add(GRAY);
-        DEFAULT_VARIANTS.add(LIGHT_GRAY_DARK_OAK);
-    }
-
     public static List<ExtraStoolVariant> values() {
+        if (DEFAULT_VARIANTS.isEmpty()) {
+            DEFAULT_VARIANTS.add(GRAY_DARK_OAK);
+            DEFAULT_VARIANTS.add(WHITE);
+            DEFAULT_VARIANTS.add(GRAY);
+            DEFAULT_VARIANTS.add(LIGHT_GRAY_DARK_OAK);
+        }
         return DEFAULT_VARIANTS;
     }
 

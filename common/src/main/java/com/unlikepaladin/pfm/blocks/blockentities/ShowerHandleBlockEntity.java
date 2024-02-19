@@ -10,17 +10,17 @@ import net.minecraft.nbt.NbtLong;
 import net.minecraft.util.math.BlockPos;
 
 public class ShowerHandleBlockEntity extends BlockEntity {
-    protected BlockPos showerHead;
+    protected BlockPos showerOffset;
     public ShowerHandleBlockEntity() {
         super(BlockEntities.SHOWER_HANDLE_BLOCK_ENTITY);
-        this.showerHead = null;
+        this.showerOffset = null;
     }
 
     @Override
     public NbtCompound writeNbt(NbtCompound nbt) {
         super.writeNbt(nbt);
-        if (this.showerHead != null) {
-            NbtLong showerHeadPos = NbtLong.of(this.showerHead.asLong());
+        if (this.showerOffset != null) {
+            NbtLong showerHeadPos = NbtLong.of(this.showerOffset.asLong());
             nbt.put("showerHead", showerHeadPos);
         }
         return nbt;
@@ -30,21 +30,22 @@ public class ShowerHandleBlockEntity extends BlockEntity {
     public void fromTag(BlockState state, NbtCompound nbt) {
         super.fromTag(state, nbt);
         if(nbt.contains("showerHead", 4)){
-            this.showerHead = BlockPos.fromLong(nbt.getLong("showerHead"));
+            this.showerOffset = BlockPos.fromLong(nbt.getLong("showerHead"));
         }
     }
 
     public void setState(boolean open)
     {
-        if (this.showerHead != null) {
-            if(this.world.getBlockEntity(this.showerHead) != null) {
+        if (this.showerOffset != null) {
+            BlockPos showerHeadPos = this.pos.subtract(this.showerOffset);
+            if(this.world.getBlockEntity(showerHeadPos) != null) {
 
-                BlockState state = world.getBlockState(this.showerHead);
-                ((ShowerHeadBlockEntity)world.getBlockEntity(this.showerHead)).setOpen(open);
+                BlockState state = world.getBlockState(showerHeadPos);
+                ((ShowerHeadBlockEntity)world.getBlockEntity(showerHeadPos)).setOpen(open);
 
-                world.updateListeners(this.showerHead, state, state, 3);
-            } else if (this.world.getBlockEntity(this.showerHead) == null) {
-                this.showerHead = null;
+                world.updateListeners(showerHeadPos, state, state, 3);
+            } else if (this.world.getBlockEntity(showerHeadPos) == null) {
+                this.showerOffset = null;
             }
         }
     }
