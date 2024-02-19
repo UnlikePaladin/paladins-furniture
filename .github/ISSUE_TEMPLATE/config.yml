@@ -1,0 +1,7 @@
+blank_issues_enabled: true
+contact_links:
+  - name: For help with other issues, join the Discord community
+    url: https://discord.gg/zbMDUPB
+    about: This is the best option for getting help with mod installation, performance issues, and any other support inquiries
+    # Copied from https://github.com/CaffeineMC/sodium-fabric#community
+    # Copied from https://github.com/CaffeineMC/sodium-fabric/blob/dev/.github/ISSUE_TEMPLATE/config.yml

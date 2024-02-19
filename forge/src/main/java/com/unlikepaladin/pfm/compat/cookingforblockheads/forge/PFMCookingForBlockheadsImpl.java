@@ -7,10 +7,12 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.client.PFMCooking
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.data.FurnitureRecipeJsonFactory;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
+import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.util.Identifier;
 
 import java.util.Optional;
@@ -20,6 +22,14 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     private PFMClientModCompatibility clientModCompatibility;
 
     public PFMCookingForBlockheadsImpl() {
+    }
+
+    @Override
+    public void generateTags() {
+        super.generateTags();
+
+        PFMTagProvider.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+                .add(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK);
     }
 
     @Override

@@ -23,6 +23,7 @@ import com.unlikepaladin.pfm.blocks.models.kitchenSink.UnbakedKitchenSinkModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.UnbakedKitchenWallCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawer.UnbakedKitchenWallDrawerModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawerSmall.UnbakedKitchenWallDrawerSmallModel;
+import com.unlikepaladin.pfm.blocks.models.ladder.UnbakedLadderModel;
 import com.unlikepaladin.pfm.blocks.models.logStool.UnbakedLogStoolModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
@@ -129,6 +130,9 @@ public class PFMModelLoadingPlugin implements ModelLoadingPlugin {
         else if (UnbakedBasicLampModel.LAMP_MODEL_IDS.contains(resourceId)){
             return new UnbakedBasicLampModel();
         }
+        else if (UnbakedLadderModel.LADDER_MODEL_IDS.contains(resourceId)){
+            return new UnbakedLadderModel();
+        }
         else
             return null;
     }
@@ -202,6 +206,9 @@ public class PFMModelLoadingPlugin implements ModelLoadingPlugin {
             out.add(id);
         }
         for (Identifier id : UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_PARTS_BASE) {
+            out.add(id);
+        }
+        for (Identifier id : UnbakedLadderModel.LADDER_PARTS_BASE) {
             out.add(id);
         }
         out.addAll(UnbakedMirrorModel.ALL_MODEL_IDS);
