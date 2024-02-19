@@ -1,0 +1,26 @@
+name: Feature Request
+description: "For requesting new features or improvements"
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: >- 
+        This form is for requesting new features or improvements, and should not be used for bug reports or other issues.
+  - type: markdown
+    attributes:
+      value: >- 
+        Make sure you have used the [search tool](https://github.com/UnlikePaladin/paladins-furniture/issues) to see if a similar
+        request already exists. If we have previously closed a feature request, then please do not create another request.
+  - type: markdown
+    attributes:
+      value: >- 
+        This template was based [off of Sodium's](https://github.com/CaffeineMC/sodium-fabric/blob/dev/.github/ISSUE_TEMPLATE/feature_request.yml)   
+  - type: textarea
+    id: description
+    attributes:
+      label: Request Description
+      description: >-
+        Use this section to describe the feature or improvement that you are looking for. The description should explain
+        what you would like to see added, and a clear and concise description
+        of what you would like changed.
