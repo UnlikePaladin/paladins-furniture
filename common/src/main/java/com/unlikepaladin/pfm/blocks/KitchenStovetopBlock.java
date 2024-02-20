@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
@@ -45,11 +46,17 @@ import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty LIT = Properties.LIT;
     private static final List<KitchenStovetopBlock> KITCHEN_STOVETOPS = new ArrayList<>();
+    public static final MapCodec<KitchenStovetopBlock> CODEC = createCodec(KitchenStovetopBlock::new);
 
     public KitchenStovetopBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(LIT, true));
         KITCHEN_STOVETOPS.add(this);
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     public static Stream<KitchenStovetopBlock> streamKitchenStovetop() {

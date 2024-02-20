@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
@@ -38,6 +39,7 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
     public static BooleanProperty OPEN = Properties.OPEN;
     private static final List<FurnitureBlock> WOOD_NIGHTSTAND = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_NIGHTSTAND = new ArrayList<>();
+    public static final MapCodec<ClassicNightstandBlock> CODEC = createCodec(ClassicNightstandBlock::new);
 
     public ClassicNightstandBlock(Settings settings) {
         super(settings);
@@ -48,6 +50,12 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
         else if (this.getClass().isAssignableFrom(ClassicNightstandBlock.class)){
             STONE_NIGHTSTAND.add(new FurnitureBlock(this, "classic_nightstand"));
         }
+    }
+
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamWoodClassicNightstands() {

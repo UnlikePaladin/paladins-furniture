@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -45,10 +46,17 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty CUTLERY = BooleanProperty.of("cutlery");
 
     private static final List<FurnitureBlock> PLATES = new ArrayList<>();
+    public static final MapCodec<PlateBlock> CODEC = createCodec(PlateBlock::new);
+
     public PlateBlock(AbstractBlock.Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(CUTLERY, false));
         PLATES.add(new FurnitureBlock(this, "plate"));
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamPlates() {
@@ -112,12 +120,12 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
 
     }
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (state.get(CUTLERY) && !player.getAbilities().creativeMode) {
             ItemEntity itemEntity = new ItemEntity( world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
             world.spawnEntity(itemEntity);
         }
-        super.onBreak(world, pos, state, player);
+        return super.onBreak(world, pos, state, player);
     }
 
     @Nullable

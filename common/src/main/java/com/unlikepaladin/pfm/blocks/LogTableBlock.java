@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
@@ -28,6 +29,7 @@ public class LogTableBlock extends HorizontalFacingBlock {
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> WOOD_LOG_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_NATURAL_TABLES = new ArrayList<>();
+    public static final MapCodec<LogTableBlock> CODEC = createCodec(LogTableBlock::new);
     public LogTableBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
@@ -39,6 +41,11 @@ public class LogTableBlock extends HorizontalFacingBlock {
         else if (this.getClass().isAssignableFrom(LogTableBlock.class)){
             STONE_NATURAL_TABLES.add(new FurnitureBlock(this, "natural_table"));
         }
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamWoodLogTables() {

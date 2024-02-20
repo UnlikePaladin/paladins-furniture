@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHandleBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -42,6 +43,12 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
         super(settings);
         this.setDefaultState(stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWERED, false));
         SHOWER_HANDLE_BLOCKS.add(this);
+    }
+
+    public static final MapCodec<BasicShowerHandleBlock> CODEC = createCodec(BasicShowerHandleBlock::new);
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     public static Stream<BasicShowerHandleBlock> streamShowerHandleBlocks() {
@@ -165,7 +172,7 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (world.getBlockEntity(pos) != null) {
             ((ShowerHandleBlockEntity)(world.getBlockEntity(pos))).setState(false);
         }
@@ -174,6 +181,7 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
             PiglinBrain.onGuardedBlockInteracted(player, false);
         }
         world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+        return super.onBreak(world, pos, state, player);
     }
 
     @Nullable

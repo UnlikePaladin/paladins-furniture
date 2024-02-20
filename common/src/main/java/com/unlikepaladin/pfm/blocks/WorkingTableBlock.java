@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -35,12 +36,19 @@ import static com.unlikepaladin.pfm.blocks.ClassicStoolBlock.rotateShape;
 public class WorkingTableBlock extends HorizontalFacingBlock implements Waterloggable {
     private static final List<WorkingTableBlock> WORKING_TABLES = new ArrayList<>();
     public static final BooleanProperty WATERLOGGED = Properties.WATERLOGGED;
+    public static final MapCodec<WorkingTableBlock> CODEC = createCodec(WorkingTableBlock::new);
 
     public WorkingTableBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(WATERLOGGED, false).with(FACING, Direction.NORTH));
         WORKING_TABLES.add(this);
     }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
+    }
+
     public static Stream<WorkingTableBlock> streamWorkingTables() {
         return WORKING_TABLES.stream();
     }

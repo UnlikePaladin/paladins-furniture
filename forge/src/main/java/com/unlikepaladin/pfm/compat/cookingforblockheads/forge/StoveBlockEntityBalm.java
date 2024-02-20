@@ -331,7 +331,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
         this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade");
         this.energyStorage.setEnergy(tagCompound.getInt("EnergyStored"));
         if (tagCompound.contains("CustomName", 8)) {
-            this.customName = Text.Serializer.fromJson(tagCompound.getString("CustomName"));
+            this.customName = Text.Serialization.fromJson(tagCompound.getString("CustomName"));
         }
 
     }
@@ -345,7 +345,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
         tagCompound.putBoolean("HasPowerUpgrade", this.hasPowerUpgrade);
         tagCompound.putInt("EnergyStored", this.energyStorage.getEnergy());
         if (this.customName != null) {
-            tagCompound.putString("CustomName", Text.Serializer.toJson(this.customName));
+            tagCompound.putString("CustomName", Text.Serialization.toJsonString(this.customName));
         }
     }
 
@@ -363,7 +363,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
     public void setHasPowerUpgrade(boolean hasPowerUpgrade) {
         this.hasPowerUpgrade = hasPowerUpgrade;
         BlockState state = this.world.getBlockState(this.pos);
-        this.world.setBlockState(this.pos, (BlockState)state.with(OvenBlock.POWERED, hasPowerUpgrade));
+        this.world.setBlockState(this.pos, state.with(OvenBlock.POWERED, hasPowerUpgrade));
         this.markDirty();
     }
 
@@ -432,7 +432,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
     }
 
     public Box balmGetRenderBoundingBox() {
-        return new Box(this.pos.add(-1, 0, -1), this.pos.add(2, 1, 2));
+        return new Box(this.pos.add(-1, 0, -1).toCenterPos(), this.pos.add(2, 1, 2).toCenterPos());
     }
 
     public Text getName() {

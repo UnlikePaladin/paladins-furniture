@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.entity.player.PlayerEntity;
@@ -28,10 +29,17 @@ import static com.unlikepaladin.pfm.blocks.ClassicStoolBlock.rotateShape;
 
 public class CutleryBlock extends HorizontalFacingBlock {
     private static final List<FurnitureBlock> CUTLERY = new ArrayList<>();
+    public static final MapCodec<CutleryBlock> CODEC = createCodec(CutleryBlock::new);
+
     public CutleryBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
         CUTLERY.add(new FurnitureBlock(this, "cutlery"));
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamCutlery() {

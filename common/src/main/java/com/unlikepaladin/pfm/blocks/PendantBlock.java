@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -32,12 +33,19 @@ public class PendantBlock extends PowerableBlock implements DynamicRenderLayerIn
     private final BlockState baseBlockState;
     private final Block baseBlock;
     private static final List<PendantBlock> PENDANTS = new ArrayList<>();
+    public static final MapCodec<PendantBlock> CODEC = createCodec(PendantBlock::new);
+
     public PendantBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(UP, false).with(DOWN, false).with(LIT,  false).with(POWERLOCKED, false));
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         PENDANTS.add(this);
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     public static Stream<PendantBlock> streamPendantLights() {

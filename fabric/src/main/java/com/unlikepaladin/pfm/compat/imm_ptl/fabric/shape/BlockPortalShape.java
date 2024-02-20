@@ -12,6 +12,8 @@ import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 import qouteall.imm_ptl.core.portal.GeometryPortalShape;
 import qouteall.imm_ptl.core.portal.Portal;
+import qouteall.imm_ptl.core.portal.shape.PortalShape;
+import qouteall.imm_ptl.core.portal.shape.SpecialFlatPortalShape;
 import qouteall.q_misc_util.Helper;
 import qouteall.q_misc_util.my_util.IntBox;
 import qouteall.q_misc_util.my_util.Mesh2D;
@@ -383,10 +385,10 @@ public class BlockPortalShape {
         Direction wDirection = perpendicularDirections.getLeft();
         Direction hDirection = perpendicularDirections.getRight();
         
-        portal.axisW = Vec3d.of(wDirection.getVector());
-        portal.axisH = Vec3d.of(hDirection.getVector());
-        portal.width = Helper.getCoordinate(innerAreaBox.getSize(), wDirection.getAxis());
-        portal.height = Helper.getCoordinate(innerAreaBox.getSize(), hDirection.getAxis());
+        portal.setAxisW(Vec3d.of(wDirection.getVector()));
+        portal.setAxisH(Vec3d.of(hDirection.getVector()));
+        portal.setWidth(Helper.getCoordinate(innerAreaBox.getSize(), wDirection.getAxis()));
+        portal.setHeight(Helper.getCoordinate(innerAreaBox.getSize(), hDirection.getAxis()));
         
         Vec3d offset = Vec3d.of(
             Direction.get(Direction.AxisDirection.POSITIVE, axis)
@@ -394,10 +396,10 @@ public class BlockPortalShape {
         ).multiply(0.5);
         
         if (isRectangle()) {
-            portal.specialShape = null;
+            portal.setPortalShape(null);
         }
         else {
-            GeometryPortalShape shape = new GeometryPortalShape(new Mesh2D());
+            Mesh2D mesh2D = new Mesh2D();
 
             IntBox rectanglePart = Helper.expandRectangle(
                     anchor,
@@ -413,28 +415,30 @@ public class BlockPortalShape {
             ).forEach(part -> {
                 Vec3d p1 = Vec3d.of(part.l).add(offset);
                 Vec3d p2 = Vec3d.of(part.h).add(1, 1, 1).add(offset);
-                double p1LocalX = p1.subtract(center).dotProduct(portal.axisW);
-                double p1LocalY = p1.subtract(center).dotProduct(portal.axisH);
-                double p2LocalX = p2.subtract(center).dotProduct(portal.axisW);
-                double p2LocalY = p2.subtract(center).dotProduct(portal.axisH);
-                shape.addTriangleForRectangle(
+                double p1LocalX = p1.subtract(center).dotProduct(portal.getAxisW());
+                double p1LocalY = p1.subtract(center).dotProduct(portal.getAxisH());
+                double p2LocalX = p2.subtract(center).dotProduct(portal.getAxisW());
+                double p2LocalY = p2.subtract(center).dotProduct(portal.getAxisH());
+                mesh2D.addQuad(
                         p1LocalX, p1LocalY,
                         p2LocalX, p2LocalY
                 );
             });
 
-            portal.specialShape = shape;
-
             Vec3d p1 = Vec3d.of(rectanglePart.l).add(offset);
             Vec3d p2 = Vec3d.of(rectanglePart.h).add(1, 1, 1).add(offset);
-            double p1LocalX = p1.subtract(center).dotProduct(portal.axisW);
-            double p1LocalY = p1.subtract(center).dotProduct(portal.axisH);
-            double p2LocalX = p2.subtract(center).dotProduct(portal.axisW);
-            double p2LocalY = p2.subtract(center).dotProduct(portal.axisH);
-            shape.addTriangleForRectangle(
+            double p1LocalX = p1.subtract(center).dotProduct(portal.getAxisW());
+            double p1LocalY = p1.subtract(center).dotProduct(portal.getAxisH());
+            double p2LocalX = p2.subtract(center).dotProduct(portal.getAxisW());
+            double p2LocalY = p2.subtract(center).dotProduct(portal.getAxisH());
+            mesh2D.addQuad(
                     p1LocalX, p1LocalY,
                     p2LocalX, p2LocalY
             );
+
+            PortalShape shape = new SpecialFlatPortalShape(mesh2D);
+
+            portal.setPortalShape(shape);
         }
     }
     

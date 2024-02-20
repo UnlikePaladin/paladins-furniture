@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -18,11 +19,18 @@ import java.util.stream.Stream;
 
 public class HerringbonePlankBlock extends HorizontalFacingBlock {
     private static final List<FurnitureBlock> PLANKS = new ArrayList<>();
+    public static final MapCodec<HerringbonePlankBlock> CODEC = createCodec(HerringbonePlankBlock::new);
+
     public HerringbonePlankBlock(Settings settings) {
         super(settings);
         if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(HerringbonePlankBlock.class)){
             PLANKS.add(new FurnitureBlock(this, "herringbone_planks"));
         }
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamPlanks() {

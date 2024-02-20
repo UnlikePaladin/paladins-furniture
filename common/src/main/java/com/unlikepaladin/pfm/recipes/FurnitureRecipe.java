@@ -232,7 +232,7 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
         try {
             return DataResult.success(StringNbtReader.parse(s));
         } catch (CommandSyntaxException e) {
-            return DataResult.error(e::getMessage);
+            return DataResult.success(new NbtCompound());
         }
     }, DataResult::success), nbtCompound -> DataResult.success(Either.left(nbtCompound.asString())));
 

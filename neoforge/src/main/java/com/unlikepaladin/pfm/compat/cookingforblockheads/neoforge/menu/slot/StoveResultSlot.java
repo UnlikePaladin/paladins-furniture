@@ -50,7 +50,7 @@ public class StoveResultSlot extends Slot {
     }
 
     protected void onCrafted(ItemStack stack) {
-        stack.onCraft(this.player.getWorld(), this.player, this.removeCount);
+        stack.onCraftByPlayer(this.player.getWorld(), this.player, this.removeCount);
         this.removeCount = 0;
         if (this.tileEntity.getWorld() != null && !stack.isEmpty()) {
             Balm.getEvents().fireEvent(new OvenItemSmeltedEvent(this.player, this.tileEntity.getWorld(), this.tileEntity.getPos(), stack));

@@ -1,19 +1,18 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
-import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.container.*;
+import net.blay09.mods.balm.api.container.BalmContainerProvider;
+import net.blay09.mods.balm.api.container.ContainerUtils;
+import net.blay09.mods.balm.api.container.DefaultContainer;
+import net.blay09.mods.balm.api.container.SubContainer;
 import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
-import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
-import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvider;
 import net.blay09.mods.cookingforblockheads.api.event.OvenCookedEvent;
 import net.blay09.mods.cookingforblockheads.block.OvenBlock;
@@ -46,8 +45,6 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSmeltingProvider, BalmMenuProvider, IMutableNameable, BalmContainerProvider, BalmEnergyStorageProvider {
     private static final int COOK_TIME = 200;
@@ -114,10 +111,9 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
     };
     private final SubContainer inputContainer;
     private final SubContainer fuelContainer;
-    private final SubContainer outputContainer;
+    final SubContainer outputContainer;
     private final SubContainer processingContainer;
-    private final SubContainer toolsContainer;
-    private final DefaultKitchenItemProvider itemProvider;
+    final SubContainer toolsContainer;
     private Text customName;
     private boolean isFirstTick;
     public int[] slotCookTime;
@@ -135,7 +131,6 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
         this.outputContainer = new SubContainer(this.container, 4, 7);
         this.processingContainer = new SubContainer(this.container, 7, 16);
         this.toolsContainer = new SubContainer(this.container, 16, 20);
-        this.itemProvider = new DefaultKitchenItemProvider(new CombinedContainer(this.toolsContainer, this.outputContainer));
         this.isFirstTick = true;
         this.slotCookTime = new int[9];
         this.singleSlotRecipeWrapper = new DefaultContainer(1);
@@ -330,7 +325,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
         this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade");
         this.energyStorage.setEnergy(tagCompound.getInt("EnergyStored"));
         if (tagCompound.contains("CustomName", 8)) {
-            this.customName = Text.Serializer.fromJson(tagCompound.getString("CustomName"));
+            this.customName = Text.Serialization.fromJson(tagCompound.getString("CustomName"));
         }
 
     }
@@ -344,7 +339,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
         tagCompound.putBoolean("HasPowerUpgrade", this.hasPowerUpgrade);
         tagCompound.putInt("EnergyStored", this.energyStorage.getEnergy());
         if (this.customName != null) {
-            tagCompound.putString("CustomName", Text.Serializer.toJson(this.customName));
+            tagCompound.putString("CustomName", Text.Serialization.toJsonString(this.customName));
         }
     }
 
@@ -410,10 +405,6 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
         }
     }
 
-    public List<BalmProvider<?>> getProviders() {
-        return Lists.newArrayList(new BalmProvider[]{new BalmProvider(IKitchenItemProvider.class, this.itemProvider), new BalmProvider(IKitchenSmeltingProvider.class, this)});
-    }
-
     public Inventory getInputContainer() {
         return this.inputContainer;
     }
@@ -431,7 +422,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
     }
 
     public Box balmGetRenderBoundingBox() {
-        return new Box(this.pos.add(-1, 0, -1), this.pos.add(2, 1, 2));
+        return new Box(this.pos.add(-1, 0, -1).toCenterPos(), this.pos.add(2, 1, 2).toCenterPos());
     }
 
     public Text getName() {

@@ -1,10 +1,12 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHeadBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
@@ -26,6 +28,12 @@ import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
     public BasicShowerHeadBlock(Settings settings) {
         super(settings);
+    }
+
+    public static final MapCodec<BasicShowerHeadBlock> CODEC = createCodec(BasicShowerHeadBlock::new);
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     @Nullable

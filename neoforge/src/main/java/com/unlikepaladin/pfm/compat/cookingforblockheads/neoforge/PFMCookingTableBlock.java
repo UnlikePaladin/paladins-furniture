@@ -1,5 +1,7 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.cookingforblockheads.ItemUtils;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
@@ -24,6 +26,12 @@ import org.jetbrains.annotations.Nullable;
 public class PFMCookingTableBlock extends BlockWithEntity {
     protected PFMCookingTableBlock(Settings arg) {
         super(arg);
+    }
+
+    MapCodec<PFMCookingTableBlock> CODEC = createCodec(PFMCookingTableBlock::new);
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {

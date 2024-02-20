@@ -7,16 +7,10 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import net.minecraft.block.Block;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
 import vectorwing.farmersdelight.FarmersDelight;
-import vectorwing.farmersdelight.common.tag.ModTags;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 public class PFMFarmersDelightImpl extends PFMFarmersDelight {
     public static PFMFarmersDelight getInstance() {

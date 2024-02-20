@@ -40,6 +40,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.DinnerTableBlock.rotateShape;
@@ -108,6 +109,11 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
             return ActionResult.SUCCESS;
         }
         return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public Function<Settings, AbstractSittableBlock> getChairConstructor() {
+        return BasicToiletBlock::new;
     }
 
     @Override

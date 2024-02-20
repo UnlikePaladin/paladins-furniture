@@ -6,14 +6,16 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
+import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemConvertible;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.recipe.Ingredient;
@@ -21,39 +23,43 @@ import net.minecraft.recipe.RecipeSerializer;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.DefaultedList;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class FurnitureRecipeJsonFactory implements CraftingRecipeJsonBuilder {
     private final Item output;
     private final int outputCount;
-    private final List<Ingredient> inputs = Lists.newArrayList();
+    private final DefaultedList<Ingredient> inputs = DefaultedList.of();
     private final Map<String, AdvancementCriterion<?>> criteria = new LinkedHashMap<>();
     private boolean showNotification = true;
-    @Nullable
-    private NbtElement nbtElement;
+    @NotNull
+    private NbtCompound nbtElement;
     @Nullable
     private String group;
 
     public FurnitureRecipeJsonFactory(ItemConvertible output, int outputCount) {
         this.output = output.asItem();
         this.outputCount = outputCount;
+        this.nbtElement = new NbtCompound();
     }
 
-    public FurnitureRecipeJsonFactory(ItemConvertible output, int outputCount, @Nullable NbtElement nbtElement) {
+    public FurnitureRecipeJsonFactory(ItemConvertible output, int outputCount, @NotNull NbtCompound nbtElement) {
         this.output = output.asItem();
         this.outputCount = outputCount;
         this.nbtElement = nbtElement;
     }
 
-    public static FurnitureRecipeJsonFactory create(ItemConvertible output, int count, NbtElement nbtElement) {
+    public static FurnitureRecipeJsonFactory create(ItemConvertible output, int count, NbtCompound nbtElement) {
         return new FurnitureRecipeJsonFactory(output, count, nbtElement);
     }
 
-    public static FurnitureRecipeJsonFactory create(ItemConvertible output, NbtElement nbtElement) {
+    public static FurnitureRecipeJsonFactory create(ItemConvertible output, NbtCompound nbtElement) {
         return new FurnitureRecipeJsonFactory(output, 1, nbtElement);
     }
 
@@ -115,75 +121,14 @@ public class FurnitureRecipeJsonFactory implements CraftingRecipeJsonBuilder {
     public void offerTo(RecipeExporter exporter, Identifier recipeId) {
         Advancement.Builder advancement$builder = exporter.getAdvancementBuilder().criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).criteriaMerger(AdvancementRequirements.CriterionMerger.OR);
         this.criteria.forEach(advancement$builder::criterion);
-        exporter.accept(new FurnitureRecipeJsonFactory.FurnitureRecipeJsonProvider(recipeId, this.output, this.nbtElement, this.outputCount, this.group == null ? "" : this.group, this.inputs, advancement$builder.build(recipeId.withPrefixedPath("recipes/furniture/")), this.showNotification));
+        ItemStack stack = new ItemStack(this.output, this.outputCount);
+        stack.setNbt(nbtElement);
+        exporter.accept(recipeId, new FurnitureRecipe(this.group == null || this.group.isBlank() ? "" : this.group, stack, this.inputs), advancement$builder.build(recipeId.withPrefixedPath("recipes/furniture/")));
     }
 
     private void validate(Identifier recipeId) {
         if (this.criteria.isEmpty()) {
             throw new IllegalStateException("No way of obtaining recipe " + recipeId);
-        }
-    }
-
-    public static class FurnitureRecipeJsonProvider
-            implements RecipeJsonProvider {
-        private final Identifier recipeId;
-        private final Item output;
-        private final int count;
-        private final String group;
-        private final List<Ingredient> inputs;
-        private final AdvancementEntry advancement;
-        private final boolean showNotification;
-        @Nullable
-        private final NbtElement nbtElement;
-
-        public FurnitureRecipeJsonProvider(Identifier recipeId, Item output, @Nullable NbtElement nbtElement, int outputCount, String group, List<Ingredient> inputs, AdvancementEntry entry, boolean showNotification) {
-            this.recipeId = recipeId;
-            this.output = output;
-            this.count = outputCount;
-            this.group = group;
-            this.inputs = inputs;
-            this.nbtElement = nbtElement;
-            this.advancement = entry;
-            this.showNotification = showNotification;
-        } 
-
-        @Override
-        public void serialize(JsonObject json) {
-            if (!this.group.isEmpty()) {
-                json.addProperty("group", this.group);
-            }
-            JsonArray jsonArray = new JsonArray();
-            for (Ingredient ingredient : this.inputs) {
-                jsonArray.add(ingredient.toJson(true));
-            }
-            json.add("ingredients", jsonArray);
-            JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("item", Registries.ITEM.getId(this.output).toString());
-            if (this.count > 1) {
-                jsonObject.addProperty("count", this.count);
-            }
-            json.addProperty("show_notification", this.showNotification);
-            json.add("result", jsonObject);
-            if (nbtElement != null) {
-                JsonElement object = NbtOps.INSTANCE.convertTo(JsonOps.INSTANCE, this.nbtElement);
-                jsonObject.add("tag", object);
-            }
-        }
-
-        @Nullable
-        @Override
-        public AdvancementEntry advancement() {
-            return this.advancement;
-        }
-
-        @Override
-        public RecipeSerializer<?> serializer() {
-            return RecipeTypes.FURNITURE_SERIALIZER;
-        }
-
-        @Override
-        public Identifier id() {
-            return this.recipeId;
         }
     }
 }

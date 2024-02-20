@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.datafixers.util.Function3;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ShapeContext;
 import net.minecraft.block.cauldron.CauldronBehavior;
@@ -23,9 +24,14 @@ import static com.unlikepaladin.pfm.blocks.DinnerTableBlock.rotateShape;
 public class BasicSinkBlock extends AbstractSinkBlock {
     private static final List<BasicSinkBlock> SINKS = new ArrayList<>();
 
-    public BasicSinkBlock(Settings settings, Predicate<Biome.Precipitation> precipitationPredicate, Map<Item, CauldronBehavior> behaviorMap) {
-        super(settings, precipitationPredicate, behaviorMap);
+    public BasicSinkBlock(Settings settings, Biome.Precipitation precipitation, CauldronBehavior.CauldronBehaviorMap behaviorMap) {
+        super(settings, precipitation, behaviorMap);
         SINKS.add(this);
+    }
+
+    @Override
+    public Function3<Settings, Biome.Precipitation, CauldronBehavior.CauldronBehaviorMap, AbstractSinkBlock> getSinkConstructor() {
+        return BasicSinkBlock::new;
     }
 
     public static Stream<BasicSinkBlock> streamSinks() {

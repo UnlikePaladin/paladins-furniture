@@ -12,6 +12,7 @@ import net.minecraft.world.BlockView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class FroggyChairBlock extends BasicChairBlock {
@@ -55,6 +56,11 @@ public class FroggyChairBlock extends BasicChairBlock {
             case SOUTH -> FACE_SOUTH;
             default -> FACE_EAST;
         };
+    }
+
+    @Override
+    public Function<Settings, AbstractSittableBlock> getChairConstructor() {
+        return FroggyChairBlock::new;
     }
 }
 

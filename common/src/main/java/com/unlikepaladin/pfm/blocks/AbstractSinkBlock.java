@@ -1,5 +1,9 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.datafixers.kinds.K1;
+import com.mojang.datafixers.util.Function3;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
@@ -38,15 +42,24 @@ import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.checkType;
 
 public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements BlockEntityProvider {
     public static final IntProperty LEVEL_4 = IntProperty.of("level", 0, 3);
-    final Map<Item, CauldronBehavior> behaviorMap;
-    final Predicate<Biome.Precipitation> precipitationPredicate;
+    final CauldronBehavior.CauldronBehaviorMap behaviorMap;
+    final Biome.Precipitation precipitation;
 
-    public AbstractSinkBlock(Settings settings, Predicate<Biome.Precipitation> precipitationPredicate, Map<Item, CauldronBehavior> behaviorMap) {
+    public AbstractSinkBlock(Settings settings, Biome.Precipitation precipitation, CauldronBehavior.CauldronBehaviorMap behaviorMap) {
         super(settings, behaviorMap);
         this.behaviorMap = behaviorMap;
-        this.precipitationPredicate = precipitationPredicate;
+        this.precipitation = precipitation;
         this.setDefaultState(this.getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_4, 0));
 
+        if (CODEC == null) {
+            CODEC = RecordCodecBuilder.mapCodec((instance) -> {
+                return instance.group(Biome.Precipitation.CODEC.fieldOf("precipitation").forGetter((block) -> {
+                    return block.precipitation;
+                }), CauldronBehavior.CODEC.fieldOf("interactions").forGetter((block) -> {
+                    return block.behaviorMap;
+                }), createSettingsCodec()).apply(instance, (precipitation1, cauldronBehaviorMap, settings1) -> getSinkConstructor().apply(settings1, precipitation1, cauldronBehaviorMap));
+            });
+        }
     }
 
     @Override
@@ -64,7 +77,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockPos sourcePos = pos.down().down();
         ItemStack itemStack = player.getStackInHand(hand);
-        CauldronBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
+        CauldronBehavior sinkBehavior = this.behaviorMap.map().get(itemStack.getItem());
         if (sinkBehavior != null && itemStack.getItem() != Items.AIR) {
             return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
         }
@@ -119,7 +132,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
 
     @Override
     public void precipitationTick(BlockState state, World world, BlockPos pos, Biome.Precipitation precipitation) {
-        if (!canFillWithPrecipitation(world, precipitation) || state.get(LEVEL_4) == 3 || !this.precipitationPredicate.test(precipitation)) {
+        if (!canFillWithPrecipitation(world, precipitation) || state.get(LEVEL_4) == 3 || precipitation != this.precipitation) {
             return;
         }
         world.setBlockState(pos, state.cycle(LEVEL_4));
@@ -164,7 +177,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
 
     @Override
     protected boolean canBeFilledByDripstone(Fluid fluid) {
-        return fluid == Fluids.WATER && this.precipitationPredicate == LeveledCauldronBlock.RAIN_PREDICATE;
+        return fluid == Fluids.WATER && this.precipitation == Biome.Precipitation.RAIN;
     }
 
     @Override
@@ -201,4 +214,13 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
     }
+
+    public static MapCodec<AbstractSinkBlock> CODEC = null;
+
+    @Override
+    protected MapCodec<? extends AbstractCauldronBlock> getCodec() {
+        return CODEC;
+    }
+
+    public abstract Function3<Settings, Biome.Precipitation, CauldronBehavior.CauldronBehaviorMap, AbstractSinkBlock> getSinkConstructor();
 }

@@ -48,7 +48,7 @@ public class GenericOutputSlot extends Slot {
 
     @Override
     protected void onCrafted(ItemStack stack) {
-        stack.onCraft(this.player.getWorld(), this.player, this.amount);
+        stack.onCraftByPlayer(this.player.getWorld(), this.player, this.amount);
         this.amount = 0;
     }
 }

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.LightSwitchBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -39,10 +40,17 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty POWERED = Properties.POWERED;
 
     private static final List<LightSwitchBlock> LIGHT_SWITCHES = new ArrayList<>();
+    public static final MapCodec<LightSwitchBlock> CODEC = createCodec(LightSwitchBlock::new);
+
     public LightSwitchBlock(Settings settings) {
         super(settings);
         this.setDefaultState(stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWERED, false));
         LIGHT_SWITCHES.add(this);
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     public static Stream<LightSwitchBlock> streamlightSwitches() {
@@ -177,11 +185,11 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         if (world.getBlockEntity(pos) != null) {
             this.togglePower(state, world, pos, true, false);
         }
-       super.onBreak(world, pos, state, player);
+       return super.onBreak(world, pos, state, player);
     }
 
     @Nullable

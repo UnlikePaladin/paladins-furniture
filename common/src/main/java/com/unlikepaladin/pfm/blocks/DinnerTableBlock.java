@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
@@ -30,6 +31,8 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
 
     private static final List<FurnitureBlock> WOOD_DINNER_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DINNER_TABLES = new ArrayList<>();
+    public static final MapCodec<DinnerTableBlock> CODEC = createCodec(DinnerTableBlock::new);
+
     public DinnerTableBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
@@ -41,6 +44,11 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
         else if (this.getClass().isAssignableFrom(DinnerTableBlock.class)){
             STONE_DINNER_TABLES.add(new FurnitureBlock(this, "table_dinner"));
         }
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamWoodDinnerTables() {

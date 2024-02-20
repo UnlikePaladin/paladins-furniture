@@ -1,17 +1,18 @@
 package com.unlikepaladin.pfm.networking.neoforge;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-import java.util.Objects;
-import java.util.function.Supplier;
-
-public class MicrowaveActivePacket {
+public class MicrowaveActivePacket implements CustomPayload {
+    public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_active");
     private final BlockPos entityPos;
     private final boolean active;
 
@@ -20,15 +21,19 @@ public class MicrowaveActivePacket {
         this.active = active;
     }
 
-    public static void handle(MicrowaveActivePacket msg, NetworkEvent.Context ctx) {
-        ctx.enqueueWork(() -> {
+    public MicrowaveActivePacket(PacketByteBuf buffer) {
+        this(buffer.readBlockPos(), buffer.readBoolean());
+    }
+
+    public static void handle(MicrowaveActivePacket msg, PlayPayloadContext ctx) {
+        ctx.workHandler().execute(() -> {
             // Work that needs to be thread-safe (most work)
-            ServerPlayerEntity player = ctx.getSender(); // the client that sent this packet
             // Do stuffm
             BlockPos entityPos = msg.entityPos;
             boolean active = msg.active;
-            World world = Objects.requireNonNull(player).getEntityWorld();
-            ctx.enqueueWork(() -> {
+            if (ctx.player().isPresent()) {
+                PlayerEntity player = ctx.player().get();
+                World world = player.getEntityWorld();
                 if (world.isChunkLoaded(entityPos)) {
                     MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(entityPos);
                     microwaveBlockEntity.setActive(active);
@@ -36,23 +41,21 @@ public class MicrowaveActivePacket {
                 else {
                     player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
                 }
-            });
+            }
         });
-        ctx.setPacketHandled(true);
     }
 
-    public static void encode(MicrowaveActivePacket packet, PacketByteBuf buffer) {
-        BlockPos entityPos = packet.entityPos;
-        boolean active = packet.active;
+    @Override
+    public void write(PacketByteBuf buffer) {
+        BlockPos entityPos = this.entityPos;
+        boolean active = this.active;
         buffer.writeBlockPos(entityPos);
         buffer.writeBoolean(active);
     }
 
-    public static MicrowaveActivePacket decode(PacketByteBuf buffer) {
-        BlockPos entityPos = buffer.readBlockPos();
-        boolean active = buffer.readBoolean();
-        return new MicrowaveActivePacket(entityPos, active);
+    @Override
+    public Identifier id() {
+        return ID;
     }
-
 }
 

@@ -171,11 +171,11 @@ dependencies {
     modCompileOnly "curse.maven:balm-fabric-500525:${rootProject.balm_version_fabric}"
     modCompileOnly "curse.maven:cooking-for-blockheads-fabric-634546:${rootProject.cookingforblockheads_version_fabric}"
 
-    modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:imm_ptl_core:${rootProject.immersive_portals_version_fabric}"){
+    modCompileOnly("com.github.iPortalTeam:ImmersivePortalsMod:${rootProject.immersive_portals_version_fabric}"){
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
-    modCompileOnly("com.github.iPortalTeam.ImmersivePortalsMod:q_misc_util:${rootProject.immersive_portals_version_fabric}"){
+    modCompileOnly("com.github.iPortalTeam:DimLib:${rootProject.dimlib_version_fabric}"){
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }

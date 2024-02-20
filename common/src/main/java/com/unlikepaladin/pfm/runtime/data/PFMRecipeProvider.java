@@ -1,8 +1,10 @@
 package com.unlikepaladin.pfm.runtime.data;
 
 import com.google.common.collect.Sets;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
@@ -28,21 +30,19 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.NumberRange;
 import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
+import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.book.RecipeCategory;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.Pair;
+import net.minecraft.util.*;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStreamWriter;
@@ -63,22 +63,21 @@ public class PFMRecipeProvider extends PFMProvider {
         Path path = getParent().getOutput();
         Set<Identifier> set = Sets.newHashSet();
         generateRecipes(new RecipeExporter() {
+
             @Override
-            public void accept(RecipeJsonProvider recipeJsonProvider) {
-                if (!set.add(recipeJsonProvider.id())) {
-                    getParent().getLogger().error("Duplicate recipe " + recipeJsonProvider.id());
-                    throw new IllegalStateException("Duplicate recipe " + recipeJsonProvider.id());
+            public void accept(Identifier recipeId, Recipe<?> recipe, @Nullable AdvancementEntry advancementEntry) {
+                if (!set.add(recipeId)) {
+                    getParent().getLogger().error("Duplicate recipe " + recipeId);
+                    throw new IllegalStateException("Duplicate recipe " + recipeId);
                 }
-                if (recipeJsonProvider == null) {
+                if (recipe == null) {
                     getParent().getLogger().error("Recipe Json Provider is null");
                     throw new IllegalStateException("Recipe Json Provider is null");
                 } else {
-                    saveRecipe(recipeJsonProvider.toJson(), path.resolve("data/" + recipeJsonProvider.id().getNamespace() + "/recipes/" + recipeJsonProvider.id().getPath() + ".json"));
-                    AdvancementEntry advancementEntry = recipeJsonProvider.advancement();
+                    saveRecipe(Util.getResult(Recipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe), IllegalStateException::new), path.resolve("data/" + recipeId.getNamespace() + "/recipes/" + recipeId.getPath() + ".json"));
                     if (advancementEntry != null) {
-                        saveRecipeAdvancement(advancementEntry.value().toJson(), path.resolve("data/" + recipeJsonProvider.id().getNamespace() + "/advancements/" + advancementEntry.id().getPath() + ".json"));
+                        saveRecipeAdvancement(Util.getResult(Advancement.CODEC.encodeStart(JsonOps.INSTANCE, advancementEntry.value()), IllegalStateException::new), path.resolve("data/" + recipeId.getNamespace() + "/advancements/" + advancementEntry.id().getPath() + ".json"));
                     }
-
                 }
             }
 
@@ -95,7 +94,7 @@ public class PFMRecipeProvider extends PFMProvider {
         return "PFM Recipes";
     }
 
-    private void saveRecipe(JsonObject json, Path path) {
+    private void saveRecipe(JsonElement json, Path path) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try (JsonWriter jsonWriter = new JsonWriter(new OutputStreamWriter(byteArrayOutputStream, StandardCharsets.UTF_8));){
             Files.createDirectories(path.getParent());
@@ -112,7 +111,7 @@ public class PFMRecipeProvider extends PFMProvider {
         }
     }
 
-    private void saveRecipeAdvancement(JsonObject json, Path path) {
+    private void saveRecipeAdvancement(JsonElement json, Path path) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         try (JsonWriter jsonWriter = new JsonWriter(new OutputStreamWriter(byteArrayOutputStream, StandardCharsets.UTF_8));){
             Files.createDirectories(path.getParent());
@@ -889,7 +888,7 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static AdvancementCriterion<InventoryChangedCriterion.Conditions> conditionsFromItemPredicates(ItemPredicate... predicates) {
-        return Criteria.INVENTORY_CHANGED.create(new InventoryChangedCriterion.Conditions(Optional.empty(), NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, List.of(predicates)));
+        return Criteria.INVENTORY_CHANGED.create(new InventoryChangedCriterion.Conditions(Optional.empty(), InventoryChangedCriterion.Conditions.Slots.ANY, List.of(predicates)));
     }
 
     private static String getItemPath(Ingredient item) {

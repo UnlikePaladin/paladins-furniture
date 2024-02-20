@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
@@ -54,6 +55,12 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
         else if (this.getClass().isAssignableFrom(KitchenCabinetBlock.class)){
             STONE_CABINETS.add(new FurnitureBlock(this, "kitchen_cabinet"));
         }
+    }
+
+    public static final MapCodec<KitchenCabinetBlock> CODEC = createCodec(KitchenCabinetBlock::new);
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamWoodCabinets() {

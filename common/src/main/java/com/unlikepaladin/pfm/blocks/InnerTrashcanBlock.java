@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -28,10 +29,17 @@ import org.jetbrains.annotations.Nullable;
 import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 
 public class InnerTrashcanBlock extends BlockWithEntity {
+    public static final MapCodec<InnerTrashcanBlock> CODEC = createCodec(InnerTrashcanBlock::new);
     public InnerTrashcanBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
     }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
+    }
+
     public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
     protected static final BooleanProperty POWERED = Properties.POWERED;
     @Override

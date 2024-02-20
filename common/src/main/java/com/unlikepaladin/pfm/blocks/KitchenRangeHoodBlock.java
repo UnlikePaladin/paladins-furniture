@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -26,11 +27,17 @@ public class KitchenRangeHoodBlock extends HorizontalFacingBlock {
     public static final BooleanProperty DOWN = Properties.DOWN;
     public static final BooleanProperty DRAWER = BooleanProperty.of("drawer");
     private static final List<FurnitureBlock> OVEN_RANGE_HOOD = new ArrayList<>();
+    public static final MapCodec<KitchenRangeHoodBlock> CODEC = createCodec(KitchenRangeHoodBlock::new);
 
     public KitchenRangeHoodBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(DOWN, false).with(DRAWER, false));
         OVEN_RANGE_HOOD.add(new FurnitureBlock(this, "oven_range_hood"));
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamOvenRangeHoods() {

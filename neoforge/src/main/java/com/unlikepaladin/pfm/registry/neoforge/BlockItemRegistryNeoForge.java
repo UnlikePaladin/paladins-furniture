@@ -1,15 +1,26 @@
 package com.unlikepaladin.pfm.registry.neoforge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.blockentities.neoforge.FreezerBlockEntityImpl;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.items.neoforge.FurnitureGuideBookImpl;
+import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import net.minecraft.block.Blocks;
+import net.minecraft.inventory.Inventory;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.items.wrapper.ForwardingItemHandler;
+import net.neoforged.neoforge.items.wrapper.InvWrapper;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.*;
@@ -42,5 +53,20 @@ public class BlockItemRegistryNeoForge {
                 itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
             });
         });
+    }
+
+    @SubscribeEvent
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockEntities.FREEZER_BLOCK_ENTITY, (freezerBlockEntity, side) -> {
+            if (side == null) {
+                return new ForwardingItemHandler(() -> new InvWrapper(freezerBlockEntity));
+            } else {
+                return new ForwardingItemHandler(() -> new SidedInvWrapper(freezerBlockEntity, side));
+            }
+        });
+
+        if (ModList.get().isLoaded("cookingforblockheads")) {
+            PFMCookingForBlockHeadsCompat.registerCapabilities(event);
+        }
     }
 }

@@ -15,6 +15,7 @@ import net.minecraft.world.BlockView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class ArmChairBlock extends AbstractSittableBlock {
@@ -26,6 +27,12 @@ public class ArmChairBlock extends AbstractSittableBlock {
             ARM_CHAIRS.add(new FurnitureBlock(this, "armchair_"));
         }
     }
+
+    @Override
+    public Function<Settings, AbstractSittableBlock> getChairConstructor() {
+        return ArmChairBlock::new;
+    }
+
     public static Stream<FurnitureBlock> streamArmChairs() {
         return ARM_CHAIRS.stream();
     }

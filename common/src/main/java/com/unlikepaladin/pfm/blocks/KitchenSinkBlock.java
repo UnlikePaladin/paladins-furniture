@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.datafixers.util.Function3;
 import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -47,8 +48,8 @@ public class KitchenSinkBlock extends AbstractSinkBlock {
     private static final List<FurnitureBlock> WOOD_SINKS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_SINKS = new ArrayList<>();
 
-    public KitchenSinkBlock(Settings settings, Predicate<Biome.Precipitation> precipitationPredicate, Map<Item, CauldronBehavior> map) {
-        super(settings, precipitationPredicate, map);
+    public KitchenSinkBlock(Settings settings, Biome.Precipitation precipitation, CauldronBehavior.CauldronBehaviorMap map) {
+        super(settings, precipitation, map);
         if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenSinkBlock.class)){
             WOOD_SINKS.add(new FurnitureBlock(this, "kitchen_sink"));
         }
@@ -90,5 +91,10 @@ public class KitchenSinkBlock extends AbstractSinkBlock {
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         //if (state.get(LEVEL_4) > 0)
         return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public Function3<Settings, Biome.Precipitation, CauldronBehavior.CauldronBehaviorMap, AbstractSinkBlock> getSinkConstructor() {
+        return KitchenSinkBlock::new;
     }
 }

@@ -1,5 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.blockentities.BathtubBlockEntity;
@@ -47,7 +49,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.checkType;
@@ -56,13 +57,13 @@ import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 public class BasicBathtubBlock extends BedBlock {
     public static final IntProperty LEVEL_8 = IntProperty.of("level", 0, 8);
     private final Map<Item, BathtubBehavior> behaviorMap;
-    private final Predicate<Biome.Precipitation> precipitationPredicate;
+    private final Biome.Precipitation precipitation;
     private static final List<BasicBathtubBlock> basicBathtubBlocks = new ArrayList<>();
-    public BasicBathtubBlock(Settings settings, Map<Item, BathtubBehavior> map, Predicate<Biome.Precipitation> precipitationPredicate) {
+    public BasicBathtubBlock(Settings settings, Map<Item, BathtubBehavior> map, Biome.Precipitation precipitation) {
         super(DyeColor.WHITE, settings);
         this.setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(LEVEL_8, 0).with(PART, BedPart.FOOT).with(OCCUPIED, false));
         this.behaviorMap = map;
-        this.precipitationPredicate = precipitationPredicate;
+        this.precipitation = precipitation;
         this.height = 0.05f;
         basicBathtubBlocks.add(this);
     }
@@ -108,7 +109,7 @@ public class BasicBathtubBlock extends BedBlock {
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         BlockPos blockPos;
         BlockState blockState;
         BedPart bedPart;
@@ -116,7 +117,7 @@ public class BasicBathtubBlock extends BedBlock {
             world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 35);
             world.syncWorldEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));
         }
-        super.onBreak(world, pos, state, player);
+        return super.onBreak(world, pos, state, player);
     }
 
     @Override
@@ -145,7 +146,7 @@ public class BasicBathtubBlock extends BedBlock {
 
     @Override
     public void precipitationTick(BlockState state, World world, BlockPos pos, Biome.Precipitation precipitation) {
-        if (!canFillWithPrecipitation(world, precipitation) || state.get(LEVEL_8) == 8 || !this.precipitationPredicate.test(precipitation)) {
+        if (!canFillWithPrecipitation(world, precipitation) || state.get(LEVEL_8) == 8 || this.precipitation != precipitation) {
             return;
         }
         world.setBlockState(pos, state.cycle(LEVEL_8));
@@ -344,5 +345,11 @@ public class BasicBathtubBlock extends BedBlock {
                 world.addParticle(ParticleIDs.WATER_DROP, x + 0.24, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
             }
         }
+    }
+
+    public static final MapCodec<BasicBathtubBlock> CODEC = RecordCodecBuilder.mapCodec( (instance) -> instance.group(createSettingsCodec(), BathtubBehavior.CODEC.fieldOf("behaviorMap").forGetter(basicBathtubBlock -> basicBathtubBlock.behaviorMap), Biome.Precipitation.CODEC.fieldOf("precipitation").forGetter(basicBathtubBlock -> basicBathtubBlock.precipitation)).apply(instance, BasicBathtubBlock::new));
+    @Override
+    public MapCodec<BedBlock> getCodec() {
+        return (MapCodec<BedBlock>)(Object)CODEC;
     }
 }

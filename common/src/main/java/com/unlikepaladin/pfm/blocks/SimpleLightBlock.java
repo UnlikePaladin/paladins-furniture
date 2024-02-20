@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
@@ -25,11 +26,19 @@ import java.util.stream.Stream;
 public class SimpleLightBlock extends PowerableBlock {
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
     private static final List<SimpleLightBlock> SIMPLE_LIGHTS = new ArrayList<>();
+    public static final MapCodec<SimpleLightBlock> CODEC = createCodec(SimpleLightBlock::new);
+
     public SimpleLightBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(LIT,  false).with(POWERLOCKED, false));
         SIMPLE_LIGHTS.add(this);
     }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
+    }
+
     @Override
     public void setPowered(World world, BlockPos lightPos, boolean powered) {
         BlockState state = world.getBlockState(lightPos);

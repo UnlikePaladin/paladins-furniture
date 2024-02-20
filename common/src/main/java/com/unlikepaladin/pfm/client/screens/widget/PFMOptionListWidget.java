@@ -34,8 +34,9 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
     public BitSet hasChanges;
     public Map<AbstractConfigOption, Boolean> newConfigValues;
     public Map<AbstractConfigOption, Integer> configOptionToIndexForHasChanges;
+
     public PFMOptionListWidget(PFMConfigScreen parent, MinecraftClient client) {
-        super(client, parent.width + 125, parent.height, 43, parent.height - 32, 20);
+        super(client, parent.width + 125, parent.height - 75, 43, 20);
         this.parent = parent;
         String string = null;
         int index = 0;

@@ -21,8 +21,7 @@ public class LateBlockRegistryNeoForge {
     private static boolean hasRegisteredBlockSets = false;
     private static Pair<List<Runnable>, List<Consumer<Registry<Item>>>> LATE_REGISTRATION_QUEUE = null;
 
-    public static void addDynamicBlockRegistration() {
-        IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
+    public static void addDynamicBlockRegistration(IEventBus bus) {
         if (LATE_REGISTRATION_QUEUE == null) {
             LATE_REGISTRATION_QUEUE = Pair.of(new ArrayList<>(), new ArrayList<>());
             bus.addListener(EventPriority.HIGHEST, LateBlockRegistryNeoForge::registerLateBlockAndItems);

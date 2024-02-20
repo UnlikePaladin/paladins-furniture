@@ -6,7 +6,6 @@ import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.registry.dynamic.neoforge.LateBlockRegistryNeoForge;
 import com.unlikepaladin.pfm.registry.neoforge.*;
-import com.unlikepaladin.pfm.registry.neoforge.*;
 import net.minecraft.resource.*;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
@@ -15,14 +14,13 @@ import net.minecraft.SharedConstants;
 import net.minecraft.resource.metadata.PackResourceMetadata;
 import net.minecraft.text.Text;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
-
 
 import java.io.IOException;
 import java.util.List;
@@ -32,7 +30,7 @@ import java.util.Optional;
 @Mod(PaladinFurnitureMod.MOD_ID)
 public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
     public static PaladinFurnitureModConfig pfmConfig;
-    public PaladinFurnitureModNeoForge() {
+    public PaladinFurnitureModNeoForge(IEventBus modEventBus) {
         pfmConfig = new PaladinFurnitureModConfig(FMLPaths.CONFIGDIR.get());
         try {
             pfmConfig.initialize();
@@ -41,20 +39,20 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
             GENERAL_LOGGER.error("", e);
         }
         this.commonInit();
-        NeoForge.EVENT_BUS.register(EntityRegistryNeoForge.class);
-        NeoForge.EVENT_BUS.register(BlockItemRegistryNeoForge.class);
-        NeoForge.EVENT_BUS.register(StatisticsRegistryNeoForge.class);
-        NeoForge.EVENT_BUS.register(ScreenHandlerRegistryNeoForge.class);
-        NeoForge.EVENT_BUS.register(RecipeRegistryNeoForge.class);
-        NeoForge.EVENT_BUS.register(BlockEntityRegistryNeoForge.class);
-        NeoForge.EVENT_BUS.register(SoundRegistryNeoForge.class);
-        NeoForge.EVENT_BUS.register(NetworkRegistryNeoForge.class);
-        NetworkRegistryNeoForge.registerPackets();
-        LateBlockRegistryNeoForge.addDynamicBlockRegistration();
+        modEventBus.register(EntityRegistryNeoForge.class);
+        modEventBus.register(BlockItemRegistryNeoForge.class);
+        modEventBus.register(StatisticsRegistryNeoForge.class);
+        modEventBus.register(ScreenHandlerRegistryNeoForge.class);
+        modEventBus.register(RecipeRegistryNeoForge.class);
+        modEventBus.register(BlockEntityRegistryNeoForge.class);
+        modEventBus.register(SoundRegistryNeoForge.class);
+        modEventBus.addListener(NetworkRegistryNeoForge::register);
+        LateBlockRegistryNeoForge.addDynamicBlockRegistration(modEventBus);
         PaladinFurnitureMod.isClient = FMLEnvironment.dist == Dist.CLIENT;
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ItemGroupRegistryNeoForge::registerItemGroups);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(ItemGroupRegistryNeoForge::addToVanillaItemGroups);
-        FMLJavaModLoadingContext.get().getModEventBus().addListener(PaladinFurnitureModNeoForge::generateResources);
+        NeoForge.EVENT_BUS.addListener(NetworkRegistryNeoForge::onServerJoin);
+        modEventBus.addListener(ItemGroupRegistryNeoForge::registerItemGroups);
+        modEventBus.addListener(ItemGroupRegistryNeoForge::addToVanillaItemGroups);
+        modEventBus.addListener(PaladinFurnitureModNeoForge::generateResources);
     }
 
     @SubscribeEvent
@@ -77,7 +75,7 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
                     return this.open(name);
                 }
             };
-            ResourcePackProfile.Metadata metadata = new ResourcePackProfile.Metadata(Text.literal("Runtime Generated Assets for PFM"), data, resource, ResourcePackCompatibility.COMPATIBLE, FeatureFlags.DEFAULT_ENABLED_FEATURES, List.of(), false);
+            ResourcePackProfile.Metadata metadata = new ResourcePackProfile.Metadata(Text.literal("Runtime Generated Assets for PFM"), ResourcePackCompatibility.COMPATIBLE, FeatureFlags.DEFAULT_ENABLED_FEATURES, List.of(), false);
             event.addRepositorySource(profileAdder -> {
                 profileAdder.accept(ResourcePackProfile.of("pfm-asset-resources", Text.literal("PFM Assets"), true,  packFactory, metadata, ResourcePackProfile.InsertionPosition.BOTTOM, false, ResourcePackSource.NONE));
             });
@@ -97,7 +95,7 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
                     return this.open(name);
                 }
             };
-            ResourcePackProfile.Metadata metadata = new ResourcePackProfile.Metadata(Text.literal("Runtime Generated Data for PFM"), data, resource, ResourcePackCompatibility.COMPATIBLE, FeatureFlags.DEFAULT_ENABLED_FEATURES, List.of(), false);
+            ResourcePackProfile.Metadata metadata = new ResourcePackProfile.Metadata(Text.literal("Runtime Generated Data for PFM"), ResourcePackCompatibility.COMPATIBLE, FeatureFlags.DEFAULT_ENABLED_FEATURES, List.of(), false);
             event.addRepositorySource(profileAdder -> {
                 profileAdder.accept(ResourcePackProfile.of("pfm-data-resources", Text.literal("PFM Data"), true,  packFactory, metadata, ResourcePackProfile.InsertionPosition.BOTTOM, false, ResourcePackSource.NONE));
             });

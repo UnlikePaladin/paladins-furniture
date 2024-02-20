@@ -1,5 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -24,6 +26,8 @@ import static com.unlikepaladin.pfm.blocks.DinnerTableBlock.rotateShape;
 public class ShowerTowelBlock extends HorizontalFacingBlock implements DyeableFurnitureBlock {
     private static final List<FurnitureBlock> SHOWER_TOWELS = new ArrayList<>();
     private final DyeColor color;
+    public static final MapCodec<ShowerTowelBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(DyeColor.CODEC.fieldOf("color").forGetter(towel -> towel.color), createSettingsCodec()).apply(instance, ShowerTowelBlock::new));;;
+
     public ShowerTowelBlock(DyeColor color, Settings settings) {
         super(settings);
         this.color = color;
@@ -92,5 +96,10 @@ public class ShowerTowelBlock extends HorizontalFacingBlock implements DyeableFu
             return 20;
         }
         return 0;
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 }

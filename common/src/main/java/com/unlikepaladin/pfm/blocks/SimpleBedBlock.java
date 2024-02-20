@@ -123,7 +123,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         BlockPos blockPos;
         BlockState blockState;
         BedPart bedPart;
@@ -136,6 +136,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
             PiglinBrain.onGuardedBlockInteracted(player, false);
         }
         world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+        return super.onBreak(world, pos, state, player);
     }
 
     @Override

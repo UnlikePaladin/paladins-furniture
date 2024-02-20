@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
@@ -29,11 +30,15 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
     private final BlockState baseBlockState;
     private final Block baseBlock;
+    public static Map<Class<? extends Block>, MapCodec<AbstractSittableBlock>> CODECS = new HashMap<>();
 
     public AbstractSittableBlock(Settings settings) {
         super(settings);
@@ -42,6 +47,9 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
         setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH));
 
         this.height = 0.36f;
+        if (!CODECS.containsKey(this)) {
+            CODECS.put(this.getClass(), createCodec(settings1 -> getChairConstructor().apply(settings1)));
+        }
     }
 
     @Override
@@ -195,5 +203,13 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
         BlockSoundGroup soundGroup = state.getSoundGroup();
         return soundGroup == BlockSoundGroup.BAMBOO_WOOD || soundGroup == BlockSoundGroup.WOOL || soundGroup == BlockSoundGroup.CHERRY_WOOD || soundGroup == BlockSoundGroup.WOOD || soundGroup == BlockSoundGroup.NETHER_WOOD || instrument == Instrument.BASS;
     }
+
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODECS.get(this.getClass());
+    }
+
+    public abstract Function<Settings, AbstractSittableBlock> getChairConstructor();
 }
 

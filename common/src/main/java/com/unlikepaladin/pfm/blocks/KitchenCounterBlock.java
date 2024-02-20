@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
@@ -39,6 +40,12 @@ public class KitchenCounterBlock extends HorizontalFacingBlock {
         else if (this.getClass().isAssignableFrom(KitchenCounterBlock.class)){
             STONE_COUNTERS.add(counterFurnitureBlock);
         }
+    }
+
+    public static final MapCodec<KitchenCounterBlock> CODEC = createCodec(KitchenCounterBlock::new);
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamWoodCounters() {

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
@@ -30,9 +31,16 @@ import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 public class MirrorBlock extends HorizontalFacingBlock {
 
     protected static List<FurnitureBlock> mirrorBlockList = new ArrayList<>();
+    public static final MapCodec<MirrorBlock> CODEC = createCodec(MirrorBlock::new);
+
     public MirrorBlock(Settings settings) {
         super(settings);
         mirrorBlockList.add(new FurnitureBlock(this, "mirror"));
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamMirrorBlocks() {

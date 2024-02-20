@@ -25,7 +25,7 @@ import java.util.function.Predicate;
 public interface SinkBehavior extends CauldronBehavior {
 
     SinkBehavior FILL_SINK_WITH_WATER = (state, world, pos, player, hand, stack) -> SinkBehavior.fillCauldron(world, pos, player, hand, stack, state.with(KitchenSinkBlock.LEVEL_4, 3), SoundEvents.ITEM_BUCKET_EMPTY);
-    Map<Item, CauldronBehavior> WATER_SINK_BEHAVIOR = CauldronBehavior.createMap();
+    CauldronBehaviorMap WATER_SINK_BEHAVIOR = CauldronBehavior.createMap("sink");
     CauldronBehavior CLEAN_SHULKER_BOX = (state, world, pos, player, hand, stack) -> {
         if (state.get(KitchenSinkBlock.LEVEL_4) == 0) {
             return ActionResult.PASS;
@@ -122,7 +122,7 @@ public interface SinkBehavior extends CauldronBehavior {
         behavior.put(Items.WATER_BUCKET, FILL_SINK_WITH_WATER);
     }
     static void registerBehavior() {
-        WATER_SINK_BEHAVIOR.put(Items.POTION, (state, world, pos, player, hand, stack) -> {
+        WATER_SINK_BEHAVIOR.map().put(Items.POTION, (state, world, pos, player, hand, stack) -> {
             if (PotionUtil.getPotion(stack) != Potions.WATER) {
                 return ActionResult.PASS;
             }
@@ -140,9 +140,9 @@ public interface SinkBehavior extends CauldronBehavior {
 
 
 
-        SinkBehavior.registerBucketBehavior(WATER_SINK_BEHAVIOR);
-        WATER_SINK_BEHAVIOR.put(Items.BUCKET, (state2, world, pos, player, hand, stack) -> SinkBehavior.emptyCauldron(state2, world, pos, player, hand, stack, new ItemStack(Items.WATER_BUCKET), state -> state.get(KitchenSinkBlock.LEVEL_4) == 3, SoundEvents.ITEM_BUCKET_FILL));
-        WATER_SINK_BEHAVIOR.put(Items.GLASS_BOTTLE, (state, world, pos, player, hand, stack) -> {
+        SinkBehavior.registerBucketBehavior(WATER_SINK_BEHAVIOR.map());
+        WATER_SINK_BEHAVIOR.map().put(Items.BUCKET, (state2, world, pos, player, hand, stack) -> SinkBehavior.emptyCauldron(state2, world, pos, player, hand, stack, new ItemStack(Items.WATER_BUCKET), state -> state.get(KitchenSinkBlock.LEVEL_4) == 3, SoundEvents.ITEM_BUCKET_FILL));
+        WATER_SINK_BEHAVIOR.map().put(Items.GLASS_BOTTLE, (state, world, pos, player, hand, stack) -> {
             if (!world.isClient) {
                 if (state.get(KitchenSinkBlock.LEVEL_4) == 0) {
                     return ActionResult.PASS;
@@ -157,7 +157,7 @@ public interface SinkBehavior extends CauldronBehavior {
             }
             return ActionResult.success(world.isClient);
         });
-        WATER_SINK_BEHAVIOR.put(Items.POTION, (state, world, pos, player, hand, stack) -> {
+        WATER_SINK_BEHAVIOR.map().put(Items.POTION, (state, world, pos, player, hand, stack) -> {
             if (state.get(KitchenSinkBlock.LEVEL_4) == 3 || PotionUtil.getPotion(stack) != Potions.WATER) {
                 return ActionResult.PASS;
             }
@@ -171,42 +171,42 @@ public interface SinkBehavior extends CauldronBehavior {
             }
             return ActionResult.success(world.isClient);
         });
-        WATER_SINK_BEHAVIOR.put(Items.LEATHER_BOOTS, CLEAN_DYEABLE_ITEM);
-        WATER_SINK_BEHAVIOR.put(Items.LEATHER_LEGGINGS, CLEAN_DYEABLE_ITEM);
-        WATER_SINK_BEHAVIOR.put(Items.LEATHER_CHESTPLATE, CLEAN_DYEABLE_ITEM);
-        WATER_SINK_BEHAVIOR.put(Items.LEATHER_HELMET, CLEAN_DYEABLE_ITEM);
-        WATER_SINK_BEHAVIOR.put(Items.LEATHER_HORSE_ARMOR, CLEAN_DYEABLE_ITEM);
-        WATER_SINK_BEHAVIOR.put(Items.WHITE_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.GRAY_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.BLACK_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.BLUE_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.BROWN_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.CYAN_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.GREEN_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.LIGHT_BLUE_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.LIGHT_GRAY_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.LIME_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.MAGENTA_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.ORANGE_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.PINK_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.PURPLE_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.RED_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.YELLOW_BANNER, CLEAN_BANNER);
-        WATER_SINK_BEHAVIOR.put(Items.WHITE_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.GRAY_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.BLACK_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.BLUE_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.BROWN_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.CYAN_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.GREEN_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.LIGHT_BLUE_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.LIGHT_GRAY_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.LIME_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.MAGENTA_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.ORANGE_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.PINK_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.PURPLE_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.RED_SHULKER_BOX, CLEAN_SHULKER_BOX);
-        WATER_SINK_BEHAVIOR.put(Items.YELLOW_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.LEATHER_BOOTS, CLEAN_DYEABLE_ITEM);
+        WATER_SINK_BEHAVIOR.map().put(Items.LEATHER_LEGGINGS, CLEAN_DYEABLE_ITEM);
+        WATER_SINK_BEHAVIOR.map().put(Items.LEATHER_CHESTPLATE, CLEAN_DYEABLE_ITEM);
+        WATER_SINK_BEHAVIOR.map().put(Items.LEATHER_HELMET, CLEAN_DYEABLE_ITEM);
+        WATER_SINK_BEHAVIOR.map().put(Items.LEATHER_HORSE_ARMOR, CLEAN_DYEABLE_ITEM);
+        WATER_SINK_BEHAVIOR.map().put(Items.WHITE_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.GRAY_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.BLACK_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.BLUE_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.BROWN_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.CYAN_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.GREEN_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.LIGHT_BLUE_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.LIGHT_GRAY_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.LIME_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.MAGENTA_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.ORANGE_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.PINK_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.PURPLE_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.RED_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.YELLOW_BANNER, CLEAN_BANNER);
+        WATER_SINK_BEHAVIOR.map().put(Items.WHITE_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.GRAY_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.BLACK_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.BLUE_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.BROWN_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.CYAN_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.GREEN_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.LIGHT_BLUE_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.LIGHT_GRAY_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.LIME_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.MAGENTA_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.ORANGE_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.PINK_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.PURPLE_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.RED_SHULKER_BOX, CLEAN_SHULKER_BOX);
+        WATER_SINK_BEHAVIOR.map().put(Items.YELLOW_SHULKER_BOX, CLEAN_SHULKER_BOX);
         }
     }

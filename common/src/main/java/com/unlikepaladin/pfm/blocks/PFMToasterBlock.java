@@ -1,12 +1,10 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
@@ -35,9 +33,15 @@ import org.jetbrains.annotations.Nullable;
 import static com.unlikepaladin.pfm.blocks.LogTableBlock.rotateShape;
 
 public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
-    public static final BooleanProperty ON = BooleanProperty.of("on");;
+    public static final BooleanProperty ON = BooleanProperty.of("on");
+    public static final MapCodec<PFMToasterBlock> CODEC = createCodec(PFMToasterBlock::new);
     public PFMToasterBlock(Settings settings) {
         super(settings);
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     @Override

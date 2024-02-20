@@ -10,8 +10,14 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScre
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.container.CombinedContainer;
 import net.blay09.mods.balm.api.container.ContainerUtils;
+import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.KitchenMultiBlock;
+import net.blay09.mods.cookingforblockheads.api.SourceItem;
+import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.api.capability.IngredientPredicate;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
 import net.minecraft.block.*;
@@ -21,6 +27,7 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.property.Properties;
@@ -30,6 +37,11 @@ import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class PFMCookingForBlockHeadsCompat {
 
@@ -129,5 +141,44 @@ public class PFMCookingForBlockHeadsCompat {
             }
             return ActionResult.SUCCESS;
         }
+    }
+
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+
+        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(DefaultKitchenItemProvider.class), BlockEntities.FREEZER_BLOCK_ENTITY, (entity, side) -> {
+            return new DefaultKitchenItemProvider(entity){
+                private final ItemStack snowStack;
+                private final ItemStack iceStack;
+                {
+                    this.snowStack = new ItemStack(Items.SNOWBALL);
+                    this.iceStack = new ItemStack(Blocks.ICE);
+                }
+                private @Nullable SourceItem applyIceUnit(IngredientPredicate predicate, int maxAmount) {
+                    if (predicate.test(this.snowStack, 64))
+                        return new SourceItem(this, -1, ContainerUtils.copyStackWithSize(this.snowStack, maxAmount));
+                    else
+                        return predicate.test(this.iceStack, 64) ? new SourceItem(this, -1, ContainerUtils.copyStackWithSize(this.iceStack, maxAmount)) : null;
+                }
+                public @Nullable SourceItem findSource(IngredientPredicate predicate, int maxAmount, List<IKitchenItemProvider> inventories, boolean requireBucket, boolean simulate) {
+                    SourceItem iceUnitResult = this.applyIceUnit(predicate, maxAmount);
+                    if (iceUnitResult != null) {
+                        return iceUnitResult;
+                    } else {
+                        return super.findSource(predicate, maxAmount, inventories, requireBucket, simulate);
+                    }             }
+                public @Nullable SourceItem findSourceAndMarkAsUsed(IngredientPredicate predicate, int maxAmount, List<IKitchenItemProvider> inventories, boolean requireBucket, boolean simulate) {
+                    SourceItem iceUnitResult = this.applyIceUnit(predicate, maxAmount);
+                    if (iceUnitResult != null) {                     return iceUnitResult;
+                    } else {
+                        return super.findSourceAndMarkAsUsed(predicate, maxAmount, inventories, requireBucket, simulate);
+                    }
+                }
+            };
+        });
+
+        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(DefaultKitchenItemProvider.class), BlockEntities.STOVE_BLOCK_ENTITY, (entity, side) -> {
+            StoveBlockEntityBalm ovenBlockEntityBalm = (StoveBlockEntityBalm) entity;
+            return new DefaultKitchenItemProvider(new CombinedContainer(ovenBlockEntityBalm.toolsContainer, ovenBlockEntityBalm.outputContainer));
+        });
     }
 }

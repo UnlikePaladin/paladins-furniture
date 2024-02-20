@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
@@ -32,15 +33,22 @@ import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
+import net.minecraft.world.WorldView;
 import net.minecraft.world.event.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 public class BasicLampBlock extends PowerableBlock implements BlockEntityProvider {
     private static final BooleanProperty LIT = Properties.LIT;
+    public static final MapCodec<BasicLampBlock> CODEC = createCodec(BasicLampBlock::new);
 
     public BasicLampBlock(AbstractBlock.Settings settings) {
         super(settings);
         setDefaultState(this.getStateManager().getDefaultState().with(LIT, false).with(POWERLOCKED, false));
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     @Override
@@ -97,7 +105,7 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
         return super.getDefaultMapColor();
     }
 
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof LampBlockEntity lampBlockEntity) {
             if (!world.isClient && !player.isCreative()) {
@@ -112,7 +120,7 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
             }
         }
 
-        super.onBreak(world, pos, state, player);
+        return super.onBreak(world, pos, state, player);
     }
 
     private static final VoxelShape SINGLE = VoxelShapes.union(createCuboidShape(7, 1.5, 7, 9, 6, 9), createCuboidShape(3, 0, 3,13, 1.5, 13),createCuboidShape(1.5, 5, 1.5,14.5, 16, 14.5));
@@ -165,7 +173,7 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
     }
 
     @Override
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
+    public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
         ItemStack stack = super.getPickStack(world, pos, state);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof LampBlockEntity) {

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -45,6 +46,7 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> MICROWAVES = new ArrayList<>();
+    public static final MapCodec<MicrowaveBlock> CODEC = createCodec(MicrowaveBlock::new);
 
     public MicrowaveBlock(Settings settings) {
         super(settings);
@@ -52,6 +54,11 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
         this.baseBlockState = this.getDefaultState();
         this.baseBlock = baseBlockState.getBlock();
         MICROWAVES.add(new FurnitureBlock(this, "microwave"));
+    }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamMicrowaves() {

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -23,10 +24,17 @@ import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
 public class TrashcanBlock extends BlockWithEntity {
+    public static final MapCodec<TrashcanBlock> CODEC = createCodec(TrashcanBlock::new);
     public TrashcanBlock(Settings settings) {
         super(settings);
         setDefaultState(this.getDefaultState().with(OPEN, false));
     }
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
+    }
+
     protected static final BooleanProperty OPEN = Properties.OPEN;
     protected static final BooleanProperty POWERED = Properties.POWERED;
 

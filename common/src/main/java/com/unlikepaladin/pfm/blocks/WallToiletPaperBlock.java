@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -29,11 +30,17 @@ import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 public class WallToiletPaperBlock extends HorizontalFacingBlock {
     protected static final BooleanProperty WALL = BooleanProperty.of("wall");
     private static final List<FurnitureBlock> TOILET_PAPER = new ArrayList<>();
+    public static final MapCodec<WallToiletPaperBlock> CODEC = createCodec(WallToiletPaperBlock::new);
     public WallToiletPaperBlock(Settings settings) {
         super(settings);
         this.setDefaultState(getDefaultState().with(FACING, Direction.NORTH).with(WALL, false));
         TOILET_PAPER.add(new FurnitureBlock(this, "toilet_paper"));
 
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamToiletPaperBlocks() {

@@ -12,6 +12,7 @@ import net.minecraft.world.BlockView;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class ClassicChairBlock extends BasicChairBlock {
@@ -64,6 +65,9 @@ public class ClassicChairBlock extends BasicChairBlock {
         };
     }
 
-
+    @Override
+    public Function<Settings, AbstractSittableBlock> getChairConstructor() {
+        return ClassicChairBlock::new;
+    }
 }
 

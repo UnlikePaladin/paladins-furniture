@@ -19,7 +19,7 @@ import java.util.List;
 public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
     public static ExtraStoolVariant GRAY_DARK_OAK = new ExtraStoolVariant(Blocks.GRAY_CONCRETE, Blocks.STRIPPED_DARK_OAK_LOG, "gray_dark_oak");
     public static ExtraStoolVariant WHITE = new ExtraStoolVariant(Blocks.WHITE_CONCRETE, Blocks.LIGHT_GRAY_CONCRETE, "white");
-    public static ExtraStoolVariant GRAY = new ExtraStoolVariant(PaladinFurnitureModBlocksItems.RAW_CONCRETE, Blocks.LIGHT_GRAY_CONCRETE, "gray");
+    public static ExtraStoolVariant GRAY = new ExtraStoolVariant(null, Blocks.LIGHT_GRAY_CONCRETE, "gray");
     public static ExtraStoolVariant LIGHT_GRAY_DARK_OAK = new ExtraStoolVariant(Blocks.LIGHT_GRAY_CONCRETE, Blocks.STRIPPED_DARK_OAK_LOG, "light_gray_dark_oak");
 
     private final String name;
@@ -59,6 +59,9 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
 
     @Override
     public Block getSecondaryBlock() {
+        if (secondaryBlock == null)
+            return PaladinFurnitureModBlocksItems.RAW_CONCRETE;
+
         return secondaryBlock;
     }
 
@@ -103,7 +106,7 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
     @Override
     public Identifier getTexture(BlockType type) {
         if (type == BlockType.SECONDARY)
-            return ModelHelper.getTextureId(secondaryBlock);
+            return ModelHelper.getTextureId(getSecondaryBlock());
         return ModelHelper.getTextureId(baseBlock);
     }
 

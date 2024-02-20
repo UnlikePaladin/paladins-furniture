@@ -24,6 +24,7 @@ import net.minecraft.world.WorldAccess;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class BasicChairBlock extends AbstractSittableBlock {
@@ -144,6 +145,11 @@ public class BasicChairBlock extends AbstractSittableBlock {
             return ActionResult.SUCCESS;
         }
         return super.onUse(state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public Function<Settings, AbstractSittableBlock> getChairConstructor() {
+        return BasicChairBlock::new;
     }
 }
 
