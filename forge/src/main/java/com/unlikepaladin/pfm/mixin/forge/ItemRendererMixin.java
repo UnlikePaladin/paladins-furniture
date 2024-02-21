@@ -49,10 +49,10 @@ public abstract class ItemRendererMixin {
             long randomSeed = 42L;
             for (Direction direction : Direction.values()) {
                 random.setSeed(randomSeed);
-                this.renderBakedItemQuads(matrices, vertexConsumer, ((PFMBakedModelGetQuadsExtension) model).getQuads(stack, state, direction, random), stack, light, overlay);
+                this.renderBakedItemQuads(matrices, vertexConsumer, ((PFMBakedModelGetQuadsExtension) model).getQuadsCached(stack, state, direction, random), stack, light, overlay);
             }
             random.setSeed(randomSeed);
-            this.renderBakedItemQuads(matrices, vertexConsumer, ((PFMBakedModelGetQuadsExtension)model).getQuads(stack, state, null, random), stack, light, overlay);
+            this.renderBakedItemQuads(matrices, vertexConsumer, ((PFMBakedModelGetQuadsExtension)model).getQuadsCached(stack, state, null, random), stack, light, overlay);
 
             // Conditionally pop because of handlePerspective weirdness
             if (matrices.peek() != pose) {
