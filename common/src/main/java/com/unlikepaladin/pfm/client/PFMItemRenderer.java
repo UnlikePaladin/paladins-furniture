@@ -34,11 +34,16 @@ import net.minecraft.util.math.BlockPos;
 import java.util.*;
 
 public class PFMItemRenderer extends BuiltinModelItemRenderer {
-    private final PFMBedBlockEntity renderBed = new PFMBedBlockEntity(BlockPos.ORIGIN, PaladinFurnitureMod.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList().get(WoodVariantRegistry.OAK).iterator().next().getDefaultState());
+    private final PFMBedBlockEntity renderBed;
     private final BlockEntityRenderDispatcher blockEntityRenderDispatcher;
     public PFMItemRenderer(BlockEntityRenderDispatcher blockEntityRenderDispatcher, EntityModelLoader loader) {
         super(blockEntityRenderDispatcher, loader);
         this.blockEntityRenderDispatcher = blockEntityRenderDispatcher;
+        if (PaladinFurnitureMod.furnitureEntryMap.get(SimpleBedBlock.class) != null ) {
+            renderBed = new PFMBedBlockEntity(BlockPos.ORIGIN, PaladinFurnitureMod.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList().get(WoodVariantRegistry.OAK).iterator().next().getDefaultState());
+        } else {
+            renderBed = null;
+        }
     }
 
     static Map<WoodVariant, Map<String, BakedModel>> bakedModels = new LinkedHashMap<>();
