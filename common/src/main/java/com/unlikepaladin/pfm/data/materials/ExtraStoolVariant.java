@@ -54,14 +54,14 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
 
     @Override
     public Block getBaseBlock() {
+        if (baseBlock == null)
+            return PaladinFurnitureModBlocksItems.RAW_CONCRETE;
+
         return baseBlock;
     }
 
     @Override
     public Block getSecondaryBlock() {
-        if (secondaryBlock == null)
-            return PaladinFurnitureModBlocksItems.RAW_CONCRETE;
-
         return secondaryBlock;
     }
 
@@ -99,7 +99,7 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
 
     @Override
     public Block mainChild() {
-        return baseBlock;
+        return getBaseBlock();
     }
 
     @Environment(EnvType.CLIENT)
@@ -107,7 +107,7 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
     public Identifier getTexture(BlockType type) {
         if (type == BlockType.SECONDARY)
             return ModelHelper.getTextureId(getSecondaryBlock());
-        return ModelHelper.getTextureId(baseBlock);
+        return ModelHelper.getTextureId(getBaseBlock());
     }
 
     @Override
