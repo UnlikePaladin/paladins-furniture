@@ -11,8 +11,10 @@
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
     "PFMMinecraftServerMixin",
-    "PFMReloadableResourceManagerImplMixin",
     "PFMSaveLoaderMixin",
+    "PFMItemEntryAccessor",
+    "PFMLootPool$BuilderMixin",
+    "PFMReloadableResourceManagerImplMixin",
     "SimpleRegistryAccessor"
   ],
   "injectors": {
