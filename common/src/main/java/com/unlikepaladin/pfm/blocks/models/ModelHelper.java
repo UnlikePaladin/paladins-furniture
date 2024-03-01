@@ -31,33 +31,30 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import net.minecraft.util.math.random.Random;
 
 public class ModelHelper {
-    private static final List<Sprite> OAK_SPRITES_PLANKS_TO_REPLACE = new ArrayList<>();
+    private static List<Sprite> OAK_SPRITES_PLANKS_TO_REPLACE = null;
     public static List<Sprite> getOakPlankLogSprites() {
-        if (OAK_SPRITES_PLANKS_TO_REPLACE.isEmpty()) {
+        if (OAK_SPRITES_PLANKS_TO_REPLACE == null) {
             SpriteIdentifier planksId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.PLANKS));
             SpriteIdentifier logId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.LOG));
-            OAK_SPRITES_PLANKS_TO_REPLACE.add(planksId.getSprite());
-            OAK_SPRITES_PLANKS_TO_REPLACE.add(logId.getSprite());
+            OAK_SPRITES_PLANKS_TO_REPLACE = Arrays.asList(planksId.getSprite(), logId.getSprite());
         }
         return OAK_SPRITES_PLANKS_TO_REPLACE;
     }
-    private static final List<Sprite> OAK_SPRITES_BED_TO_REPLACE = new ArrayList<>();
+    private static List<Sprite> OAK_SPRITES_BED_TO_REPLACE = null;
     public static List<Sprite> getOakBedSprites() {
-        if (OAK_SPRITES_BED_TO_REPLACE.isEmpty()) {
+        if (OAK_SPRITES_BED_TO_REPLACE == null) {
             SpriteIdentifier planksId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.PLANKS));
             SpriteIdentifier bedId = TexturedRenderLayers.BED_TEXTURES[DyeColor.RED.getId()];
-            OAK_SPRITES_BED_TO_REPLACE.add(planksId.getSprite());
-            OAK_SPRITES_BED_TO_REPLACE.add(bedId.getSprite());
+            OAK_SPRITES_BED_TO_REPLACE = Arrays.asList(planksId.getSprite(), bedId.getSprite());
         }
         return OAK_SPRITES_BED_TO_REPLACE;
     }
-    private static final List<Sprite> OAK_SPRITES_LOG_TOP_TO_REPLACE = new ArrayList<>();
+    private static List<Sprite> OAK_SPRITES_LOG_TOP_TO_REPLACE = null;
     public static List<Sprite> getOakLogLogTopSprites() {
-        if (OAK_SPRITES_LOG_TOP_TO_REPLACE.isEmpty()) {
+        if (OAK_SPRITES_LOG_TOP_TO_REPLACE == null) {
             SpriteIdentifier logId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.LOG));
             SpriteIdentifier logTopId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.LOG_TOP));
-            OAK_SPRITES_LOG_TOP_TO_REPLACE.add(logId.getSprite());
-            OAK_SPRITES_LOG_TOP_TO_REPLACE.add(logTopId.getSprite());
+            OAK_SPRITES_LOG_TOP_TO_REPLACE = Arrays.asList(logId.getSprite(), logTopId.getSprite());
         }
         return OAK_SPRITES_LOG_TOP_TO_REPLACE;
     }

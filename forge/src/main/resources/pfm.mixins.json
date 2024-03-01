@@ -12,8 +12,10 @@
     "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMCookingPotBlockEntityMixin",
     "PFMMinecraftServerMixin",
-    "PFMReloadableResourceManagerImplMixin",
-    "PFMSaveLoaderMixin"
+    "PFMSaveLoaderMixin",
+    "PFMItemEntryAccessor",
+    "PFMLootPool$BuilderMixin",
+    "PFMReloadableResourceManagerImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1
