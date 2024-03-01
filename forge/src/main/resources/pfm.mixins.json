@@ -11,6 +11,8 @@
   ],
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
+    "PFMItemEntryAccessor",
+    "PFMLootPool$BuilderMixin",
     "PFMReloadableResourceManagerImplMixin",
     "PFMResourcePackManagerMixin"
   ],
