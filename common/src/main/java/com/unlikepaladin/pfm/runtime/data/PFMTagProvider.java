@@ -126,7 +126,9 @@ public class PFMTagProvider extends PFMProvider {
                 .add(sinkBlocks)
                 .add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE)
                 .add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD)
-                .add(PaladinFurnitureModBlocksItems.BASIC_BATHTUB);
+                .add(PaladinFurnitureModBlocksItems.BASIC_BATHTUB)
+                .add(PaladinFurnitureModBlocksItems.TRASHCAN)
+                .add(PaladinFurnitureModBlocksItems.MESH_TRASHCAN);
 
         KitchenCounterBlock[] woodCounters = KitchenCounterBlock.streamWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
         KitchenWallCounterBlock[] woodWallCounters = KitchenWallCounterBlock.streamWallWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenWallCounterBlock[]::new);
