@@ -39,6 +39,8 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     }
     public static ModelProperty<BlockState> STATE = new ModelProperty<>();
 
+    public static boolean forceReload;
+
     @NotNull
     @Override
     public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
@@ -114,6 +116,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                 transformedQuads.add(quadToTransformedQuad.get(quadKey));
             }
             else {
+
                 int[] vertexData = new int[quad.getVertexData().length];
                 System.arraycopy(quad.getVertexData(), 0, vertexData, 0, vertexData.length);
                 float[][] uv = new float[4][2];
