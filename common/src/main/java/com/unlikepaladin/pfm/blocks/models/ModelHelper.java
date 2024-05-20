@@ -103,8 +103,7 @@ public class ModelHelper {
 
     @Nullable
     public static StoneVariant getStoneType(Identifier identifier) {
-        for (StoneVariant variant:
-             StoneVariant.values()) {
+        for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
             if (identifier.getPath().contains(variant.getPath()) && getBlockType(identifier) == BlockType.BLOCK) {
                 return variant;
             }

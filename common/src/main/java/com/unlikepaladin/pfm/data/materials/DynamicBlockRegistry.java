@@ -1,12 +1,5 @@
 package com.unlikepaladin.pfm.data.materials;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.BasicChairBlock;
-import com.unlikepaladin.pfm.blocks.DinnerChairBlock;
-import com.unlikepaladin.pfm.registry.dynamic.FurnitureEntry;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import net.minecraft.block.AbstractBlock;
 import net.minecraft.util.Identifier;
 
 import java.util.Map;
@@ -148,6 +141,32 @@ public class DynamicBlockRegistry {
         clutteredFloweringYellow.addChild("button", "luphie_flowering_yellow_button");
 
         addBlockTypeFinder(WoodVariant.class, clutteredFloweringYellow);
+
+        // Stones
+        StoneVariant.Finder calcite = StoneVariant.Finder.simple(
+                "minecraft", "calcite", "calcite", "stripped_warped_stem");
+
+        addBlockTypeFinder(StoneVariant.class, calcite);
+
+        StoneVariant.Finder lightWood = StoneVariant.Finder.simple(
+                "minecraft", "light_wood", "quartz_block", "stripped_oak_log");
+
+        addBlockTypeFinder(StoneVariant.class, lightWood);
+
+        StoneVariant.Finder darkWood = StoneVariant.Finder.simple(
+                "minecraft", "dark_wood", "quartz_block", "stripped_dark_oak_log");
+
+        addBlockTypeFinder(StoneVariant.class, darkWood);
+
+        StoneVariant.Finder quartz = StoneVariant.Finder.simple(
+                "minecraft", "quartz", "quartz_block", "quartz_block");
+
+        addBlockTypeFinder(StoneVariant.class, quartz);
+
+        StoneVariant.Finder netherite = StoneVariant.Finder.simple(
+                "minecraft", "netherite", "netherite_block", "ancient_debris");
+
+        addBlockTypeFinder(StoneVariant.class, netherite);
     }
 }
 

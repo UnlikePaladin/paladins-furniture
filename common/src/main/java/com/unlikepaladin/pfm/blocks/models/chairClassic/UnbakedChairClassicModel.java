@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.chairClassic;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.materials.StoneVariant;
+import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -34,8 +35,7 @@ public class UnbakedChairClassicModel implements UnbakedModel {
                 if (variant.hasStripped())
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_chair_classic"));
             }
-            for(StoneVariant variant : StoneVariant.values()){
-
+            for(StoneVariant variant : StoneVariantRegistry.getVariants()){
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_chair_classic"));
             }
             add(CHAIR_MODEL_ID);

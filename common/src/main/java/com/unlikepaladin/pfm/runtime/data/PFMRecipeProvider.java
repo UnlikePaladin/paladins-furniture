@@ -6,7 +6,6 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
@@ -697,20 +696,20 @@ public class PFMRecipeProvider extends PFMProvider {
         Block counterTop = variantBase.getSecondaryBlock();
         Block counterBase = variantBase.getBaseBlock();
 
-        if (variantBase == StoneVariant.GRANITE) {
+        if (variantBase.identifier.getPath().equals("granite")) {
             counterTop = Blocks.POLISHED_GRANITE;
             counterBase = Blocks.WHITE_TERRACOTTA;
-        } else if (variantBase == StoneVariant.CALCITE || variantBase == StoneVariant.NETHERITE) {
+        } else if (variantBase.identifier.getPath().equals("calcite") || variantBase.identifier.getPath().equals("netherite")) {
             Block temp = counterBase;
             counterBase = counterTop;
             counterTop  = temp;
-        } else if (variantBase == StoneVariant.ANDESITE) {
+        } else if (variantBase.identifier.getPath().equals("andesite")) {
             counterTop = Blocks.POLISHED_ANDESITE;
             counterBase = Blocks.STRIPPED_OAK_LOG;
-        } else if (variantBase == StoneVariant.DEEPSLATE) {
+        } else if (variantBase.identifier.getPath().equals("deepslate")) {
             counterTop = Blocks.POLISHED_DEEPSLATE;
             counterBase = Blocks.DARK_OAK_PLANKS;
-        } else if (variantBase == StoneVariant.BLACKSTONE) {
+        } else if (variantBase.identifier.getPath().equals("blackstone")) {
             counterTop = Blocks.POLISHED_BLACKSTONE;
             counterBase = Blocks.CRIMSON_PLANKS;
         }

@@ -2,9 +2,7 @@ package com.unlikepaladin.pfm.blocks.models.chairDinner;
 
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.data.materials.StoneVariant;
-import com.unlikepaladin.pfm.data.materials.WoodVariant;
-import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.data.materials.*;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -34,7 +32,7 @@ public class UnbakedChairDinnerModel implements UnbakedModel {
                 if (variant.hasStripped())
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_chair_dinner"));
             }
-            for(StoneVariant variant : StoneVariant.values()){
+            for(StoneVariant variant : StoneVariantRegistry.getVariants()){
 
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_chair_dinner"));
             }

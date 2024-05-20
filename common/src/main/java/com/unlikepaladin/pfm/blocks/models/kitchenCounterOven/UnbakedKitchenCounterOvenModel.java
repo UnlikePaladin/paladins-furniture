@@ -11,7 +11,6 @@ import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -40,8 +39,8 @@ public class UnbakedKitchenCounterOvenModel implements UnbakedModel {
                 if (variant.hasStripped())
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_kitchen_counter_oven"));
             }
-            for(StoneVariant variant : StoneVariant.values()){
-                if (variant.equals(StoneVariant.QUARTZ))
+            for(StoneVariant variant : StoneVariantRegistry.getVariants()){
+                if (variant.identifier.getPath().equals("quartz"))
                     continue;
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_counter_oven"));
             }

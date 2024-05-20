@@ -9,8 +9,6 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
-import com.unlikepaladin.pfm.data.materials.WoodVariant;
-import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.mixin.PFMTextureKeyFactory;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
@@ -251,20 +249,20 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         public static Texture createCounterBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
             Identifier counterBase = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getBaseBlock());
             Identifier counterTop = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
-            if (variantBase == StoneVariant.GRANITE) {
+            if (variantBase.identifier.getPath().equals("granite")) {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_GRANITE);
                 counterBase = ModelHelper.getTextureId(Blocks.WHITE_TERRACOTTA);
-            } else if (variantBase == StoneVariant.CALCITE || variantBase == StoneVariant.NETHERITE) {
+            } else if (variantBase.identifier.getPath().equals("calcite") || variantBase.identifier.getPath().equals("netherite")) {
                 Identifier temp = counterBase;
                 counterBase = counterTop;
                 counterTop  = temp;
-            } else if (variantBase == StoneVariant.ANDESITE) {
+            } else if (variantBase.identifier.getPath().equals("andesite")) {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_ANDESITE);
                 counterBase = ModelHelper.getTextureId(Blocks.STRIPPED_OAK_LOG);
-            } else if (variantBase == StoneVariant.DEEPSLATE) {
+            } else if (variantBase.identifier.getPath().equals("deepslate")) {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_DEEPSLATE);
                 counterBase = ModelHelper.getTextureId(Blocks.DARK_OAK_PLANKS);
-            } else if (variantBase == StoneVariant.BLACKSTONE) {
+            } else if (variantBase.identifier.getPath().equals("blackstone")) {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_BLACKSTONE);
                 counterBase = ModelHelper.getTextureId(Blocks.CRIMSON_PLANKS);
             }

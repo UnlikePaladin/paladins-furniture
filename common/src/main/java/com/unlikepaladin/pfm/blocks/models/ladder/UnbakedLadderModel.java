@@ -2,9 +2,7 @@ package com.unlikepaladin.pfm.blocks.models.ladder;
 
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.data.materials.StoneVariant;
-import com.unlikepaladin.pfm.data.materials.WoodVariant;
-import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.data.materials.*;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -29,14 +27,9 @@ public class UnbakedLadderModel implements UnbakedModel {
     public static final List<Identifier> LADDER_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_simple_bunk_ladder"));
                 if (variant.hasStripped())
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_simple_bunk_ladder"));
-            }
-            for(StoneVariant variant : StoneVariant.values()){
-
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_simple_bunk_ladder"));
             }
             add(LADDER_MODEL_ID);
         }

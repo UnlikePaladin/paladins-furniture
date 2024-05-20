@@ -281,7 +281,11 @@ public class PFMLangProvider extends PFMProvider {
                     throw new RuntimeException(e);
                 }
             } else {
-                String translatedVariantName = translate("block.pfm.variant."+variant.getIdentifier().getPath());
+                String key = "block.pfm.variant."+variant.getIdentifier().getPath();
+                String translatedVariantName = translate(key);
+                if (translatedVariantName.equals(key)) {
+                    translatedVariantName = getTranslatedVariantName(variant);
+                }
                 String translatedFurnitureName = StringUtils.normalizeSpace(blockStringStringStringStringQuadFunc.apply(block, furnitureKey, "", translatedVariantName));
                 try {
                     writer.write(String.format("    \"%1$s\": \"%2$s\",", block.getTranslationKey(), translatedFurnitureName));
