@@ -17,6 +17,7 @@ public class PFMMCMetaProvider extends PFMProvider {
 
     public PFMMCMetaProvider(PFMGenerator parent) {
         super(parent);
+        parent.setProgress("Generating Minecraft Metadata");
     }
 
     public void run(PackType type, String description) {

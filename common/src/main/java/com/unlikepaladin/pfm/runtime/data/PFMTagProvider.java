@@ -36,6 +36,7 @@ import java.util.stream.Collectors;
 public class PFMTagProvider extends PFMProvider {
     public PFMTagProvider(PFMGenerator parent) {
         super(parent);
+        parent.setProgress("Generating Tags");
     }
 
     protected void generateTags() {

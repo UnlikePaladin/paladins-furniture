@@ -50,6 +50,7 @@ public class PFMRecipeProvider extends PFMProvider {
 
     public PFMRecipeProvider(PFMGenerator parent) {
         super(parent);
+        parent.setProgress("Generating Recipes");
     }
 
     public void run(DataCache cache) {

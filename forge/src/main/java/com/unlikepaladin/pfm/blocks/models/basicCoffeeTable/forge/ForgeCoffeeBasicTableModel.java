@@ -198,8 +198,8 @@ public class ForgeCoffeeBasicTableModel extends PFMForgeBakedModel {
                 }
             }
             List<Sprite> spriteList = getSpriteList(state);
-            List<BakedQuad> quads = getQuadsWithTexture(baseQuads, spriteList.get(0));
-            quads.addAll(getQuadsWithTexture(secondaryQuads, spriteList.get(1)));
+            List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
+            quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
             return quads;
         }
        return Collections.emptyList();
@@ -222,8 +222,8 @@ public class ForgeCoffeeBasicTableModel extends PFMForgeBakedModel {
         secondaryQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, face, random));
 
         List<Sprite> spriteList = getSpriteList(stack);
-        List<BakedQuad> quads = getQuadsWithTexture(baseQuads, spriteList.get(0));
-        quads.addAll(getQuadsWithTexture(secondaryQuads, spriteList.get(1)));
+        List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
+        quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
         return quads;
     }
 }

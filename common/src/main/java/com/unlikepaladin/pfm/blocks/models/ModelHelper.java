@@ -79,8 +79,8 @@ public class ModelHelper {
         return BlockType.BLOCK;
     }
 
-    public static VariantBase getVariant(Identifier identifier) {
-        VariantBase var = getExtraCounterType(identifier);
+    public static VariantBase<?> getVariant(Identifier identifier) {
+        VariantBase<?> var = getExtraCounterType(identifier);
         if (var == null) {
             var = getStoneType(identifier);
         }

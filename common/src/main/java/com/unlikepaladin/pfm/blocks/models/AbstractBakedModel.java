@@ -32,6 +32,8 @@ import java.util.*;
 public abstract class AbstractBakedModel implements BakedModel {
     protected final ModelBakeSettings settings;
     private final List<BakedModel> templateBakedModels;
+
+    public static boolean reloading = false;
     public AbstractBakedModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
         this.settings = settings;
         this.templateBakedModels = templateBakedModels;

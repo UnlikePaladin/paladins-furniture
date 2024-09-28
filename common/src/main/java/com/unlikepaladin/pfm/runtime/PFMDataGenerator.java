@@ -24,6 +24,9 @@ import java.util.concurrent.TimeUnit;
 
 public class PFMDataGenerator extends PFMGenerator {
     public static boolean FROZEN = false;
+    private int count;
+    private String progress;
+
     public PFMDataGenerator(Path output, boolean logOrDebug) {
         super(output, logOrDebug, LogManager.getLogger("PFM-DataGen"));
     }
@@ -62,6 +65,7 @@ public class PFMDataGenerator extends PFMGenerator {
                 log("Starting provider: {}", "PFM PFMTags");
                 stopwatch2.start();
                 new PFMTagProvider(this).run(dataCache);
+                count++;
                 stopwatch2.stop();
                 log("{} finished after {} ms", "PFM PFMTags", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                 stopwatch2.reset();
@@ -69,6 +73,7 @@ public class PFMDataGenerator extends PFMGenerator {
                 log("Starting provider: {}", "PFM Drops");
                 stopwatch2.start();
                 new PFMLootTableProvider(this).run(dataCache);
+                count++;
                 stopwatch2.stop();
                 log("{} finished after {} ms", "PFM Drops", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                 stopwatch2.reset();
@@ -76,6 +81,7 @@ public class PFMDataGenerator extends PFMGenerator {
                 log("Starting provider: {}", "PFM Recipes");
                 stopwatch2.start();
                 new PFMRecipeProvider(this).run(dataCache);
+                count++;
                 stopwatch2.stop();
                 log("{} finished after {} ms", "PFM Recipes", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                 stopwatch2.reset();
@@ -83,6 +89,7 @@ public class PFMDataGenerator extends PFMGenerator {
                 log("Starting provider: {}", "PFM MC Meta");
                 stopwatch2.start();
                 new PFMMCMetaProvider(this).run(PackType.DATA, "PFM-Data");
+                count++;
                 stopwatch2.stop();
                 log("{} finished after {} ms", "PFM MC Meta", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
 
@@ -103,5 +110,20 @@ public class PFMDataGenerator extends PFMGenerator {
             }
             setDataRunning(false);
         }
+    }
+
+    @Override
+    public int getProgress() {
+        return count / 4;
+    }
+
+    @Override
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
+    @Override
+    public String getProgressString() {
+        return progress;
     }
 }

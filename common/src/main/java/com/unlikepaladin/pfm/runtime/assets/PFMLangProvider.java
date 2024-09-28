@@ -37,6 +37,7 @@ public class PFMLangProvider extends PFMProvider {
 
     public PFMLangProvider(PFMGenerator parent) {
         super(parent);
+        parent.setProgress("Generating Language Resources");
     }
 
     public void run() {

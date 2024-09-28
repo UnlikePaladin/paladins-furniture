@@ -39,6 +39,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
     public PFMBlockstateModelProvider(PFMGenerator parent) {
         super(parent);
+        parent.setProgress("Generating Blockstates and Models");
     }
 
     public void run(DataCache cache) {

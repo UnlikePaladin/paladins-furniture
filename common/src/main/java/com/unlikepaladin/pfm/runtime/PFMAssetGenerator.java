@@ -21,8 +21,12 @@ import java.util.concurrent.TimeUnit;
 
 public class PFMAssetGenerator extends PFMGenerator {
     public static boolean FROZEN = false;
+    private int count;
+    private String progress;
+
     public PFMAssetGenerator(Path output, boolean logOrDebug) {
         super(output, logOrDebug, LogManager.getLogger("PFM-Asset-Generation"));
+        count = 0;
     }
 
     public void run() throws IOException {
@@ -62,12 +66,14 @@ public class PFMAssetGenerator extends PFMGenerator {
                 log("Starting provider: {}", "PFM Asset MC Meta");
                 stopwatch2.start();
                 new PFMMCMetaProvider(this).run(PackType.RESOURCE, "PFM-Assets");
+                count++;
                 stopwatch2.stop();
                 log("{} finished after {} ms", "PFM Asset MC Meta", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
 
                 log("Starting provider: {}", "PFM Blockstates and Models");
                 stopwatch2.start();
                 new PFMBlockstateModelProvider(this).run(dataCache);
+                count++;
                 stopwatch2.stop();
                 log("{} finished after {} ms", "PFM Blockstates and Models", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                 stopwatch2.reset();
@@ -75,6 +81,7 @@ public class PFMAssetGenerator extends PFMGenerator {
                 log("Starting provider: {}", "PFM Lang");
                 stopwatch2.start();
                 new PFMLangProvider(this).run();
+                count++;
                 stopwatch2.stop();
                 log("{} finished after {} ms", "PFM Lang", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                 stopwatch2.reset();
@@ -95,5 +102,20 @@ public class PFMAssetGenerator extends PFMGenerator {
             }
             setAssetsRunning(false);
         }
+    }
+
+    @Override
+    public int getProgress() {
+        return count / 3;
+    }
+
+    @Override
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
+    @Override
+    public String getProgressString() {
+        return progress;
     }
 }
