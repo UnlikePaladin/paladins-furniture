@@ -4,6 +4,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.hash.HashCode;
 import com.mojang.bridge.game.PackType;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.client.screens.PFMGeneratingOverlay;
 import com.unlikepaladin.pfm.runtime.assets.PFMBlockstateModelProvider;
 import com.unlikepaladin.pfm.runtime.assets.PFMLangProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMLootTableProvider;
@@ -11,6 +12,7 @@ import com.unlikepaladin.pfm.runtime.data.PFMMCMetaProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.data.DataCache;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
@@ -29,9 +31,11 @@ public class PFMDataGenerator extends PFMGenerator {
 
     public PFMDataGenerator(Path output, boolean logOrDebug) {
         super(output, logOrDebug, LogManager.getLogger("PFM-DataGen"));
+        count = 4;
     }
     public void run() throws IOException {
         if (!FROZEN) {
+            count = 0;
             setDataRunning(true);
             log("Packs:");
             for (ResourcePack pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
@@ -56,6 +60,7 @@ public class PFMDataGenerator extends PFMGenerator {
             List<String> modList = Files.readAllLines(modListPath);
             if (!hashToCompare.toString().equals(oldHash.toString()) || !modList.toString().replace("[", "").replace("]", "").equals(PaladinFurnitureMod.getVersionMap().toString())) {
                 getLogger().info("Starting PFM Data Generation");
+                //MinecraftClient.getInstance().setOverlay(new PFMGeneratingOverlay(MinecraftClient.getInstance().getOverlay(), this, MinecraftClient.getInstance(), true));
                 PFMFileUtil.deleteDir(output.toFile());
                 DataCache dataCache = new DataCache(output, "cache");
                 dataCache.ignore(output.resolve("version.json"));
@@ -113,8 +118,8 @@ public class PFMDataGenerator extends PFMGenerator {
     }
 
     @Override
-    public int getProgress() {
-        return count / 4;
+    public float getProgress() {
+        return (float) count / 4;
     }
 
     @Override

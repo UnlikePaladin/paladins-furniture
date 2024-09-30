@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.runtime;
 
 public interface PFMResourceProgress {
-    int getProgress();
+    float getProgress();
 
     String getProgressString();
 }
