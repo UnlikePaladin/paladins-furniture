@@ -8,8 +8,8 @@
 	"elements": [
 		{
 			"name": "grill",
-			"from": [1, 16, 1],
-			"to": [15, 16, 15],
+			"from": [1, 16.01, 1],
+			"to": [15, 16.01, 15],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 16, 8]},
 			"faces": {
 				"up": {"uv": [16, 3.5, 12.5, 0], "rotation": 180, "texture": "#0"}
