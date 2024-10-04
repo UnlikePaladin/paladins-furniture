@@ -55,6 +55,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
     public PFMBlockstateModelProvider(PFMGenerator parent) {
         super(parent);
+        parent.setProgress("Generating Blockstates and Models");
     }
 
     public CompletableFuture<?> run(DataWriter writer) {
@@ -200,6 +201,15 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
             generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMap(), "modern_dinner_table", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMapNonBase(), "modern_dinner_table", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
+
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_basic", PFMBlockStateModelGenerator::createAxisOrientableTableBlockState);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_basic", PFMBlockStateModelGenerator::createAxisOrientableTableBlockState);
+
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_modern", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_modern", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
+
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_classic", PFMBlockStateModelGenerator::createSingleStateBlockState);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_classic", PFMBlockStateModelGenerator::createSingleStateBlockState);
         }
 
         public void registerNightStands() {
@@ -270,20 +280,20 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         public static TextureMap createCounterBlockTexture(Boolean stripped, VariantBase<?> variantBase) {
             Identifier counterBase = stripped ? ModelHelper.getTextureId((Block) variantBase.getChild("stripped_log")) : ModelHelper.getTextureId(variantBase.getBaseBlock());
             Identifier counterTop = stripped ? ModelHelper.getTextureId(variantBase.getBaseBlock()) : ModelHelper.getTextureId(variantBase.getSecondaryBlock());
-            if (variantBase == StoneVariant.GRANITE) {
+            if (variantBase.identifier.getPath().equals("granite")) {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_GRANITE);
                 counterBase = ModelHelper.getTextureId(Blocks.WHITE_TERRACOTTA);
-            } else if (variantBase == StoneVariant.CALCITE || variantBase == StoneVariant.NETHERITE) {
+            } else if (variantBase.identifier.getPath().equals("calcite") || variantBase.identifier.getPath().equals("netherite")) {
                 Identifier temp = counterBase;
                 counterBase = counterTop;
                 counterTop  = temp;
-            } else if (variantBase == StoneVariant.ANDESITE) {
+            } else if (variantBase.identifier.getPath().equals("andesite")) {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_ANDESITE);
                 counterBase = ModelHelper.getTextureId(Blocks.STRIPPED_OAK_LOG);
-            } else if (variantBase == StoneVariant.DEEPSLATE) {
+            } else if (variantBase.identifier.getPath().equals("deepslate")) {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_DEEPSLATE);
                 counterBase = ModelHelper.getTextureId(Blocks.DARK_OAK_PLANKS);
-            } else if (variantBase == StoneVariant.BLACKSTONE) {
+            } else if (variantBase.identifier.getPath().equals("blackstone")) {
                 counterTop = ModelHelper.getTextureId(Blocks.POLISHED_BLACKSTONE);
                 counterBase = ModelHelper.getTextureId(Blocks.CRIMSON_PLANKS);
             }

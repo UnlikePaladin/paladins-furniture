@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.mixin.fabric;
 
 import com.google.common.base.Suppliers;
+import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
@@ -30,6 +31,7 @@ public class PFMModResourcePackCreatorMixin {
     @Inject(method = "register", at = @At("TAIL"))
     private void addPFMResources(Consumer<ResourcePackProfile> consumer, CallbackInfo ci) {
         if (type == ResourceType.CLIENT_RESOURCES) {
+            AbstractBakedModel.reloading = true;
             PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES));
             ResourcePackProfile.PackFactory packFactory = name -> new PathPackRPWrapper(Suppliers.memoize(() -> {
                 if (!PFMDataGenerator.areAssetsRunning())

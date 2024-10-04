@@ -14,7 +14,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
-public abstract class PFMGenerator {
+public abstract class PFMGenerator implements PFMResourceProgress {
     protected final Path output;
     private final boolean logOrDebug;
     private final Logger logger;
@@ -122,4 +122,6 @@ public abstract class PFMGenerator {
             }
         }
     }
+
+    abstract public void setProgress(String message);
 }

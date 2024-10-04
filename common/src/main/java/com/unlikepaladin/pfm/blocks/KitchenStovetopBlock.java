@@ -106,7 +106,7 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
         return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
     }
 
-    protected static final VoxelShape STOVETOP = VoxelShapes.union(createCuboidShape(0, 0, 1, 16, 0.5, 15));
+    protected static final VoxelShape STOVETOP = VoxelShapes.union(createCuboidShape(0, 0, 1, 16, 1, 15));
     protected static final VoxelShape STOVETOP_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STOVETOP);
     protected static final VoxelShape STOVETOP_EAST = rotateShape(Direction.NORTH, Direction.EAST, STOVETOP);
     protected static final VoxelShape STOVETOP_WEST = rotateShape(Direction.NORTH, Direction.WEST, STOVETOP);

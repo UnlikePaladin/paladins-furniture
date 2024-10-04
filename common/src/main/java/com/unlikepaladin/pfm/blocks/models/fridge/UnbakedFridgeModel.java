@@ -21,18 +21,18 @@ import java.util.function.Function;
 public class UnbakedFridgeModel implements UnbakedModel {
     public static final List<String> FRIDGE_MODEL_PARTS_BASE = new ArrayList<>() {
         {
-            add("block/fridge/fridge_single");
-            add("block/fridge/fridge_top");
-            add("block/fridge/fridge_middle");
-            add("block/fridge/fridge_bottom");
-            add("block/fridge/fridge");
-            add("block/fridge/fridge_middle_freezer");
-            add("block/fridge/fridge_single_open");
-            add("block/fridge/fridge_top_open");
-            add("block/fridge/fridge_middle_open");
-            add("block/fridge/fridge_bottom_open");
-            add("block/fridge/fridge_open");
-            add("block/fridge/fridge_middle_freezer_open");
+            add("block/white_fridge/fridge_single");
+            add("block/white_fridge/fridge_top");
+            add("block/white_fridge/fridge_middle");
+            add("block/white_fridge/fridge_bottom");
+            add("block/white_fridge/fridge");
+            add("block/white_fridge/fridge_middle_freezer");
+            add("block/white_fridge/fridge_single_open");
+            add("block/white_fridge/fridge_top_open");
+            add("block/white_fridge/fridge_middle_open");
+            add("block/white_fridge/fridge_bottom_open");
+            add("block/white_fridge/fridge_open");
+            add("block/white_fridge/fridge_middle_freezer_open");
         }
     };
 
@@ -42,7 +42,7 @@ public class UnbakedFridgeModel implements UnbakedModel {
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, part));
             }
             for (String part : FRIDGE_MODEL_PARTS_BASE) {
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, part.replaceAll("fridge", "gray_fridge")));
+                add(new Identifier(PaladinFurnitureMod.MOD_ID, part.replaceAll("white", "gray")));
             }
         }
     };
@@ -79,7 +79,7 @@ public class UnbakedFridgeModel implements UnbakedModel {
         Map<String,BakedModel> bakedModels = new LinkedHashMap<>();
         for (String modelPart : FRIDGE_MODEL_PARTS_BASE) {
             if (modelId.getPath().contains("gray"))
-                modelPart = modelPart.replaceAll("fridge", "gray_fridge");
+                modelPart = modelPart.replaceAll("white", "gray");
             bakedModels.put(modelPart, loader.bake(new Identifier(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
         }
         return getBakedModel(textureGetter.apply(frameTex), rotationContainer, bakedModels, bakedModels.keySet().stream().toList());
