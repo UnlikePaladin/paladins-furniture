@@ -3,10 +3,12 @@ package com.unlikepaladin.pfm.runtime;
 import com.google.common.base.Stopwatch;
 import com.mojang.bridge.game.PackType;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.client.screens.PFMGeneratingOverlay;
 import com.unlikepaladin.pfm.runtime.assets.PFMBlockstateModelProvider;
 import com.unlikepaladin.pfm.runtime.assets.PFMLangProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMMCMetaProvider;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.data.DataCache;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
@@ -21,12 +23,17 @@ import java.util.concurrent.TimeUnit;
 
 public class PFMAssetGenerator extends PFMGenerator {
     public static boolean FROZEN = false;
+    private int count;
+    private String progress;
+
     public PFMAssetGenerator(Path output, boolean logOrDebug) {
         super(output, logOrDebug, LogManager.getLogger("PFM-Asset-Generation"));
+        count = 3;
     }
 
     public void run() throws IOException {
         if (!FROZEN) {
+            count = 0;
             setAssetsRunning(true);
             log("Packs:");
             for (ResourcePack pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
@@ -51,6 +58,7 @@ public class PFMAssetGenerator extends PFMGenerator {
             List<String> oldHash = Files.readAllLines(hashPath);
             List<String> modList = Files.readAllLines(modListPath);
             if (!hashToCompare.toString().equals(oldHash.toString()) || !modList.toString().replace("[", "").replace("]", "").equals(PaladinFurnitureMod.getVersionMap().toString())) {
+                //MinecraftClient.getInstance().setOverlay(new PFMGeneratingOverlay(MinecraftClient.getInstance().getOverlay(), this, MinecraftClient.getInstance(), true));
                 getLogger().info("Starting PFM Asset Generation");
                 PFMFileUtil.deleteDir(output.toFile());
                 PFMRuntimeResources.createDirIfNeeded(output);
@@ -62,12 +70,14 @@ public class PFMAssetGenerator extends PFMGenerator {
                 log("Starting provider: {}", "PFM Asset MC Meta");
                 stopwatch2.start();
                 new PFMMCMetaProvider(this).run(PackType.RESOURCE, "PFM-Assets");
+                count++;
                 stopwatch2.stop();
                 log("{} finished after {} ms", "PFM Asset MC Meta", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
 
                 log("Starting provider: {}", "PFM Blockstates and Models");
                 stopwatch2.start();
                 new PFMBlockstateModelProvider(this).run(dataCache);
+                count++;
                 stopwatch2.stop();
                 log("{} finished after {} ms", "PFM Blockstates and Models", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                 stopwatch2.reset();
@@ -75,6 +85,7 @@ public class PFMAssetGenerator extends PFMGenerator {
                 log("Starting provider: {}", "PFM Lang");
                 stopwatch2.start();
                 new PFMLangProvider(this).run();
+                count++;
                 stopwatch2.stop();
                 log("{} finished after {} ms", "PFM Lang", stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                 stopwatch2.reset();
@@ -95,5 +106,20 @@ public class PFMAssetGenerator extends PFMGenerator {
             }
             setAssetsRunning(false);
         }
+    }
+
+    @Override
+    public float getProgress() {
+        return (float) count / 3;
+    }
+
+    @Override
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
+    @Override
+    public String getProgressString() {
+        return progress;
     }
 }

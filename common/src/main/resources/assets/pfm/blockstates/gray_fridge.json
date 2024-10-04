@@ -1,9 +1,9 @@
 {"variants":
 {
-    "facing=north":{"model":"pfm:block/gray_fridge","y":180,"uvlock":"true"},
-    "facing=east":{"model":"pfm:block/gray_fridge","y":270,"uvlock":"true"},
-    "facing=south":{"model":"pfm:block/gray_fridge","y":0,"uvlock":"true"},
-    "facing=west":{"model":"pfm:block/gray_fridge","y":90,"uvlock":"true"}
+    "facing=north":{"model":"pfm:block/gray_fridge","y":180,"uvlock":"false"},
+    "facing=east":{"model":"pfm:block/gray_fridge","y":270,"uvlock":"false"},
+    "facing=south":{"model":"pfm:block/gray_fridge","y":0,"uvlock":"false"},
+    "facing=west":{"model":"pfm:block/gray_fridge","y":90,"uvlock":"false"}
 }
 
 }

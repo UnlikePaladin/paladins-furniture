@@ -11,6 +11,7 @@ import com.unlikepaladin.pfm.compat.imm_ptl.PFMImmersivePortals;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
+import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.dynamic.FurnitureEntry;
 import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypeAccessor;
@@ -56,6 +57,8 @@ public class PaladinFurnitureMod {
 		updateChecker = new PaladinFurnitureModUpdateChecker();
 		updateChecker.checkForUpdates(getPFMConfig());
 		DynamicBlockRegistry.addBlockSetContainer(WoodVariantRegistry.INSTANCE.getType(), WoodVariantRegistry.INSTANCE);
+		DynamicBlockRegistry.addBlockSetContainer(StoneVariantRegistry.INSTANCE.getType(), StoneVariantRegistry.INSTANCE);
+
 		if (getModList().contains("cookingforblockheads"))
 			pfmModCompatibilities.add(PFMCookingForBlockheads.getInstance());
 		if (getModList().contains("farmersdelight"))
