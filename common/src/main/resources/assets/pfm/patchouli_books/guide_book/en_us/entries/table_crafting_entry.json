@@ -5,7 +5,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "There are different kinds of tables, you'll need planks and logs depending on which type you're crafting. To get the different wood types just replace the oak with the wood type you want the table to be."
+      "text": "There are different kinds of tables, you'll need planks and logs or stone and the polished block depending on which type you're crafting. To get the different wood types or stone types just replace the oak with the material you want the table to be."
     },
     {
       "type": "pfm:furniturerecipe2template",

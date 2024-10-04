@@ -1,0 +1,26 @@
+{
+  "name": "Crafting: Coffee Tables",
+  "icon": "minecraft:oak_log",
+  "category": "pfm:table_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "There are different kinds of coffee tables to match, you'll need planks and logs or stone and the polished block depending on which type you're crafting. To get the different wood types or stone types just replace the oak with the material you want the table to be."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:coffe_oak_table_basic",
+      "recipe2": "pfm:stripped_oak_coffee_table_basic"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:coffee_oak_table_classic",
+      "recipe2": "pfm:stripped_oak_coffee_table_classic"
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:oak_coffee_table_modern",
+      "recipe2": "pfm:stripped_oak_coffee_table_modern"
+    }
+  ]
+}

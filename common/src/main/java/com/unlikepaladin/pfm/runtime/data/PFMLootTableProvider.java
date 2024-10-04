@@ -51,6 +51,7 @@ public class PFMLootTableProvider extends PFMProvider {
 
     public PFMLootTableProvider(PFMGenerator parent) {
         super(parent);
+        parent.setProgress("Generating Loot Tables");
     }
 
     public CompletableFuture<?> run(DataWriter writer) {

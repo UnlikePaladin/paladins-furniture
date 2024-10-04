@@ -111,15 +111,11 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
         }
     }
 
-    protected static final VoxelShape COUNTER_OVEN = VoxelShapes.union(createCuboidShape(0, 1, 0, 16, 14, 14),createCuboidShape(0, 0, 0, 16, 1, 12),createCuboidShape(0, 14, 0, 16, 16, 16),createCuboidShape(1.8, 11.2, 14.54, 14.3, 11.8, 15.14),createCuboidShape(2.5, 11.2, 13.07, 3.1, 11.8, 14.57),createCuboidShape(12.6, 11.2, 13.07, 13.2, 11.8, 14.57),createCuboidShape(1.8, 1.9, 14.44, 14.3, 2.5, 15.04),createCuboidShape(2.5, 1.9, 12.47, 3.1, 2.5, 14.47),createCuboidShape(12.6, 1.9, 12.47, 13.2, 2.5, 14.47));
+    protected static final VoxelShape COUNTER_OVEN = VoxelShapes.union(createCuboidShape(0, 1, 0, 16, 14, 14),createCuboidShape(0, 0, 0, 16, 1, 12),createCuboidShape(0, 14, 0, 16, 16, 16),createCuboidShape(2, 10, 14.1, 14, 11, 15.1),createCuboidShape(4, 2, 14.1, 12, 3, 15.1));
     protected static final VoxelShape COUNTER_OVEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, COUNTER_OVEN);
     protected static final VoxelShape COUNTER_OVEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, COUNTER_OVEN);
     protected static final VoxelShape COUNTER_OVEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, COUNTER_OVEN);
-    protected static final VoxelShape COUNTER_OVEN_BOTTOM = VoxelShapes.union(createCuboidShape(0, 1, 0,16, 16, 13),createCuboidShape(0, 0, 0,16, 1, 12),createCuboidShape(0, 1, 13,16, 15, 14),createCuboidShape(1.8, 11.2, 14.54,14.3, 11.8, 15.14),createCuboidShape(2.5, 11.2, 13.07,3.1, 11.8, 14.57),createCuboidShape(12.6, 11.2, 13.07,13.2, 11.8, 14.57),createCuboidShape(1.8, 1.9, 14.44,14.3, 2.5, 15.04),createCuboidShape(2.5, 1.9, 12.47,3.1, 2.5, 14.47),createCuboidShape(12.6, 1.9, 12.47,13.2, 2.5, 14.47));
-    protected static final VoxelShape COUNTER_OVEN_MIDDLE = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 13),createCuboidShape(0, 1, 13,16, 15, 14),createCuboidShape(1.8, 11.2, 14.54,14.3, 11.8, 15.14),createCuboidShape(2.5, 11.2, 13.07,3.1, 11.8, 14.57),createCuboidShape(12.6, 11.2, 13.07,13.2, 11.8, 14.57),createCuboidShape(1.8, 1.9, 14.44,14.3, 2.5, 15.04),createCuboidShape(2.5, 1.9, 12.47,3.1, 2.5, 14.47),createCuboidShape(12.6, 1.9, 12.47,13.2, 2.5, 14.47));
-    protected static final VoxelShape COUNTER_OVEN_BOTTOM_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, COUNTER_OVEN_BOTTOM);
-    protected static final VoxelShape COUNTER_OVEN_BOTTOM_EAST = rotateShape(Direction.NORTH, Direction.EAST, COUNTER_OVEN_BOTTOM);
-    protected static final VoxelShape COUNTER_OVEN_BOTTOM_WEST = rotateShape(Direction.NORTH, Direction.WEST, COUNTER_OVEN_BOTTOM);
+    protected static final VoxelShape COUNTER_OVEN_MIDDLE = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 13),createCuboidShape(0, 1, 13,16, 15, 14),createCuboidShape(2, 10, 14.1,14, 11, 15.1),createCuboidShape(4, 2, 14.1,12, 3, 15.1));
     protected static final VoxelShape COUNTER_OVEN_MIDDLE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, COUNTER_OVEN_MIDDLE);
     protected static final VoxelShape COUNTER_OVEN_MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, COUNTER_OVEN_MIDDLE);
     protected static final VoxelShape COUNTER_OVEN_MIDDLE_WEST = rotateShape(Direction.NORTH, Direction.WEST, COUNTER_OVEN_MIDDLE);
@@ -128,15 +124,7 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
         Direction dir = state.get(FACING);
         boolean up = connectsVertical(view.getBlockState(pos.up()).getBlock());
         boolean down = connectsVertical(view.getBlockState(pos.down()).getBlock());
-        if(up){
-            return switch (dir){
-                case NORTH -> COUNTER_OVEN_BOTTOM_SOUTH;
-                case SOUTH -> COUNTER_OVEN_BOTTOM;
-                case EAST -> COUNTER_OVEN_BOTTOM_WEST;
-                default -> COUNTER_OVEN_BOTTOM_EAST;
-            };
-        }
-        else if(down) {
+        if(up || down) {
             return switch (dir){
                 case NORTH -> COUNTER_OVEN_MIDDLE_SOUTH;
                 case SOUTH -> COUNTER_OVEN_MIDDLE;
