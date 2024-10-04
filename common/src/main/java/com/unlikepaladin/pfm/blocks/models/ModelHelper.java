@@ -156,7 +156,7 @@ public class ModelHelper {
     public static Identifier getTextureId(Block block) {
         return getTextureId(block, "");
     }
-    private static final Map<Pair<String, String>, Pair<Identifier, Integer>> blockToTextureMap = new HashMap<>();
+    public static final Map<Pair<String, String>, Pair<Identifier, Integer>> blockToTextureMap = new HashMap<>();
     public static Identifier getTextureId(Block block, String postfix) {
         if (postfix.isEmpty())
             postfix = null;

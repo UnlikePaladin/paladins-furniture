@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.mixin;
 
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
@@ -17,6 +18,7 @@ public class PFMReloadableResourceManagerImplMixin {
     @ModifyVariable(at = @At(value = "HEAD"), method = "reload", argsOnly = true)
     private List<ResourcePack> createReload(List<ResourcePack> packs) {
         PFMRuntimeResources.modelCacheMap.clear();
+        ModelHelper.blockToTextureMap.clear();
         return packs;
     }
 }
