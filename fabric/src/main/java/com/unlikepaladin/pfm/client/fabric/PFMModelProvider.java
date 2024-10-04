@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.client.fabric;
 
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
@@ -8,6 +9,7 @@ import com.unlikepaladin.pfm.blocks.models.chair.UnbakedChairModel;
 import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel;
 import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
 import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
+import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
@@ -27,6 +29,7 @@ import com.unlikepaladin.pfm.blocks.models.ladder.UnbakedLadderModel;
 import com.unlikepaladin.pfm.blocks.models.logStool.UnbakedLogStoolModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
+import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffeeTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
@@ -126,6 +129,15 @@ public class PFMModelProvider implements ModelResourceProvider {
         }
         else if (UnbakedLadderModel.LADDER_MODEL_IDS.contains(resourceId)){
             return new UnbakedLadderModel();
+        }
+        else if (UnbakedCoffeeBasicTableModel.MODEL_IDS.contains(resourceId)){
+            return new UnbakedCoffeeBasicTableModel();
+        }
+        else if (UnbakedModernCoffeeTableModel.TABLE_MODEL_IDS.contains(resourceId)){
+            return new UnbakedModernCoffeeTableModel();
+        }
+        else if (UnbakedClassicCoffeeTableModel.MODEL_IDS.contains(resourceId)){
+            return new UnbakedClassicCoffeeTableModel();
         }
         else
             return null;

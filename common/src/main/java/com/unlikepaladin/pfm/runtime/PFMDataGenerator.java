@@ -4,6 +4,7 @@ import com.google.common.base.Stopwatch;
 import com.google.common.hash.HashCode;
 import com.mojang.bridge.game.PackType;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.client.screens.PFMGeneratingOverlay;
 import com.unlikepaladin.pfm.runtime.assets.PFMBlockstateModelProvider;
 import com.unlikepaladin.pfm.runtime.assets.PFMLangProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMLootTableProvider;
@@ -12,6 +13,7 @@ import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.minecraft.SharedConstants;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.DataProvider;
 import net.minecraft.resource.ResourcePack;
@@ -26,11 +28,16 @@ import java.util.concurrent.TimeUnit;
 
 public class PFMDataGenerator extends PFMGenerator {
     public static boolean FROZEN = false;
+    private int count;
+    private String progress;
+
     public PFMDataGenerator(Path output, boolean logOrDebug) {
         super(output, logOrDebug, LogManager.getLogger("PFM-DataGen"));
+        count = 4;
     }
     public void run() throws IOException {
         if (!FROZEN) {
+            count = 0;
             setDataRunning(true);
             log("Packs:");
             for (ResourcePack pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
@@ -62,6 +69,7 @@ public class PFMDataGenerator extends PFMGenerator {
                 dataProviders.add(new PFMRecipeProvider(this));
 
                 getLogger().info("Starting PFM Data Generation");
+                //MinecraftClient.getInstance().setOverlay(new PFMGeneratingOverlay(MinecraftClient.getInstance().getOverlay(), this, MinecraftClient.getInstance(), true));
                 PFMFileUtil.deleteDir(output.toFile());
                 DataCache dataCache = new DataCache(output, dataProviders, SharedConstants.getGameVersion());
                 Stopwatch stopwatch = Stopwatch.createStarted();
@@ -72,6 +80,7 @@ public class PFMDataGenerator extends PFMGenerator {
                     stopwatch2.start();
                     provider.run(dataCache.getOrCreateWriter(provider));
                     stopwatch2.stop();
+                    count++;
                     log("{} finished after {} ms", provider.getName(), stopwatch2.elapsed(TimeUnit.MILLISECONDS));
                     stopwatch2.reset();
                 }
@@ -92,5 +101,20 @@ public class PFMDataGenerator extends PFMGenerator {
             }
             setDataRunning(false);
         }
+    }
+
+    @Override
+    public float getProgress() {
+        return (float) count / 4;
+    }
+
+    @Override
+    public void setProgress(String progress) {
+        this.progress = progress;
+    }
+
+    @Override
+    public String getProgressString() {
+        return progress;
     }
 }
