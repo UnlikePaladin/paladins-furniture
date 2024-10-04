@@ -1,0 +1,8 @@
+{
+	"credit": "By UnlikePaladin",
+    "parent": "pfm:block/white_fridge/fridge_middle_freezer",
+	"textures": {
+		"particle": "pfm:block/gray_fridge",
+		"0": "pfm:block/gray_fridge"
+	}    
+}

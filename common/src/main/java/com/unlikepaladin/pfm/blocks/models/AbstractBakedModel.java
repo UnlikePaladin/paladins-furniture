@@ -1,19 +1,15 @@
 package com.unlikepaladin.pfm.blocks.models;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.KitchenCounterBlock;
 import com.unlikepaladin.pfm.blocks.LogStoolBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.data.materials.BlockType;
-import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -36,6 +32,8 @@ import java.util.*;
 public abstract class AbstractBakedModel implements BakedModel {
     protected final ModelBakeSettings settings;
     private final List<BakedModel> templateBakedModels;
+
+    public static boolean reloading = false;
     public AbstractBakedModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
         this.settings = settings;
         this.templateBakedModels = templateBakedModels;
