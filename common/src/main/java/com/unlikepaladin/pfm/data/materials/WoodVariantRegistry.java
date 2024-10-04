@@ -60,7 +60,7 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
             name = path.substring("plank_".length());
         }
         String namespace = blockId.getNamespace();
-        if (name != null && !namespace.equals("securitycraft") &&
+        if (!namespace.equals("cozy_home") && name != null && !namespace.equals("securitycraft") &&
                 !namespace.equals("absentbydesign") && !(namespace.equals("terrestria") && path.contains("sakura")) && !(namespace.equals("betternether") && path.contains("nether_mushroom")) && !namespace.equals("chipped") && !(namespace.equals("regions_unexplored") && path.contains("alpha"))) {
 
             BlockState state = baseBlock.getDefaultState();

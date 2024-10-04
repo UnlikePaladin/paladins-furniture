@@ -128,8 +128,8 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    protected static final VoxelShape STOVE = VoxelShapes.union(createCuboidShape(0, 0, 0, 16, 16, 14),createCuboidShape(0, 1, 14, 16, 16, 15),createCuboidShape(1.8, 12.2, 15.5375, 14.3, 12.799, 16.1375),createCuboidShape(2.5, 12.2, 14.07, 3.1, 12.79, 15.56),createCuboidShape(12.6, 12.2, 14.07, 13.2, 12.79, 15.57),createCuboidShape(1.8, 2.89, 15.437, 14.3, 3.49, 16.037),createCuboidShape(2.5, 2.89, 13.47, 3.1, 3.49, 15.47),createCuboidShape(12.6, 2.89, 13.47, 13.2, 3.49, 15.47),createCuboidShape(0, 16, 0, 16, 19, 1));
-    protected static final VoxelShape STOVE_NORTH = rotateShape(Direction.NORTH, Direction.SOUTH, STOVE);
+    protected static final VoxelShape STOVE = VoxelShapes.union(createCuboidShape(0, 0, 1, 16, 1, 16),createCuboidShape(0, 1, 0, 16, 16, 16),createCuboidShape(0, 16, 15, 16, 19, 16));
+    protected static final VoxelShape STOVE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STOVE);
     protected static final VoxelShape STOVE_WEST = rotateShape(Direction.NORTH, Direction.WEST, STOVE);
     protected static final VoxelShape STOVE_EAST = rotateShape(Direction.NORTH, Direction.EAST, STOVE);
 
@@ -137,10 +137,10 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
         Direction dir = state.get(FACING);
         return switch (dir) {
-            case WEST -> STOVE_EAST;
-            case NORTH -> STOVE_NORTH;
-            case SOUTH -> STOVE;
-            default -> STOVE_WEST;
+            case WEST -> STOVE_WEST;
+            case NORTH -> STOVE;
+            case SOUTH -> STOVE_SOUTH;
+            default -> STOVE_EAST;
         };
     }
     @Override

@@ -46,6 +46,7 @@ import java.util.stream.Collectors;
 public class PFMTagProvider extends PFMProvider {
     public PFMTagProvider(PFMGenerator parent) {
         super(parent);
+        parent.setProgress("Generating Tags");
     }
 
     protected void generateTags() {
@@ -72,6 +73,9 @@ public class PFMTagProvider extends PFMProvider {
         ModernDinnerTableBlock[] stoneModernDinnerTables = ModernDinnerTableBlock.streamStoneModernDinnerTables().map(FurnitureBlock::getBlock).toArray(ModernDinnerTableBlock[]::new);
         ClassicNightstandBlock[] stoneClassicNightstands = ClassicNightstandBlock.streamStoneClassicNightstands().map(FurnitureBlock::getBlock).toArray(ClassicNightstandBlock[]::new);
         LogTableBlock[] stoneNaturalTables = LogTableBlock.streamStoneNaturalTables().map(FurnitureBlock::getBlock).toArray(LogTableBlock[]::new);
+        BasicCoffeeTableBlock[] stoneBasicCoffeeTables = BasicCoffeeTableBlock.streamStoneBasicTables().map(FurnitureBlock::getBlock).toArray(BasicCoffeeTableBlock[]::new);
+        ModernCoffeeTableBlock[] stoneModernCoffeeTables = ModernCoffeeTableBlock.streamStoneModernCoffeeTables().map(FurnitureBlock::getBlock).toArray(ModernCoffeeTableBlock[]::new);
+        ClassicCoffeeTableBlock[] stoneClassicCoffeeTables = ClassicCoffeeTableBlock.streamStoneClassicTables().map(FurnitureBlock::getBlock).toArray(ClassicCoffeeTableBlock[]::new);
 
         SimpleStoolBlock[] stoneSimpleStools = SimpleStoolBlock.streamStoneSimpleStools().map(FurnitureBlock::getBlock).toArray(SimpleStoolBlock[]::new);
         PendantBlock[] pendantLights = PendantBlock.streamPendantLights().toList().toArray(new PendantBlock[0]);
@@ -136,7 +140,12 @@ public class PFMTagProvider extends PFMProvider {
                 .add(sinkBlocks)
                 .add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE)
                 .add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD)
-                .add(PaladinFurnitureModBlocksItems.BASIC_BATHTUB);
+                .add(PaladinFurnitureModBlocksItems.BASIC_BATHTUB)
+                .add(PaladinFurnitureModBlocksItems.TRASHCAN)
+                .add(PaladinFurnitureModBlocksItems.MESH_TRASHCAN)
+                .add(stoneBasicCoffeeTables)
+                .add(stoneModernCoffeeTables)
+                .add(stoneClassicCoffeeTables);
 
         KitchenCounterBlock[] woodCounters = KitchenCounterBlock.streamWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
         KitchenWallCounterBlock[] woodWallCounters = KitchenWallCounterBlock.streamWallWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenWallCounterBlock[]::new);
@@ -162,6 +171,9 @@ public class PFMTagProvider extends PFMProvider {
         ModernChairBlock[] woodModernChairs = ModernChairBlock.streamWoodModernChairs().map(FurnitureBlock::getBlock).toArray(ModernChairBlock[]::new);
         ModernDinnerTableBlock[] woodModernDinnerTables = ModernDinnerTableBlock.streamWoodModernDinnerTables().map(FurnitureBlock::getBlock).toArray(ModernDinnerTableBlock[]::new);
         RawLogTableBlock[] logTables = RawLogTableBlock.streamLogTables().map(FurnitureBlock::getBlock).toArray(RawLogTableBlock[]::new);
+        BasicCoffeeTableBlock[] woodBasicCoffeeTables = BasicCoffeeTableBlock.streamWoodBasicTables().map(FurnitureBlock::getBlock).toArray(BasicCoffeeTableBlock[]::new);
+        ModernCoffeeTableBlock[] woodModernCoffeeTables = ModernCoffeeTableBlock.streamWoodModernCoffeeTables().map(FurnitureBlock::getBlock).toArray(ModernCoffeeTableBlock[]::new);
+        ClassicCoffeeTableBlock[] woodClassicCoffeeTables = ClassicCoffeeTableBlock.streamWoodClassicTables().map(FurnitureBlock::getBlock).toArray(ClassicCoffeeTableBlock[]::new);
 
         ClassicNightstandBlock[] woodClassicNightstands = ClassicNightstandBlock.streamWoodClassicNightstands().map(FurnitureBlock::getBlock).toArray(ClassicNightstandBlock[]::new);
         ModernStoolBlock[] woodModernStools = ModernStoolBlock.streamWoodModernStools().map(FurnitureBlock::getBlock).toArray(ModernStoolBlock[]::new);
@@ -207,7 +219,10 @@ public class PFMTagProvider extends PFMProvider {
                 .add(simpleBunkLadders)
                 .add(classicBeds)
                 .add(logTables)
-                .add(PaladinFurnitureModBlocksItems.BASIC_LAMP);
+                .add(PaladinFurnitureModBlocksItems.BASIC_LAMP)
+                .add(woodBasicCoffeeTables)
+                .add(woodModernCoffeeTables)
+                .add(woodClassicCoffeeTables);
 
         getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
                 .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);

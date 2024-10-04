@@ -29,24 +29,24 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
         float x,y,z;
         switch (facing) {
             case NORTH -> {
-                x = 0.4f;
-                y = 0.2f;
-                z = 0.5f;
+                x = 0.625f;
+                y = 0.25f;
+                z = 0.57f;
             }
             case SOUTH -> {
-                x = 0.6f;
-                y = 0.2f;
-                z = 0.5f;
+                x = 0.375f;
+                y = 0.25f;
+                z = 0.43f;
             }
             case WEST -> {
-                x = 0.5f;
-                y = 0.2f;
-                z = 0.6f;
+                x = 0.57f;
+                y = 0.25f;
+                z = 0.375f;
             }
             case EAST -> {
-                x = 0.5f;
-                y = 0.2f;
-                z = 0.4f;
+                x = 0.43f;
+                y = 0.25f;
+                z = 0.625f;
             }
             default -> throw new IllegalStateException("Unexpected value: " + facing);
         }

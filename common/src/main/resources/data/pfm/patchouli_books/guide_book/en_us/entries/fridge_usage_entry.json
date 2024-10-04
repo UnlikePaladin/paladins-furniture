@@ -1,0 +1,12 @@
+{
+  "name": "Usage: Freezer",
+  "icon": "minecraft:ice",
+  "category": "pfm:freezing_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "title": "Usage",
+      "text": "To use the Fridge right click on the fridge section of the unit. This will open the Fridge's GUI, it has as much storage as a chest, you can store anything you'd like in it."
+    }
+  ]
+}

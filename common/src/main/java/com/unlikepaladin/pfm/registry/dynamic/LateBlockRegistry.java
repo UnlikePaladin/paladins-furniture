@@ -58,7 +58,7 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_chair", () -> new BasicChairBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_chair", () -> new BasicChairBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
         }}});
         PaladinFurnitureMod.furnitureEntryMap.put(DinnerChairBlock.class, new FurnitureEntry<>() {{
@@ -67,7 +67,7 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_chair_dinner", () -> new DinnerChairBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_chair_dinner", () -> new DinnerChairBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicChairBlock.class, new FurnitureEntry<>() {{
@@ -76,7 +76,7 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_chair_classic", () -> new ClassicChairBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_chair_classic", () -> new ClassicChairBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicChairDyeableBlock.class, new FurnitureEntry<>() {{
@@ -91,7 +91,7 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_chair_modern", () -> new ModernChairBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_chair_modern", () -> new ModernChairBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(FroggyChairBlock.class, new FurnitureEntry<>() {{
@@ -121,7 +121,7 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_table_basic", () -> new BasicTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_table_basic", () -> new BasicTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicTableBlock.class, new FurnitureEntry<>() {{
@@ -130,7 +130,7 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_table_classic", () -> new ClassicTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_table_classic", () -> new ClassicTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
 
@@ -141,7 +141,7 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_table_" + postfix, () -> new LogTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_table_natural", () -> new LogTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
 
@@ -159,7 +159,7 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_table_dinner", () -> new DinnerTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_table_dinner", () -> new DinnerTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
         }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ModernDinnerTableBlock.class, new FurnitureEntry<>() {{
@@ -168,16 +168,43 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_table_modern_dinner", () -> new ModernDinnerTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_table_modern_dinner", () -> new ModernDinnerTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
         }}});
+        PaladinFurnitureMod.furnitureEntryMap.put(BasicCoffeeTableBlock.class, new FurnitureEntry<>() {{
+            for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                if (variant.hasStripped())
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+            }
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+            }}});
+        PaladinFurnitureMod.furnitureEntryMap.put(ModernCoffeeTableBlock.class, new FurnitureEntry<>() {{
+            for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                if (variant.hasStripped())
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+            }
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+            }}});
+        PaladinFurnitureMod.furnitureEntryMap.put(ClassicCoffeeTableBlock.class, new FurnitureEntry<>() {{
+            for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                if (variant.hasStripped())
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+            }
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+            }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicNightstandBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_classic_nightstand", () -> new ClassicNightstandBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_classic_nightstand", () -> new ClassicNightstandBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_classic_nightstand", () -> new ClassicNightstandBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(SimpleBedBlock.class, new FurnitureEntry<>() {{
@@ -210,7 +237,7 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_simple_stool", () -> new SimpleStoolBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_simple_stool", () -> new SimpleStoolBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicStoolBlock.class, new FurnitureEntry<>() {{
@@ -219,7 +246,7 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_classic_stool", () -> new ClassicStoolBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_classic_stool", () -> new ClassicStoolBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
 
@@ -229,7 +256,7 @@ public class LateBlockRegistry {
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_modern_stool", () -> new ModernStoolBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
-            for (StoneVariant variant : StoneVariant.values()) {
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_modern_stool", () -> new ModernStoolBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }
             for (ExtraStoolVariant variant : ExtraStoolVariant.values()) {
@@ -265,7 +292,7 @@ public class LateBlockRegistry {
                     PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_kitchen_wall_small_drawer", () -> new KitchenWallDrawerSmallBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
                 }
             }
-            for (StoneVariant variant : StoneVariant.values()) {if (variant == StoneVariant.QUARTZ)
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {if (variant.identifier.getPath().equals("quartz"))
                     continue;
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_kitchen_counter", () -> new KitchenCounterBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_kitchen_drawer", () -> new KitchenDrawerBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
