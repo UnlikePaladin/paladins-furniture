@@ -19,7 +19,9 @@
     "PFMItemRendererMixin",
     "PFMLanguageManagerAccessor",
     "PFMMixinClientPacketListener",
-    "PFMRenderLayersMixin"
+    "PFMReloadableResourceManagerImplMixin",
+    "PFMRenderLayersMixin",
+    "PFMSpriteAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

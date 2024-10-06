@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.runtime.assets;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
@@ -21,6 +22,7 @@ import net.minecraft.client.resource.language.TranslationStorage;
 import net.minecraft.client.resource.metadata.LanguageResourceMetadata;
 import net.minecraft.resource.*;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -37,6 +39,7 @@ public class PFMLangProvider extends PFMProvider {
 
     public PFMLangProvider(PFMGenerator parent) {
         super(parent);
+        parent.setProgress("Generating Language Resources");
     }
 
     public void run() {
@@ -130,6 +133,16 @@ public class PFMLangProvider extends PFMProvider {
             generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_wall_small_drawer", this::simpleStrippedFurnitureTranslation);
 
             generateTranslationForLampBlock(writer);
+
+            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.coffee_table_basic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.coffee_table_basic", this::simpleStrippedFurnitureTranslation);
+
+            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.coffee_table_modern", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.coffee_table_modern", this::simpleStrippedFurnitureTranslation);
+
+            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.coffee_table_classic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.coffee_table_classic", this::simpleStrippedFurnitureTranslation);
+
             writer.write("    \"pfm.dummy.entry\": \"dummy entry\"\n");
             writer.write("}");
         }
@@ -207,7 +220,10 @@ public class PFMLangProvider extends PFMProvider {
 
     public void generateTranslationForLampBlock(BufferedWriter writer) {
         for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
+            int i = 0;
             for (DyeColor color : DyeColor.values()) {
+                if (i > 15)
+                    break;
                 try {
                     String translatedVariantName = getTranslatedVariantName(variant);
                     String translatedColor = translate("color.minecraft."+color.getName());
@@ -218,6 +234,7 @@ public class PFMLangProvider extends PFMProvider {
                     getParent().getLogger().error("Writer exception: " + e);
                     throw new RuntimeException(e);
                 }
+                i++;
             }
         }
     }
@@ -263,6 +280,20 @@ public class PFMLangProvider extends PFMProvider {
                 String translatedVariantName = getTranslatedVariantName(variant);
                 String strippedKey = block.getTranslationKey().contains("stripped") ? translate("block.type.stripped") : "";
                 String translatedFurnitureName = StringUtils.normalizeSpace(blockStringStringStringStringQuadFunc.apply(block, furnitureKey, strippedKey, translatedVariantName));
+                try {
+                    writer.write(String.format("    \"%1$s\": \"%2$s\",", block.getTranslationKey(), translatedFurnitureName));
+                    writer.write("\n");
+                } catch (IOException e) {
+                    getParent().getLogger().error("Writer exception: " + e);
+                    throw new RuntimeException(e);
+                }
+            } else {
+                String key = "block.pfm.variant."+variant.getIdentifier().getPath();
+                String translatedVariantName = translate(key);
+                if (translatedVariantName.equals(key)) {
+                    translatedVariantName = getTranslatedVariantName(variant);
+                }
+                String translatedFurnitureName = StringUtils.normalizeSpace(blockStringStringStringStringQuadFunc.apply(block, furnitureKey, "", translatedVariantName));
                 try {
                     writer.write(String.format("    \"%1$s\": \"%2$s\",", block.getTranslationKey(), translatedFurnitureName));
                     writer.write("\n");

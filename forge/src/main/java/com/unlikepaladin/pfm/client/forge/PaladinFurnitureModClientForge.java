@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.client.forge;
 
+import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
@@ -7,6 +8,7 @@ import com.unlikepaladin.pfm.blocks.models.chair.UnbakedChairModel;
 import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel;
 import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
 import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
+import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
@@ -26,6 +28,7 @@ import com.unlikepaladin.pfm.blocks.models.ladder.UnbakedLadderModel;
 import com.unlikepaladin.pfm.blocks.models.logStool.UnbakedLogStoolModel;
 import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
 import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
+import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffeeTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
@@ -150,6 +153,15 @@ public class PaladinFurnitureModClientForge {
             ModelLoader.addSpecialModel(id);
         }
         for (Identifier id : UnbakedLadderModel.LADDER_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedCoffeeBasicTableModel.BASIC_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedModernCoffeeTableModel.MODERN_COFFEE_MODEL_PARTS_BASE) {
+            ModelLoader.addSpecialModel(id);
+        }
+        for (Identifier id : UnbakedClassicCoffeeTableModel.CLASSIC_MODEL_PARTS_BASE) {
             ModelLoader.addSpecialModel(id);
         }
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);

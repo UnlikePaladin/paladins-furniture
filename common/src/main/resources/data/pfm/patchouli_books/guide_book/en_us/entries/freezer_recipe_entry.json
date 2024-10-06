@@ -1,6 +1,6 @@
 {
-  "name": "Recipes: Fridges",
-  "icon": "pfm:white_fridge",
+  "name": "Recipes: Freezer",
+  "icon": "pfm:white_freezer",
   "category": "pfm:freezing_category",
   "pages": [
     {

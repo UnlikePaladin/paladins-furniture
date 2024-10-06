@@ -20,6 +20,8 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.IntProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.BlockMirror;
+import net.minecraft.util.BlockRotation;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -33,6 +35,7 @@ import java.util.Map;
 import java.util.function.Predicate;
 
 import static net.minecraft.block.Block.createCuboidShape;
+import static net.minecraft.block.HorizontalFacingBlock.FACING;
 
 public abstract class AbstractSinkBlock extends CauldronBlock implements BlockEntityProvider {
     public static final IntProperty LEVEL_4 = IntProperty.of("level", 0, 3);
@@ -182,5 +185,15 @@ public abstract class AbstractSinkBlock extends CauldronBlock implements BlockEn
     @Override
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(state.get(FACING)));
     }
 }

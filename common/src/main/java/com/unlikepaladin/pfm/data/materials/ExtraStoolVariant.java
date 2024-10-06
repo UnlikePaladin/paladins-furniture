@@ -75,6 +75,9 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
 
     @Override
     public Material getBaseMaterial() {
+        if (baseBlock == null)
+            return PaladinFurnitureModBlocksItems.RAW_CONCRETE.getDefaultState().getMaterial();
+
         return baseBlock.getDefaultState().getMaterial();
     }
 

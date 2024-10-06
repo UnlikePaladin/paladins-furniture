@@ -99,6 +99,10 @@ if (rootProject.rei_compatibility == "true"){
     dependencies {
         modImplementation("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version_forge}")
     }
+} else {
+    dependencies {
+        modCompileOnly("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version_forge}")
+    }
 }
 
 

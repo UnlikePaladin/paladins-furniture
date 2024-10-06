@@ -1,11 +1,11 @@
 package com.unlikepaladin.pfm.blocks.models.forge;
 
-import com.google.common.collect.Iterables;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.client.forge.PFMBakedModelGetQuadsExtension;
+import com.unlikepaladin.pfm.mixin.PFMSpriteAccessor;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.client.render.VertexFormats;
@@ -28,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
 public abstract class PFMForgeBakedModel extends AbstractBakedModel implements PFMBakedModelGetQuadsExtension {
@@ -36,10 +37,24 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return getQuads(state, face, random);
     }
 
+    Map<Pair<ItemStack, Direction>, List<BakedQuad>> cache = new HashMap<>();
+    @Override
+    public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+        Pair<ItemStack, Direction> directionPair = new Pair<>(stack, face);
+        if (cache.containsKey(directionPair))
+            return cache.get(directionPair);
+
+        List<BakedQuad> quads = getQuads(stack, state, face, random);
+        cache.put(directionPair, quads);
+        return quads;
+    }
+
     public PFMForgeBakedModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
         super(settings, templateBakedModels);
     }
     public static ModelProperty<BlockState> STATE = new ModelProperty<>();
+
+    public static boolean forceReload;
 
     @NotNull
     @Override
@@ -48,7 +63,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return tileData;
     }
 
-    Map<Identifier, List<BakedQuad>> separatedQuads = new ConcurrentHashMap<>();
+    Map<Pair<Identifier, SpriteData>, List<BakedQuad>> separatedQuads = new ConcurrentHashMap<>();
     public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, List<Sprite> toReplace, List<Sprite> replacements) {
         if (quads == null)
             return Collections.emptyList();
@@ -65,31 +80,41 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         if (toReplace.equals(replacements))
             return quads;
 
-        for (BakedQuad quad : quads) {
-            Identifier sprite = quad.func_187508_a().getId();
-            if (separatedQuads.containsKey(sprite)) {
-                if (!separatedQuads.get(sprite).contains(quad)) {
-                    List<BakedQuad> newQuadList = new ArrayList<>(separatedQuads.get(sprite));
+         for (BakedQuad quad : quads) {
+            SpriteData sprite = new SpriteData(quad.func_187508_a());
+            Pair<Identifier, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
+            if (separatedQuads.containsKey(pair)) {
+                if (!separatedQuads.get(pair).contains(quad)) {
+                    List<BakedQuad> newQuadList = new ArrayList<>(separatedQuads.get(pair));
                     newQuadList.add(quad);
-                    separatedQuads.put(sprite, newQuadList);
+                    separatedQuads.put(pair, newQuadList);
                 }
                 continue;
+            } else if (!separatedQuads.isEmpty()) {
+                AtomicReference<Pair<Identifier, SpriteData>> del = new AtomicReference<>(null);
+                separatedQuads.keySet().forEach(identifierSpriteDataPair ->  {
+                        if (identifierSpriteDataPair != null && sprite.getId().equals(identifierSpriteDataPair.getFirst())){
+                            del.set(identifierSpriteDataPair);
+                        }
+                });
+                if (del.get() != null)
+                    separatedQuads.remove(del.get());
             }
             List<BakedQuad> list = new ArrayList<>();
             list.add(quad);
-            separatedQuads.put(sprite, list);
+            separatedQuads.put(pair, list);
         }
 
         List<BakedQuad> transformedQuads = new ArrayList<>(quads.size());
-        for (Map.Entry<Identifier, List<BakedQuad>> entry : separatedQuads.entrySet()) {
-            Identifier keyId = entry.getKey();
+        for (Map.Entry<Pair<Identifier, SpriteData>, List<BakedQuad>> entry : separatedQuads.entrySet()) {
+            Identifier keyId = entry.getKey().getFirst();
             int index = IntStream.range(0, toReplace.size())
                     .filter(i -> keyId.equals(toReplace.get(i).getId()))
                     .findFirst()
                     .orElse(-1);
 
             if (index != -1) {
-                Sprite replacement = Iterables.get(replacements, index, toReplace.get(index));
+                SpriteData replacement = new SpriteData(replacements.get(index));
                 transformedQuads.addAll(getQuadsWithTexture(entry.getValue().stream().filter(quads::contains).collect(Collectors.toList()), replacement));
             } else {
                 transformedQuads.addAll(entry.getValue().stream().filter(quads::contains).collect(Collectors.toList()));
@@ -98,8 +123,8 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return transformedQuads;
     }
 
-    Map<Pair<Identifier, BakedQuad>, BakedQuad> quadToTransformedQuad = new ConcurrentHashMap<>();
-    public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, Sprite sprite) {
+    Map<Pair<SpriteData, BakedQuad>, BakedQuad> quadToTransformedQuad = new ConcurrentHashMap<>();
+    public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, SpriteData spriteData) {
         List<BakedQuad> transformedQuads = new ArrayList<>(quads.size());
 
         // UV Element index
@@ -107,15 +132,18 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
         // I basically have to disable caching if Optifine is present, otherwise it breaks uvs
         quads.forEach(quad -> {
-            Pair<Identifier, BakedQuad> quadKey = new Pair<>(sprite.getId(), quad);
-            if (quad.func_187508_a().getId() == sprite.getId() && !quadToTransformedQuad.containsKey(quadKey) && !PaladinFurnitureMod.isOptifineLoaded()) {
+            Pair<SpriteData, BakedQuad> quadKey = new Pair<>(spriteData, quad);
+
+            if (quad.func_187508_a().getId() == spriteData.getId() && !quadToTransformedQuad.containsKey(quadKey)) {
                 quadToTransformedQuad.put(quadKey, quad);
                 transformedQuads.add(quad);
             }
-            else if (quadToTransformedQuad.containsKey(quadKey) && !PaladinFurnitureMod.isOptifineLoaded()) {
+            else if (quadToTransformedQuad.containsKey(quadKey)) {
                 transformedQuads.add(quadToTransformedQuad.get(quadKey));
             }
             else {
+                Sprite sprite = spriteData.getSprite();
+
                 int[] vertexData = new int[quad.getVertexData().length];
                 System.arraycopy(quad.getVertexData(), 0, vertexData, 0, vertexData.length);
                 float[][] uv = new float[4][2];
@@ -167,5 +195,43 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
     public void appendProperties(ModelDataMap.Builder builder) {
         builder.withProperty(STATE);
+    }
+
+
+
+    public static class SpriteData {
+        float minU, maxU, minV, maxV;
+        int x, y;
+        Identifier id;
+        Sprite sprite;
+
+        public SpriteData(Sprite sprite) {
+            this.sprite = sprite;
+            this.minU = sprite.getMinU();
+            this.maxU = sprite.getMaxU();
+            this.minV = sprite.getMinV();
+            this.maxV = sprite.getMaxV();
+            this.x = ((PFMSpriteAccessor)sprite).pfm$getX();
+            this.y = ((PFMSpriteAccessor)sprite).pfm$getY();
+            this.id = sprite.getId();
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof SpriteData && ((SpriteData) obj).id == id && ((SpriteData) obj).minV == minV && ((SpriteData) obj).maxV == maxV && ((SpriteData) obj).minU == minU && ((SpriteData) obj).maxU == maxU && ((SpriteData) obj).x == x && ((SpriteData) obj).y == y;
+        }
+
+        public Sprite getSprite() {
+            return sprite;
+        }
+
+        public Identifier getId() {
+            return id;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(minU, maxU, minV, maxV, x, y, id);
+        }
     }
 }

@@ -57,6 +57,7 @@ public class ColorRegistry {
         registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.WHITE_MIRROR, RenderLayer.getCutout());
         registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.GRAY_MIRROR, RenderLayer.getCutout());
         registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.BASIC_LAMP, RenderLayer.getCutout());
+        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP, RenderLayer.getCutout());
     }
 
     public static void registerItemColors() {

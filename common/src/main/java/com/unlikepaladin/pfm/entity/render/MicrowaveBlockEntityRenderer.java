@@ -30,24 +30,24 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> extend
         Direction facing = blockEntity.getFacing();
         float x,y,z;
         if (facing == Direction.NORTH) {
-                x = 0.4f;
-                y = 0.2f;
-                z = 0.5f;
+                x = 0.625f;
+                y = 0.25f;
+                z = 0.57f;
             }
         else if (facing == Direction.SOUTH) {
-                x = 0.6f;
-                y = 0.2f;
-                z = 0.5f;
+                x = 0.375f;
+                y = 0.25f;
+                z = 0.43f;
             }
         else if (facing == Direction.WEST) {
-                x = 0.5f;
-                y = 0.2f;
-                z = 0.6f;
+                x = 0.57f;
+                y = 0.25f;
+                z = 0.375f;
             }
         else {
-                x = 0.5f;
-                y = 0.2f;
-                z = 0.4f;
+                x = 0.43f;
+                y = 0.25f;
+                z = 0.625f;
             }
 
         matrices.translate(x, y ,z);
