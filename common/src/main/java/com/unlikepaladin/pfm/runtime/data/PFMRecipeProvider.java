@@ -955,7 +955,12 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     private static String getItemPath(Ingredient item) {
-        return Registry.ITEM.getId(item.getMatchingStacks()[0].getItem()).getPath();
+        ItemStack[] n = item.getMatchingStacks();
+        if (n.length > 0) {
+            return Registry.ITEM.getId(n[0].getItem()).getPath();
+        } else {
+            return item.toString();
+        }
     }
     private static String getItemPath(ItemConvertible item) {
         return Registry.ITEM.getId(item.asItem()).getPath();
