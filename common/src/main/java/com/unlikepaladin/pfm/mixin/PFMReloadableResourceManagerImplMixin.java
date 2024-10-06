@@ -23,10 +23,10 @@ public class PFMReloadableResourceManagerImplMixin {
         PFMRuntimeResources.modelCacheMap.clear();
         ModelHelper.blockToTextureMap.clear();
         if (ModelHelper.OAK_SPRITES_PLANKS_TO_REPLACE != null)
-            ModelHelper.OAK_SPRITES_PLANKS_TO_REPLACE.clear();
+            ModelHelper.OAK_SPRITES_PLANKS_TO_REPLACE = null;
         if (ModelHelper.OAK_SPRITES_BED_TO_REPLACE != null)
-            ModelHelper.OAK_SPRITES_BED_TO_REPLACE.clear();
+            ModelHelper.OAK_SPRITES_BED_TO_REPLACE = null;
         if (ModelHelper.OAK_SPRITES_LOG_TOP_TO_REPLACE != null)
-            ModelHelper.OAK_SPRITES_LOG_TOP_TO_REPLACE.clear();
+            ModelHelper.OAK_SPRITES_LOG_TOP_TO_REPLACE = null;
     }
 }
