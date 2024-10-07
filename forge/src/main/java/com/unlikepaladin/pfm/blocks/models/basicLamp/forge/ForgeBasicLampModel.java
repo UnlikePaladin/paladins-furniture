@@ -74,13 +74,13 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
     static List<Sprite> getOakStrippedLogSprite() {
         if (!oakSprite.isEmpty())
             return oakSprite;
-        Sprite wood = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, WoodVariantRegistry.OAK.getTexture(BlockType.STRIPPED_LOG)).getSprite();
+        Sprite wood = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,  new Identifier("minecraft:block/stripped_oak_log")).getSprite();
         oakSprite.add(wood);
         return oakSprite;
     }
 
-    static Map<WoodVariant, List<Sprite>> sprites = new HashMap<>();
-    static List<Sprite> getVariantStrippedLogSprite(WoodVariant variant) {
+    Map<WoodVariant, List<Sprite>> sprites = new HashMap<>();
+    List<Sprite> getVariantStrippedLogSprite(WoodVariant variant) {
         if (sprites.containsKey(variant))
             return sprites.get(variant);
 

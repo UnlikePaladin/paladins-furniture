@@ -225,7 +225,10 @@ public class PFMLangProvider extends PFMProvider {
 
     public void generateTranslationForLampBlock(BufferedWriter writer) {
         for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
+            int i = 0;
             for (DyeColor color : DyeColor.values()) {
+                if (i > 15)
+                    break;
                 try {
                     String translatedVariantName = getTranslatedVariantName(variant);
                     String translatedColor = translate("color.minecraft."+color.getName());
@@ -236,6 +239,7 @@ public class PFMLangProvider extends PFMProvider {
                     getParent().getLogger().error("Writer exception: " + e);
                     throw new RuntimeException(e);
                 }
+                i++;
             }
         }
     }
