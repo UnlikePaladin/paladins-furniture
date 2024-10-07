@@ -2,6 +2,7 @@
 	"credit": "By UnlikePaladin",
 	"texture_size": [64, 64],
 	"textures": {
+		"particle": "pfm:block/iron_stove",
 		"6": "pfm:block/iron_stove"
 	},
 	"elements": [
@@ -21,7 +22,7 @@
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0.75, 9]},
 			"faces": {
 				"up": {"uv": [12.5, 0.25, 16, 3], "rotation": 180, "texture": "#6"},
-				"down": {"uv": [6.5, 2, 8.5, 12.2], "rotation": 180, "texture": "#missing"}
+				"down": {"uv": [6.5, 2, 8.5, 12.2], "rotation": 180, "texture": "#6"}
 			}
 		},
 		{

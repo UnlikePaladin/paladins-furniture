@@ -9,6 +9,7 @@ import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.EnumProperty;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.BlockMirror;
 import net.minecraft.util.BlockRotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -51,23 +52,7 @@ public class BasicTableBlock extends Block {
     protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
         stateManager.add(AXIS);
     }
-    @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        switch (rotation) {
-            case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> {
-                switch (state.get(AXIS)) {
-                    case X -> {
-                        return state.with(AXIS, Direction.Axis.Z);
-                    }
-                    case Z -> {
-                        return state.with(AXIS, Direction.Axis.X);
-                    }
-                }
-                return state;
-            }
-        }
-        return state;
-    }
+
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (!state.isOf(state.getBlock())) {
@@ -265,6 +250,29 @@ public class BasicTableBlock extends Block {
     @Override
     public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
         return false;
+    }
+
+    @Override
+    public BlockState rotate(BlockState state, BlockRotation rotation) {
+        switch (rotation) {
+            case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> {
+                switch (state.get(AXIS)) {
+                    case X -> {
+                        return state.with(AXIS, Direction.Axis.Z);
+                    }
+                    case Z -> {
+                        return state.with(AXIS, Direction.Axis.X);
+                    }
+                }
+                return state;
+            }
+        }
+        return state;
+    }
+
+    @Override
+    public BlockState mirror(BlockState state, BlockMirror mirror) {
+        return state.rotate(mirror.getRotation(Direction.get(Direction.AxisDirection.NEGATIVE, state.get(AXIS))));
     }
 }
 

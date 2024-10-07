@@ -16,14 +16,5 @@ import net.minecraft.util.math.random.Random;
 public interface PFMBakedModelGetQuadsExtension {
     List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random);
 
-    Map<Pair<ItemStack, Direction>, List<BakedQuad>> cache = new HashMap<>();
-    default List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
-        Pair<ItemStack, Direction> directionPair = new Pair<>(stack, face);
-        if (cache.containsKey(directionPair))
-            return cache.get(directionPair);
-
-        List<BakedQuad> quads = getQuads(stack, state, face, random);
-        cache.put(directionPair, quads);
-        return quads;
-    }
+    List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random);
 }
