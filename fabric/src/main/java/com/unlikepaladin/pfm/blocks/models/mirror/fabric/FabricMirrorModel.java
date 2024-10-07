@@ -1,10 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models.mirror.fabric;
 
 import com.unlikepaladin.pfm.blocks.MirrorBlock;
-import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
-import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.ModelHelper;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -51,38 +48,38 @@ public class FabricMirrorModel extends PFMFabricBakedModel {
             boolean cornerLeftDown = block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYClockwise()).down()), state);
             boolean cornerRightUp = block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYCounterclockwise()).up()), state);
 
-            context.fallbackConsumer().accept(getTemplateBakedModels().get((0)));
+            getTemplateBakedModels().get(0).emitBlockQuads(blockView, state, pos, randomSupplier, context);
             if (!down) {
-                context.fallbackConsumer().accept(getTemplateBakedModels().get((2)));
+                getTemplateBakedModels().get(2).emitBlockQuads(blockView, state, pos, randomSupplier, context);
             }
             if (!up) {
-                context.fallbackConsumer().accept(getTemplateBakedModels().get((1)));
+                getTemplateBakedModels().get(1).emitBlockQuads(blockView, state, pos, randomSupplier, context);
             }
             if (!right) {
-                context.fallbackConsumer().accept(getTemplateBakedModels().get((3)));
+                getTemplateBakedModels().get(3).emitBlockQuads(blockView, state, pos, randomSupplier, context);
             }
             if (!left) {
-                context.fallbackConsumer().accept(getTemplateBakedModels().get((4)));
+                getTemplateBakedModels().get(4).emitBlockQuads(blockView, state, pos, randomSupplier, context);
             }
 
             if (!cornerLeftDown) {
-                context.fallbackConsumer().accept(getTemplateBakedModels().get((8)));
+                getTemplateBakedModels().get(8).emitBlockQuads(blockView, state, pos, randomSupplier, context);
             }
             if (!cornerRightDown) {
-                context.fallbackConsumer().accept(getTemplateBakedModels().get((7)));
+                getTemplateBakedModels().get(7).emitBlockQuads(blockView, state, pos, randomSupplier, context);
             }
             if (!cornerLeftUp) {
-                context.fallbackConsumer().accept(getTemplateBakedModels().get((6)));
+                getTemplateBakedModels().get(6).emitBlockQuads(blockView, state, pos, randomSupplier, context);
             }
             if (!cornerRightUp) {
-                context.fallbackConsumer().accept(getTemplateBakedModels().get((5)));
+                getTemplateBakedModels().get(5).emitBlockQuads(blockView, state, pos, randomSupplier, context);
             }
         }
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        context.fallbackConsumer().accept(getTemplateBakedModels().get(0));
+        getTemplateBakedModels().get(0).emitItemQuads(stack, randomSupplier, context);
     }
 
     @Override

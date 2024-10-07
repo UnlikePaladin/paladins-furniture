@@ -2,9 +2,9 @@ package com.unlikepaladin.pfm.blocks.models.chairDinner;
 
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.data.materials.StoneVariant;
-import com.unlikepaladin.pfm.data.materials.WoodVariant;
-import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.data.materials.*;
+import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
+import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.render.model.*;
 import net.minecraft.client.texture.Sprite;
@@ -31,7 +31,7 @@ public class UnbakedChairDinnerModel implements UnbakedModel {
                 if (variant.hasStripped())
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_chair_dinner"));
             }
-            for(StoneVariant variant : StoneVariant.values()){
+            for(StoneVariant variant : StoneVariantRegistry.getVariants()){
 
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_chair_dinner"));
             }
@@ -53,23 +53,26 @@ public class UnbakedChairDinnerModel implements UnbakedModel {
         return Collections.emptyList();
     }
 
-    public static final Map<ModelBakeSettings, List<BakedModel>> CACHED_MODELS = new ConcurrentHashMap<>();
     @Nullable
     @Override
     public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        if (CACHED_MODELS.containsKey(rotationContainer))
-            return getBakedModel(rotationContainer, CACHED_MODELS.get(rotationContainer));
+        if (PFMRuntimeResources.modelCacheMap.containsKey(CHAIR_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(CHAIR_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
+            return getBakedModel(CHAIR_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(CHAIR_MODEL_ID).getCachedModelParts().get(rotationContainer));
+
+        if (!PFMRuntimeResources.modelCacheMap.containsKey(CHAIR_MODEL_ID))
+            PFMRuntimeResources.modelCacheMap.put(CHAIR_MODEL_ID, new PFMBakedModelContainer());
 
         List<BakedModel> bakedModelList = new ArrayList<>();
         for (Identifier modelPart : CHAIR_DINNER_PARTS_BASE) {
             bakedModelList.add(loader.bake(modelPart, rotationContainer));
         }
-        CACHED_MODELS.put(rotationContainer, bakedModelList);
-        return getBakedModel(rotationContainer, bakedModelList);
+
+        PFMRuntimeResources.modelCacheMap.get(CHAIR_MODEL_ID).getCachedModelParts().put(rotationContainer, bakedModelList);
+        return getBakedModel(CHAIR_MODEL_ID, rotationContainer, bakedModelList);
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public static BakedModel getBakedModel(Identifier modelId, ModelBakeSettings settings, List<BakedModel> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 }

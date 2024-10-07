@@ -7,7 +7,6 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
@@ -57,6 +56,7 @@ public class PFMRecipeProvider extends PFMProvider {
 
     public PFMRecipeProvider(PFMGenerator parent) {
         super(parent);
+        parent.setProgress("Generating Recipes");
     }
 
     public CompletableFuture<?> run(DataWriter writer) {
@@ -429,7 +429,7 @@ public class PFMRecipeProvider extends PFMProvider {
         PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
             if (!generatedRecipes.contains(getId(block))) {
                 Pair<Block, Block> materials = getCounterMaterials(variantBase);
-                offerCounterRecipe(block.asItem(), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(materials.getRight()), exporter);
+                offerCounterRecipe(block.asItem(), Ingredient.ofItems(materials.getLeft()), Ingredient.ofItems(materials.getLeft()), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
@@ -442,20 +442,20 @@ public class PFMRecipeProvider extends PFMProvider {
         PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
             if (!generatedRecipes.contains(getId(block))) {
                 Pair<Block, Block> materials = getCounterMaterials(variantBase);
-                offerWallDrawerRecipe(block.asItem(), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(Items.CHEST), exporter);
+                offerWallDrawerRecipe(block.asItem(), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(materials.getLeft()), Ingredient.ofItems(Items.CHEST), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
         PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMapNonBase().forEach((variantBase, block) -> {
             if (!generatedRecipes.contains(getId(block))) {
-                offerWallDrawerRecipe(block.asItem(), Ingredient.ofItems((Block)variantBase.getChild("stripped_log")), Ingredient.ofItems((Block)variantBase.getChild("stripped_log")), Ingredient.ofItems(Items.CHEST), exporter);
+                offerWallDrawerRecipe(block.asItem(), Ingredient.ofItems((Block)variantBase.getChild("stripped_log")), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems(Items.CHEST), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
         PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
             if (!generatedRecipes.contains(getId(block))) {
                 Pair<Block, Block> materials = getCounterMaterials(variantBase);
-                offerWallDrawerSmallRecipe(block.asItem(), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(Items.CHEST), exporter);
+                offerWallDrawerSmallRecipe(block.asItem(), Ingredient.ofItems(materials.getRight()), Ingredient.ofItems(materials.getLeft()), Ingredient.ofItems(Items.CHEST), exporter);
                 generatedRecipes.add(getId(block));
             }
         });
@@ -575,7 +575,7 @@ public class PFMRecipeProvider extends PFMProvider {
         }
 
         if (!generatedRecipes.contains(getId(PaladinFurnitureModBlocksItems.WALL_TOILET_PAPER))) {
-            offerWallToiletPaperRecipe(PaladinFurnitureModBlocksItems.WALL_TOILET_PAPER,  Ingredient.ofItems(Blocks.LIGHT_GRAY_CONCRETE), exporter);
+            offerWallToiletPaperRecipe(PaladinFurnitureModBlocksItems.WALL_TOILET_PAPER,  Ingredient.ofItems(Blocks.STONE), exporter);
             generatedRecipes.add(getId(PaladinFurnitureModBlocksItems.WALL_TOILET_PAPER));
         }
 
@@ -622,6 +622,46 @@ public class PFMRecipeProvider extends PFMProvider {
         }
 
         offerLampRecipes(exporter);
+
+        PaladinFurnitureMod.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
+            if (!generatedRecipes.contains(getId(block))) {
+                offerBasicCoffeeTableRecipe(block.asItem(), Ingredient.ofItems(variantBase.getSecondaryBlock()), Ingredient.ofItems(variantBase.getBaseBlock()), exporter);
+                generatedRecipes.add(getId(block));
+            }
+        });
+        PaladinFurnitureMod.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMapNonBase().forEach((variantBase, block) -> {
+            if (!generatedRecipes.contains(getId(block))) {
+                offerBasicCoffeeTableRecipe(block.asItem(), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems((Block)variantBase.getChild("stripped_log")), exporter);
+                generatedRecipes.add(getId(block));
+            }
+        });
+
+        PaladinFurnitureMod.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
+            if (!generatedRecipes.contains(getId(block))) {
+                offerModernCoffeeTableRecipe(block.asItem(), Ingredient.ofItems(variantBase.getSecondaryBlock()), Ingredient.ofItems(variantBase.getBaseBlock()), exporter);
+                generatedRecipes.add(getId(block));
+            }
+        });
+        PaladinFurnitureMod.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMapNonBase().forEach((variantBase, block) -> {
+            if (!generatedRecipes.contains(getId(block))) {
+                offerModernCoffeeTableRecipe(block.asItem(), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems((Block)variantBase.getChild("stripped_log")), exporter);
+                generatedRecipes.add(getId(block));
+            }
+        });
+
+        PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMap().forEach((variantBase, block) -> {
+            if (!generatedRecipes.contains(getId(block))) {
+                offerClassicCoffeeTableRecipe(block.asItem(), Ingredient.ofItems(variantBase.getSecondaryBlock()), Ingredient.ofItems(variantBase.getBaseBlock()), exporter);
+                generatedRecipes.add(getId(block));
+            }
+        });
+        PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMapNonBase().forEach((variantBase, block) -> {
+            if (!generatedRecipes.contains(getId(block))) {
+                offerClassicCoffeeTableRecipe(block.asItem(), Ingredient.ofItems(variantBase.getBaseBlock()), Ingredient.ofItems((Block)variantBase.getChild("stripped_log")), exporter);
+                generatedRecipes.add(getId(block));
+            }
+        });
+
         PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> pfmModCompatibility.generateRecipes(exporter));
     }
 
@@ -643,20 +683,20 @@ public class PFMRecipeProvider extends PFMProvider {
         Block counterTop = variantBase.getSecondaryBlock();
         Block counterBase = variantBase.getBaseBlock();
 
-        if (variantBase == StoneVariant.GRANITE) {
+        if (variantBase.identifier.getPath().equals("granite")) {
             counterTop = Blocks.POLISHED_GRANITE;
             counterBase = Blocks.WHITE_TERRACOTTA;
-        } else if (variantBase == StoneVariant.CALCITE || variantBase == StoneVariant.NETHERITE) {
+        } else if (variantBase.identifier.getPath().equals("calcite") || variantBase.identifier.getPath().equals("netherite")) {
             Block temp = counterBase;
             counterBase = counterTop;
             counterTop  = temp;
-        } else if (variantBase == StoneVariant.ANDESITE) {
+        } else if (variantBase.identifier.getPath().equals("andesite")) {
             counterTop = Blocks.POLISHED_ANDESITE;
             counterBase = Blocks.STRIPPED_OAK_LOG;
-        } else if (variantBase == StoneVariant.DEEPSLATE) {
+        } else if (variantBase.identifier.getPath().equals("deepslate")) {
             counterTop = Blocks.POLISHED_DEEPSLATE;
             counterBase = Blocks.DARK_OAK_PLANKS;
-        } else if (variantBase == StoneVariant.BLACKSTONE) {
+        } else if (variantBase.identifier.getPath().equals("blackstone")) {
             counterTop = Blocks.POLISHED_BLACKSTONE;
             counterBase = Blocks.CRIMSON_PLANKS;
         }
@@ -698,11 +738,23 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static void offerBasicTableRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, RecipeExporter exporter) {
-        FurnitureRecipeJsonFactory.create(output, 4).group("chairs").criterion(getCriterionNameFromOutput(output), conditionsFromIngredient(baseMaterial)).input(legMaterial, 5).input(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+        FurnitureRecipeJsonFactory.create(output, 4).group("tables").criterion(getCriterionNameFromOutput(output), conditionsFromIngredient(baseMaterial)).input(legMaterial, 5).input(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+
+    public static void offerBasicCoffeeTableRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, RecipeExporter exporter) {
+        FurnitureRecipeJsonFactory.create(output, 4).group("tables").criterion(getCriterionNameFromOutput(output), conditionsFromIngredient(baseMaterial)).input(legMaterial, 3).input(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+
+    public static void offerModernCoffeeTableRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, RecipeExporter exporter) {
+        FurnitureRecipeJsonFactory.create(output, 4).group("tables").criterion(getCriterionNameFromOutput(output), conditionsFromIngredient(baseMaterial)).input(legMaterial, 4).input(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    }
+
+    public static void offerClassicCoffeeTableRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, RecipeExporter exporter) {
+        FurnitureRecipeJsonFactory.create(output, 4).group("tables").criterion(getCriterionNameFromOutput(output), conditionsFromIngredient(baseMaterial)).input(legMaterial, 2).input(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerClassicTableRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, RecipeExporter exporter) {
-        FurnitureRecipeJsonFactory.create(output, 4).group("chairs").criterion(getCriterionNameFromOutput(output), conditionsFromIngredient(baseMaterial)).input(legMaterial, 4).input(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+        FurnitureRecipeJsonFactory.create(output, 4).group("tables").criterion(getCriterionNameFromOutput(output), conditionsFromIngredient(baseMaterial)).input(legMaterial, 4).input(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerLogTableRecipe(ItemConvertible output, Ingredient legMaterial, Ingredient baseMaterial, RecipeExporter exporter) {
@@ -893,7 +945,12 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     private static String getItemPath(Ingredient item) {
-        return Registries.ITEM.getId(item.getMatchingStacks()[0].getItem()).getPath();
+        ItemStack[] n = item.getMatchingStacks();
+        if (n.length > 0) {
+            return Registries.ITEM.getId(n[0].getItem()).getPath();
+        } else {
+            return item.toString();
+        }
     }
     private static String getItemPath(ItemConvertible item) {
         return Registries.ITEM.getId(item.asItem()).getPath();

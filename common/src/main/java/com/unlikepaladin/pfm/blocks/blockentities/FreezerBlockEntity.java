@@ -104,7 +104,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
 
     private static final int[] TOP_SLOTS = new int[]{0};
-    private static final int[] BOTTOM_SLOTS = new int[]{2, 1};
+    private static final int[] BOTTOM_SLOTS = new int[]{2, 1, 0};
     private static final int[] SIDE_SLOTS = new int[]{1};
     private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY);
     int fuelTime;
@@ -228,7 +228,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        if (dir == Direction.DOWN && slot == 1) {
+        if (dir == Direction.DOWN && slot != 2) {
             return stack.isOf(Items.BUCKET);
         }
         return true;
