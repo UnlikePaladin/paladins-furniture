@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.models.bed;
 
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.ShowerTowelBlock;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
@@ -9,9 +10,11 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.block.AbstractBlock;
 import net.minecraft.client.render.model.*;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -55,13 +58,21 @@ public class UnbakedBedModel implements UnbakedModel {
     public static final List<Identifier> BED_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
+                int i = 0;
                 for (DyeColor dyeColor : DyeColor.values()) {
+                    if (i > 15)
+                        break;
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_" + dyeColor.getName() + "_simple_bed"));
+                    i++;
                 }
             }
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
+                int i = 0;
                 for (DyeColor dyeColor : DyeColor.values()) {
+                    if (i > 15)
+                        break;
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_" + dyeColor.getName() + "_classic_bed"));
+                    i++;
                 }
             }
             add(BED_MODEL_ID);

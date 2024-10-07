@@ -80,8 +80,12 @@ public class LateBlockRegistry {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_chair_classic", () -> new ClassicChairBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicChairDyeableBlock.class, new FurnitureEntry<>() {{
+            int i = 0;
             for (DyeColor color : DyeColor.values()) {
+                if (i > 15)
+                    break;
                 this.addBlock(registerLateBlock("oak_chair_classic_" + color.getName(), () -> new ClassicChairDyeableBlock(color, AbstractBlock.Settings.copy(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).allBlocks.get(0))), true, PaladinFurnitureMod.FURNITURE_GROUP));
+                i++;
             }
         }});
 
@@ -103,15 +107,24 @@ public class LateBlockRegistry {
             this.addBlock(registerLateBlock("froggy_chair_yellow", () -> new FroggyChairBlock(AbstractBlock.Settings.copy(this.allBlocks.get(0)).mapColor(MapColor.YELLOW)), true, PaladinFurnitureMod.FURNITURE_GROUP));
         }});
         PaladinFurnitureMod.furnitureEntryMap.put(SimpleSofaBlock.class, new FurnitureEntry<>() {{
+            int i = 0;
             for (DyeColor color : DyeColor.values()) {
+                if (i > 15)
+                    break;
                 this.addBlock(registerLateBlock(color.getName() + "_simple_sofa", () -> new SimpleSofaBlock(color, AbstractBlock.Settings.create().burnable().strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL).mapColor(color.getMapColor())), true, PaladinFurnitureMod.FURNITURE_GROUP));
-            }}});
+                i++;
+            }
+        }});
         PaladinFurnitureMod.furnitureEntryMap.put(ArmChairBlock.class, new FurnitureEntry<>() {{
             this.addBlock(registerLateBlock("arm_chair_leather", () -> new ArmChairBlock(AbstractBlock.Settings.create().strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL)), true, PaladinFurnitureMod.FURNITURE_GROUP));
         }});
         PaladinFurnitureMod.furnitureEntryMap.put(ArmChairColoredBlock.class, new FurnitureEntry<>() {{
+            int i = 0;
             for (DyeColor color : DyeColor.values()) {
+                if (i > 15)
+                    break;
                 this.addBlock(registerLateBlock(color.getName() + "_arm_chair", () -> new ArmChairColoredBlock(color, AbstractBlock.Settings.create().burnable().strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL).mapColor(color.getMapColor())), true, PaladinFurnitureMod.FURNITURE_GROUP));
+                i++;
             }
         }});
 
@@ -209,19 +222,27 @@ public class LateBlockRegistry {
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(SimpleBedBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                for (DyeColor color : DyeColor.values()) {
-                    SimpleBedBlock block = LateBlockRegistry.registerLateBlock(variant.asString() + "_" + color.getName() +  "_simple_bed", () -> new SimpleBedBlock(color, AbstractBlock.Settings.create().mapColor(state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMapColor() : MapColor.WHITE_GRAY).sounds(variant.getBaseBlock().getSoundGroup(variant.getBaseBlock().getDefaultState())).requires(variant.getFeatureList().toArray(new FeatureFlag[0])).strength(0.2f).nonOpaque()), 1, PaladinFurnitureMod.FURNITURE_GROUP);
-                    this.addBlock(variant, block, true);
+                int i = 0;for (DyeColor color : DyeColor.values()) {
+                if (i > 15)
+                        break;
+                    SimpleBedBlock block = LateBlockRegistry.registerLateBlock(variant.asString() + "_" + color.getName() +  "_simple_bed", () -> new SimpleBedBlock(color, AbstractBlock.Settings.create().mapColor(state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMapColor() : MapColor.WHITE_GRAY).sounds(variant.getBaseBlock().getSoundGroup(variant.getBaseBlock().getDefaultState())).requires(variant.getFeatureList().toArray(new FeatureFlag[0])).strength(0.2f).nonOpaque()), 1, PaladinFurnitureMod.FURNITURE_GROUP);                    this.addBlock(variant, block, true);
                     PaladinFurnitureModBlocksItems.beds.add(block);
-                }}}});
+                    i++;
+                }
+            }
+        }});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicBedBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                for (DyeColor color : DyeColor.values()) {
+                int i = 0;for (DyeColor color : DyeColor.values()) {
+                if (i > 15)
+                        break;
                     ClassicBedBlock block = LateBlockRegistry.registerLateBlock(variant.asString() + "_" + color.getName() +  "_classic_bed", () -> new ClassicBedBlock(color, AbstractBlock.Settings.create().mapColor(state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMapColor() : MapColor.WHITE_GRAY).sounds(variant.getBaseBlock().getSoundGroup(variant.getBaseBlock().getDefaultState())).strength(0.2f).nonOpaque().requires(variant.getFeatureList().toArray(new FeatureFlag[0]))), 1, PaladinFurnitureMod.FURNITURE_GROUP);
                     this.addBlock(variant, block, true);
                     PaladinFurnitureModBlocksItems.beds.add(block);
+                    i++;
                 }
-            }}});
+            }
+        }});
         PaladinFurnitureMod.furnitureEntryMap.put(SimpleBunkLadderBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_simple_bunk_ladder", () -> new SimpleBunkLadderBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
@@ -392,8 +413,12 @@ public class LateBlockRegistry {
             this.addBlock( LateBlockRegistry.registerLateBlock( "mesh_trashcan",() -> PaladinFurnitureModBlocksItems.MESH_TRASHCAN, true, PaladinFurnitureMod.FURNITURE_GROUP));
         }});
         PaladinFurnitureMod.furnitureEntryMap.put(ShowerTowelBlock.class, new FurnitureEntry<ShowerTowelBlock>() {{
+            int i = 0;
             for (DyeColor color : DyeColor.values()) {
+                if (i > 15)
+                    break;
                 this.addBlock(registerLateBlock(color.getName() + "_shower_towel", () -> new ShowerTowelBlock(color, AbstractBlock.Settings.create().burnable().strength(2.0f).resistance(2.0f).nonOpaque().sounds(BlockSoundGroup.WOOL).mapColor(color.getMapColor())), true, PaladinFurnitureMod.FURNITURE_GROUP));
+                i++;
             }
         }});
         if (!BlockItemRegistry.isModLoaded("imm_ptl_core")) {
