@@ -103,6 +103,10 @@ if (rootProject.rei_compatibility == "true"){
             transitive(false)
         }
     }
+} else {
+    dependencies {
+        modCompileOnly("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version}")
+    }
 }
 
 
