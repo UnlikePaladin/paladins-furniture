@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.LightSwitchBlockEntity;
+import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.LivingEntity;
@@ -19,6 +20,7 @@ import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -177,6 +179,14 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
         if (state.get(POWERED)) {
             this.updateNeighbors(state, world, pos);
         }
+
+        if (state.isOf(newState.getBlock())) {
+            return;
+        }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof LightSwitchBlockEntity lightSwitchBlockEntity) {
+            lightSwitchBlockEntity.markRemoved();
+        }
     }
 
     private void updateNeighbors(BlockState state, World world, BlockPos pos) {
@@ -202,4 +212,5 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
     protected static Direction getDirection(BlockState state) {
         return state.get(FACING);
     }
+
 }

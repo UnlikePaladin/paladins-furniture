@@ -47,7 +47,7 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends PowerableBlock> getCodec() {
         return CODEC;
     }
 

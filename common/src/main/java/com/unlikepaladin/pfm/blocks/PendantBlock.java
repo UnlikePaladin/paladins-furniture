@@ -44,7 +44,7 @@ public class PendantBlock extends PowerableBlock implements DynamicRenderLayerIn
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends PowerableBlock> getCodec() {
         return CODEC;
     }
 

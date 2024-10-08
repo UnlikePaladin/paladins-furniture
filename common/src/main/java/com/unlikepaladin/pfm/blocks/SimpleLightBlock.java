@@ -35,7 +35,7 @@ public class SimpleLightBlock extends PowerableBlock {
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends PowerableBlock> getCodec() {
         return CODEC;
     }
 

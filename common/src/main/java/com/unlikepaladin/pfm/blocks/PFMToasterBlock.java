@@ -49,7 +49,7 @@ public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
         stateManager.add(FACING, ON);
     }
 
-    public static final VoxelShape IRON_TOASTER = VoxelShapes.union(createCuboidShape(4.8, 0, 3.8,11.2, 1, 12.2),createCuboidShape(5, 1, 4,11, 6, 12));
+    public static final VoxelShape IRON_TOASTER = VoxelShapes.union(createCuboidShape(5, 0, 3,11, 7, 13));
     public static final VoxelShape IRON_TOASTER_WEST_EAST = rotateShape(Direction.NORTH, Direction.WEST, IRON_TOASTER);
     @Override
     public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext ctx) {

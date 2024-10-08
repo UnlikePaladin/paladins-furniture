@@ -48,7 +48,7 @@ public class TrashcanBlock extends BlockWithEntity {
         return BlockRenderType.MODEL;
     }
 
-    public static final VoxelShape TRASHCAN = VoxelShapes.union(createCuboidShape(2, 0, 2, 13, 13, 13), createCuboidShape(1, 12, 1, 14, 16, 14), createCuboidShape(3.5, 16, 6.5,11.5, 18, 8.5));
+    public static final VoxelShape TRASHCAN = VoxelShapes.union(createCuboidShape(2, 0, 2, 13, 13, 13), createCuboidShape(1, 12, 1, 14, 15, 14), createCuboidShape(3.5, 14.9, 6.5,11.5, 16, 8.5));
     public static final VoxelShape TRASHCAN_OPEN = VoxelShapes.union(createCuboidShape(2, 0, 2, 13, 13, 13), createCuboidShape(10.5, 0, 0, 19.5, 13, 14));
 
     @Override

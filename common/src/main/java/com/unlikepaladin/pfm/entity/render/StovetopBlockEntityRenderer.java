@@ -41,16 +41,16 @@ public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
             int rot = 45;
             switch(direction) {
                 case NORTH:
-                    matrices.translate(0.5, 0.05, 0.45);
+                    matrices.translate(0.5, 0.08, 0.45);
                     break;
                 case SOUTH:
-                    matrices.translate(0.5, 0.05, 0.55);
+                    matrices.translate(0.5, 0.08, 0.55);
                     break;
                 case WEST:
-                    matrices.translate(0.45, 0.05, 0.5);
+                    matrices.translate(0.45, 0.08, 0.5);
                     break;
                 case EAST:
-                    matrices.translate(0.55, 0.05, 0.5);
+                    matrices.translate(0.55, 0.08, 0.5);
             }
             rot = 180;
             matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(g));

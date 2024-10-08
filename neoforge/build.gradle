@@ -56,7 +56,7 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 
-    modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}-FORGE")
+    modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}-NEOFORGE")
     modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-forge-api:${rootProject.jei_version}")
     modCompileOnlyApi "me.shedaniel:RoughlyEnoughItems-api-neoforge:${rootProject.rei_version}"
     modCompileOnlyApi "me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}"
