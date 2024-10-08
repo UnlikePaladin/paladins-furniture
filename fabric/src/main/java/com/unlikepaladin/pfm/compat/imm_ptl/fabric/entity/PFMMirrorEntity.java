@@ -134,9 +134,9 @@ public class PFMMirrorEntity extends Mirror {
         return false;
     }
 
-    public static void createMirror(ServerWorld world, BlockPos glassPos, Direction facing) {
+    public static PFMMirrorEntity createMirror(ServerWorld world, BlockPos glassPos, Direction facing) {
         if (!isMirrorBlock(world, glassPos, facing.getOpposite())) {
-            return;
+            return null;
         }
 
         BlockPortalShape shape = BlockPortalShape.findArea(
@@ -146,7 +146,7 @@ public class PFMMirrorEntity extends Mirror {
         );
 
         if (shape == null) {
-            return;
+            return null;
         }
 
         PFMMirrorEntity pfmMirrorEntity = PFMImmersivePortalsImpl.MIRROR.create(world);
@@ -154,7 +154,7 @@ public class PFMMirrorEntity extends Mirror {
 
         Box wallBox = getWallBox(world, shape.area.stream());
         if (wallBox == null) {
-            return;
+            return null;
         }
         pfmMirrorEntity.facing = facing;
         Vec3d pos = Helper.getBoxSurfaceInversed(wallBox, facing.getOpposite()).getCenter();
@@ -176,6 +176,7 @@ public class PFMMirrorEntity extends Mirror {
         pfmMirrorEntity.blockPortalShape = shape;
         world.spawnEntity(pfmMirrorEntity);
 
+        return pfmMirrorEntity;
     }
 
     @Nullable

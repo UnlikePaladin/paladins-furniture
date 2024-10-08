@@ -396,7 +396,7 @@ public class BlockPortalShape {
         ).multiply(0.5);
         
         if (isRectangle()) {
-            portal.setPortalShape(null);
+            portal.setPortalShapeToDefault();
         }
         else {
             Mesh2D mesh2D = new Mesh2D();
