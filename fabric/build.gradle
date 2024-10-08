@@ -90,7 +90,7 @@ else {
 
 if (rootProject.rei_compatibility == "true"){
     dependencies {
-        modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"){
+        modImplementation("me.shedaniel:RoughlyEnoughItems-fabric:${rootProject.rei_version}"){
             transitive(false)
         }
         modRuntimeOnly("me.shedaniel.cloth:cloth-config-fabric:${rootProject.cloth_config_version}") {

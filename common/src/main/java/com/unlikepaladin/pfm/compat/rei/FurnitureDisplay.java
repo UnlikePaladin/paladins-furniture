@@ -41,6 +41,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
+import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -49,18 +50,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class FurnitureDisplay implements Display {
-    protected FurnitureRecipe recipe;
+    protected RecipeEntry<FurnitureRecipe> recipe;
     public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"));
     public List<EntryIngredient> input;
     public List<EntryIngredient> output;
-    public FurnitureDisplay(FurnitureRecipe recipe) {
+    public FurnitureDisplay(RecipeEntry<FurnitureRecipe> recipe) {
         this.recipe = recipe;
-        output = Collections.singletonList(EntryIngredients.of(recipe.getResult(MinecraftClient.getInstance().world.getRegistryManager())));
+        output = Collections.singletonList(EntryIngredients.of(recipe.value().getResult(MinecraftClient.getInstance().world.getRegistryManager())));
     }
 
     @Override
     public List<EntryIngredient> getInputEntries() {
-        List<Ingredient> ingredients = recipe.getIngredients();
+        List<Ingredient> ingredients = recipe.value().getIngredients();
         HashMap<Item, Integer> containedItems = new HashMap<>();
         for (Ingredient ingredient : ingredients) {
             for (ItemStack stack : ingredient.getMatchingStacks()) {
@@ -89,4 +90,8 @@ public class FurnitureDisplay implements Display {
         return IDENTIFIER;
     }
 
+    @Override
+    public Optional<Identifier> getDisplayLocation() {
+        return Optional.of(recipe.id());
+    }
 }
