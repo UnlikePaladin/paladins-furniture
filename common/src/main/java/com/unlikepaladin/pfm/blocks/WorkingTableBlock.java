@@ -55,7 +55,7 @@ public class WorkingTableBlock extends HorizontalFacingBlock implements Waterlog
 
     private static final Text TITLE = Text.translatable("container.pfm.working_table");
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
@@ -115,7 +115,7 @@ public class WorkingTableBlock extends HorizontalFacingBlock implements Waterlog
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 }

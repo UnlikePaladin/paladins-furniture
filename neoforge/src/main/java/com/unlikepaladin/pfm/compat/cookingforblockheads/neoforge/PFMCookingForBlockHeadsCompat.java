@@ -1,25 +1,23 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.KitchenCounterBlock;
-import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
-import com.unlikepaladin.pfm.blocks.KitchenWallCounterBlock;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
+import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.blocks.neoforge.StoveBlockImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScreenHandlerBalm;
+import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.CombinedContainer;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
-import net.blay09.mods.cookingforblockheads.KitchenMultiBlock;
-import net.blay09.mods.cookingforblockheads.api.SourceItem;
-import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IngredientPredicate;
+import net.blay09.mods.cookingforblockheads.api.CacheHint;
+import net.blay09.mods.cookingforblockheads.api.IngredientToken;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.block.entity.FridgeBlockEntity;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
-import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
+import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -28,36 +26,35 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.ScreenHandler;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.recipe.Ingredient;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.Collection;
+import java.util.function.Function;
 
 public class PFMCookingForBlockHeadsCompat {
 
-    public static void initBlockConnectors() {
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getAllBlocks().forEach(KitchenMultiBlock::registerConnectorBlock);
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getAllBlocks().forEach(KitchenMultiBlock::registerConnectorBlock);
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getAllBlocks().forEach(KitchenMultiBlock::registerConnectorBlock);
+    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE));//PaladinFurnitureModBlocksItems.GRAY_STOVE));
+    public static TriFunc<Integer, PlayerInventory, StoveScreenHandler.StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
+        return (integer, playerInventory, data) -> {
+            BlockPos pos = data.pos();
+            BlockEntity blockEntity = playerInventory.player.getWorld().getBlockEntity(pos);
+            return new StoveScreenHandlerBalm(integer, playerInventory, (StoveBlockEntityBalm)blockEntity);
+        };
     }
 
-    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE));//PaladinFurnitureModBlocksItems.GRAY_STOVE));
-    public static <T extends ScreenHandler> TriFunc<Integer, PlayerInventory, PacketByteBuf, T> getStoveScreenHandler() {
-        return (integer, playerInventory, packetByteBuf) -> {
-            BlockPos pos = packetByteBuf.readBlockPos();
-            BlockEntity blockEntity = playerInventory.player.getWorld().getBlockEntity(pos);
-            return (T) new StoveScreenHandlerBalm(integer, playerInventory, (StoveBlockEntityBalm)blockEntity);
-        };
+    public static <D extends StovePacket> PacketCodec<RegistryByteBuf, D> getStovePacket() {
+        return (PacketCodec<RegistryByteBuf, D>) StoveScreenHandler.PACKET_CODEC;
     }
 
     public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
@@ -79,11 +76,11 @@ public class PFMCookingForBlockHeadsCompat {
         }
     }
 
-    public static ActionResult onUseStove(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public static ItemActionResult onUseStove(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack heldItem = player.getStackInHand(hand);
         if (heldItem.getItem() == ModItems.heatingUnit) {
-            return ActionResult.PASS;
-        } else if (hit.getSide() == Direction.UP && CookingRegistry.isToolItem(heldItem)) {
+            return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        } else if (hit.getSide() == Direction.UP && heldItem.isIn(ModItemTags.UTENSILS)) {
             Direction stateFacing = state.get(StoveBlock.FACING);
             double hx =  (hit.getPos().x - hit.getBlockPos().getX());
             double hz = (hit.getPos().z - hit.getBlockPos().getZ());
@@ -117,68 +114,73 @@ public class PFMCookingForBlockHeadsCompat {
                     tileOven.setToolItem(index, toolItem);
                 }
             }
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         } else {
             StoveBlockEntityBalm oven = (StoveBlockEntityBalm)level.getBlockEntity(pos);
             if (hit.getSide() == state.get(Properties.HORIZONTAL_FACING) && oven != null) {
                 if (player.isSneaking()) {
-                    return ActionResult.SUCCESS;
+                    return ItemActionResult.SUCCESS;
                 }
 
                 if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem) != ItemStack.EMPTY) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getInputContainer(), heldItem, false);
                     player.setStackInHand(hand, heldItem);
 
-                    return ActionResult.SUCCESS;
+                    return ItemActionResult.SUCCESS;
                 } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(heldItem)) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getFuelContainer(), heldItem, false);
                     player.setStackInHand(hand, heldItem);
-                    return ActionResult.SUCCESS;
+                    return ItemActionResult.SUCCESS;
                 }
             }
             if (!level.isClient) {
                 Balm.getNetworking().openGui(player, oven);
             }
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         }
     }
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
 
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(DefaultKitchenItemProvider.class), BlockEntities.FREEZER_BLOCK_ENTITY, (entity, side) -> {
-            return new DefaultKitchenItemProvider(entity){
+        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.FREEZER_BLOCK_ENTITY, (entity, side) -> {
+            return new ContainerKitchenItemProvider(entity){
                 private final ItemStack snowStack;
                 private final ItemStack iceStack;
                 {
                     this.snowStack = new ItemStack(Items.SNOWBALL);
                     this.iceStack = new ItemStack(Blocks.ICE);
                 }
-                private @Nullable SourceItem applyIceUnit(IngredientPredicate predicate, int maxAmount) {
-                    if (predicate.test(this.snowStack, 64))
-                        return new SourceItem(this, -1, ContainerUtils.copyStackWithSize(this.snowStack, maxAmount));
-                    else
-                        return predicate.test(this.iceStack, 64) ? new SourceItem(this, -1, ContainerUtils.copyStackWithSize(this.iceStack, maxAmount)) : null;
+
+                @Override
+                public IngredientToken findIngredient(Ingredient ingredient, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
+                    IngredientToken result = applyIceUnit(ingredient::test);
+                    if (result != null)
+                        return result;
+
+                    return super.findIngredient(ingredient, ingredientTokens, cacheHint);
                 }
-                public @Nullable SourceItem findSource(IngredientPredicate predicate, int maxAmount, List<IKitchenItemProvider> inventories, boolean requireBucket, boolean simulate) {
-                    SourceItem iceUnitResult = this.applyIceUnit(predicate, maxAmount);
-                    if (iceUnitResult != null) {
-                        return iceUnitResult;
-                    } else {
-                        return super.findSource(predicate, maxAmount, inventories, requireBucket, simulate);
-                    }             }
-                public @Nullable SourceItem findSourceAndMarkAsUsed(IngredientPredicate predicate, int maxAmount, List<IKitchenItemProvider> inventories, boolean requireBucket, boolean simulate) {
-                    SourceItem iceUnitResult = this.applyIceUnit(predicate, maxAmount);
-                    if (iceUnitResult != null) {                     return iceUnitResult;
-                    } else {
-                        return super.findSourceAndMarkAsUsed(predicate, maxAmount, inventories, requireBucket, simulate);
-                    }
+
+                @Override
+                public IngredientToken findIngredient(ItemStack itemStack, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
+                    IngredientToken result = applyIceUnit(stack -> ItemStack.areItemsEqual(stack, itemStack));
+                    if (result != null)
+                        return result;
+
+                    return super.findIngredient(itemStack, ingredientTokens, cacheHint);
+                }
+
+                private @Nullable IngredientToken applyIceUnit(Function<ItemStack, Boolean> predicate) {
+                    if (predicate.apply(this.snowStack))
+                        return new FridgeBlockEntity.IceUnitIngredientToken(ContainerUtils.copyStackWithSize(this.snowStack, 64));
+                    else
+                        return predicate.apply(this.iceStack) ? new FridgeBlockEntity.IceUnitIngredientToken(ContainerUtils.copyStackWithSize(this.iceStack, 64)) : null;
                 }
             };
         });
 
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(DefaultKitchenItemProvider.class), BlockEntities.STOVE_BLOCK_ENTITY, (entity, side) -> {
+        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.STOVE_BLOCK_ENTITY, (entity, side) -> {
             StoveBlockEntityBalm ovenBlockEntityBalm = (StoveBlockEntityBalm) entity;
-            return new DefaultKitchenItemProvider(new CombinedContainer(ovenBlockEntityBalm.toolsContainer, ovenBlockEntityBalm.outputContainer));
+            return new ContainerKitchenItemProvider(new CombinedContainer(ovenBlockEntityBalm.toolsContainer, ovenBlockEntityBalm.outputContainer));
         });
     }
 }

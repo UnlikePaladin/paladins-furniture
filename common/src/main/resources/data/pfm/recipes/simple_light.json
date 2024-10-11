@@ -22,7 +22,7 @@
     }
   ],
   "result": {
-    "item": "pfm:simple_light",
+    "id": "pfm:simple_light",
     "count": 2
   }
 }

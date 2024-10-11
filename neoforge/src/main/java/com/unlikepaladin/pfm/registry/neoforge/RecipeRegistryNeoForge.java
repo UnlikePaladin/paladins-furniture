@@ -11,11 +11,12 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.MOD)
 public class RecipeRegistryNeoForge {
 
     @SubscribeEvent
@@ -29,8 +30,6 @@ public class RecipeRegistryNeoForge {
             );
             // Can't run resource gen until the recipe serializer has been registered or it dies because it needs the ID
             // PFMRuntimeResources.prepareAsyncResourceGen(); Had to disable async gen because Forge dies and I can't be bothered to figure out why, this is cursed enough as it is
-            if (PaladinFurnitureMod.getModList().contains("cookingforblockheads"))
-                PFMCookingForBlockHeadsCompat.initBlockConnectors();
         });
     }
 

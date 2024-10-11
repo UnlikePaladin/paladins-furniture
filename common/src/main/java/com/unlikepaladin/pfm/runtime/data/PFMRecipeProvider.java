@@ -12,6 +12,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
@@ -29,6 +30,7 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.DataWriter;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeProvider;
 import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
 import net.minecraft.item.*;
 import net.minecraft.nbt.NbtCompound;
@@ -37,7 +39,10 @@ import net.minecraft.predicate.item.ItemPredicate;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.BuiltinRegistries;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryOps;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.*;
@@ -62,6 +67,7 @@ public class PFMRecipeProvider extends PFMProvider {
     public CompletableFuture<?> run(DataWriter writer) {
         Path path = getParent().getOutput();
         Set<Identifier> set = Sets.newHashSet();
+        RegistryWrapper.WrapperLookup lookup = BuiltinRegistries.createWrapperLookup();
         generateRecipes(new RecipeExporter() {
 
             @Override
@@ -74,9 +80,10 @@ public class PFMRecipeProvider extends PFMProvider {
                     getParent().getLogger().error("Recipe Json Provider is null");
                     throw new IllegalStateException("Recipe Json Provider is null");
                 } else {
-                    saveRecipe(Util.getResult(Recipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe), IllegalStateException::new), path.resolve("data/" + recipeId.getNamespace() + "/recipes/" + recipeId.getPath() + ".json"));
+                    RegistryOps<JsonElement> ops = lookup.getOps(JsonOps.INSTANCE);
+                    saveRecipe(Recipe.CODEC.encodeStart(ops, recipe).getOrThrow(IllegalStateException::new), path.resolve("data/" + recipeId.getNamespace() + "/recipes/" + recipeId.getPath() + ".json"));
                     if (advancementEntry != null) {
-                        saveRecipeAdvancement(Util.getResult(Advancement.CODEC.encodeStart(JsonOps.INSTANCE, advancementEntry.value()), IllegalStateException::new), path.resolve("data/" + recipeId.getNamespace() + "/advancements/" + advancementEntry.id().getPath() + ".json"));
+                        saveRecipeAdvancement(Advancement.CODEC.encodeStart(ops, advancementEntry.value()).getOrThrow(IllegalStateException::new), path.resolve("data/" + recipeId.getNamespace() + "/advancements/" + advancementEntry.id().getPath() + ".json"));
                     }
                 }
             }
@@ -561,7 +568,7 @@ public class PFMRecipeProvider extends PFMProvider {
             }
         });
         if (!generatedRecipes.contains(Registries.ITEM.getId(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM))) {
-            FurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM, 6).input(Blocks.WHITE_CONCRETE, 6).input(Blocks.LIGHT_GRAY_CONCRETE, 2).input(Items.REDSTONE).offerTo(exporter, new Identifier("pfm", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getTranslationKey().replace("block.pfm.", "")));
+            FurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getDefaultStack().copyWithCount(6)).input(Blocks.WHITE_CONCRETE, 6).input(Blocks.LIGHT_GRAY_CONCRETE, 2).input(Items.REDSTONE).offerTo(exporter, new Identifier("pfm", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getTranslationKey().replace("block.pfm.", "")));
             generatedRecipes.add(Registries.ITEM.getId(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM));
         }
 
@@ -590,7 +597,7 @@ public class PFMRecipeProvider extends PFMProvider {
 
         if (!generatedRecipes.contains(getId(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD))) {
             offerShowerHeadRecipe(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD, Ingredient.ofItems(Blocks.LIGHT_GRAY_CONCRETE), exporter);
-            offerShowerHandleRecipe(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM, Ingredient.ofItems(Blocks.LIGHT_GRAY_CONCRETE), exporter);
+            offerShowerHandleRecipe(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM.getDefaultStack(), Ingredient.ofItems(Blocks.LIGHT_GRAY_CONCRETE), exporter);
             generatedRecipes.add(getId(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD));
             generatedRecipes.add(Registries.ITEM.getId(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM));
         }
@@ -667,13 +674,10 @@ public class PFMRecipeProvider extends PFMProvider {
     public static void offerLampRecipes(RecipeExporter exporter) {
         for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
             for (DyeColor color : DyeColor.values()) {
-                NbtCompound beTag = new NbtCompound();
-                beTag.putString("color", color.asString());
-                beTag.putString("variant", variant.getIdentifier().toString());
-                NbtCompound tag = new NbtCompound();
-                tag.put("BlockEntityTag", beTag);
-
-                FurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.BASIC_LAMP, tag).input(ModelHelper.getWoolColor(color.asString()), 3).input((Block)variant.getChild("stripped_log"), 2).offerTo(exporter, new Identifier("pfm", String.format("basic_%s_%s_lamp", color.asString(), variant.asString())));
+                ItemStack stack = new ItemStack(PaladinFurnitureModBlocksItems.BASIC_LAMP);
+                stack.set(PFMComponents.VARIANT_COMPONENT, variant.identifier);
+                stack.set(PFMComponents.COLOR_COMPONENT, color);
+                FurnitureRecipeJsonFactory.create(stack).input(ModelHelper.getWoolColor(color.asString()), 3).input((Block)variant.getChild("stripped_log"), 2).offerTo(exporter, new Identifier("pfm", String.format("basic_%s_%s_lamp", color.asString(), variant.asString())));
             }
         }
     }
@@ -900,8 +904,8 @@ public class PFMRecipeProvider extends PFMProvider {
         FurnitureRecipeJsonFactory.create(output, 1).group("bathroom").criterion("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 3).input(Items.WATER_BUCKET, 1).input(Items.IRON_INGOT, 1).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
-    public static void offerShowerHandleRecipe(ItemConvertible output, Ingredient base, RecipeExporter exporter) {
-        FurnitureRecipeJsonFactory.create(output, 1).group("bathroom").criterion("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 4).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+    public static void offerShowerHandleRecipe(ItemStack output, Ingredient base, RecipeExporter exporter) {
+        FurnitureRecipeJsonFactory.create(output).group("bathroom").criterion("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 4).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).offerTo(exporter, new Identifier("pfm", output.getItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerShowerTowelRecipe(ItemConvertible output, Ingredient base, RecipeExporter exporter) {

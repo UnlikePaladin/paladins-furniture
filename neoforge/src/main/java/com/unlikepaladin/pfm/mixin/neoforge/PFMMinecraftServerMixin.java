@@ -20,7 +20,7 @@ import java.util.List;
 @Mixin(MinecraftServer.class)
 public class PFMMinecraftServerMixin {
 
-    @Inject(method = "lambda$reloadResources$24", at = @At(value = "RETURN"), remap = false)
+    @Inject(method = "lambda$reloadResources$25", at = @At(value = "RETURN"), remap = false)
     private void createReload(CallbackInfoReturnable<ImmutableList<ResourcePack>> cir) {
         List<ResourcePack> resourcePacks = new ArrayList<>(cir.getReturnValue());
         resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);

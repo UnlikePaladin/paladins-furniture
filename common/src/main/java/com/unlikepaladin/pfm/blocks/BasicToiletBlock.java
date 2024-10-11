@@ -10,14 +10,15 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
 import net.minecraft.item.Items;
+import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleTypes;
-import net.minecraft.potion.PotionUtil;
 import net.minecraft.potion.Potions;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -27,6 +28,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -67,25 +69,30 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack stack = player.getStackInHand(hand);
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
             player.incrementStat(Statistics.TOILET_USED);
         }
-        if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY && (player.getStackInHand(hand).getItem() == Items.POTION) && PotionUtil.getPotion(player.getStackInHand(hand)) == Potions.WATER) {
+
+        if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY && (stack.getItem() == Items.POTION) && stack.contains(DataComponentTypes.POTION_CONTENTS) && stack.get(DataComponentTypes.POTION_CONTENTS) != null && stack.get(DataComponentTypes.POTION_CONTENTS).matches(Potions.WATER)) {
             world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
             if (!player.getAbilities().creativeMode)
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
-             world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
-            return ActionResult.SUCCESS;
-        }
-        else if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY && (player.getStackInHand(hand).getItem() == Items.WATER_BUCKET)) {
+            world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
+            return ItemActionResult.SUCCESS;
+        } else if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY && (player.getStackInHand(hand).getItem() == Items.WATER_BUCKET)) {
             world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
             if (!player.getAbilities().creativeMode)
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.BUCKET)));
             world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         }
+
+        return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY) {
             BlockPos sourcePos = pos.down().down();
             BlockState sourceState = world.getBlockState(sourcePos);
@@ -108,7 +115,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
             blockEntity.setFlushTimer(0);
             return ActionResult.SUCCESS;
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.onUse(state, world, pos, player, hit);
     }
 
     @Override
@@ -131,9 +138,9 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
         double y = pos.getY();
         double z = pos.getZ() + 0.5;
         if (random.nextDouble() < 0.2)
-            world.addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, x, y + 0.6, z, 0.8, 1.0, 0.0);
+            world.addParticle(EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 1), x, y + 0.6, z, 0.8, 1.0, 0.0);
         if (random.nextDouble() < 0.009) {
-            world.addParticle(ParticleTypes.AMBIENT_ENTITY_EFFECT, x, y + 0.6, z, 0.18, 0.0, 0.34);
+            world.addParticle(EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 1), x, y + 0.6, z, 0.18, 0.0, 0.34);
         }
     }
 

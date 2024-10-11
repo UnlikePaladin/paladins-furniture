@@ -1,8 +1,5 @@
 package com.unlikepaladin.pfm.mixin.fabric;
 
-import com.nhoryzon.mc.farmersdelight.entity.block.CookingPotBlockEntity;
-import com.nhoryzon.mc.farmersdelight.entity.block.HeatableBlockEntity;
-import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
 import net.minecraft.block.Block;
@@ -17,6 +14,9 @@ import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import vectorwing.farmersdelight.common.block.entity.CookingPotBlockEntity;
+import vectorwing.farmersdelight.common.block.entity.HeatableBlockEntity;
+import vectorwing.farmersdelight.common.tag.ModTags;
 
 @Pseudo
 @Mixin(CookingPotBlockEntity.class)
@@ -28,12 +28,12 @@ public abstract class PFMCookingPotBlockEntityMixin implements HeatableBlockEnti
             return true;
 
         BlockState stateBelow = world.getBlockState(pos.down());
-        if (stateBelow.isIn(TagsRegistry.HEAT_SOURCES)) {
+        if (stateBelow.isIn(ModTags.HEAT_SOURCES)) {
             return stateBelow.contains(Properties.LIT) ? stateBelow.get(Properties.LIT) : true;
         } else {
-            if (!this.requiresDirectHeat() && stateBelow.isIn(TagsRegistry.HEAT_CONDUCTORS)) {
+            if (!this.requiresDirectHeat() && stateBelow.isIn(ModTags.HEAT_CONDUCTORS)) {
                 BlockState stateFurtherBelow = world.getBlockState(pos.down(2));
-                if (stateFurtherBelow.isIn(TagsRegistry.HEAT_SOURCES)) {
+                if (stateFurtherBelow.isIn(ModTags.HEAT_SOURCES)) {
                     if (stateFurtherBelow.contains(Properties.LIT)) {
                         return stateFurtherBelow.get(Properties.LIT);
                     }

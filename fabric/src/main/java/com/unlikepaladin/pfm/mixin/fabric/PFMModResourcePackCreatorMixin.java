@@ -1,12 +1,15 @@
 package com.unlikepaladin.pfm.mixin.fabric;
 
 import com.google.common.base.Suppliers;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
+import com.unlikepaladin.pfm.utilities.Version;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.minecraft.SharedConstants;
+import net.minecraft.registry.VersionedIdentifier;
 import net.minecraft.resource.*;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
 import net.minecraft.resource.metadata.PackResourceMetadata;
@@ -35,38 +38,36 @@ public class PFMModResourcePackCreatorMixin {
             PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
             ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
                 @Override
-                public ResourcePack open(String name) {
+                public ResourcePack open(ResourcePackInfo info) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.areAssetsRunning())
                             PFMRuntimeResources.prepareAndRunAssetGen(false);
-                        return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata);
+                        return PFMRuntimeResources.getAssetsPack(info);}), packResourceMetadata, info);
                 }
 
                 @Override
-                public ResourcePack openWithOverlays(String name, ResourcePackProfile.Metadata metadata) {
-                    return this.open(name);
+                public ResourcePack openWithOverlays(ResourcePackInfo info, ResourcePackProfile.Metadata metadata) {
+                    return open(info);
                 }
             };
-            ResourcePackProfile.Metadata metadata = new ResourcePackProfile.Metadata(Text.literal("Runtime Generated Assets for PFM"), ResourcePackCompatibility.COMPATIBLE, FeatureFlags.DEFAULT_ENABLED_FEATURES, List.of());
-            consumer.accept(ResourcePackProfile.of("pfm-asset-resources", Text.literal("PFM Assets"), true,  packFactory, metadata, ResourcePackProfile.InsertionPosition.BOTTOM, false, ResourcePackSource.NONE));
+            consumer.accept(ResourcePackProfile.create(new ResourcePackInfo("pfm-asset-resources", Text.literal("PFM Assets"), ResourcePackSource.NONE, Optional.of(new VersionedIdentifier(PaladinFurnitureMod.MOD_ID, "pfm_assets", Version.getCurrentVersion()))), packFactory, ResourceType.CLIENT_RESOURCES, new ResourcePackPosition(true, ResourcePackProfile.InsertionPosition.BOTTOM, false)));
         } else if (type == ResourceType.SERVER_DATA) {
             PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.SERVER_DATA), Optional.empty());
             ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
                 @Override
-                public ResourcePack open(String name) {
+                public ResourcePack open(ResourcePackInfo name) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.isDataRunning())
                             PFMRuntimeResources.prepareAndRunDataGen(false);
-                        return PFMRuntimeResources.DATA_PACK;}), packResourceMetadata);
+                        return PFMRuntimeResources.getDataPack(name);}), packResourceMetadata, name);
                 }
 
                 @Override
-                public ResourcePack openWithOverlays(String name, ResourcePackProfile.Metadata metadata) {
+                public ResourcePack openWithOverlays(ResourcePackInfo name, ResourcePackProfile.Metadata metadata) {
                     return this.open(name);
                 }
             };
-            ResourcePackProfile.Metadata metadata = new ResourcePackProfile.Metadata(Text.literal("Runtime Generated Data for PFM"), ResourcePackCompatibility.COMPATIBLE, FeatureFlags.DEFAULT_ENABLED_FEATURES, List.of());
-            consumer.accept(ResourcePackProfile.of("pfm-data-resources", Text.literal("PFM Data"), true,  packFactory, metadata, ResourcePackProfile.InsertionPosition.BOTTOM, false, ResourcePackSource.NONE));
+            consumer.accept(ResourcePackProfile.create(new ResourcePackInfo("pfm-data-resources", Text.literal("PFM Data"), ResourcePackSource.NONE, Optional.of(new VersionedIdentifier(PaladinFurnitureMod.MOD_ID, "pfm_data", Version.getCurrentVersion()))),  packFactory, ResourceType.SERVER_DATA, new ResourcePackPosition(true, ResourcePackProfile.InsertionPosition.BOTTOM, false)));
         }
     }
 }

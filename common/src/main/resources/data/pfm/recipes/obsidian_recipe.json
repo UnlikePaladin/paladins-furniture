@@ -3,5 +3,7 @@
   "ingredient": {
     "item": "minecraft:lava_bucket"
   },
-  "result": "minecraft:obsidian"
+  "result": {
+    "id": "minecraft:obsidian"
+  }
 }

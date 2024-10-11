@@ -4,14 +4,14 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 
 
 import java.io.IOException;
 import java.util.HashMap;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class LeaveEventHandlerNeoForge {
     public static final HashMap<String, Object> originalConfigValues = new HashMap<>();
 

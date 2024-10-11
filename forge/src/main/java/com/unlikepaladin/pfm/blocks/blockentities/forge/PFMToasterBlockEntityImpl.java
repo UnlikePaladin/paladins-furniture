@@ -10,6 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryEntryLookup;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
@@ -39,26 +41,26 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
         return BlockEntityUpdateS2CPacket.create(this);
     }
 
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, items, true);
+    protected NbtCompound saveInitialChunkData(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        Inventories.writeNbt(nbt, items, true, registryLookup);
         return nbt;
     }
 
     @Override
-    public @NotNull NbtCompound toInitialChunkDataNbt() {
-        return this.saveInitialChunkData(new NbtCompound());
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return this.saveInitialChunkData(new NbtCompound(), registryLookup);
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag) {
-        this.readNbt(tag);
+    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup holders) {
+       this.readNbt(tag, holders);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
-        super.onDataPacket(net, pkt);
+    public void onDataPacket(ClientConnection connection, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup lookup) {
+        super.onDataPacket(connection, pkt, lookup);
         this.getItems().clear();
-        Inventories.readNbt(pkt.getNbt(), this.items);
+        Inventories.readNbt(pkt.getNbt(), this.items, lookup);
     }
 }

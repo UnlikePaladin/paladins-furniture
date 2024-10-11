@@ -30,6 +30,7 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -78,12 +79,12 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             return onUseCookingForBlockheads(state, world, pos, player, hand, hit);
         } else {
             if (world.isClient) {
-                return ActionResult.SUCCESS;
+                return ItemActionResult.SUCCESS;
             }
             if (hit.getSide() == Direction.UP && world.getBlockEntity(pos) instanceof StoveBlockEntity) {
                 ItemStack itemStack;
@@ -93,29 +94,29 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
                 if (blockEntity instanceof StoveBlockEntity && (optional = (stoveBlockEntity = (StoveBlockEntity)blockEntity).getRecipeFor(itemStack = player.getStackInHand(hand))).isPresent()) {
                     if (stoveBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().value().getCookingTime())) {
                         player.incrementStat(Statistics.STOVE_OPENED);
-                        return ActionResult.SUCCESS;
+                        return ItemActionResult.SUCCESS;
                     }
                 }
                 if(blockEntity instanceof StoveBlockEntity){
                     stoveBlockEntity = (StoveBlockEntity)blockEntity;
                     for (int i = 0; i < stoveBlockEntity.getItemsBeingCooked().size(); i++) {
-                        ItemStack stack = stoveBlockEntity.getItemsBeingCooked().get(i);
-                        if (stack.isEmpty()) continue;
-                        if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) {
+                        ItemStack itemStack1 = stoveBlockEntity.getItemsBeingCooked().get(i);
+                        if (itemStack1.isEmpty()) continue;
+                        if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(itemStack1), world).isEmpty()) {
                             ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stoveBlockEntity.removeStack(i));
                             world.spawnEntity(itemEntity);
                             player.incrementStat(Statistics.STOVE_OPENED);
-                            return ActionResult.SUCCESS;
+                            return ItemActionResult.SUCCESS;
                         }
                     }
-                    return ActionResult.CONSUME;
+                    return ItemActionResult.CONSUME;
                 }
-                return ActionResult.PASS;
+                return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
             else{
                 this.openScreen(world, pos, player);
             }
-            return ActionResult.CONSUME;
+            return ItemActionResult.CONSUME;
         }
     }
 
@@ -187,7 +188,7 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
     }
 
     @ExpectPlatform
-    public static ActionResult onUseCookingForBlockheads(BlockState blockState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult){
+    public static ItemActionResult onUseCookingForBlockheads(BlockState blockState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult){
         throw new AssertionError();
     }
     @Override
@@ -209,7 +210,7 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 

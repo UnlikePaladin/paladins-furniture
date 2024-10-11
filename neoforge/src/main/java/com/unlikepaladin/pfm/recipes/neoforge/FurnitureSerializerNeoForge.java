@@ -1,8 +1,11 @@
 package com.unlikepaladin.pfm.recipes.neoforge;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.RecipeSerializer;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,19 +14,15 @@ public class FurnitureSerializerNeoForge implements RecipeSerializer<FurnitureRe
         serializer = new FurnitureRecipe.Serializer();
     }
     FurnitureRecipe.Serializer serializer;
+
     @Override
-    public Codec<FurnitureRecipe> codec() {
+    public MapCodec<FurnitureRecipe> codec() {
         return serializer.codec();
     }
 
     @Override
-    public @Nullable FurnitureRecipe read(PacketByteBuf buf) {
-        return serializer.read(buf);
-    }
-
-    @Override
-    public void write(PacketByteBuf buf, FurnitureRecipe recipe) {
-        serializer.write(buf, recipe);
+    public PacketCodec<RegistryByteBuf, FurnitureRecipe> packetCodec() {
+        return serializer.packetCodec();
     }
 }
 

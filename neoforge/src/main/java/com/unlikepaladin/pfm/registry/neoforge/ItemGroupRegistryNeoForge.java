@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.BasicChairBlock;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -84,10 +85,8 @@ public class ItemGroupRegistryNeoForge {
                             }
                             for (DyeColor color : DyeColor.values()) {
                                 ItemStack stack = new ItemStack(item);
-                                NbtCompound beTag = new NbtCompound();
-                                beTag.putString("color", color.asString());
-                                beTag.putString("variant", variant.getIdentifier().toString());
-                                stack.setSubNbt("BlockEntityTag", beTag);
+                                stack.set(PFMComponents.VARIANT_COMPONENT, variant.getIdentifier());
+                                stack.set(PFMComponents.COLOR_COMPONENT, color);
                                 stacks.add(stack);
                             }
                         }

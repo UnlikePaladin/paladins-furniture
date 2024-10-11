@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "pfm:leather_block",
+    "id": "pfm:leather_block",
     "count": 1
   }
 }

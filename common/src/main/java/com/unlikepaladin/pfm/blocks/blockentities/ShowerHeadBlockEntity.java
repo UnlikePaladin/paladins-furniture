@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
@@ -20,21 +21,22 @@ public class ShowerHeadBlockEntity extends BlockEntity {
         super(BlockEntities.SHOWER_HEAD_BLOCK_ENTITY, pos, state);
     }
     protected boolean isOpen = false;
+
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return super.toInitialChunkDataNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return super.toInitialChunkDataNbt(registryLookup);
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
         nbt.putBoolean("isOpen", isOpen);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         isOpen = nbt.getBoolean("isOpen");
-        super.readNbt(nbt);
+        super.readNbt(nbt, registryLookup);
     }
 
     public void setOpen(boolean isOpen) {
@@ -95,8 +97,8 @@ public class ShowerHeadBlockEntity extends BlockEntity {
         }
     }
 
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected NbtCompound saveInitialChunkData(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
         nbt.putBoolean("isOpen", isOpen);
         return nbt;
     }

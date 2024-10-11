@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -18,23 +19,24 @@ public class SinkBlockEntity extends BlockEntity {
     }
     private int sinkTimer = 0;
     private boolean isFilling = false;
+
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return super.toInitialChunkDataNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return super.toInitialChunkDataNbt(registryLookup);
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
         nbt.putInt("sinkTimer", sinkTimer);
         nbt.putBoolean("isFilling", isFilling);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         sinkTimer = nbt.getInt("sinkTimer");
         isFilling = nbt.getBoolean("isFilling");
-        super.readNbt(nbt);
+        super.readNbt(nbt, registryLookup);
     }
 
     public void setSinkTimer(int sinkTimer) {

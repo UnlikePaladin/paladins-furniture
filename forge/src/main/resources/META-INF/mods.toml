@@ -18,14 +18,14 @@ credits = "Translators: lzyzl6, MIHONO, WrenXing"
 [[dependencies.pfm]]
 modId = "forge"
 mandatory = true
-versionRange = "[49,)"
+versionRange = "[50,)"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.pfm]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.20.3,1.21)"
+versionRange = "[1.20.5,1.21)"
 ordering = "NONE"
 side = "BOTH"
 

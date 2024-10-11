@@ -3,5 +3,7 @@
   "ingredient": {
     "item": "minecraft:rotten_flesh"
   },
-  "result": "minecraft:leather"
+  "result": {
+    "id": "minecraft:leather"
+  }
 }

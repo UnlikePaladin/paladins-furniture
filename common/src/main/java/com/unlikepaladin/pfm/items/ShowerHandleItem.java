@@ -4,7 +4,9 @@ import com.unlikepaladin.pfm.blocks.BasicShowerHandleBlock;
 import com.unlikepaladin.pfm.blocks.BasicShowerHeadBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
@@ -41,11 +43,13 @@ public class ShowerHandleItem extends BlockItem {
             return new TypedActionResult<>(ActionResult.FAIL, stack);
         }
         if (player.isSneaking()) {
-            stack.setNbt(null);
+            stack.remove(DataComponentTypes.BLOCK_ENTITY_DATA);
+            createNbt(stack);
             return new TypedActionResult<>(ActionResult.SUCCESS, stack);
         }
         return new TypedActionResult<>(ActionResult.PASS, stack);
     }
+
     @Override
     public ActionResult useOnBlock(ItemUsageContext context) {
         super.useOnBlock(context);
@@ -75,66 +79,55 @@ public class ShowerHandleItem extends BlockItem {
                 context.getPlayer().sendMessage(Text.translatable("message.pfm.shower_handle_far", headPos.toString()), false);
             }
             if (distance > 16) {
-                context.getStack().setNbt(null);
+                context.getStack().remove(DataComponentTypes.BLOCK_ENTITY_DATA);
+                createNbt(context.getStack());
             } else {
                 setShowerHeadPosNBT(context.getStack(), pos.subtract(headPos));
             }
-            return state.getBlock().canPlaceAt(state, world, pos) && placeDirection.getAxis().isHorizontal();
+            return state.canPlaceAt(world, pos) && placeDirection.getAxis().isHorizontal();
         }
-        return state.getBlock().canPlaceAt(state, world, pos) && placeDirection.getAxis().isHorizontal();
+        return state.canPlaceAt(world, pos) && placeDirection.getAxis().isHorizontal();
     }
 
-    private void setShowerHeadPosNBT(ItemStack stack, BlockPos pos)
-    {
+    private void setShowerHeadPosNBT(ItemStack stack, BlockPos pos) {
         NbtCompound nbtCompound = createNbt(stack);
-        if(!nbtCompound.contains("BlockEntityTag", NbtElement.COMPOUND_TYPE))
-        {
-            nbtCompound.put("BlockEntityTag", new NbtCompound());
+        if(!nbtCompound.contains("showerHead", NbtElement.LONG_TYPE)) {
+            nbtCompound.put("showerHead", NbtLong.of(0));
         }
 
-        NbtCompound blockEntityTag = nbtCompound.getCompound("BlockEntityTag");
-        if(!blockEntityTag.contains("showerHead", NbtElement.LONG_TYPE))
-        {
-            blockEntityTag.put("showerHead", NbtLong.of(0));
-        }
-
-        NbtLong showerHeadPos = (NbtLong) blockEntityTag.get("showerHead");
+        NbtLong showerHeadPos = (NbtLong) nbtCompound.get("showerHead");
         if(showerHeadPos.longValue() != pos.asLong()) {
-            blockEntityTag.put("showerHead", NbtLong.of(pos.asLong()));
+            nbtCompound.put("showerHead", NbtLong.of(pos.asLong()));
         }
+        stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbtCompound));
     }
 
     @Nullable
-    public static NbtLong getShowerHead(ItemStack stack)
-    {
-        if (stack.hasNbt()) {
-            NbtCompound stackNbt = stack.getNbt();
-            if(stackNbt.contains("BlockEntityTag", NbtElement.COMPOUND_TYPE))
-            {
-                NbtCompound blockEntityTag = stackNbt.getCompound("BlockEntityTag");
-                if(blockEntityTag.contains("showerHead", NbtElement.LONG_TYPE))
-                {
-                    return (NbtLong) blockEntityTag.get("showerHead");
-                }
+    public static NbtLong getShowerHead(ItemStack stack) {
+        if (stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
+            NbtCompound blockEntityTag = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).getNbt();
+            if(blockEntityTag.contains("showerHead", NbtElement.LONG_TYPE)) {
+                return (NbtLong) blockEntityTag.get("showerHead");
             }
         }
         return null;
     }
 
-    private static NbtCompound createNbt(ItemStack stack)
-    {
-        if(!stack.hasNbt())
+    private static NbtCompound createNbt(ItemStack stack) {
+        if(!stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA))
         {
-            stack.setNbt(new NbtCompound());
+            NbtCompound nbtCompound = new NbtCompound();
+            nbtCompound.putString("id", "pfm:shower_handle_block_entity");
+            stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbtCompound));
         }
-        return stack.getNbt();
+        return stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).copyNbt();
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if (stack.hasNbt() && getShowerHead(stack) != null) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        if (stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA) && getShowerHead(stack) != null) {
             tooltip.add(Text.translatable("tooltip.pfm.shower_handle_connected", 1));
         }
-        super.appendTooltip(stack, world, tooltip, context);
+        super.appendTooltip(stack, context, tooltip, type);
     }
 }

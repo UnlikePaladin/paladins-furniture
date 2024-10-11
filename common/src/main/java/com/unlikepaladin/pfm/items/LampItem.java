@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -25,13 +26,12 @@ public class LampItem extends BlockItem {
     public String getTranslationKey(ItemStack stack) {
         DyeColor color = DyeColor.WHITE;
         WoodVariant variant = WoodVariantRegistry.OAK;
-        if (stack.hasNbt()) {
-            if (stack.getSubNbt("BlockEntityTag").contains("color")) {
-                color = DyeColor.byName(stack.getSubNbt("BlockEntityTag").getString("color"), DyeColor.WHITE);
-            }
-            if (stack.getSubNbt("BlockEntityTag").contains("variant")) {
-                variant = WoodVariantRegistry.getVariant(Identifier.tryParse(stack.getSubNbt("BlockEntityTag").getString("variant")));
-            }
+
+        if (stack.contains(PFMComponents.COLOR_COMPONENT)) {
+            color = stack.get(PFMComponents.COLOR_COMPONENT);
+        }
+        if (stack.contains(PFMComponents.VARIANT_COMPONENT)) {
+            variant = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
         }
         return String.format("block.pfm.basic_%s_%s_lamp", color.asString(), variant.asString());
     }

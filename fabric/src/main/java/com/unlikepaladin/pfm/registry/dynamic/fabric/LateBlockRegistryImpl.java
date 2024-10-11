@@ -4,12 +4,14 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.block.Block;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -37,7 +39,7 @@ public class LateBlockRegistryImpl {
         return block;
     }
     public static void registerLateBlockItem(String itemName, Block block, Pair<String, ItemGroup> group) {
-        registerLateItem(itemName, () -> new BlockItem(block, new FabricItemSettings()), group);
+        registerLateItem(itemName, () -> new BlockItem(block, new Item.Settings()), group);
         if (AbstractSittableBlock.isWoodBased(block.getDefaultState())) {
             FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
             FuelRegistry.INSTANCE.add(block, 300);
@@ -66,10 +68,8 @@ public class LateBlockRegistryImpl {
                     }
                     for (DyeColor color : DyeColor.values()) {
                         ItemStack stack = new ItemStack(item);
-                        NbtCompound beTag = new NbtCompound();
-                        beTag.putString("color", color.asString());
-                        beTag.putString("variant", variant.getIdentifier().toString());
-                        stack.setSubNbt("BlockEntityTag", beTag);
+                        stack.set(PFMComponents.VARIANT_COMPONENT, variant.getIdentifier());
+                        stack.set(PFMComponents.COLOR_COMPONENT, color);
                         stacks.add(stack);
                     }
                 }

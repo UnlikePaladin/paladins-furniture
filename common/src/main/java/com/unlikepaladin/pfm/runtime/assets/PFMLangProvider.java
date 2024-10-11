@@ -184,7 +184,7 @@ public class PFMLangProvider extends PFMProvider {
                 }
             }
             catch (IOException | RuntimeException exception) {
-                getParent().getLogger().warn("Unable to parse language metadata section of resourcepack: {}", pack.getName(), exception);
+                getParent().getLogger().warn("Unable to parse language metadata section of resourcepack: {}", pack.getInfo().title().toString(), exception);
             }
         });
         return ImmutableMap.copyOf(map);

@@ -3,5 +3,7 @@
   "ingredient": {
     "item": "minecraft:potion"
   },
-  "result": "minecraft:snowball"
+  "result": {
+    "id": "minecraft:snowball"
+  }
 }

@@ -10,6 +10,8 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
 import net.minecraft.data.server.recipe.RecipeExporter;
 import net.minecraft.item.Item;
@@ -33,42 +35,33 @@ import java.util.Map;
 import java.util.Objects;
 
 public class FurnitureRecipeJsonFactory implements CraftingRecipeJsonBuilder {
-    private final Item output;
-    private final int outputCount;
+    private final ItemStack stack;
     private final DefaultedList<Ingredient> inputs = DefaultedList.of();
     private final Map<String, AdvancementCriterion<?>> criteria = new LinkedHashMap<>();
     private boolean showNotification = true;
-    @NotNull
-    private NbtCompound nbtElement;
     @Nullable
     private String group;
 
     public FurnitureRecipeJsonFactory(ItemConvertible output, int outputCount) {
-        this.output = output.asItem();
-        this.outputCount = outputCount;
-        this.nbtElement = new NbtCompound();
+        this.stack = output.asItem().getDefaultStack().copyWithCount(outputCount);
     }
 
-    public FurnitureRecipeJsonFactory(ItemConvertible output, int outputCount, @NotNull NbtCompound nbtElement) {
-        this.output = output.asItem();
-        this.outputCount = outputCount;
-        this.nbtElement = nbtElement;
+    public FurnitureRecipeJsonFactory(ItemStack stack) {
+        this.stack = stack;
     }
 
-    public static FurnitureRecipeJsonFactory create(ItemConvertible output, int count, NbtCompound nbtElement) {
-        return new FurnitureRecipeJsonFactory(output, count, nbtElement);
+    public static FurnitureRecipeJsonFactory create(ItemConvertible output, int count) {
+        return new FurnitureRecipeJsonFactory(output, count);
     }
 
-    public static FurnitureRecipeJsonFactory create(ItemConvertible output, NbtCompound nbtElement) {
-        return new FurnitureRecipeJsonFactory(output, 1, nbtElement);
+    public static FurnitureRecipeJsonFactory create(ItemStack stack) {
+        return new FurnitureRecipeJsonFactory(stack);
     }
 
     public static FurnitureRecipeJsonFactory create(ItemConvertible output) {
         return new FurnitureRecipeJsonFactory(output, 1);
     }
-    public static FurnitureRecipeJsonFactory create(ItemConvertible output, int count) {
-        return new FurnitureRecipeJsonFactory(output, count);
-    }
+
     public FurnitureRecipeJsonFactory input(TagKey<Item> tag) {
         return this.input(Ingredient.fromTag(tag));
     }
@@ -114,15 +107,13 @@ public class FurnitureRecipeJsonFactory implements CraftingRecipeJsonBuilder {
 
     @Override
     public Item getOutputItem() {
-        return this.output;
+        return this.stack.getItem();
     }
 
     @Override
     public void offerTo(RecipeExporter exporter, Identifier recipeId) {
         Advancement.Builder advancement$builder = exporter.getAdvancementBuilder().criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).criteriaMerger(AdvancementRequirements.CriterionMerger.OR);
         this.criteria.forEach(advancement$builder::criterion);
-        ItemStack stack = new ItemStack(this.output, this.outputCount);
-        stack.setNbt(nbtElement);
         exporter.accept(recipeId, new FurnitureRecipe(this.group == null || this.group.isBlank() ? "" : this.group, stack, this.inputs), advancement$builder.build(recipeId.withPrefixedPath("recipes/furniture/")));
     }
 

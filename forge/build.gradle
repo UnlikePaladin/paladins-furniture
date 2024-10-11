@@ -70,12 +70,12 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
-    modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}-NEOFORGE")
+    modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}")
     modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-forge-api:${rootProject.jei_version}")
-    modCompileOnlyApi("me.shedaniel:RoughlyEnoughItems-api-forge:${rootProject.rei_version}") {
+    modCompileOnlyApi("me.shedaniel:RoughlyEnoughItems-api-neoforge:${rootProject.rei_version}") {
         transitive(false)
     }
-    modCompileOnlyApi("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version}") {
+    modCompileOnlyApi("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}") {
         transitive(false)
     }
     //modRuntimeOnly("curse.maven:biomesop-220318:3562256")
@@ -106,14 +106,11 @@ if (rootProject.lazy_dfu_enabled == "true"){
 
 if (rootProject.rei_compatibility == "true"){
     dependencies {
-        modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version}")
-        modRuntimeOnly("me.shedaniel.cloth:cloth-config-forge:${rootProject.cloth_config_version}") {
-            transitive(false)
-        }
+        modCompileOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}")
     }
 } else {
     dependencies {
-        modCompileOnly("me.shedaniel:RoughlyEnoughItems-forge:${rootProject.rei_version}")
+        modCompileOnly("me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}")
     }
 }
 
@@ -175,4 +172,8 @@ publishing {
     repositories {
         // Add repositories to publish to here.
     }
+}
+
+configurations.all {
+    resolutionStrategy.force("net.sf.jopt-simple:jopt-simple:5.0.4")
 }

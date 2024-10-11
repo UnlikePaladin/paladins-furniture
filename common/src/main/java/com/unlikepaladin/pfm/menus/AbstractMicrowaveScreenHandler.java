@@ -8,7 +8,8 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.RecipeBookCategory;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
@@ -16,6 +17,7 @@ import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 import java.util.Optional;
@@ -29,11 +31,9 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     public boolean isActive;
     public MicrowaveBlockEntity microwaveBlockEntity;
     // Client Constructor
-    protected AbstractMicrowaveScreenHandler(MicrowaveBlockEntity microwaveBlockEntity, ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
-        this(microwaveBlockEntity, type, recipeType, category, syncId, playerInventory, new SimpleInventory(1), new ArrayPropertyDelegate(2));
-        this.isActive = buf.readBoolean();
-        microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(buf.readBlockPos());
-        this.microwaveBlockEntity = microwaveBlockEntity;
+    protected AbstractMicrowaveScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookCategory category, int syncId, PlayerInventory playerInventory, MicrowaveData packet) {
+        this((MicrowaveBlockEntity) playerInventory.player.getWorld().getBlockEntity(packet.pos()), type, recipeType, category, syncId, playerInventory, new SimpleInventory(1), new ArrayPropertyDelegate(2));
+        this.isActive = packet.isActive();
     }
 
     // Server Constructor
@@ -207,6 +207,17 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     public void onClosed(PlayerEntity player) {
         super.onClosed(player);
         this.inventory.onClose(player);
+    }
+
+    public static final PacketCodec<RegistryByteBuf, MicrowaveData> PACKET_CODEC = PacketCodec.of(MicrowaveData::write, MicrowaveData::new);
+    public record MicrowaveData(BlockPos pos, Boolean isActive) {
+        public MicrowaveData(RegistryByteBuf buf) {
+            this(buf.readBlockPos(), buf.readBoolean());
+        }
+        public void write(RegistryByteBuf buf) {
+            buf.writeBlockPos(pos);
+            buf.writeBoolean(isActive);
+        }
     }
 }
 

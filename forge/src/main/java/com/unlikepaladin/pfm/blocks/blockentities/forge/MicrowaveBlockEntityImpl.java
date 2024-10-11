@@ -14,6 +14,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.WorldChunk;
@@ -41,25 +42,24 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt = super.toInitialChunkDataNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        NbtCompound nbt = super.toInitialChunkDataNbt(registryLookup);
         nbt.putBoolean("isActive", this.isActive);
-        Inventories.writeNbt(nbt, this.inventory);
+        Inventories.writeNbt(nbt, this.inventory, registryLookup);
         return nbt;
     }
 
-
     @Override
-    public void handleUpdateTag(NbtCompound tag) {
-        this.readNbt(tag);
+    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup holders) {
+        this.readNbt(tag, holders);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
-        super.onDataPacket(net, pkt);
+    public void onDataPacket(ClientConnection connection, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup lookup) {
+        super.onDataPacket(connection, pkt, lookup);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         this.isActive = pkt.getNbt().getBoolean("isActive");
-        Inventories.readNbt(pkt.getNbt(), this.inventory);
+        Inventories.readNbt(pkt.getNbt(), this.inventory, lookup);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends MicrowaveBlockEntity> getFactory() {

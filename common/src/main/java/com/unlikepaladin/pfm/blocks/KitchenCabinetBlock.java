@@ -311,8 +311,7 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (!state.isOf(state.getBlock())) {
-            this.baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
-            this.baseBlock.onBlockAdded(this.baseBlockState, world, pos, oldState, false);
+            oldState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
         }
     }
 
@@ -322,7 +321,7 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
@@ -345,13 +344,6 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
         return false;
     }
 
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        BlockEntity blockEntity;
-        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof GenericStorageBlockEntity9x3) {
-            ((GenericStorageBlockEntity9x3)blockEntity).setCustomName(itemStack.getName());
-        }
-    }
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
@@ -371,7 +363,7 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 }

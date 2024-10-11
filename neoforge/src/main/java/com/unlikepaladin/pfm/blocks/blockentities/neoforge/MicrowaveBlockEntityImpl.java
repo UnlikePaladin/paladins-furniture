@@ -1,8 +1,7 @@
 package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
-import com.unlikepaladin.pfm.networking.neoforge.MicrowaveUpdatePacket;
-import com.unlikepaladin.pfm.registry.neoforge.NetworkRegistryNeoForge;
+import com.unlikepaladin.pfm.networking.MicrowaveUpdatePayload;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.inventory.Inventories;
@@ -12,6 +11,8 @@ import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.WorldChunk;
@@ -28,7 +29,7 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
         microwaveBlockEntity.setActive(active);
         BlockPos pos = microwaveBlockEntity.getPos();
         WorldChunk chunk = Objects.requireNonNull(microwaveBlockEntity.getWorld()).getWorldChunk(pos);
-        PacketDistributor.TRACKING_CHUNK.with(chunk).send(new MicrowaveUpdatePacket(pos, active));
+        PacketDistributor.sendToPlayersTrackingChunk((ServerWorld) microwaveBlockEntity.getWorld(), chunk.getPos(), new MicrowaveUpdatePayload(pos, active));
     }
 
     @Nullable
@@ -38,25 +39,25 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt = super.toInitialChunkDataNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        NbtCompound nbt = super.toInitialChunkDataNbt(registryLookup);
         nbt.putBoolean("isActive", this.isActive);
-        Inventories.writeNbt(nbt, this.inventory);
+        Inventories.writeNbt(nbt, this.inventory, registryLookup);
         return nbt;
     }
 
 
     @Override
-    public void handleUpdateTag(NbtCompound tag) {
-        this.readNbt(tag);
+    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookupProvider) {
+        this.readNbt(tag, lookupProvider);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
-        super.onDataPacket(net, pkt);
+    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup lookupProvider) {
+        super.onDataPacket(net, pkt, lookupProvider);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         this.isActive = pkt.getNbt().getBoolean("isActive");
-        Inventories.readNbt(pkt.getNbt(), this.inventory);
+        Inventories.readNbt(pkt.getNbt(), this.inventory, lookupProvider);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends MicrowaveBlockEntity> getFactory() {

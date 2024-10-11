@@ -5,26 +5,25 @@ import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
+import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -59,15 +58,12 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasNbt()) {
-            NbtCompound nbtCompound = itemStack.getSubNbt("BlockEntityTag");
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof LampBlockEntity && nbtCompound != null) {
-                DyeColor color = DyeColor.byName(nbtCompound.getString("color"), DyeColor.WHITE);
-                WoodVariant variant = WoodVariantRegistry.getVariant(Identifier.tryParse(nbtCompound.getString("variant")));
-                ((LampBlockEntity) blockEntity).setPFMColor(color);
-                ((LampBlockEntity) blockEntity).setVariant(variant);
-            }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof LampBlockEntity) {
+            DyeColor color = itemStack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE);
+            WoodVariant variant = WoodVariantRegistry.getVariant(itemStack.getOrDefault(PFMComponents.VARIANT_COMPONENT, WoodVariantRegistry.OAK.identifier));
+            ((LampBlockEntity) blockEntity).setPFMColor(color);
+            ((LampBlockEntity) blockEntity).setVariant(variant);
         }
         super.onPlaced(world, pos, state, placer, itemStack);
     }
@@ -96,7 +92,7 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 
@@ -110,10 +106,8 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
         if (blockEntity instanceof LampBlockEntity lampBlockEntity) {
             if (!world.isClient && !player.isCreative()) {
                 ItemStack itemStack = new ItemStack(PaladinFurnitureModBlocksItems.BASIC_LAMP);
-                NbtCompound nbtCompound = lampBlockEntity.writeColorAndVariant(new NbtCompound());
-                if (!nbtCompound.isEmpty()) {
-                    itemStack.setSubNbt("BlockEntityTag", nbtCompound);
-                }
+                itemStack.set(PFMComponents.VARIANT_COMPONENT, lampBlockEntity.getVariant().identifier);
+                itemStack.set(PFMComponents.COLOR_COMPONENT, lampBlockEntity.getPFMColor());
                 ItemEntity itemEntity = new ItemEntity(world, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, itemStack);
                 itemEntity.setToDefaultPickupDelay();
                 world.spawnEntity(itemEntity);
@@ -143,13 +137,19 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (player.getStackInHand(hand).getItem() instanceof LightSwitchItem)
-            return super.onUse(state, world, pos, player, hand, hit);
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (stack.getItem() instanceof LightSwitchItem)
+            return ItemActionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
 
+        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
+
         if (!state.get(POWERLOCKED)) {
             togglePower(state, world, pos);
             float f = state.get(LIT) ? 0.9f : 0.8f;
@@ -157,7 +157,7 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
             world.emitGameEvent(player, state.get(LIT) ? GameEvent.BLOCK_ACTIVATE : GameEvent.BLOCK_DEACTIVATE, pos);
             return ActionResult.CONSUME;
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.onUse(state, world, pos, player, hit);
     }
 
     public BlockState togglePower(BlockState state, World world, BlockPos pos) {
@@ -177,8 +177,8 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
         ItemStack stack = super.getPickStack(world, pos, state);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof LampBlockEntity) {
-            NbtCompound nbtCompound = ((LampBlockEntity)blockEntity).writeColorAndVariant(new NbtCompound());
-            stack.setSubNbt("BlockEntityTag", nbtCompound);
+            stack.set(PFMComponents.VARIANT_COMPONENT, ((LampBlockEntity) blockEntity).getVariant().identifier);
+            stack.set(PFMComponents.COLOR_COMPONENT, ((LampBlockEntity) blockEntity).getPFMColor());
         }
         return stack;
     }

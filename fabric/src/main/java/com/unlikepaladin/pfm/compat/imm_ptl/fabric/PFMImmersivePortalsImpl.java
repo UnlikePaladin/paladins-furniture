@@ -19,7 +19,7 @@ public class PFMImmersivePortalsImpl implements PFMModCompatibility {
 
     @Override
     public void registerEntityTypes() {
-        MIRROR = EntityType.Builder.create(PFMMirrorEntity::new, SpawnGroup.MISC).setDimensions(0.0F, 0.0F).makeFireImmune().disableSummon().build("mirror_entity");
+        MIRROR = EntityType.Builder.create(PFMMirrorEntity::new, SpawnGroup.MISC).dimensions(0.0F, 0.0F).makeFireImmune().disableSummon().build("mirror_entity");
         EntityRegistry.registerEntityType("mirror_entity", MIRROR);
     }
 

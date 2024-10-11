@@ -5,6 +5,8 @@ import com.unlikepaladin.pfm.blocks.blockentities.LightSwitchBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.FluidState;
@@ -66,7 +68,7 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
@@ -79,12 +81,12 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasNbt()) {
-            NbtCompound nbtCompound = itemStack.getSubNbt("BlockEntityTag");
+        if (itemStack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
+            NbtCompound nbtCompound = itemStack.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT).getNbt();
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (nbtCompound.contains("lights") && blockEntity instanceof LightSwitchBlockEntity) {
-                ((LightSwitchBlockEntity)blockEntity).writeNbt(nbtCompound);
-                itemStack.setNbt(null);
+                nbtCompound.remove("lights");
+                itemStack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbtCompound));
             }
         }
 

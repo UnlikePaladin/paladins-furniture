@@ -10,19 +10,20 @@ import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class TrashcanScreenHandler extends ScreenHandler {
     private final Inventory inventory;
     protected final World world;
     public TrashcanBlockEntity trashcanBlockEntity;
-    public TrashcanScreenHandler(int syncId, PlayerInventory playerInventory, PacketByteBuf buf) {
+    public TrashcanScreenHandler(int syncId, PlayerInventory playerInventory, TrashCanData canData) {
         this(null, syncId, playerInventory, new SimpleInventory(9));
-        trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(buf.readBlockPos());
+        trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(canData.pos());
     }
 
     public TrashcanScreenHandler(TrashcanBlockEntity trashcanBlockEntity, int syncId, PlayerInventory playerInventory, Inventory inventory) {
@@ -88,4 +89,13 @@ public class TrashcanScreenHandler extends ScreenHandler {
         this.inventory.onClose(player);
     }
 
+    public static final PacketCodec<RegistryByteBuf, TrashCanData> PACKET_CODEC = PacketCodec.of(TrashCanData::write, TrashCanData::new);
+    public record TrashCanData(BlockPos pos) {
+        public TrashCanData(RegistryByteBuf buf) {
+            this(buf.readBlockPos());
+        }
+        public void write(RegistryByteBuf buf) {
+            buf.writeBlockPos(pos);
+        }
+    }
 }

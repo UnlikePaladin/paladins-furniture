@@ -3,15 +3,20 @@ package com.unlikepaladin.pfm.blocks.blockentities.forge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
+import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.screen.ScreenHandler;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
@@ -34,25 +39,31 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
     }
 
     @Override
-    public @NotNull NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt =  this.saveInitialChunkData(new NbtCompound());
-        Inventories.writeNbt(nbt, this.itemsBeingCooked, true);
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        NbtCompound nbt =  this.saveInitialChunkData(new NbtCompound(), registryLookup);
+        Inventories.writeNbt(nbt, this.itemsBeingCooked, true, registryLookup);
         return nbt;
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag) {
-        this.readNbt(tag);
+    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup holders) {
+        this.readNbt(tag, holders);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
-        super.onDataPacket(net, pkt);
+    public void onDataPacket(ClientConnection connection, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup lookup) {
+        super.onDataPacket(connection, pkt, lookup);
         this.itemsBeingCooked.clear();
-        Inventories.readNbt(pkt.getNbt(), this.itemsBeingCooked);
+        Inventories.readNbt(pkt.getNbt(), this.itemsBeingCooked, lookup);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends BlockEntity> getFactory() {
         return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? StoveBlockEntityBalm::new :StoveBlockEntityImpl::new;
+    }
+
+    @Nullable
+    @Override
+    public ScreenHandler createMenu(int i, PlayerInventory inventory, PlayerEntity arg2) {
+        return new StoveScreenHandler(i, inventory, new StoveScreenHandler.StoveData(this.pos));
     }
 }

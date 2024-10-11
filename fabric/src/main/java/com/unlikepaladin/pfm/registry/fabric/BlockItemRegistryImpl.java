@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.registry.fabric;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
@@ -35,7 +34,7 @@ public class BlockItemRegistryImpl {
 
     public static void registerBlockItemPlatformSpecific(String itemName, Block block, Pair<String, ItemGroup> group) {
         PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-        registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new FabricItemSettings()), group);
+        registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Settings()), group);
         if (AbstractSittableBlock.isWoodBased(block.getDefaultState())) {
             FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
             FuelRegistry.INSTANCE.add(block, 300);

@@ -19,11 +19,11 @@ public class MicrowaveBlockImpl {
 
     public static void openScreen(PlayerEntity player, BlockState state, World world, BlockPos pos) {
         if (world.isChunkLoaded(pos) && world.getBlockEntity(pos) instanceof MicrowaveBlockEntityImpl microwaveBlockEntity){
-            NamedScreenHandlerFactory namedScreenHandlerFactory = new SimpleNamedScreenHandlerFactory(((syncId, inv, player1) -> new MicrowaveScreenHandler(microwaveBlockEntity, syncId, inv, microwaveBlockEntity, new MicrowavePropertyDelegate(microwaveBlockEntity, 2))), Text.translatable("container.pfm.microwave"));
+            NamedScreenHandlerFactory namedScreenHandlerFactory = state.createScreenHandlerFactory(world, pos);
             if (player instanceof ServerPlayerEntity) {
                 ((ServerPlayerEntity)player).openMenu(namedScreenHandlerFactory, packetByteBuf -> {
-                    packetByteBuf.writeBoolean(microwaveBlockEntity.isActive);
                     packetByteBuf.writeBlockPos(microwaveBlockEntity.getPos());
+                    packetByteBuf.writeBoolean(microwaveBlockEntity.isActive);
                 } );
             }
         }

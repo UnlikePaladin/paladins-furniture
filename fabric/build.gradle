@@ -164,7 +164,7 @@ dependencies {
     }
     modCompileOnly("maven.modrinth:iris:${rootProject.iris_version}")
 
-    modCompileOnly("curse.maven:farmers-delight-fabric-482834:${rootProject.farmers_delight_version_fabric}")
+    modCompileOnly("curse.maven:farmers-delight-fabric-993166:${rootProject.farmers_delight_version_fabric}")
     modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-fabric:${rootProject.jei_version}") {
         exclude group: "mezz.jei"
     }

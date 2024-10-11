@@ -32,6 +32,7 @@ import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.function.BooleanBiFunction;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -167,8 +168,9 @@ public class BasicBathtubBlock extends BedBlock {
     }
 
     public float height;
+
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    protected ItemActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         BlockPos sourcePos = pos.down().down();
         ItemStack itemStack = player.getStackInHand(hand);
         BathtubBehavior sinkBehavior = this.behaviorMap.get(itemStack.getItem());
@@ -178,7 +180,7 @@ public class BasicBathtubBlock extends BedBlock {
         if (state.get(LEVEL_8) > 0 && player.isSneaking() && player.getStackInHand(hand).isEmpty()) {
             world.playSound(null, pos, SoundEvents.ITEM_BUCKET_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
             decrementFluidLevel(state, world, pos);
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         }
         if (state.get(LEVEL_8) < 8) {
             BlockState sourceState = world.getBlockState(sourcePos);
@@ -198,17 +200,22 @@ public class BasicBathtubBlock extends BedBlock {
                     blockEntity.setFilling(true);
                 }
                 BathtubBehavior.fillTub(world, pos, player, hand, player.getStackInHand(hand), state, SoundEvents.BLOCK_WATER_AMBIENT, false);
-                return ActionResult.SUCCESS;
+                return ItemActionResult.SUCCESS;
             }
         }
-        if (world.isNight() && world.getDimension().bedWorks()) {
-            super.onUse(state, world, pos, player, hand, hit);
-            return ActionResult.SUCCESS;
-        }
-        return sit(state, world, pos, player, hand, hit);
+        return super.onUseWithItem(stack, state, world, pos, player, hand, hit);
     }
 
-    public ActionResult sit(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    @Override
+    protected ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        if (world.isNight() && world.getDimension().bedWorks()) {
+            super.onUse(state, world, pos, player, hit);
+            return ActionResult.SUCCESS;
+        }
+        return sit(state, world, pos, player, hit);
+    }
+
+    public ActionResult sit(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!world.isClient) {
             if (player.isSpectator() || player.isSneaking()) {
                 return ActionResult.PASS;
@@ -317,7 +324,7 @@ public class BasicBathtubBlock extends BedBlock {
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    protected boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
     

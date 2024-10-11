@@ -3,5 +3,6 @@
   "ingredient": {
     "item": "minecraft:water_bucket"
   },
-  "result": "minecraft:ice"
-}
+  "result": {
+    "id": "minecraft:ice"
+  }}

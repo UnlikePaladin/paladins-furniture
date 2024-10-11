@@ -1,11 +1,11 @@
 package com.unlikepaladin.pfm.recipes.forge;
 
-import com.google.gson.JsonObject;
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 public class FurnitureSerializerForge implements RecipeSerializer<FurnitureRecipe> {
@@ -14,17 +14,20 @@ public class FurnitureSerializerForge implements RecipeSerializer<FurnitureRecip
     }
     FurnitureRecipe.Serializer serializer;
     @Override
-    public Codec<FurnitureRecipe> codec() {
+    public MapCodec<FurnitureRecipe> codec() {
         return serializer.codec();
     }
 
     @Override
-    public @Nullable FurnitureRecipe read(PacketByteBuf buf) {
+    public PacketCodec<RegistryByteBuf, FurnitureRecipe> packetCodec() {
+        return serializer.packetCodec();
+    }
+
+    public @Nullable FurnitureRecipe read(RegistryByteBuf buf) {
         return serializer.read(buf);
     }
 
-    @Override
-    public void write(PacketByteBuf buf, FurnitureRecipe recipe) {
+    public void write(RegistryByteBuf buf, FurnitureRecipe recipe) {
         serializer.write(buf, recipe);
     }
 }

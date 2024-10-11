@@ -5,10 +5,14 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.ComponentMap;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtLong;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
@@ -21,17 +25,18 @@ public class LightSwitchBlockEntity extends BlockEntity {
         lights = DefaultedList.of();
     }
 
+
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
         NbtList tagList = new NbtList();
         lights.forEach(blockPos -> tagList.add(NbtLong.of(blockPos.asLong())));
         nbt.put("lights", tagList);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
         if(nbt.contains("lights", NbtElement.LIST_TYPE)){
             lights.clear();
             NbtList lightTagList = nbt.getList("lights", NbtElement.LONG_TYPE);
@@ -46,8 +51,6 @@ public class LightSwitchBlockEntity extends BlockEntity {
             lights.add(lightPos);
         }
     }
-
-
 
     public void setState(boolean powered)
     {

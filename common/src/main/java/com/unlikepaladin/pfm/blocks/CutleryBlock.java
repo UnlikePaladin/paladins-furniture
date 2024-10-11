@@ -10,6 +10,7 @@ import net.minecraft.registry.Registries;
 import net.minecraft.state.StateManager;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -90,16 +91,15 @@ public class CutleryBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player.getStackInHand(hand);
+    protected ItemActionResult onUseWithItem(ItemStack itemStack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         Block block = (Registries.BLOCK.get(Registries.ITEM.getId(itemStack.getItem())));
         if(block instanceof PlateBlock) {
             BlockState newState = block.getDefaultState();
             world.setBlockState(pos, newState.with(PlateBlock.CUTLERY, true).with(FACING, state.get(FACING)));
             itemStack.decrement(1);
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.onUseWithItem(itemStack, state, world, pos, player, hand, hit);
     }
 
     @Override

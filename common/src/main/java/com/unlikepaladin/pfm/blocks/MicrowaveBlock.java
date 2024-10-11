@@ -71,7 +71,7 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
         stateManager.add(POWERED);
     }
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (!world.isClient) {
             openScreen(player, state, world, pos);
             player.incrementStat(Statistics.MICROWAVE_USED);
@@ -109,15 +109,6 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
     @Override
     public BlockState getPlacementState(ItemPlacementContext ctx) {
         return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
-    }
-
-    @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        BlockEntity blockEntity;
-        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof MicrowaveBlockEntity) {
-            ((MicrowaveBlockEntity)blockEntity).setCustomName(itemStack.getName());
-        }
-        super.onPlaced(world, pos, state, placer, itemStack);
     }
 
     @Override
@@ -179,7 +170,7 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 

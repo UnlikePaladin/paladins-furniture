@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.registry;
 
-import net.minecraft.particle.DefaultParticleType;
+import net.minecraft.particle.SimpleParticleType;
 
 public class ParticleIDs {
-    public static DefaultParticleType WATER_DROP;
+    public static SimpleParticleType WATER_DROP;
 }

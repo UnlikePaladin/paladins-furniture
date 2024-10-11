@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.ItemEntity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -20,6 +21,7 @@ import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
@@ -64,21 +66,20 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player.getStackInHand(hand);
+    protected ItemActionResult onUseWithItem(ItemStack itemStack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         PlateBlockEntity plateBlockEntity;
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof PlateBlockEntity && (itemStack.isFood())) {
+        if (blockEntity instanceof PlateBlockEntity && (itemStack.contains(DataComponentTypes.FOOD))) {
             if (!world.isClient && ((PlateBlockEntity)blockEntity).addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack)) {
                 player.incrementStat(Statistics.PLATE_USED);
-                return ActionResult.SUCCESS;
+                return ItemActionResult.SUCCESS;
             }
-            return ActionResult.CONSUME;
+            return ItemActionResult.CONSUME;
         }
         if(Registries.BLOCK.get(Registries.ITEM.getId(itemStack.getItem())) instanceof CutleryBlock) {
             world.setBlockState(pos, state.with(CUTLERY, true));
             itemStack.decrement(1);
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         }
         if (player.isSneaking() && blockEntity instanceof PlateBlockEntity) {
             plateBlockEntity = (PlateBlockEntity)blockEntity;
@@ -87,9 +88,9 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
                     ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, plateBlockEntity.removeItem());
                     world.spawnEntity(itemEntity);
                     player.incrementStat(Statistics.PLATE_USED);
-                    return ActionResult.SUCCESS;
+                    return ItemActionResult.SUCCESS;
                 }
-                return ActionResult.CONSUME;
+                return ItemActionResult.CONSUME;
             }
         }
         if(blockEntity instanceof PlateBlockEntity){
@@ -109,10 +110,10 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
                     }
                     plateBlockEntity.removeItem();
                     player.incrementStat(Statistics.PLATE_USED);
-                    return ActionResult.SUCCESS;
+                    return ItemActionResult.SUCCESS;
                 }
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.onUseWithItem(itemStack, state, world, pos, player, hand, hit);
     }
 
     @ExpectPlatform

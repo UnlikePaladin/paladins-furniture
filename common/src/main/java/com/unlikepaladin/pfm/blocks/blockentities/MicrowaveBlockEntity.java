@@ -21,6 +21,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -157,10 +158,10 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readNbt(nbt, this.inventory);
+        Inventories.readNbt(nbt, this.inventory, registryLookup);
         this.cookTime = nbt.getShort("CookTime");
         this.cookTimeTotal = nbt.getShort("CookTimeTotal");
         NbtCompound nbtCompound = nbt.getCompound("RecipesUsed");
@@ -171,11 +172,11 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
         nbt.putShort("CookTime", (short)this.cookTime);
         nbt.putShort("CookTimeTotal", (short)this.cookTimeTotal);
-        Inventories.writeNbt(nbt, this.inventory);
+        Inventories.writeNbt(nbt, this.inventory, registryLookup);
         NbtCompound nbtCompound = new NbtCompound();
         nbt.putBoolean("isActive", this.isActive);
         this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), (int)integer));
@@ -194,6 +195,16 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     @Override
     protected Text getContainerName() {
         return getDisplayName();
+    }
+
+    @Override
+    protected DefaultedList<ItemStack> getHeldStacks() {
+        return inventory;
+    }
+
+    @Override
+    protected void setHeldStacks(DefaultedList<ItemStack> inventory) {
+        this.inventory = inventory;
     }
 
     @Override
@@ -263,13 +274,11 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     @Override
     public void setStack(int slot, ItemStack stack) {
         ItemStack itemStack = this.inventory.get(slot);
-        boolean bl = !stack.isEmpty() && stack.isOf(itemStack.getItem()) && ItemStack.canCombine(stack, itemStack);
+        boolean bl = !stack.isEmpty() && ItemStack.areItemsAndComponentsEqual(itemStack, stack);
         this.inventory.set(slot, stack);
-        if (stack.getCount() > this.getMaxCountPerStack()) {
-            stack.setCount(this.getMaxCountPerStack());
-        }
+        stack.capCount(this.getMaxCount(stack));
         if (slot == 0 && !bl) {
-            this.cookTimeTotal = MicrowaveBlockEntity.getCookTime(this.world, this.recipeType, this);
+            this.cookTimeTotal = getCookTime(this.world, this.recipeType, this);
             this.cookTime = 0;
             this.markDirty();
             world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
@@ -388,7 +397,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         this.isActive = active;
         NbtCompound nbtCompound = new NbtCompound();
         nbtCompound.putBoolean("isActive", active);
-        this.writeNbt(nbtCompound);
+        this.writeNbt(nbtCompound, world.getRegistryManager());
         this.markDirty();
         world.setBlockState(pos, this.getCachedState().with(MicrowaveBlock.POWERED, true), Block.NOTIFY_LISTENERS);
     }

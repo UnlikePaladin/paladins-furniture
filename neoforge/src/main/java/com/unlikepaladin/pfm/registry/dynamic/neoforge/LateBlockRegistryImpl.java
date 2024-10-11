@@ -26,6 +26,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraft.world.poi.PointOfInterestTypes;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.jetbrains.annotations.Nullable;
@@ -34,7 +35,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Supplier;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.MOD)
 public class LateBlockRegistryImpl {
 
     public static Map<String, Block> blocks = new LinkedHashMap<>();

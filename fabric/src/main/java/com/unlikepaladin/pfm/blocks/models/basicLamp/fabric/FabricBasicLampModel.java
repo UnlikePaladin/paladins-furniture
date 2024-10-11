@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.items.PFMComponents;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
@@ -16,6 +17,7 @@ import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.state.property.Properties;
@@ -50,19 +52,19 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
         boolean down = blockView.getBlockState(pos.down()).getBlock() instanceof BasicLampBlock;
         pushTextureTransform(context, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
         if (up && down) {
-            ((FabricBakedModel)getTemplateBakedModels().get(1)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            (getTemplateBakedModels().get(1)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
         } else if (up) {
-            ((FabricBakedModel)getTemplateBakedModels().get(0)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            (getTemplateBakedModels().get(0)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
         } else if (down)
         {
-            ((FabricBakedModel)getTemplateBakedModels().get(3)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-            ((FabricBakedModel)getTemplateBakedModels().get(5+onOffset)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-            ((FabricBakedModel)getTemplateBakedModels().get(4)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            (getTemplateBakedModels().get(3)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            (getTemplateBakedModels().get(5+onOffset)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            (getTemplateBakedModels().get(4)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
         }
         else {
-            ((FabricBakedModel)getTemplateBakedModels().get(4)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-            ((FabricBakedModel)getTemplateBakedModels().get(2)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
-            ((FabricBakedModel)getTemplateBakedModels().get(5+onOffset)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            (getTemplateBakedModels().get(4)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            (getTemplateBakedModels().get(2)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+            (getTemplateBakedModels().get(5+onOffset)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
         }
         context.popTransform();
     }
@@ -70,13 +72,13 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
         WoodVariant variant = WoodVariantRegistry.OAK;
-        if (stack.hasNbt()) {
-            variant = WoodVariantRegistry.getVariant(Identifier.tryParse(stack.getSubNbt("BlockEntityTag").getString("variant")));
+        if (stack.contains(PFMComponents.VARIANT_COMPONENT)) {
+            variant = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
         }
         pushTextureTransform(context, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
-        ((FabricBakedModel)getTemplateBakedModels().get(4)).emitItemQuads(stack, randomSupplier, context);
-        ((FabricBakedModel)getTemplateBakedModels().get(2)).emitItemQuads(stack, randomSupplier, context);
-        ((FabricBakedModel)getTemplateBakedModels().get(5)).emitItemQuads(stack, randomSupplier, context);
+        (getTemplateBakedModels().get(4)).emitItemQuads(stack, randomSupplier, context);
+        (getTemplateBakedModels().get(2)).emitItemQuads(stack, randomSupplier, context);
+        (getTemplateBakedModels().get(5)).emitItemQuads(stack, randomSupplier, context);
         context.popTransform();
     }
 

@@ -14,7 +14,7 @@
     }
   },
   "result": {
-    "item": "pfm:working_table",
+    "id": "pfm:working_table",
     "count": 1
   }
 }

@@ -15,6 +15,7 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Rarity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -25,7 +26,7 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.*;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.MOD)
 public class BlockItemRegistryNeoForge {
     @SubscribeEvent
     public static void registerBlocks(RegisterEvent event) {

@@ -56,7 +56,7 @@ dependencies {
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 
-    modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}-NEOFORGE")
+    modCompileOnly("vazkii.patchouli:Patchouli:${rootProject.patchouli_version_forge}")
     modCompileOnlyApi("mezz.jei:jei-${rootProject.minecraft_version}-forge-api:${rootProject.jei_version}")
     modCompileOnlyApi "me.shedaniel:RoughlyEnoughItems-api-neoforge:${rootProject.rei_version}"
     modCompileOnlyApi "me.shedaniel:RoughlyEnoughItems-neoforge:${rootProject.rei_version}"
@@ -97,7 +97,7 @@ if (rootProject.rei_compatibility == "true"){
 processResources {
     inputs.property "version", project.version
 
-    filesMatching("META-INF/mods.toml") {
+    filesMatching("META-INF/neoforge.mods.toml") {
         expand "version": project.version
     }
     duplicatesStrategy = 'include'

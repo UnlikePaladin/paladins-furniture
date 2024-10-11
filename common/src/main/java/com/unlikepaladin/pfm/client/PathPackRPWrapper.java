@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.client;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.resource.InputSupplier;
 import net.minecraft.resource.ResourcePack;
+import net.minecraft.resource.ResourcePackInfo;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.PackResourceMetadata;
 import net.minecraft.resource.metadata.ResourceMetadataReader;
@@ -22,10 +23,12 @@ import java.util.function.Supplier;
 public class PathPackRPWrapper implements ResourcePack {
     private final Supplier<ResourcePack> delegate;
     private final PackResourceMetadata packResourceMetadata;
+    private final ResourcePackInfo resourcePackInfo;
 
-    public PathPackRPWrapper(Supplier<ResourcePack> delegate, PackResourceMetadata packResourceMetadata) {
+    public PathPackRPWrapper(Supplier<ResourcePack> delegate, PackResourceMetadata packResourceMetadata, ResourcePackInfo packInfo) {
         this.delegate = delegate;
         this.packResourceMetadata = packResourceMetadata;
+        this.resourcePackInfo = packInfo;
     }
 
     @Nullable
@@ -68,9 +71,13 @@ public class PathPackRPWrapper implements ResourcePack {
         return null;
     }
 
-    @Override
     public String getName() {
         return "PFM-Runtime-RP";
+    }
+
+    @Override
+    public ResourcePackInfo getInfo() {
+        return resourcePackInfo;
     }
 
     @Override

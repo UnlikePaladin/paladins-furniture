@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.items.PFMComponents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.RenderLayer;
@@ -134,8 +135,8 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
         List<BakedQuad> quads = new ArrayList<>();
         WoodVariant variant = WoodVariantRegistry.OAK;
-        if (stack.hasNbt()) {
-            variant = WoodVariantRegistry.getVariant(Identifier.tryParse(stack.getSubNbt("BlockEntityTag").getString("variant")));
+        if (stack.contains(PFMComponents.VARIANT_COMPONENT)) {
+            variant = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
         }
         quads.addAll(getTemplateBakedModels().get(4).getQuads(state, face, random));
         quads.addAll(getTemplateBakedModels().get(2).getQuads(state, face, random));

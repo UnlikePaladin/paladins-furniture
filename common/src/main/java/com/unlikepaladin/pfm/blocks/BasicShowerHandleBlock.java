@@ -4,12 +4,13 @@ import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHandleBlockEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.mob.PiglinBrain;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -18,7 +19,6 @@ import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -62,7 +62,7 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
@@ -75,12 +75,11 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasNbt()) {
-            NbtCompound nbtCompound = itemStack.getSubNbt("BlockEntityTag");
+        if (itemStack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
+            NbtComponent nbtCompound = itemStack.get(DataComponentTypes.BLOCK_ENTITY_DATA);
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (nbtCompound.contains("showerHead") && blockEntity instanceof ShowerHandleBlockEntity) {
-                ((ShowerHandleBlockEntity)blockEntity).writeNbt(nbtCompound);
-                itemStack.setNbt(null);
+                itemStack.remove(DataComponentTypes.BLOCK_ENTITY_DATA);
             }
         }
 

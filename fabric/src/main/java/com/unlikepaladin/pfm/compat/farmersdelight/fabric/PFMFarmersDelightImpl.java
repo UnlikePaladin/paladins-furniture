@@ -1,7 +1,5 @@
 package com.unlikepaladin.pfm.compat.farmersdelight.fabric;
 
-import com.nhoryzon.mc.farmersdelight.FarmersDelightMod;
-import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.unlikepaladin.pfm.blocks.IronStoveBlock;
 import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
@@ -12,6 +10,7 @@ import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import net.minecraft.block.Block;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
+import vectorwing.farmersdelight.FarmersDelight;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +32,6 @@ public class PFMFarmersDelightImpl extends PFMFarmersDelight {
 
     @Override
     public String getModId() {
-        return FarmersDelightMod.MOD_ID;
+        return FarmersDelight.MODID;
     }
 }

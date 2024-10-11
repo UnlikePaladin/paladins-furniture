@@ -8,6 +8,7 @@ import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
@@ -28,8 +29,9 @@ public class BathtubBlockEntity extends BedBlockEntity {
 
     private int fillTimer = 0;
     private boolean isFilling = false;
+
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
         return this.writeIdentifyingTubData(new NbtCompound());
     }
 
@@ -48,15 +50,15 @@ public class BathtubBlockEntity extends BedBlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         fillTimer = nbt.getInt("tubTimer");
         isFilling = nbt.getBoolean("isTubFilling");
-        super.readNbt(nbt);
+        super.readNbt(nbt, registryLookup);
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
         nbt.putInt("tubTimer", fillTimer);
         nbt.putBoolean("isTubFilling", isFilling);
     }

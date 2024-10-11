@@ -134,7 +134,7 @@ public class BasicChairBlock extends AbstractSittableBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (player.isSneaking() && this.canTuck(world.getBlockState(pos.offset(state.get(FACING).getOpposite())))) {
             if (state.get(TUCKED)) {
                 world.setBlockState(pos, state.with(TUCKED, false));
@@ -144,7 +144,7 @@ public class BasicChairBlock extends AbstractSittableBlock {
             }
             return ActionResult.SUCCESS;
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.onUse(state, world, pos, player, hit);
     }
 
     @Override

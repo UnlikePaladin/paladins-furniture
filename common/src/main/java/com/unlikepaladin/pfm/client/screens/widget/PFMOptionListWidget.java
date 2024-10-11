@@ -90,8 +90,8 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
     }
 
     @Override
-    protected int getScrollbarPositionX() {
-        return super.getScrollbarPositionX() + 15;
+    protected int getScrollbarX() {
+        return super.getScrollbarX() + 15;
     }
 
     @Override

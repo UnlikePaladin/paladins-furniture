@@ -17,7 +17,7 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
     private Recipe<?> recipe;
     @Override
     public void setup(World level, IVariableProvider variables) {
-        String recipeId = variables.get("recipe").asString();
+        String recipeId = variables.get("recipe", level.getRegistryManager()).asString();
         RecipeManager manager = level.getRecipeManager();
         recipe = manager.get(new Identifier(recipeId)).map(RecipeEntry::value).orElse(null);
     }
@@ -31,13 +31,13 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
                  ItemStack[] stacks = ingredient.getMatchingStacks();
                  ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
 
-                 return IVariable.from(stack);
+                 return IVariable.from(stack, level.getRegistryManager());
              case "output":
                  ItemStack result = recipe.getResult(level.getRegistryManager());
-                 return IVariable.from(result);
+                 return IVariable.from(result, level.getRegistryManager());
              case "icon":
                  ItemStack icon = recipe.createIcon();
-                 return IVariable.from(icon);
+                 return IVariable.from(icon, level.getRegistryManager());
              case "text":
                  ItemStack out = recipe.getResult(level.getRegistryManager());
                  return IVariable.wrap(out.getCount() + "x$(br)" + out.getName());

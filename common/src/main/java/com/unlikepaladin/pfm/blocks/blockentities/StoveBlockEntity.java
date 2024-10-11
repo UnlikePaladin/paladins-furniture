@@ -20,6 +20,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -115,11 +116,11 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
         int[] is;
         this.itemsBeingCooked.clear();
-        readNbt(nbt, this.itemsBeingCooked);
+        readNbt(nbt, this.itemsBeingCooked, registryLookup);
         if (nbt.contains("CookingTimes", 11)) {
             is = nbt.getIntArray("CookingTimes");
             System.arraycopy(is, 0, this.cookingTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
@@ -131,28 +132,26 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        this.saveInitialChunkData(nbt);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        this.saveInitialChunkData(nbt, registryLookup);
         nbt.putIntArray("CookingTimes", this.cookingTimes);
         nbt.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
     }
 
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        writeNbt(nbt, this.itemsBeingCooked, true);
+    protected NbtCompound saveInitialChunkData(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        writeNbt(nbt, this.itemsBeingCooked, true, registryLookup);
         return nbt;
     }
 
-    public static NbtCompound writeNbt(NbtCompound nbt, DefaultedList<ItemStack> stacks, boolean setIfEmpty) {
+    public static NbtCompound writeNbt(NbtCompound nbt, DefaultedList<ItemStack> stacks, boolean setIfEmpty, RegistryWrapper.WrapperLookup registryLookup) {
         NbtList nbtList = new NbtList();
         for (int i = 0; i < stacks.size(); ++i) {
             ItemStack itemStack = stacks.get(i);
             if (itemStack.isEmpty()) continue;
             NbtCompound nbtCompound = new NbtCompound();
             nbtCompound.putByte("Slot", (byte)i);
-            itemStack.writeNbt(nbtCompound);
-            nbtList.add(nbtCompound);
+            nbtList.add(itemStack.encode(registryLookup, nbtCompound));
         }
         if (!nbtList.isEmpty() || setIfEmpty) {
             nbt.put("CookTopItems", nbtList);
@@ -160,13 +159,13 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         return nbt;
     }
 
-    public static void readNbt(NbtCompound nbt, DefaultedList<ItemStack> stacks) {
+    public static void readNbt(NbtCompound nbt, DefaultedList<ItemStack> stacks, RegistryWrapper.WrapperLookup registryLookup) {
         NbtList nbtList = nbt.getList("CookTopItems", 10);
         for (int i = 0; i < nbtList.size(); ++i) {
             NbtCompound nbtCompound = nbtList.getCompound(i);
             int j = nbtCompound.getByte("Slot") & 0xFF;
             if (j < 0 || j >= stacks.size()) continue;
-            stacks.set(j, ItemStack.fromNbt(nbtCompound));
+            stacks.set(j, ItemStack.fromNbt(registryLookup, nbtCompound).orElse(ItemStack.EMPTY));
         }
     }
 

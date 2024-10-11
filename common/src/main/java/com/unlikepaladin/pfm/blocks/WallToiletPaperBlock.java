@@ -76,12 +76,12 @@ public class WallToiletPaperBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (player.isSneaking()) {
             world.setBlockState(pos, state.cycle(WALL));
             return ActionResult.SUCCESS;
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.onUse(state, world, pos, player, hit);
     }
 
     public static final VoxelShape WALL_PAPER_SOUTH = VoxelShapes.union(createCuboidShape(11.5, 12, 12,12.5, 13, 16), createCuboidShape(3.5, 12, 11.5,4.5, 13, 16), createCuboidShape(4.5, 10.5, 10.5,11.5, 14.5, 14.5));
@@ -110,7 +110,7 @@ public class WallToiletPaperBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 }

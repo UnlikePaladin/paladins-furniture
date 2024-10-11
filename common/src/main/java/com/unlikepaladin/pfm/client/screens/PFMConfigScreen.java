@@ -119,10 +119,4 @@ public class PFMConfigScreen extends Screen {
         }
         this.resetButton.active = bl;
     }
-
-
-    @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackgroundTexture(context);
-    }
 }

@@ -2,34 +2,42 @@ package com.unlikepaladin.pfm.registry.neoforge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
+import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
+import com.unlikepaladin.pfm.config.option.Side;
+import com.unlikepaladin.pfm.networking.*;
 import com.unlikepaladin.pfm.networking.neoforge.*;
+import com.unlikepaladin.pfm.registry.NetworkIDs;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlerEvent;
-import net.neoforged.neoforge.network.registration.IPayloadRegistrar;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class NetworkRegistryNeoForge {
 
-    public static void register(final RegisterPayloadHandlerEvent event) {
-        final IPayloadRegistrar registrar = event.registrar(PaladinFurnitureMod.MOD_ID);
-        registrar.play(TrashcanClearPacket.ID, TrashcanClearPacket::new, handler -> handler
-                .client(TrashcanClearPacket::handle)
-                .server(TrashcanClearPacket::handle));
+    public static void register(final RegisterPayloadHandlersEvent event) {
+        final PayloadRegistrar registrar = event.registrar("1");
+        registrar.configurationToClient(NetworkIDs.CONFIG_SYNC_ID, SyncConfigPayload.PACKET_SIMPLE_CODEC, (payload, context) ->
+                context.enqueueWork(() -> {
+            payload.configOptionMap().forEach((title, configOption) -> {
+                PFMConfigScreen.isOnServer = true;
+                if (configOption.getSide() == Side.SERVER) {
+                    LeaveEventHandlerNeoForge.originalConfigValues.put(title, PaladinFurnitureMod.getPFMConfig().options.get(title).getValue());
+                    PaladinFurnitureMod.getPFMConfig().options.get(title).setValue(configOption.getValue());
+                }
+            });
+        }));
 
-        registrar.play(ToiletUsePacket.ID, ToiletUsePacket::new, handler -> handler
-                .server(ToiletUsePacket::handle));
+        registrar.playToServer(NetworkIDs.TRASHCAN_CLEAR, TrashcanClearPayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayerEntity) context.player()));
 
-        registrar.play(SyncConfigPacket.ID, SyncConfigPacket::new, handler -> handler
-                .client(SyncConfigPacket::handle));
+        registrar.playToServer(NetworkIDs.TOILET_USE_ID, ToiletUsePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayerEntity) context.player()));
 
-        registrar.play(MicrowaveUpdatePacket.ID, MicrowaveUpdatePacket::new, handler -> handler
-                .client(MicrowaveUpdatePacket::handle));
+        registrar.playToServer(NetworkIDs.MICROWAVE_ACTIVATE_PACKET_ID, MicrowaveActivatePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayerEntity) context.player()));
 
-        registrar.play(MicrowaveActivePacket.ID, MicrowaveActivePacket::new, handler -> handler
-                .server(MicrowaveActivePacket::handle));
+        registrar.playToClient(NetworkIDs.MICROWAVE_UPDATE_PACKET_ID, MicrowaveUpdatePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player(), MinecraftClient.getInstance()));
+
     }
 
     @SubscribeEvent
@@ -40,7 +48,7 @@ public class NetworkRegistryNeoForge {
                 PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayerEntity) event.getEntity());
             }
             //Sync Config
-            PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event.getEntity()).send(new SyncConfigPacket(PaladinFurnitureMod.getPFMConfig().options));
+            PacketDistributor.sendToPlayer((ServerPlayerEntity) event.getEntity(), new SyncConfigPayload(PaladinFurnitureMod.getPFMConfig().options));
         }
    }
 }

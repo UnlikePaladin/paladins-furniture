@@ -47,7 +47,7 @@ public class XboxFridgeBlock extends FridgeBlock
         stateManager.add(HALF);
     }
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }
@@ -62,10 +62,6 @@ public class XboxFridgeBlock extends FridgeBlock
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         world.setBlockState(pos.up(), this.getDefaultState().with(FACING, placer.getHorizontalFacing()).with(HALF, DoubleBlockHalf.UPPER).with(OPEN,false), NOTIFY_ALL);
-        BlockEntity blockEntity;
-        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof FridgeBlockEntity) {
-            ((FridgeBlockEntity)blockEntity).setCustomName(itemStack.getName());
-        }
     }
 
     @Override

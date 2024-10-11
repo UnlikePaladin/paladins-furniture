@@ -21,10 +21,7 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
+import net.minecraft.util.*;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -70,18 +67,24 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack;
+    protected ItemActionResult onUseWithItem(ItemStack itemStack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         StovetopBlockEntity stovetopBlockEntity;
         Optional<RecipeEntry<CampfireCookingRecipe>> optional;
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof StovetopBlockEntity && (optional = (stovetopBlockEntity = (StovetopBlockEntity)blockEntity).getRecipeFor(itemStack = player.getStackInHand(hand))).isPresent()) {
+        if (blockEntity instanceof StovetopBlockEntity && (optional = (stovetopBlockEntity = (StovetopBlockEntity)blockEntity).getRecipeFor(itemStack)).isPresent()) {
             if (!world.isClient && stovetopBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().value().getCookingTime())) {
                 player.incrementStat(Statistics.STOVETOP_USED);
-                return ActionResult.SUCCESS;
+                return ItemActionResult.SUCCESS;
             }
-            return ActionResult.CONSUME;
+            return ItemActionResult.CONSUME;
         }
+        return super.onUseWithItem(itemStack, state, world, pos, player, hand, hit);
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
+        StovetopBlockEntity stovetopBlockEntity;
+        BlockEntity blockEntity = world.getBlockEntity(pos);
         if(blockEntity instanceof StovetopBlockEntity){
             stovetopBlockEntity = (StovetopBlockEntity)blockEntity;
             for (int i = 0; i < stovetopBlockEntity.getItemsBeingCooked().size(); i++) {
@@ -166,7 +169,7 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
     @Override

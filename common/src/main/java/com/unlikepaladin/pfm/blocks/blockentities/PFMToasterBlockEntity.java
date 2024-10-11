@@ -7,6 +7,8 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.SidedInventory;
@@ -22,6 +24,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -54,8 +57,8 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
         items = DefaultedList.ofSize(2, ItemStack.EMPTY);
         toastProgress = nbt.getInt("toastProgress");
         toasting = nbt.getBoolean("toasting");
@@ -64,11 +67,11 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         if (nbt.contains("lastUser")) {
             this.lastUser = nbt.getUuid("lastUser");
         } else this.lastUser = null;
-        Inventories.readNbt(nbt, items);
+        Inventories.readNbt(nbt, items, registryLookup);
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         nbt.putInt("toastProgress", toastProgress);
         nbt.putBoolean("toasting", toasting);
         nbt.putInt("smokeProgress", smokeProgress);
@@ -76,8 +79,8 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         if (this.lastUser == null) {
             nbt.remove("lastUser");
         } else nbt.putUuid("lastUser", this.lastUser);
-        Inventories.writeNbt(nbt, items);
-        super.writeNbt(nbt);
+        Inventories.writeNbt(nbt, items, registryLookup);
+        super.writeNbt(nbt, registryLookup);
     }
 
     @Nullable
@@ -87,8 +90,8 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 
     private void explode() {
@@ -179,7 +182,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
                     items.set(i, match.get().value().getResult(world.getRegistryManager()).copy());
                     changed = true;
                 } else {
-                    if(items.get(i).isFood()) {
+                    if(items.get(i).contains(DataComponentTypes.FOOD)) {
                         Item item = Items.COAL;
                         items.set(i, new ItemStack(item, 1));
                         changed = true;

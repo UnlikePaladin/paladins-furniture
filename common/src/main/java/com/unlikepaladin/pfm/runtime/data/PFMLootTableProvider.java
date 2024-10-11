@@ -72,7 +72,10 @@ public class PFMLootTableProvider extends PFMProvider {
                 Files.createFile(path2);
                 jsonWriter.setSerializeNulls(false);
                 jsonWriter.setIndent("  ");
-                JsonHelper.writeSorted(jsonWriter, LootTable.CODEC.encodeStart(JsonOps.INSTANCE, lootTable).getOrThrow(true, (error) -> {getParent().getLogger().warn("Failed to parse Loot table: {}", error);}), JSON_KEY_SORTING_COMPARATOR);
+                JsonHelper.writeSorted(jsonWriter, LootTable.CODEC.encodeStart(JsonOps.INSTANCE, lootTable).getOrThrow((error) -> {
+                    getParent().getLogger().warn("Failed to parse Loot table: {}", error);
+                    return null;
+                }), JSON_KEY_SORTING_COMPARATOR);
                 jsonWriter.flush();
                 Files.write(path2, byteArrayOutputStream.toByteArray(), StandardOpenOption.WRITE);
                 byteArrayOutputStream.close();
@@ -104,8 +107,8 @@ public class PFMLootTableProvider extends PFMProvider {
 
             HashSet<Identifier> set = Sets.newHashSet();
             for (Block block : pfmBlocks) {
-                Identifier identifier = block.getLootTableId();
-                if (identifier == LootTables.EMPTY || !set.add(identifier)) continue;
+                Identifier identifier = block.getLootTableKey().getValue();
+                if (identifier == LootTables.EMPTY.getValue() || !set.add(identifier)) continue;
                 LootTable.Builder builder5 = this.lootTables.remove(identifier);
                 if (builder5 == null) {
                     throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", identifier, Registries.BLOCK.getId(block)));
@@ -134,7 +137,7 @@ public class PFMLootTableProvider extends PFMProvider {
         }
 
         public final void addDrop(Block block, LootTable.Builder lootTable) {
-            this.lootTables.put(block.getLootTableId(), lootTable);
+            this.lootTables.put(block.getLootTableKey().getValue(), lootTable);
             this.pfmBlocks.add(block);
         }
 

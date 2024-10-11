@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
@@ -13,6 +14,7 @@ import net.minecraft.client.color.item.ItemColorProvider;
 import net.minecraft.client.color.world.BiomeColors;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayers;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.item.Item;
 import net.minecraft.util.DyeColor;
 
@@ -29,8 +31,8 @@ public class ColorRegistry {
         registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_TOILET, addToiletColor());
         registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB, addWaterColor());
         registerItemColor(PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM, (stack, tintIndex) -> {
-            if (stack.hasNbt()) {
-                return DyeColor.byName(stack.getSubNbt("BlockEntityTag").getString("color"), DyeColor.WHITE).getMapColor().color;
+            if (stack.contains(PFMComponents.COLOR_COMPONENT)) {
+                return stack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getMapColor().color;
             }
             return 0xFFFFFF;
         });
@@ -39,7 +41,7 @@ public class ColorRegistry {
             if (entity != null) {
                 if (entity instanceof LampBlockEntity) {
                     DyeColor color = ((LampBlockEntity)entity).getPFMColor();
-                    return color.getFireworkColor();
+                    return color.getMapColor().color;
                 }
             }
             return 0xFFFFFF;

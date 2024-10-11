@@ -87,7 +87,7 @@ public class ShowerTowelBlock extends HorizontalFacingBlock implements DyeableFu
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 

@@ -56,8 +56,7 @@ public class BasicTableBlock extends Block {
     @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (!state.isOf(state.getBlock())) {
-            this.baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
-            this.baseBlock.onBlockAdded(this.baseBlockState, world, pos, oldState, false);
+            oldState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
         }
     }
     @Override
@@ -248,7 +247,7 @@ public class BasicTableBlock extends Block {
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 

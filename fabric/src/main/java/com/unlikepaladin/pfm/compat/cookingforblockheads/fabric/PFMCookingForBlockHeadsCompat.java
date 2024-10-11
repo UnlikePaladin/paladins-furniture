@@ -5,16 +5,17 @@ import com.unlikepaladin.pfm.blocks.KitchenCounterBlock;
 import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.blocks.KitchenWallCounterBlock;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
+import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.blocks.fabric.StoveBlockImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.menu.StoveScreenHandlerBalm;
+import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.ContainerUtils;
-import net.blay09.mods.cookingforblockheads.KitchenMultiBlock;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
-import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
+import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -24,30 +25,32 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.RegistryByteBuf;
+import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
+import net.minecraft.util.Pair;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 
 public class PFMCookingForBlockHeadsCompat {
-
-    public static void initBlockConnectors() {
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getAllBlocks().forEach(KitchenMultiBlock::registerConnectorBlock);
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getAllBlocks().forEach(KitchenMultiBlock::registerConnectorBlock);
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getAllBlocks().forEach(KitchenMultiBlock::registerConnectorBlock);
+    
+    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(AbstractBlock.Settings.copy(PaladinFurnitureModBlocksItems.GRAY_STOVE));
+    public static TriFunc<Integer, PlayerInventory, StoveScreenHandler.StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
+        return (integer, playerInventory, data) -> {
+            BlockPos pos = data.pos();
+            BlockEntity blockEntity = playerInventory.player.getWorld().getBlockEntity(pos);
+            return new StoveScreenHandlerBalm(integer, playerInventory, (StoveBlockEntityBalm)blockEntity);
+        };
     }
 
-    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(AbstractBlock.Settings.copy(PaladinFurnitureModBlocksItems.GRAY_STOVE));
-    public static <T extends ScreenHandler> TriFunc<Integer, PlayerInventory, PacketByteBuf, T> getStoveScreenHandler() {
-        return (integer, playerInventory, packetByteBuf) -> {
-            BlockPos pos = packetByteBuf.readBlockPos();
-            BlockEntity blockEntity = playerInventory.player.getWorld().getBlockEntity(pos);
-            return (T) new StoveScreenHandlerBalm(integer, playerInventory, (StoveBlockEntityBalm)blockEntity);
-        };
+    public static <D extends StovePacket> PacketCodec<RegistryByteBuf, D> getStovePacket() {
+        return (PacketCodec<RegistryByteBuf, D>) StoveScreenHandler.PACKET_CODEC;
     }
 
     public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
@@ -69,11 +72,11 @@ public class PFMCookingForBlockHeadsCompat {
         }
     }
 
-    public static ActionResult onUseStove(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public static ItemActionResult onUseStove(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         ItemStack heldItem = player.getStackInHand(hand);
         if (heldItem.getItem() == ModItems.heatingUnit) {
-            return ActionResult.PASS;
-        } else if (hit.getSide() == Direction.UP && CookingRegistry.isToolItem(heldItem)) {
+            return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        } else if (hit.getSide() == Direction.UP && heldItem.isIn(ModItemTags.UTENSILS)) {
             Direction stateFacing = state.get(StoveBlock.FACING);
             double hx =  (hit.getPos().x - hit.getBlockPos().getX());
             double hz = (hit.getPos().z - hit.getBlockPos().getZ());
@@ -107,29 +110,29 @@ public class PFMCookingForBlockHeadsCompat {
                     tileOven.setToolItem(index, toolItem);
                 }
             }
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         } else {
             StoveBlockEntityBalm oven = (StoveBlockEntityBalm)level.getBlockEntity(pos);
             if (hit.getSide() == state.get(Properties.HORIZONTAL_FACING) && oven != null) {
                 if (player.isSneaking()) {
-                    return ActionResult.SUCCESS;
+                    return ItemActionResult.SUCCESS;
                 }
 
                 if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem) != ItemStack.EMPTY) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getInputContainer(), heldItem, false);
                     player.setStackInHand(hand, heldItem);
 
-                    return ActionResult.SUCCESS;
+                    return ItemActionResult.SUCCESS;
                 } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(heldItem)) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getFuelContainer(), heldItem, false);
                     player.setStackInHand(hand, heldItem);
-                    return ActionResult.SUCCESS;
+                    return ItemActionResult.SUCCESS;
                 }
             }
             if (!level.isClient) {
                 Balm.getNetworking().openGui(player, oven);
             }
-            return ActionResult.SUCCESS;
+            return ItemActionResult.SUCCESS;
         }
     }
 }

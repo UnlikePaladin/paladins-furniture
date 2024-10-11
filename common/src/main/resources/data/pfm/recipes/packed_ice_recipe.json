@@ -3,5 +3,7 @@
   "ingredient": {
     "item": "minecraft:powder_snow_bucket"
   },
-  "result": "minecraft:blue_ice"
+  "result": {
+    "id": "minecraft:blue_ice"
+  }
 }

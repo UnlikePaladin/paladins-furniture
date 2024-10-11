@@ -12,8 +12,10 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
@@ -29,9 +31,11 @@ public class StoveBlockImpl {
             PFMCookingForBlockHeadsCompat.openMenuScreen(world, pos, player);
         } else {
             NamedScreenHandlerFactory screenHandlerFactory = world.getBlockState(pos).createScreenHandlerFactory(world, pos);
-            if (screenHandlerFactory != null) {
+            if (screenHandlerFactory != null && player instanceof ServerPlayerEntity) {
                 // With this call the server will request the client to open the appropriate Screenhandler
-                player.openHandledScreen(screenHandlerFactory);
+                ((ServerPlayerEntity)player).openMenu(screenHandlerFactory, packetByteBuf -> {
+                    packetByteBuf.writeBlockPos(pos);
+                } );
                 player.incrementStat(Statistics.STOVE_OPENED);
             }
         }
@@ -54,7 +58,7 @@ public class StoveBlockImpl {
         return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
     }
 
-    public static ActionResult onUseCookingForBlockheads(BlockState blockState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
+    public static ItemActionResult onUseCookingForBlockheads(BlockState blockState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         return PFMCookingForBlockHeadsCompat.onUseStove(blockState, world, pos, player, hand, blockHitResult);
     }
 }

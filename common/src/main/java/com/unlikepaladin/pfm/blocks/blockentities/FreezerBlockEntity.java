@@ -24,6 +24,7 @@ import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
@@ -255,17 +256,24 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         return Inventories.removeStack(this.inventory, slot);
     }
 
+    @Override
+    protected DefaultedList<ItemStack> getHeldStacks() {
+        return inventory;
+    }
+
+    @Override
+    protected void setHeldStacks(DefaultedList<ItemStack> inventory) {
+        this.inventory = inventory;
+    }
 
     @Override
     public void setStack(int slot, ItemStack stack) {
         ItemStack itemStack = this.inventory.get(slot);
-        boolean bl = !stack.isEmpty() && stack.isOf(itemStack.getItem()) && ItemStack.canCombine(stack, itemStack);
+        boolean bl = !stack.isEmpty() && ItemStack.areItemsAndComponentsEqual(itemStack, stack);
         this.inventory.set(slot, stack);
-        if (stack.getCount() > this.getMaxCountPerStack()) {
-            stack.setCount(this.getMaxCountPerStack());
-        }
+        stack.capCount(this.getMaxCount(stack));
         if (slot == 0 && !bl) {
-            this.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(this.world, this.recipeType, this);
+            this.freezeTimeTotal = getFreezeTime(this.world, this.recipeType, this);
             this.freezeTime = 0;
             this.markDirty();
         }
@@ -313,10 +321,10 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
+    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.readNbt(nbt, registryLookup);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readNbt(nbt, this.inventory);
+        Inventories.readNbt(nbt, this.inventory, registryLookup);
         this.fuelTime = nbt.getShort("FuelTimeLeft");
         this.freezeTime = nbt.getShort("FreezeTime");
         this.freezeTimeTotal = nbt.getShort("FreezeTimeTotal");
@@ -328,9 +336,9 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, this.inventory);
+    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+        super.writeNbt(nbt, registryLookup);
+        Inventories.writeNbt(nbt, this.inventory, registryLookup);
         nbt.putShort("FuelTimeLeft", (short)this.fuelTime);
         nbt.putShort("FreezeTime", (short)this.freezeTime);
         nbt.putShort("FreezeTimeTotal", (short)this.freezeTimeTotal);

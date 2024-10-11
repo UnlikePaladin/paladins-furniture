@@ -281,7 +281,10 @@ public class PFMTagProvider extends PFMProvider {
             } else {
                 Path path = this.getOutput(id);
                 DataResult<JsonElement> jsonElementDataResult = TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(list, false));
-                JsonElement jsonElement = jsonElementDataResult.getOrThrow(false, getParent().getLogger()::error);
+                JsonElement jsonElement = jsonElementDataResult.getOrThrow((error) -> {
+                    getParent().getLogger().error(error);
+                    return null;
+                });
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 try (JsonWriter jsonWriter = new JsonWriter(new OutputStreamWriter(byteArrayOutputStream, StandardCharsets.UTF_8));){
                     Files.createDirectories(path.getParent());

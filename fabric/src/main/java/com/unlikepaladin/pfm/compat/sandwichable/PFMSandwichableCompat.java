@@ -5,6 +5,7 @@ import io.github.foundationgames.sandwichable.Sandwichable;
 import io.github.foundationgames.sandwichable.blocks.BlocksRegistry;
 import io.github.foundationgames.sandwichable.items.ItemsRegistry;
 import io.github.foundationgames.sandwichable.recipe.ToastingRecipe;
+import net.minecraft.component.DataComponentTypes;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -29,7 +30,7 @@ public class PFMSandwichableCompat {
                 pfmToasterBlockEntity.setCurrentItem(i, match.get().value().getResult(world.getRegistryManager()).copy());
                 changed = true;
             } else {
-                if(items.get(i).isFood()) {
+                if(items.get(i).contains(DataComponentTypes.FOOD)) {
                     Item item = items.get(i).isIn(Sandwichable.SMALL_FOODS) ? ItemsRegistry.BURNT_MORSEL : ItemsRegistry.BURNT_FOOD;
                     items.set(i, new ItemStack(item, 1));
                     changed = true;

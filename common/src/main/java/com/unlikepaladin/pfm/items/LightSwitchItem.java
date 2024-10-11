@@ -4,7 +4,9 @@ import com.unlikepaladin.pfm.blocks.PendantBlock;
 import com.unlikepaladin.pfm.blocks.PowerableBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
+import net.minecraft.client.item.TooltipType;
+import net.minecraft.component.DataComponentTypes;
+import net.minecraft.component.type.NbtComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
@@ -43,7 +45,8 @@ public class LightSwitchItem extends BlockItem {
             return new TypedActionResult<>(ActionResult.FAIL, stack);
         }
         if (player.isSneaking()) {
-            stack.setNbt(null);
+            stack.remove(DataComponentTypes.BLOCK_ENTITY_DATA);
+            createTag(stack);
             return new TypedActionResult<>(ActionResult.SUCCESS, stack);
         }
         return new TypedActionResult<>(ActionResult.PASS, stack);
@@ -96,7 +99,8 @@ public class LightSwitchItem extends BlockItem {
                     lightOffsets.add(pos.subtract(lightPos));
                 }
             }
-            context.getStack().setNbt(new NbtCompound());
+            context.getStack().remove(DataComponentTypes.BLOCK_ENTITY_DATA);
+            createTag(context.getStack());
             for (BlockPos blockPos : lightOffsets) {
                 addLight(context.getStack(), blockPos);
             }
@@ -105,28 +109,21 @@ public class LightSwitchItem extends BlockItem {
                 context.getPlayer().sendMessage(Text.translatable("message.pfm.light_switch_far", removedLights.toString()), false);
             }
         }
-        return state.getBlock().canPlaceAt(state, world, pos) && side.getAxis().isHorizontal();
+        return state.canPlaceAt(world, pos) && side.getAxis().isHorizontal();
     }
 
     private void addLight(ItemStack stack, BlockPos pos)
     {
         NbtCompound nbtCompound = createTag(stack);
-        if(!nbtCompound.contains("BlockEntityTag", NbtElement.COMPOUND_TYPE))
-        {
-            nbtCompound.put("BlockEntityTag", new NbtCompound());
+        if(!nbtCompound.contains("lights", NbtElement.LIST_TYPE)) {
+            nbtCompound.put("lights", new NbtList());
         }
 
-        NbtCompound blockEntityTag = nbtCompound.getCompound("BlockEntityTag");
-        if(!blockEntityTag.contains("lights", NbtElement.LIST_TYPE))
-        {
-            blockEntityTag.put("lights", new NbtList());
-        }
-
-        NbtList tagList = (NbtList) blockEntityTag.get("lights");
-        if(!containsLight(tagList, pos))
-        {
+        NbtList tagList = (NbtList) nbtCompound.get("lights");
+        if(!containsLight(tagList, pos))  {
             tagList.add(NbtLong.of(pos.asLong()));
         }
+        stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbtCompound));
     }
 
     private boolean containsLight(NbtList tagList, BlockPos pos)
@@ -143,17 +140,11 @@ public class LightSwitchItem extends BlockItem {
     }
 
     @Nullable
-    public static NbtList getLights(ItemStack stack)
-    {
-        if(stack.hasNbt()) {
-            NbtCompound nbtCompound = stack.getNbt();
-            if(nbtCompound.contains("BlockEntityTag", NbtElement.COMPOUND_TYPE))
-            {
-                NbtCompound blockEntityTag = nbtCompound.getCompound("BlockEntityTag");
-                if(blockEntityTag.contains("lights", NbtElement.LIST_TYPE))
-                {
-                    return (NbtList) blockEntityTag.get("lights");
-                }
+    public static NbtList getLights(ItemStack stack) {
+        if(stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
+            NbtCompound blockEntityTag = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).getNbt();
+            if(blockEntityTag.contains("lights", NbtElement.LIST_TYPE)) {
+                return (NbtList) blockEntityTag.get("lights");
             }
         }
         return null;
@@ -161,19 +152,22 @@ public class LightSwitchItem extends BlockItem {
 
     private static NbtCompound createTag(ItemStack stack)
     {
-        if(!stack.hasNbt())
+        if(!stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA))
         {
-            stack.setNbt(new NbtCompound());
+            NbtCompound nbtCompound = new NbtCompound();
+            nbtCompound.putString("id", "pfm:light_switch_block_entity");
+            stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbtCompound));
         }
-        return stack.getNbt();
+        return stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).copyNbt();
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
-        if (stack.hasNbt() && getLights(stack) != null) {
-            int lightNum = getLights(stack).size();
+    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+        NbtList nbtList;
+        if (stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA) && (nbtList = getLights(stack)) != null) {
+            int lightNum = nbtList.size();
             tooltip.add(Text.translatable("tooltip.pfm.light_switch_connected", lightNum));
         }
-        super.appendTooltip(stack, world, tooltip, context);
+        super.appendTooltip(stack, context, tooltip, type);
     }
 }

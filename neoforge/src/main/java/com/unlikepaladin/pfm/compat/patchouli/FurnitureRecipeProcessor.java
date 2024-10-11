@@ -17,7 +17,7 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
     private Recipe<?> recipe;
     @Override
     public void setup(World level, IVariableProvider variables) {
-        String recipeId = variables.get("recipe").asString();
+        String recipeId = variables.get("recipe", level.getRegistryManager()).asString();
         RecipeManager manager = level.getRecipeManager();
         recipe = manager.get(new Identifier(recipeId)).map(RecipeEntry::value).orElse(null);
     }
@@ -28,18 +28,18 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
             if (key.startsWith("item")) {
                 int index = Integer.parseInt(key.substring(4)) - 1;
                 if (index >= recipe.getIngredients().size()) {
-                    return IVariable.from(ItemStack.EMPTY);
+                    return IVariable.from(ItemStack.EMPTY, level.getRegistryManager());
                 }
                 Ingredient ingredient = recipe.getIngredients().get(index);
                 ItemStack[] stacks = ingredient.getMatchingStacks();
                 ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
-                return IVariable.from(stack);
+                return IVariable.from(stack, level.getRegistryManager());
             } else if (key.equals("resultitem")) {
                 ItemStack result = recipe.getResult(level.getRegistryManager());
-                return IVariable.from(result);
+                return IVariable.from(result, level.getRegistryManager());
             } else if (key.equals("icon")) {
                 ItemStack icon = recipe.createIcon();
-                return IVariable.from(icon);
+                return IVariable.from(icon, level.getRegistryManager());
             } else if (key.equals("text")) {
                 ItemStack out = recipe.getResult(level.getRegistryManager());
                 return IVariable.wrap(out.getCount() + "x$(br)" + out.getName());
