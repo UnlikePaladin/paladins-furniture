@@ -32,7 +32,7 @@ public class NeoForgeLadderModel extends PFMNeoForgeBakedModel {
         if (state != null && state.getBlock() instanceof SimpleBunkLadderBlock) {
             int offset = state.get(SimpleBunkLadderBlock.UP) ? 1 : 0;
             Sprite sprite = getSpriteList(state).get(0);
-            return getQuadsWithTexture(getTemplateBakedModels().get(offset).getQuads(state, side, rand, extraData, layer), sprite);
+            return getQuadsWithTexture(getTemplateBakedModels().get(offset).getQuads(state, side, rand, extraData, layer), new SpriteData(sprite));
         }
         return Collections.emptyList();
     }
@@ -45,6 +45,6 @@ public class NeoForgeLadderModel extends PFMNeoForgeBakedModel {
     @Override
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
         Sprite sprite = getSpriteList(stack).get(0);
-        return getQuadsWithTexture(getTemplateBakedModels().get(0).getQuads(state, face, random), sprite);
+        return getQuadsWithTexture(getTemplateBakedModels().get(0).getQuads(state, face, random), new SpriteData(sprite));
     }
 }
