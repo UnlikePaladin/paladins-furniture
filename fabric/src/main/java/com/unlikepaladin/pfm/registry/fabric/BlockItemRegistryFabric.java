@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.util.Rarity;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 public class BlockItemRegistryFabric {
 
@@ -19,7 +20,7 @@ public class BlockItemRegistryFabric {
     public static void registerItems() {
         PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Settings().rarity(Rarity.RARE).maxCount(1));
         if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(PaladinFurnitureMod.FURNITURE_GROUP)) {
-            PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(PaladinFurnitureMod.FURNITURE_GROUP, new ArrayList<>());
+            PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(PaladinFurnitureMod.FURNITURE_GROUP, new LinkedHashSet<>());
         }
         PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.get(PaladinFurnitureMod.FURNITURE_GROUP).add(PaladinFurnitureModBlocksItems.FURNITURE_BOOK);
         BlockItemRegistry.registerCommonItems();

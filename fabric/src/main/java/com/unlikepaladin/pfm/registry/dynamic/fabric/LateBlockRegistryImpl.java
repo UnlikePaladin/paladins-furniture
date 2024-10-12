@@ -25,6 +25,8 @@ import net.minecraft.registry.Registry;
 import net.minecraft.util.Pair;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -49,7 +51,7 @@ public class LateBlockRegistryImpl {
         Item item = itemSup.get();
         Registry.register(Registries.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
         if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(group)) {
-            PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(group, new ArrayList<>());
+            PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(group, new LinkedHashSet<>());
         }
         PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.get(group).add(item);
         if (item == PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM) {

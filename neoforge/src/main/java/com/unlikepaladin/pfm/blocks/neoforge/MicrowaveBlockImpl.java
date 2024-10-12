@@ -22,8 +22,8 @@ public class MicrowaveBlockImpl {
             NamedScreenHandlerFactory namedScreenHandlerFactory = new SimpleNamedScreenHandlerFactory(((syncId, inv, player1) -> new MicrowaveScreenHandler(microwaveBlockEntity, syncId, inv, microwaveBlockEntity, new MicrowavePropertyDelegate(microwaveBlockEntity, 2))), Text.translatable("container.pfm.microwave"));
             if (player instanceof ServerPlayerEntity) {
                 player.openMenu(namedScreenHandlerFactory, packetByteBuf -> {
-                    packetByteBuf.writeBoolean(microwaveBlockEntity.isActive);
                     packetByteBuf.writeBlockPos(microwaveBlockEntity.getPos());
+                    packetByteBuf.writeBoolean(microwaveBlockEntity.isActive);
                 } );
             }
         }

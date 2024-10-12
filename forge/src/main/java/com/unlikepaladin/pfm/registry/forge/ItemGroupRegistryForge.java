@@ -36,6 +36,7 @@ import net.minecraftforge.registries.RegisterEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -80,7 +81,7 @@ public class ItemGroupRegistryForge {
 
     @SubscribeEvent
     public static void addToVanillaItemGroups(BuildCreativeModeTabContentsEvent creativeModeTabEvent){
-        for (Map.Entry<Pair<String, ItemGroup>, List<Item>> itemGroupListEntry : PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.entrySet()) {
+        for (Map.Entry<Pair<String, ItemGroup>, Set<Item>> itemGroupListEntry : PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.entrySet()) {
             if (creativeModeTabEvent.getTab() == itemGroupListEntry.getKey().getRight()) {
                 itemGroupListEntry.getValue().forEach(item -> {
                     if (item == PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM) {

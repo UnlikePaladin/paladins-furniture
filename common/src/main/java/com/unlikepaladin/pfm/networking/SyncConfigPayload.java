@@ -44,7 +44,7 @@ public final class SyncConfigPayload implements CustomPayload {
     }
 
     public void write(RegistryByteBuf buf) {
-        write(buf);
+        write((PacketByteBuf) buf);
     }
 
     public void write(PacketByteBuf buf) {
