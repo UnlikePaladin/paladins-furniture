@@ -10,7 +10,6 @@ import net.minecraft.registry.Registry;
 import net.minecraft.registry.SimpleRegistry;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.ArrayList;

@@ -14,6 +14,7 @@ import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
@@ -44,7 +45,7 @@ public class PFMItemRenderer extends BuiltinModelItemRenderer {
         for (WoodVariant woodVariant : WoodVariantRegistry.getVariants()) {
             bakedModels.put(woodVariant, new LinkedHashMap<>());
             for (String part : modelParts) {
-                bakedModels.get(woodVariant).put(part, MinecraftClient.getInstance().getBakedModelManager().getModel(Identifier.of(PaladinFurnitureMod.MOD_ID, part.replaceAll("template", woodVariant.asString()))));
+                bakedModels.get(woodVariant).put(part, MinecraftClient.getInstance().getBakedModelManager().getModel(ModelIdentifier.ofInventoryVariant(Identifier.of(PaladinFurnitureMod.MOD_ID, part.replaceAll("template", woodVariant.asString())))));
             }
         }
         return bakedModels.get(variantBase).get(modelParts.get(index));

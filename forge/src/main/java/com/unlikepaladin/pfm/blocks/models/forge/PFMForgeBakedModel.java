@@ -173,16 +173,16 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     }
 
 
-    private static final Map<Pair<VertexFormatElement.Type, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
-    public static int findVertexElement(VertexFormatElement.Type type, int index) {
-        Pair<VertexFormatElement.Type, Integer> pairToFind = new Pair<>(type, index);
+    private static final Map<Pair<VertexFormatElement.ComponentType, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
+    public static int findVertexElement(VertexFormatElement.ComponentType type, int index) {
+        Pair<VertexFormatElement.ComponentType, Integer> pairToFind = new Pair<>(type, index);
         if (ELEMENT_INTEGER_MAP.containsKey(pairToFind))
             return ELEMENT_INTEGER_MAP.get(pairToFind);
 
         int id = 0;
         for (VertexFormatElement element1 : VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.getElements())
         {
-            if (element1.getType() == type && element1.getUvIndex() == index)
+            if (element1.type() == type && element1.uvIndex() == index)
                 break;
             id++;
         }

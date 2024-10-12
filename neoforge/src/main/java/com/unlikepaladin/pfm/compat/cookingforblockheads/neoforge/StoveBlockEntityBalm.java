@@ -39,6 +39,8 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SmeltingRecipe;
+import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.screen.ScreenHandler;
@@ -280,11 +282,12 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     }
 
     public ItemStack getSmeltingResult(ItemStack itemStack) {
-        ItemStack ovenRecipeResult = this.getSmeltingResult(ModRecipes.ovenRecipeType, this.singleSlotRecipeWrapper);
-        return !ovenRecipeResult.isEmpty() ? ovenRecipeResult : this.getSmeltingResult(RecipeType.SMELTING, this.singleSlotRecipeWrapper);
+        SingleStackRecipeInput recipeInput = new SingleStackRecipeInput(itemStack);
+        ItemStack ovenRecipeResult = this.getSmeltingResult(ModRecipes.ovenRecipeType, recipeInput);
+        return !ovenRecipeResult.isEmpty() ? ovenRecipeResult : this.getSmeltingResult(RecipeType.SMELTING, recipeInput);
     }
 
-    public <T extends Inventory> ItemStack getSmeltingResult(RecipeType<? extends Recipe<T>> recipeType, T container) {
+    public <T extends RecipeInput> ItemStack getSmeltingResult(RecipeType<? extends Recipe<T>> recipeType, T container) {
         RecipeEntry<?> recipe = this.world.getRecipeManager().getFirstMatch(recipeType, container, this.world).orElse(null);
         if (recipe != null) {
             ItemStack result = recipe.value().getResult(this.world.getRegistryManager());
