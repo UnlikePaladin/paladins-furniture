@@ -37,10 +37,10 @@ public class DynamicBlockRegistry {
 
     public static void compatInit() {
 
-        addBlockTypeFinder(WoodVariant.class, WoodVariant.Finder.simple(new Identifier("domum_ornamentum:cactus"),
-                new Identifier("domum_ornamentum:green_cactus_extra"), new Identifier("cactus")));
-        addBlockTypeFinder(WoodVariant.class, WoodVariant.Finder.simple(new Identifier("domum_ornamentum:cactus_extra"),
-                new Identifier("domum_ornamentum:cactus_extra"), new Identifier("cactus")));
+        addBlockTypeFinder(WoodVariant.class, WoodVariant.Finder.simple(Identifier.of("domum_ornamentum:cactus"),
+                Identifier.of("domum_ornamentum:green_cactus_extra"), Identifier.of("cactus")));
+        addBlockTypeFinder(WoodVariant.class, WoodVariant.Finder.simple(Identifier.of("domum_ornamentum:cactus_extra"),
+                Identifier.of("domum_ornamentum:cactus_extra"), Identifier.of("cactus")));
 
         addBlockTypeFinder(WoodVariant.class, WoodVariant.Finder.simple(
                 "darkerdepths", "petrified", "petrified_planks", "petrified_log"));
@@ -108,26 +108,26 @@ public class DynamicBlockRegistry {
         WoodVariant.Finder floweringAzalea = WoodVariant.Finder.simple(
                 "ecologics", "flowering_azalea", "flowering_azalea_planks", "flowering_azalea_log");
         floweringAzalea.addChild("stripped_log", "stripped_azalea_log");
-        floweringAzalea.addChild("leaves", new Identifier("minecraft:flowering_azalea_leaves"));
+        floweringAzalea.addChild("leaves", Identifier.of("minecraft:flowering_azalea_leaves"));
 
         addBlockTypeFinder(WoodVariant.class, floweringAzalea);
 
 
         WoodVariant.Finder azalea = WoodVariant.Finder.simple(
                 "ecologics", "azalea", "azalea_planks", "azalea_log");
-        azalea.addChild("leaves", new Identifier("minecraft:azalea_leaves"));
+        azalea.addChild("leaves", Identifier.of("minecraft:azalea_leaves"));
 
         addBlockTypeFinder(WoodVariant.class, azalea);
 
         WoodVariant.Finder quarkAzalea = WoodVariant.Finder.simple(
                 "quark", "azalea", "azalea_planks", "azalea_log");
-        quarkAzalea.addChild("leaves", new Identifier("minecraft:azalea_leaves"));
+        quarkAzalea.addChild("leaves", Identifier.of("minecraft:azalea_leaves"));
 
         addBlockTypeFinder(WoodVariant.class, quarkAzalea);
 
         WoodVariant.Finder vanillaBamboo = WoodVariant.Finder.simple(
                 "minecraft", "bamboo", "bamboo_planks", "bamboo_block");
-        vanillaBamboo.addChild("stripped_log", new Identifier("minecraft:stripped_bamboo_block"));
+        vanillaBamboo.addChild("stripped_log", Identifier.of("minecraft:stripped_bamboo_block"));
 
         addBlockTypeFinder(WoodVariant.class, vanillaBamboo);
 

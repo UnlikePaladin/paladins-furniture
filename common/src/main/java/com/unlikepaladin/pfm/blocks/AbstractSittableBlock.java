@@ -6,7 +6,7 @@ import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.*;
-import net.minecraft.block.enums.Instrument;
+import net.minecraft.block.enums.NoteBlockInstrument;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -20,7 +20,6 @@ import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -199,9 +198,9 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
     }
 
     public static boolean isWoodBased(BlockState state) {
-        Instrument instrument = state.getInstrument();
+        NoteBlockInstrument instrument = state.getInstrument();
         BlockSoundGroup soundGroup = state.getSoundGroup();
-        return soundGroup == BlockSoundGroup.BAMBOO_WOOD || soundGroup == BlockSoundGroup.WOOL || soundGroup == BlockSoundGroup.CHERRY_WOOD || soundGroup == BlockSoundGroup.WOOD || soundGroup == BlockSoundGroup.NETHER_WOOD || instrument == Instrument.BASS;
+        return soundGroup == BlockSoundGroup.BAMBOO_WOOD || soundGroup == BlockSoundGroup.WOOL || soundGroup == BlockSoundGroup.CHERRY_WOOD || soundGroup == BlockSoundGroup.WOOD || soundGroup == BlockSoundGroup.NETHER_WOOD || instrument == NoteBlockInstrument.BASS;
     }
 
 

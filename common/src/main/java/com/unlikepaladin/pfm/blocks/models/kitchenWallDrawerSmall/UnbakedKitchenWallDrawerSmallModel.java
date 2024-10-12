@@ -20,26 +20,26 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public class UnbakedKitchenWallDrawerSmallModel implements UnbakedModel {
     public static final Identifier[] DRAWER_MODEL_PARTS_BASE = new Identifier[] {
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_wall_drawer_small/kitchen_wall_drawer_small"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_wall_drawer_small/kitchen_wall_drawer_small_open")
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_wall_drawer_small/kitchen_wall_drawer_small"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_wall_drawer_small/kitchen_wall_drawer_small_open")
     };
 
-    private static final Identifier PARENT = new Identifier("block/block");
-    public static final Identifier DRAWER_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_wall_small_drawer");
+    private static final Identifier PARENT = Identifier.of("block/block");
+    public static final Identifier DRAWER_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_wall_small_drawer");
     public static final List<Identifier> DRAWER_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_small_drawer"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_small_drawer"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_kitchen_wall_small_drawer"));
+                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_kitchen_wall_small_drawer"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
                 if (variant.identifier.getPath().equals("quartz"))
                     continue;
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_small_drawer"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_small_drawer"));
             }
             for(ExtraCounterVariant variant : ExtraCounterVariant.values()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_small_drawer"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_small_drawer"));
             }
             add(DRAWER_MODEL_ID);
         }
@@ -61,7 +61,7 @@ public class UnbakedKitchenWallDrawerSmallModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(DRAWER_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(DRAWER_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(DRAWER_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(DRAWER_MODEL_ID).getCachedModelParts().get(rotationContainer));
 

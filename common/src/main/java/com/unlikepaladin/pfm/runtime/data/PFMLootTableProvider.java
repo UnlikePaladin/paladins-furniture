@@ -92,7 +92,7 @@ public class PFMLootTableProvider extends PFMProvider {
     }
 
     private static Path getOutput(Path rootOutput, Identifier lootTableId) {
-        return rootOutput.resolve("data/" + lootTableId.getNamespace() + "/loot_tables/" + lootTableId.getPath() + ".json");
+        return rootOutput.resolve("data/" + lootTableId.getNamespace() + "/loot_table/" + lootTableId.getPath() + ".json");
     }
 
     static class PFMLootTableGenerator implements Consumer<BiConsumer<Identifier, LootTable.Builder>> {

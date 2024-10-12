@@ -18,6 +18,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Clearable;
 import net.minecraft.util.ItemScatterer;
@@ -49,7 +50,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
                 stovetopBlockEntity.cookingTimes[i] = stovetopBlockEntity.cookingTimes[i] + 2;
             }
             if (stovetopBlockEntity.cookingTimes[i] < stovetopBlockEntity.cookingTotalTimes[i]) continue;
-            SimpleInventory inventory = new SimpleInventory(itemStack);
+            SingleStackRecipeInput inventory = new SingleStackRecipeInput(itemStack);
             ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.value().craft(inventory, world.getRegistryManager())).orElse(itemStack);
                 if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
                     ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), itemStack2);
@@ -83,7 +84,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         i = state.get(KitchenStovetopBlock.FACING).rotateYClockwise().getHorizontal();
         for (int j = 0; j < stovetopBlockEntity.itemsBeingCooked.size(); ++j) {
             ItemStack stack = stovetopBlockEntity.itemsBeingCooked.get(j);
-            if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) continue;
+            if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(stack), world).isEmpty()) continue;
             Direction direction = Direction.fromHorizontal(Math.floorMod(j + i, 4));
             float f = 0.2125f;
             double x = pos.getX() + 0.5 - ((direction.getOffsetX() * f) + (direction.rotateYClockwise().getOffsetX() * f));
@@ -148,7 +149,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         if (this.itemsBeingCooked.stream().noneMatch(ItemStack::isEmpty)) {
             return Optional.empty();
         }
-        return this.world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(item), this.world);
+        return this.world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(item), this.world);
     }
 
     public boolean addItem(ItemStack item, int integer) {

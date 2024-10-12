@@ -67,14 +67,14 @@ public class ItemGroupRegistryForge {
                             stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY));
                             stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLACK));
                         }).build();
-            helper.register(new Identifier(MOD_ID, "dye_kits"), dyeGroup);
+            helper.register(Identifier.of(MOD_ID, "dye_kits"), dyeGroup);
             PaladinFurnitureMod.DYE_KITS.setRight(dyeGroup);
 
             ItemGroup furnitureGroup = ItemGroup.builder().displayName(Text.translatable("itemGroup.pfm.furniture"))
                     .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultStack())
                     .entries((enabledFeatures, entries) -> {
                     }).build();
-            helper.register(new Identifier(MOD_ID, "furniture"), furnitureGroup);
+            helper.register(Identifier.of(MOD_ID, "furniture"), furnitureGroup);
             PaladinFurnitureMod.FURNITURE_GROUP.setRight(furnitureGroup);
         });
     }

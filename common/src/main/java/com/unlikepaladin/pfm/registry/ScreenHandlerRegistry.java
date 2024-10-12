@@ -20,12 +20,12 @@ import java.util.function.BiFunction;
 public class ScreenHandlerRegistry {
     public static void registerScreenHandlers() {
         ScreenHandlerIDs.FREEZER_SCREEN_HANDLER = registerScreenHandlerSimple(ScreenHandlerIDs.FREEZER, FreezerScreenHandler::new);
-        ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER = registerScreenHandlerSimple(new Identifier(PaladinFurnitureMod.MOD_ID,"furniture"), WorkbenchScreenHandler::new);
+        ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER = registerScreenHandlerSimple(Identifier.of(PaladinFurnitureMod.MOD_ID,"furniture"), WorkbenchScreenHandler::new);
         Pair<TriFunc<Integer, PlayerInventory, StoveScreenHandler.StoveData, ScreenHandler>, PacketCodec<RegistryByteBuf, StoveScreenHandler.StoveData>> stoveHandler = getStoveMenuFactory();
-        ScreenHandlerIDs.STOVE_SCREEN_HANDLER = registerScreenHandlerExtended(new Identifier(PaladinFurnitureMod.MOD_ID,"stove_block_entity"), stoveHandler.getLeft(), stoveHandler.getRight());
-        ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER = registerScreenHandlerSimple(new Identifier(PaladinFurnitureMod.MOD_ID,"iron_stove_block_entity"), IronStoveScreenHandler::new);
-        ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = registerScreenHandlerExtended(new Identifier(PaladinFurnitureMod.MOD_ID,"microwave_block_entity"), MicrowaveScreenHandler::new, MicrowaveScreenHandler.PACKET_CODEC);
-        ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER = registerScreenHandlerExtended(new Identifier(PaladinFurnitureMod.MOD_ID,"trashcan_block_entity"), TrashcanScreenHandler::new, TrashcanScreenHandler.PACKET_CODEC);
+        ScreenHandlerIDs.STOVE_SCREEN_HANDLER = registerScreenHandlerExtended(Identifier.of(PaladinFurnitureMod.MOD_ID,"stove_block_entity"), stoveHandler.getLeft(), stoveHandler.getRight());
+        ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER = registerScreenHandlerSimple(Identifier.of(PaladinFurnitureMod.MOD_ID,"iron_stove_block_entity"), IronStoveScreenHandler::new);
+        ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER = registerScreenHandlerExtended(Identifier.of(PaladinFurnitureMod.MOD_ID,"microwave_block_entity"), MicrowaveScreenHandler::new, MicrowaveScreenHandler.PACKET_CODEC);
+        ScreenHandlerIDs.TRASHCAN_SCREEN_HANDLER = registerScreenHandlerExtended(Identifier.of(PaladinFurnitureMod.MOD_ID,"trashcan_block_entity"), TrashcanScreenHandler::new, TrashcanScreenHandler.PACKET_CODEC);
 
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerScreenHandlers);
     }

@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.items.forge;
 
 import com.unlikepaladin.pfm.items.PFMComponents;
-import net.minecraft.component.DataComponentType;
+import net.minecraft.component.ComponentType;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.Identifier;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -13,8 +13,8 @@ import java.util.Map;
 
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PFMComponentsImpl {
-    public static Map<Identifier, DataComponentType<?>> components = new HashMap<>();
-    public static <T> DataComponentType<T> register(Identifier id, DataComponentType<T> type) {
+    public static Map<Identifier, ComponentType<?>> components = new HashMap<>();
+    public static <T> ComponentType<T> register(Identifier id, ComponentType<T> type) {
         components.put(id, type);
         return type;
     }

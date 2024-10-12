@@ -21,25 +21,25 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public class UnbakedClassicTableModel implements UnbakedModel {
     public static final Identifier[] CLASSIC_MODEL_PARTS_BASE = new Identifier[] {
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic_middle"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic_two"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic_two_uved"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic_one"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic_one_uved"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic")
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic_middle"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic_two"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic_two_uved"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic_one"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic_one_uved"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_classic/table_classic")
     };
 
-    private static final Identifier PARENT = new Identifier("block/block");
-    public static final Identifier TABLE_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/table_classic");
+    private static final Identifier PARENT = Identifier.of("block/block");
+    public static final Identifier TABLE_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_classic");
     public static final List<Identifier> MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_table_classic"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_table_classic"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_table_classic"));
+                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_table_classic"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_table_classic"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_table_classic"));
             }
             add(TABLE_MODEL_ID);
         }
@@ -63,7 +63,7 @@ public class UnbakedClassicTableModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(TABLE_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(TABLE_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().get(rotationContainer));
 

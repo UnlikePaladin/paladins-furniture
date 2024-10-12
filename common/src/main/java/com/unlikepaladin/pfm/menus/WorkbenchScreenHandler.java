@@ -90,7 +90,8 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     boolean craft() {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe furnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
-            if (furnitureRecipe.matches(playerInventory, playerInventory.player.getWorld())) {
+            FurnitureRecipe.FurnitureRecipeInput furnitureRecipeInput = new FurnitureRecipe.FurnitureRecipeInput(playerInventory);
+            if (furnitureRecipe.matches(furnitureRecipeInput, playerInventory.player.getWorld())) {
                 List<Ingredient> ingredients = furnitureRecipe.getIngredients();
                 for (Ingredient ingredient : ingredients) {
                     for (ItemStack stack : ingredient.getMatchingStacks()) {
@@ -115,7 +116,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     void populateResult(PlayerEntity player) {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe furnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
-            this.outputSlot.setStack(furnitureRecipe.craft(player.getInventory(), player.getWorld().getRegistryManager()));
+            this.outputSlot.setStack(furnitureRecipe.craft(new FurnitureRecipe.FurnitureRecipeInput(player.getInventory()), player.getWorld().getRegistryManager()));
         } else {
             this.outputSlot.setStack(ItemStack.EMPTY);
         }
@@ -169,15 +170,16 @@ public class WorkbenchScreenHandler extends ScreenHandler {
 
     public void updateInput() {
         // Reset the selected recipe and clear the output slot
+        FurnitureRecipe.FurnitureRecipeInput input = new FurnitureRecipe.FurnitureRecipeInput(playerInventory);
         if (!this.availableRecipes.isEmpty() && getSelectedRecipe() != -1) {
-            if (!this.sortedRecipes.get(getSelectedRecipe()).matches(playerInventory, world)){
+            if (!this.sortedRecipes.get(getSelectedRecipe()).matches(input, world)){
                 this.selectedRecipe.set(-1);
                 this.outputSlot.setStack(ItemStack.EMPTY);
             }
         }
         // Reset the available recipes list and add all recipes that can be crafted
         this.availableRecipes.clear();
-        this.availableRecipes.addAll(allRecipes.stream().filter(newFurnitureRecipe -> newFurnitureRecipe.matches(playerInventory, world)).toList());
+        this.availableRecipes.addAll(allRecipes.stream().filter(newFurnitureRecipe -> newFurnitureRecipe.matches(input, world)).toList());
         // Clear the visible recipe list and add the craft-able recipes first, then add the rest, checking that it's not present already so that it's not overridden.
         this.sortedRecipes.clear();
         this.sortedRecipes.addAll(availableRecipes);

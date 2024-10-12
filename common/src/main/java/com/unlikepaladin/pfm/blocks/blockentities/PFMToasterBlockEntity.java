@@ -24,6 +24,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -174,8 +175,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         }
         else {
             for (int i = 0; i < 2; i++) {
-                SimpleInventory inv = new SimpleInventory(items.get(i));
-                Optional<RecipeEntry<CampfireCookingRecipe>> match = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inv, world);
+                Optional<RecipeEntry<CampfireCookingRecipe>> match = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(items.get(i)), world);
 
                 boolean changed = false;
                 if(match.isPresent()) {

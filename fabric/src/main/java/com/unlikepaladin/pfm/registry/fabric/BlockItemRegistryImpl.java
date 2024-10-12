@@ -25,7 +25,7 @@ public class BlockItemRegistryImpl {
 
     public static void registerItemPlatformSpecific(String itemName, Supplier<Item> itemSupplier, Pair<String, ItemGroup> group) {
         Item item = itemSupplier.get();
-        Registry.register(Registries.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
+        Registry.register(Registries.ITEM, Identifier.of(PaladinFurnitureMod.MOD_ID, itemName), item);
         if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(group)) {
             PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(group, new LinkedHashSet<>());
         }
@@ -47,7 +47,7 @@ public class BlockItemRegistryImpl {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerBlockItemPlatformSpecific(blockName, block, new Pair<>("building_blocks", Registries.ITEM_GROUP.get(ItemGroups.BUILDING_BLOCKS)));
         }
-        Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName),  block);
+        Registry.register(Registries.BLOCK, Identifier.of(PaladinFurnitureMod.MOD_ID, blockName),  block);
     }
 
     public static boolean isModLoaded(String modId) {

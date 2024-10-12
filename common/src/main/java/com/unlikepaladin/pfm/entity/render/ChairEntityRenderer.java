@@ -8,7 +8,7 @@ import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.util.Identifier;
 
 public class ChairEntityRenderer extends MobEntityRenderer<ChairEntity, ModelEmpty> {
-    private static final Identifier EMPTY_TEXTURE = new Identifier("minecraft:textures/block/stone.png");
+    private static final Identifier EMPTY_TEXTURE = Identifier.of("minecraft:textures/block/stone.png");
     public ChairEntityRenderer(EntityRendererFactory.Context context) {
         super(context, new ModelEmpty(context.getPart(EntityRenderIDs.MODEL_CUBE_LAYER)), 0f);
     }

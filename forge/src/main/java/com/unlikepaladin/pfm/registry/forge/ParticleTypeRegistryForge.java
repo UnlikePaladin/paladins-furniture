@@ -14,7 +14,7 @@ public class ParticleTypeRegistryForge {
     @SubscribeEvent
     public static void register(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.PARTICLE_TYPES, particleTypeRegisterHelper -> {
-            particleTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "shower_water"), ParticleIDs.WATER_DROP = new SimpleParticleType(false));
+            particleTypeRegisterHelper.register(Identifier.of(PaladinFurnitureMod.MOD_ID, "shower_water"), ParticleIDs.WATER_DROP = new SimpleParticleType(false));
         });
     }
 }

@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.menus;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import com.unlikepaladin.pfm.fabric.menus.slots.GenericOutputSlot;
 import com.unlikepaladin.pfm.menus.slots.FreezerFuelSlot;
+import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -10,6 +11,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.RecipeBookCategory;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
@@ -17,7 +19,7 @@ import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.world.World;
 
-public abstract class AbstractFreezerScreenHandler extends AbstractRecipeScreenHandler<Inventory> {
+public abstract class AbstractFreezerScreenHandler extends AbstractRecipeScreenHandler<SingleStackRecipeInput, FreezingRecipe> {
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
     protected final World world;
@@ -67,8 +69,8 @@ public abstract class AbstractFreezerScreenHandler extends AbstractRecipeScreenH
     }
 
     @Override
-    public boolean matches(RecipeEntry<? extends Recipe<Inventory>> recipe) {
-        return recipe != null && recipe.value().matches(this.inventory, this.world);
+    public boolean matches(RecipeEntry<FreezingRecipe> recipe) {
+        return recipe != null && recipe.value().matches(new SingleStackRecipeInput(this.inventory.getStack(0)), this.world);
     }
 
     @Override
@@ -150,7 +152,7 @@ public abstract class AbstractFreezerScreenHandler extends AbstractRecipeScreenH
     }
 
     protected boolean isFreezeable(ItemStack itemStack) {
-        return this.world.getRecipeManager().getFirstMatch(this.recipeType, new SimpleInventory(itemStack), this.world).isPresent();
+        return this.world.getRecipeManager().getFirstMatch(this.recipeType, new SingleStackRecipeInput(itemStack), this.world).isPresent();
     }
 
     public boolean isFuel(ItemStack itemStack) {

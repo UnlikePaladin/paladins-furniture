@@ -32,7 +32,7 @@ public class BlockItemRegistryNeoForge {
     public static void registerBlocks(RegisterEvent event) {
         event.register(Registries.BLOCK.getKey(), blockRegisterHelper -> {
             BlockItemRegistry.registerCommonBlocks();
-            BlockItemRegistryImpl.blocks.forEach((blockName, block) -> blockRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, blockName), block));
+            BlockItemRegistryImpl.blocks.forEach((blockName, block) -> blockRegisterHelper.register(Identifier.of(PaladinFurnitureMod.MOD_ID, blockName), block));
         });
     }
 
@@ -51,7 +51,7 @@ public class BlockItemRegistryNeoForge {
                     PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(BlockItemRegistryImpl.itemNameToGroup.get(itemName), new LinkedHashSet<>());
                 }
                 PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.get(BlockItemRegistryImpl.itemNameToGroup.get(itemName)).add(item);
-                itemRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
+                itemRegisterHelper.register(Identifier.of(PaladinFurnitureMod.MOD_ID, itemName), item);
             });
         });
     }

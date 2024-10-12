@@ -20,7 +20,7 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
     public void setup(World level, IVariableProvider variables) {
         String recipeId = variables.get("recipe", level.getRegistryManager()).asString();
         RecipeManager manager = level.getRecipeManager();
-        recipe = manager.get(new Identifier(recipeId)).map(RecipeEntry::value).orElse(null);
+        recipe = manager.get(Identifier.of(recipeId)).map(RecipeEntry::value).orElse(null);
     }
 
     @Override

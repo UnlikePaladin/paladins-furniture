@@ -23,6 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.entry.RegistryEntry;
@@ -49,9 +50,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker, RecipeInputProvider {
+    private final RecipeManager.MatchGetter<SingleStackRecipeInput, ? extends AbstractCookingRecipe> matchGetter;
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.FREEZER_BLOCK_ENTITY, pos, state);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
+        this.matchGetter = RecipeManager.createCachedMatchGetter(recipeType);
     }
     private final ViewerCountManager stateManager = new ViewerCountManager() {
 
@@ -192,7 +195,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         fuelTimes.put(item2, fuelTime);
     }
     private static int getFreezeTime(World world, RecipeType<? extends AbstractCookingRecipe> recipeType, Inventory inventory) {
-        return world.getRecipeManager().getFirstMatch(recipeType, inventory, world).map(RecipeEntry::value).map(AbstractCookingRecipe::getCookingTime).orElse(200);
+        return world.getRecipeManager().getFirstMatch(recipeType, new SingleStackRecipeInput(inventory.getStack(0)), world).map(RecipeEntry::value).map(AbstractCookingRecipe::getCookingTime).orElse(200);
     }
 
     public static boolean canUseAsFuel(ItemStack stack) {
@@ -331,7 +334,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         this.fuelTimeTotal = this.getFuelTime(this.inventory.get(1));
         NbtCompound nbtCompound = nbt.getCompound("RecipesUsed");
         for (String string : nbtCompound.getKeys()) {
-            this.recipesUsed.put(new Identifier(string), nbtCompound.getInt(string));
+            this.recipesUsed.put(Identifier.of(string), nbtCompound.getInt(string));
         }
     }
 
@@ -438,7 +441,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         }
         ItemStack itemStack = blockEntity.inventory.get(1);
         if (blockEntity.isActive() || !itemStack.isEmpty() && !blockEntity.inventory.get(0).isEmpty()) {
-            RecipeEntry<?> recipEntry = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
+            RecipeEntry<?> recipEntry = blockEntity.matchGetter.getFirstMatch(new SingleStackRecipeInput(blockEntity.inventory.get(0)), world).orElse(null);
             Recipe recipe = recipEntry != null ? recipEntry.value() : null;
             int i = blockEntity.getMaxCountPerStack();
             if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {

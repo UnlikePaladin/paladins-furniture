@@ -21,28 +21,28 @@ import java.util.function.Function;
 
 public class UnbakedChairModel implements UnbakedModel {
     public static final Identifier[] CHAIR_PARTS_BASE = new Identifier[] {
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/chair/chair"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/chair/chair_tucked")
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/chair/chair"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/chair/chair_tucked")
     };
 
-    public static final Identifier CHAIR_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/chair");
+    public static final Identifier CHAIR_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/chair");
     public static final List<Identifier> CHAIR_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
 
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_chair"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_chair"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_chair"));
+                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_chair"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
 
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_chair"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_chair"));
             }
             add(CHAIR_MODEL_ID);
         }
     };
 
-    private static final Identifier PARENT = new Identifier("block/block");
+    private static final Identifier PARENT = Identifier.of("block/block");
     public Collection<Identifier> getModelDependencies() {
         return List.of(PARENT);
     }
@@ -58,7 +58,7 @@ public class UnbakedChairModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(CHAIR_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(CHAIR_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(CHAIR_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(CHAIR_MODEL_ID).getCachedModelParts().get(rotationContainer));
 

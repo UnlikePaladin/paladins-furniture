@@ -13,12 +13,12 @@ import java.util.Map;
 @Mixin(BakedModelManager.class)
 public abstract class PFMBakedModelManagerMixin implements PFMBakedModelManagerAccessor {
     @Shadow
-    private Map<Identifier, BakedModel> models;
+    private Map<ModelIdentifier, BakedModel> models;
 
     @Shadow private BakedModel missingModel;
 
     @Override
     public BakedModel pfm$getModelFromNormalID(Identifier id) {
-        return models.getOrDefault(id, missingModel);
+        return models.getOrDefault(ModelIdentifier.ofInventoryVariant(id), missingModel);
     }
 }

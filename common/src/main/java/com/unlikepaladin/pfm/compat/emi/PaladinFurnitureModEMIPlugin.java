@@ -23,9 +23,9 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
     protected static EmiRecipeCategory FREEZER;
 
     public static EmiIngredient WORKBENCH_ICON = EmiStack.of(PaladinFurnitureModBlocksItems.WORKING_TABLE);
-    public static Identifier WORKBENCH_ID = new Identifier("pfm:furniture");
+    public static Identifier WORKBENCH_ID = Identifier.of("pfm:furniture");
     public static EmiIngredient FREEZER_ICON = EmiStack.of(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
-    public static Identifier FREEZER_ID = new Identifier("pfm:freezer");
+    public static Identifier FREEZER_ID = Identifier.of("pfm:freezer");
     @Override
     public void register(EmiRegistry registry) {
         FURNITURE  = new EmiRecipeCategory(WORKBENCH_ID, WORKBENCH_ICON, simplifiedRenderer(240, 240));
@@ -50,7 +50,7 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
     private static EmiRenderable simplifiedRenderer(int u, int v) {
         return (context, x, y, delta) -> {
             RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-            context.drawTexture(new Identifier("emi", "textures/gui/widgets.png"), x, y, u, v, 16, 16, 256, 256);
+            context.drawTexture(Identifier.of("emi", "textures/gui/widgets.png"), x, y, u, v, 16, 16, 256, 256);
         };
     }
 }

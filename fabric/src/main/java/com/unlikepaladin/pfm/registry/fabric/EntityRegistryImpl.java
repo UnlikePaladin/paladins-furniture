@@ -17,6 +17,6 @@ public class EntityRegistryImpl {
     }
 
     public static void registerEntityType(String id, EntityType<?> entityType) {
-        Registry.register(Registries.ENTITY_TYPE, new Identifier(PaladinFurnitureMod.MOD_ID, id), entityType);
+        Registry.register(Registries.ENTITY_TYPE, Identifier.of(PaladinFurnitureMod.MOD_ID, id), entityType);
     }
 }

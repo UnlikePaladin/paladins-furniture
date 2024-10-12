@@ -16,6 +16,7 @@ import net.minecraft.recipe.Recipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.SmokingRecipe;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -25,7 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
-    private final Identifier background = new Identifier(PaladinFurnitureMod.MOD_ID,"textures/gui/container/microwave.png");
+    private final Identifier background = Identifier.of(PaladinFurnitureMod.MOD_ID,"textures/gui/container/microwave.png");
     private boolean narrow;
     public boolean isActive;
     private MicrowaveBlockEntity microwaveBlockEntity;
@@ -79,7 +80,7 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
     }
 
     public Optional<RecipeEntry<SmokingRecipe>> getRecipe(World world, Inventory inventory) {
-        return world.getRecipeManager().getFirstMatch(RecipeType.SMOKING, inventory, world);
+        return world.getRecipeManager().getFirstMatch(RecipeType.SMOKING, new SingleStackRecipeInput(inventory.getStack(0)), world);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.entity.render;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
+import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.client.EntityRenderIDs;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import net.minecraft.block.BedBlock;

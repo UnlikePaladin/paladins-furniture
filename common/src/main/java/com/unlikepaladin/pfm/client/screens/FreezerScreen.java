@@ -14,7 +14,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class FreezerScreen extends HandledScreen<AbstractFreezerScreenHandler> {
-    private final Identifier background = new Identifier(PaladinFurnitureMod.MOD_ID,"textures/gui/container/freezer.png");
+    private final Identifier background = Identifier.of(PaladinFurnitureMod.MOD_ID,"textures/gui/container/freezer.png");
     private boolean narrow;
 
     public FreezerScreen(AbstractFreezerScreenHandler handler, PlayerInventory inventory, Text title) {

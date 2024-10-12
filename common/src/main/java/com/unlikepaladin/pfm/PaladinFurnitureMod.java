@@ -38,7 +38,7 @@ import java.util.*;
 public class PaladinFurnitureMod {
 
 	public static final String MOD_ID = "pfm";
-	public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
+	public static final Identifier FURNITURE_DYED_ID = Identifier.of("pfm:furniture_dyed");
 	public static final HashMap<Class<? extends Block>, FurnitureEntry<?>> furnitureEntryMap = new LinkedHashMap<>();
 	public static SoundEvent FURNITURE_DYED_EVENT = SoundEvent.of(FURNITURE_DYED_ID);
 
@@ -52,7 +52,6 @@ public class PaladinFurnitureMod {
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
-		PFMComponents.registerComponents();
 		SinkBehavior.registerBehavior();
 		BathtubBehavior.registerBehavior();
 		updateChecker = new PaladinFurnitureModUpdateChecker();

@@ -20,6 +20,7 @@ import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
@@ -154,7 +155,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     private static int getCookTime(World world, RecipeType<? extends AbstractCookingRecipe> recipeType, Inventory inventory) {
-        return world.getRecipeManager().getFirstMatch(recipeType, inventory, world).map(RecipeEntry::value).map(AbstractCookingRecipe::getCookingTime).orElse(200);
+        return world.getRecipeManager().getFirstMatch(recipeType, new SingleStackRecipeInput(inventory.getStack(0)), world).map(RecipeEntry::value).map(AbstractCookingRecipe::getCookingTime).orElse(200);
     }
 
     @Override
@@ -167,7 +168,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         NbtCompound nbtCompound = nbt.getCompound("RecipesUsed");
         this.isActive = nbt.getBoolean("isActive");
         for (String string : nbtCompound.getKeys()) {
-            this.recipesUsed.put(new Identifier(string), nbtCompound.getInt(string));
+            this.recipesUsed.put(Identifier.of(string), nbtCompound.getInt(string));
         }
     }
 
@@ -219,10 +220,10 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
-        return dir == Direction.DOWN && getRecipe(new SimpleInventory(stack)) == null;
+        return dir == Direction.DOWN && getRecipe(new SingleStackRecipeInput(stack)) == null;
     }
 
-    public Recipe<?> getRecipe(Inventory inventory) {
+    public Recipe<?> getRecipe(SingleStackRecipeInput inventory) {
         return this.world.getRecipeManager().getFirstMatch(RecipeType.SMOKING, inventory, world).orElse(null).value();
     }
 
@@ -299,7 +300,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     public RecipeEntry<?> getRecipe() {
-        return world.getRecipeManager().getFirstMatch(this.recipeType, this, world).orElse(null);
+        return world.getRecipeManager().getFirstMatch(this.recipeType, new SingleStackRecipeInput(this.inventory.get(0)), world).orElse(null);
     }
     public static boolean canAcceptRecipeOutput(DynamicRegistryManager registryManager, @Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
         if (slots.get(0).isEmpty() || recipe == null) {
@@ -350,7 +351,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         boolean bl2 = false;
         ItemStack itemStack = blockEntity.inventory.get(0);
         if (blockEntity.isActive || !itemStack.isEmpty()) {
-            RecipeEntry<? extends AbstractCookingRecipe> recipeEntry = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
+            RecipeEntry<? extends AbstractCookingRecipe> recipeEntry = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, new SingleStackRecipeInput(itemStack), world).orElse(null);
             Recipe recipe = recipeEntry != null ? recipeEntry.value() : null;
             int i = blockEntity.getMaxCountPerStack();
             if (blockEntity.isActive && canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {

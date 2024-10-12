@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class FreezingWidget extends BurningFire {
-    private final Identifier background = new Identifier(PaladinFurnitureMod.MOD_ID,"textures/gui/container/freezer.png");
+    private final Identifier background = Identifier.of(PaladinFurnitureMod.MOD_ID,"textures/gui/container/freezer.png");
     private Rectangle bounds;
     private double animationDuration = -1;
     private final NumberAnimator<Float> darkBackgroundAlpha = ValueAnimator.ofFloat()

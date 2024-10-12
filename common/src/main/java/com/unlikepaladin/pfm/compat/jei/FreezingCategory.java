@@ -30,9 +30,9 @@ import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     public static final Text TITLE = Text.translatable("rei.pfm.freezer");
     public final IDrawable ICON;
-    public static final Identifier IDENTIFIER = new Identifier(PaladinFurnitureMod.MOD_ID, "freezing");
+    public static final Identifier IDENTIFIER = Identifier.of(PaladinFurnitureMod.MOD_ID, "freezing");
     private final IDrawable BACKGROUND;
-    public static final Identifier FREEZE_GUI = new Identifier(PaladinFurnitureMod.MOD_ID, "textures/gui/container/freezer.png");
+    public static final Identifier FREEZE_GUI = Identifier.of(PaladinFurnitureMod.MOD_ID, "textures/gui/container/freezer.png");
     protected final IDrawableStatic staticFreezeIcon;
     protected final IDrawableAnimated animatedFreezeIcon;
     private final int regularFreezeTime;

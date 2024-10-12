@@ -78,14 +78,14 @@ public class WoodVariant extends VariantBase<WoodVariant> {
         Identifier id = this.getIdentifier();
         String logN = Registries.BLOCK.getId(this.logBlock).getPath();
         Identifier[] targets = {
-                new Identifier(id.getNamespace(), logN + "_" + append + post),
-                new Identifier(id.getNamespace(), logN + "_" + append + post.replace("_", "")),
-                new Identifier(id.getNamespace(), append + "_" + logN + post),
-                new Identifier(id.getNamespace(), append + "_" + logN + post.replace("_", "")),
-                new Identifier(id.getNamespace(), id.getPath() + "_" + append + post),
-                new Identifier(id.getNamespace(), id.getPath() + "_" + append + post.replace("_", "")),
-                new Identifier(id.getNamespace(), append + "_" + id.getPath() + post),
-                new Identifier(id.getNamespace(), append + "_" + id.getPath() + post.replace("_", ""))
+                Identifier.of(id.getNamespace(), logN + "_" + append + post),
+                Identifier.of(id.getNamespace(), logN + "_" + append + post.replace("_", "")),
+                Identifier.of(id.getNamespace(), append + "_" + logN + post),
+                Identifier.of(id.getNamespace(), append + "_" + logN + post.replace("_", "")),
+                Identifier.of(id.getNamespace(), id.getPath() + "_" + append + post),
+                Identifier.of(id.getNamespace(), id.getPath() + "_" + append + post.replace("_", "")),
+                Identifier.of(id.getNamespace(), append + "_" + id.getPath() + post),
+                Identifier.of(id.getNamespace(), append + "_" + id.getPath() + post.replace("_", ""))
         };
         String postNether = "";
         switch (postpend) {
@@ -96,14 +96,14 @@ public class WoodVariant extends VariantBase<WoodVariant> {
         Block found = null;
         if (!postNether.isEmpty()) {
             Identifier[] nether_targets = {
-                    new Identifier(id.getNamespace(), logN + "_" + append + postNether),
-                    new Identifier(id.getNamespace(), logN + "_" + append + postNether.replace("_", "")),
-                    new Identifier(id.getNamespace(), append + "_" + logN + postNether),
-                    new Identifier(id.getNamespace(), append + "_" + logN + postNether.replace("_", "")),
-                    new Identifier(id.getNamespace(), id.getPath() + "_" + append + postNether),
-                    new Identifier(id.getNamespace(), id.getPath() + "_" + append + postNether.replace("_", "")),
-                    new Identifier(id.getNamespace(), append + "_" + id.getPath() + postNether),
-                    new Identifier(id.getNamespace(), append + "_" + id.getPath() + postNether.replace("_", ""))
+                    Identifier.of(id.getNamespace(), logN + "_" + append + postNether),
+                    Identifier.of(id.getNamespace(), logN + "_" + append + postNether.replace("_", "")),
+                    Identifier.of(id.getNamespace(), append + "_" + logN + postNether),
+                    Identifier.of(id.getNamespace(), append + "_" + logN + postNether.replace("_", "")),
+                    Identifier.of(id.getNamespace(), id.getPath() + "_" + append + postNether),
+                    Identifier.of(id.getNamespace(), id.getPath() + "_" + append + postNether.replace("_", "")),
+                    Identifier.of(id.getNamespace(), append + "_" + id.getPath() + postNether),
+                    Identifier.of(id.getNamespace(), append + "_" + id.getPath() + postNether.replace("_", ""))
             };
             for (Identifier r : nether_targets) {
                 if (Registries.BLOCK.containsId(r)) {
@@ -207,7 +207,7 @@ public class WoodVariant extends VariantBase<WoodVariant> {
         }
 
         public static Finder simple(String modId, String woodTypeName, String planksName, String logName) {
-            return simple(new Identifier(modId, woodTypeName), new Identifier(modId, planksName), new Identifier(modId, logName));
+            return simple(Identifier.of(modId, woodTypeName), Identifier.of(modId, planksName), Identifier.of(modId, logName));
         }
 
         public static Finder simple(Identifier woodTypeName, Identifier planksName, Identifier logName) {
@@ -217,7 +217,7 @@ public class WoodVariant extends VariantBase<WoodVariant> {
         }
 
         public void addChild(String childType, String childName) {
-            addChild(childType, new Identifier(id.getNamespace(), childName));
+            addChild(childType, Identifier.of(id.getNamespace(), childName));
         }
 
         public void addChild(String childType, Identifier childName) {
@@ -229,7 +229,7 @@ public class WoodVariant extends VariantBase<WoodVariant> {
                 try {
                     Block plank = planksFinder.get();
                     Block log = logFinder.get();
-                    Block d = Registries.BLOCK.get(new Identifier("minecraft","air"));
+                    Block d = Registries.BLOCK.get(Identifier.of("minecraft","air"));
                     if (plank != d && log != d && plank != null && log != null) {
                         WoodVariant w = new WoodVariant(id, plank, log);
                         for (Map.Entry<String, Identifier> entry : childNames.entrySet()){

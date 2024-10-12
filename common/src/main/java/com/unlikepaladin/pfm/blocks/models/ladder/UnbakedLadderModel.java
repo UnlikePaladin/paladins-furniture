@@ -18,23 +18,23 @@ import java.util.function.Function;
 
 public class UnbakedLadderModel implements UnbakedModel {
     public static final Identifier[] LADDER_PARTS_BASE = new Identifier[] {
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/simple_bunk_ladder/simple_ladder"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/simple_bunk_ladder/simple_ladder_top")
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bunk_ladder/simple_ladder"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bunk_ladder/simple_ladder_top")
     };
 
-    public static final Identifier LADDER_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/simple_bunk_ladder");
+    public static final Identifier LADDER_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bunk_ladder");
     public static final List<Identifier> LADDER_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_simple_bunk_ladder"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_simple_bunk_ladder"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_simple_bunk_ladder"));
+                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_simple_bunk_ladder"));
             }
             add(LADDER_MODEL_ID);
         }
     };
 
-    private static final Identifier PARENT = new Identifier("block/block");
+    private static final Identifier PARENT = Identifier.of("block/block");
     public Collection<Identifier> getModelDependencies() {
         return List.of(PARENT);
     }
@@ -50,7 +50,7 @@ public class UnbakedLadderModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(LADDER_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(LADDER_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(LADDER_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(LADDER_MODEL_ID).getCachedModelParts().get(rotationContainer));
 

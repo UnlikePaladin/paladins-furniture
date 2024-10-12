@@ -44,7 +44,7 @@ public class PFMItemRenderer extends BuiltinModelItemRenderer {
         for (WoodVariant woodVariant : WoodVariantRegistry.getVariants()) {
             bakedModels.put(woodVariant, new LinkedHashMap<>());
             for (String part : modelParts) {
-                bakedModels.get(woodVariant).put(part, MinecraftClient.getInstance().getBakedModelManager().getModel(new Identifier(PaladinFurnitureMod.MOD_ID, part.replaceAll("template", woodVariant.asString()))));
+                bakedModels.get(woodVariant).put(part, MinecraftClient.getInstance().getBakedModelManager().getModel(Identifier.of(PaladinFurnitureMod.MOD_ID, part.replaceAll("template", woodVariant.asString()))));
             }
         }
         return bakedModels.get(variantBase).get(modelParts.get(index));

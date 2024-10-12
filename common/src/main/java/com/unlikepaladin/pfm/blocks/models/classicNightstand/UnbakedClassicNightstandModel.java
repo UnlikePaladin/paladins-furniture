@@ -18,34 +18,34 @@ import java.util.function.Function;
 
 public class UnbakedClassicNightstandModel implements UnbakedModel {
     public static final Identifier[] NIGHTSTAND_MODEL_PARTS_BASE = new Identifier[] {
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_middle"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_right"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_left"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_middle_open"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_right_open"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_left_open"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_open")
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_middle"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_right"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_left"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_middle_open"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_right_open"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_left_open"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand/classic_nightstand_open")
     };
 
-    public static final Identifier NIGHTSTAND_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand");
+    public static final Identifier NIGHTSTAND_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand");
     public static final List<Identifier> NIGHSTAND_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_classic_nightstand"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_classic_nightstand"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_classic_nightstand"));
+                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_classic_nightstand"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
                 
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_classic_nightstand"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_classic_nightstand"));
             }
             add(NIGHTSTAND_MODEL_ID);
         }
     };
 
-    private static final Identifier PARENT = new Identifier("block/block");
+    private static final Identifier PARENT = Identifier.of("block/block");
     public Collection<Identifier> getModelDependencies() {
         return List.of(PARENT);
     }
@@ -61,7 +61,7 @@ public class UnbakedClassicNightstandModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(NIGHTSTAND_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(NIGHTSTAND_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(NIGHTSTAND_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(NIGHTSTAND_MODEL_ID).getCachedModelParts().get(rotationContainer));
 

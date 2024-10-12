@@ -14,7 +14,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class StoveScreenBalm extends HandledScreen<StoveScreenHandlerBalm> {
-    private static final Identifier texture = new Identifier("cookingforblockheads", "textures/gui/oven.png");
+    private static final Identifier texture = Identifier.of("cookingforblockheads", "textures/gui/oven.png");
 
     public StoveScreenBalm(StoveScreenHandlerBalm container, PlayerInventory playerInventory, Text displayName) {
         super(container, playerInventory, displayName);

@@ -18,6 +18,6 @@ public class EntityRegistryImpl {
     }
 
     public static void registerEntityType(String id, EntityType<?> entityType) {
-        entityTypeList.put(new Identifier(PaladinFurnitureMod.MOD_ID, id), entityType);
+        entityTypeList.put(Identifier.of(PaladinFurnitureMod.MOD_ID, id), entityType);
     }
 }

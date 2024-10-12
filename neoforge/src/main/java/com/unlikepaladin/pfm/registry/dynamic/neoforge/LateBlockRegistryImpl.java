@@ -75,13 +75,13 @@ public class LateBlockRegistryImpl {
                  IllegalAccessException ex) {
             throw new RuntimeException(ex);
         }
-        blocks.forEach((blockName, block) -> Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), block));
+        blocks.forEach((blockName, block) -> Registry.register(Registries.BLOCK, Identifier.of(PaladinFurnitureMod.MOD_ID, blockName), block));
     }
 
     public static void registerItems(Registry<Item> itemIForgeRegistry) {
         items.forEach((itemName, itemSup) -> {
             Item item = itemSup.get();
-            Registry.register(Registries.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
+            Registry.register(Registries.ITEM, Identifier.of(PaladinFurnitureMod.MOD_ID, itemName), item);
             if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(BlockItemRegistryImpl.itemNameToGroup.get(itemName))) {
                 PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(BlockItemRegistryImpl.itemNameToGroup.get(itemName), new LinkedHashSet<>());
             }

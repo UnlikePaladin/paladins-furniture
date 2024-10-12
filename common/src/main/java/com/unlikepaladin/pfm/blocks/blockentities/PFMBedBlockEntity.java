@@ -43,4 +43,9 @@ public class PFMBedBlockEntity extends BedBlockEntity implements DyeableFurnitur
     public BlockEntityType<?> getType() {
         return BlockEntities.BED_BLOCK_ENTITY;
     }
+
+    @Override
+    public boolean supports(BlockState state) {
+        return getType().supports(state);
+    }
 }

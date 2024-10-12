@@ -43,7 +43,7 @@ public class FurnitureBlock extends Material {
         }
         else if(secondMaterial.contains("concrete")){
             secondMaterial = "raw_concrete";
-            this.secondMaterial = Registries.ITEM.get(new Identifier("pfm:" + secondMaterial));
+            this.secondMaterial = Registries.ITEM.get(Identifier.of("pfm:" + secondMaterial));
             return this.secondMaterial;
         }
         else if(secondMaterial.contains("deepslate_tile")){
@@ -94,7 +94,7 @@ public class FurnitureBlock extends Material {
         if (secondMaterial.contains("stemlog")) {
             secondMaterial = secondMaterial.replace("stemlog", "stem");
         }
-        this.secondMaterial = Registries.ITEM.get(new Identifier("minecraft:" + secondMaterial));
+        this.secondMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + secondMaterial));
         return this.secondMaterial;
     }
 
@@ -161,33 +161,33 @@ public class FurnitureBlock extends Material {
             }
             baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "planks");
         }
-        this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + baseMaterial));
+        this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
     public Item getFroggyChairMaterial() {
         String baseMaterial = this.block.getLootTableKey().getValue().getPath();
         baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "");
         if (baseMaterial.matches("froggy_chair")) {
-            this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + "lime_concrete"));
+            this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + "lime_concrete"));
             return this.baseMaterial;
         }
         baseMaterial = baseMaterial.concat("_concrete");
-        this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + baseMaterial));
+        this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
     public Item getFridgeMaterial() {
         String baseMaterial = this.block.getLootTableKey().getValue().getPath();
         baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "");
         if (baseMaterial.contains("iron")) {
-            this.baseMaterial =  Registries.ITEM.get(new Identifier("minecraft:" + "iron_ingot"));
+            this.baseMaterial =  Registries.ITEM.get(Identifier.of("minecraft:" + "iron_ingot"));
             return this.baseMaterial;
         }
         else if (baseMaterial.contains("xbox")) {
-            this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + "black_concrete"));
+            this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + "black_concrete"));
             return this.baseMaterial;
         }
         baseMaterial = baseMaterial.concat("concrete");
-        this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + baseMaterial));
+        this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
     public Block getSlab(){
@@ -195,7 +195,7 @@ public class FurnitureBlock extends Material {
         if (block.getTranslationKey().contains("stripped")) {
             slabName.replace("stripped_", "");
         }
-        this.slab =  Registries.BLOCK.get(new Identifier("minecraft:" + slabName));
+        this.slab =  Registries.BLOCK.get(Identifier.of("minecraft:" + slabName));
         return slab;
     }
 
@@ -214,7 +214,7 @@ public class FurnitureBlock extends Material {
         else {
             secondMaterial = secondMaterial.replace(furnitureName, "");
         }
-        this.secondMaterial = Registries.ITEM.get(new Identifier("minecraft:" + secondMaterial));
+        this.secondMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + secondMaterial));
         return this.secondMaterial;
     }
 
@@ -228,7 +228,7 @@ public class FurnitureBlock extends Material {
             baseMaterial = baseMaterial.replace("raw_", "");
         }
         baseMaterial = baseMaterial.replace("stripped_", "").replace(furnitureName, "planks");
-        this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + baseMaterial));
+        this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
@@ -236,27 +236,27 @@ public class FurnitureBlock extends Material {
         String baseMaterial = this.block.getLootTableKey().getValue().getPath();
         baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "");
         if (baseMaterial.contains("leather")) {
-            this.baseMaterial = Registries.ITEM.get(new Identifier("pfm:" + "leather_block"));
+            this.baseMaterial = Registries.ITEM.get(Identifier.of("pfm:" + "leather_block"));
             return this.baseMaterial;
         }
         else if (baseMaterial.contains("standard")) {
-            this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + "white_wool"));
+            this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + "white_wool"));
             return this.baseMaterial;
         }
         if (this.block instanceof DyeableFurnitureBlock) {
             String color = ((DyeableFurnitureBlock) this.block).getPFMColor().toString();
-            this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + color + "_wool"));
+            this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + color + "_wool"));
             return this.baseMaterial;
         }
         baseMaterial = baseMaterial.concat("wool");
-        this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + baseMaterial));
+        this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
     public Item getWoolColor() {
         if (this.block instanceof DyeableFurnitureBlock) {
             String color = ((DyeableFurnitureBlock) this.block).getPFMColor().toString();
-            this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + color + "_wool"));
+            this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + color + "_wool"));
             return this.baseMaterial;
         }
         return null;
@@ -265,7 +265,7 @@ public class FurnitureBlock extends Material {
     public Block getBed() {
         if (block instanceof SimpleBedBlock){
             String color = ((SimpleBedBlock) block).getPFMColor().getName();
-            return Registries.BLOCK.get(new Identifier("minecraft:" + color + "_bed"));
+            return Registries.BLOCK.get(Identifier.of("minecraft:" + color + "_bed"));
         }
         return null;
     }
@@ -277,7 +277,7 @@ public class FurnitureBlock extends Material {
                 baseMaterial = baseMaterial.replace("stem", "");
             }
         baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "fence");
-        this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + baseMaterial));
+        this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
@@ -297,7 +297,7 @@ public class FurnitureBlock extends Material {
         }
         else if(secondMaterial.contains("concrete")){
             secondMaterial = "raw_concrete";
-            this.secondMaterial = Registries.ITEM.get(new Identifier("pfm:" + secondMaterial));
+            this.secondMaterial = Registries.ITEM.get(Identifier.of("pfm:" + secondMaterial));
             return this.secondMaterial;
         }
         else if(secondMaterial.contains("deepslate")){
@@ -324,7 +324,7 @@ public class FurnitureBlock extends Material {
         else {
             secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "");
         }
-        this.secondMaterial = Registries.ITEM.get(new Identifier("minecraft:" + secondMaterial));
+        this.secondMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + secondMaterial));
         return this.secondMaterial;
     }
 
@@ -344,7 +344,7 @@ public class FurnitureBlock extends Material {
         }
         else if(baseMaterial.contains("concrete")){
             baseMaterial = "raw_concrete";
-            this.baseMaterial = Registries.ITEM.get(new Identifier("pfm:" + baseMaterial));
+            this.baseMaterial = Registries.ITEM.get(Identifier.of("pfm:" + baseMaterial));
             return this.baseMaterial;
         }
         else if(baseMaterial.contains("deepslate")){
@@ -377,7 +377,7 @@ public class FurnitureBlock extends Material {
         else {
             baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "");
         }
-        this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + baseMaterial));
+        this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
@@ -389,7 +389,7 @@ public class FurnitureBlock extends Material {
         else  {
             baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "block");
         }
-        this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + baseMaterial));
+        this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
@@ -401,7 +401,7 @@ public class FurnitureBlock extends Material {
         else  {
             baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "block");
         }
-        this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + baseMaterial));
+        this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 
@@ -413,7 +413,7 @@ public class FurnitureBlock extends Material {
         else  {
             baseMaterial = baseMaterial.replace("blocks/", "").replace(furnitureName, "block");
         }
-        this.baseMaterial = Registries.ITEM.get(new Identifier("minecraft:" + baseMaterial));
+        this.baseMaterial = Registries.ITEM.get(Identifier.of("minecraft:" + baseMaterial));
         return this.baseMaterial;
     }
 }

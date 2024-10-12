@@ -60,7 +60,7 @@ public abstract class PFMModelLoaderMixin {
     private void pfm$loadModels(Identifier resourceId, CallbackInfo ci) {
         Identifier modifiedId = resourceId;
         if (resourceId instanceof ModelIdentifier && Objects.equals(((ModelIdentifier)resourceId).getVariant(), "inventory")) {
-            modifiedId = new Identifier(resourceId.getNamespace(), "item/" + resourceId.getPath());
+            modifiedId = Identifier.of(resourceId.getNamespace(), "item/" + resourceId.getPath());
         }
 
         if (ModelHelper.containsIdentifier(UnbakedMirrorModel.MIRROR_MODEL_IDS, modifiedId)){

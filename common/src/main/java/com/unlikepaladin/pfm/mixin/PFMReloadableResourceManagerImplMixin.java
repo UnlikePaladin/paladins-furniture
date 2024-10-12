@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.mixin;
 
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import com.unlikepaladin.pfm.client.PFMItemRenderer;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.resource.ReloadableResourceManagerImpl;
 import net.minecraft.resource.ResourcePack;
@@ -28,5 +29,6 @@ public class PFMReloadableResourceManagerImplMixin {
             ModelHelper.OAK_SPRITES_BED_TO_REPLACE = null;
         if (ModelHelper.OAK_SPRITES_LOG_TOP_TO_REPLACE != null)
             ModelHelper.OAK_SPRITES_LOG_TOP_TO_REPLACE = null;
+        PFMItemRenderer.bedModel.clear();
     }
 }

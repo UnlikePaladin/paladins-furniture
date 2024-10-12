@@ -9,7 +9,10 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.inventory.SimpleInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.world.World;
 
@@ -23,7 +26,9 @@ public class PFMSandwichableCompat {
         List<ItemStack> items = pfmToasterBlockEntity.getItems();
         for (int i = 0; i < 2; i++) {
             SimpleInventory inv = new SimpleInventory(pfmToasterBlockEntity.getItems().get(i));
-            Optional<RecipeEntry<ToastingRecipe>> match = world.getRecipeManager().getFirstMatch(ToastingRecipe.Type.INSTANCE, inv, world);
+            // had to disable this as it errored, until sandwichable is updated
+         //   Optional<RecipeEntry<ToastingRecipe>> match = world.getRecipeManager().getFirstMatch(ToastingRecipe.Type.INSTANCE, new SingleStackRecipeInput(inv.getStack(0)), world);
+            Optional<RecipeEntry<CampfireCookingRecipe>> match = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(items.get(i)), world);
 
             boolean changed = false;
             if(match.isPresent()) {

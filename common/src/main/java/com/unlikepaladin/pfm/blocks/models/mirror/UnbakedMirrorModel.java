@@ -19,9 +19,9 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public class UnbakedMirrorModel implements UnbakedModel {
     public static final String[] BASE_MODEL_PARTS = new String[] {"block/mirror/mirror_base", "block/mirror/mirror_top", "block/mirror/mirror_bottom", "block/mirror/mirror_left","block/mirror/mirror_right", "block/mirror/mirror_right_top", "block/mirror/mirror_left_top", "block/mirror/mirror_right_bottom", "block/mirror/mirror_left_bottom"};
-    public static final Identifier[] DEFAULT_TEXTURES = new Identifier[] {new Identifier("minecraft","block/white_concrete"), new Identifier("minecraft","block/glass"), new Identifier("pfm","block/mirror")};
-    private static final Identifier PARENT = new Identifier("block/block");
-    public static final Identifier[] MIRROR_MODEL_IDS = {new Identifier(PaladinFurnitureMod.MOD_ID, "block/white_mirror"), new Identifier(PaladinFurnitureMod.MOD_ID, "block/gray_mirror")};
+    public static final Identifier[] DEFAULT_TEXTURES = new Identifier[] {Identifier.of("minecraft","block/white_concrete"), Identifier.of("minecraft","block/glass"), Identifier.of("pfm","block/mirror")};
+    private static final Identifier PARENT = Identifier.of("block/block");
+    public static final Identifier[] MIRROR_MODEL_IDS = {Identifier.of(PaladinFurnitureMod.MOD_ID, "block/white_mirror"), Identifier.of(PaladinFurnitureMod.MOD_ID, "block/gray_mirror")};
     private final List<String> MODEL_PARTS;
     protected final SpriteIdentifier reflectTex;
     protected final SpriteIdentifier glassTex;
@@ -42,11 +42,11 @@ public class UnbakedMirrorModel implements UnbakedModel {
     public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : BASE_MODEL_PARTS) {
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, part));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part));
             }
             for (String part : BASE_MODEL_PARTS) {
                 part = part.replace("mirror", "gray_mirror");
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, part));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part));
             }
         }
     };
@@ -71,10 +71,10 @@ public class UnbakedMirrorModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         Map<String,BakedModel> bakedModels = new LinkedHashMap<>();
         for (String modelPartName: MODEL_PARTS) {
-            bakedModels.put(modelPartName, loader.bake(new Identifier(PaladinFurnitureMod.MOD_ID, modelPartName), rotationContainer));
+            bakedModels.put(modelPartName, loader.bake(Identifier.of(PaladinFurnitureMod.MOD_ID, modelPartName), rotationContainer));
         }
         return getBakedModel(textureGetter.apply(frameTex), textureGetter.apply(glassTex), textureGetter.apply(reflectTex), rotationContainer, bakedModels, MODEL_PARTS);
     }

@@ -13,5 +13,5 @@ public abstract class PFMFarmersDelight implements PFMModCompatibility {
         throw new AssertionError();
     };
 
-    protected static final TagKey<Block> HEAT_SOURCES = PFMTags.createTag(new Identifier("farmersdelight", "heat_sources"));
+    protected static final TagKey<Block> HEAT_SOURCES = PFMTags.createTag(Identifier.of("farmersdelight", "heat_sources"));
 }

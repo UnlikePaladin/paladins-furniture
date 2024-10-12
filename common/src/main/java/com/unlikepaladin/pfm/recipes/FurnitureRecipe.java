@@ -21,6 +21,7 @@ import net.minecraft.nbt.*;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.*;
+import net.minecraft.recipe.input.RecipeInput;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.Identifier;
@@ -32,7 +33,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<FurnitureRecipe> {
+public class FurnitureRecipe implements Recipe<FurnitureRecipe.FurnitureRecipeInput>, Comparable<FurnitureRecipe> {
     final String group;
     protected final ItemStack output;
     final DefaultedList<Ingredient> input;
@@ -49,7 +50,7 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
     }
 
     @Override
-    public boolean matches(PlayerInventory playerInventory, World world) {
+    public boolean matches(FurnitureRecipeInput playerInventory, World world) {
         List<Ingredient> ingredients = this.getIngredients();
         BitSet hasIngredients = new BitSet(ingredients.size());
         HashMap<Item, Integer> containedItems = new HashMap<>();
@@ -57,7 +58,7 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
             Ingredient ingredient = ingredients.get(i);
             for (ItemStack stack : ingredient.getMatchingStacks()) {
                 int itemCount = 0;
-                for (ItemStack stack1 : playerInventory.main) {
+                for (ItemStack stack1 : playerInventory.playerInventory().main) {
                     if (stack.isOf(stack1.getItem())) {
                         itemCount += stack1.getCount();
                     }
@@ -65,7 +66,7 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
                 if (itemCount == 0)
                     break;
 
-                if (getSlotWithStackIgnoreNBT(playerInventory, stack) != -1){
+                if (getSlotWithStackIgnoreNBT(playerInventory.playerInventory, stack) != -1){
                     if (!containedItems.containsKey(stack.getItem())) {
                         if (itemCount >= stack.getCount()) {
                             hasIngredients.set(i, true);
@@ -101,7 +102,7 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
     }
 
     @Override
-    public ItemStack craft(PlayerInventory inventory, RegistryWrapper.WrapperLookup lookup) {
+    public ItemStack craft(FurnitureRecipeInput inventory, RegistryWrapper.WrapperLookup lookup) {
         if (!this.output.getComponents().isEmpty() && output.contains(DataComponentTypes.BLOCK_ENTITY_DATA) && output.get(DataComponentTypes.BLOCK_ENTITY_DATA).isEmpty()) {
             ItemStack stack = this.output.copy();
             stack.remove(DataComponentTypes.BLOCK_ENTITY_DATA);
@@ -250,4 +251,22 @@ public class FurnitureRecipe implements Recipe<PlayerInventory>, Comparable<Furn
                         stack.applyComponentsFrom(components);
                         return stack;
     }));*/
+
+    public static record FurnitureRecipeInput(PlayerInventory playerInventory) implements RecipeInput {
+
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            return playerInventory.getStack(slot);
+        }
+
+        @Override
+        public int getSize() {
+            return playerInventory.size();
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return playerInventory.isEmpty();
+        }
+    }
 }

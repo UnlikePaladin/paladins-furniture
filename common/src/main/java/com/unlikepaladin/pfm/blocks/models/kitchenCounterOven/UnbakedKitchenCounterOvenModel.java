@@ -22,29 +22,29 @@ import java.util.function.Function;
 public class UnbakedKitchenCounterOvenModel implements UnbakedModel {
 
     public static final Identifier[] OVEN_MODEL_PARTS_BASE = new Identifier[] {
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven/kitchen_counter_oven"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven/kitchen_counter_oven_middle"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven/kitchen_counter_oven_open"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven/kitchen_counter_oven_middle_open")
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven/kitchen_counter_oven"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven/kitchen_counter_oven_middle"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven/kitchen_counter_oven_open"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven/kitchen_counter_oven_middle_open")
     };
 
 
-    private static final Identifier PARENT = new Identifier("block/block");
-    public static final Identifier OVEN_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven");
+    private static final Identifier PARENT = Identifier.of("block/block");
+    public static final Identifier OVEN_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven");
     public static final List<Identifier> OVEN_MODEL_IDS  = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_counter_oven"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_counter_oven"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_kitchen_counter_oven"));
+                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_kitchen_counter_oven"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
                 if (variant.identifier.getPath().equals("quartz"))
                     continue;
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_counter_oven"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_counter_oven"));
             }
             for(ExtraCounterVariant variant : ExtraCounterVariant.values()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_counter_oven"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_counter_oven"));
             }
             add(OVEN_MODEL_ID);
         }
@@ -66,7 +66,7 @@ public class UnbakedKitchenCounterOvenModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(OVEN_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(OVEN_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(OVEN_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(OVEN_MODEL_ID).getCachedModelParts().get(rotationContainer));
 

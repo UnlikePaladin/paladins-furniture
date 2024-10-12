@@ -20,6 +20,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.sound.SoundCategory;
@@ -112,7 +113,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         if (this.itemsBeingCooked.stream().noneMatch(ItemStack::isEmpty)) {
             return Optional.empty();
         }
-        return this.world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(item), this.world);
+        return this.world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(item), this.world);
     }
 
     @Override
@@ -200,7 +201,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
                     stoveBlockEntity.cookingTimes[n] = stoveBlockEntity.cookingTimes[n] + 2;
                 }
                 if (stoveBlockEntity.cookingTimes[i] < stoveBlockEntity.cookingTotalTimes[i]) continue;
-                SimpleInventory inventory = new SimpleInventory(itemStack);
+                SingleStackRecipeInput inventory = new SingleStackRecipeInput(itemStack);
                 ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.value().craft(inventory, world.getRegistryManager())).orElse(itemStack);
                     if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
                         ItemScatterer.spawn(world, pos.getX(), pos.up().getY(), pos.getZ(), itemStack2);
@@ -239,7 +240,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
             i = state.get(StoveBlock.FACING).rotateYClockwise().getHorizontal();
             for (int j = 0; j < stoveBlockEntity.itemsBeingCooked.size(); ++j) {
                 ItemStack stack = stoveBlockEntity.itemsBeingCooked.get(j);
-                if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) continue;
+                if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(stack), world).isEmpty()) continue;
                 Direction direction = Direction.fromHorizontal(Math.floorMod(j + i, 4));
                 float f = 0.2125f;
                 double x = pos.getX() + 0.5 - ((direction.getOffsetX() * f) + (direction.rotateYClockwise().getOffsetX() * f));

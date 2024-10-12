@@ -39,7 +39,7 @@ public class SkinGetter {
     }
 
 
-    public static final Identifier TEXTURE = new Identifier("minecraft", "textures/entity/steve.png");
+    public static final Identifier TEXTURE = Identifier.of("minecraft", "textures/entity/steve.png");
 
     public Identifier getjson() {
         this.getFromName(playerName);
@@ -76,10 +76,10 @@ public class SkinGetter {
             }
             System.out.println(texturepath);
 
-            return new Identifier(texturepath.toString());
+            return Identifier.of(texturepath.toString());
         } else {
             System.out.println("Identifier is null, defaulting to Steve");
-            return new Identifier(TEXTURE.toString());
+            return Identifier.of(TEXTURE.toString());
 
 
         }

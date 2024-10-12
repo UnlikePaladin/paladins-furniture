@@ -12,6 +12,7 @@ import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.book.RecipeBookCategory;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.screen.AbstractRecipeScreenHandler;
 import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
@@ -22,7 +23,7 @@ import net.minecraft.world.World;
 
 import java.util.Optional;
 
-public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScreenHandler<Inventory> {
+public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScreenHandler<SingleStackRecipeInput, AbstractCookingRecipe> {
     private final Inventory inventory;
     private final PropertyDelegate propertyDelegate;
     protected final World world;
@@ -85,8 +86,8 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     }
 
     @Override
-    public boolean matches(RecipeEntry<? extends Recipe<Inventory>> recipe) {
-        return recipe != null && recipe.value() != null && recipe.value().matches(this.inventory, this.world);
+    public boolean matches(RecipeEntry<AbstractCookingRecipe> recipe) {
+        return recipe != null && recipe.value() != null && recipe.value().matches(new SingleStackRecipeInput(this.inventory.getStack(0)), this.world);
     }
 
     @Override
@@ -175,7 +176,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     }
 
     protected boolean isCookable(ItemStack itemStack) {
-        Optional<? extends RecipeEntry<? extends AbstractCookingRecipe>> optionalRecipeEntry = this.world.getRecipeManager().getFirstMatch(this.recipeType, new SimpleInventory(itemStack), this.world);
+        Optional<? extends RecipeEntry<? extends AbstractCookingRecipe>> optionalRecipeEntry = this.world.getRecipeManager().getFirstMatch(this.recipeType, new SingleStackRecipeInput(itemStack), this.world);
         return optionalRecipeEntry != null && optionalRecipeEntry.isPresent() && optionalRecipeEntry.get().value() != null;
     }
 

@@ -123,7 +123,7 @@ public class StoneVariant extends VariantBase<StoneVariant> {
         }
 
         public static Finder simple(String modId, String stoneTypeName, String polishedName, String rawName) {
-            return simple(new Identifier(modId, stoneTypeName), new Identifier(modId, polishedName), new Identifier(modId, rawName));
+            return simple(Identifier.of(modId, stoneTypeName), Identifier.of(modId, polishedName), Identifier.of(modId, rawName));
         }
 
         public static Finder simple(Identifier stoneTypeName, Identifier polishedName, Identifier rawName) {
@@ -133,7 +133,7 @@ public class StoneVariant extends VariantBase<StoneVariant> {
         }
 
         public void addChild(String childType, String childName) {
-            addChild(childType, new Identifier(id.getNamespace(), childName));
+            addChild(childType, Identifier.of(id.getNamespace(), childName));
         }
 
         public void addChild(String childType, Identifier childName) {
@@ -145,7 +145,7 @@ public class StoneVariant extends VariantBase<StoneVariant> {
                 try {
                     Block plank = polishedFinder.get();
                     Block log = rawFinder.get();
-                    Block d = Registries.BLOCK.get(new Identifier("minecraft","air"));
+                    Block d = Registries.BLOCK.get(Identifier.of("minecraft","air"));
                     if (plank != d && log != d && plank != null && log != null) {
                         StoneVariant w = new StoneVariant(id, plank, log);
                         for (Map.Entry<String, Identifier> entry : childNames.entrySet()){

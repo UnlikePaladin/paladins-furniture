@@ -15,7 +15,7 @@ import net.minecraft.registry.Registry;
 
 public class EntityRegistryFabric {
     public static void registerEntity(String name, EntityType<? extends Entity> entity) {
-        Registry.register(Registries.ENTITY_TYPE, new Identifier(PaladinFurnitureMod.MOD_ID, name), entity);
+        Registry.register(Registries.ENTITY_TYPE, Identifier.of(PaladinFurnitureMod.MOD_ID, name), entity);
     }
     public static void registerEntities()
     {

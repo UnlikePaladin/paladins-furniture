@@ -62,6 +62,6 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
 
     @Override
     public Identifier getPluginUid() {
-        return new Identifier(PaladinFurnitureMod.MOD_ID, "jei_plugin");
+        return Identifier.of(PaladinFurnitureMod.MOD_ID, "jei_plugin");
     }
 }

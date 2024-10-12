@@ -20,23 +20,23 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public class UnbakedDinnerTableModel implements UnbakedModel {
     public static final Identifier[] DINNER_MODEL_PARTS_BASE = new Identifier[] {
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_middle"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_right"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_left"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_legs")
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_middle"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_right"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_left"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/dinner_table/dinner_table_legs")
     };
 
-    private static final Identifier PARENT = new Identifier("block/block");
-    public static final Identifier TABLE_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/dinner_table");
+    private static final Identifier PARENT = Identifier.of("block/block");
+    public static final Identifier TABLE_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/dinner_table");
     public static final List<Identifier> TABLE_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_table_dinner"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_table_dinner"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_table_dinner"));
+                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_table_dinner"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_table_dinner"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_table_dinner"));
             }
             add(TABLE_MODEL_ID);
         }
@@ -58,7 +58,7 @@ public class UnbakedDinnerTableModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(TABLE_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(TABLE_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().get(rotationContainer));
 

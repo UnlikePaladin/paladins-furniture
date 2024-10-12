@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class FreezingDisplay implements Display {
-    public static final CategoryIdentifier<FreezingDisplay> IDENTIFIER = CategoryIdentifier.of(new Identifier(PaladinFurnitureMod.MOD_ID, "freezing"));
+    public static final CategoryIdentifier<FreezingDisplay> IDENTIFIER = CategoryIdentifier.of(Identifier.of(PaladinFurnitureMod.MOD_ID, "freezing"));
 
     private RecipeEntry<FreezingRecipe> recipeEntry;
     public List<EntryIngredient> input;

@@ -7,6 +7,6 @@ import net.minecraft.util.Identifier;
 
 public class PFMTagsImpl {
     public static TagKey<Block> createTag(Identifier identifier) {
-        return BlockTags.create(new Identifier("pfm", "tuckable_blocks"));
+        return BlockTags.create(Identifier.of("pfm", "tuckable_blocks"));
     }
 }

@@ -15,7 +15,7 @@ import net.minecraft.util.dynamic.Codecs;
 import java.util.Optional;
 
 public class GiveGuideBookCriterion extends AbstractCriterion<GiveGuideBookCriterion.Conditions> {
-    public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "give_book");
+    public static final Identifier ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "give_book");
 
     public void trigger(ServerPlayerEntity player) {
         this.trigger(player, conditions -> true);

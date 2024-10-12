@@ -6,6 +6,7 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.search.SearchManager;
@@ -32,7 +33,7 @@ import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
-    private static final Identifier TEXTURE = new Identifier("pfm:textures/gui/container/working_table.png");
+    private static final Identifier TEXTURE = Identifier.of("pfm:textures/gui/container/working_table.png");
     private static final int SCROLLBAR_WIDTH = 12;
     private static final int SCROLLBAR_HEIGHT = 15;
     private static final int RECIPE_LIST_COLUMNS = 6;
@@ -119,22 +120,26 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             this.handler.searching = false;
         } else {
             this.handler.updateInput();
-            SearchProvider<ItemStack> searchable;
-            if (string.startsWith("#")) {
-                string = string.substring(1);
-                searchable = this.client.getSearchProvider(SearchManager.ITEM_TAG);
-                this.searchForTags(string);
-            } else {
-                searchable = this.client.getSearchProvider(SearchManager.ITEM_TOOLTIP);
-            }
-            List<Item> items = new ArrayList<>();
-            searchable.findAll(string.toLowerCase(Locale.ROOT)).forEach(itemStack -> items.add(itemStack.getItem()));
-            this.handler.getSortedRecipes().forEach(furnitureRecipe -> {
-                if (items.contains(furnitureRecipe.getResult(client.world.getRegistryManager()).getItem())) {
-                    this.handler.getSearchableRecipes().add(furnitureRecipe);
+            ClientPlayNetworkHandler clientPlayNetworkHandler = this.client.getNetworkHandler();
+                if (clientPlayNetworkHandler != null) {
+                    SearchManager searchManager = clientPlayNetworkHandler.getSearchManager();
+                    SearchProvider<ItemStack> searchable;
+                if (string.startsWith("#")) {
+                    string = string.substring(1);
+                    searchable = searchManager.getItemTagReloadFuture();
+                    this.searchForTags(string);
+                } else {
+                    searchable = searchManager.getItemTooltipReloadFuture();
                 }
-            });
-            this.handler.searching = true;
+                List<Item> items = new ArrayList<>();
+                searchable.findAll(string.toLowerCase(Locale.ROOT)).forEach(itemStack -> items.add(itemStack.getItem()));
+                this.handler.getSortedRecipes().forEach(furnitureRecipe -> {
+                    if (items.contains(furnitureRecipe.getResult(client.world.getRegistryManager()).getItem())) {
+                        this.handler.getSearchableRecipes().add(furnitureRecipe);
+                    }
+                });
+                this.handler.searching = true;
+            }
         }
         this.scrollAmount = 0.0f;
         this.scrollOffset = 0;

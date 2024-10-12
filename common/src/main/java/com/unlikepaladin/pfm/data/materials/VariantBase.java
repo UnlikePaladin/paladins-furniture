@@ -75,14 +75,14 @@ public abstract class VariantBase<T> implements StringIdentifiable {
     protected <V> V findRelatedEntry(String append, String postPend, Registry<V> reg) {
         if (this.identifier.getNamespace().equals("tfc")) {
             var o = reg.getOrEmpty(
-                    new Identifier(identifier.getNamespace(), "wood/" + postPend + "/" + identifier.getPath()));
+                    Identifier.of(identifier.getNamespace(), "wood/" + postPend + "/" + identifier.getPath()));
             if (o.isPresent()) return o.get();
         }
         String post = postPend.isEmpty() ? "" : "_" + postPend;
         Identifier[] targets = {
-                new Identifier(identifier.getNamespace(), identifier.getPath() + "_" + append + post),
-                new Identifier(identifier.getNamespace(), append + "_" + identifier.getPath() + post),
-                new Identifier(identifier.getNamespace(), identifier.getPath() + "_planks_" + append + post),
+                Identifier.of(identifier.getNamespace(), identifier.getPath() + "_" + append + post),
+                Identifier.of(identifier.getNamespace(), append + "_" + identifier.getPath() + post),
+                Identifier.of(identifier.getNamespace(), identifier.getPath() + "_planks_" + append + post),
         };
         V found = null;
         for (var r : targets) {

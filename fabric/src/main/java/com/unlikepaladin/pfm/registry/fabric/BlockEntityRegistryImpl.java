@@ -15,6 +15,6 @@ import net.minecraft.registry.Registry;
 public class BlockEntityRegistryImpl {
 
     public static <T extends BlockEntity>BlockEntityType<T> registerBlockEntity(String id, Block[] block, BlockEntityType.BlockEntityFactory<T> factory) {
-        return Registry.register(Registries.BLOCK_ENTITY_TYPE, new Identifier(PaladinFurnitureMod.MOD_ID, id), BlockEntityType.Builder.create(factory, block).build(null));
+        return Registry.register(Registries.BLOCK_ENTITY_TYPE, Identifier.of(PaladinFurnitureMod.MOD_ID, id), BlockEntityType.Builder.create(factory, block).build(null));
     }
 }

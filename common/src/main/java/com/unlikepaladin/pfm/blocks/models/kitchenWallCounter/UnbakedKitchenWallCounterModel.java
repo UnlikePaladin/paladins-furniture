@@ -20,29 +20,29 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public class UnbakedKitchenWallCounterModel implements UnbakedModel {
     public static final Identifier[] COUNTER_MODEL_PARTS_BASE = new Identifier[] {
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_inner_corner_left"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_inner_corner_right"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_outer_corner_left"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_outer_corner_right")
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_inner_corner_left"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_inner_corner_right"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_outer_corner_left"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_outer_corner_right")
     };
 
-    private static final Identifier PARENT = new Identifier("block/block");
-    public static final Identifier COUNTER_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/kitchen_wall_counter");
+    private static final Identifier PARENT = Identifier.of("block/block");
+    public static final Identifier COUNTER_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_wall_counter");
     public static final List<Identifier> COUNTER_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_counter"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_counter"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_kitchen_wall_counter"));
+                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_kitchen_wall_counter"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
                 if (variant.identifier.getPath().equals("quartz"))
                     continue;
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_counter"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_counter"));
             }
             for(ExtraCounterVariant variant : ExtraCounterVariant.values()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_counter"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_counter"));
             }
             add(COUNTER_MODEL_ID);
         }
@@ -64,7 +64,7 @@ public class UnbakedKitchenWallCounterModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(COUNTER_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(COUNTER_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(COUNTER_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(COUNTER_MODEL_ID).getCachedModelParts().get(rotationContainer));
 

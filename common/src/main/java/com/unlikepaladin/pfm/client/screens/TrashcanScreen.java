@@ -15,7 +15,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
 public class TrashcanScreen extends HandledScreen<TrashcanScreenHandler> {
-    private static final Identifier background = new Identifier("textures/gui/container/dispenser.png");
+    private static final Identifier background = Identifier.of("textures/gui/container/dispenser.png");
     private TrashcanBlockEntity trashcanBlockEntity;
     private boolean narrow;
     private ButtonWidget startButton;

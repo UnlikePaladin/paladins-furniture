@@ -51,7 +51,7 @@ import java.util.*;
 
 public class FurnitureDisplay implements Display {
     protected RecipeEntry<FurnitureRecipe> recipe;
-    public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"));
+    public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(Identifier.of(PaladinFurnitureMod.MOD_ID, "furniture"));
     public List<EntryIngredient> input;
     public List<EntryIngredient> output;
     public FurnitureDisplay(RecipeEntry<FurnitureRecipe> recipe) {

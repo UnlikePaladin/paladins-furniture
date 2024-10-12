@@ -18,7 +18,7 @@ import net.minecraftforge.network.config.SimpleConfigurationTask;
 public class NetworkRegistryForge {
 
     public static final SimpleChannel PFM_CHANNEL = ChannelBuilder.named(
-            new Identifier(PaladinFurnitureMod.MOD_ID, "main_channel")
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "main_channel")
     ).networkProtocolVersion(1).simpleChannel();
     public static final AttributeKey<ForgePacketHandler> CONTEXT = AttributeKey.newInstance("pfm:handshake");
 

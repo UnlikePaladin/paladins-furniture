@@ -44,7 +44,7 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
         this.secondaryBlock = secondaryBlock;
     }
     ExtraCounterVariant(Block baseBlock, Block secondaryBlock, String name) {
-        this(new Identifier("", name), baseBlock, secondaryBlock);
+        this(Identifier.of("", name), baseBlock, secondaryBlock);
     }
 
     @Override

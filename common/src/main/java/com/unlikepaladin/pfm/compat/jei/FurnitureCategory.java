@@ -23,7 +23,7 @@ import java.util.*;
 
 public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private final IDrawable BACKGROUND;
-    public static final Identifier TEXTURE_GUI_VANILLA = new Identifier("pfm:textures/gui/gui_jei.png");
+    public static final Identifier TEXTURE_GUI_VANILLA = Identifier.of("pfm:textures/gui/gui_jei.png");
     public final IDrawable ICON;
     public static final Text TITLE = Text.translatable("rei.pfm.furniture");
     private final ICraftingGridHelper craftingGridHelper;
@@ -35,7 +35,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         this.BACKGROUND = guiHelper.createDrawable(TEXTURE_GUI_VANILLA, 0, 60, 116, 54);
         craftingGridHelper = guiHelper.createCraftingGridHelper();
     }
-    public static final Identifier IDENTIFIER = new Identifier(PaladinFurnitureMod.MOD_ID, "crafting");
+    public static final Identifier IDENTIFIER = Identifier.of(PaladinFurnitureMod.MOD_ID, "crafting");
 
     @Override
     public RecipeType<FurnitureRecipe> getRecipeType() {

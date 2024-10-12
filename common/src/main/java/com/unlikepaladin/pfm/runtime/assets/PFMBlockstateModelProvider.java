@@ -310,7 +310,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             variantBaseHashMap.forEach((variantBase, block) -> {
                 if (!generatedStates.contains(Registries.BLOCK.getId(block))) {
                     Identifier modelID = ModelIds.getBlockModelId(block);
-                    Identifier id = new Identifier(modelID.getNamespace(), "block/" + blockName);
+                    Identifier id = Identifier.of(modelID.getNamespace(), "block/" + blockName);
                     List<Identifier> ids = new ArrayList<>(1);
                     ids.add(id);
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
@@ -325,7 +325,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                 Block block = (Block) block1;
                 if (!generatedStates.contains(Registries.BLOCK.getId(block))) {
                     Identifier modelID = ModelIds.getBlockModelId(block);
-                    Identifier id = new Identifier(modelID.getNamespace(), "block/" + blockName);
+                    Identifier id = Identifier.of(modelID.getNamespace(), "block/" + blockName);
                     List<Identifier> ids = new ArrayList<>(1);
                     ids.add(id);
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
@@ -354,7 +354,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                     }
                     Identifier modelID = ModelIds.getBlockModelId(block);
                     for (Model model : models) {
-                        Identifier id = new Identifier(modelID.getNamespace(), ModelIDS.get(model).getPath().replace("template_", "").replace("template", "").replaceAll(blockName, strippedprefix + variantBase.asString() + "_" + blockName2).replace("block/", "block/" + blockName + "/").replace("//", "/"));
+                        Identifier id = Identifier.of(modelID.getNamespace(), ModelIDS.get(model).getPath().replace("template_", "").replace("template", "").replaceAll(blockName, strippedprefix + variantBase.asString() + "_" + blockName2).replace("block/", "block/" + blockName + "/").replace("//", "/"));
                         model.upload(id, blockTexture, this.modelCollector);
                         ids.add(id);
                     }
@@ -377,7 +377,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                         String color = block instanceof SimpleBedBlock ? ((SimpleBedBlock) block).getPFMColor().asString() : "";
                         List<Identifier> ids = new ArrayList<>();
                         for (Model model : models) {
-                            Identifier id = new Identifier(modelID.getNamespace(), ModelIDS.get(model).getPath().replaceAll("white", color).replaceAll("template", variantBase.asString()));
+                            Identifier id = Identifier.of(modelID.getNamespace(), ModelIDS.get(model).getPath().replaceAll("white", color).replaceAll("template", variantBase.asString()));
 
                             if (allids.contains(id))
                                 continue;
@@ -430,18 +430,18 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         }
 
         private static Model block(String parent, TextureKey ... requiredTextures) {
-            Identifier id = new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + parent);
+            Identifier id = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + parent);
             Model model = new Model(Optional.of(id), Optional.empty(), requiredTextures);
             ModelIDS.put(model, id);
             return model;
         }
 
         private static Model item(String parent, TextureKey ... requiredTextures) {
-            return new Model(Optional.of(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + parent)), Optional.empty(), requiredTextures);
+            return new Model(Optional.of(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + parent)), Optional.empty(), requiredTextures);
         }
 
         private static Model block(String parent, String variant, TextureKey ... requiredTextures) {
-            Identifier id = new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + parent + variant);
+            Identifier id = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + parent + variant);
             Model model = new Model(Optional.of(id), Optional.of(variant), requiredTextures);
             ModelIDS.put(model, id);
             return model;
@@ -459,7 +459,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             BlockStateVariant variant;
             String path = modelIdentifiers.get(0).getPath();
             //Ugly hack to get the folder name for the Baked Block Model
-            Identifier id = new Identifier(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
+            Identifier id = Identifier.of(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
             variant = (BlockStateVariant.create().put(VariantSettings.MODEL, id));
             return VariantsBlockStateSupplier.create(block, variant);
         }
@@ -471,7 +471,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
             } else {
-                id = new Identifier(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
+                id = Identifier.of(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
             }
             Integer[] rotationArray = new Integer[]{0, 90};
             for (int i = 0; rotationArray.length > i; i++) {
@@ -508,7 +508,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
             } else {
-                id = new Identifier(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
+                id = Identifier.of(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
             }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
             for (int i = 0; rotationArray.length > i; i++) {
@@ -544,7 +544,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
             } else {
-                id = new Identifier(modelIdentifiers.get(0).getNamespace(), name.replace(furnitureName, replacement));
+                id = Identifier.of(modelIdentifiers.get(0).getNamespace(), name.replace(furnitureName, replacement));
             }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
             for (int i = 0; rotationArray.length > i; i++) {

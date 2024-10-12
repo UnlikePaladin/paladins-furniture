@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.data.materials;
 
 import net.minecraft.block.*;
-import net.minecraft.block.enums.Instrument;
+import net.minecraft.block.enums.NoteBlockInstrument;
 import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.BlockSoundGroup;
@@ -13,7 +13,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
-    public static final WoodVariant OAK = new WoodVariant(new Identifier("oak"), Blocks.OAK_PLANKS, Blocks.OAK_LOG, BoatEntity.Type.OAK);
+    public static final WoodVariant OAK = new WoodVariant(Identifier.of("oak"), Blocks.OAK_PLANKS, Blocks.OAK_LOG, BoatEntity.Type.OAK);
     public static final WoodVariantRegistry INSTANCE = new WoodVariantRegistry();
     public static Collection<String> getNamespaces() {
         return INSTANCE.variants.values().stream().map(VariantBase::getNamespace).collect(Collectors.toUnmodifiableList());
@@ -44,9 +44,9 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
         if (blockId.getNamespace().equals("tfc")) {
             if (path.contains("wood/planks/")) {
                 Optional<Block> log = Registries.BLOCK.getOrEmpty(
-                        new Identifier(blockId.getNamespace(), path.replace("planks", "log")));
+                        Identifier.of(blockId.getNamespace(), path.replace("planks", "log")));
                 if (log.isPresent()) {
-                    Identifier id = new Identifier(blockId.getNamespace(), path.replace("wood/planks/", ""));
+                    Identifier id = Identifier.of(blockId.getNamespace(), path.replace("wood/planks/", ""));
                     return Optional.of(new WoodVariant(id, baseBlock, log.get()));
                 }
             }
@@ -71,12 +71,12 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
                 // needs to use wood sound type
                 // if (state.getSoundType() == SoundType.WOOD) { //wood from tcon has diff sounds
                 BlockSoundGroup soundGroup = state.getSoundGroup();
-                Instrument instrument = state.getInstrument();
+                NoteBlockInstrument instrument = state.getInstrument();
                 // and have correct material
-                if (soundGroup == BlockSoundGroup.BAMBOO_WOOD || soundGroup == BlockSoundGroup.CHERRY_WOOD || soundGroup == BlockSoundGroup.WOOD || soundGroup == BlockSoundGroup.NETHER_WOOD || instrument == Instrument.BASS) {
+                if (soundGroup == BlockSoundGroup.BAMBOO_WOOD || soundGroup == BlockSoundGroup.CHERRY_WOOD || soundGroup == BlockSoundGroup.WOOD || soundGroup == BlockSoundGroup.NETHER_WOOD || instrument == NoteBlockInstrument.BASS) {
                     // we do not allow "/" in the wood name
                     name = name.replace("/", "_");
-                    Identifier id = new Identifier(blockId.getNamespace(), name);
+                    Identifier id = Identifier.of(blockId.getNamespace(), name);
                     Block logBlock = findLog(id);
                     if (logBlock != null) {
                         return Optional.of(new WoodVariant(id, baseBlock, logBlock));
@@ -100,19 +100,19 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
     @Nullable
     private static Block findLog(Identifier id) {
         Identifier[] test = {
-                new Identifier(id.getNamespace(), id.getPath() + "_log"),
-                new Identifier(id.getNamespace(), "log_" + id.getPath()),
-                new Identifier(id.getNamespace(), id.getPath() + "log"),
-                new Identifier(id.getPath() + "_log"),
-                new Identifier("log_" + id.getPath()),
-                new Identifier(id.getPath() + "log"),
-                new Identifier(id.getNamespace(), id.getPath() + "_stem"),
-                new Identifier(id.getNamespace(), "stem_" + id.getPath()),
-                new Identifier(id.getPath() + "_stem"),
-                new Identifier("stem_" + id.getPath()),
-                new Identifier(id.getNamespace(), "stalk_" + id.getPath()),
-                new Identifier(id.getPath() + "_stalk"),
-                new Identifier("stalk_" + id.getPath())
+                Identifier.of(id.getNamespace(), id.getPath() + "_log"),
+                Identifier.of(id.getNamespace(), "log_" + id.getPath()),
+                Identifier.of(id.getNamespace(), id.getPath() + "log"),
+                Identifier.of(id.getPath() + "_log"),
+                Identifier.of("log_" + id.getPath()),
+                Identifier.of(id.getPath() + "log"),
+                Identifier.of(id.getNamespace(), id.getPath() + "_stem"),
+                Identifier.of(id.getNamespace(), "stem_" + id.getPath()),
+                Identifier.of(id.getPath() + "_stem"),
+                Identifier.of("stem_" + id.getPath()),
+                Identifier.of(id.getNamespace(), "stalk_" + id.getPath()),
+                Identifier.of(id.getPath() + "_stalk"),
+                Identifier.of("stalk_" + id.getPath())
         };
         Block temp = null;
         for (Identifier r : test) {

@@ -39,15 +39,15 @@ public class UnbakedFridgeModel implements UnbakedModel {
     public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : FRIDGE_MODEL_PARTS_BASE) {
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, part));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part));
             }
             for (String part : FRIDGE_MODEL_PARTS_BASE) {
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, part.replaceAll("white", "gray")));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part.replaceAll("white", "gray")));
             }
         }
     };
 
-    private static final Identifier PARENT = new Identifier("block/block");
+    private static final Identifier PARENT = Identifier.of("block/block");
     private final SpriteIdentifier frameTex;
 
     @Override
@@ -65,8 +65,8 @@ public class UnbakedFridgeModel implements UnbakedModel {
     }
 
     public static final List<Identifier> FRIDGE_MODEL_IDS = new ArrayList<>() { {
-        add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/white_fridge"));
-        add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/gray_fridge"));
+        add(Identifier.of(PaladinFurnitureMod.MOD_ID, "block/white_fridge"));
+        add(Identifier.of(PaladinFurnitureMod.MOD_ID, "block/gray_fridge"));
     }};
     private final Identifier id;
     public UnbakedFridgeModel(Identifier id) {
@@ -75,12 +75,12 @@ public class UnbakedFridgeModel implements UnbakedModel {
     }
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         Map<String,BakedModel> bakedModels = new LinkedHashMap<>();
         for (String modelPart : FRIDGE_MODEL_PARTS_BASE) {
-            if (modelId.getPath().contains("gray"))
+            if (this.id.getPath().contains("gray"))
                 modelPart = modelPart.replaceAll("white", "gray");
-            bakedModels.put(modelPart, loader.bake(new Identifier(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
+            bakedModels.put(modelPart, loader.bake(Identifier.of(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
         }
         return getBakedModel(textureGetter.apply(frameTex), rotationContainer, bakedModels, bakedModels.keySet().stream().toList());
     }

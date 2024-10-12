@@ -46,7 +46,7 @@ public class DyeKit extends Item {
                 world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 String newBlock= blockState.getBlock().toString();
                 newBlock = newBlock.replace(((DyeableFurnitureBlock) blockState.getBlock()).getPFMColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
-                BlockState blockState1 = Registries.BLOCK.get(new Identifier(newBlock)).getStateWithProperties(blockState);
+                BlockState blockState1 = Registries.BLOCK.get(Identifier.of(newBlock)).getStateWithProperties(blockState);
                 world.setBlockState(blockPos, blockState1, 3);
                 stack.decrement(1);
                 dyed = true;

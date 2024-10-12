@@ -59,18 +59,18 @@ public class PFMItemRenderer extends BuiltinModelItemRenderer {
         for (WoodVariant woodVariant : WoodVariantRegistry.getVariants()) {
             bakedModels.put(woodVariant, new LinkedHashMap<>());
             for (String part : modelParts) {
-                bakedModels.get(woodVariant).put(part, ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(new Identifier(PaladinFurnitureMod.MOD_ID, part.replaceAll("template", woodVariant.asString()))));
+                bakedModels.get(woodVariant).put(part, ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(Identifier.of(PaladinFurnitureMod.MOD_ID, part.replaceAll("template", woodVariant.asString()))));
             }
         }
         return bakedModels.get(variantBase).get(modelParts.get(index));
     }
 
-    static Map<Boolean, BakedModel> bedModel = new HashMap<>();
+    public static Map<Boolean, BakedModel> bedModel = new HashMap<>();
     public BakedModel getBedModel(boolean classic) {
         if (bedModel.containsKey(classic) && bedModel.get(classic) != null) {
             return bedModel.get(classic);
         }
-        bedModel.put(classic, ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(UnbakedBedModel.BED_MODEL_PARTS_BASE[classic ? 23 : 11]));
+        bedModel.put(classic, classic ? UnbakedBedModel.inventoryModels.getRight() : UnbakedBedModel.inventoryModels.getLeft());
         return bedModel.get(classic);
     }
 

@@ -55,7 +55,7 @@ public class EmiFurnitureRecipe extends EmiCraftingRecipe {
             List<EmiStack> stacks = input.get(i).getEmiStacks();
             for (EmiStack stack : stacks) {
                 inv.setStack(i, stack.getItemStack().copy());
-                ItemStack remainder = entry.value().getRemainder(playerInventory).get(i);
+                ItemStack remainder = entry.value().getRemainder(new FurnitureRecipe.FurnitureRecipeInput(playerInventory)).get(i);
                 if (!remainder.isEmpty()) {
                     stack.setRemainder(EmiStack.of(remainder));
                 }

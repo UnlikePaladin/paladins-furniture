@@ -15,6 +15,6 @@ public class RecipeTypes {
 
     public static RecipeSerializer<FurnitureRecipe> FURNITURE_SERIALIZER;
 
-    public static final Identifier FURNITURE_ID = new Identifier(PaladinFurnitureMod.MOD_ID,"furniture");
+    public static final Identifier FURNITURE_ID = Identifier.of(PaladinFurnitureMod.MOD_ID,"furniture");
 
 }

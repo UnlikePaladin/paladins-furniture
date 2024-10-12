@@ -21,6 +21,7 @@ import net.minecraft.particle.ParticleTypes;
 import net.minecraft.recipe.CampfireCookingRecipe;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.recipe.RecipeType;
+import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
@@ -102,7 +103,7 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
                     for (int i = 0; i < stoveBlockEntity.getItemsBeingCooked().size(); i++) {
                         ItemStack itemStack1 = stoveBlockEntity.getItemsBeingCooked().get(i);
                         if (itemStack1.isEmpty()) continue;
-                        if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(itemStack1), world).isEmpty()) {
+                        if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(itemStack1), world).isEmpty()) {
                             ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stoveBlockEntity.removeStack(i));
                             world.spawnEntity(itemEntity);
                             player.incrementStat(Statistics.STOVE_OPENED);

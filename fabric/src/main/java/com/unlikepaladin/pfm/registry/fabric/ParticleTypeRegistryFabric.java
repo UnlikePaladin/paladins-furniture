@@ -10,6 +10,6 @@ import net.minecraft.registry.Registry;
 public class ParticleTypeRegistryFabric {
     public static void registerParticleTypes() {
         ParticleIDs.WATER_DROP = FabricParticleTypes.simple();
-        Registry.register(Registries.PARTICLE_TYPE, new Identifier(PaladinFurnitureMod.MOD_ID, "shower_water"), ParticleIDs.WATER_DROP);
+        Registry.register(Registries.PARTICLE_TYPE, Identifier.of(PaladinFurnitureMod.MOD_ID, "shower_water"), ParticleIDs.WATER_DROP);
     }
 }

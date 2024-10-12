@@ -309,6 +309,6 @@ public class PFMTagProvider extends PFMProvider {
     }
 
     protected Path getOutput(Identifier id) {
-        return getParent().getOutput().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
+        return getParent().getOutput().resolve("data/" + id.getNamespace() + "/tags/block/" + id.getPath() + ".json");
     }
 }

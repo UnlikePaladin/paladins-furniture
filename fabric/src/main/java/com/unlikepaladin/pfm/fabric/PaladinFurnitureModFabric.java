@@ -37,7 +37,7 @@ import java.util.Collection;
 
 public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer, DedicatedServerModInitializer {
 
-    public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
+    public static final Identifier FURNITURE_DYED_ID = Identifier.of("pfm:furniture_dyed");
     public static SoundEvent FURNITURE_DYED_EVENT = SoundEvent.of(FURNITURE_DYED_ID);
     public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 
@@ -86,9 +86,9 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
         sender.sendPacket(new SyncConfigPayload(buffer));
     }
-//new Identifier(MOD_ID, "dye_kits")
+//Identifier.of(MOD_ID, "dye_kits")
     public static void initializeItemGroup() {
-        PaladinFurnitureMod.DYE_KITS.setRight(Registry.register(Registries.ITEM_GROUP, new Identifier(MOD_ID, "dye_kits"), FabricItemGroup.builder()
+        PaladinFurnitureMod.DYE_KITS.setRight(Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "dye_kits"), FabricItemGroup.builder()
                 .displayName(Text.translatable("itemGroup.pfm.dye_kits"))
                 .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
                 .entries((enabledFeatures, stacks) -> {
@@ -111,7 +111,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                 })
                 .build()));
 
-        PaladinFurnitureMod.FURNITURE_GROUP.setRight(Registry.register(Registries.ITEM_GROUP, new Identifier(MOD_ID, "furniture"), FabricItemGroup.builder()
+        PaladinFurnitureMod.FURNITURE_GROUP.setRight(Registry.register(Registries.ITEM_GROUP, Identifier.of(MOD_ID, "furniture"), FabricItemGroup.builder()
                 .displayName(Text.translatable("itemGroup.pfm.furniture"))
                 .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultStack())
                 .entries((displayContext, stacks) -> {

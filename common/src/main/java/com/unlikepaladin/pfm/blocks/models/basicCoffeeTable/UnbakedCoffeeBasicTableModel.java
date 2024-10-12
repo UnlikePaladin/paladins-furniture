@@ -24,35 +24,35 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public class UnbakedCoffeeBasicTableModel implements UnbakedModel {
     public static final Identifier[] BASIC_MODEL_PARTS_BASE = {
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_base"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_east"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_west"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_south_east"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_south_west"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_east_top"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_west_top"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_east_west_north"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_east_west_south"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_east_bottom"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_west_bottom"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_east"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_west"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_east_corner"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_west_corner"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_south_east_corner"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_south_west_corner")
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_base"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_east"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_west"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_south_east"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_south_west"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_east_top"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_west_top"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_east_west_north"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_east_west_south"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_east_bottom"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_west_bottom"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_east"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_south_west"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_east_corner"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_north_west_corner"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_south_east_corner"),
+            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic/coffee_table_basic_south_west_corner")
     };
-    private static final Identifier PARENT = new Identifier("block/block");
-    public static final Identifier TABLE_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic");
+    private static final Identifier PARENT = Identifier.of("block/block");
+    public static final Identifier TABLE_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/coffee_table_basic");
     public static final List<Identifier> MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_coffee_table_basic"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_coffee_table_basic"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_coffee_table_basic"));
+                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_coffee_table_basic"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_coffee_table_basic"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_coffee_table_basic"));
             }
             add(TABLE_MODEL_ID);
         }
@@ -70,7 +70,7 @@ public class UnbakedCoffeeBasicTableModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(TABLE_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(TABLE_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().get(rotationContainer));
 

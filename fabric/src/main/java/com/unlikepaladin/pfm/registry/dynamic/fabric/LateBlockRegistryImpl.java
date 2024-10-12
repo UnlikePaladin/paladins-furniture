@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 public class LateBlockRegistryImpl {
 
     public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> blockSupplier, boolean registerItem, Pair<String, ItemGroup> group) {
-        T block = Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), blockSupplier.get());
+        T block = Registry.register(Registries.BLOCK, Identifier.of(PaladinFurnitureMod.MOD_ID, blockName), blockSupplier.get());
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerLateBlockItem(blockName, block, group);
@@ -49,7 +49,7 @@ public class LateBlockRegistryImpl {
     }
     public static void registerLateItem(String itemName, Supplier<Item> itemSup, Pair<String, ItemGroup> group) {
         Item item = itemSup.get();
-        Registry.register(Registries.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
+        Registry.register(Registries.ITEM, Identifier.of(PaladinFurnitureMod.MOD_ID, itemName), item);
         if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(group)) {
             PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(group, new LinkedHashSet<>());
         }
@@ -83,7 +83,7 @@ public class LateBlockRegistryImpl {
     }
 
     public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, Pair<String, ItemGroup> group) {
-        Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), block);
+        Registry.register(Registries.BLOCK, Identifier.of(PaladinFurnitureMod.MOD_ID, blockName), block);
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerLateBlockItem(blockName, block, group);

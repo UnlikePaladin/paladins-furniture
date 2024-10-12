@@ -13,7 +13,7 @@ public class PFMBookScreen extends Screen {
         super(title);
     }
 
-    public static final Identifier BOOK_TEXTURE = new Identifier("pfm", "textures/gui/book_orange.png");
+    public static final Identifier BOOK_TEXTURE = Identifier.of("pfm", "textures/gui/book_orange.png");
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context, mouseX, mouseY, delta);

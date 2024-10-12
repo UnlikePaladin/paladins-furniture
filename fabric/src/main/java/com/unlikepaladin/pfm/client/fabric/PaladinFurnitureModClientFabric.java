@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.client.fabric;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
-import com.unlikepaladin.pfm.client.fabric.modelLoaders.PFMModelLoadingV0;
 import com.unlikepaladin.pfm.client.fabric.modelLoaders.PFMModelLoadingV1;
 import com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric;
 import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
@@ -43,8 +42,6 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
         ScreenRegistry.registerScreens();
         if (FabricLoader.getInstance().isModLoaded("fabric-model-loading-api-v1")) {
             PFMModelLoadingV1.registerV1Plugin();
-        } else {
-            PFMModelLoadingV0.registerV0Plugin();
         }
         ParticleProviderRegistryFabric.registerParticleFactories();
         ClientPlayConnectionEvents.DISCONNECT.register(LeaveEventHandlerFabric::onServerLeave);

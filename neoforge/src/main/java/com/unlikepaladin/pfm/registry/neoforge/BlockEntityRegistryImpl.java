@@ -13,7 +13,7 @@ public class BlockEntityRegistryImpl {
 
     public static <T extends BlockEntity>BlockEntityType<T> registerBlockEntity(String blockEntityId, Block[] block, BlockEntityType.BlockEntityFactory<T> factory) {
         BlockEntityType<T> blockEntityType = BlockEntityType.Builder.create(factory, block).build(null);
-        blockEntityTypes.put(new Identifier(PaladinFurnitureMod.MOD_ID, blockEntityId), blockEntityType);
+        blockEntityTypes.put(Identifier.of(PaladinFurnitureMod.MOD_ID, blockEntityId), blockEntityType);
         return blockEntityType;
     }
 }

@@ -24,13 +24,13 @@ public class UnbakedBasicLampModel implements UnbakedModel {
 
     public static final List<Identifier> LAMP_MODEL_IDS = new ArrayList<>() {
         {
-            add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_lamp"));
-            add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/basic_lamp"));
+            add(Identifier.of(PaladinFurnitureMod.MOD_ID, "block/basic_lamp"));
+            add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/basic_lamp"));
         }
     };
 
     public static Identifier getItemModelId() {
-        return PaladinFurnitureMod.getLoader() == PaladinFurnitureMod.Loader.FORGE ? new Identifier("builtin/entity") : LAMP_MODEL_IDS.get(1);
+        return PaladinFurnitureMod.getLoader() == PaladinFurnitureMod.Loader.FORGE ? Identifier.of("builtin/entity") : LAMP_MODEL_IDS.get(1);
     }
 
     public static final List<String> MODEL_PARTS_BASE = new ArrayList<>() {{
@@ -45,14 +45,14 @@ public class UnbakedBasicLampModel implements UnbakedModel {
         add("block/basic_lamp/basic_lamp_light_bulb_off");
         add("block/basic_lamp/basic_lamp_light_bulb_on");
     }};
-    private static final Identifier PARENT = new Identifier("block/block");
+    private static final Identifier PARENT = Identifier.of("block/block");
     public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : MODEL_PARTS_BASE) {
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, part));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part));
             }
             for (String part : STATIC_PARTS) {
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, part));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part));
             }
         }
     };
@@ -76,7 +76,7 @@ public class UnbakedBasicLampModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(LAMP_MODEL_IDS.get(0)) && PFMRuntimeResources.modelCacheMap.get(LAMP_MODEL_IDS.get(0)).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(LAMP_MODEL_IDS.get(0), rotationContainer, PFMRuntimeResources.modelCacheMap.get(LAMP_MODEL_IDS.get(0)).getCachedModelParts().get(rotationContainer));
 

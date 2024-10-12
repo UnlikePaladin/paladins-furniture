@@ -67,7 +67,7 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
     static List<Sprite> getOakStrippedLogSprite() {
         if (!oakSprite.isEmpty())
             return oakSprite;
-        Sprite wood = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,  new Identifier("minecraft:block/stripped_oak_log")).getSprite();
+        Sprite wood = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,  Identifier.of("minecraft:block/stripped_oak_log")).getSprite();
         oakSprite.add(wood);
         return oakSprite;
     }

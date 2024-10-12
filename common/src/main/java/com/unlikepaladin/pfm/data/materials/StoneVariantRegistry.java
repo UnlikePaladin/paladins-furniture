@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.data.materials;
 
 import net.minecraft.block.*;
-import net.minecraft.block.enums.Instrument;
+import net.minecraft.block.enums.NoteBlockInstrument;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.Identifier;
@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
-    public static final StoneVariant STONE = new StoneVariant(new Identifier("stone"), Blocks.STONE, Blocks.COBBLESTONE);
+    public static final StoneVariant STONE = new StoneVariant(Identifier.of("stone"), Blocks.STONE, Blocks.COBBLESTONE);
     public static final StoneVariantRegistry INSTANCE = new StoneVariantRegistry();
     public static Collection<String> getNamespaces() {
         return INSTANCE.variants.values().stream().map(VariantBase::getNamespace).collect(Collectors.toUnmodifiableList());
@@ -52,12 +52,12 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
                 // needs to use wood sound type
                 // if (state.getSoundType() == SoundType.WOOD) { //wood from tcon has diff sounds
                 BlockSoundGroup soundGroup = state.getSoundGroup();
-                Instrument instrument = state.getInstrument();
+                NoteBlockInstrument instrument = state.getInstrument();
                 // and have correct material
-                if (soundGroup == BlockSoundGroup.DEEPSLATE || soundGroup == BlockSoundGroup.POLISHED_DEEPSLATE || soundGroup == BlockSoundGroup.STONE || instrument == Instrument.BASEDRUM) {
+                if (soundGroup == BlockSoundGroup.DEEPSLATE || soundGroup == BlockSoundGroup.POLISHED_DEEPSLATE || soundGroup == BlockSoundGroup.STONE || instrument == NoteBlockInstrument.BASEDRUM) {
                     // we do not allow "/" in the wood name
                     name = name.replace("/", "_");
-                    Identifier id = new Identifier(blockId.getNamespace(), name);
+                    Identifier id = Identifier.of(blockId.getNamespace(), name);
                     Block rawBlock = findRaw(id);
                     if (rawBlock != null) {
                         return Optional.of(new StoneVariant(id, baseBlock, rawBlock));
@@ -81,24 +81,24 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
     @Nullable
     private static Block findRaw(Identifier id) {
         Identifier[] test = {
-                new Identifier(id.getNamespace(), id.getPath()),
-                new Identifier(id.getNamespace(), id.getPath() + "raw"),
-                new Identifier(id.getNamespace(), id.getPath() + "_raw"),
-                new Identifier(id.getNamespace(), "raw_" + id.getPath()),
-                new Identifier(id.getNamespace(), "raw" + id.getPath()),
-                new Identifier(id.getNamespace(), id.getPath() + "_cobble"),
-                new Identifier(id.getNamespace(), id.getPath() + "cobble"),
-                new Identifier(id.getNamespace(), "cobble_" + id.getPath()),
-                new Identifier(id.getNamespace(), "cobble" + id.getPath()),
-                new Identifier(id.getPath()),
-                new Identifier(id.getPath() + "raw"),
-                new Identifier(id.getPath() + "_raw"),
-                new Identifier("raw_" + id.getPath()),
-                new Identifier("raw" + id.getPath()),
-                new Identifier(id.getPath() + "_cobble"),
-                new Identifier(id.getPath() + "cobble"),
-                new Identifier("cobble_" + id.getPath()),
-                new Identifier("cobble" + id.getPath())
+                Identifier.of(id.getNamespace(), id.getPath()),
+                Identifier.of(id.getNamespace(), id.getPath() + "raw"),
+                Identifier.of(id.getNamespace(), id.getPath() + "_raw"),
+                Identifier.of(id.getNamespace(), "raw_" + id.getPath()),
+                Identifier.of(id.getNamespace(), "raw" + id.getPath()),
+                Identifier.of(id.getNamespace(), id.getPath() + "_cobble"),
+                Identifier.of(id.getNamespace(), id.getPath() + "cobble"),
+                Identifier.of(id.getNamespace(), "cobble_" + id.getPath()),
+                Identifier.of(id.getNamespace(), "cobble" + id.getPath()),
+                Identifier.of(id.getPath()),
+                Identifier.of(id.getPath() + "raw"),
+                Identifier.of(id.getPath() + "_raw"),
+                Identifier.of("raw_" + id.getPath()),
+                Identifier.of("raw" + id.getPath()),
+                Identifier.of(id.getPath() + "_cobble"),
+                Identifier.of(id.getPath() + "cobble"),
+                Identifier.of("cobble_" + id.getPath()),
+                Identifier.of("cobble" + id.getPath())
         };
         Block temp = null;
         for (Identifier r : test) {
