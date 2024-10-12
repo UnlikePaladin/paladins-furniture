@@ -3,11 +3,14 @@ package com.unlikepaladin.pfm.registry.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
 import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
+import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
 import com.unlikepaladin.pfm.networking.*;
 import com.unlikepaladin.pfm.networking.neoforge.*;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
+import io.netty.buffer.Unpooled;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -15,11 +18,14 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
+import java.util.Collection;
+
 public class NetworkRegistryNeoForge {
 
+    @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar("1");
-        registrar.configurationToClient(NetworkIDs.CONFIG_SYNC_ID, SyncConfigPayload.PACKET_SIMPLE_CODEC, (payload, context) ->
+        registrar.playToClient(NetworkIDs.CONFIG_SYNC_ID, SyncConfigPayload.PACKET_SIMPLE_CODEC, (payload, context) ->
                 context.enqueueWork(() -> {
             payload.configOptionMap().forEach((title, configOption) -> {
                 PFMConfigScreen.isOnServer = true;
@@ -48,7 +54,10 @@ public class NetworkRegistryNeoForge {
                 PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayerEntity) event.getEntity());
             }
             //Sync Config
-            PacketDistributor.sendToPlayer((ServerPlayerEntity) event.getEntity(), new SyncConfigPayload(PaladinFurnitureMod.getPFMConfig().options));
+            RegistryByteBuf buffer = new RegistryByteBuf(Unpooled.buffer(), event.getEntity().getRegistryManager());
+            Collection<AbstractConfigOption> configOptions = PaladinFurnitureMod.getPFMConfig().options.values();
+            buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
+            PacketDistributor.sendToPlayer((ServerPlayerEntity) event.getEntity(), new SyncConfigPayload(buffer));
         }
    }
 }

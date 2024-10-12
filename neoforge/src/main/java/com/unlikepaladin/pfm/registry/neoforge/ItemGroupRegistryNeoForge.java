@@ -25,6 +25,7 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static com.unlikepaladin.pfm.PaladinFurnitureMod.MOD_ID;
 
@@ -35,24 +36,7 @@ public class ItemGroupRegistryNeoForge {
         event.register(RegistryKeys.ITEM_GROUP, helper -> {
             ItemGroup dyeGroup = ItemGroup.builder().displayName(Text.translatable("itemGroup.pfm.dye_kits"))
                         .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
-                        .entries((enabledFeatures, stacks) -> {
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_GREEN));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIME));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_CYAN));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLUE));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_BLUE));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_PURPLE));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_MAGENTA));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_PINK));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BROWN));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_WHITE));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_GRAY));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY));
-                            stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLACK));
-                        }).build();
+                        .entries((enabledFeatures, stacks) -> {}).build();
             helper.register(new Identifier(MOD_ID, "dye_kits"), dyeGroup);
             PaladinFurnitureMod.DYE_KITS.setRight(dyeGroup);
 
@@ -67,7 +51,7 @@ public class ItemGroupRegistryNeoForge {
 
     @SubscribeEvent
     public static void addToVanillaItemGroups(BuildCreativeModeTabContentsEvent creativeModeTabEvent){
-        for (Map.Entry<Pair<String, ItemGroup>, List<Item>> itemGroupListEntry : PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.entrySet()) {
+        for (Map.Entry<Pair<String, ItemGroup>, Set<Item>> itemGroupListEntry : PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.entrySet()) {
             if (creativeModeTabEvent.getTab() == itemGroupListEntry.getKey().getRight()) {
                 itemGroupListEntry.getValue().forEach(item -> {
                     if (item == PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM) {

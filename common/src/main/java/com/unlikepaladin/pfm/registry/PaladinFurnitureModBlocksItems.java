@@ -23,7 +23,7 @@ import java.util.stream.Stream;
 
 public class PaladinFurnitureModBlocksItems {
     public static final List<Block> BLOCKS = new ArrayList<>();
-    public static final Map<Pair<String, ItemGroup>, List<Item>> ITEM_GROUP_LIST_MAP = new LinkedHashMap<>();
+    public static final Map<Pair<String, ItemGroup>, Set<Item>> ITEM_GROUP_LIST_MAP = new LinkedHashMap<>();
     public static Set<BlockState> originalHomePOIBedStates = new HashSet<>();
     public static final FreezerBlock WHITE_FREEZER = new FreezerBlock(AbstractBlock.Settings.create().resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE).mapColor(MapColor.WHITE), () -> PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
     public static final FridgeBlock WHITE_FRIDGE = new FridgeBlock(AbstractBlock.Settings.copy(WHITE_FREEZER).nonOpaque(), () -> PaladinFurnitureModBlocksItems.WHITE_FREEZER);
