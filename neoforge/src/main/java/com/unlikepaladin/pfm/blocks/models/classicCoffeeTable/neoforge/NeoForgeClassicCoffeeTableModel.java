@@ -1,6 +1,6 @@
-package com.unlikepaladin.pfm.blocks.models.dinnerTable.neoforge;
+package com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.neoforge;
 
-import com.unlikepaladin.pfm.blocks.DinnerTableBlock;
+import com.unlikepaladin.pfm.blocks.ClassicCoffeeTableBlock;
 import com.unlikepaladin.pfm.blocks.models.neoforge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
 import net.minecraft.block.BlockState;
@@ -17,13 +17,13 @@ import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.*;
 import net.minecraft.util.math.random.Random;
 
-public class NeoForgeDinnerTableModel extends PFMNeoForgeBakedModel {
-    public NeoForgeDinnerTableModel(ModelBakeSettings settings, List<BakedModel> modelList) {
-        super(settings, modelList);
+import java.util.*;
+
+public class NeoForgeClassicCoffeeTableModel extends PFMNeoForgeBakedModel {
+    public NeoForgeClassicCoffeeTableModel(ModelBakeSettings settings, List<BakedModel> parts) {
+        super(settings, parts);
     }
 
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
@@ -31,19 +31,22 @@ public class NeoForgeDinnerTableModel extends PFMNeoForgeBakedModel {
     @NotNull
     @Override
     public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
-        if (state.getBlock() instanceof DinnerTableBlock) {
+        if (state.getBlock() instanceof ClassicCoffeeTableBlock) {
             ModelData.Builder builder = ModelData.builder();
 
             ModelData data = builder.build();
             data = super.getModelData(world, pos, state, data);
 
-            DinnerTableBlock block = (DinnerTableBlock) state.getBlock();
-            Direction dir = state.get(DinnerTableBlock.FACING);
-            boolean left = block.isTable(world, pos, dir.rotateYCounterclockwise(), dir);
-            boolean right = block.isTable(world, pos, dir.rotateYClockwise(), dir);
+            ClassicCoffeeTableBlock block = (ClassicCoffeeTableBlock) state.getBlock();
+            boolean north = block.canConnect(world.getBlockState(pos.north()));
+            boolean east = block.canConnect(world.getBlockState(pos.east()));
+            boolean west = block.canConnect(world.getBlockState(pos.west()));
+            boolean south = block.canConnect(world.getBlockState(pos.south()));
             BitSet set = new BitSet();
-            set.set(0, left);
-            set.set(1, right);
+            set.set(0, north);
+            set.set(1, east);
+            set.set(2, west);
+            set.set(3, south);
             data = data.derive().with(CONNECTIONS, new ModelBitSetProperty(set)).build();
             return data;
         }
@@ -52,26 +55,29 @@ public class NeoForgeDinnerTableModel extends PFMNeoForgeBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
-        if (state != null && state.getBlock() instanceof DinnerTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
+        if (state != null && state.getBlock() instanceof ClassicCoffeeTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
+            BitSet set = extraData.get(CONNECTIONS).connections;
             List<BakedQuad> baseQuads = new ArrayList<>();
             List<BakedQuad> secondaryQuads = new ArrayList<>();
 
-            BitSet set = extraData.get(CONNECTIONS).connections;
-            boolean left = set.get(0);
-            boolean right = set.get(1);
-            Direction dir = state.get(DinnerTableBlock.FACING);
+            boolean north = set.get(0);
+            boolean east = set.get(1);
+            boolean west = set.get(2);
+            boolean south = set.get(3);
             baseQuads.addAll(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData, renderType));
-            if (!left) {
-                int index = dir == Direction.NORTH || dir == Direction.WEST ? 1 : 2;
-                secondaryQuads.addAll(getTemplateBakedModels().get(index).getQuads(state, side, rand, extraData, renderType));
+            if (!north && !east) {
+                secondaryQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData, renderType));
             }
-            if (!right) {
-                int index = dir == Direction.NORTH || dir == Direction.WEST ? 2 : 1;
-                secondaryQuads.addAll(getTemplateBakedModels().get(index).getQuads(state, side, rand, extraData, renderType));
+            if (!north && !west) {
+                secondaryQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData, renderType));
             }
-            if (!right && !left) {
+            if (!south && !west) {
                 secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderType));
             }
+            if (!south && !east) {
+                secondaryQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderType));
+            }
+
             List<Sprite> spriteList = getSpriteList(state);
             List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
             quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
@@ -84,8 +90,13 @@ public class NeoForgeDinnerTableModel extends PFMNeoForgeBakedModel {
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
         // base
         List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(state, face, random));
+
+        List<BakedQuad> secondaryQuads = new ArrayList<>();
         // legs
-        List<BakedQuad> secondaryQuads = new ArrayList<>(getTemplateBakedModels().get(3).getQuads(state, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, face, random));
 
         List<Sprite> spriteList = getSpriteList(stack);
         List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));

@@ -1,8 +1,8 @@
-package com.unlikepaladin.pfm.blocks.models.basicTable.neoforge;
+package com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.neoforge;
 
-import com.unlikepaladin.pfm.blocks.BasicTableBlock;
-import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
+import com.unlikepaladin.pfm.blocks.BasicCoffeeTableBlock;
 import com.unlikepaladin.pfm.blocks.models.neoforge.ModelBitSetProperty;
+import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.model.BakedModel;
@@ -12,32 +12,34 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
-import net.minecraft.util.math.random.Random;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.Collections;
+import java.util.List;
 
-public class NeoForgeBasicTableModel extends PFMNeoForgeBakedModel {
-    public NeoForgeBasicTableModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+public class NeoForgeCoffeeBasicTableModel extends PFMNeoForgeBakedModel {
+    public NeoForgeCoffeeBasicTableModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
 
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
-
     @NotNull
     @Override
     public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
-        if (state.getBlock() instanceof BasicTableBlock) {
+        if (state.getBlock() instanceof BasicCoffeeTableBlock) {
             ModelData.Builder builder = ModelData.builder();
 
             ModelData data = builder.build();
             data = super.getModelData(world, pos, state, data);
 
-            BasicTableBlock block = (BasicTableBlock) state.getBlock();
+            BasicCoffeeTableBlock block = (BasicCoffeeTableBlock) state.getBlock();
             boolean north = block.canConnect(world, state, pos.north(), pos);
             boolean east = block.canConnect(world, state, pos.east(), pos);
             boolean west = block.canConnect(world, state, pos.west(), pos);
@@ -63,7 +65,7 @@ public class NeoForgeBasicTableModel extends PFMNeoForgeBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
-        if (state != null && state.getBlock() instanceof BasicTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
+        if (state != null && state.getBlock() instanceof BasicCoffeeTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             List<BakedQuad> baseQuads = new ArrayList<>();
             List<BakedQuad> secondaryQuads = new ArrayList<>();
 
@@ -76,7 +78,7 @@ public class NeoForgeBasicTableModel extends PFMNeoForgeBakedModel {
             boolean cornerNorthEast = set.get(5);
             boolean cornerSouthEast = set.get(6);
             boolean cornerSouthWest = set.get(7);
-            Direction.Axis dir = state.get(BasicTableBlock.AXIS);
+            Direction.Axis dir = state.get(BasicCoffeeTableBlock.AXIS);
             baseQuads.addAll(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData, renderType));
             if (!north && !south && !east && !west) {
                 secondaryQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData, renderType));
