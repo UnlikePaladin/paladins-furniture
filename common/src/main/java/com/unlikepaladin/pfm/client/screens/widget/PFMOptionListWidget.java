@@ -18,11 +18,13 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.*;
+import net.minecraft.util.Formatting;
 
 import java.util.*;
 import java.util.function.Consumer;
@@ -147,24 +149,24 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         private final ButtonWidget valueButton;
         private final ButtonWidget resetButton;
 
-        private final Supplier<MutableText> supplier;
+        private final Tooltip supplier;
         int index;
         boolean hasChanges = false;
         BooleanEntry(final BooleanConfigOption configOption, final Text optionName, int index) {
             this.configOption = configOption;
             this.optionName = optionName;
             this.index = index;
-            this.supplier = () -> {
-                final MutableText sideText = configOption.getSide() == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
-                final MutableText styledTooltip = ((MutableText)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true));
-                return sideText.append(Text.literal("\n")).append(styledTooltip);
-            };
+            final MutableText sideText = configOption.getSide() == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+            final MutableText styledTooltip = ((MutableText)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(Formatting.WHITE));
+            final Text tooltipText = sideText.append(Text.literal("\n")).append(styledTooltip);
+            this.supplier = Tooltip.of(tooltipText);
+
             this.valueButton = ButtonWidget.builder(optionName, button -> {
                 PFMOptionListWidget.this.parent.focusedConfigOption = configOption;
                 PFMOptionListWidget.this.newConfigValues.put(configOption, !PFMOptionListWidget.this.newConfigValues.get(configOption));
                 hasChanges = !hasChanges;
                 PFMOptionListWidget.this.hasChanges.set(index, hasChanges);
-            }).dimensions(0,0,75,20).narrationSupplier(textSupplier -> this.supplier.get()).build();
+            }).tooltip(supplier).dimensions(0,0,75,20).narrationSupplier(Supplier::get).build();
 
             this.resetButton = ButtonWidget.builder(Text.translatable("controls.reset"), button -> {
                 PFMOptionListWidget.this.newConfigValues.put(configOption, configOption.getDefaultValue());
@@ -217,23 +219,23 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         private final Text optionName;
         private final ButtonWidget button;
 
-        private final Supplier<MutableText> supplier;
+        private final Tooltip supplier;
         private final Side side;
         ButtonEntry(Side side, final Text optionName, Text buttonText, Text tooltip, ButtonWidget.PressAction pressAction) {
             this.optionName = optionName;
             this.side = side;
-            this.supplier = () -> {
-                final MutableText sideText = side == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
-                final MutableText styledTooltip = ((MutableText)tooltip).setStyle(Style.EMPTY.withItalic(true));
-                return sideText.append(Text.literal("\n")).append(styledTooltip);
-            };
+            final MutableText sideText = side == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+            final MutableText styledTooltip = ((MutableText)tooltip).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(Formatting.WHITE));
+            final Text tooltipText = sideText.append(Text.literal("\n")).append(styledTooltip);
+            this.supplier = Tooltip.of(tooltipText);
 
-            this.button = new ButtonWidget(0, 0, 135, 20, buttonText, pressAction, textSupplier -> supplier.get()){
+            this.button = new ButtonWidget(0, 0, 135, 20, buttonText, pressAction, Supplier::get){
                 @Override
                 protected MutableText getNarrationMessage() {
                     return (MutableText) optionName;
                 }
             };
+            button.setTooltip(supplier);
         }
 
         @Override

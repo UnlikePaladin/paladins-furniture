@@ -1,0 +1,15 @@
+{
+  "name": "Usage: Bathtub",
+  "icon": "pfm:basic_bathtub",
+  "category": "pfm:bathtub_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The bathtub works mostly like a cauldron, it can be filled with a water bucket or bottle, or if there's a water source one block underground you can grab that water too. It can be used to remove dye off of armor and shulker boxes, it can extinguish fire and it outputs a comparator signal as well. During the day you can also sit in it, and at night sleep in it."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

@@ -20,4 +20,12 @@ public class ColorRegistryImpl {
     public static void registerItemColor(Item item, ItemColorProvider colorProvider) {
         ColorProviderRegistry.ITEM.register(colorProvider, item);
     }
+
+    public static BlockColorProvider getBlockColor(Block block) {
+        return ColorProviderRegistry.BLOCK.get(block);
+    }
+
+    public static ItemColorProvider getItemColor(Item item) {
+        return ColorProviderRegistry.ITEM.get(item);
+    }
 }
