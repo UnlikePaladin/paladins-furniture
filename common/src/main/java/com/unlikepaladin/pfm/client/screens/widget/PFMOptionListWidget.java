@@ -18,6 +18,7 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -165,7 +166,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
                 PFMOptionListWidget.this.newConfigValues.put(configOption, !PFMOptionListWidget.this.newConfigValues.get(configOption));
                 hasChanges = !hasChanges;
                 PFMOptionListWidget.this.hasChanges.set(index, hasChanges);
-            }).dimensions(0,0,75,20).narrationSupplier(textSupplier -> this.supplier.get()).build();
+            }).tooltip(Tooltip.of(supplier.get())).dimensions(0,0,75,20).narrationSupplier(textSupplier -> this.supplier.get()).build();
 
             this.resetButton = ButtonWidget.builder(Text.translatable("controls.reset"), button -> {
                 PFMOptionListWidget.this.newConfigValues.put(configOption, configOption.getDefaultValue());
@@ -235,6 +236,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
                     return (MutableText) optionName;
                 }
             };
+            button.setTooltip(Tooltip.of(supplier.get()));
         }
 
         @Override

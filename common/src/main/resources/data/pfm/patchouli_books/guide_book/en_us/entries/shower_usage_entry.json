@@ -1,0 +1,15 @@
+{
+  "name": "Usage: Shower Items",
+  "icon": "pfm:basic_shower_handle",
+  "category": "pfm:shower_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The shower is mostly decorational, to turn the head on, you can right click on it, or connect it to a shower handle. To link them, place the head down, then right click on it with the handle, once you've placed the handle down it will be connected."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}
