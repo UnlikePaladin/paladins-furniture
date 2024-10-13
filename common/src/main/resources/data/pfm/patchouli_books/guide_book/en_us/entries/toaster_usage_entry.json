@@ -1,0 +1,15 @@
+{
+  "name": "Usage: Toaster",
+  "icon": "minecraft:redstone",
+  "category": "pfm:toaster_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The use the toaster right click on it with what you want to toast. This will insert the item, into it, you can then shift right click it to start toasting, once done right click to get your toasted food back."
+    },
+    {
+      "type": "patchouli:empty",
+      "draw_filler": "false"
+    }
+  ]
+}

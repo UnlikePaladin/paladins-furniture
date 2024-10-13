@@ -40,9 +40,11 @@ public class ShowerHeadBlockEntity extends BlockEntity {
         super.fromTag(state, nbt);
     }
 
+    public boolean isOpen() {
+        return isOpen;
+    }
+
     public void setOpen(boolean isOpen) {
-        if (isOpen){
-        }
         this.isOpen = isOpen;
     }
 
