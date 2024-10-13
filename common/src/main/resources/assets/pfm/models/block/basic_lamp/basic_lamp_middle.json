@@ -1,7 +1,7 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"texture": "minecraft:block/stripped_oak_log"
+		"texture": "block/stripped_oak_log"
 	},
 	"elements": [
 		{
@@ -9,11 +9,11 @@
 			"to": [9, 16, 9],
 			"rotation": {"angle": 0, "axis": "y", "origin": [0, -16, 0]},
 			"faces": {
-				"north": {"uv": [0, 0, 2, 16], "texture": "#texture", "cullface": "up"},
-				"east": {"uv": [0, 0, 2, 16], "texture": "#texture", "cullface": "up"},
-				"south": {"uv": [0, 0, 2, 16], "texture": "#texture", "cullface": "up"},
-				"west": {"uv": [0, 0, 2, 16], "texture": "#texture", "cullface": "up"},
-				"up": {"uv": [0, 0, 2, 2], "texture": "#texture", "cullface": "up"}
+				"north": {"uv": [0, 0, 2, 16], "texture": "#texture", "cullface": "up", "tintindex": 0},
+				"east": {"uv": [0, 0, 2, 16], "texture": "#texture", "cullface": "up", "tintindex": 0},
+				"south": {"uv": [0, 0, 2, 16], "texture": "#texture", "cullface": "up", "tintindex": 0},
+				"west": {"uv": [0, 0, 2, 16], "texture": "#texture", "cullface": "up", "tintindex": 0},
+				"up": {"uv": [0, 0, 2, 2], "texture": "#texture", "cullface": "up", "tintindex": 0}
 			}
 		}
 	],
