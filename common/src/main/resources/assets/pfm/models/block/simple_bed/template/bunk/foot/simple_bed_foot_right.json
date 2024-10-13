@@ -1,7 +1,7 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"0": "minecraft:block/oak_planks"
+		"0": "block/oak_planks"
 	},
 	"elements": [
 		{
@@ -9,10 +9,10 @@
 			"to": [16, 0, 16],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
-				"north": {"uv": [0, 2, 3, 8], "texture": "#0"},
-				"east": {"uv": [0, 2, 3, 8], "texture": "#0"},
-				"south": {"uv": [0, 2, 3, 8], "texture": "#0"},
-				"west": {"uv": [0, 2, 3, 8], "texture": "#0"}
+				"north": {"uv": [0, 2, 3, 8], "texture": "#0", "tintindex": 0},
+				"east": {"uv": [0, 2, 3, 8], "texture": "#0", "tintindex": 0},
+				"south": {"uv": [0, 2, 3, 8], "texture": "#0", "tintindex": 0},
+				"west": {"uv": [0, 2, 3, 8], "texture": "#0", "tintindex": 0}
 			}
 		}
 	],

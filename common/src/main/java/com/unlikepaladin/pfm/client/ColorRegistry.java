@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.item.ItemColorProvider;
@@ -28,12 +29,6 @@ public class ColorRegistry {
         sinks.forEach(block -> registerBlockColor(block, addWaterColor()));
         registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_TOILET, addToiletColor());
         registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB, addWaterColor());
-        registerItemColor(PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM, (stack, tintIndex) -> {
-            if (stack.hasNbt()) {
-                return DyeColor.byName(stack.getSubNbt("BlockEntityTag").getString("color"), DyeColor.WHITE).getMapColor().color;
-            }
-            return 0xFFFFFF;
-        });
         registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_LAMP, (state, world, pos, tintIndex) -> {
             BlockEntity entity = world.getBlockEntity(pos);
             if (entity != null) {
@@ -49,6 +44,20 @@ public class ColorRegistry {
                 pfmModCompatibility.getClientModCompatiblity().get().registerBlockColors();
             }
         });
+        PaladinFurnitureModBlocksItems.furnitureEntryMap.forEach((key, value) -> {
+            value.getVariantToBlockMap().forEach((variantBase, block) -> {
+                BlockColorProvider blockColorProvider = getBlockColor(variantBase.getBaseBlock());
+                if (blockColorProvider != null) {
+                    registerBlockColor(block, blockColorProvider);
+                }
+            });
+            value.getVariantToBlockMapNonBase().forEach((variantBase, block) -> {
+                BlockColorProvider blockColorProvider = getBlockColor(variantBase.getSecondaryBlock());
+                if (blockColorProvider != null) {
+                    registerBlockColor(block, blockColorProvider);
+                }
+            });
+        });
     }
 
     public static void registerBlockRenderLayers() {
@@ -62,6 +71,27 @@ public class ColorRegistry {
 
     public static void registerItemColors() {
         registerItemColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB.asItem(), (stack, index) -> index == 1 ?  0x3c44a9 : 0xFFFFFF);
+        registerItemColor(PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM, (stack, tintIndex) -> {
+            if (stack.hasNbt()) {
+                return DyeColor.byName(stack.getSubNbt("BlockEntityTag").getString("color"), DyeColor.WHITE).getMapColor().color;
+            }
+            return 0xFFFFFF;
+        });
+
+        PaladinFurnitureModBlocksItems.furnitureEntryMap.forEach((key, value) -> {
+            value.getVariantToBlockMap().forEach((variantBase, block) -> {
+                ItemColorProvider itemColorProvider = getItemColor(variantBase.getBaseBlock().asItem());
+                if (itemColorProvider != null) {
+                    registerItemColor(block.asItem(), itemColorProvider);
+                }
+            });
+            value.getVariantToBlockMapNonBase().forEach((variantBase, block) -> {
+                ItemColorProvider itemColorProvider = getItemColor(variantBase.getBaseBlock().asItem());
+                if (itemColorProvider != null) {
+                    registerItemColor(block.asItem(), itemColorProvider);
+                }
+            });
+        });
     }
 
     @ExpectPlatform
@@ -70,6 +100,15 @@ public class ColorRegistry {
     }
     @ExpectPlatform
     public static void registerBlockColor(Block block, BlockColorProvider blockColorProvider){
+        throw new RuntimeException();
+    }
+    @ExpectPlatform
+    public static BlockColorProvider getBlockColor(Block block){
+        throw new RuntimeException();
+    }
+
+    @ExpectPlatform
+    public static ItemColorProvider getItemColor(Item item){
         throw new RuntimeException();
     }
 
