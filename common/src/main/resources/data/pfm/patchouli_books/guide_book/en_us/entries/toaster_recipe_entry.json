@@ -1,0 +1,32 @@
+{
+  "name": "Recipes: Toaster",
+  "icon": "minecraft:baked_potato",
+  "category": "pfm:toaster_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The toaster unlike a furnace or smoker does not need any fuel but any smoker recipes will work."
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:baked_potato_from_smoking",
+      "recipe2": "minecraft:cooked_beef_from_smoking",
+      "recipe3": "minecraft:cooked_chicken_from_smoking",
+      "customicon": "pfm:iron_toaster"
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:cooked_cod_from_smoking",
+      "recipe2": "minecraft:cooked_salmon_from_smoking",
+      "recipe3": "minecraft:cooked_mutton_from_smoking",
+      "customicon": "pfm:iron_toaster"
+    },
+    {
+      "type": "pfm:stoverecipe2template",
+      "recipe": "minecraft:cooked_rabbit_from_smoking",
+      "recipe2": "minecraft:dried_kelp_from_smoking",
+      "recipe3": "",
+      "customicon": "pfm:iron_toaster"
+    }
+  ]
+}

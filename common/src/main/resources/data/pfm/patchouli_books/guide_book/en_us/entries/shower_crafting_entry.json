@@ -1,0 +1,16 @@
+{
+  "name": "Crafting: Shower Items",
+  "icon": "minecraft:basic_shower_head",
+  "category": "pfm:shower_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The handle can be crafted with 2 levers, 1 redstone and 1 iron ingot. To craft the head, you'll need 1 water bucket, 1 redstone and an iron ingot."
+    },
+    {
+      "type": "pfm:furniturerecipe2template",
+      "recipe": "pfm:basic_shower_head",
+      "recipe2": "pfm:basic_shower_handle"
+    }
+  ]
+}
