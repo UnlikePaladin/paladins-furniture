@@ -39,9 +39,11 @@ public class ShowerHeadBlockEntity extends BlockEntity {
         super.readNbt(nbt);
     }
 
+    public boolean isOpen() {
+        return isOpen;
+    }
+
     public void setOpen(boolean isOpen) {
-        if (isOpen){
-        }
         this.isOpen = isOpen;
     }
 

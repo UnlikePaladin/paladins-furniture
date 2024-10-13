@@ -1,0 +1,15 @@
+{
+  "name": "Crafting: Toaster",
+  "icon": "minecraft:iron_ingot",
+  "category": "pfm:toaster_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "To craft the toaster you will need redstone dust, iron, and iron, put these in the Wood Working Table to craft one."
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:iron_toaster"
+    }
+  ]
+}
