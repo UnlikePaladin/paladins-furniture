@@ -4,17 +4,19 @@
   "package": "com.unlikepaladin.pfm.mixin.neoforge",
   "compatibilityLevel": "JAVA_8",
   "client": [
+    "BlockColorsAccessor",
+    "ItemColorsAccessor",
     "ItemRendererMixin",
     "PFMModelLoaderMixin",
     "PFMRenderLayersNeoForgeMixin"
   ],
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
-    "PFMMinecraftServerMixin",
-    "PFMSaveLoaderMixin",
     "PFMItemEntryAccessor",
     "PFMLootPool$BuilderMixin",
+    "PFMMinecraftServerMixin",
     "PFMReloadableResourceManagerImplMixin",
+    "PFMSaveLoaderMixin",
     "SimpleRegistryAccessor"
   ],
   "injectors": {
