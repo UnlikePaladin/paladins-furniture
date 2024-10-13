@@ -4,6 +4,9 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import com.unlikepaladin.pfm.data.materials.VariantBase;
+import com.unlikepaladin.pfm.data.materials.WoodVariant;
+import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
@@ -16,6 +19,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraft.item.Item;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,10 +35,14 @@ public class ColorRegistry {
         registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB, addWaterColor());
         registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_LAMP, (state, world, pos, tintIndex) -> {
             BlockEntity entity = world.getBlockEntity(pos);
-            if (entity != null) {
+            if (entity != null && tintIndex == 1) {
                 if (entity instanceof LampBlockEntity) {
                     DyeColor color = ((LampBlockEntity)entity).getPFMColor();
                     return color.getFireworkColor();
+                }
+            } else if (entity != null && tintIndex == 0) {
+                if (getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()) != null) {
+                    return getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()).getColor(state, world, pos, tintIndex);
                 }
             }
             return 0xFFFFFF;
@@ -72,8 +80,13 @@ public class ColorRegistry {
     public static void registerItemColors() {
         registerItemColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB.asItem(), (stack, index) -> index == 1 ?  0x3c44a9 : 0xFFFFFF);
         registerItemColor(PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM, (stack, tintIndex) -> {
-            if (stack.hasNbt()) {
+            if (stack.hasNbt() && tintIndex == 1) {
                 return DyeColor.byName(stack.getSubNbt("BlockEntityTag").getString("color"), DyeColor.WHITE).getMapColor().color;
+            } else if (stack.hasNbt() && tintIndex == 0) {
+                WoodVariant variantBase = WoodVariantRegistry.getVariant(Identifier.tryParse(stack.getSubNbt("BlockEntityTag").getString("variant")));
+                if (getItemColor(variantBase.getLogBlock().asItem()) != null) {
+                    return getItemColor(variantBase.getLogBlock().asItem()).getColor(stack, tintIndex);
+                }
             }
             return 0xFFFFFF;
         });
