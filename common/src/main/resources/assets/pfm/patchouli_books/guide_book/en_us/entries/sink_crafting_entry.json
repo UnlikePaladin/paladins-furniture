@@ -5,12 +5,12 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "There are many variations of the kitchen sink, you'll need planks, logs, or stones depending on which type you're crafting, an iron ingot and a bucket. To get the different wood types just replace the oak with the wood type you want the sink to be."
+      "text": "There are 2 sink styles, one of them with many variations to match kitchen counters, you'll need quartz, or planks, logs, or stone depending on which sink type you're crafting, and an iron ingot and a bucket. To get the different wood or stone types just replace the oak with the wood material you want to use for crafting."
     },
     {
       "type": "pfm:furniturerecipe2template",
       "recipe": "pfm:oak_kitchen_sink",
-      "recipe2": "pfm:stripped_oak_kitchen_sink"
+      "recipe2": "pfm:basic_sink"
     },
     {
       "type": "pfm:furniturerecipe2template",

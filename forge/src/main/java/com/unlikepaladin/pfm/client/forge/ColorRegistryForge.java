@@ -1,29 +1,23 @@
 package com.unlikepaladin.pfm.client.forge;
 
-import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.client.ColorRegistry;
-import com.unlikepaladin.pfm.data.FurnitureBlock;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import net.minecraft.block.Block;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayers;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ColorRegistryForge {
     @SubscribeEvent
     public static void registerBlockColors(RegisterColorHandlersEvent.Block event){
+        ColorRegistryImpl.blockColors = event.getBlockColors();
         ColorRegistry.registerBlockColors();
         ColorRegistryImpl.BLOCK_COLOR_PROVIDER_MAP.forEach((block, blockColorProvider) -> event.getBlockColors().registerColorProvider(blockColorProvider, block));
     }
     @SubscribeEvent
     public static void registerItemColors(RegisterColorHandlersEvent.Item event){
+        ColorRegistryImpl.itemColors = event.getItemColors();
         ColorRegistry.registerItemColors();
         ColorRegistryImpl.ITEM_COLOR_PROVIDER_MAP.forEach((item, colorProvider) -> event.getItemColors().register(colorProvider, item));
     }
