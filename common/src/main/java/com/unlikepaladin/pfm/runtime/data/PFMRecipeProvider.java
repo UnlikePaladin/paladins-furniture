@@ -589,8 +589,8 @@ public class PFMRecipeProvider extends PFMProvider {
         }
 
         if (!generatedRecipes.contains(getId(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD))) {
-            offerShowerHeadRecipe(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD, Ingredient.ofItems(Blocks.LIGHT_GRAY_CONCRETE), exporter);
-            offerShowerHandleRecipe(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM, Ingredient.ofItems(Blocks.LIGHT_GRAY_CONCRETE), exporter);
+            offerShowerHeadRecipe(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD, Ingredient.ofItems(Items.WATER_BUCKET), exporter);
+            offerShowerHandleRecipe(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM, Ingredient.ofItems(Blocks.LEVER), exporter);
             generatedRecipes.add(getId(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD));
             generatedRecipes.add(Registries.ITEM.getId(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM));
         }
@@ -897,11 +897,11 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static void offerShowerHeadRecipe(ItemConvertible output, Ingredient base, RecipeExporter exporter) {
-        FurnitureRecipeJsonFactory.create(output, 1).group("bathroom").criterion("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 3).input(Items.WATER_BUCKET, 1).input(Items.IRON_INGOT, 1).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+        FurnitureRecipeJsonFactory.create(output, 1).group("bathroom").criterion("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 1).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerShowerHandleRecipe(ItemConvertible output, Ingredient base, RecipeExporter exporter) {
-        FurnitureRecipeJsonFactory.create(output, 1).group("bathroom").criterion("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 4).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
+        FurnitureRecipeJsonFactory.create(output, 1).group("bathroom").criterion("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base, 2).input(Items.REDSTONE, 1).input(Items.IRON_INGOT, 1).offerTo(exporter, new Identifier("pfm", output.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
 
     public static void offerShowerTowelRecipe(ItemConvertible output, Ingredient base, RecipeExporter exporter) {

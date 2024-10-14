@@ -2,6 +2,8 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHeadBlockEntity;
+import com.unlikepaladin.pfm.items.LightSwitchItem;
+import com.unlikepaladin.pfm.items.ShowerHandleItem;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.BlockRenderType;
@@ -9,10 +11,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
 import net.minecraft.block.Blocks;
 import net.minecraft.block.ShapeContext;
+import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.shape.VoxelShape;
@@ -76,6 +83,22 @@ public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
             case EAST -> SHOWER_HEAD_EAST;
             default -> SHOWER_HEAD_SOUTH;
         };
+    }
+
+    @Override
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+        if (player.getStackInHand(hand).getItem() instanceof ShowerHandleItem)
+            return super.onUse(state, world, pos, player, hand, hit);
+
+        if (world.isClient) {
+            return ActionResult.SUCCESS;
+        }
+        if (world.getBlockEntity(pos) instanceof ShowerHeadBlockEntity) {
+            ShowerHeadBlockEntity showerHeadBlockEntity = (ShowerHeadBlockEntity) world.getBlockEntity(pos);
+            showerHeadBlockEntity.setOpen(!showerHeadBlockEntity.isOpen());
+            world.updateListeners(pos, state, state, Block.NOTIFY_LISTENERS);
+        }
+        return super.onUse(state, world, pos, player, hand, hit);
     }
 
     @Override

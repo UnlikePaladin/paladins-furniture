@@ -1,0 +1,15 @@
+{
+  "name": "Crafting: Bathtub",
+  "icon": "minecraft:water_bucket",
+  "category": "pfm:bathtub_category",
+  "pages": [
+    {
+      "type": "patchouli:text",
+      "text": "The bathtub can be crafted with quartz, a stone button and a bucket."
+    },
+    {
+      "type": "pfm:furniturerecipetemplate",
+      "recipe": "pfm:basic_bathtub"
+    }
+  ]
+}
