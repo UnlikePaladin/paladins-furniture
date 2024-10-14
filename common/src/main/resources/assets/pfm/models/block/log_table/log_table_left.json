@@ -1,8 +1,8 @@
 {
 	"credit": "By UnlikePaladin",
 	"textures": {
-		"particle": "block/oak_planks",
-		"legs": "block/oak_log"
+		"legs": "block/oak_log",
+		"particle": "block/oak_planks"
 	},
 	"elements": [
 		{
@@ -10,12 +10,12 @@
 			"to": [8.5, 14, 11],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 7, 8]},
 			"faces": {
-				"north": {"uv": [0, 0, 3, 13], "texture": "#legs"},
-				"east": {"uv": [0, 0, 6, 13], "texture": "#legs"},
-				"south": {"uv": [0, 0, 3, 13], "texture": "#legs"},
-				"west": {"uv": [0, 0, 6, 13], "texture": "#legs"},
-				"up": {"uv": [0, 0, 3, 6], "texture": "#legs"},
-				"down": {"uv": [0, 0, 3, 6], "texture": "#legs"}
+				"north": {"uv": [0, 0, 3, 13], "texture": "#legs", "tintindex": 0},
+				"east": {"uv": [0, 0, 6, 13], "texture": "#legs", "tintindex": 0},
+				"south": {"uv": [0, 0, 3, 13], "texture": "#legs", "tintindex": 0},
+				"west": {"uv": [0, 0, 6, 13], "texture": "#legs", "tintindex": 0},
+				"up": {"uv": [0, 0, 3, 6], "texture": "#legs", "tintindex": 0},
+				"down": {"uv": [0, 0, 3, 6], "texture": "#legs", "tintindex": 0}
 			}
 		}
 	],

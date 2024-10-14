@@ -4,6 +4,8 @@
   "package": "com.unlikepaladin.pfm.mixin.neoforge",
   "compatibilityLevel": "JAVA_8",
   "client": [
+    "BlockColorsAccessor",
+    "ItemColorsAccessor",
     "HandledScreensAccessor",
     "ItemRendererMixin",
     "PFMModelLoaderMixin",
