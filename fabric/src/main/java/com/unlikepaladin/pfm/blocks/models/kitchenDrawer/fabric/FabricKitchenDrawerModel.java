@@ -46,6 +46,7 @@ public class FabricKitchenDrawerModel extends PFMFabricBakedModel {
 
             if (block.canConnectToCounter(neighborStateFacing) && neighborStateFacing.contains(Properties.HORIZONTAL_FACING)) {
                 Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
+                // outer corner
                 if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && block.isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
                     if (direction2 == direction.rotateYCounterclockwise()) {
                         ((FabricBakedModel) getTemplateBakedModels().get((5 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
@@ -66,6 +67,7 @@ public class FabricKitchenDrawerModel extends PFMFabricBakedModel {
                     direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
                 }
                 if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && block.isDifferentOrientation(state, world, pos, direction3)) {
+                    // inner corner
                     if (direction3 == direction.rotateYCounterclockwise()) {
                         ((FabricBakedModel) getTemplateBakedModels().get((4 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                     } else {
