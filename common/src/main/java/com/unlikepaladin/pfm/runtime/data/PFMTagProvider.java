@@ -13,20 +13,15 @@ import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import net.minecraft.block.Block;
-import net.minecraft.data.DataCache;
 import net.minecraft.data.server.AbstractTagProvider;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileAttribute;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -265,26 +260,19 @@ public class PFMTagProvider extends PFMProvider {
     @Override
     public void run() {
         startProviderRun();
+        createWriter();
         tagBuilders.clear();
         this.generateTags();
         tagBuilders.forEach((id, builder) -> {
-            List list = builder.streamEntries().filter(trackedEntry -> !trackedEntry.getEntry().canAdd(Registry.BLOCK::containsId, this.tagBuilders::containsKey)).collect(Collectors.toList());
+            List<Tag.TrackedEntry> list = builder.streamEntries().filter(trackedEntry -> !trackedEntry.getEntry().canAdd(Registry.BLOCK::containsId, tagBuilders::containsKey)).toList();
             if (!list.isEmpty()) {
                 throw new IllegalArgumentException(String.format("Couldn't define tag %s as it is missing following references: %s", id, list.stream().map(Objects::toString).collect(Collectors.joining(","))));
             }
             JsonObject jsonObject = builder.toJson();
             Path path = this.getOutput(id);
-            try {
-                String string = PFMDataGenerator.GSON.toJson(jsonObject);
-                if (!Files.exists(path.getParent()))
-                    Files.createDirectories(path.getParent());
-
-                Files.writeString(path, string);
-            }
-            catch (IOException iOException) {
-                getParent().getLogger().error("Couldn't save tags to {}", path, iOException);
-            }
+            enqueueJsonWrite(getWriteQueue(), path, jsonObject);
         });
+
         endProviderRun();
     }
 
