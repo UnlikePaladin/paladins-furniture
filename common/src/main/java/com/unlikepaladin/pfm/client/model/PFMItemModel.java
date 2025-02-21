@@ -6,6 +6,9 @@ import com.unlikepaladin.pfm.client.ColorRegistry;
 import com.unlikepaladin.pfm.data.materials.VariantHelper;
 import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.mixin.*;
+import com.unlikepaladin.pfm.registry.QuadFunc;
+import com.unlikepaladin.pfm.registry.TriFunc;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -40,7 +43,7 @@ import java.util.Optional;
 
 public class PFMItemModel<T> implements ItemModel {
     private final SpecialModelRenderer<T> specialModelType;
-    private final BakedModel model;
+    protected final BakedModel model;
     private final List<TintSource> tints;
     private final List<TintSource> pfm$parentTints = new ArrayList<>();
 
@@ -95,6 +98,10 @@ public class PFMItemModel<T> implements ItemModel {
             }
         }
 
+        setProperties(stack);
+    }
+
+    protected void setProperties(ItemStack stack) {
         if (stack.getItem() instanceof BlockItem && model instanceof PFMBakedModelSetPropertiesExtension) {
             ((PFMBakedModelSetPropertiesExtension) model).setBlockStateProperty(((BlockItem) stack.getItem()).getBlock().getDefaultState());
             if (stack.contains(PFMComponents.VARIANT_COMPONENT))
@@ -164,14 +171,19 @@ public class PFMItemModel<T> implements ItemModel {
             BakedModel bakedModel = context.bake(this.model);
             if (specialModel.isPresent()) {
                 SpecialModelRenderer<?> specialModelRenderer = this.specialModel.get().bake(context.entityModelSet());
-                return new PFMItemModel<>(bakedModel, specialModelRenderer, this.tints);
+                return getItemModelFunc().apply(bakedModel, specialModelRenderer, this.tints);
             }
-            return new PFMItemModel<>(bakedModel, null, this.tints);
+            return getItemModelFunc().apply(bakedModel, null, this.tints);
         }
 
         @Override
         public MapCodec<Unbaked> getCodec() {
             return CODEC;
         }
+    }
+
+    @ExpectPlatform
+    public static TriFunc<BakedModel, SpecialModelRenderer<?>, List<TintSource>, ItemModel> getItemModelFunc(){
+        throw new AssertionError();
     }
 }
