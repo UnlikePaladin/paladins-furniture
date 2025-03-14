@@ -32,8 +32,8 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity implements Ex
         // Look at the other methods of `PlayerStream` to capture different groups of players.
         // We'll get to this later
         RegistryByteBuf clientData = new RegistryByteBuf(Unpooled.buffer(), microwaveBlockEntity.getWorld().getRegistryManager());
-        clientData.writeBoolean(active);
         clientData.writeBlockPos(microwaveBlockEntity.getPos());
+        clientData.writeBoolean(active);
         // Then we'll send the packet to all the players
         watchingPlayers.forEach(player -> {
                     ServerPlayNetworking.send(player, new MicrowaveUpdatePayload(clientData));
