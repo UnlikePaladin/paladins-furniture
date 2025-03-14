@@ -5,13 +5,14 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "BlockColorsAccessor",
-    "ItemColorsAccessor",
     "HandledScreensAccessor",
+    "ItemColorsAccessor",
     "ItemRendererMixin",
     "PFMModelLoaderMixin",
     "PFMRenderLayersNeoForgeMixin"
   ],
   "mixins": [
+    "PFMCFBModBlockEntitiesMixin",
     "PFMCookingPotBlockEntityMixin",
     "PFMItemEntryAccessor",
     "PFMLootPool$BuilderMixin",
