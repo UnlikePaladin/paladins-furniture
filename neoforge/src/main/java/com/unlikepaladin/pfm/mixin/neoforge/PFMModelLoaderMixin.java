@@ -1,6 +1,10 @@
 package com.unlikepaladin.pfm.mixin.neoforge;
 
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
@@ -61,8 +65,8 @@ public abstract class PFMModelLoaderMixin {
 
     @Unique
     Identifier pfm$localId;
-    @Redirect(method = "getOrLoadModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadModelFromJson(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/render/model/json/JsonUnbakedModel;"))
-    private JsonUnbakedModel pfm$wrapCall(ModelLoader instance, Identifier resourceId) {
+    @WrapOperation(method = "getOrLoadModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadModelFromJson(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/render/model/json/JsonUnbakedModel;"))
+    private JsonUnbakedModel pfm$wrapCall(ModelLoader instance, Identifier resourceId, Operation<JsonUnbakedModel> original) {
         pfm$localId = resourceId;
         return null;
     }
