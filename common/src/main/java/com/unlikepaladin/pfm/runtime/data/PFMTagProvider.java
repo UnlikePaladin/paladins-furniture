@@ -13,20 +13,15 @@ import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import net.minecraft.block.Block;
-import net.minecraft.data.DataCache;
 import net.minecraft.data.server.AbstractTagProvider;
 import net.minecraft.tag.BlockTags;
 import net.minecraft.tag.Tag;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.OpenOption;
 import java.nio.file.Path;
-import java.nio.file.attribute.FileAttribute;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -65,6 +60,8 @@ public class PFMTagProvider extends PFMProvider {
         BasicCoffeeTableBlock[] stoneBasicCoffeeTables = BasicCoffeeTableBlock.streamStoneBasicTables().map(FurnitureBlock::getBlock).toArray(BasicCoffeeTableBlock[]::new);
         ModernCoffeeTableBlock[] stoneModernCoffeeTables = ModernCoffeeTableBlock.streamStoneModernCoffeeTables().map(FurnitureBlock::getBlock).toArray(ModernCoffeeTableBlock[]::new);
         ClassicCoffeeTableBlock[] stoneClassicCoffeeTables = ClassicCoffeeTableBlock.streamStoneClassicTables().map(FurnitureBlock::getBlock).toArray(ClassicCoffeeTableBlock[]::new);
+        BasicDeskBlock[] stoneBasicDesks = BasicDeskBlock.streamStoneBasicDesks().map(FurnitureBlock::getBlock).toArray(BasicDeskBlock[]::new);
+        BasicDeskCabinetBlock[] stoneBasicDeskCabinets = BasicDeskCabinetBlock.streamStoneBasicDeskCabinets().map(FurnitureBlock::getBlock).toArray(BasicDeskCabinetBlock[]::new);
 
         SimpleStoolBlock[] stoneSimpleStools = SimpleStoolBlock.streamStoneSimpleStools().map(FurnitureBlock::getBlock).toArray(SimpleStoolBlock[]::new);
         PendantBlock[] pendantLights = PendantBlock.streamPendantLights().toList().toArray(new PendantBlock[0]);
@@ -134,7 +131,9 @@ public class PFMTagProvider extends PFMProvider {
                 .add(PaladinFurnitureModBlocksItems.MESH_TRASHCAN)
                 .add(stoneBasicCoffeeTables)
                 .add(stoneModernCoffeeTables)
-                .add(stoneClassicCoffeeTables);
+                .add(stoneClassicCoffeeTables)
+                .add(stoneBasicDesks)
+                .add(stoneBasicDeskCabinets);
 
         KitchenCounterBlock[] woodCounters = KitchenCounterBlock.streamWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
         KitchenWallCounterBlock[] woodWallCounters = KitchenWallCounterBlock.streamWallWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenWallCounterBlock[]::new);
@@ -173,6 +172,8 @@ public class PFMTagProvider extends PFMProvider {
         WorkingTableBlock[] workingTables = WorkingTableBlock.streamWorkingTables().toList().toArray(new WorkingTableBlock[0]);
         HerringbonePlankBlock[] herringbonePlanks = HerringbonePlankBlock.streamPlanks().map(FurnitureBlock::getBlock).toArray(HerringbonePlankBlock[]::new);
         SimpleBunkLadderBlock[] simpleBunkLadders = SimpleBunkLadderBlock.streamSimpleBunkLadder().map(FurnitureBlock::getBlock).toArray(SimpleBunkLadderBlock[]::new);
+        BasicDeskBlock[] woodBasicDesks = BasicDeskBlock.streamWoodBasicDesks().map(FurnitureBlock::getBlock).toArray(BasicDeskBlock[]::new);
+        BasicDeskCabinetBlock[] woodBasicDeskCabinets = BasicDeskCabinetBlock.streamWoodBasicDeskCabinets().map(FurnitureBlock::getBlock).toArray(BasicDeskCabinetBlock[]::new);
 
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
                 .add(showerTowels)
@@ -211,7 +212,9 @@ public class PFMTagProvider extends PFMProvider {
                 .add(PaladinFurnitureModBlocksItems.BASIC_LAMP)
                 .add(woodBasicCoffeeTables)
                 .add(woodModernCoffeeTables)
-                .add(woodClassicCoffeeTables);
+                .add(woodClassicCoffeeTables)
+                .add(woodBasicDesks)
+                .add(woodBasicDeskCabinets);
 
         getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
                 .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
@@ -234,7 +237,9 @@ public class PFMTagProvider extends PFMProvider {
                 .add(stoneModernDinnerTables)
                 .add(woodLogTables)
                 .add(stoneNaturalTables)
-                .add(logTables);
+                .add(logTables)
+                .add(woodBasicDesks)
+                .add(stoneBasicDesks);
 
         getOrCreateTagBuilder(PFMTags.FURNITURE)
                 .add(PaladinFurnitureModBlocksItems.BLOCKS.toArray(Block[]::new));
@@ -255,26 +260,19 @@ public class PFMTagProvider extends PFMProvider {
     @Override
     public void run() {
         startProviderRun();
+        createWriter();
         tagBuilders.clear();
         this.generateTags();
         tagBuilders.forEach((id, builder) -> {
-            List list = builder.streamEntries().filter(trackedEntry -> !trackedEntry.getEntry().canAdd(Registry.BLOCK::containsId, this.tagBuilders::containsKey)).collect(Collectors.toList());
+            List<Tag.TrackedEntry> list = builder.streamEntries().filter(trackedEntry -> !trackedEntry.getEntry().canAdd(Registry.BLOCK::containsId, tagBuilders::containsKey)).toList();
             if (!list.isEmpty()) {
                 throw new IllegalArgumentException(String.format("Couldn't define tag %s as it is missing following references: %s", id, list.stream().map(Objects::toString).collect(Collectors.joining(","))));
             }
             JsonObject jsonObject = builder.toJson();
             Path path = this.getOutput(id);
-            try {
-                String string = PFMDataGenerator.GSON.toJson(jsonObject);
-                if (!Files.exists(path.getParent()))
-                    Files.createDirectories(path.getParent());
-
-                Files.writeString(path, string);
-            }
-            catch (IOException iOException) {
-                getParent().getLogger().error("Couldn't save tags to {}", path, iOException);
-            }
+            enqueueJsonWrite(getWriteQueue(), path, jsonObject);
         });
+
         endProviderRun();
     }
 

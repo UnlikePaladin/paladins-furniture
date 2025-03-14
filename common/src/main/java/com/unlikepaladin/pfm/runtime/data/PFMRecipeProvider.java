@@ -51,6 +51,8 @@ public class PFMRecipeProvider extends PFMProvider {
     @Override
     public void run() {
         startProviderRun();
+        createWriter();
+
         Path path = getParent().getOutput();
         HashSet<Identifier> set = Sets.newHashSet();
         WorkbenchScreenHandler.ALL_RECIPES.clear();
@@ -63,39 +65,20 @@ public class PFMRecipeProvider extends PFMProvider {
                 getParent().getLogger().error("Recipe Json Provider is null");
                 throw new IllegalStateException("Recipe Json Provider is null");
             }
-            saveRecipe(recipeJsonProvider.toJson(), path.resolve("data/" + recipeJsonProvider.getRecipeId().getNamespace() + "/recipes/" + recipeJsonProvider.getRecipeId().getPath() + ".json"));
+            Path recipePath = path.resolve("data/" + recipeJsonProvider.getRecipeId().getNamespace() + "/recipes/" + recipeJsonProvider.getRecipeId().getPath() + ".json");
+            enqueueJsonWrite(getWriteQueue(), recipePath, recipeJsonProvider.toJson());
             JsonObject jsonObject = recipeJsonProvider.toAdvancementJson();
             if (jsonObject != null) {
-                saveRecipeAdvancement(jsonObject, path.resolve("data/" + recipeJsonProvider.getRecipeId().getNamespace() + "/advancements/" + recipeJsonProvider.getAdvancementId().getPath() + ".json"));
+                Path advancementPath = path.resolve("data/" + recipeJsonProvider.getRecipeId().getNamespace() + "/advancements/" + recipeJsonProvider.getAdvancementId().getPath() + ".json");
+                enqueueJsonWrite(getWriteQueue(), advancementPath, jsonObject.toString());
             }
         });
-        saveRecipeAdvancement(Advancement.Task.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).toJson(), path.resolve("data/pfm/advancements/recipes/root.json"));
+
+        enqueueJsonWrite(getWriteQueue(), path.resolve("data/pfm/advancements/recipes/root.json"), Advancement.Task.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).toJson());
+        waitForWrite();
         endProviderRun();
     }
 
-    private void saveRecipe(JsonObject json, Path path) {
-        try {
-            String string = PFMDataGenerator.GSON.toJson(json);
-            if (!Files.exists(path.getParent()))
-                Files.createDirectories(path.getParent());
-
-            Files.writeString(path, string);
-        } catch (IOException var10) {
-            getParent().getLogger().error("Couldn't save recipe {}", path, var10);
-        }
-    }
-
-    private void saveRecipeAdvancement(JsonObject json, Path path) {
-        try {
-            String string = PFMDataGenerator.GSON.toJson(json);
-            if (!Files.exists(path.getParent()))
-                Files.createDirectories(path.getParent());
-
-            Files.writeString(path, string);
-        } catch (IOException var10) {
-            getParent().getLogger().error("Couldn't save recipe advancement {}", path, var10);
-        }
-    }
     @ExpectPlatform
     protected static Identifier getId(Block block) {
         throw new AssertionError();    
@@ -322,6 +305,8 @@ public class PFMRecipeProvider extends PFMProvider {
         offerBasicCoffeeTableRecipe(BasicCoffeeTableBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariants(), exporter);
         offerModernCoffeeTableRecipe(ModernCoffeeTableBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariants(), exporter);
         offerClassicCoffeeTableRecipe(ClassicCoffeeTableBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariants(), exporter);
+        offerBasicDeskRecipe(BasicDeskBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskBlock.class).getVariants(), exporter);
+        offerBasicDeskCabinetRecipe(BasicDeskCabinetBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariants(), exporter);
 
         PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> pfmModCompatibility.generateRecipes(exporter));
     }
@@ -400,6 +385,14 @@ public class PFMRecipeProvider extends PFMProvider {
 
     public static void offerBasicTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
         DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    }
+
+    public static void offerBasicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    }
+
+    public static void offerBasicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).vanillaInput(Ingredient.ofItems(Items.CHEST)).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerBasicCoffeeTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {

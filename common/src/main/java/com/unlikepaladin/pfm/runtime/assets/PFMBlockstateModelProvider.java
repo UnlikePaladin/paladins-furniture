@@ -17,8 +17,6 @@ import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.DataCache;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.client.model.*;
 import net.minecraft.item.Item;
 import net.minecraft.state.property.Properties;
@@ -27,9 +25,10 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.registry.Registry;
 
 import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -47,41 +46,35 @@ public class PFMBlockstateModelProvider extends PFMProvider {
     @Override
     public void run() {
         startProviderRun();
+        createWriter();
+
         Path path = getParent().getOutput();
-        HashMap<Block, BlockStateSupplier> blockstates = Maps.newHashMap();
+
         Consumer<BlockStateSupplier> blockStateSupplierConsumer = blockStateSupplier -> {
-            Block block = blockStateSupplier.getBlock();
-            BlockStateSupplier blockStateSupplier2 = blockstates.put(block, blockStateSupplier);
-            if (blockStateSupplier2 != null) {
-                getParent().getLogger().error("Duplicate blockstate definition for " + block);
-                throw new IllegalStateException("Duplicate blockstate definition for " + block);
-            }
+            Path jsonPath = getBlockStateJsonPath(path, blockStateSupplier.getBlock());
+            String jsonContent = PFMDataGenerator.GSON.toJson(blockStateSupplier.get());
+            enqueueJsonWrite(getWriteQueue(), jsonPath, jsonContent);
         };
-        HashMap<Identifier, Supplier<JsonElement>> models = Maps.newHashMap();
-        HashSet<Item> excludeBlockItem = Sets.newHashSet();
+
         BiConsumer<Identifier, Supplier<JsonElement>> identifierSupplierBiConsumer = (identifier, supplier) -> {
-            Supplier<JsonElement> supplier2 = models.put(identifier, supplier);
-            if (supplier2 != null) {
-                getParent().getLogger().error("Duplicate model definition for " + identifier);
-                throw new IllegalStateException("Duplicate model definition for " + identifier);
-            }
+            Path jsonPath = getModelJsonPath(path, identifier);
+            String jsonContent = PFMDataGenerator.GSON.toJson(supplier.get());
+            enqueueJsonWrite(getWriteQueue(), jsonPath, jsonContent);
         };
-        Consumer<Item> excludeBlockItemConsumer = excludeBlockItem::add;
-        new PFMBlockStateModelGenerator(blockStateSupplierConsumer, identifierSupplierBiConsumer, excludeBlockItemConsumer).registerModelsAndStates();
+
+        HashMap<Identifier, Supplier<JsonElement>> models = Maps.newHashMap();
+        new PFMBlockStateModelGenerator(this, blockStateSupplierConsumer, identifierSupplierBiConsumer).registerModelsAndStates();
         modelPathMap.keySet().forEach(block -> {
             Item item = Item.BLOCK_ITEMS.get(block);
             if (item != null) {
-                if (excludeBlockItem.contains(item)) {
-                    return;
-                }
                 Identifier identifier = ModelIds.getItemModelId(item);
                 if (!models.containsKey(identifier)) {
                     models.put(identifier, new SimpleModelSupplier(modelPathMap.get(block)));
                 }
             }
         });
-        this.writeJsons(path, blockstates, PFMBlockstateModelProvider::getBlockStateJsonPath);
-        this.writeJsons(path, models, PFMBlockstateModelProvider::getModelJsonPath);
+
+        waitForWrite();
         endProviderRun();
     }
 
@@ -95,22 +88,6 @@ public class PFMBlockstateModelProvider extends PFMProvider {
     }
 
 
-    private <T> void writeJsons(Path root, Map<T, ? extends Supplier<JsonElement>> jsons, BiFunction<Path, T, Path> locator) {
-        jsons.forEach((object, supplier) -> {
-            Path path2 = locator.apply(root, object);
-            if (supplier != null && supplier.get() != null && object != null && path2 != null)
-                try {
-                    String string = PFMDataGenerator.GSON.toJson(supplier.get());
-                    if (!Files.exists(path2.getParent()))
-                        Files.createDirectories(path2.getParent());
-
-                    Files.writeString(path2, string);
-                }
-                catch (Exception exception) {
-                    getParent().getLogger().error("Couldn't save {}", path2, exception);
-                }
-        });
-    }
     static class PFMBlockStateModelGenerator {
         public static Map<Model, Identifier> ModelIDS = new HashMap<>();
 
@@ -118,120 +95,169 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         final BiConsumer<Identifier, Supplier<JsonElement>> modelCollector;
 
         final List<Identifier> generatedStates = new ArrayList<>();
-        final Consumer<Item> simpleItemModelExemptionCollector;
+        final PFMBlockstateModelProvider provider;
 
-        PFMBlockStateModelGenerator(Consumer<BlockStateSupplier> blockStateCollector, BiConsumer<Identifier, Supplier<JsonElement>> modelCollector, Consumer<Item> simpleItemModelExemptionCollector) {
+        PFMBlockStateModelGenerator(PFMBlockstateModelProvider provider, Consumer<BlockStateSupplier> blockStateCollector, BiConsumer<Identifier, Supplier<JsonElement>> modelCollector) {
+            this.provider = provider;
             this.blockStateCollector = blockStateCollector;
             this.modelCollector = modelCollector;
-            this.simpleItemModelExemptionCollector = simpleItemModelExemptionCollector;
         }
 
         public void registerModelsAndStates() {
+            provider.getParent().log("Generating Chairs and Stools");
             registerTuckableChairs();
+            provider.getParent().log("Generating Tables");
             registerTables();
+            provider.getParent().log("Generating Nightstands Chairs");
             registerNightStands();
+            provider.getParent().log("Generating Beds");
             registerBeds();
+            provider.getParent().log("Generating Bunk Ladders");
             registerLadders();
+            provider.getParent().log("Generating Kitchen Counters");
             registerCounters();
+            provider.getParent().log("Generating Lamps");
             registerLamp();
+            provider.getParent().log("Generating Desks");
+            registerDesks();
         }
 
         public void registerTuckableChairs() {
+            provider.getParent().log("Basic Chairs");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap(), "chair", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMapNonBase(), "chair", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
+            provider.getParent().log("Dining Chairs");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMap(), "chair_dinner", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMapNonBase(), "chair_dinner", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
+            provider.getParent().log("Modern Chairs");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMap(), "chair_modern", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMapNonBase(), "chair_modern", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
+            provider.getParent().log("Classic Chairs");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMap(), "chair_classic", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMapNonBase(), "chair_classic", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
+            provider.getParent().log("Log Stools");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(LogStoolBlock.class).getVariantToBlockMap(), "log_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
+            provider.getParent().log("Simple Stools");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMap(), "simple_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMapNonBase(), "simple_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
+            provider.getParent().log("Classic Stools");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMap(), "classic_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMapNonBase(), "classic_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
+            provider.getParent().log("Modern Stools");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMap(), "modern_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMapNonBase(), "modern_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
         }
 
         public void registerTables() {
+            provider.getParent().log("Basic Tables");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicTableBlock.class).getVariantToBlockMap(), "table_basic", PFMBlockStateModelGenerator::createAxisOrientableTableBlockState);
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicTableBlock.class).getVariantToBlockMapNonBase(), "table_basic", PFMBlockStateModelGenerator::createAxisOrientableTableBlockState);
 
+            provider.getParent().log("Classic Tables");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicTableBlock.class).getVariantToBlockMap(), "table_classic", PFMBlockStateModelGenerator::createSingleStateBlockState);
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicTableBlock.class).getVariantToBlockMapNonBase(), "table_classic", PFMBlockStateModelGenerator::createSingleStateBlockState);
 
+            provider.getParent().log("Log Tables");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(LogTableBlock.class).getVariantToBlockMap(), "log_table", PFMBlockStateModelGenerator::createOrientableTableBlockState);
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(LogTableBlock.class).getVariantToBlockMapNonBase(), "log_table", PFMBlockStateModelGenerator::createOrientableTableBlockState);
 
+            provider.getParent().log("Raw Log Tables");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(RawLogTableBlock.class).getVariantToBlockMap(), "log_table", PFMBlockStateModelGenerator::createOrientableTableBlockState);
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(RawLogTableBlock.class).getVariantToBlockMapNonBase(), "log_table", PFMBlockStateModelGenerator::createOrientableTableBlockState);
 
+            provider.getParent().log("Dining Tables");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(DinnerTableBlock.class).getVariantToBlockMap(), "dinner_table", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(DinnerTableBlock.class).getVariantToBlockMapNonBase(), "dinner_table", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
 
+            provider.getParent().log("Modern Dining Tables");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMap(), "modern_dinner_table", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMapNonBase(), "modern_dinner_table", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
 
+            provider.getParent().log("Basic Coffee Tables");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_basic", PFMBlockStateModelGenerator::createAxisOrientableTableBlockState);
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_basic", PFMBlockStateModelGenerator::createAxisOrientableTableBlockState);
 
+            provider.getParent().log("Modern Coffee Tables");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_modern", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_modern", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
 
+            provider.getParent().log("Classic Coffee Tables");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_classic", PFMBlockStateModelGenerator::createSingleStateBlockState);
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_classic", PFMBlockStateModelGenerator::createSingleStateBlockState);
 
         }
 
+        public void registerDesks() {
+            provider.getParent().log("Basic Desks");
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskBlock.class).getVariantToBlockMap(), "desk_basic", PFMBlockStateModelGenerator::createSingleStateBlockState);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskBlock.class).getVariantToBlockMapNonBase(), "desk_basic", PFMBlockStateModelGenerator::createSingleStateBlockState);
+
+            provider.getParent().log("Basic Desk Cabinets");
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMap(), "desk_cabinet_basic", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), "desk_cabinet_basic", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+        }
+
         public void registerNightStands() {
+            provider.getParent().log("Classic Nightstands");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicNightstandBlock.class).getVariantToBlockMap(), "classic_nightstand", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicNightstandBlock.class).getVariantToBlockMapNonBase(), "classic_nightstand", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
         }
 
         public void registerBeds() {
+            provider.getParent().log("Simple Beds");
             generateModelAndBlockStateForBed(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList(), "simple_bed", PFMBlockStateModelGenerator::createBedBlockState);
+            provider.getParent().log("Classic Beds");
             generateModelAndBlockStateForBed(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicBedBlock.class).getVariantToBlockMapList(), "simple_bed", PFMBlockStateModelGenerator::createBedBlockState);
         }
 
         public void registerLadders() {
+            provider.getParent().log("Simple Bunk Ladders");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleBunkLadderBlock.class).getVariantToBlockMap(), "simple_bunk_ladder", PFMBlockStateModelGenerator::createOrientableTableBlockState);
         }
 
         public void registerCounters() {
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMap(), "kitchen_counter", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            provider.getParent().log("Kitchen Counters");
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMap(), "kitchen_counter", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
 
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMap(), "kitchen_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            provider.getParent().log("Kitchen Drawers");
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMap(), "kitchen_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
 
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMap(), "kitchen_cabinet", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMapNonBase(), "kitchen_cabinet", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            provider.getParent().log("Kitchen Cabinets");
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMap(), "kitchen_cabinet", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMapNonBase(), "kitchen_cabinet", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
 
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMap(), "kitchen_wall_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            provider.getParent().log("Kitchen Wall Drawers");
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMap(), "kitchen_wall_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
 
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMap(), "kitchen_wall_counter", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_counter", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            provider.getParent().log("Kitchen Wall Cabinets");
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMap(), "kitchen_wall_counter", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_counter", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
 
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMap(), "kitchen_wall_small_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_small_drawer", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            provider.getParent().log("Small Kitchen Cabinets");
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMap(), "kitchen_wall_small_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_small_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
 
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMap(), "kitchen_counter_oven", (block, identifiers) -> createOrientableKitchenCounter(block, identifiers, "", "", "", 180));
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter_oven", (block, identifiers) -> createOrientableKitchenCounter(block, identifiers, "", "", "", 180));
+            provider.getParent().log("Kitchen Counter Ovens");
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMap(), "kitchen_counter_oven", (block, identifiers) -> createOrientableUvLockedBlock(block, identifiers, "", "", "", 180));
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter_oven", (block, identifiers) -> createOrientableUvLockedBlock(block, identifiers, "", "", "", 180));
 
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMap(), "kitchen_sink", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
-            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMapNonBase(), "kitchen_sink", PFMBlockStateModelGenerator::createOrientableKitchenCounter);
+            provider.getParent().log("Kitchen Sinks");
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMap(), "kitchen_sink", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMapNonBase(), "kitchen_sink", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
         }
 
         public void registerLamp() {
+            provider.getParent().log("Basic Lamps");
             Identifier modelID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.BASIC_LAMP);
             this.blockStateCollector.accept(createSingleStateBlockState(PaladinFurnitureModBlocksItems.BASIC_LAMP, List.of(modelID)));
             PFMBlockstateModelProvider.modelPathMap.put(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.getItemModelId());
@@ -512,10 +538,10 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                 return null;
             }));
         }
-        private static BlockStateSupplier createOrientableKitchenCounter(Block block, List<Identifier> modelIdentifiers){
-            return createOrientableKitchenCounter(block, modelIdentifiers, "", "", "", 0);
+        private static BlockStateSupplier createOrientableUvLockedBlock(Block block, List<Identifier> modelIdentifiers){
+            return createOrientableUvLockedBlock(block, modelIdentifiers, "", "", "", 0);
         }
-        private static BlockStateSupplier createOrientableKitchenCounter(Block block, List<Identifier> modelIdentifiers, String override, String furnitureName, String replacement, int rotation) {
+        private static BlockStateSupplier createOrientableUvLockedBlock(Block block, List<Identifier> modelIdentifiers, String override, String furnitureName, String replacement, int rotation) {
             Map<Direction, BlockStateVariant> variantMap = new HashMap<>();
             String path = modelIdentifiers.get(0).getPath().replaceAll(override, "");
             String name = path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/'));

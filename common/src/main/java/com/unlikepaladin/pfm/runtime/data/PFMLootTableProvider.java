@@ -47,26 +47,20 @@ public class PFMLootTableProvider extends PFMProvider {
     @Override
     public void run() {
         startProviderRun();
+        createWriter();
+
         Path path = getParent().getOutput();
-        HashMap<Identifier, LootTable> map = Maps.newHashMap();
+        Set<Identifier> identifiers = new HashSet<>();
         this.lootTypeGenerators.forEach((pair) -> pair.getFirst().get().accept((identifier, builder) -> {
-            if (map.put(identifier, builder.type(pair.getSecond()).build()) != null) {
+            if (!identifiers.add(identifier)) {
                 throw new IllegalStateException("Duplicate loot table " + identifier);
+            } else {
+                Path path2 = getOutput(path, identifier);
+                enqueueJsonWrite(getWriteQueue(), path2, LootManager.toJson(builder.type(pair.getSecond()).build()));
             }
         }));
-        map.forEach((identifier, lootTable) -> {
-            Path path2 = getOutput(path, identifier);
-            try {
-                String string = PFMDataGenerator.GSON.toJson(LootManager.toJson(lootTable));
-                if (!Files.exists(path2.getParent()))
-                    Files.createDirectories(path2.getParent());
 
-                Files.writeString(path2, string);
-            }
-            catch (IOException iOException) {
-                getParent().getLogger().error("Couldn't save loot table {}", path2, iOException);
-            }
-        });
+        waitForWrite();
         endProviderRun();
     }
 
