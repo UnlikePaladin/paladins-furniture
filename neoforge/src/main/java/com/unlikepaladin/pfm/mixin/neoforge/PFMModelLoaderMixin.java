@@ -2,6 +2,8 @@ package com.unlikepaladin.pfm.mixin.neoforge;
 
 
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
+import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
+import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
@@ -250,6 +252,18 @@ public abstract class PFMModelLoaderMixin {
         }
         else if (UnbakedClassicCoffeeTableModel.MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedClassicCoffeeTableModel();
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (UnbakedBasicDeskModel.MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedBasicDeskModel();
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (UnbakedBasicDeskCabinetModel.MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedBasicDeskCabinetModel();
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();
