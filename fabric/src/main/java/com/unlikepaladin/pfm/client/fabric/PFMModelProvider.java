@@ -2,6 +2,8 @@ package com.unlikepaladin.pfm.client.fabric;
 
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
+import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
+import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
@@ -138,6 +140,12 @@ public class PFMModelProvider implements ModelResourceProvider {
         }
         else if (UnbakedClassicCoffeeTableModel.MODEL_IDS.contains(resourceId)){
             return new UnbakedClassicCoffeeTableModel();
+        }
+        else if (UnbakedBasicDeskModel.MODEL_IDS.contains(resourceId)){
+            return new UnbakedBasicDeskModel();
+        }
+        else if (UnbakedBasicDeskCabinetModel.MODEL_IDS.contains(resourceId)){
+            return new UnbakedBasicDeskCabinetModel();
         }
         else
             return null;

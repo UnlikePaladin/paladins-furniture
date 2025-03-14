@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.mixin;
+package com.unlikepaladin.pfm.mixin.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.DynamicRenderLayerInterface;
@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(RenderLayers.class)
-public abstract class PFMRenderLayersMixin {
+public abstract class PFMRenderLayersFabricMixin {
     @Shadow
     @Deprecated
     public static RenderLayer getBlockLayer(BlockState state) {
@@ -31,6 +31,14 @@ public abstract class PFMRenderLayersMixin {
     private static final Map<BlockState, RenderLayer> pfm$renderLayers = new HashMap<>();
     @Inject(method = "getBlockLayer", at = @At("TAIL"), cancellable = true)
     private static void modifyFurnitureRenderLayer(BlockState state, CallbackInfoReturnable<RenderLayer> cir) {
+        if (state.getBlock() instanceof DynamicRenderLayerInterface) {
+            RenderLayer renderLayer = ((DynamicRenderLayerInterface) state.getBlock()).getCustomRenderLayer();
+            if (PaladinFurnitureMod.getPFMConfig().isShaderSolidFixOn())
+                cir.setReturnValue(PaladinFurnitureModClient.areShadersOn() ? RenderLayer.getSolid() : renderLayer);
+            else
+                cir.setReturnValue(renderLayer);
+        }
+
         if (state.getBlock().getTranslationKey().contains("pfm")) {
             if (pfm$renderLayers.containsKey(state)) {
                 cir.setReturnValue(pfm$renderLayers.get(state));
@@ -46,15 +54,7 @@ public abstract class PFMRenderLayersMixin {
                     } else {
                         pfm$renderLayers.put(state, cir.getReturnValue());
                     }
-                    return;
                 }
-            }
-            if (state.getBlock() instanceof DynamicRenderLayerInterface) {
-                RenderLayer renderLayer = ((DynamicRenderLayerInterface) state.getBlock()).getCustomRenderLayer();
-                    if (PaladinFurnitureMod.getPFMConfig().isShaderSolidFixOn())
-                        cir.setReturnValue(PaladinFurnitureModClient.areShadersOn() ? RenderLayer.getSolid() : renderLayer);
-                    else
-                        cir.setReturnValue(renderLayer);
             }
         }
     }
