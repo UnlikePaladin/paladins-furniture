@@ -177,16 +177,22 @@ public abstract class PFMGenerator implements PFMResourceProgress {
     }
 
     public static final class PFMCache {
+        private final String gameVersion;
         private final String modVersion;
         private final PFMFileUtil.ModLoader modLoader;
         private final List<String> folderHash;
         private  final List<Identifier> variants;
 
-        public PFMCache(String modVersion, PFMFileUtil.ModLoader modLoader, List<String> folderHash, List<Identifier> variants) {
+        public PFMCache(String gameVersion, String modVersion, PFMFileUtil.ModLoader modLoader, List<String> folderHash, List<Identifier> variants) {
+            this.gameVersion = gameVersion;
             this.modVersion = modVersion;
             this.modLoader = modLoader;
             this.folderHash = folderHash;
             this.variants = variants;
+        }
+
+        public String gameVersion() {
+            return gameVersion;
         }
 
         public String modVersion() {
@@ -210,7 +216,8 @@ public abstract class PFMGenerator implements PFMResourceProgress {
             if (obj == this) return true;
             if (obj == null || obj.getClass() != this.getClass()) return false;
             PFMCache that = (PFMCache) obj;
-            return Objects.equals(this.modVersion, that.modVersion) &&
+            return Objects.equals(this.gameVersion, that.gameVersion) &&
+                    Objects.equals(this.modVersion, that.modVersion) &&
                     Objects.equals(this.modLoader, that.modLoader) &&
                     Objects.equals(this.variants, that.variants) &&
                     Objects.equals(this.folderHash, that.folderHash);
@@ -218,12 +225,13 @@ public abstract class PFMGenerator implements PFMResourceProgress {
 
         @Override
         public int hashCode() {
-            return Objects.hash(modVersion, modLoader, folderHash, variants);
+            return Objects.hash(gameVersion, modVersion, modLoader, folderHash, variants);
         }
 
         @Override
         public String toString() {
             return "PFMCache{" +
+                    "gameVersion='" + gameVersion + '\'' +
                     "modVersion='" + modVersion + '\'' +
                     ", modLoader=" + modLoader +
                     ", variants=" + variants +
@@ -233,6 +241,7 @@ public abstract class PFMGenerator implements PFMResourceProgress {
 
         public JsonElement toJson() {
             JsonObject obj = new JsonObject();
+            obj.addProperty("game_version", gameVersion);
             obj.addProperty("mod_version", modVersion);
             obj.addProperty("mod_loader", modLoader.asString());
 
@@ -258,7 +267,10 @@ public abstract class PFMGenerator implements PFMResourceProgress {
                 List<String> folderHash = new ArrayList<>();
                 PFMFileUtil.ModLoader modLoader = PFMFileUtil.ModLoader.INVALID;
                 List<Identifier> variants = new ArrayList<>();
-
+                String gameVersion = "0";
+                if (jsonObject.has("game_version")) {
+                    gameVersion = jsonObject.get("game_version").getAsString();
+                }
                 if (jsonObject.has("mod_version")) {
                     modVersion = jsonObject.get("mod_version").getAsString();
                 }
@@ -276,9 +288,9 @@ public abstract class PFMGenerator implements PFMResourceProgress {
                         folderHash.add(jsonElement.getAsString());
                     }
                 }
-                return new PFMCache(modVersion, modLoader, folderHash, variants);
+                return new PFMCache(gameVersion, modVersion, modLoader, folderHash, variants);
             }
-            return new PFMCache("0", PFMFileUtil.ModLoader.INVALID, Collections.emptyList(), Collections.emptyList());
+            return new PFMCache("0","0", PFMFileUtil.ModLoader.INVALID, Collections.emptyList(), Collections.emptyList());
         }
     }
 }

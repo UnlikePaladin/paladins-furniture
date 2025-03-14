@@ -1,9 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
-import com.unlikepaladin.pfm.blocks.ClassicNightstandBlock;
-import com.unlikepaladin.pfm.blocks.KitchenCabinetBlock;
-import com.unlikepaladin.pfm.blocks.KitchenDrawerBlock;
-import com.unlikepaladin.pfm.blocks.KitchenWallDrawerSmallBlock;
+import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
@@ -39,14 +36,14 @@ public class GenericStorageBlockEntity3x3 extends LootableContainerBlockEntity {
     protected DefaultedList<ItemStack> inventory = DefaultedList.ofSize(9, ItemStack.EMPTY);
 
         protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock){
+            if (state.getBlock() instanceof BasicDeskCabinetBlock || state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock){
                 GenericStorageBlockEntity3x3.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
                 GenericStorageBlockEntity3x3.this.setOpen(state, true);
             }
         }
 
         protected void onContainerClose(World world, BlockPos pos, BlockState state) {
-            if (state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock) {
+            if (state.getBlock() instanceof BasicDeskCabinetBlock ||state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock) {
                 GenericStorageBlockEntity3x3.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
                 GenericStorageBlockEntity3x3.this.setOpen(state, false);
             }
