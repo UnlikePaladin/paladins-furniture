@@ -21,7 +21,6 @@
     "PFMLanguageManagerAccessor",
     "PFMMixinClientPacketListener",
     "PFMReloadableResourceManagerImplMixin",
-    "PFMRenderLayersMixin",
     "PFMSpriteAccessor"
   ],
   "injectors": {
