@@ -298,6 +298,8 @@
   "block.pfm.coffee_table_modern": "Modern %s %s Coffee Table",
   "block.pfm.coffee_table_classic": "Classic %s %s Coffee Table",
   "block.pfm.basic_lamp": "Basic %s %s Lamp",
+  "block.pfm.desk_basic": "Basic %s %s Desk",
+  "block.pfm.desk_cabinet_basic": "Basic %s %s Desk Cabinet",
 
   "message.pfm.toilet_use": "To use the toilet you must first fill it with water, use a water bucket or a water bottle on it. To automatically fill it, you must place a water source 1 block under the floor.",
 
