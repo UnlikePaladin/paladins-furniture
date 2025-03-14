@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.client.fabric;
 
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
+import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
+import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
@@ -121,6 +123,12 @@ public class PFMExtraModelProvider implements ExtraModelProvider {
             out.accept(id);
         }
         for (Identifier id : UnbakedClassicCoffeeTableModel.CLASSIC_MODEL_PARTS_BASE) {
+            out.accept(id);
+        }
+        for (Identifier id : UnbakedBasicDeskModel.BASIC_MODEL_PARTS_BASE) {
+            out.accept(id);
+        }
+        for (Identifier id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
             out.accept(id);
         }
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(out::accept);

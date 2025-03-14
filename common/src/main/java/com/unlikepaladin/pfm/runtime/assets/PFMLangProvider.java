@@ -148,6 +148,12 @@ public class PFMLangProvider extends PFMProvider {
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.coffee_table_classic", this::simpleStrippedFurnitureTranslation);
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.coffee_table_classic", this::simpleStrippedFurnitureTranslation);
 
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskBlock.class).getVariantToBlockMap(), writer, "block.pfm.desk_basic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.desk_basic", this::simpleStrippedFurnitureTranslation);
+
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMap(), writer, "block.pfm.desk_cabinet_basic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.desk_cabinet_basic", this::simpleStrippedFurnitureTranslation);
+
             writer.write("    \"pfm.dummy.entry\": \"dummy entry\"\n");
             writer.write("}");
         }

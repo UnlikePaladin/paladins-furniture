@@ -15,7 +15,9 @@ import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtOps;
@@ -79,9 +81,21 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
 
             Map<String, Integer> childrenToCountMap = ingredients.variantChildren;
 
+            boolean abortVariant = false;
             List<Ingredient> stacks = Lists.newArrayList();
             for (Map.Entry<String, Integer> entry : childrenToCountMap.entrySet()) {
-                stacks.add(Ingredient.ofStacks(new ItemStack(variant.getItemForRecipe(entry.getKey(), getOutputBlockClass()), entry.getValue())));
+                ItemConvertible convertible = variant.getItemForRecipe(entry.getKey(), getOutputBlockClass());
+                if (convertible == null || convertible.asItem() == Items.AIR){
+                    abortVariant = true;
+                    break;
+                }
+                stacks.add(Ingredient.ofStacks(new ItemStack(convertible.asItem(), entry.getValue())));
+            }
+
+            // abort constructing for a variant if the recipe was invalid because of a missing ingredient, preferable over a crash
+            if (abortVariant) {
+                PaladinFurnitureMod.GENERAL_LOGGER.warn("Skipped constructing inner recipe for variant {} on recipe {}", variant.identifier, furnitureOutput.outputClass);
+                continue;
             }
 
             List<FurnitureInnerRecipe> recipes = new ArrayList<>();
