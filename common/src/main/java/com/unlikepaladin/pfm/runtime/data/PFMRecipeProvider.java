@@ -81,6 +81,8 @@ public class PFMRecipeProvider extends PFMProvider {
         WorkbenchScreenHandler.ALL_RECIPES.clear();
         WorkbenchScreenHandler.CRAFTABLE_RECIPES.clear();
         RegistryWrapper.WrapperLookup lookup = createWrapperLookup();
+        RegistryOps<JsonElement> ops = lookup.getOps(JsonOps.INSTANCE);
+
         generateRecipes(new RecipeExporter() {
             @Override
             public void accept(RegistryKey<Recipe<?>> recipeId, Recipe<?> recipe, @Nullable AdvancementEntry advancementEntry) {
@@ -92,7 +94,6 @@ public class PFMRecipeProvider extends PFMProvider {
                     getParent().getLogger().error("Recipe Json Provider is null");
                     throw new IllegalStateException("Recipe Json Provider is null");
                 }
-                RegistryOps<JsonElement> ops = lookup.getOps(JsonOps.INSTANCE);
                 Path recipePath = path.resolve("data/" + recipeId.getValue().getNamespace() + "/recipe/" + recipeId.getValue().getPath() + ".json");
                 enqueueJsonWrite(getWriteQueue(), recipePath, Recipe.CODEC.encodeStart(ops, recipe).getOrThrow(IllegalStateException::new));
                 if (advancementEntry != null) {
@@ -111,7 +112,7 @@ public class PFMRecipeProvider extends PFMProvider {
             }
         });
 
-        enqueueJsonWrite(getWriteQueue(), path.resolve("data/pfm/advancements/recipes/root.json"), Advancement.CODEC.encodeStart(JsonOps.INSTANCE, Advancement.Builder.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).build(Identifier.of("root")).value()).getOrThrow(IllegalAccessError::new));
+        enqueueJsonWrite(getWriteQueue(), path.resolve("data/pfm/advancements/recipes/root.json"), Advancement.CODEC.encodeStart(ops, Advancement.Builder.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).build(Identifier.of("root")).value()).getOrThrow(IllegalAccessError::new));
         waitForWrite();
         endProviderRun();
     }

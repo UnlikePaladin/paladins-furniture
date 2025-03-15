@@ -37,6 +37,8 @@ import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
 
+import static com.unlikepaladin.pfm.blocks.LogTableBlock.rotateShape;
+
 public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     private final Block baseBlock;
     public static BooleanProperty OPEN = Properties.OPEN;
@@ -120,20 +122,6 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     @Override
     public FluidState getFluidState(BlockState state) {
         return super.getFluidState(state);
-    }
-
-    /** Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/ */
-    public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{ shape, VoxelShapes.empty() };
-
-        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
-        for (int i = 0; i < times; i++) {
-            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
-            buffer[0] = buffer[1];
-            buffer[1] = VoxelShapes.empty();
-        }
-
-        return buffer[0];
     }
 
     final static VoxelShape TABLE_CLASSIC_BASE = createCuboidShape(0, 14, 0, 16, 16, 16);

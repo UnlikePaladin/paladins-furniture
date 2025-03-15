@@ -1,9 +1,7 @@
 package com.unlikepaladin.pfm.runtime.assets;
 
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
-import com.google.gson.stream.JsonWriter;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
@@ -22,21 +20,19 @@ import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.data.client.*;
+import net.minecraft.client.data.*;
+import net.minecraft.client.item.ItemAsset;
+import net.minecraft.client.render.item.model.ItemModel;
+import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
+import net.minecraft.client.render.item.tint.TintSource;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.util.math.Direction;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.nio.file.StandardOpenOption;
-import java.nio.file.attribute.FileAttribute;
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -86,23 +82,22 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             }
         });
 
-        waitForWrite();
 
-
-        HashMap<Identifier, Supplier<JsonElement>> itemModels = Maps.newHashMap();
+        Set<Identifier> itemModels = new HashSet<>();
         BiConsumer<Identifier, ItemModel.Unbaked> consumer = (id, unbakedModel) -> {
             ItemAsset asset = new ItemAsset(unbakedModel, ItemAsset.Properties.DEFAULT);
             DataResult<JsonElement> result = ItemAsset.CODEC.encodeStart(JsonOps.INSTANCE, asset);
-            if (result.isSuccess() && !itemModels.containsKey(id))
-                itemModels.put(id, result::getOrThrow);
+            Path dest = getItemsJsonPath(path, id);
+            if (result.isSuccess() && !itemModels.contains(id)) {
+                enqueueJsonWrite(getWriteQueue(), dest, result.getOrThrow());
+                itemModels.add(id);
+            }
             else if (result.isError())
                 getParent().getLogger().error("Failed to load item model for: {} {}", id, result.error().get());
         };
-
         new PFMItemModelGenerator(consumer, identifierSupplierBiConsumer).register(generateModelFor);
-        this.writeJsons(path, blockstates, PFMBlockstateModelProvider::getBlockStateJsonPath);
-        this.writeJsons(path, models, PFMBlockstateModelProvider::getModelJsonPath);
-        this.writeJsons(path, itemModels, PFMBlockstateModelProvider::getItemsJsonPath);
+
+        waitForWrite();
         endProviderRun();
     }
 
@@ -148,13 +143,19 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         }
 
         public void register(List<Item> items) {
+            Set<Item> processed = new HashSet<>();
             for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
-                if (block instanceof DyeableFurnitureBlock)
+                if (block instanceof DyeableFurnitureBlock && !processed.contains(block.asItem())) {
                     registerFurnitureModel(block.asItem(), new PFMBedModelRenderer.Unbaked(((DyeableFurnitureBlock) block).getPFMColor()));
+                    processed.add(block.asItem());
+                }
             }
 
             for (Item item : items) {
-                registerFurnitureModel(item);
+                if (!processed.contains(item)) {
+                    registerFurnitureModel(item);
+                    processed.add(item);
+                }
             }
         }
     }
