@@ -195,20 +195,20 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
         // base
-        List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(state, face, random));
+        List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(null, face, random));
 
         List<BakedQuad> secondaryQuads = new ArrayList<>();
         // legs
-        secondaryQuads.addAll(getTemplateBakedModels().get(18).getQuads(state, face, random));
-        secondaryQuads.addAll(getTemplateBakedModels().get(16).getQuads(state, face, random));
-        secondaryQuads.addAll(getTemplateBakedModels().get(17).getQuads(state, face, random));
-        secondaryQuads.addAll(getTemplateBakedModels().get(19).getQuads(state, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(18).getQuads(null, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(16).getQuads(null, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(17).getQuads(null, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(19).getQuads(null, face, random));
         // in between pieces
 
 
-        List<Sprite> spriteList = getSpriteList(stack);
+        List<Sprite> spriteList = getSpriteList(blockState);
         List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
         quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
         return quads;
