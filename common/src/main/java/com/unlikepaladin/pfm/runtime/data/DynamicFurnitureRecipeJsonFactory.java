@@ -3,6 +3,8 @@ package com.unlikepaladin.pfm.runtime.data;
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.DynamicFurnitureRecipe;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
 import net.minecraft.block.Block;
@@ -28,6 +30,7 @@ public class DynamicFurnitureRecipeJsonFactory {
     private final List<Identifier> supportedVariants;
     private final ComponentChanges components;
     private final Map<String, AdvancementCriterion<?>> criteria = new LinkedHashMap<>();
+    private boolean emptyCriterion = true;
 
     public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, Map<String, Integer> variantChildren) {
         this.outputClass = output.getSimpleName();
@@ -104,6 +107,7 @@ public class DynamicFurnitureRecipeJsonFactory {
 
     public DynamicFurnitureRecipeJsonFactory criterion(String name, AdvancementCriterion<?> criterionConditions) {
         this.criteria.put(name, criterionConditions);
+        this.emptyCriterion = false;
         return this;
     }
 
@@ -152,6 +156,9 @@ public class DynamicFurnitureRecipeJsonFactory {
     }
 
     public void offerTo(RecipeExporter exporter, Identifier recipeId) {
+        if (emptyCriterion) {
+            criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.ofItems(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
+        }
         Advancement.Builder advancement$builder = exporter.getAdvancementBuilder().criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).criteriaMerger(AdvancementRequirements.CriterionMerger.OR);
         this.criteria.forEach(advancement$builder::criterion);
 
