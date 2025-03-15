@@ -16,6 +16,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.state.property.Properties;
@@ -76,23 +77,11 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         return false;
     }
 
-    @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (!state.isOf(state.getBlock())) {
-            oldState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
-        }
-    }
-
     public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
         if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
         return 0;
-    }
-
-    @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
     }
 
     public BlockState getPlacementState(ItemPlacementContext ctx) {
@@ -317,7 +306,7 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         if (blockEntity instanceof GenericStorageBlockEntity3x3) {
             player.openHandledScreen((GenericStorageBlockEntity3x3)blockEntity);
             player.incrementStat(Statistics.DRAWER_SEARCHED);
-            PiglinBrain.onGuardedBlockInteracted(player, true);
+            PiglinBrain.onGuardedBlockInteracted((ServerWorld) world, player, true);
         }
         return ActionResult.CONSUME;
     }

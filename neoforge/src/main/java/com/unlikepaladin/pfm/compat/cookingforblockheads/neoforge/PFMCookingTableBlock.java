@@ -59,18 +59,18 @@ public class PFMCookingTableBlock extends BlockWithEntity {
     }
 
     @Override
-    protected ItemActionResult onUseWithItem(ItemStack itemStack, BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
+    protected ActionResult onUseWithItem(ItemStack itemStack, BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (!itemStack.isEmpty()) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof CookingTableBlockEntity cookingTable) {
                 if (!cookingTable.hasNoFilterBook() && itemStack.getItem() == ModItems.noFilterBook) {
                     cookingTable.setNoFilterBook(itemStack.split(1));
-                    return ItemActionResult.SUCCESS;
+                    return ActionResult.SUCCESS;
                 }
             }
 
         }
-        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
     }
 
 

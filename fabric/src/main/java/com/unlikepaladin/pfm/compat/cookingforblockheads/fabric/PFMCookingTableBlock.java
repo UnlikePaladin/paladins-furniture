@@ -14,7 +14,6 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
-import net.minecraft.util.ItemActionResult;
 import net.minecraft.util.hit.BlockHitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.shape.VoxelShape;
@@ -59,18 +58,18 @@ public class PFMCookingTableBlock extends BlockWithEntity {
     }
 
     @Override
-    protected ItemActionResult onUseWithItem(ItemStack itemStack, BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
+    protected ActionResult onUseWithItem(ItemStack itemStack, BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (!itemStack.isEmpty()) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof CookingTableBlockEntity cookingTable) {
                 if (!cookingTable.hasNoFilterBook() && itemStack.getItem() == ModItems.noFilterBook) {
                     cookingTable.setNoFilterBook(itemStack.split(1));
-                    return ItemActionResult.SUCCESS;
+                    return ActionResult.SUCCESS;
                 }
             }
 
         }
-        return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
     }
 
     public void onStateReplaced(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {

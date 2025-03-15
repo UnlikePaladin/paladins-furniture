@@ -62,13 +62,9 @@ public class UnbakedBasicDeskCabinetModel implements UnbakedModel {
     };
 
     @Override
-    public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
-
-    }
-
-    @Override
-    public Collection<Identifier> getModelDependencies() {
-        return List.of(PARENT);
+    public void resolve(Resolver resolver) {
+        for (Identifier c : BASIC_MODEL_PARTS_BASE)
+            resolver.resolve(c);
     }
 
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
