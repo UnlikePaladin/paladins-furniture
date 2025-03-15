@@ -58,12 +58,12 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
             name = path.substring("polish_".length());
         }
         String namespace = blockId.getNamespace();
-        if (!namespace.equals("cozy_home") && name != null && !namespace.equals("securitycraft") &&
-                !namespace.equals("absentbydesign") && !namespace.equals("chipped") && !namespace.equals("extshape") && !(namespace.equals("ars_nouveau") && path.contains("sconce"))) {
+        if (!namespace.equals("cozy_home") && !namespace.equals("adorn") && name != null && !namespace.equals("securitycraft") &&
+                !namespace.equals("absentbydesign") && !namespace.equals("chipped") && !namespace.equals("polydecorations") && !namespace.equals("extshape") && !namespace.equals("modernlife") && !(namespace.equals("ars_nouveau") && path.contains("sconce"))) {
 
             BlockState state = baseBlock.getDefaultState();
             // can't check if the block is a full one, so I do this. Adding some checks here
-            if (state.getProperties().size() <= 2 && !(baseBlock instanceof SlabBlock) && !name.contains("slab")) {
+            if (state.getProperties().size() <= 2 && !(baseBlock instanceof SlabBlock) && !name.contains("slab") && !(baseBlock instanceof AbstractPressurePlateBlock) && !name.contains("pressure_plate")) {
                 // needs to use wood sound type
                 // if (state.getSoundType() == SoundType.WOOD) { //wood from tcon has diff sounds
                 BlockSoundGroup soundGroup = state.getSoundGroup();

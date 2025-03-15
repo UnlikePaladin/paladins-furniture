@@ -77,6 +77,8 @@ public class PFMRecipeProvider extends PFMProvider {
     @Override
     public void run() {
         startProviderRun();
+        createWriter();
+
         Path path = getParent().getOutput();
         Set<Identifier> set = Sets.newHashSet();
         WorkbenchScreenHandler.ALL_RECIPES.clear();
@@ -94,9 +96,10 @@ public class PFMRecipeProvider extends PFMProvider {
                     throw new IllegalStateException("Recipe Json Provider is null");
                 }
                 RegistryOps<JsonElement> ops = lookup.getOps(JsonOps.INSTANCE);
-                    saveRecipe(Recipe.CODEC.encodeStart(ops, recipe).getOrThrow(IllegalStateException::new), path.resolve("data/" + recipeId.getNamespace() + "/recipe/" + recipeId.getPath() + ".json"));
-                    if (advancementEntry != null) {
-                        saveRecipeAdvancement(Advancement.CODEC.encodeStart(ops, advancementEntry.value()).getOrThrow(IllegalStateException::new), path.resolve("data/" + recipeId.getNamespace() + "/advancement/" + advancementEntry.id().getPath() + ".json"));
+                Path recipePath = path.resolve("data/" + recipeId.getNamespace() + "/recipe/" + recipeId.getPath() + ".json");
+                enqueueJsonWrite(getWriteQueue(), recipePath, Recipe.CODEC.encodeStart(ops, recipe).getOrThrow(IllegalStateException::new));
+                if (advancementEntry != null) {
+                    Path advancementPath = path.resolve("data/" + recipeId.getNamespace() + "/advancement/" + advancementEntry.id().getPath() + ".json");enqueueJsonWrite(getWriteQueue(), advancementPath, Advancement.CODEC.encodeStart(ops, advancementEntry.value()).getOrThrow(IllegalStateException::new));
                 }
             }
 
@@ -105,33 +108,12 @@ public class PFMRecipeProvider extends PFMProvider {
                 return Advancement.Builder.createUntelemetered().parent(CraftingRecipeJsonBuilder.ROOT);
             }
         });
-        saveRecipeAdvancement(Advancement.CODEC.encodeStart(JsonOps.INSTANCE, Advancement.Builder.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).build(Identifier.of("root")).value()).getOrThrow(IllegalStateException::new), path.resolve("data/pfm/advancements/recipes/root.json"));
+
+        enqueueJsonWrite(getWriteQueue(), path.resolve("data/pfm/advancements/recipes/root.json"), Advancement.CODEC.encodeStart(JsonOps.INSTANCE, Advancement.Builder.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).build(Identifier.of("root")).value()).getOrThrow(IllegalAccessError::new));
+        waitForWrite();
         endProviderRun();
     }
 
-    private void saveRecipe(JsonElement json, Path path) {
-        try {
-            String string = PFMDataGenerator.GSON.toJson(json);
-            if (!Files.exists(path.getParent()))
-                Files.createDirectories(path.getParent());
-
-            Files.writeString(path, string);
-        } catch (IOException var10) {
-            getParent().getLogger().error("Couldn't save recipe {}", path, var10);
-        }
-    }
-
-    private void saveRecipeAdvancement(JsonElement json, Path path) {
-        try {
-            String string = PFMDataGenerator.GSON.toJson(json);
-            if (!Files.exists(path.getParent()))
-                Files.createDirectories(path.getParent());
-
-            Files.writeString(path, string);
-        } catch (IOException var10) {
-            getParent().getLogger().error("Couldn't save recipe advancement {}", path, var10);
-        }
-    }
     @ExpectPlatform
     protected static Identifier getId(Block block) {
         throw new AssertionError();    
@@ -358,6 +340,8 @@ public class PFMRecipeProvider extends PFMProvider {
         offerBasicCoffeeTableRecipe(BasicCoffeeTableBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariants(), exporter);
         offerModernCoffeeTableRecipe(ModernCoffeeTableBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariants(), exporter);
         offerClassicCoffeeTableRecipe(ClassicCoffeeTableBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariants(), exporter);
+        offerBasicDeskRecipe(BasicDeskBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskBlock.class).getVariants(), exporter);
+        offerBasicDeskCabinetRecipe(BasicDeskCabinetBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariants(), exporter);
 
         PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> pfmModCompatibility.generateRecipes(exporter));
     }
@@ -431,6 +415,14 @@ public class PFMRecipeProvider extends PFMProvider {
 
     public static void offerBasicTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeExporter exporter) {
         DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, Identifier.of("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    }
+
+    public static void offerBasicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeExporter exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).offerTo(exporter, Identifier.of("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    }
+
+    public static void offerBasicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeExporter exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).vanillaInput(Ingredient.ofItems(Items.CHEST)).offerTo(exporter, Identifier.of("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerBasicCoffeeTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeExporter exporter) {

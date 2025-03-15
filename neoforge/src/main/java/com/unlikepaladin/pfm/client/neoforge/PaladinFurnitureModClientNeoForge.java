@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.client.neoforge;
 
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
+import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
+import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
@@ -165,6 +167,12 @@ public class PaladinFurnitureModClientNeoForge {
             event.register(ModelIdentifier.standalone(id));
         }
         for (Identifier id : UnbakedClassicCoffeeTableModel.CLASSIC_MODEL_PARTS_BASE) {
+            event.register(ModelIdentifier.standalone(id));
+        }
+        for (Identifier id : UnbakedBasicDeskModel.BASIC_MODEL_PARTS_BASE) {
+            event.register(ModelIdentifier.standalone(id));
+        }
+        for (Identifier id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
             event.register(ModelIdentifier.standalone(id));
         }
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(model -> event.register(ModelIdentifier.standalone(model)));
