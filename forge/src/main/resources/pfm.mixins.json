@@ -10,6 +10,7 @@
     "PFMRenderLayersForgeMixin"
   ],
   "mixins": [
+    "PFMCFBModBlockEntitiesMixin",
     "PFMCookingPotBlockEntityMixin",
     "PFMItemEntryAccessor",
     "PFMLootPool$BuilderMixin",

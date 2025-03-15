@@ -7,10 +7,12 @@
     "PFMBlockDustParticleMixin",
     "PFMBlockModelsMixin",
     "PFMSpriteBillBoardParticleMixin",
+    "PFMRenderLayersFabricMixin",
     "PFMTitleScreenMixin"
   ],
   "mixins": [
     "PFMAbstractTagProvider$ObjectBuilderMixin",
+    "PFMCFBModBlockEntitiesMixin",
     "PFMCookingPotBlockEntityMixin",
     "PFMMinecraftServerMixin",
     "PFMModResourcePackCreatorMixin",

@@ -1,7 +1,12 @@
 package com.unlikepaladin.pfm.mixin.forge;
 
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
+import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
+import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
@@ -50,6 +55,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 @Mixin(ReferencedModelsCollector.class)
 public abstract class PFMReferencedModelsCollectorMixin {
@@ -186,6 +192,14 @@ public abstract class PFMReferencedModelsCollectorMixin {
         }
         else if (UnbakedClassicCoffeeTableModel.MODEL_IDS.contains(resourceId)){
             UnbakedModel model = new UnbakedClassicCoffeeTableModel();
+            return model;
+        }
+        else if (UnbakedBasicDeskModel.MODEL_IDS.contains(resourceId)){
+            UnbakedModel model = new UnbakedBasicDeskModel();
+            return model;
+        }
+        else if (UnbakedBasicDeskCabinetModel.MODEL_IDS.contains(resourceId)){
+            UnbakedModel model = new UnbakedBasicDeskCabinetModel();
             return model;
         }
         return olModel;

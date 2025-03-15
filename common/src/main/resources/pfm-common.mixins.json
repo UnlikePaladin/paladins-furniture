@@ -27,7 +27,6 @@
     "PFMMinecraftClientAcccessor",
     "PFMMixinClientPacketListener",
     "PFMReloadableResourceManagerImplMixin",
-    "PFMRenderLayersMixin",
     "RangeDispatchItemModelAccessor",
     "SelectItemModelAccessor"
   ],
