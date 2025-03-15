@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.SimpleFurnitureRecipe;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
@@ -39,6 +40,8 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
     private final DefaultedList<Ingredient> inputs = DefaultedList.of();
     private final Map<String, AdvancementCriterion<?>> criteria = new LinkedHashMap<>();
     private boolean showNotification = true;
+    private boolean emptyCriterion = true;
+
     @NotNull
     private NbtCompound nbtElement;
     @Nullable
@@ -99,6 +102,7 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
     @Override
     public SimpleFurnitureRecipeJsonFactory criterion(String name, AdvancementCriterion<?> criterionConditions) {
         this.criteria.put(name, criterionConditions);
+        this.emptyCriterion = false;
         return this;
     }
 
@@ -120,6 +124,9 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
 
     @Override
     public void offerTo(RecipeExporter exporter, Identifier recipeId) {
+        if (emptyCriterion) {
+            criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.ofItems(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
+        }
         Advancement.Builder advancement$builder = exporter.getAdvancementBuilder().criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).criteriaMerger(AdvancementRequirements.CriterionMerger.OR);
         this.criteria.forEach(advancement$builder::criterion);
         ItemStack stack = new ItemStack(this.output, this.outputCount);

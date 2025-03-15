@@ -7,6 +7,7 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.DynamicFurnitureRecipe;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.CriterionConditions;
@@ -42,6 +43,7 @@ public class DynamicFurnitureRecipeJsonFactory {
     private final List<Identifier> supportedVariants;
     @Nullable
     private final NbtElement nbtElement;
+    private boolean emptyCriterion = true;
 
     public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, Map<String, Integer> variantChildren) {
         this.outputClass = output.getSimpleName();
@@ -117,6 +119,7 @@ public class DynamicFurnitureRecipeJsonFactory {
 
     public DynamicFurnitureRecipeJsonFactory criterion(String string, AdvancementCriterion<?> criterionConditions) {
         this.builder.criterion(string, criterionConditions);
+        this.emptyCriterion = false;
         return this;
     }
 
@@ -165,6 +168,9 @@ public class DynamicFurnitureRecipeJsonFactory {
     }
 
     public void offerTo(RecipeExporter exporter, Identifier recipeId) {
+        if (emptyCriterion) {
+            builder.criterion("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.ofItems(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
+        }
         exporter.accept(recipeId,
                 new DynamicFurnitureRecipe(this.group == null || this.group.isBlank() ? " " : this.group,
                         new DynamicFurnitureRecipe.FurnitureOutput(outputClass, outputCount, nbtElement != null && nbtElement.getNbtType() == NbtCompound.TYPE ? (NbtCompound) nbtElement : new NbtCompound()), supportedVariants,
