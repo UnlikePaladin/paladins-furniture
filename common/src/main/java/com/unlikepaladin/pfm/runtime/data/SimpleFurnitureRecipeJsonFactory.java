@@ -2,6 +2,8 @@ package com.unlikepaladin.pfm.runtime.data;
 
 
 import com.unlikepaladin.pfm.recipes.SimpleFurnitureRecipe;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
 import net.minecraft.component.DataComponentTypes;
@@ -34,6 +36,8 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
     private final DefaultedList<Ingredient> inputs = DefaultedList.of();
     private final Map<String, AdvancementCriterion<?>> criteria = new LinkedHashMap<>();
     private boolean showNotification = true;
+    private boolean emptyCriterion = true;
+
     @Nullable
     private String group;
 
@@ -99,6 +103,7 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
     @Override
     public SimpleFurnitureRecipeJsonFactory criterion(String name, AdvancementCriterion<?> criterionConditions) {
         this.criteria.put(name, criterionConditions);
+        this.emptyCriterion = false;
         return this;
     }
 
@@ -120,12 +125,18 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
 
     @Override
     public void offerTo(RecipeExporter exporter, RegistryKey<Recipe<?>> recipeKey) {
+        if (emptyCriterion) {
+            criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.ofItems(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
+        }
         Advancement.Builder advancement$builder = exporter.getAdvancementBuilder().criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeKey)).rewards(AdvancementRewards.Builder.recipe(recipeKey)).criteriaMerger(AdvancementRequirements.CriterionMerger.OR);
         this.criteria.forEach(advancement$builder::criterion);
         exporter.accept(recipeKey, new SimpleFurnitureRecipe(this.group == null || this.group.isBlank() ? "" : this.group, stack, this.inputs), advancement$builder.build(recipeKey.getValue().withPrefixedPath("recipes/furniture/")));
     }
 
     public void offerTo(RecipeExporter exporter, Identifier recipeId) {
+        if (emptyCriterion) {
+            criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.ofItems(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
+        }
         Recipe<?> recipe =  new SimpleFurnitureRecipe(this.group == null || this.group.isBlank() ? " " : this.group, stack, this.inputs);
         RegistryKey<Recipe<?>> recipeKey = RegistryKey.of(RegistryKeys.RECIPE, recipeId);
         Advancement.Builder advancement$builder = exporter.getAdvancementBuilder().criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeKey)).rewards(AdvancementRewards.Builder.recipe(recipeKey)).criteriaMerger(AdvancementRequirements.CriterionMerger.OR);

@@ -59,7 +59,6 @@ public class UnbakedBasicTableModel implements UnbakedModel {
         return Collections.emptyList();
     }
 
-    public static final Map<ModelBakeSettings, List<BakedModel>> CACHED_MODELS = new ConcurrentHashMap<>();
     @Nullable
     @Override
     public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {

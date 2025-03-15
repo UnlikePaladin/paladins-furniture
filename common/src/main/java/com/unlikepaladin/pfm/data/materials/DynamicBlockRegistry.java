@@ -164,6 +164,11 @@ public class DynamicBlockRegistry {
 
         addBlockTypeFinder(StoneVariant.class, darkWood);
 
+        StoneVariant.Finder pinkWood = StoneVariant.Finder.simple(
+                "minecraft", "pink_wood", "quartz_block", "stripped_cherry_log");
+
+        addBlockTypeFinder(StoneVariant.class, pinkWood);
+
         StoneVariant.Finder quartz = StoneVariant.Finder.simple(
                 "minecraft", "quartz", "quartz_block", "quartz_block");
 

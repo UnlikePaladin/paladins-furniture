@@ -12,6 +12,7 @@
     "PFMRenderLayersNeoForgeMixin"
   ],
   "mixins": [
+    "PFMCFBModBlockEntitiesMixin",
     "PFMCookingPotBlockEntityMixin",
     "PFMItemEntryAccessor",
     "PFMLootPool$BuilderMixin",

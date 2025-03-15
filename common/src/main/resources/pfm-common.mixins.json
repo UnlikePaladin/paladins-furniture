@@ -22,8 +22,7 @@
     "PFMLanguageManagerAccessor",
     "PFMMinecraftClientAcccessor",
     "PFMMixinClientPacketListener",
-    "PFMReloadableResourceManagerImplMixin",
-    "PFMRenderLayersMixin"
+    "PFMReloadableResourceManagerImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1
