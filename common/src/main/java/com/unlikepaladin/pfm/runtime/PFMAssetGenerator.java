@@ -85,6 +85,7 @@ public class PFMAssetGenerator extends PFMGenerator {
                         .map(provider -> executor.submit(provider::run))
                         .toList();
 
+                ClientOverlaySetter.setup();
                 while (!allDone) {
                     allDone = futures.stream().allMatch(Future::isDone);
 
@@ -94,6 +95,7 @@ public class PFMAssetGenerator extends PFMGenerator {
                         ClientOverlaySetter.updateScreen();
                 }
                 executor.shutdown();
+                ClientOverlaySetter.finish();
 
                 // Check for errors in providers
                 for (Future<?> future : futures) {

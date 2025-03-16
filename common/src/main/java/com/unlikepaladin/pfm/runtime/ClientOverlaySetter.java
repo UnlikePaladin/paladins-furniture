@@ -1,13 +1,10 @@
 package com.unlikepaladin.pfm.runtime;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.client.screens.overlay.PFMGeneratingOverlay;
 import com.unlikepaladin.pfm.mixin.PFMMinecraftClientAcccessor;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.InactivityFpsLimiter;
 import net.minecraft.client.render.RenderTickCounter;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.util.Util;
-import org.joml.Matrix4fStack;
 
 public class ClientOverlaySetter {
     public static void setOverlayToPFMOverlay(PFMResourceProgress resourceProgress) {
@@ -44,5 +41,20 @@ public class ClientOverlaySetter {
 
     private static boolean shouldTick(MinecraftClient client) {
         return client.world == null || client.world.getTickManager().shouldTick();
+    }
+
+    private static boolean resetLimiter = false;
+    public static void setup() {
+        if (MinecraftClient.getInstance().getInactivityFpsLimiter() == null) {
+            ((PFMMinecraftClientAcccessor)MinecraftClient.getInstance()).setInactivityFpsLimiter(new InactivityFpsLimiter(MinecraftClient.getInstance().options, MinecraftClient.getInstance()));
+            resetLimiter = true;
+        }
+    }
+
+    public static void finish() {
+        if (resetLimiter) {
+            ((PFMMinecraftClientAcccessor)MinecraftClient.getInstance()).setInactivityFpsLimiter(null);
+            resetLimiter = false;
+        }
     }
 }
