@@ -27,10 +27,10 @@ public class PFMFabricItemModel<T> extends PFMItemModel<T> {
     @Override
     protected void setProperties(ItemStack stack) {
     BakedModel model1 = UnwrappableBakedModel.unwrap(this.model, m -> m instanceof PFMBakedModelSetPropertiesExtension);
-        if (model1 != null && stack.getItem() instanceof BlockItem) {
-            ((PFMBakedModelSetPropertiesExtension) model).setBlockStateProperty(((BlockItem) stack.getItem()).getBlock().getDefaultState());
+        if (model1 != null && stack.getItem() instanceof BlockItem && model1 instanceof PFMBakedModelSetPropertiesExtension) {
+            ((PFMBakedModelSetPropertiesExtension) model1).setBlockStateProperty(((BlockItem) stack.getItem()).getBlock().getDefaultState());
             if (stack.contains(PFMComponents.VARIANT_COMPONENT))
-                ((PFMBakedModelSetPropertiesExtension) model).setVariant(VariantHelper.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT)));
+                ((PFMBakedModelSetPropertiesExtension) model1).setVariant(VariantHelper.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT)));
         }
     }
 }
