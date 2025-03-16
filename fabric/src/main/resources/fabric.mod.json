@@ -50,7 +50,7 @@
   ],
   "depends": {
     "fabric-api": "*",
-    "minecraft": "1.19.4"
+    "minecraft": "${supported_minecraft_version}"
   },
   "suggests": {
     "patchouli": "*"
