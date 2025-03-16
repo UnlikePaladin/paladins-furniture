@@ -3,9 +3,8 @@ name: Publish on GitHub, CurseForge & Modrinth    #The name of your GitHub Actio
 on: [workflow_dispatch ]           #'workflow_dispatch' -> allows manual execution through github.com
 
 env:
-  MINECRAFT_VERSION: 1.17.1
-  MODRINTH_TOKEN: ${{ secrets.CURSEFORGE_TOKEN }}
-  CURSEFORGE_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+  MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+  CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN  }}
   GITHUB_TOKEN: ${{ secrets.PB_GITHUB_TOKEN }}
   MOD_VERSION: 1.4
 permissions:
@@ -51,7 +50,7 @@ jobs:
           github-tag: "v${{env.MINECRAFT_VERSION}}-${{env.MOD_VERSION}}"
           github-token: "${{env.GITHUB_TOKEN}}"
 
-          name: "Paladin's Furniture Mod '${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - Forge"
+          name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - Forge"
           version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}-minecraftforge"
           version-type: release
           changelog-file: CHANGELOG.md
@@ -59,7 +58,7 @@ jobs:
           loaders: forge
           game-versions: "${{env.MINECRAFT_VERSION}}"
 
-          github_name: "Paladin's Furniture Mod '${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
+          github_name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
           github_version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
 
           files: forge/build/libs/!(*-@(dev|sources|all)).jar
@@ -76,7 +75,7 @@ jobs:
           github-tag: "v${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
           github-token: "${{env.GITHUB_TOKEN}}"
 
-          name: "Paladin's Furniture Mod '${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - Fabric"
+          name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - Fabric"
           version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}-fabric"
           version-type: release
           changelog-file: CHANGELOG.md
@@ -85,7 +84,7 @@ jobs:
           game-versions: "${{env.MINECRAFT_VERSION}}"
           dependencies: fabric-api | depends | *
 
-          github_name: "Paladin's Furniture Mod '${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
+          github_name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
           github_version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
 
           files: fabric/build/libs/!(*-@(dev|sources|all)).jar
@@ -103,7 +102,7 @@ jobs:
           github-tag: "v${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
           github-token: "${{env.GITHUB_TOKEN}}"
 
-          name: "Paladin's Furniture Mod '${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - NeoForge"
+          name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - NeoForge"
           version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}-neoforge"
           version-type: release
           changelog-file: CHANGELOG.md
@@ -112,7 +111,7 @@ jobs:
           game-versions: "${{env.MINECRAFT_VERSION}}"
           dependencies: fabric-api | depends | *
 
-          github_name: "Paladin's Furniture Mod '${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
+          github_name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
           github_version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
 
           files: neoforge/build/libs/!(*-@(dev|sources|all)).jar
