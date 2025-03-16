@@ -39,7 +39,7 @@ jobs:
       - name: Extract Minecraft Version from Branch
         run: echo "MINECRAFT_VERSION=${GITHUB_REF_NAME#architectury-}" >> $GITHUB_ENV
 
-      - name: Publish (CurseForge/Modrinth/GitHub) - Forge
+      - name: Publish (CurseForge/Modrinth) - Forge
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: 663141
@@ -47,9 +47,6 @@ jobs:
 
           modrinth-id: SISz7Qd3
           modrinth-token: "${{env.MODRINTH_TOKEN}}"
-
-          github-tag: "v${{env.MINECRAFT_VERSION}}-${{env.MOD_VERSION}}"
-          github-token: "${{env.GITHUB_TOKEN}}"
 
           name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - Forge"
           version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}-minecraftforge"
@@ -57,14 +54,10 @@ jobs:
           changelog-file: CHANGELOG.md
 
           loaders: forge
-          game-versions: "${{env.MINECRAFT_VERSION}}"
-
-          github-name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
-          github-version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
 
           files: forge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
 
-      - name: Publish (CurseForge/Modrinth/GitHub) - Fabric
+      - name: Publish (CurseForge/Modrinth) - Fabric
         uses: Kir-Antipov/mc-publish@v3.3
         with:
           curseforge-id: 663141
@@ -73,24 +66,17 @@ jobs:
           modrinth-id: SISz7Qd3
           modrinth-token: "${{env.MODRINTH_TOKEN}}"
 
-          github-tag: "v${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
-          github-token: "${{env.GITHUB_TOKEN}}"
-
           name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - Fabric"
           version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}-fabric"
           version-type: release
           changelog-file: CHANGELOG.md
 
           loaders: fabric
-          game-versions: "${{env.MINECRAFT_VERSION}}"
           dependencies: fabric-api | depends | *
-
-          github-name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
-          github-version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
 
           files: fabric/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
 
-      - name: Publish (CurseForge/Modrinth/GitHub) - NeoForge
+      - name: Publish (CurseForge/Modrinth) - NeoForge
         if: ${{ hashFiles('neoforge/build/libs') != '' }}
         uses: Kir-Antipov/mc-publish@v3.3
         with:
@@ -100,19 +86,33 @@ jobs:
           modrinth-id: SISz7Qd3
           modrinth-token: "${{env.MODRINTH_TOKEN}}"
 
-          github-tag: "v${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
-          github-token: "${{env.GITHUB_TOKEN}}"
-
           name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - NeoForge"
           version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}-neoforge"
           version-type: release
           changelog-file: CHANGELOG.md
 
           loaders: neoforge
-          game-versions: "${{env.MINECRAFT_VERSION}}"
           dependencies: fabric-api | depends | *
 
-          github-name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
-          github-version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
-
           files: neoforge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
+
+      - name: Publish (GitHub) - All Loaders
+        uses: Kir-Antipov/mc-publish@v3.3
+        with:
+          github-tag: "v${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
+          github-token: "${{env.GITHUB_TOKEN}}"
+
+          name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
+          version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
+          version-type: release
+          changelog-file: CHANGELOG.md
+
+          loaders: |
+            fabric
+            forge
+            neoforge
+
+          files: |
+            fabric/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
+            forge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
+            neoforge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
