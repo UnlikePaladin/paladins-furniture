@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.mixin;
 
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.option.InactivityFpsLimiter;
 import net.minecraft.client.util.tracy.TracyFrameCapturer;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,4 +18,7 @@ public interface PFMMinecraftClientAcccessor {
 
     @Accessor("renderTaskQueue")
     Queue<Runnable> getRenderTasks();
+
+    @Accessor("inactivityFpsLimiter")
+    void setInactivityFpsLimiter(InactivityFpsLimiter inactivityFpsLimiter);
 }
