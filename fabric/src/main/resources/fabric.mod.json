@@ -44,7 +44,7 @@
   ],
   "depends": {
     "fabric": "*",
-    "minecraft": "1.16.x"
+    "minecraft": "${supported_minecraft_version}"
   },
   "suggests": {
     "patchouli": "*"
