@@ -11,7 +11,8 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  build_and_publish:
+    name: Build and Publish (Github, Modrinth, CF)
     runs-on: ubuntu-latest
     steps:
       - name: Check Environment Variables
@@ -58,10 +59,10 @@ jobs:
           loaders: forge
           game-versions: "${{env.MINECRAFT_VERSION}}"
 
-          github_name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
-          github_version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
+          github-name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
+          github-version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
 
-          files: forge/build/libs/!(*-@(dev|sources|all)).jar
+          files: forge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
 
       - name: Publish (CurseForge/Modrinth/GitHub) - Fabric
         uses: Kir-Antipov/mc-publish@v3.3
@@ -84,10 +85,10 @@ jobs:
           game-versions: "${{env.MINECRAFT_VERSION}}"
           dependencies: fabric-api | depends | *
 
-          github_name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
-          github_version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
+          github-name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
+          github-version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
 
-          files: fabric/build/libs/!(*-@(dev|sources|all)).jar
+          files: fabric/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
 
       - name: Publish (CurseForge/Modrinth/GitHub) - NeoForge
         if: ${{ hashFiles('neoforge/build/libs') != '' }}
@@ -107,11 +108,11 @@ jobs:
           version-type: release
           changelog-file: CHANGELOG.md
 
-          loaders: fabric
+          loaders: neoforge
           game-versions: "${{env.MINECRAFT_VERSION}}"
           dependencies: fabric-api | depends | *
 
-          github_name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
-          github_version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
+          github-name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
+          github-version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
 
-          files: neoforge/build/libs/!(*-@(dev|sources|all)).jar
+          files: neoforge/build/libs/!(*-@(dev|sources|all|dev-shadow|javadoc|transformProduction*)).jar
