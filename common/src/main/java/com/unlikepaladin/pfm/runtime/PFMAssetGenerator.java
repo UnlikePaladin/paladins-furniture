@@ -85,7 +85,8 @@ public class PFMAssetGenerator extends PFMGenerator {
                         .map(provider -> executor.submit(provider::run))
                         .toList();
 
-                ClientOverlaySetter.setup();
+                if (PaladinFurnitureMod.isClient)
+                    ClientOverlaySetter.setup();
                 while (!allDone) {
                     allDone = futures.stream().allMatch(Future::isDone);
 
@@ -95,7 +96,8 @@ public class PFMAssetGenerator extends PFMGenerator {
                         ClientOverlaySetter.updateScreen();
                 }
                 executor.shutdown();
-                ClientOverlaySetter.finish();
+                if (PaladinFurnitureMod.isClient)
+                    ClientOverlaySetter.finish();
 
                 // Check for errors in providers
                 for (Future<?> future : futures) {
