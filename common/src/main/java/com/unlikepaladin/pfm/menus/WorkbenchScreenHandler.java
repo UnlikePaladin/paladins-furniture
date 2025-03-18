@@ -87,14 +87,14 @@ public class WorkbenchScreenHandler extends ScreenHandler {
         this.addProperty(this.selectedRecipe);
         if (world instanceof ServerWorld) {
             if (ALL_RECIPES.isEmpty()) {
+                CRAFTABLE_RECIPES.clear();
                 ((ServerRecipeManagerAccessor)((ServerWorld)world).getRecipeManager()).getPreparedRecipes().getAll(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeEntry::value).forEach(recipe -> {
                     ALL_RECIPES.add(recipe);
                     CRAFTABLE_RECIPES.addAll(recipe.getInnerRecipes(world.getEnabledFeatures()));
                 });
             } else {
-                for (FurnitureRecipe recipe : ALL_RECIPES) {
-                    CRAFTABLE_RECIPES.addAll(recipe.getInnerRecipes(world.getEnabledFeatures()));
-                }
+                CRAFTABLE_RECIPES.clear();
+                ALL_RECIPES.parallelStream().forEach(recipe -> CRAFTABLE_RECIPES.addAll(recipe.getInnerRecipes(world.getEnabledFeatures())));
             }
             sendSyncRecipesPayload(playerInventory.player, world, ALL_RECIPES);
             CRAFTABLE_RECIPES.sort(FurnitureRecipe.CraftableFurnitureRecipe::compareTo);
