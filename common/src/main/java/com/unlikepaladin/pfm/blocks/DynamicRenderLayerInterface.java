@@ -1,5 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.render.RenderLayer;
 
 /**
@@ -7,5 +9,6 @@ import net.minecraft.client.render.RenderLayer;
  * Mostly used when Shaders are enabled to prevent rendering issues.
  **/
 public interface DynamicRenderLayerInterface {
+    @Environment(EnvType.CLIENT)
     RenderLayer getCustomRenderLayer();
 }
