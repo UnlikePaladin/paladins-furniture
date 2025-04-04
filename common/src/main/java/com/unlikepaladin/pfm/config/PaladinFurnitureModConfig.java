@@ -41,7 +41,8 @@ public class PaladinFurnitureModConfig {
             enableBook = new BooleanConfigOption(new TranslatableText("pfm.option.enableBook"), new TranslatableText("pfm.option.enableBook.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
             mobsSitOnChairs = new BooleanConfigOption(new TranslatableText("pfm.option.mobsSitOnChairs"), new TranslatableText("pfm.option.mobsSitOnChairs.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
             renderImmersivePortalsMirrors = new BooleanConfigOption(new TranslatableText("pfm.option.renderImmersivePortalsMirrors"), new TranslatableText("pfm.option.renderImmersivePortalsMirrors.tooltip"), GAMEPLAY_OPTIONS, true, Side.CLIENT),
-            spawnImmersivePortalsMirror  = new BooleanConfigOption(new TranslatableText("pfm.option.spawnImmersivePortalsMirror"), new TranslatableText("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER)
+            spawnImmersivePortalsMirror  = new BooleanConfigOption(new TranslatableText("pfm.option.spawnImmersivePortalsMirror"), new TranslatableText("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
+            disableGeneratingScreen  = new BooleanConfigOption(new TranslatableText("pfm.option.disableGeneratingScreen"), new TranslatableText("pfm.option.disableGeneratingScreen.tooltip"), MOD_OPTIONS, false, Side.CLIENT)
         );
         this.propertiesPath = propertiesPath.resolve("pfm.json");
         this.directoryPath = propertiesPath;
@@ -108,6 +109,9 @@ public class PaladinFurnitureModConfig {
     public boolean doImmersivePortalsMirrorsSpawn() {
         return spawnImmersivePortalsMirror.getValue();
     }
+    public boolean disableGeneratingScreen() {
+        return disableGeneratingScreen.getValue();
+    }
 
     private BooleanConfigOption checkForUpdates;
 
@@ -127,6 +131,7 @@ public class PaladinFurnitureModConfig {
     private BooleanConfigOption mobsSitOnChairs;
     private BooleanConfigOption renderImmersivePortalsMirrors;
     private BooleanConfigOption spawnImmersivePortalsMirror;
+    private BooleanConfigOption disableGeneratingScreen;
 
 
     public Path getPath() {
@@ -165,7 +170,7 @@ public class PaladinFurnitureModConfig {
         mobsSitOnChairs.setValue(getFromJsonElement(config.get("mobsSitOnChairs"), false));
         renderImmersivePortalsMirrors.setValue(getFromJsonElement(config.get("renderImmersivePortalsMirrors"), true));
         spawnImmersivePortalsMirror.setValue(getFromJsonElement(config.get("spawnImmersivePortalsMirror"), true));
-
+        disableGeneratingScreen.setValue(getFromJsonElement(config.get("disableGeneratingScreen"), false));
         for (String key : options.keySet()) {
             if (!config.has(key.replace("pfm.option.", ""))){
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Missing Config Option: " +  key.replace("pfm.option.", "") + ", resetting to default value.");
@@ -216,6 +221,7 @@ public class PaladinFurnitureModConfig {
         mobsSitOnChairs.setValue("true".equals(properties.getProperty("mobsSitOnChairs")));
         renderImmersivePortalsMirrors.setValue("true".equals(properties.getProperty("renderImmersivePortalsMirrors")));
         spawnImmersivePortalsMirror.setValue("true".equals(properties.getProperty("spawnImmersivePortalsMirror")));
+        disableGeneratingScreen.setValue("true".equals(properties.get("disableGeneratingScreen")));
         save();
         Files.delete(legacyConfigFile);
         PaladinFurnitureMod.GENERAL_LOGGER.info("Successfully migrated to new config");
@@ -239,6 +245,7 @@ public class PaladinFurnitureModConfig {
         object.addProperty("mobsSitOnChairs", mobsSitOnChairs.getValue());
         object.addProperty("renderImmersivePortalsMirrors", renderImmersivePortalsMirrors.getValue());
         object.addProperty("spawnImmersivePortalsMirror", spawnImmersivePortalsMirror.getValue());
+        object.addProperty("disableGeneratingScreen", disableGeneratingScreen.getValue());
 
         try (FileWriter writer = new FileWriter(propertiesPath.toString())) {
             GSON.toJson(object, writer);

@@ -24,6 +24,7 @@ public class PFMRuntimeResources {
 
     public static volatile List<ResourcePack> RESOURCE_PACK_LIST;
     public static Map<Identifier, PFMBakedModelContainer> modelCacheMap = new ConcurrentHashMap<>();
+    private static boolean isAnyGeneratorRunning = false;
 
     public static byte[] getImageData() {
         return Base64.getDecoder().decode(base64Icon);
@@ -56,29 +57,34 @@ public class PFMRuntimeResources {
     public static CompletableFuture<Void> prepareAsyncDataGen(boolean logOrDebug) {
         PFMDataGenerator dataGen = new PFMDataGenerator(PFMRuntimeResources.getDataPackDirectory(), logOrDebug);
         return future = CompletableFuture.runAsync(() -> {
+            isAnyGeneratorRunning = true;
             try {
                 dataGen.run();
             } catch (IOException e) {
                 dataGen.getLogger().error("Failed to run data generation {}", e.getMessage());
                 throw new RuntimeException(e);
             }
+            isAnyGeneratorRunning = false;
         });
     }
 
     public static CompletableFuture<Void> prepareAsyncAssetGen(boolean logOrDebug) {
         PFMAssetGenerator dataGen = new PFMAssetGenerator(PFMRuntimeResources.getAssetPackDirectory(), logOrDebug);
         return future = CompletableFuture.runAsync(() -> {
+            isAnyGeneratorRunning = true;
             try {
                 dataGen.run();
             } catch (IOException e) {
                 dataGen.getLogger().error("Failed to run asset generation {}", e.getMessage());
                 throw new RuntimeException(e);
             }
+            isAnyGeneratorRunning = false;
         });
     }
 
     public static boolean ready = false;
     public static void prepareAndRunDataGen(boolean logOrDebug) {
+        isAnyGeneratorRunning = true;
         PFMDataGenerator dataGen = new PFMDataGenerator(PFMRuntimeResources.getDataPackDirectory(), logOrDebug);
         try {
             dataGen.run();
@@ -86,9 +92,11 @@ public class PFMRuntimeResources {
             dataGen.getLogger().error("Failed to run data generation {}", e.getMessage());
             throw new RuntimeException(e);
         }
+        isAnyGeneratorRunning = false;
     }
 
     public static void prepareAndRunAssetGen(boolean logOrDebug) {
+        isAnyGeneratorRunning = true;
         PFMAssetGenerator dataGen = new PFMAssetGenerator(PFMRuntimeResources.getAssetPackDirectory(), logOrDebug);
         try {
             dataGen.run();
@@ -96,10 +104,16 @@ public class PFMRuntimeResources {
             dataGen.getLogger().error("Failed to run asset generation {}", e.getMessage());
             throw new RuntimeException(e);
         }
+        isAnyGeneratorRunning = false;
+
     }
 
     public static void runAsyncResourceGen() {
         if (future != null && !future.isDone())
             future.join();
+    }
+
+    public static boolean isAnyGeneratorRunning() {
+        return isAnyGeneratorRunning;
     }
 }
