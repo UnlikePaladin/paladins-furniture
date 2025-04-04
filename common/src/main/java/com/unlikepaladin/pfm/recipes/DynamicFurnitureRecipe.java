@@ -269,6 +269,18 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         return ingredientList;
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof DynamicFurnitureRecipe that)) return false;
+        return Objects.equals(group, that.group) && furnitureOutput.equals(that.furnitureOutput) && ingredients.equals(that.ingredients);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(group, furnitureOutput, ingredients);
+    }
+
     Map<ItemStack, FurnitureInnerRecipe> outputToInnerRecipe = new HashMap<>();
     Map<Item, FurnitureInnerRecipe> outputItemToInnerRecipe = new HashMap<>();
     public static final class FurnitureInnerRecipe implements CraftableFurnitureRecipe {
@@ -331,6 +343,18 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         public ItemStack getRecipeOuput() {
             return output;
         }
+
+        @Override
+        public boolean equals(Object object) {
+            if (this == object) return true;
+            if (!(object instanceof FurnitureInnerRecipe that)) return false;
+            return Objects.equals(parentRecipe, that.parentRecipe) && ItemStack.areEqual(output, that.output) && Objects.equals(combinedIngredients, that.combinedIngredients);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(parentRecipe, output, combinedIngredients);
+        }
     }
 
     public static class FurnitureOutput {
@@ -383,6 +407,18 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
                 throw new RuntimeException(e);
             }
         }
+
+        @Override
+        public boolean equals(Object object) {
+            if (this == object) return true;
+            if (!(object instanceof FurnitureOutput that)) return false;
+            return outputCount == that.outputCount && Objects.equals(outputClass, that.outputClass) && Objects.equals(components, that.components);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(outputClass, outputCount, components);
+        }
     }
 
     public static final class FurnitureIngredients {
@@ -408,6 +444,18 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         public static void write(RegistryByteBuf buf, FurnitureIngredients ingredients) {
             buf.writeCollection(ingredients.vanillaIngredients, ((packetByteBuf, ingredient) -> Ingredient.PACKET_CODEC.encode((RegistryByteBuf) packetByteBuf, ingredient)));
             buf.writeMap(ingredients.variantChildren, PacketByteBuf::writeString, PacketByteBuf::writeInt);
+        }
+
+        @Override
+        public boolean equals(Object object) {
+            if (this == object) return true;
+            if (!(object instanceof FurnitureIngredients that)) return false;
+            return Objects.equals(vanillaIngredients, that.vanillaIngredients) && Objects.equals(variantChildren, that.variantChildren);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(vanillaIngredients, variantChildren);
         }
     }
 
