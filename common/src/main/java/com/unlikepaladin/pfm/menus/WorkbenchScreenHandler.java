@@ -1,12 +1,16 @@
 package com.unlikepaladin.pfm.menus;
 
 import com.google.common.collect.Lists;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.mixin.ServerRecipeManagerAccessor;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
+import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.CraftingResultInventory;
@@ -22,7 +26,11 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.world.World;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class WorkbenchScreenHandler extends ScreenHandler {
     private final ScreenHandlerContext context;
@@ -86,18 +94,16 @@ public class WorkbenchScreenHandler extends ScreenHandler {
         }
         this.addProperty(this.selectedRecipe);
         if (world instanceof ServerWorld) {
-            if (ALL_RECIPES.isEmpty()) {
+            if (ALL_RECIPES.isEmpty() || CRAFTABLE_RECIPES.isEmpty()) {
+                CRAFTABLE_RECIPES.clear();
+                ALL_RECIPES.clear();
                 ((ServerRecipeManagerAccessor)((ServerWorld)world).getRecipeManager()).getPreparedRecipes().getAll(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeEntry::value).forEach(recipe -> {
                     ALL_RECIPES.add(recipe);
                     CRAFTABLE_RECIPES.addAll(recipe.getInnerRecipes(world.getEnabledFeatures()));
                 });
-            } else {
-                for (FurnitureRecipe recipe : ALL_RECIPES) {
-                    CRAFTABLE_RECIPES.addAll(recipe.getInnerRecipes(world.getEnabledFeatures()));
-                }
+                CRAFTABLE_RECIPES.sort(FurnitureRecipe.CraftableFurnitureRecipe::compareTo);
             }
             sendSyncRecipesPayload(playerInventory.player, world, ALL_RECIPES);
-            CRAFTABLE_RECIPES.sort(FurnitureRecipe.CraftableFurnitureRecipe::compareTo);
         }
         this.updateInput();
         selectedRecipe.set(-1);
@@ -108,9 +114,11 @@ public class WorkbenchScreenHandler extends ScreenHandler {
         throw new AssertionError();
     }
 
-    public void setAllRecipes(World world, List<FurnitureRecipe> recipes) {
-        ALL_RECIPES = new ArrayList<>(recipes);
-        CRAFTABLE_RECIPES = new ArrayList<>();
+    public static void setAllRecipes(World world, List<FurnitureRecipe> recipes) {
+        if (!ALL_RECIPES.isEmpty()) return;
+
+        ALL_RECIPES.addAll(recipes);
+        CRAFTABLE_RECIPES.clear();
         for (FurnitureRecipe recipe : ALL_RECIPES) {
             CRAFTABLE_RECIPES.addAll(recipe.getInnerRecipes(world.getEnabledFeatures()));
         }

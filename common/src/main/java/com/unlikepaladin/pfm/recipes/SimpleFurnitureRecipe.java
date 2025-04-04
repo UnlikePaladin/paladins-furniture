@@ -123,6 +123,18 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
         return Collections.singletonList(this);
     }
 
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof SimpleFurnitureRecipe that)) return false;
+        return Objects.equals(group, that.group) && Objects.equals(output, that.output) && Objects.equals(input, that.input);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(group, output, input);
+    }
+
     public static class Serializer
             implements RecipeSerializer<SimpleFurnitureRecipe> {
 

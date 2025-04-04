@@ -12,10 +12,8 @@ public class ClientSyncRecipesPayloadHandler {
         MinecraftClient client = MinecraftClient.getInstance();
         client.execute(() -> {
             ClientPlayerEntity player = MinecraftClient.getInstance().player;
-            if (player.getWorld() != null && player.currentScreenHandler instanceof WorkbenchScreenHandler) {
-                ((WorkbenchScreenHandler) player.currentScreenHandler).setAllRecipes(player.getWorld(), recipes);
-                ((WorkbenchScreenHandler) player.currentScreenHandler).updateInput();
-            }
+            if (player != null && player.getWorld() != null)
+                WorkbenchScreenHandler.setAllRecipes(player.getWorld(), recipes);
         });
     }
 }
