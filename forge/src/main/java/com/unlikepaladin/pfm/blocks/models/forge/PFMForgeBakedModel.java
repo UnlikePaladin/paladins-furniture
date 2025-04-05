@@ -81,6 +81,8 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             SpriteData sprite = new SpriteData(quad.getSprite());
             Pair<Identifier, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
             if (separatedQuads.containsKey(pair)) {
+                separatedQuads.putIfAbsent(pair, new ArrayList<>());
+
                 if (!separatedQuads.get(pair).contains(quad)) {
                     List<BakedQuad> newQuadList = new ArrayList<>(separatedQuads.get(pair));
                     newQuadList.add(quad);
