@@ -23,24 +23,18 @@ import static com.unlikepaladin.pfm.client.screens.overlay.GLText.GLT_CENTER;
 public class PFMSplashOverlayMixin {
     @Shadow @Final private MinecraftClient client;
     @Unique
-    private final GLText pfm$glText;
+    private GLText pfm$glText;
     @Unique
-    private final GLText.GLTtext pfm$assemblingFurniture;
-
-    public PFMSplashOverlayMixin() {
-        if (!BlockItemRegistry.isModLoaded("vulkanmod")) {
-            this.pfm$glText = new GLText();
-            this.pfm$assemblingFurniture = GLText.gltCreateText();
-        } else {
-            this.pfm$glText = null;
-            this.pfm$assemblingFurniture = null;
-        }
-    }
+    private GLText.GLTtext pfm$assemblingFurniture;
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ResourceReload;getProgress()F"))
     private void onRender(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (PFMRuntimeResources.isAnyGeneratorRunning()) {
             if (!BlockItemRegistry.isModLoaded("vulkanmod")) {
+                if (pfm$glText == null || this.pfm$assemblingFurniture == null) {
+                    this.pfm$glText = new GLText();
+                    this.pfm$assemblingFurniture = GLText.gltCreateText();
+                }
                 pfm$glText.gltViewport(this.client.getWindow().getFramebufferWidth(), this.client.getWindow().getFramebufferHeight());
 
                 try (Closeable ignored1 = pfm$glText.gltBeginDraw()) {
