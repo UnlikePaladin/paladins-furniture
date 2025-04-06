@@ -116,11 +116,6 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public boolean isBuiltin() {
-        return true;
-    }
-
-    @Override
     public Sprite getParticleIcon(@NotNull ModelData data) {
         if (data != null && data.has(VARIANT)) {
             return getVariantStrippedLogSprite(data.get(VARIANT)).get(0);
