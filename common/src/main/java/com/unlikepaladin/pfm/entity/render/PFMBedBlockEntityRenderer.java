@@ -21,6 +21,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.block.entity.LightmapCoordinatesRetriever;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3f;
 import net.minecraft.world.World;
@@ -58,8 +59,8 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
 
     @Override
     public void render(PFMBedBlockEntity bedBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
-        SpriteIdentifier spriteIdentifier = TexturedRenderLayers.BED_TEXTURES[bedBlockEntity.getColor().getId()];
-        World world2 = bedBlockEntity.getWorld();
+        SpriteIdentifier spriteIdentifier = bedBlockEntity != null ? TexturedRenderLayers.BED_TEXTURES[bedBlockEntity.getColor().getId()] : TexturedRenderLayers.BED_TEXTURES[DyeColor.WHITE.getId()];
+        World world2 = bedBlockEntity != null ? bedBlockEntity.getWorld() :  null;
         if (world2 != null) {
             BlockState blockState = bedBlockEntity.getCachedState();
             DoubleBlockProperties.PropertySource<BedBlockEntity> propertySource = DoubleBlockProperties.toPropertySource(BlockEntityType.BED, BedBlock::getBedPart, BedBlock::getOppositePartDirection, ChestBlock.FACING, blockState, world2, bedBlockEntity.getPos(), (world, pos) -> false);
