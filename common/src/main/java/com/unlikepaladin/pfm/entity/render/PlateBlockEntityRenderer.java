@@ -23,34 +23,36 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> extends BlockE
     }
     @Override
     public void render(PlateBlockEntity plateBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
-        Direction direction = plateBlockEntity.getCachedState().get(PlateBlock.FACING);
-        itemStack = plateBlockEntity.getItemInPlate();
-        matrices.push();
-        Direction direction2 = Direction.fromHorizontal((direction.getHorizontal()) % 4);
-        float g = -direction2.asRotation();
-        Direction dir = plateBlockEntity.getCachedState().get(PlateBlock.FACING);
-        if (dir == Direction.NORTH) {
-            matrices.translate(0.5, 0.08, 0.65);
-        }
-        else if (dir == Direction.SOUTH) {
-            matrices.translate(0.5, 0.08, 0.35);
-        }
-        else if (dir == Direction.WEST) {
-            matrices.translate(0.65, 0.08, 0.5);
-        }
-        else {
-            matrices.translate(0.35, 0.08, 0.5);
-        }
+        if (plateBlockEntity instanceof PlateBlockEntity) {
+            Direction direction = plateBlockEntity.getCachedState().get(PlateBlock.FACING);
+            itemStack = plateBlockEntity.getItemInPlate();
+            matrices.push();
+            Direction direction2 = Direction.fromHorizontal((direction.getHorizontal()) % 4);
+            float g = -direction2.asRotation();
+            Direction dir = plateBlockEntity.getCachedState().get(PlateBlock.FACING);
+            if (dir == Direction.NORTH) {
+                matrices.translate(0.5, 0.08, 0.65);
+            }
+            else if (dir == Direction.SOUTH) {
+                matrices.translate(0.5, 0.08, 0.35);
+            }
+            else if (dir == Direction.WEST) {
+                matrices.translate(0.65, 0.08, 0.5);
+            }
+            else {
+                matrices.translate(0.35, 0.08, 0.5);
+            }
 
-        int rot = 90;
-        matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(g));
-        matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(rot));
-        if (Registry.ITEM.getId(itemStack.getItem()).toString().equals("sandwichable:sandwich")) {
-            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270.0f));
-            matrices.translate(0.0, 0.11, 0.05);
+            int rot = 90;
+            matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(g));
+            matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(rot));
+            if (Registry.ITEM.getId(itemStack.getItem()).toString().equals("sandwichable:sandwich")) {
+                matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(270.0f));
+                matrices.translate(0.0, 0.11, 0.05);
+            }
+            int lightAbove = WorldRenderer.getLightmapCoordinates(plateBlockEntity.getWorld(), plateBlockEntity.getPos().up());
+            MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumerProvider);
+            matrices.pop();
         }
-        int lightAbove = WorldRenderer.getLightmapCoordinates(plateBlockEntity.getWorld(), plateBlockEntity.getPos().up());
-        MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumerProvider);
-        matrices.pop();
     }
 }

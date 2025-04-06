@@ -7,12 +7,16 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.client.forge.PFMBakedModelGetQuadsExtension;
 import com.unlikepaladin.pfm.mixin.PFMSpriteAccessor;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderLayers;
 import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.json.ModelOverrideList;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -84,6 +88,8 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             SpriteData sprite = new SpriteData(quad.func_187508_a());
             Pair<Identifier, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
             if (separatedQuads.containsKey(pair)) {
+                separatedQuads.putIfAbsent(pair, new ArrayList<>());
+
                 if (!separatedQuads.get(pair).contains(quad)) {
                     List<BakedQuad> newQuadList = new ArrayList<>(separatedQuads.get(pair));
                     newQuadList.add(quad);
@@ -197,7 +203,23 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         builder.withProperty(STATE);
     }
 
+    @Override
+    public List<Pair<BakedModel, RenderLayer>> getLayerModels(ItemStack itemStack, boolean fabulous) {
+        BlockState state = itemStack.getItem() instanceof BlockItem ? ((BlockItem) itemStack.getItem()).getBlock().getDefaultState() : null;
+        Map<Direction, List<BakedQuad>> map = new HashMap<>();
+        Random random = new Random(1);
+        for (Direction direction : Direction.values()) {
+            map.put(direction, getQuadsCached(itemStack, state, direction, random));
+        }
+        map.put(null, getQuadsCached(itemStack, state, null, random));
+        PFMCachingBakedModel cachingBakedModel = new PFMCachingBakedModel(map, getSprite());
+        return Collections.singletonList(Pair.of(cachingBakedModel, RenderLayers.getItemLayer(itemStack, fabulous)));
+    }
 
+    @Override
+    public boolean isLayered() {
+        return true;
+    }
 
     public static class SpriteData {
         float minU, maxU, minV, maxV;
@@ -233,5 +255,72 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         public int hashCode() {
             return Objects.hash(minU, maxU, minV, maxV, x, y, id);
         }
+    }
+
+    public static final class PFMCachingBakedModel implements BakedModel {
+        private final Map<Direction, List<BakedQuad>> transformedQuads;
+        private final Sprite particleSprite;
+
+        public PFMCachingBakedModel(Map<Direction, List<BakedQuad>> transformedQuads, Sprite particleSprite) {
+            this.transformedQuads = transformedQuads;
+            this.particleSprite = particleSprite;
+        }
+
+        @Override
+        public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
+            return transformedQuads.get(face);
+        }
+
+        @Override
+        public boolean useAmbientOcclusion() {
+            return true;
+        }
+
+        @Override
+        public boolean hasDepth() {
+            return true;
+        }
+
+        @Override
+        public boolean isSideLit() {
+            return true;
+        }
+
+        @Override
+        public boolean isBuiltin() {
+            return false;
+        }
+
+        @Override
+        public Sprite getSprite() {
+            return particleSprite;
+        }
+
+        @Override
+        public ModelOverrideList getOverrides() {
+            return ModelOverrideList.EMPTY;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            PFMCachingBakedModel that = (PFMCachingBakedModel) obj;
+            return Objects.equals(this.transformedQuads, that.transformedQuads) &&
+                    Objects.equals(this.particleSprite, that.particleSprite);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(transformedQuads, particleSprite);
+        }
+
+        @Override
+        public String toString() {
+            return "PFMCachingBakedModel[" +
+                    "transformedQuads=" + transformedQuads + ", " +
+                    "particleSprite=" + particleSprite + ']';
+        }
+
     }
 }

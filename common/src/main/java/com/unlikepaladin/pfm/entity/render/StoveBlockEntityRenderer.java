@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.entity.render;
 
 import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
+import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -19,7 +20,7 @@ import net.minecraft.util.math.Vec3f;
 @Environment(value= EnvType.CLIENT)
 public class StoveBlockEntityRenderer<T extends BlockEntity>
         extends BlockEntityRenderer<T> {
-    private static final float SCALE = 0.375f;
+    private static final float SCALE = 0.4f;
     public StoveBlockEntityRenderer(BlockEntityRenderDispatcher ctx) {
         super(ctx);
     }
@@ -57,7 +58,7 @@ public class StoveBlockEntityRenderer<T extends BlockEntity>
                 matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rot));
                 matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90.0f));
                 matrices.translate(-0.16, -0.16, 0.0);
-                matrices.scale(0.4f, 0.4f, 0.4f);
+                matrices.scale(SCALE, SCALE, SCALE);
                 MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, i, j, matrices, vertexConsumerProvider);
                 matrices.pop();
             }

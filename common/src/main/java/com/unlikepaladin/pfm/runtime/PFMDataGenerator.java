@@ -4,6 +4,8 @@ import com.google.common.base.Stopwatch;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
+import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMLootTableProvider;
@@ -77,7 +79,7 @@ public class PFMDataGenerator extends PFMGenerator {
                 providers.add(metaProvider);
                 this.setTotalCount(providers.size());
 
-                if (PaladinFurnitureMod.isClient)
+                if (PaladinFurnitureMod.isClient && !PaladinFurnitureMod.getPFMConfig().disableGeneratingScreen())
                     ClientOverlaySetter.setOverlayToPFMOverlay(this);
                 boolean allDone = false;
 

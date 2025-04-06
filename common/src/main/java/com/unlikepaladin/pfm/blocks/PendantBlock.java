@@ -1,5 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -156,6 +158,7 @@ public class PendantBlock extends PowerableBlock implements DynamicRenderLayerIn
         return false;
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public RenderLayer getCustomRenderLayer() {
         return RenderLayer.getTranslucent();

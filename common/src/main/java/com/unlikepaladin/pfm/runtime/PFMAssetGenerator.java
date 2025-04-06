@@ -81,7 +81,7 @@ public class PFMAssetGenerator extends PFMGenerator {
                 providers.add(new PFMLangProvider(this));
                 this.setTotalCount(providers.size());
 
-                if (PaladinFurnitureMod.isClient)
+                if (PaladinFurnitureMod.isClient && !PaladinFurnitureMod.getPFMConfig().disableGeneratingScreen())
                     ClientOverlaySetter.setOverlayToPFMOverlay(this);
                 boolean allDone = false;
 

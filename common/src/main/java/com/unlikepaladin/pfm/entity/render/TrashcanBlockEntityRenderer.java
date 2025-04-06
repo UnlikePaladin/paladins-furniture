@@ -25,7 +25,7 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> extends 
 
     @Override
     public void render(T trashcanBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
-        if (!(trashcanBlockEntity.getCachedState().getBlock() instanceof TrashcanBlock)) {
+        if (!(trashcanBlockEntity.getCachedState().getBlock() instanceof TrashcanBlock) && trashcanBlockEntity instanceof TrashcanBlockEntity) {
             for (int i = 0; i < 9; i++)
             {
                 Direction direction = trashcanBlockEntity.getCachedState().get(InnerTrashcanBlock.FACING);
@@ -73,7 +73,7 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> extends 
                 }
                 if (!(itemStack.getItem() instanceof BlockItem)) {
                     matrices.translate(0.0, 0.0, 0.1);
-                } else if (Registry.ITEM.getId(itemStack.getItem()).getNamespace().contains("pfm")) {
+                } else if (Registry.ITEM.getId(itemStack.getItem()).getNamespace().equals("pfm")) {
                     matrices.translate(0.0, 0.0, 0.15);
                 }
                 int rot = 90;
