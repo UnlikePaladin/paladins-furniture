@@ -33,7 +33,7 @@ public class UnbakedBasicLampModel implements UnbakedModel {
     };
 
     public static Identifier getItemModelId() {
-        return PaladinFurnitureMod.getLoader() == PaladinFurnitureMod.Loader.FORGE ? new Identifier("builtin/entity") : LAMP_MODEL_IDS.get(1);
+        return LAMP_MODEL_IDS.get(1);
     }
 
     public static final List<String> MODEL_PARTS_BASE = new ArrayList<>() {{
