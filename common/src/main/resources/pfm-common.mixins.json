@@ -22,7 +22,8 @@
     "PFMLanguageManagerAccessor",
     "PFMMinecraftClientAcccessor",
     "PFMMixinClientPacketListener",
-    "PFMReloadableResourceManagerImplMixin"
+    "PFMReloadableResourceManagerImplMixin",
+    "PFMSplashOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1

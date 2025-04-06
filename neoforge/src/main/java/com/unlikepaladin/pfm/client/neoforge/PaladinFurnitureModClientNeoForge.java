@@ -186,15 +186,4 @@ public class PaladinFurnitureModClientNeoForge {
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(model -> event.register(ModelIdentifier.standalone(model)));
     }
 
-    @SubscribeEvent
-    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        event.registerItem(new IClientItemExtensions() {
-               @Override
-               public BuiltinModelItemRenderer getCustomRenderer() {
-                   return PFMItemRenderer.INSTANCE;
-               }
-           },
-            PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM
-        );
-    }
 }

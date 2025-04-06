@@ -39,7 +39,7 @@ public class ColorRegistry {
                     return color.getMapColor().color;
                 }
             } else if (entity != null && tintIndex == 0) {
-                if (getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()) != null) {
+                if (entity instanceof LampBlockEntity && getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()) != null) {
                     return getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()).getColor(state, world, pos, tintIndex);
                 }
             }

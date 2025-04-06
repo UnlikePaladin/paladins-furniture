@@ -6,6 +6,8 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -182,6 +184,7 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
         return false;
     }
 
+    @Environment(EnvType.CLIENT)
     @Override
     public RenderLayer getCustomRenderLayer() {
         return RenderLayer.getTranslucent();

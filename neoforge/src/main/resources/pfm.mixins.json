@@ -7,7 +7,6 @@
     "BlockColorsAccessor",
     "HandledScreensAccessor",
     "ItemColorsAccessor",
-    "ItemRendererMixin",
     "PFMReferencedModelsCollectorMixin",
     "PFMRenderLayersNeoForgeMixin"
   ],
