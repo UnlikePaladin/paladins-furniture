@@ -2,15 +2,18 @@ package com.unlikepaladin.pfm.runtime;
 
 import com.unlikepaladin.pfm.client.screens.overlay.PFMGeneratingOverlay;
 import com.unlikepaladin.pfm.mixin.PFMMinecraftClientAcccessor;
+import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.InactivityFpsLimiter;
 import net.minecraft.client.render.RenderTickCounter;
 
 public class ClientOverlaySetter {
     public static void setOverlayToPFMOverlay(PFMResourceProgress resourceProgress) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        PFMGeneratingOverlay overlay = new PFMGeneratingOverlay(client.getOverlay(), resourceProgress, client, true);
-        client.setOverlay(overlay);
+        if (!BlockItemRegistry.isModLoaded("vulkanmod")) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            PFMGeneratingOverlay overlay = new PFMGeneratingOverlay(client.getOverlay(), resourceProgress, client, true);
+            client.setOverlay(overlay);
+        }
     }
 
     public static void updateScreen() {

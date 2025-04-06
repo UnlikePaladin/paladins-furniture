@@ -28,7 +28,8 @@
     "PFMMixinClientPacketListener",
     "PFMReloadableResourceManagerImplMixin",
     "RangeDispatchItemModelAccessor",
-    "SelectItemModelAccessor"
+    "SelectItemModelAccessor",
+    "PFMSplashOverlayMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -181,4 +181,5 @@ public class PaladinFurnitureModClientNeoForge {
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(event::register);
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(event::register);
     }
+
 }

@@ -29,37 +29,38 @@ public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
 
     @Override
     public void render(StovetopBlockEntity stovetopBlockEntity, float f, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
-        Direction direction = stovetopBlockEntity.getCachedState().get(KitchenStovetopBlock.FACING);
-        DefaultedList<ItemStack> itemList = stovetopBlockEntity.getItemsBeingCooked();
-        int k = (int)stovetopBlockEntity.getPos().asLong();
-        for (int l = 0; l < itemList.size(); ++l) {
-            ItemStack itemStack = itemList.get(l);
-            if (itemStack == ItemStack.EMPTY) continue;
-            matrices.push();
-            Direction direction2 = Direction.fromHorizontalQuarterTurns((l + direction.getHorizontalQuarterTurns()) % 4);
-            float g = -direction2.getPositiveHorizontalDegrees();
-            int rot = 45;
-            switch(direction) {
-                case NORTH:
-                    matrices.translate(0.5, 0.08, 0.45);
-                    break;
-                case SOUTH:
-                    matrices.translate(0.5, 0.08, 0.55);
-                    break;
-                case WEST:
-                    matrices.translate(0.45, 0.08, 0.5);
-                    break;
-                case EAST:
-                    matrices.translate(0.55, 0.08, 0.5);
+        if (stovetopBlockEntity instanceof StovetopBlockEntity) {
+            Direction direction = stovetopBlockEntity.getCachedState().get(KitchenStovetopBlock.FACING);
+            DefaultedList<ItemStack> itemList = stovetopBlockEntity.getItemsBeingCooked();
+            int k = (int)stovetopBlockEntity.getPos().asLong();
+            for (int l = 0; l < itemList.size(); ++l) {
+                ItemStack itemStack = itemList.get(l);
+                if (itemStack == ItemStack.EMPTY) continue;
+                matrices.push();
+                Direction direction2 = Direction.fromHorizontalQuarterTurns((l + direction.getHorizontalQuarterTurns()) % 4);
+                float g = -direction2.getPositiveHorizontalDegrees();
+                int rot = 180;
+                switch (direction) {
+                    case NORTH:
+                        matrices.translate(0.5, 0.08, 0.45);
+                        break;
+                    case SOUTH:
+                        matrices.translate(0.5, 0.08, 0.55);
+                        break;
+                    case WEST:
+                        matrices.translate(0.45, 0.08, 0.5);
+                        break;
+                    case EAST:
+                        matrices.translate(0.55, 0.08, 0.5);
+                }
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(g));
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rot));
+                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0f));
+                matrices.translate(-0.1625, -0.1625, 0.0);
+                matrices.scale(0.355f, 0.355f, 0.355f);
+                this.itemRenderer.renderItem(itemStack, ModelTransformationMode.FIXED, i, j, matrices, vertexConsumerProvider,stovetopBlockEntity.getWorld(), k + l);
+                matrices.pop();
             }
-            rot = 180;
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(g));
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(rot));
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0f));
-            matrices.translate(-0.1625, -0.1625, 0.0);
-            matrices.scale(0.355f, 0.355f, 0.355f);
-            this.itemRenderer.renderItem(itemStack, ModelTransformationMode.FIXED, i, j, matrices, vertexConsumerProvider,stovetopBlockEntity.getWorld(), k + l);
-            matrices.pop();
         }
     }
 }

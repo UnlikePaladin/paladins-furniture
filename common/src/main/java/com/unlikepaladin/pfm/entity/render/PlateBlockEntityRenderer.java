@@ -26,27 +26,29 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
     }
     @Override
     public void render(PlateBlockEntity plateBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
-        Direction direction = plateBlockEntity.getCachedState().get(PlateBlock.FACING);
-        itemStack = plateBlockEntity.getItemInPlate();
-        matrices.push();
-        Direction direction2 = Direction.fromHorizontalQuarterTurns((direction.getHorizontalQuarterTurns()) % 4);
-        float g = -direction2.getPositiveHorizontalDegrees();
-        Direction dir = plateBlockEntity.getCachedState().get(PlateBlock.FACING);
-        switch (dir) {
-            case NORTH -> matrices.translate(0.5, 0.08, 0.65);
-            case SOUTH -> matrices.translate(0.5, 0.08, 0.35);
-            case WEST -> matrices.translate(0.65, 0.08, 0.5);
-            case EAST -> matrices.translate(0.35, 0.08, 0.5);
+        if (plateBlockEntity instanceof PlateBlockEntity) {
+            Direction direction = plateBlockEntity.getCachedState().get(PlateBlock.FACING);
+            itemStack = plateBlockEntity.getItemInPlate();
+            matrices.push();
+            Direction direction2 = Direction.fromHorizontalQuarterTurns((direction.getHorizontalQuarterTurns()) % 4);
+            float g = -direction2.getPositiveHorizontalDegrees();
+            Direction dir = plateBlockEntity.getCachedState().get(PlateBlock.FACING);
+            switch (dir) {
+                case NORTH -> matrices.translate(0.5, 0.08, 0.65);
+                case SOUTH -> matrices.translate(0.5, 0.08, 0.35);
+                case WEST -> matrices.translate(0.65, 0.08, 0.5);
+                case EAST -> matrices.translate(0.35, 0.08, 0.5);
+            }
+            int rot = 90;
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(g));
+            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rot));
+            if (Registries.ITEM.getId(itemStack.getItem()).toString().equals("sandwichable:sandwich")) {
+                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(270.0f));
+                matrices.translate(0.0, 0.11, 0.05);
+            }
+            int lightAbove = WorldRenderer.getLightmapCoordinates(plateBlockEntity.getWorld(), plateBlockEntity.getPos().up());
+            this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumerProvider, plateBlockEntity.getWorld(),0);
+            matrices.pop();
         }
-        int rot = 90;
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(g));
-        matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rot));
-        if (Registries.ITEM.getId(itemStack.getItem()).toString().equals("sandwichable:sandwich")) {
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(270.0f));
-            matrices.translate(0.0, 0.11, 0.05);
-        }
-        int lightAbove = WorldRenderer.getLightmapCoordinates(plateBlockEntity.getWorld(), plateBlockEntity.getPos().up());
-        this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumerProvider, plateBlockEntity.getWorld(),0);
-        matrices.pop();
     }
 }
