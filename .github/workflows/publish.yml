@@ -39,7 +39,7 @@ jobs:
         run: echo "MINECRAFT_VERSION=${GITHUB_REF_NAME#architectury-}" >> $GITHUB_ENV
 
       - name: Extract Mod Version from Gradle Properties
-        uses: BrycensRanch/read-properties-action@latest
+        uses: BrycensRanch/read-properties-action@v1.0.4
         id: mod_version
         with:
           file: gradle.properties
