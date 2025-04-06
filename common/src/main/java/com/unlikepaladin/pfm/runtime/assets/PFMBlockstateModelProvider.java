@@ -63,14 +63,16 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             enqueueJsonWrite(getWriteQueue(), jsonPath, jsonContent);
         };
 
-        HashMap<Identifier, Supplier<JsonElement>> models = Maps.newHashMap();
+        Set<Identifier> models = new HashSet<>();
         new PFMBlockStateModelGenerator(this, blockStateSupplierConsumer, identifierSupplierBiConsumer).registerModelsAndStates();
         modelPathMap.keySet().forEach(block -> {
             Item item = Item.BLOCK_ITEMS.get(block);
             if (item != null) {
                 Identifier identifier = ModelIds.getItemModelId(item);
-                if (!models.containsKey(identifier)) {
-                    models.put(identifier, new SimpleModelSupplier(modelPathMap.get(block)));
+                if (!models.contains(identifier)) {
+                    Path jsonPath = getModelJsonPath(path, identifier);
+                    enqueueJsonWrite(getWriteQueue(), jsonPath, new SimpleModelSupplier(modelPathMap.get(block)).get());
+                    models.add(identifier);
                 }
             }
         });

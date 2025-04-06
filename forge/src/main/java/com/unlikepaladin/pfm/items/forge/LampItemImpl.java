@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.items.forge;
 
-import com.unlikepaladin.pfm.client.forge.PFMItemRenderer;
 import com.unlikepaladin.pfm.items.LampItem;
 import net.minecraft.block.Block;
 import net.minecraft.item.BlockItem;
@@ -14,6 +13,6 @@ public class LampItemImpl extends LampItem {
     }
 
     public static BlockItem getItemFactory(Block block, Settings settings) {
-        return new LampItemImpl(block, settings.setISTER(() -> PFMItemRenderer::new));
+        return new LampItemImpl(block, settings);
     }
 }
