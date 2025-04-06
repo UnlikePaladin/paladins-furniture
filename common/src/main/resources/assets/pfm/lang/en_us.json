@@ -243,6 +243,8 @@
   "pfm.option.spawnImmersivePortalsMirror.tooltip": "If true the mod's mirrors work if immersive portals is present, if the server sets this to false, it won't work for the players.",
   "pfm.option.renderImmersivePortalsMirrors": "Immersive Portals Mirror Rendering",
   "pfm.option.renderImmersivePortalsMirrors.tooltip": "If true mirrors will render if immersive portals is installed.",
+  "pfm.option.disableGeneratingScreen": "Disable Paladin's Furniture Overlay",
+  "pfm.option.disableGeneratingScreen.tooltip": "If true, this will disable the PFM overlay when assets or data are being generated.",
 
   "pfm.config.title": "Paladin's Furniture Mod Config",
   "pfm.option.resetAll": "Reset All Options",

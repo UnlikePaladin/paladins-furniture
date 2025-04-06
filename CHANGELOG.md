@@ -1,3 +1,20 @@
+#### PFM 1.4.2 Changes and Fixes:
+
+- Fix microwave crashing the server in multiplayer in 1.20.6+
+- Fix crash wth axiom and the lamp block
+- Add missing check for wood variants
+- Add a config to disable the data/asset generation screen
+- Use Forge API rather than a mixin to get custom item quads
+- Fix a highly unlikely crash on forge
+- Add Missing @Environment to render layer related methods, fixes server issues
+- Fix a severe recipe desync on Multiplayer on 1.21.3+
+- Fix the mod crashing on 1.21.3+ Servers
+- Fix the mod crashing on 1.21.3+ Forge
+- Hoppers can now extract glass bottles from the freezer
+
+#### PFM 1.4.1 Changes and Fixes:
+- 1.21.1 exclusive, added a config to disable the generating screen
+
 #### PFM 1.4 Changes and Fixes:
 
 - Add a new Basic Desk and Basic Desk Cabinet
