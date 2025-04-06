@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.runtime;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.client.screens.overlay.PFMGeneratingOverlay;
+import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Util;
@@ -9,9 +10,11 @@ import org.joml.Matrix4fStack;
 
 public class ClientOverlaySetter {
     public static void setOverlayToPFMOverlay(PFMResourceProgress resourceProgress) {
-        MinecraftClient client = MinecraftClient.getInstance();
-        PFMGeneratingOverlay overlay = new PFMGeneratingOverlay(client.getOverlay(), resourceProgress, client, true);
-        client.setOverlay(overlay);
+        if (!BlockItemRegistry.isModLoaded("vulkanmod")) {
+            MinecraftClient client = MinecraftClient.getInstance();
+            PFMGeneratingOverlay overlay = new PFMGeneratingOverlay(client.getOverlay(), resourceProgress, client, true);
+            client.setOverlay(overlay);
+        }
     }
 
     public static void updateScreen() {
