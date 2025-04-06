@@ -6,7 +6,6 @@ env:
   MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
   CURSEFORGE_TOKEN: ${{ secrets.CURSEFORGE_TOKEN  }}
   GITHUB_TOKEN: ${{ secrets.PB_GITHUB_TOKEN }}
-  MOD_VERSION: 1.4
 permissions:
   contents: write
 
@@ -39,6 +38,14 @@ jobs:
       - name: Extract Minecraft Version from Branch
         run: echo "MINECRAFT_VERSION=${GITHUB_REF_NAME#architectury-}" >> $GITHUB_ENV
 
+      - name: Extract Mod Version from Gradle Properties
+        uses: madhead/read-java-properties@latest
+        id: mod_version
+        with:
+          file: gradle.properties
+          property: mod_version
+          default: 1.4
+
       - name: Publish (CurseForge/Modrinth) - Forge
         uses: Kir-Antipov/mc-publish@v3.3
         with:
@@ -48,8 +55,8 @@ jobs:
           modrinth-id: SISz7Qd3
           modrinth-token: "${{env.MODRINTH_TOKEN}}"
 
-          name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - Forge"
-          version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}-minecraftforge"
+          name: "Paladin's Furniture Mod ${{steps.mod_version.outputs.value}} for Minecraft ${{env.MINECRAFT_VERSION}} - Forge"
+          version: "${{env.MINECRAFT_VERSION}}-v${{steps.mod_version.outputs.value}}-minecraftforge"
           version-type: release
           changelog-file: CHANGELOG.md
 
@@ -66,8 +73,8 @@ jobs:
           modrinth-id: SISz7Qd3
           modrinth-token: "${{env.MODRINTH_TOKEN}}"
 
-          name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - Fabric"
-          version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}-fabric"
+          name: "Paladin's Furniture Mod ${{steps.mod_version.outputs.value}} for Minecraft ${{env.MINECRAFT_VERSION}} - Fabric"
+          version: "${{env.MINECRAFT_VERSION}}-v${{steps.mod_version.outputs.value}}-fabric"
           version-type: release
           changelog-file: CHANGELOG.md
 
@@ -86,8 +93,8 @@ jobs:
           modrinth-id: SISz7Qd3
           modrinth-token: "${{env.MODRINTH_TOKEN}}"
 
-          name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}} - NeoForge"
-          version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}-neoforge"
+          name: "Paladin's Furniture Mod ${{steps.mod_version.outputs.value}} for Minecraft ${{env.MINECRAFT_VERSION}} - NeoForge"
+          version: "${{env.MINECRAFT_VERSION}}-v${{steps.mod_version.outputs.value}}-neoforge"
           version-type: release
           changelog-file: CHANGELOG.md
 
@@ -99,11 +106,11 @@ jobs:
       - name: Publish (GitHub) - All Loaders
         uses: Kir-Antipov/mc-publish@v3.3
         with:
-          github-tag: "v${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
+          github-tag: "v${{env.MINECRAFT_VERSION}}-v${{steps.mod_version.outputs.value}}"
           github-token: "${{env.GITHUB_TOKEN}}"
 
-          name: "Paladin's Furniture Mod ${{env.MOD_VERSION}} for Minecraft ${{env.MINECRAFT_VERSION}}"
-          version: "${{env.MINECRAFT_VERSION}}-v${{env.MOD_VERSION}}"
+          name: "Paladin's Furniture Mod ${{steps.mod_version.outputs.value}} for Minecraft ${{env.MINECRAFT_VERSION}}"
+          version: "${{env.MINECRAFT_VERSION}}-v${{steps.mod_version.outputs.value}}"
           version-type: release
           changelog-file: CHANGELOG.md
 

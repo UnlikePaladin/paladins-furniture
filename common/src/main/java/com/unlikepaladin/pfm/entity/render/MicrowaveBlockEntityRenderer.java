@@ -27,41 +27,43 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
 
     @Override
     public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        itemStack = blockEntity.getStack(0);
-        matrices.push();
-        int lightAbove = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up());
-        Direction facing = blockEntity.getFacing();
-        float x,y,z;
-        switch (facing) {
-            case NORTH -> {
-                x = 0.625f;
-                y = 0.25f;
-                z = 0.57f;
+        if (blockEntity instanceof MicrowaveBlockEntity) {
+            itemStack = blockEntity.getStack(0);
+            matrices.push();
+            int lightAbove = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up());
+            Direction facing = blockEntity.getFacing();
+            float x,y,z;
+            switch (facing) {
+                case NORTH -> {
+                    x = 0.625f;
+                    y = 0.25f;
+                    z = 0.57f;
+                }
+                case SOUTH -> {
+                    x = 0.375f;
+                    y = 0.25f;
+                    z = 0.43f;
+                }
+                case WEST -> {
+                    x = 0.57f;
+                    y = 0.25f;
+                    z = 0.375f;
+                }
+                case EAST -> {
+                    x = 0.43f;
+                    y = 0.25f;
+                    z = 0.625f;
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + facing);
             }
-            case SOUTH -> {
-                x = 0.375f;
-                y = 0.25f;
-                z = 0.43f;
-            }
-            case WEST -> {
-                x = 0.57f;
-                y = 0.25f;
-                z = 0.375f;
-            }
-            case EAST -> {
-                x = 0.43f;
-                y = 0.25f;
-                z = 0.625f;
-            }
-            default -> throw new IllegalStateException("Unexpected value: " + facing);
+            matrices.translate(x, y ,z);
+            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-facing.asRotation()));
+            if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getWorld().getRegistryManager(),blockEntity.getRecipe(), blockEntity.inventory, blockEntity.getMaxCountPerStack())) {
+                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((blockEntity.getWorld().getTime() + tickDelta) * 4));}
+            matrices.scale(0.5f, 0.5f, 0.5f);
+            this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getWorld(), 0);
+            matrices.pop();
         }
-        matrices.translate(x, y ,z);
-        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-facing.asRotation()));
-        if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getWorld().getRegistryManager(),blockEntity.getRecipe(), blockEntity.inventory ,blockEntity.getMaxCountPerStack())) {
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((blockEntity.getWorld().getTime() + tickDelta) * 4));}
-        matrices.scale(0.5f, 0.5f, 0.5f);
-        this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getWorld(), 0);
-        matrices.pop();
     }
 
 
