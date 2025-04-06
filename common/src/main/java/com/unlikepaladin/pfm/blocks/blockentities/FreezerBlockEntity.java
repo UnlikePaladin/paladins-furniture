@@ -224,7 +224,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     @Override
     public boolean canExtract(int slot, ItemStack stack, Direction dir) {
         if (dir == Direction.DOWN && slot != 2) {
-            return stack.isOf(Items.BUCKET);
+            return stack.isOf(Items.BUCKET) || stack.isOf(Items.GLASS_BOTTLE);
         }
         return true;
     }
