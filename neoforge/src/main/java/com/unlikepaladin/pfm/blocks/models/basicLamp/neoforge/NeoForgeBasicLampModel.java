@@ -114,11 +114,6 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
     }
 
     @Override
-    public boolean isBuiltin() {
-        return true;
-    }
-
-    @Override
     public Sprite getParticleIcon(@NotNull ModelData data) {
         if (data != null && data.has(VARIANT)) {
             return getVariantStrippedLogSprite(data.get(VARIANT)).get(0);
