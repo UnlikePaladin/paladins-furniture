@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.items.forge;
 
-import com.unlikepaladin.pfm.client.forge.PFMItemRenderer;
 import com.unlikepaladin.pfm.items.LampItem;
 import net.minecraft.block.Block;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
@@ -16,17 +15,5 @@ public class LampItemImpl extends LampItem {
 
     public static BlockItem getItemFactory(Block block, Settings settings) {
         return new LampItemImpl(block, settings);
-    }
-
-
-    @Override
-    public void initializeClient(Consumer<IItemRenderProperties> consumer) {
-        consumer.accept(new IItemRenderProperties() {
-
-            @Override
-            public BuiltinModelItemRenderer getItemStackRenderer() {
-                return PFMItemRenderer.INSTANCE;
-            }
-        });
     }
 }
