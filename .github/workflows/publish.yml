@@ -22,15 +22,15 @@ jobs:
         with:
           submodules: true
 
-      - name: Validate Gradle wrapper
-        uses: gradle/actions/setup-gradle@v4
-
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
           java-version: 21
           check-latest: true
+
+      - name: Validate Gradle wrapper
+        uses: gradle/actions/setup-gradle@v4
 
       - name: Build
         run: ./gradlew clean build
@@ -39,7 +39,7 @@ jobs:
         run: echo "MINECRAFT_VERSION=${GITHUB_REF_NAME#architectury-}" >> $GITHUB_ENV
 
       - name: Extract Mod Version from Gradle Properties
-        uses: madhead/read-java-properties@latest
+        uses: BrycensRanch/read-properties-action@latest
         id: mod_version
         with:
           file: gradle.properties
@@ -55,8 +55,8 @@ jobs:
           modrinth-id: SISz7Qd3
           modrinth-token: "${{env.MODRINTH_TOKEN}}"
 
-          name: "Paladin's Furniture Mod ${{steps.mod_version.outputs.value}} for Minecraft ${{env.MINECRAFT_VERSION}} - Forge"
-          version: "${{env.MINECRAFT_VERSION}}-v${{steps.mod_version.outputs.value}}-minecraftforge"
+          name: "Paladin's Furniture Mod ${{steps.mod_version.outputs.mod_version}} for Minecraft ${{env.MINECRAFT_VERSION}} - Forge"
+          version: "${{env.MINECRAFT_VERSION}}-v${{steps.mod_version.outputs.mod_version}}-minecraftforge"
           version-type: release
           changelog-file: CHANGELOG.md
 
