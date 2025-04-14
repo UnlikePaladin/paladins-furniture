@@ -1,3 +1,7 @@
+#### PFM 1.4.3 Changes and Fixes:
+
+- 1.21.1 exclusive fixes a crash when using a block display on a lamp
+
 #### PFM 1.4.2 Changes and Fixes:
 
 - Fix microwave crashing the server in multiplayer in 1.20.6+
