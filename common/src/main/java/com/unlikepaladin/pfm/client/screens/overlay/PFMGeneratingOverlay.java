@@ -1,24 +1,27 @@
 package com.unlikepaladin.pfm.client.screens.overlay;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.platform.DestFactor;
+import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMResourceProgress;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Overlay;
-import net.minecraft.client.gui.screen.SplashOverlay;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
-import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.metadata.TextureResourceMetadata;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.client.texture.TextureContents;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TriState;
@@ -30,7 +33,6 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.Closeable;
-import java.io.IOException;
 import java.util.Base64;
 import java.util.Objects;
 
@@ -94,14 +96,15 @@ public class PFMGeneratingOverlay extends Overlay {
         float r = (float)(PFM_ORANGE >> 16 & 0xFF) / 255.0f;
         float g = (float)(PFM_ORANGE >> 8 & 0xFF) / 255.0f;
         float b = (float)(PFM_ORANGE & 0xFF) / 255.0f;
-        GlStateManager._clearColor(r, g, b, 1.0f);
-        GlStateManager._clear(16384);
+        RenderSystem.getDevice().createCommandEncoder().clearColorTexture(this.client.getFramebuffer().getColorAttachment(), PFM_ORANGE);
+
 
         glText.gltViewport(this.client.getWindow().getFramebufferWidth(), this.client.getWindow().getFramebufferHeight());
         float timeProgress = this.reloadCompleteTime > -1L ? (float)(l - this.reloadCompleteTime) / 1000.0f : -1.0f;
 
         int width = this.client.getWindow().getScaledWidth();
         int height = this.client.getWindow().getScaledHeight();
+        context.fill(RenderLayer.getGuiOverlay(), 0, 0, width, height, ColorHelper.withAlpha(PFM_ORANGE, 255));
 
         float progress = this.resourceProgress.getProgress();
         double minRes = Math.min((double)this.client.getWindow().getScaledWidth() * 0.75, (double)this.client.getWindow().getScaledHeight()) * 0.25;
@@ -209,17 +212,21 @@ public class PFMGeneratingOverlay extends Overlay {
         }
     }
 
+    public static final RenderPipeline PFM_LOGO_PIPELINE = RenderPipelines.register(
+            RenderPipeline.builder(RenderPipelines.POSITION_TEX_COLOR_SNIPPET)
+                    .withLocation("pipeline/pfm_logo")
+                    .withBlend(new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE))
+                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                    .withDepthWrite(false)
+                    .build()
+    );
+
     private static final RenderLayer.MultiPhase PFM_LOGO = RenderLayer.of(
             "pfm_logo",
-            VertexFormats.POSITION_TEXTURE_COLOR,
-            VertexFormat.DrawMode.QUADS,
             786432,
+            PFM_LOGO_PIPELINE,
             RenderLayer.MultiPhaseParameters.builder()
                     .texture(new RenderPhase.Texture(pfmLogo, TriState.DEFAULT, false))
-                    .program(RenderLayer.POSITION_TEXTURE_COLOR_PROGRAM)
-                    .transparency(RenderLayer.TRANSLUCENT_TRANSPARENCY)
-                    .depthTest(RenderLayer.ALWAYS_DEPTH_TEST)
-                    .writeMaskState(RenderLayer.COLOR_MASK)
                     .build(false)
     );
 }

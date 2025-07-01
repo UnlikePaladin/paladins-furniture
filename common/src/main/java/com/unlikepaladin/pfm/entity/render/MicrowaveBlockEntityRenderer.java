@@ -2,22 +2,18 @@ package com.unlikepaladin.pfm.entity.render;
 
 
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeDisplayEntry;
 import net.minecraft.recipe.RecipePropertySet;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
@@ -29,7 +25,7 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
     }
 
     @Override
-    public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, Vec3d cameraPos) {
         if (blockEntity instanceof MicrowaveBlockEntity) {
             itemStack = blockEntity.getStack(0);
             matrices.push();
@@ -67,7 +63,7 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
             if (blockEntity.isActive && recipePropertySet.canUse(itemStack)) {
                 matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((blockEntity.getWorld().getTime() + tickDelta) * 4));}
             matrices.scale(0.5f, 0.5f, 0.5f);
-            this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getWorld(), 0);
+            this.itemRenderer.renderItem(itemStack, ItemDisplayContext.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getWorld(), 0);
             matrices.pop();
         }
     }

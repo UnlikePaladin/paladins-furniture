@@ -47,7 +47,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
 
             int itemCount = 0;
             ItemStack defaultStack = item.getDefaultStack();
-            for (ItemStack stack1 : input.playerInventory().main) {
+            for (ItemStack stack1 : input.playerInventory().getMainStacks()) {
                 if (defaultStack.isOf(stack1.getItem())) {
                     itemCount += stack1.getCount();
                 }

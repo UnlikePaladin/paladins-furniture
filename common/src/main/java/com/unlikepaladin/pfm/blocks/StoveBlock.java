@@ -159,16 +159,16 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
         double y = pos.getY();
         double z = (double)pos.getZ() + 0.5;
         if (random.nextDouble() < 0.1) {
-            world.playSound(x, y, z, SoundEvents.BLOCK_SMOKER_SMOKE, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
+            world.playSoundClient(x, y, z, SoundEvents.BLOCK_SMOKER_SMOKE, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
         }
         int min = 0;
         int max = 3;
         int griddleChosen = (int)Math.floor(Math.random()*(max-min+1)+min);
         switch (griddleChosen) {
-            case 0 -> world.addParticle(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
-            case 1 -> world.addParticle(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
-            case 2 -> world.addParticle(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
-            case 3 -> world.addParticle(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
+            case 0 -> world.addParticleClient(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
+            case 1 -> world.addParticleClient(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z - 0.2, 0.0, 0.0, 0.0);
+            case 2 -> world.addParticleClient(ParticleTypes.SMOKE, x + 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
+            case 3 -> world.addParticleClient(ParticleTypes.SMOKE, x - 0.25, y + 1.1, z + 0.2, 0.0, 0.0, 0.0);
         }
     }
 
@@ -197,10 +197,7 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
         throw new AssertionError();
     }
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.isOf(newState.getBlock())) {
-            return;
-        }
+    public void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof StoveBlockEntity)
         {
@@ -211,7 +208,7 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
             }
             world.updateComparators(pos, this);
         }
-        super.onStateReplaced(state, world, pos, newState, moved);
+        super.onStateReplaced(state, world, pos, moved);
     }
 
     @Override

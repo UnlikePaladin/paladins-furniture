@@ -29,8 +29,8 @@ public class ShowerHandleBlockEntity extends BlockEntity {
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.readNbt(nbt, registryLookup);
-        if(nbt.contains("showerHead", NbtElement.LONG_TYPE)){
-            this.showerOffset = BlockPos.fromLong(nbt.getLong("showerHead"));
+        if(nbt.contains("showerHead") && nbt.get("showerHead").getType() == NbtElement.LONG_TYPE){
+            this.showerOffset = BlockPos.fromLong(nbt.getLong("showerHead").get());
         }
     }
 

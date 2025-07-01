@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
@@ -28,6 +29,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class LightSwitchItem extends BlockItem {
     private Block block;
@@ -119,7 +121,7 @@ public class LightSwitchItem extends BlockItem {
     private void addLight(ItemStack stack, BlockPos pos)
     {
         NbtCompound nbtCompound = createTag(stack);
-        if(!nbtCompound.contains("lights", NbtElement.LIST_TYPE)) {
+        if(!nbtCompound.contains("lights")) {
             nbtCompound.put("lights", new NbtList());
         }
 
@@ -147,7 +149,7 @@ public class LightSwitchItem extends BlockItem {
     public static NbtList getLights(ItemStack stack) {
         if(stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
             NbtCompound blockEntityTag = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).getNbt();
-            if(blockEntityTag.contains("lights", NbtElement.LIST_TYPE)) {
+            if(blockEntityTag.contains("lights")) {
                 return (NbtList) blockEntityTag.get("lights");
             }
         }
@@ -166,12 +168,12 @@ public class LightSwitchItem extends BlockItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
         NbtList nbtList;
         if (stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA) && (nbtList = getLights(stack)) != null) {
             int lightNum = nbtList.size();
-            tooltip.add(Text.translatable("tooltip.pfm.light_switch_connected", lightNum));
+            textConsumer.accept(Text.translatable("tooltip.pfm.light_switch_connected", lightNum));
         }
-        super.appendTooltip(stack, context, tooltip, type);
+        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
     }
 }

@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric;
 
-import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
@@ -8,9 +7,9 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.*;
 import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
+import net.blay09.mods.balm.api.energy.DefaultEnergyStorage;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
-import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.tag.BalmItemTags;
 import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
@@ -22,8 +21,6 @@ import net.blay09.mods.cookingforblockheads.api.event.OvenCookedEvent;
 import net.blay09.mods.cookingforblockheads.block.entity.IMutableNameable;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
-import net.blay09.mods.cookingforblockheads.block.entity.IMutableNameable;
-import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.DataComponentTypes;
@@ -58,7 +55,6 @@ import net.minecraft.world.World;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItemProcessor, BalmMenuProvider<StoveScreenHandler.StoveData>, IMutableNameable, BalmContainerProvider, BalmEnergyStorageProvider {
@@ -107,7 +103,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
             return 11;
         }
     };
-    private final EnergyStorage energyStorage = new EnergyStorage(10000) {
+    private final EnergyStorage energyStorage = new DefaultEnergyStorage(10000) {
         public int fill(int maxReceive, boolean simulate) {
             if (!simulate) {
                 StoveBlockEntityBalm.this.markDirty();
@@ -317,7 +313,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
         if (itemStack.isEmpty()) {
             return 0;
         } else {
-            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.isIn(BalmItemTags.COOKING_OIL) ? 800 : Balm.getHooks().getBurnTime(world, itemStack);
+            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.isIn(BalmItemTags.COOKING_OIL) ? 800 : 800;
         }
     }
 
@@ -335,18 +331,18 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     @Override
     protected void readNbt(NbtCompound tagCompound, RegistryWrapper.WrapperLookup registryLookup) {
         super.readNbt(tagCompound, registryLookup);
-        this.container.deserialize(tagCompound.getCompound("ItemHandler"), registryLookup);
-        this.furnaceBurnTime = tagCompound.getShort("BurnTime");
-        this.currentItemBurnTime = tagCompound.getShort("CurrentItemBurnTime");
-        this.slotCookTime = tagCompound.getIntArray("CookTimes");
+        this.container.deserialize(tagCompound.getCompound("ItemHandler").orElse(new NbtCompound()), registryLookup);
+        this.furnaceBurnTime = tagCompound.getShort("BurnTime", (short)0);
+        this.currentItemBurnTime = tagCompound.getShort("CurrentItemBurnTime", (short)0);
+        this.slotCookTime = tagCompound.getIntArray("CookTimes").orElse(new int[0]);
         if (this.slotCookTime.length != 9) {
             this.slotCookTime = new int[9];
         }
 
-        this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade");
-        this.energyStorage.setEnergy(tagCompound.getInt("EnergyStored"));
-        if (tagCompound.contains("CustomName", 8)) {
-            this.customName = Text.Serialization.fromJson(tagCompound.getString("CustomName"), registryLookup);
+        this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade", false);
+        this.energyStorage.setEnergy(tagCompound.getInt("EnergyStored", 0));
+        if (tagCompound.contains("CustomName")) {
+            this.customName = Text.Serialization.fromJson(tagCompound.getString("CustomName", ""), registryLookup);
         }
 
     }
@@ -413,10 +409,10 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
             return subContainer;
         }
     }
-
+/*
     public List<BalmProvider<?>> getProviders() {
         return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider), new BalmProvider<>(KitchenItemProcessor.class, this));
-    }
+    }*/
 
     public Inventory getInputContainer() {
         return this.inputContainer;

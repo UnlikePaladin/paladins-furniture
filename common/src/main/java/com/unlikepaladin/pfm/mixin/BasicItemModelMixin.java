@@ -17,8 +17,8 @@ import net.minecraft.client.world.ClientWorld;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.*;
@@ -38,7 +38,7 @@ public class BasicItemModelMixin {
     private List<TintSource> pfm$parentTints;
 
     @Inject(method = "update", at = @At(value = "HEAD", target = "Lnet/minecraft/client/render/item/ItemRenderState$LayerRenderState;initTints(I)[I"))
-    private void inject(ItemRenderState state, ItemStack stack, ItemModelManager resolver, ModelTransformationMode transformationMode, ClientWorld world, LivingEntity user, int seed, CallbackInfo ci) {
+    private void inject(ItemRenderState state, ItemStack stack, ItemModelManager resolver, ItemDisplayContext displayContext, ClientWorld world, LivingEntity user, int seed, CallbackInfo ci) {
         if (ColorRegistry.itemColorProviders.containsKey(stack.getItem()) && pfm$parentTints == null) {
             Item item = ColorRegistry.itemColorProviders.get(stack.getItem()).asItem();
 
@@ -46,7 +46,7 @@ public class BasicItemModelMixin {
 
             ItemModel parentModel = MinecraftClient.getInstance().getBakedModelManager().getItemModel(parentModelId);
             pfm$parentStack = item.getDefaultStack();
-            this.pfm$parentTints = exploreForTints(parentModel, world, user, seed, transformationMode);
+            this.pfm$parentTints = exploreForTints(parentModel, world, user, seed, displayContext);
         }
         if (stack.contains(PFMComponents.VARIANT_COMPONENT)) {
             Item item = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT)).getLogBlock().asItem();
@@ -55,12 +55,12 @@ public class BasicItemModelMixin {
 
             ItemModel parentModel = MinecraftClient.getInstance().getBakedModelManager().getItemModel(parentModelId);
             pfm$parentStack = item.getDefaultStack();
-            this.pfm$parentTints = exploreForTints(parentModel, world, user, seed, transformationMode);
+            this.pfm$parentTints = exploreForTints(parentModel, world, user, seed, displayContext);
         }
     }
 
     @Unique
-    private List<TintSource> exploreForTints(ItemModel model, ClientWorld world, LivingEntity user, int seed, ModelTransformationMode transformationMode) {
+    private List<TintSource> exploreForTints(ItemModel model, ClientWorld world, LivingEntity user, int seed, ItemDisplayContext transformationMode) {
         switch (model) {
             case BasicItemModelAccessor accessor -> {
                 return accessor.getTints();
@@ -73,14 +73,15 @@ public class BasicItemModelMixin {
                 }
             }
             case ConditionItemModelAccessor accessor -> {
-                boolean property = accessor.getProperty().getValue(pfm$parentStack, world, user, seed, transformationMode);
+                boolean property = accessor.getProperty().test(pfm$parentStack, world, user, seed, transformationMode);
                 if (property)
                     return exploreForTints(accessor.getOnTrue(), world, user, seed, transformationMode);
                 else
                     return exploreForTints(accessor.getOnFalse(), world, user, seed, transformationMode);
             }
-            case SelectItemModelAccessor<?> accessor -> {
-                ItemModel itemModel = accessor.getCases().get(accessor.getProperty().getValue(pfm$parentStack, world, user, seed, transformationMode));
+            case SelectItemModelAccessor accessor -> {
+                Object object = accessor.getProperty().getValue(pfm$parentStack, world, user, seed, transformationMode);
+                ItemModel itemModel = accessor.getSelector().get(object, world);
                 return exploreForTints(itemModel, world, user, seed, transformationMode);
             }
             case RangeDispatchItemModelAccessor accessor -> {

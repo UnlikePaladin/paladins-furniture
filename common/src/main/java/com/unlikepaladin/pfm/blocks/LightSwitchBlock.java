@@ -12,6 +12,7 @@ import net.minecraft.fluid.FluidState;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
@@ -124,7 +125,6 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
         else {
         state = state.cycle(POWERED);}
         world.setBlockState(pos, state, Block.NOTIFY_ALL);
-        this.updateNeighbors(state, world, pos);
         if (world.getBlockEntity(pos) instanceof LightSwitchBlockEntity)
             ((LightSwitchBlockEntity)world.getBlockEntity(pos)).setState(state.get(POWERED));
         return state;
@@ -176,23 +176,11 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.get(POWERED)) {
-            this.updateNeighbors(state, world, pos);
-        }
-
-        if (state.isOf(newState.getBlock())) {
-            return;
-        }
+    public void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof LightSwitchBlockEntity lightSwitchBlockEntity) {
             lightSwitchBlockEntity.markRemoved();
         }
-    }
-
-    private void updateNeighbors(BlockState state, World world, BlockPos pos) {
-        world.updateNeighborsAlways(pos, this);
-        world.updateNeighborsAlways(pos.offset(getDirection(state).getOpposite()), this);
     }
 
     @Override

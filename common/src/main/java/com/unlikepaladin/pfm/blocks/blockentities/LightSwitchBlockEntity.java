@@ -37,9 +37,9 @@ public class LightSwitchBlockEntity extends BlockEntity {
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.readNbt(nbt, registryLookup);
-        if(nbt.contains("lights", NbtElement.LIST_TYPE)){
+        if(nbt.contains("lights")){
             lights.clear();
-            NbtList lightTagList = nbt.getList("lights", NbtElement.LONG_TYPE);
+            NbtList lightTagList = nbt.getList("lights").orElse(new NbtList());
             lightTagList.forEach(nbtElement -> addLight(((NbtLong)nbtElement).longValue()));
         }
     }

@@ -27,6 +27,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBlockEntity> {
@@ -45,7 +46,7 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
     public static TexturedModelData getFootTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData group = modelPartData.addChild("main", ModelPartBuilder.create(), ModelTransform.pivot(8.0F, 24.0F, -8.0F));
+        ModelPartData group = modelPartData.addChild("main", ModelPartBuilder.create(), ModelTransform.origin(8.0F, 24.0F, -8.0F));
 
         ModelPartData foot_r1 = group.addChild("foot_r1", ModelPartBuilder.create().uv(2, 24).cuboid(-8.0F, -11.0F, -8.0F, 16.0F, 13.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-8.0F, -1.0F, 11.0F, -1.5708F, 3.1416F, 0.0F));
         return TexturedModelData.of(modelData, 64, 64);
@@ -54,11 +55,11 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
     public static TexturedModelData getHeadTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
-        ModelPartData group = modelPartData.addChild("main", ModelPartBuilder.create(), ModelTransform.pivot(8.0F, 24.0F, -8.0F));
+        ModelPartData group = modelPartData.addChild("main", ModelPartBuilder.create(), ModelTransform.origin(8.0F, 24.0F, -8.0F));
 
         ModelPartData head_r1 = group.addChild("head_r1", ModelPartBuilder.create().uv(2, 2).cuboid(-28.0F, -5.0F, -3.0F, 16.0F, 13.0F, 4.0F, new Dilation(0.0F)), ModelTransform.of(-28.0F, -6.0F, 8.0F, -1.5708F, 3.1416F, 0.0F));
 
-        ModelPartData pillow = group.addChild("pillow", ModelPartBuilder.create(), ModelTransform.pivot(-28.0F, -5.0F, 8.0F));
+        ModelPartData pillow = group.addChild("pillow", ModelPartBuilder.create(), ModelTransform.origin(-28.0F, -5.0F, 8.0F));
 
         ModelPartData head_r2 = pillow.addChild("head_r2", ModelPartBuilder.create().uv(7, 5).mirrored().cuboid(-20.0F, -5.0F, -5.0F, 7.0F, 8.0F, 1.0F, new Dilation(0.0F)).mirrored(false)
                 .uv(7, 5).cuboid(-27.0F, -5.0F, -5.0F, 7.0F, 8.0F, 1.0F, new Dilation(0.0F)), ModelTransform.of(0.0F, 0.0F, 0.0F, -1.5708F, 3.1416F, 0.0F));
@@ -66,7 +67,7 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
     }
 
     @Override
-    public void render(PFMBedBlockEntity bedBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
+    public void render(PFMBedBlockEntity bedBlockEntity, float f, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int i, int j, Vec3d cameraPos) {
         SpriteIdentifier spriteIdentifier = bedBlockEntity != null ? TexturedRenderLayers.getBedTextureId(bedBlockEntity.getColor()) : TexturedRenderLayers.getBedTextureId(DyeColor.WHITE);
         World world2 = bedBlockEntity != null ? bedBlockEntity.getWorld() :  null;
         if (world2 != null) {

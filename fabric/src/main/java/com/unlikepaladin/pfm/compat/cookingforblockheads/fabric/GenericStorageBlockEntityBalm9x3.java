@@ -3,8 +3,6 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
-import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.block.BlockState;
@@ -14,7 +12,7 @@ import net.minecraft.util.math.Direction;
 
 import java.util.*;
 
-public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9x3 implements BalmContainerProvider, BalmProviderHolder, BlockEntityContract {
+public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9x3 implements BalmContainerProvider, BlockEntityContract {
     private final KitchenItemProvider itemProvider;
 
     public GenericStorageBlockEntityBalm9x3(BlockPos pos, BlockState state) {
@@ -27,6 +25,7 @@ public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9
         return this;
     }
 
+    /*
     public List<BalmProvider<?>> getProviders() {
         return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider));
     }
@@ -56,5 +55,5 @@ public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9
 
         BalmProvider<?> found = this.providers.get(clazz);
         return found != null ? (T) found.getInstance() : null;
-    }
+    }*/
 }

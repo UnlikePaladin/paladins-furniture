@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
-public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
+public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity implements CustomItemBlockState{
     public static BooleanProperty OPEN = Properties.OPEN;
     private static final List<FurnitureBlock> WOOD_NIGHTSTAND = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_NIGHTSTAND = new ArrayList<>();
@@ -102,16 +102,13 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.isOf(newState.getBlock())) {
-            return;
-        }
+    public void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof Inventory) {
             ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
             world.updateComparators(pos, this);
         }
-        super.onStateReplaced(state, world, pos, newState, moved);
+        super.onStateReplaced(state, world, pos, moved);
     }
 
     @Nullable
@@ -300,5 +297,10 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
     @Override
     public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
+    }
+
+    @Override
+    public BlockState getItemBlockState() {
+        return getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.WEST);
     }
 }

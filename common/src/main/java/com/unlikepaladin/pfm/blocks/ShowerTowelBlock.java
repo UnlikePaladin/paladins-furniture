@@ -34,7 +34,7 @@ public class ShowerTowelBlock extends HorizontalFacingBlock implements DyeableFu
         super(settings);
         this.color = color;
         if (this.getClass().isAssignableFrom(ShowerTowelBlock.class)) {
-            String towelColor = color.getName();
+            String towelColor = color.getId();
             SHOWER_TOWELS.add(new FurnitureBlock(this, towelColor+ "_shower_towel"));
         }
     }

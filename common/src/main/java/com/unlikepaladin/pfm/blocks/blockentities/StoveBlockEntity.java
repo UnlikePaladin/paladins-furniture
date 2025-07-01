@@ -126,12 +126,12 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         int[] is;
         this.itemsBeingCooked.clear();
         readNbt(nbt, this.itemsBeingCooked, registryLookup);
-        if (nbt.contains("CookingTimes", 11)) {
-            is = nbt.getIntArray("CookingTimes");
+        if (nbt.contains("CookingTimes")) {
+            is = nbt.getIntArray("CookingTimes").orElse(new int[0]);
             System.arraycopy(is, 0, this.cookingTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
         }
-        if (nbt.contains("CookingTotalTimes", 11)) {
-            is = nbt.getIntArray("CookingTotalTimes");
+        if (nbt.contains("CookingTotalTimes")) {
+            is = nbt.getIntArray("CookingTotalTimes").orElse(new int[0]);
             System.arraycopy(is, 0, this.cookingTotalTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
         }
     }
@@ -165,10 +165,10 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     public static void readNbt(NbtCompound nbt, DefaultedList<ItemStack> stacks, RegistryWrapper.WrapperLookup registryLookup) {
-        NbtList nbtList = nbt.getList("CookTopItems", 10);
+        NbtList nbtList = nbt.getList("CookTopItems").orElse(new NbtList());
         for (int i = 0; i < nbtList.size(); ++i) {
-            NbtCompound nbtCompound = nbtList.getCompound(i);
-            int j = nbtCompound.getByte("Slot") & 0xFF;
+            NbtCompound nbtCompound = nbtList.getCompound(i).orElse(new NbtCompound());
+            int j = nbtCompound.getByte("Slot").orElse((byte)0) & 0xFF;
             if (j < 0 || j >= stacks.size()) continue;
             stacks.set(j, ItemStack.fromNbt(registryLookup, nbtCompound).orElse(ItemStack.EMPTY));
         }
@@ -253,7 +253,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
                 double z = pos.getZ() + 0.5 - ((direction.getOffsetZ() * f) + (direction.rotateYClockwise().getOffsetZ() * f));
                 for (int k = 0; k < 4; ++k) {
                     if (!(random.nextFloat() < 0.9f))
-                        world.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 5.0E-4, 0.0);
+                        world.addParticleClient(ParticleTypes.SMOKE, x, y, z, 0.0, 5.0E-4, 0.0);
                 }
             }
         }

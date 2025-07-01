@@ -35,7 +35,7 @@ public class ShowerHeadBlockEntity extends BlockEntity {
 
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        isOpen = nbt.getBoolean("isOpen");
+        isOpen = nbt.getBoolean("isOpen").orElse(false);
         super.readNbt(nbt, registryLookup);
     }
 
@@ -78,24 +78,24 @@ public class ShowerHeadBlockEntity extends BlockEntity {
         int x = pos.getX(), y = pos.getY(), z = pos.getZ();
         Random rand = world.random;
         if (rand.nextBoolean()) {
-            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
+            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
         } else {
-            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
+            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
         }
 
         if (rand.nextBoolean()) {
-            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
+            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
         } else {
-            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
-            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
+            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
+            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
        }
 
         if (rand.nextBoolean()) {
-            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
-            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
+            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
+            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
         } else {
-            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
-            world.addParticle(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
+            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2] - difference[2]), 0.0, 0.0, 0.0);
+            world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + (offset[0] + difference[0]), y + (offset[1] - difference[1]), z + (offset[2] + difference[2]), 0.0, 0.0, 0.0);
         }
     }
 

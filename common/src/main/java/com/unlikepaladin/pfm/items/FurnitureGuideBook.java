@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.items;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -11,6 +12,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class FurnitureGuideBook extends Item {
     public FurnitureGuideBook(Settings settings) {
@@ -26,8 +28,8 @@ public class FurnitureGuideBook extends Item {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        tooltip.add(Text.translatable("pfm.patchouli.guide_book.subtitle"));
-        super.appendTooltip(stack, context, tooltip, type);
+    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
+        textConsumer.accept(Text.translatable("pfm.patchouli.guide_book.subtitle"));
+        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
     }
 }

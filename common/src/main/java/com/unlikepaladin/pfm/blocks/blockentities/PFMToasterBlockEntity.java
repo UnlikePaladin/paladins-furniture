@@ -61,12 +61,12 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
         super.readNbt(nbt, registryLookup);
         items = DefaultedList.ofSize(2, ItemStack.EMPTY);
-        toastProgress = nbt.getInt("toastProgress");
-        toasting = nbt.getBoolean("toasting");
-        smokeProgress = nbt.getInt("smokeProgress");
-        smoking = nbt.getBoolean("smoking");
+        toastProgress = nbt.getInt("toastProgress").orElse(0);
+        toasting = nbt.getBoolean("toasting").orElse(false);
+        smokeProgress = nbt.getInt("smokeProgress").orElse(0);
+        smoking = nbt.getBoolean("smoking").orElse(false);
         if (nbt.contains("lastUser")) {
-            this.lastUser = nbt.getUuid("lastUser");
+            this.lastUser = UUID.fromString(nbt.getString("lastUser").orElse(""));
         } else this.lastUser = null;
         Inventories.readNbt(nbt, items, registryLookup);
     }
@@ -79,7 +79,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         nbt.putBoolean("smoking", smoking);
         if (this.lastUser == null) {
             nbt.remove("lastUser");
-        } else nbt.putUuid("lastUser", this.lastUser);
+        } else nbt.putString("lastUser", this.lastUser.toString());
         Inventories.writeNbt(nbt, items, registryLookup);
         super.writeNbt(nbt, registryLookup);
     }
@@ -258,7 +258,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
         }
         if(blockEntity.smoking) {
             if(blockEntity.smokeProgress % 3 == 0) {
-                world.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5, 0, 0.03, 0);
+                world.addParticleClient(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5, 0, 0.03, 0);
             }
             blockEntity.smokeProgress++;
         } if (blockEntity.smokeProgress == smokeTime) { blockEntity.smoking = false; blockEntity.smokeProgress = 0; }

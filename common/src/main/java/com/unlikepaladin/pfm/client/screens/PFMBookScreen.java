@@ -19,7 +19,7 @@ public class PFMBookScreen extends Screen {
         this.renderBackground(context, mouseX, mouseY, delta);
         //RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
+        //RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
 
         super.render(context, mouseX, mouseY, delta);
     }

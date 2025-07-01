@@ -244,7 +244,7 @@ public class PFMLangProvider extends PFMProvider {
                     break;
                 try {
                     String translatedVariantName = getTranslatedVariantName(variant);
-                    String translatedColor = translate("color.minecraft."+color.getName());
+                    String translatedColor = translate("color.minecraft."+color.getId());
                     String translatedFurnitureName = StringUtils.normalizeSpace(translate("block.pfm.basic_lamp", translatedColor, translatedVariantName));
                     writer.write(String.format("    \"%1$s\": \"%2$s\",", String.format("block.pfm.basic_%s_%s_lamp", color.asString(), variant.asString()), translatedFurnitureName));
                     writer.write("\n");

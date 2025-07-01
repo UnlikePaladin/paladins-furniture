@@ -1,34 +1,35 @@
 package com.unlikepaladin.pfm.blocks.models.basicLamp;
 
-import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.data.materials.*;
+import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
 import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.render.model.*;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.client.render.model.json.ModelVariant;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
-public class UnbakedBasicLampModel implements UnbakedModel {
+public record UnbakedBasicLampModel(ModelVariant variant) implements PFMUnbakedBlockStateModel {
+    public static final MapCodec<UnbakedBasicLampModel> MAP_CODEC = RecordCodecBuilder.mapCodec
+            (instance ->
+                    instance.group(ModelVariant.MAP_CODEC.forGetter(UnbakedBasicLampModel::variant))
+                            .apply(instance, UnbakedBasicLampModel::new));
 
-    public UnbakedBasicLampModel() {
-    }
+    public static final Codec<UnbakedBasicLampModel> CODEC = MAP_CODEC.codec();
 
     public static final List<Identifier> LAMP_MODEL_IDS = new ArrayList<>() {
         {
-            add(Identifier.of(PaladinFurnitureMod.MOD_ID, "block/basic_lamp"));
+            add(LAMP_MODEL_ID);
             add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/basic_lamp"));
         }
     };
+
+    public static final Identifier LAMP_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/basic_lamp");
 
     public static Identifier getItemModelId() {
         return LAMP_MODEL_IDS.get(1);
@@ -46,7 +47,7 @@ public class UnbakedBasicLampModel implements UnbakedModel {
         add("block/basic_lamp/basic_lamp_light_bulb_off");
         add("block/basic_lamp/basic_lamp_light_bulb_on");
     }};
-    private static final Identifier PARENT = Identifier.of("block/block");
+
     public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : MODEL_PARTS_BASE) {
@@ -58,39 +59,39 @@ public class UnbakedBasicLampModel implements UnbakedModel {
         }
     };
 
-
-    Map<WoodVariant, SpriteIdentifier> textureMap = new HashMap<>();
-
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return Collections.emptyList();
-    }
-
-    @Nullable
     @Override
-    public BakedModel bake(ModelTextures textures, Baker loader, ModelBakeSettings rotationContainer, boolean ambientOcclusion, boolean isSideLit, ModelTransformation transformation){
-        if (PFMRuntimeResources.modelCacheMap.containsKey(LAMP_MODEL_IDS.get(0)) && PFMRuntimeResources.modelCacheMap.get(LAMP_MODEL_IDS.get(0)).getCachedModelParts().containsKey(rotationContainer))
-            return getBakedModel(LAMP_MODEL_IDS.get(0), rotationContainer, PFMRuntimeResources.modelCacheMap.get(LAMP_MODEL_IDS.get(0)).getCachedModelParts().get(rotationContainer));
+    public BlockStateModel bake(Baker baker){
+        ModelBakeSettings settings = variant.modelState().asModelBakeSettings();
+        ModelSettings itemSettings = ModelSettings.resolveSettings(baker, baker.getModel(Identifier.of(PaladinFurnitureMod.MOD_ID, MODEL_PARTS_BASE.get(2))), baker.getModel(Identifier.of(PaladinFurnitureMod.MOD_ID, MODEL_PARTS_BASE.get(2))).getTextures());
 
-        if (!PFMRuntimeResources.modelCacheMap.containsKey(LAMP_MODEL_IDS.get(0)))
-            PFMRuntimeResources.modelCacheMap.put(LAMP_MODEL_IDS.get(0), new PFMBakedModelContainer());
+        if (PFMRuntimeResources.modelCacheMap.containsKey(LAMP_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(LAMP_MODEL_ID).getCachedModelParts().containsKey(settings))
+            return getBakedModel(LAMP_MODEL_ID, settings, itemSettings, PFMRuntimeResources.modelCacheMap.get(LAMP_MODEL_ID).getCachedModelParts().get(settings));
 
-        List<BakedModel> bakedModelList = new ArrayList<>();
+        if (!PFMRuntimeResources.modelCacheMap.containsKey(LAMP_MODEL_ID))
+            PFMRuntimeResources.modelCacheMap.put(LAMP_MODEL_ID, new PFMBakedModelContainer());
+
+        List<BlockModelPart> bakedModelList = new ArrayList<>();
         for (Identifier modelPart : ALL_MODEL_IDS) {
-            bakedModelList.add(loader.bake(modelPart, rotationContainer));
+            bakedModelList.add(GeometryBakedModel.create(baker, modelPart, settings));
         }
 
-        PFMRuntimeResources.modelCacheMap.get(LAMP_MODEL_IDS.get(0)).getCachedModelParts().put(rotationContainer, bakedModelList);
-        return getBakedModel(LAMP_MODEL_IDS.get(0), rotationContainer, bakedModelList);
+        PFMRuntimeResources.modelCacheMap.get(LAMP_MODEL_ID).getCachedModelParts().put(settings, bakedModelList);
+        return getBakedModel(LAMP_MODEL_ID, settings, itemSettings, bakedModelList);
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Identifier modelId, ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelBakeSettings settings, ModelSettings itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolve(Resolver resolver) {
         for (Identifier c : ALL_MODEL_IDS)
-            resolver.resolve(c);
+            resolver.markDependency(c);
+    }
+
+    @Override
+    public MapCodec<? extends BlockStateModel.Unbaked> codec() {
+        return MAP_CODEC;
     }
 }

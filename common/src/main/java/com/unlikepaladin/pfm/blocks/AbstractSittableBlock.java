@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.NoteBlockInstrument;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -38,7 +39,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
-public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
+public abstract class AbstractSittableBlock extends HorizontalFacingBlock implements CustomItemBlockState{
     private final BlockState baseBlockState;
     private final Block baseBlock;
     public static Map<Class<? extends Block>, MapCodec<AbstractSittableBlock>> CODECS = new HashMap<>();
@@ -174,8 +175,8 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
-        super.onEntityCollision(state, world, pos, entity);
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
+        super.onEntityCollision(state, world, pos, entity, handler);
         List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers);
         if (active == null || !active.isEmpty())
             return;
@@ -214,5 +215,10 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock {
     }
 
     public abstract Function<Settings, AbstractSittableBlock> getChairConstructor();
+
+    @Override
+    public BlockState getItemBlockState() {
+        return getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.WEST);
+    }
 }
 

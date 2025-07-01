@@ -7,11 +7,12 @@ import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.Objects;
 
@@ -19,8 +20,9 @@ public class PFMToasterBlockEntityRenderer <T extends PFMToasterBlockEntity> imp
 
         public PFMToasterBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
         }
+
         @Override
-        public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, Vec3d cameraPos) {
             if (blockEntity instanceof PFMToasterBlockEntity) {
                 matrices.push();
                 DefaultedList<ItemStack> items = blockEntity.getItems();
@@ -52,9 +54,9 @@ public class PFMToasterBlockEntityRenderer <T extends PFMToasterBlockEntity> imp
                 matrices.scale(0.8f,0.8f,0.8f);
                 matrices.translate(0.0D, 0.0D, -0.55D);
                 matrices.translate(0.0D, 0.0D, 0.41D);
-                MinecraftClient.getInstance().getItemRenderer().renderItem(items.get(0), ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, blockEntity.getWorld(), 346746554);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(items.get(0), ItemDisplayContext.GROUND, light, overlay, matrices, vertexConsumers, blockEntity.getWorld(), 346746554);
                 matrices.translate(0.0D, 0.0D, 0.29D);
-                MinecraftClient.getInstance().getItemRenderer().renderItem(items.get(1), ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, blockEntity.getWorld(),834871346);
+                MinecraftClient.getInstance().getItemRenderer().renderItem(items.get(1), ItemDisplayContext.GROUND, light, overlay, matrices, vertexConsumers, blockEntity.getWorld(),834871346);
                 matrices.pop();
             }
         }

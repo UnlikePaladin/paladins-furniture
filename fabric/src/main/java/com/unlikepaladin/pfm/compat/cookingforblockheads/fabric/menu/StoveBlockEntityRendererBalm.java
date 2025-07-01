@@ -8,6 +8,7 @@ import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 
 
@@ -15,7 +16,8 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
     public StoveBlockEntityRendererBalm(BlockEntityRendererFactory.Context context) {
     }
 
-    public void render(StoveBlockEntityBalm blockEntity, float partialTicks, MatrixStack poseStack, VertexConsumerProvider buffer, int combinedLight, int combinedOverlay) {
+    @Override
+    public void render(StoveBlockEntityBalm blockEntity, float partialTicks, MatrixStack poseStack, VertexConsumerProvider buffer, int combinedLight, int combinedOverlay, Vec3d cameraPos) {
         World level = blockEntity.getWorld();
         if (level != null) {
             poseStack.push();

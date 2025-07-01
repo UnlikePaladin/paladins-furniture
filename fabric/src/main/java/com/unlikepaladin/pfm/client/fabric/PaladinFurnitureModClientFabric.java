@@ -59,6 +59,7 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
 
         ScreenRegistry.registerScreens();
         if (FabricLoader.getInstance().isModLoaded("fabric-model-loading-api-v1")) {
+            PFMModelLoadingPlugin.registerCustomModels();
             PFMModelLoadingV1.registerV1Plugin();
         }
         ParticleProviderRegistryFabric.registerParticleFactories();

@@ -26,10 +26,11 @@
     "PFMLanguageManagerAccessor",
     "PFMMinecraftClientAcccessor",
     "PFMMixinClientPacketListener",
+    "PFMModelVariantMixin",
     "PFMReloadableResourceManagerImplMixin",
+    "PFMSplashOverlayMixin",
     "RangeDispatchItemModelAccessor",
-    "SelectItemModelAccessor",
-    "PFMSplashOverlayMixin"
+    "SelectItemModelAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

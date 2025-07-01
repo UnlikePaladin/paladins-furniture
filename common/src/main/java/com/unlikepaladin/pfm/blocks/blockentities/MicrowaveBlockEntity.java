@@ -174,12 +174,12 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         super.readNbt(nbt, registryLookup);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.inventory, registryLookup);
-        this.cookTime = nbt.getShort("CookTime");
-        this.cookTimeTotal = nbt.getShort("CookTimeTotal");
-        NbtCompound nbtCompound = nbt.getCompound("RecipesUsed");
-        this.isActive = nbt.getBoolean("isActive");
+        this.cookTime = nbt.getShort("CookTime").orElse((short)0);
+        this.cookTimeTotal = nbt.getShort("CookTimeTotal").orElse((short)0);
+        NbtCompound nbtCompound = nbt.getCompound("RecipesUsed").orElse(new NbtCompound());
+        this.isActive = nbt.getBoolean("isActive").orElse(false);
         for (String string : nbtCompound.getKeys()) {
-            this.recipesUsed.put(Identifier.of(string), nbtCompound.getInt(string));
+            this.recipesUsed.put(Identifier.of(string), nbtCompound.getInt(string).orElse(0));
         }
     }
 

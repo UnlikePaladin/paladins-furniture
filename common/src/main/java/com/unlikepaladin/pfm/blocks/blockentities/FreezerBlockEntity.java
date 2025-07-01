@@ -181,10 +181,8 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
     private static void addFuel(Map<Item, Integer> fuelTimes, TagKey<Item> tag, int fuelTime) {
-        Iterator var3 = Registries.ITEM.iterateEntries(tag).iterator();
-
-        while(var3.hasNext()) {
-            RegistryEntry<Item> registryEntry = (RegistryEntry)var3.next();
+        for (RegistryEntry<Item> itemRegistryEntry : Registries.ITEM.iterateEntries(tag)) {
+            RegistryEntry<Item> registryEntry = (RegistryEntry) itemRegistryEntry;
             fuelTimes.put(registryEntry.value(), fuelTime);
         }
     }
@@ -328,13 +326,13 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         super.readNbt(nbt, registryLookup);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, this.inventory, registryLookup);
-        this.fuelTime = nbt.getShort("FuelTimeLeft");
-        this.freezeTime = nbt.getShort("FreezeTime");
-        this.freezeTimeTotal = nbt.getShort("FreezeTimeTotal");
+        this.fuelTime = nbt.getShort("FuelTimeLeft").orElse((short) 0);
+        this.freezeTime = nbt.getShort("FreezeTime").orElse((short) 0);
+        this.freezeTimeTotal = nbt.getShort("FreezeTimeTotal").orElse((short) 0);
         this.fuelTimeTotal = this.getFuelTime(this.inventory.get(1));
-        NbtCompound nbtCompound = nbt.getCompound("RecipesUsed");
+        NbtCompound nbtCompound = nbt.getCompound("RecipesUsed").orElse(new NbtCompound());
         for (String string : nbtCompound.getKeys()) {
-            this.recipesUsed.put(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(string)), nbtCompound.getInt(string));
+            this.recipesUsed.put(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(string)), nbtCompound.getInt(string).orElse(0));
         }
     }
 

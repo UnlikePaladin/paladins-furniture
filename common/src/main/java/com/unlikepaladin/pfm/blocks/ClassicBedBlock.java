@@ -22,7 +22,7 @@ public class ClassicBedBlock extends SimpleBedBlock {
     public ClassicBedBlock(DyeColor color, Settings settings) {
         super(color, settings);
         if(this.getClass().isAssignableFrom(ClassicBedBlock.class)){
-            String bedColor = color.getName();
+            String bedColor = color.getId();
             CLASSIC_BEDS.add(new FurnitureBlock(this, bedColor+"_classic_bed"));
         }
     }

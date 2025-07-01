@@ -51,8 +51,8 @@ public class BathtubBlockEntity extends BedBlockEntity {
 
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        fillTimer = nbt.getInt("tubTimer");
-        isFilling = nbt.getBoolean("isTubFilling");
+        fillTimer = nbt.getInt("tubTimer").orElse(0);
+        isFilling = nbt.getBoolean("isTubFilling").orElse(false);
         super.readNbt(nbt, registryLookup);
     }
 

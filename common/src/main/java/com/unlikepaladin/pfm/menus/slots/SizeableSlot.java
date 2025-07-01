@@ -49,7 +49,7 @@ public class SizeableSlot extends Slot {
 
     @Override
     protected void onCrafted(ItemStack stack) {
-        stack.onCraftByPlayer(this.player.getWorld(), this.player, this.amount);
+        stack.onCraftByPlayer(this.player, this.amount);
         this.amount = 0;
     }
 }

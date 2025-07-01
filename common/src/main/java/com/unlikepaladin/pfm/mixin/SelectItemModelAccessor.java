@@ -1,7 +1,5 @@
 package com.unlikepaladin.pfm.mixin;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
-import net.minecraft.client.render.item.model.ItemModel;
 import net.minecraft.client.render.item.model.SelectItemModel;
 import net.minecraft.client.render.item.property.select.SelectProperty;
 import org.spongepowered.asm.mixin.Mixin;
@@ -13,5 +11,5 @@ public interface SelectItemModelAccessor<T>  {
     SelectProperty<T> getProperty();
 
     @Accessor
-    Object2ObjectMap<T, ItemModel> getCases();
+    SelectItemModel.ModelSelector<T> getSelector();
 }

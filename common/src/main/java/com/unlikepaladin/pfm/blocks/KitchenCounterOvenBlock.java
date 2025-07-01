@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
-public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRenderLayerInterface {
+public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRenderLayerInterface, CustomItemBlockState {
     private static final List<FurnitureBlock> WOOD_COUNTER_OVENS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_COUNTER_OVENS = new ArrayList<>();
 
@@ -148,5 +148,10 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
     @Override
     public RenderLayer getCustomRenderLayer() {
         return RenderLayer.getTranslucent();
+    }
+
+    @Override
+    public BlockState getItemBlockState() {
+        return getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.SOUTH);
     }
 }

@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.particle.ItemStackParticleEffect;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.registry.Registries;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
 import net.minecraft.util.ActionResult;
@@ -183,17 +184,14 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.isOf(newState.getBlock())) {
-            return;
-        }
+    public void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof PlateBlockEntity plateBlockEntity) {
             ItemScatterer.spawn(world, pos, plateBlockEntity.getInventory());
             world.updateComparators(pos, this);
             plateBlockEntity.markRemoved();
         }
-        super.onStateReplaced(state, world, pos, newState, moved);
+        super.onStateReplaced(state, world, pos, moved);
     }
 
     protected final Random random = new Random();
@@ -207,7 +205,7 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
             vec3d2 = vec3d2.rotateX(-entity.getPitch() * ((float)Math.PI / 180));
             vec3d2 = vec3d2.rotateY(-entity.getYaw() * ((float)Math.PI / 180));
             vec3d2 = vec3d2.add(entity.getX(), entity.getEyeY(), entity.getZ());
-            entity.getEntityWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
+            entity.getEntityWorld().addParticleClient(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
         }
     }
     @Override

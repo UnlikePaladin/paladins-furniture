@@ -318,7 +318,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
 
                 int itemCount = 0;
                 ItemStack defaultStack = item.getDefaultStack();
-                for (ItemStack stack1 : inventory.playerInventory().main) {
+                for (ItemStack stack1 : inventory.playerInventory().getMainStacks()) {
                     if (defaultStack.isOf(stack1.getItem())) {
                         itemCount += stack1.getCount();
                     }

@@ -10,12 +10,15 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.component.ComponentMap;
+import net.minecraft.component.ComponentsAccess;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.Optional;
 
 public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBlockEntity<LampBlockEntity> {
     protected WoodVariant variant;
@@ -29,13 +32,13 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
 
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        if (nbt.contains("color", NbtElement.STRING_TYPE)) {
-            this.color = DyeColor.byName(nbt.getString("color"), DyeColor.WHITE);
+        if (nbt.contains("color")) {
+            this.color = DyeColor.byId(nbt.getString("color").orElse("white"), DyeColor.WHITE);
         }
-        if (nbt.contains("variant", NbtElement.STRING_TYPE)) {
-            String variantName = nbt.getString("variant");
-            if (WoodVariantRegistry.getVariant(Identifier.tryParse(variantName)) != null)
-                this.variant = WoodVariantRegistry.getVariant(Identifier.tryParse(variantName));
+        if (nbt.contains("variant")) {
+            Optional<String> variantName = nbt.getString("variant");
+            if (variantName.isPresent() && WoodVariantRegistry.getVariant(Identifier.tryParse(variantName.get())) != null)
+                this.variant = WoodVariantRegistry.getVariant(Identifier.tryParse(variantName.get()));
             else {
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Couldn't find variant for lamp: {}", variantName);
                 this.variant = WoodVariantRegistry.OAK;

@@ -11,25 +11,21 @@ import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.data.TextureMap;
 import net.minecraft.client.render.TexturedRenderLayers;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
-import net.minecraft.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -132,10 +128,10 @@ public class ModelHelper {
             return block.getPFMColor();
         }
         for (DyeColor color : DyeColor.values()) {
-            if (identifier.getPath().contains(color.getName())){
-                if (!identifier.getPath().contains("light") && color.getName().contains("light"))  {
+            if (identifier.getPath().contains(color.getId())){
+                if (!identifier.getPath().contains("light") && color.getId().contains("light"))  {
                     continue;
-                } else if (identifier.getPath().contains("light") && !color.getName().contains("light"))  {
+                } else if (identifier.getPath().contains("light") && !color.getId().contains("light"))  {
                     continue;
                 }
                 return color;
@@ -146,9 +142,9 @@ public class ModelHelper {
 
     public static Identifier getVanillaConcreteColor(Identifier identifier) {
         DyeColor color = getColor(identifier);
-        if (!identifier.getPath().contains(color.getName()))
+        if (!identifier.getPath().contains(color.getId()))
             return Identifier.of("minecraft", "block/white_concrete");
-        return Identifier.of("minecraft", "block/"+ color.getName() + "_concrete");
+        return Identifier.of("minecraft", "block/"+ color.getId() + "_concrete");
     }
 
     public static Block getWoolColor(String string) {
@@ -179,11 +175,11 @@ public class ModelHelper {
 
         Identifier id;
         if (postfix.isEmpty() && !PFMDataGenerator.areAssetsRunning()) {
-            BakedModel model = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(block.getDefaultState());
+            BlockStateModel model = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(block.getDefaultState());
             if (model != null) {
-                List<BakedQuad> quadList = model.getQuads(block.getDefaultState(), Direction.NORTH, Random.create(42L));
+                List<BakedQuad> quadList = model.getParts(Random.create(42L)).getFirst().getQuads(Direction.NORTH);
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).getSprite().getContents().getId();
+                    id = quadList.get(0).sprite().getContents().getId();
                     if (id != null && id != MissingSprite.getMissingSpriteId()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;
@@ -191,19 +187,19 @@ public class ModelHelper {
                 }
             }
         } else if (postfix.equals("_top") && !PFMDataGenerator.areAssetsRunning()) {
-            BakedModel model = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(block.getDefaultState());
+            BlockStateModel model = MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(block.getDefaultState());
             if (model != null) {
-                List<BakedQuad> quadList = model.getQuads(block.getDefaultState(), Direction.UP, Random.create(42L));
+                List<BakedQuad> quadList = model.getParts(Random.create(42L)).getFirst().getQuads(Direction.UP);
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).getSprite().getContents().getId();
+                    id = quadList.get(0).sprite().getContents().getId();
                     if (id != null && id != MissingSprite.getMissingSpriteId()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;
                     }
                 }
-                quadList = model.getQuads(block.getDefaultState(), Direction.DOWN, Random.create(42L));
+                quadList = model.getParts(Random.create(42L)).getFirst().getQuads(Direction.DOWN);
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).getSprite().getContents().getId();
+                    id = quadList.get(0).sprite().getContents().getId();
                     if (id != null && id != MissingSprite.getMissingSpriteId()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;

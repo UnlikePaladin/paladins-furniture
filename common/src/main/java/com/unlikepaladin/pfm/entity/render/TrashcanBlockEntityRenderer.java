@@ -3,20 +3,19 @@ package com.unlikepaladin.pfm.entity.render;
 import com.unlikepaladin.pfm.blocks.InnerTrashcanBlock;
 import com.unlikepaladin.pfm.blocks.TrashcanBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
@@ -26,7 +25,7 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implemen
     }
 
     @Override
-    public void render(T trashcanBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
+    public void render(T trashcanBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light, int overlay, Vec3d cameraPos) {
         if (!(trashcanBlockEntity.getCachedState().getBlock() instanceof TrashcanBlock) && trashcanBlockEntity instanceof TrashcanBlockEntity) {
             for (int i = 0; i < 9; i++)
             {
@@ -82,7 +81,7 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implemen
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rot));
                 int lightAbove = WorldRenderer.getLightmapCoordinates(trashcanBlockEntity.getWorld(), trashcanBlockEntity.getPos().up());
                 matrices.scale(0.8f, 0.8f, 0.8f);
-                this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, overlay, matrices, vertexConsumerProvider, trashcanBlockEntity.getWorld(), (int) (trashcanBlockEntity.getPos().asLong()+ i));
+                this.itemRenderer.renderItem(itemStack, ItemDisplayContext.GROUND, lightAbove, overlay, matrices, vertexConsumerProvider, trashcanBlockEntity.getWorld(), (int) (trashcanBlockEntity.getPos().asLong()+ i));
                 matrices.pop();
             }
         }

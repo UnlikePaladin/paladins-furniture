@@ -98,7 +98,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
             double z = pos.getZ() + 0.5 - ((direction.getOffsetZ() * f) + (direction.rotateYClockwise().getOffsetZ() * f));
             for (int k = 0; k < 4; ++k) {
                 if (!(random.nextFloat() < 0.9f))
-                    world.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 5.0E-4, 0.0);
+                    world.addParticleClient(ParticleTypes.SMOKE, x, y, z, 0.0, 5.0E-4, 0.0);
             }
         }
     }
@@ -121,12 +121,12 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         super.readNbt(nbt, registryLookup);
         this.itemsBeingCooked.clear();
         Inventories.readNbt(nbt, this.itemsBeingCooked, registryLookup);
-        if (nbt.contains("CookingTimes", 11)) {
-            is = nbt.getIntArray("CookingTimes");
+        if (nbt.contains("CookingTimes")) {
+            is = nbt.getIntArray("CookingTimes").orElse(new int[0]);
             System.arraycopy(is, 0, this.cookingTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
         }
-        if (nbt.contains("CookingTotalTimes", 11)) {
-            is = nbt.getIntArray("CookingTotalTimes");
+        if (nbt.contains("CookingTotalTimes")) {
+            is = nbt.getIntArray("CookingTotalTimes").orElse(new int[0]);
             System.arraycopy(is, 0, this.cookingTotalTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
         }
     }

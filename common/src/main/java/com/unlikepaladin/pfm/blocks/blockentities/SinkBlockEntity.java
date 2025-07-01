@@ -36,8 +36,8 @@ public class SinkBlockEntity extends BlockEntity {
 
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        sinkTimer = nbt.getInt("sinkTimer");
-        isFilling = nbt.getBoolean("isFilling");
+        sinkTimer = nbt.getInt("sinkTimer").orElse(0);
+        isFilling = nbt.getBoolean("isFilling").orElse(false);
         super.readNbt(nbt, registryLookup);
     }
 

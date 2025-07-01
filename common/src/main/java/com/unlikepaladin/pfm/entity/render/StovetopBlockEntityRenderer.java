@@ -4,18 +4,17 @@ import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 @Environment(value= EnvType.CLIENT)
 public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
@@ -28,7 +27,7 @@ public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
     }
 
     @Override
-    public void render(StovetopBlockEntity stovetopBlockEntity, float f, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
+    public void render(StovetopBlockEntity stovetopBlockEntity, float f, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, int j, Vec3d cameraPos) {
         if (stovetopBlockEntity instanceof StovetopBlockEntity) {
             Direction direction = stovetopBlockEntity.getCachedState().get(KitchenStovetopBlock.FACING);
             DefaultedList<ItemStack> itemList = stovetopBlockEntity.getItemsBeingCooked();
@@ -58,7 +57,7 @@ public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(90.0f));
                 matrices.translate(-0.1625, -0.1625, 0.0);
                 matrices.scale(0.355f, 0.355f, 0.355f);
-                this.itemRenderer.renderItem(itemStack, ModelTransformationMode.FIXED, i, j, matrices, vertexConsumerProvider,stovetopBlockEntity.getWorld(), k + l);
+                this.itemRenderer.renderItem(itemStack, ItemDisplayContext.FIXED, i, j, matrices, vertexConsumerProvider,stovetopBlockEntity.getWorld(), k + l);
                 matrices.pop();
             }
         }

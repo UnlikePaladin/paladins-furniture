@@ -6,6 +6,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
+import net.minecraft.component.type.TooltipDisplayComponent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
@@ -25,6 +26,7 @@ import net.minecraft.world.WorldView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class ShowerHandleItem extends BlockItem {
@@ -94,7 +96,7 @@ public class ShowerHandleItem extends BlockItem {
 
     private void setShowerHeadPosNBT(ItemStack stack, BlockPos pos) {
         NbtCompound nbtCompound = createNbt(stack);
-        if(!nbtCompound.contains("showerHead", NbtElement.LONG_TYPE)) {
+        if(!nbtCompound.contains("showerHead")) {
             nbtCompound.put("showerHead", NbtLong.of(0));
         }
 
@@ -109,8 +111,8 @@ public class ShowerHandleItem extends BlockItem {
     public static NbtLong getShowerHead(ItemStack stack) {
         if (stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
             NbtCompound blockEntityTag = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).getNbt();
-            if(blockEntityTag.contains("showerHead", NbtElement.LONG_TYPE)) {
-                return (NbtLong) blockEntityTag.get("showerHead");
+            if(blockEntityTag.contains("showerHead")) {
+                return NbtLong.of(blockEntityTag.getLong("showerHead").orElse(0L));
             }
         }
         return null;
@@ -127,10 +129,10 @@ public class ShowerHandleItem extends BlockItem {
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
+    public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
         if (stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA) && getShowerHead(stack) != null) {
-            tooltip.add(Text.translatable("tooltip.pfm.shower_handle_connected", 1));
+            textConsumer.accept(Text.translatable("tooltip.pfm.shower_handle_connected", 1));
         }
-        super.appendTooltip(stack, context, tooltip, type);
+        super.appendTooltip(stack, context, displayComponent, textConsumer, type);
     }
 }

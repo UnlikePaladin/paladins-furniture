@@ -179,17 +179,15 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
+
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.isOf(newState.getBlock())) {
-            return;
-        }
+    public void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof StovetopBlockEntity stovetopBlockEntity) {
             ItemScatterer.spawn(world, pos, stovetopBlockEntity.getInventory());
             world.updateComparators(pos, this);
             stovetopBlockEntity.markRemoved();
         }
-        super.onStateReplaced(state, world, pos, newState, moved);
+        super.onStateReplaced(state, world, pos, moved);
     }
 }

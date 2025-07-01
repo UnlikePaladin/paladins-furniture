@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+//TODO: Fix CFBH compat
 public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     private PFMClientModCompatibility clientModCompatibility;
     @Override
@@ -56,8 +57,8 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
 
     @Override
     public void registerBlockEntityTypes() {
-        this.registerLookup("kitchen_item_processor", KitchenItemProcessor.class, BlockEntities.STOVE_BLOCK_ENTITY);
-        this.registerLookup("kitchen_item_provider", KitchenItemProvider.class, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
+        //this.registerLookup("kitchen_item_processor", KitchenItemProcessor.class, BlockEntities.STOVE_BLOCK_ENTITY);
+        //this.registerLookup("kitchen_item_provider", KitchenItemProvider.class, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
     }
 
     @Override
@@ -93,14 +94,14 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
         builder.add(freezers);
     }
 
-    private <T> void registerLookup(String provName, Class<T> clazz, BlockEntityType<?>... blockEntities) {
+    /*private <T> void registerLookup(String provName, Class<T> clazz, BlockEntityType<?>... blockEntities) {
         Identifier identifier = Identifier.of(getModId(), provName);
         BlockApiLookup<T, Void> lookup = BlockApiLookup.get(identifier, clazz, Void.class);
         lookup.registerForBlockEntities((blockEntity, context) -> {
-            return blockEntity instanceof BalmBlockEntity ? (T) ((BalmBlockEntity) blockEntity).getProvider(clazz) : ((BlockEntityContract)blockEntity).getProvider(clazz);
+            return blockEntity instanceof BalmBlockEntity ? (T) ((BalmBlockEntity) blockEntity).getAtt(clazz) : ((BlockEntityContract)blockEntity).getProvider(clazz);
         }, blockEntities);
     }
-
+*/
     public static PFMCookingForBlockheads getInstance() {
         return new PFMCookingForBlockheadsImpl();
     }

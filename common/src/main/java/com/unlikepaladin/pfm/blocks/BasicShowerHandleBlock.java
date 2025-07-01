@@ -117,7 +117,6 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
         else {
         state = state.cycle(POWERED);}
         world.setBlockState(pos, state, Block.NOTIFY_ALL);
-        this.updateNeighbors(state, world, pos);
         if (world.getBlockEntity(pos) instanceof ShowerHandleBlockEntity)
             ((ShowerHandleBlockEntity)(world.getBlockEntity(pos))).setState(state.get(POWERED));
         return state;
@@ -167,11 +166,6 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
-    }
-
-    private void updateNeighbors(BlockState state, World world, BlockPos pos) {
-        world.updateNeighborsAlways(pos, this);
-        world.updateNeighborsAlways(pos.offset(getDirection(state).getOpposite()), this);
     }
 
     @Override

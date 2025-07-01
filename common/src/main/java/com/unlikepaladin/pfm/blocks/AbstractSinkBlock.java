@@ -12,6 +12,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.fluid.Fluid;
@@ -142,24 +143,24 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
         if (world.isClient) {
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
             if (facing == Direction.EAST) {
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
             }
             else if (facing == Direction.SOUTH){
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.76, 0.0, 0.0, 0.0);
             }
             else if (facing == Direction.NORTH){
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 1.19, z + 0.24, 0.0, 0.0, 0.0);
             }
             else {
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
             }
         }
     }
@@ -201,7 +202,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
         if (world instanceof ServerWorld serverWorld && entity.isOnFire() && this.isEntityTouchingFluid(state, pos, entity)) {
             entity.extinguish();
             if (entity.canModifyAt(serverWorld, pos)) {

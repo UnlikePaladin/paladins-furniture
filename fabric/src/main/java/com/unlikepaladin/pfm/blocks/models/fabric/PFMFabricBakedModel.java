@@ -1,46 +1,38 @@
 package com.unlikepaladin.pfm.blocks.models.fabric;
 
-import com.mojang.datafixers.util.Pair;
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.fabric.PFMBakedModelParticleExtension;
-import com.unlikepaladin.pfm.client.model.PFMBakedModelGetQuadsExtension;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelSetPropertiesExtension;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.model.FabricBlockStateModel;
 import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexFormatElement;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
+import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
+import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 
-public abstract class PFMFabricBakedModel extends AbstractBakedModel implements FabricBakedModel, PFMBakedModelParticleExtension, PFMBakedModelSetPropertiesExtension {
+public abstract class PFMFabricBakedModel extends AbstractBakedModel implements FabricBlockStateModel, PFMBakedModelParticleExtension, PFMBakedModelSetPropertiesExtension {
     protected BlockState blockState;
     protected VariantBase<?> variant;
 
-    public PFMFabricBakedModel(ModelBakeSettings settings, List<BakedModel> bakedModels) {
-        super(settings, bakedModels);
+    public PFMFabricBakedModel(ModelBakeSettings settings, ModelSettings itemBakeSettings, List<BlockModelPart> bakedModels) {
+        super(settings, itemBakeSettings, bakedModels);
     }
+
+
 
     public void pushTextureTransform(QuadEmitter context, Sprite sprite) {
         context.pushTransform(quad -> {
@@ -88,8 +80,13 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
     }
 
     @Override
-    public Sprite getParticleSprite() {
-        return getTemplateBakedModels().get(0).getParticleSprite();
+    public Sprite particleSprite() {
+        return getTemplateBakedModels().get(0).particleSprite();
+    }
+
+    @Override
+    public Sprite particleSprite(BlockRenderView blockView, BlockPos pos, BlockState state) {
+        return pfm$getParticle(state);
     }
 
     @Override
@@ -111,4 +108,16 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
     public VariantBase<?> getVariant() {
         return variant;
     }
+
+
+    public void emitModelQuads(QuadEmitter emitter, BlockStateModel model, Random random) {
+        List<BlockModelPart> parts = model.getParts(random);
+        int partCount = parts.size();
+
+        for(int i = 0; i < partCount; ++i) {
+            parts.get(i).emitQuads(emitter, null);
+        }
+    }
+
+    abstract public void emitItemQuads(QuadEmitter context, Random randomSupplier);
 }

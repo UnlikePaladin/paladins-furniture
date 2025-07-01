@@ -1,23 +1,17 @@
 package com.unlikepaladin.pfm.blocks.models;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.BasicChairBlock;
 import com.unlikepaladin.pfm.blocks.LogStoolBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.TexturedRenderLayers;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.*;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -26,53 +20,38 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Pair;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public abstract class AbstractBakedModel implements BakedModel {
-    protected final ModelBakeSettings settings;
-    private final List<BakedModel> templateBakedModels;
+public abstract class AbstractBakedModel implements BlockStateModel {
+    private final ModelBakeSettings settings;
+    private final List<BlockModelPart> templateBakedModels;
+    public ModelSettings itemDisplaySettings;
 
     public static boolean reloading = false;
-    public AbstractBakedModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
+    public AbstractBakedModel(ModelBakeSettings settings, ModelSettings itemBakeSettings, List<BlockModelPart> templateBakedModels) {
         this.settings = settings;
-        this.templateBakedModels = templateBakedModels;
+        this.templateBakedModels = Objects.requireNonNull(templateBakedModels);
+        this.itemDisplaySettings = itemBakeSettings;
     }
 
-    public List<BakedModel> getTemplateBakedModels() {
+    public ModelSettings getItemDisplaySettings() {
+        return itemDisplaySettings;
+    }
+
+    public List<BlockModelPart> getTemplateBakedModels() {
         return templateBakedModels;
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
-        return Collections.emptyList();
+    public List<BlockModelPart> getParts(Random random) {
+        return templateBakedModels;
     }
 
     @Override
-    public boolean useAmbientOcclusion() {
-        return true;
-    }
-
-    @Override
-    public boolean hasDepth() {
-        return true;
-    }
-
-    @Override
-    public boolean isSideLit() {
-        return true;
-    }
-
-    public boolean isBuiltin() {
-        return false;
-    }
-
-    @Override
-    public ModelTransformation getTransformation() {
-        return templateBakedModels.get(0).getTransformation();
+    public void addParts(Random random, List<BlockModelPart> parts) {
+        parts.addAll(getTemplateBakedModels());
     }
 
     Map<Block, VariantBase<?>> blockVariantMap = new HashMap<>();
@@ -133,11 +112,11 @@ public abstract class AbstractBakedModel implements BakedModel {
             blockItemBlockStateMap.put(blockItem, state);
             return getSpriteFromState(state);
         } else if (element == null) {
-            return Collections.singletonList(getTemplateBakedModels().get(0).getParticleSprite());
+            return Collections.singletonList(getTemplateBakedModels().get(0).particleSprite());
         } else {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Invalid element for sprite list method");
         }
-        return Collections.singletonList(getTemplateBakedModels().get(0).getParticleSprite());
+        return Collections.singletonList(getTemplateBakedModels().get(0).particleSprite());
     }
     protected List<Sprite> getBedSprites(DyeColor color, BlockState state) {
         List<Sprite> list = new ArrayList<>(3);

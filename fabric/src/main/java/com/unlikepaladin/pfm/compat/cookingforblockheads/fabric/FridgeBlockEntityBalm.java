@@ -1,20 +1,14 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric;
 
-import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
-import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 
-import java.util.*;
-
-public class FridgeBlockEntityBalm extends FridgeBlockEntity implements BalmContainerProvider, BalmProviderHolder, BlockEntityContract {
+public class FridgeBlockEntityBalm extends FridgeBlockEntity implements BalmContainerProvider, BlockEntityContract {
     private final KitchenItemProvider itemProvider;
 
     public FridgeBlockEntityBalm(BlockPos pos, BlockState state) {
@@ -27,7 +21,7 @@ public class FridgeBlockEntityBalm extends FridgeBlockEntity implements BalmCont
         return this;
     }
 
-    public List<BalmProvider<?>> getProviders() {
+   /* public List<BalmProvider<?>> getProviders() {
         return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider));
     }
 
@@ -56,5 +50,5 @@ public class FridgeBlockEntityBalm extends FridgeBlockEntity implements BalmCont
 
         BalmProvider<?> found = this.providers.get(clazz);
         return found != null ? (T) found.getInstance() : null;
-    }
+    }*/
 }

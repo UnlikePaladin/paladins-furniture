@@ -1,23 +1,30 @@
 package com.unlikepaladin.pfm.blocks.models.ladder;
 
-import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawerSmall.UnbakedKitchenWallDrawerSmallModel;
+import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
 import com.unlikepaladin.pfm.data.materials.*;
 import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.render.model.*;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.client.render.model.json.ModelVariant;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
 
-public class UnbakedLadderModel implements UnbakedModel {
+public record UnbakedLadderModel(ModelVariant variant) implements PFMUnbakedBlockStateModel {
+    public static final MapCodec<UnbakedLadderModel> MAP_CODEC = RecordCodecBuilder.mapCodec
+            (instance ->
+                    instance.group(ModelVariant.MAP_CODEC.forGetter(UnbakedLadderModel::variant))
+                            .apply(instance, UnbakedLadderModel::new));
+
+    public static final Codec<UnbakedLadderModel> CODEC = MAP_CODEC.codec();
+
     public static final Identifier[] LADDER_PARTS_BASE = new Identifier[] {
             Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bunk_ladder/simple_ladder"),
             Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bunk_ladder/simple_ladder_top")
@@ -35,41 +42,39 @@ public class UnbakedLadderModel implements UnbakedModel {
         }
     };
 
-    private static final Identifier PARENT = Identifier.of("block/block");
-    public Collection<Identifier> getModelDependencies() {
-        return List.of(PARENT);
-    }
-
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        return Collections.emptyList();
-    }
-
-    @Nullable
     @Override
-    public BakedModel bake(ModelTextures textures, Baker loader, ModelBakeSettings rotationContainer, boolean ambientOcclusion, boolean isSideLit, ModelTransformation transformation){
-        if (PFMRuntimeResources.modelCacheMap.containsKey(LADDER_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(LADDER_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
-            return getBakedModel(LADDER_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(LADDER_MODEL_ID).getCachedModelParts().get(rotationContainer));
+    public BlockStateModel bake(Baker baker){
+        ModelBakeSettings settings = variant.modelState().asModelBakeSettings();
+        ModelSettings itemSettings = ModelSettings.resolveSettings(baker, baker.getModel(LADDER_PARTS_BASE[0]), baker.getModel(LADDER_PARTS_BASE[0]).getTextures());
+
+        if (PFMRuntimeResources.modelCacheMap.containsKey(LADDER_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(LADDER_MODEL_ID).getCachedModelParts().containsKey(settings))
+            return getBakedModel(LADDER_MODEL_ID, settings, itemSettings, PFMRuntimeResources.modelCacheMap.get(LADDER_MODEL_ID).getCachedModelParts().get(settings));
 
         if (!PFMRuntimeResources.modelCacheMap.containsKey(LADDER_MODEL_ID))
             PFMRuntimeResources.modelCacheMap.put(LADDER_MODEL_ID, new PFMBakedModelContainer());
 
-        List<BakedModel> bakedModelList = new ArrayList<>();
+        List<BlockModelPart> bakedModelList = new ArrayList<>();
         for (Identifier modelPart : LADDER_PARTS_BASE) {
-            bakedModelList.add(loader.bake(modelPart, rotationContainer));
+            bakedModelList.add(GeometryBakedModel.create(baker, modelPart, settings));
         }
 
-        PFMRuntimeResources.modelCacheMap.get(LADDER_MODEL_ID).getCachedModelParts().put(rotationContainer, bakedModelList);
-        return getBakedModel(LADDER_MODEL_ID, rotationContainer, bakedModelList);
+        PFMRuntimeResources.modelCacheMap.get(LADDER_MODEL_ID).getCachedModelParts().put(settings, bakedModelList);
+        return getBakedModel(LADDER_MODEL_ID, settings, itemSettings, bakedModelList);
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Identifier modelId, ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public static BlockStateModel getBakedModel(Identifier modelId, ModelBakeSettings settings, ModelSettings itemSettings, List<BlockModelPart> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolve(Resolver resolver) {
         for (Identifier c : LADDER_PARTS_BASE)
-            resolver.resolve(c);
+            resolver.markDependency(c);
+    }
+
+    @Override
+    public MapCodec<? extends BlockStateModel.Unbaked> codec() {
+        return MAP_CODEC;
     }
 }

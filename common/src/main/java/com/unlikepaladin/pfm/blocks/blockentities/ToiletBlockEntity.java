@@ -30,7 +30,7 @@ public class ToiletBlockEntity extends BlockEntity {
 
     @Override
     protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        flushTimer = nbt.getInt("flushTimer");
+        flushTimer = nbt.getInt("flushTimer").orElse(0);
         super.readNbt(nbt, registryLookup);
     }
 

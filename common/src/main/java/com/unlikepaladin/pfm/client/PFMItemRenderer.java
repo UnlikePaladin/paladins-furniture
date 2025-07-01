@@ -3,24 +3,22 @@ package com.unlikepaladin.pfm.client;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
-import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
-import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import com.unlikepaladin.pfm.entity.render.PFMBedBlockEntityRenderer;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.item.ModelTransformationMode;
+import net.minecraft.client.render.model.BlockModelPart;
+import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Arm;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Vec3d;
 
 import java.util.*;
 
@@ -36,8 +34,8 @@ public class PFMItemRenderer {
         }
     }
 
-    public static Map<Boolean, BakedModel> bedModel = new HashMap<>();
-    public BakedModel getBedModel(boolean classic) {
+    public static Map<Boolean, BlockModelPart> bedModel = new HashMap<>();
+    public BlockModelPart getBedModel(boolean classic) {
         if (bedModel.containsKey(classic) && bedModel.get(classic) != null) {
             return bedModel.get(classic);
         }
@@ -45,20 +43,19 @@ public class PFMItemRenderer {
         return bedModel.get(classic);
     }
 
-    public void render(ItemStack stack, ModelTransformationMode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(ItemStack stack, ItemDisplayContext mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, Vec3d cameraPos) {
         boolean leftHanded = MinecraftClient.getInstance().player != null && MinecraftClient.getInstance().player.getMainArm() == Arm.LEFT && mode.isFirstPerson();
 
         if (stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof SimpleBedBlock) {
             matrices.push();
 
             Block block = ((BlockItem) stack.getItem()).getBlock();
-            BakedModel bedModel = getBedModel(stack.getItem().getTranslationKey().contains("classic"));
-            bedModel.getTransformation().getTransformation(mode).apply(leftHanded, matrices);
-            matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
+//            BlockModelPart bedModel = getBedModel(stack.getItem().getTranslationKey().contains("classic"));
+
 
             this.renderBed.setPFMColor(((SimpleBedBlock)block).getColor());
             BlockEntityRenderer<PFMBedBlockEntity> blockEntityRenderer = blockEntityRenderDispatcher.get(renderBed);
-            blockEntityRenderer.render(renderBed, 1.0f, matrices, vertexConsumers, light, overlay);
+            blockEntityRenderer.render(renderBed, 1.0f, matrices, vertexConsumers, light, overlay, cameraPos);
             matrices.pop();
         }
     }

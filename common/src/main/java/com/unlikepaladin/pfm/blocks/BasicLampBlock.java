@@ -165,7 +165,6 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
     public BlockState togglePower(BlockState state, World world, BlockPos pos) {
         state = state.cycle(LIT);
         world.setBlockState(pos, state, Block.NOTIFY_ALL);
-        world.updateNeighborsAlways(pos, this);
         return state;
     }
 

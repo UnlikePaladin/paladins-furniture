@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.client.fabric;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
@@ -36,17 +35,12 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
-import com.unlikepaladin.pfm.client.model.PFMItemModel;
+import net.fabricmc.fabric.api.client.model.loading.v1.CustomUnbakedBlockStateModel;
+import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
-import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.item.model.ItemModelTypes;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.Baker;
-import net.minecraft.client.render.model.GroupableModel;
+import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,120 +48,44 @@ import java.util.List;
 public class PFMModelLoadingPlugin implements ModelLoadingPlugin {
     @Override
     public void initialize(Context pluginContext) {
-        pluginContext.modifyModelOnLoad().register((oldModel, context) -> {
-            UnbakedModel model = loadModelResource(context.id());
-            if (model != null)
-                return model;
-            return oldModel;
-        });
-        pluginContext.addModels(provideExtraModels());
+        provideExtraModels().forEach(identifier -> {pluginContext.addModel(ExtraModelKey.create(identifier::getPath), SimpleUnbakedExtraModel.blockStateModel(identifier));});
     }
 
-    public @Nullable UnbakedModel loadModelResource(Identifier id) {
-        Identifier resourceId = id;
-        if (ModelHelper.containsIdentifier(UnbakedMirrorModel.MIRROR_MODEL_IDS, resourceId)){
-            return new UnbakedMirrorModel(UnbakedMirrorModel.DEFAULT_TEXTURES[2], ModelHelper.getVanillaConcreteColor(resourceId), UnbakedMirrorModel.DEFAULT_TEXTURES[1], new ArrayList<>(), ModelHelper.getColor(resourceId));
-        } else if (UnbakedBedModel.BED_MODEL_IDS.contains(resourceId)){
-            return new UnbakedBedModel();
-        }
-        else if (UnbakedBasicTableModel.MODEL_IDS.contains(resourceId)){
-            return new UnbakedBasicTableModel();
-        }
-        else if (UnbakedClassicTableModel.MODEL_IDS.contains(resourceId)){
-            return new UnbakedClassicTableModel();
-        }
-        else if (UnbakedLogTableModel.TABLE_MODEL_IDS.contains(resourceId)){
-            return new UnbakedLogTableModel();
-        }
-        else if (UnbakedDinnerTableModel.TABLE_MODEL_IDS.contains(resourceId)){
-            return new UnbakedDinnerTableModel();
-        }
-        else if (UnbakedModernDinnerTableModel.TABLE_MODEL_IDS.contains(resourceId)){
-            return new UnbakedModernDinnerTableModel();
-        }
-        else if (UnbakedClassicNightstandModel.NIGHSTAND_MODEL_IDS.contains(resourceId)){
-            return new UnbakedClassicNightstandModel();
-        }
-        else if (UnbakedChairModel.CHAIR_MODEL_IDS.contains(resourceId)){
-            return new UnbakedChairModel();
-        }
-        else if (UnbakedChairDinnerModel.CHAIR_DINNER_MODEL_IDS.contains(resourceId)){
-            return new UnbakedChairDinnerModel();
-        }
-        else if (UnbakedChairModernModel.CHAIR_MODERN_MODEL_IDS.contains(resourceId)){
-            return new UnbakedChairModernModel();
-        }
-        else if (UnbakedChairClassicModel.CHAIR_CLASSIC_MODEL_IDS.contains(resourceId)){
-            return new UnbakedChairClassicModel();
-        }
-        else if (UnbakedSimpleStoolModel.SIMPLE_STOOL_MODEL_IDS.contains(resourceId)){
-            return new UnbakedSimpleStoolModel();
-        }
-        else if (UnbakedClassicStoolModel.CLASSIC_STOOL_MODEL_IDS.contains(resourceId)){
-            return new UnbakedClassicStoolModel();
-        }
-        else if (UnbakedModernStoolModel.MODERN_STOOL_MODEL_IDS.contains(resourceId)){
-            return new UnbakedModernStoolModel();
-        }
-        else if (UnbakedLogStoolModel.LOG_STOOL_MODEL_IDS.contains(resourceId)){
-            return new UnbakedLogStoolModel();
-        }
-        else if (UnbakedKitchenCounterModel.COUNTER_MODEL_IDS.contains(resourceId)){
-            return new UnbakedKitchenCounterModel();
-        }
-        else if (UnbakedKitchenDrawerModel.DRAWER_MODEL_IDS.contains(resourceId)){
-            return new UnbakedKitchenDrawerModel();
-        }
-        else if (UnbakedKitchenWallCounterModel.COUNTER_MODEL_IDS.contains(resourceId)){
-            return new UnbakedKitchenWallCounterModel();
-        }
-        else if (UnbakedKitchenWallDrawerModel.DRAWER_MODEL_IDS.contains(resourceId)){
-            return new UnbakedKitchenWallDrawerModel();
-        }
-        else if (UnbakedKitchenCabinetModel.CABINET_MODEL_IDS.contains(resourceId)){
-            return new UnbakedKitchenCabinetModel();
-        }
-        else if (UnbakedKitchenCounterOvenModel.OVEN_MODEL_IDS.contains(resourceId)){
-            return new UnbakedKitchenCounterOvenModel();
-        }
-        else if (UnbakedKitchenSinkModel.SINK_MODEL_IDS.contains(resourceId)){
-            return new UnbakedKitchenSinkModel();
-        }
-        else if (UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_IDS.contains(resourceId)){
-            return new UnbakedKitchenWallDrawerSmallModel();
-        }
-        else if (UnbakedIronFridgeModel.IRON_FRIDGE_MODEL_IDS.contains(resourceId)){
-            return new UnbakedIronFridgeModel();
-        }
-        else if (UnbakedFridgeModel.FRIDGE_MODEL_IDS.contains(resourceId)){
-            return new UnbakedFridgeModel(resourceId);
-        }
-        else if (UnbakedFreezerModel.FREEZER_MODEL_IDS.contains(resourceId)){
-            return new UnbakedFreezerModel(resourceId);
-        }
-        else if (UnbakedBasicLampModel.LAMP_MODEL_IDS.contains(resourceId)){
-            return new UnbakedBasicLampModel();
-        }
-        else if (UnbakedLadderModel.LADDER_MODEL_IDS.contains(resourceId)){
-            return new UnbakedLadderModel();
-        }
-        else if (UnbakedCoffeeBasicTableModel.MODEL_IDS.contains(resourceId)){
-            return new UnbakedCoffeeBasicTableModel();
-        }
-        else if (UnbakedModernCoffeeTableModel.TABLE_MODEL_IDS.contains(resourceId)){
-            return new UnbakedModernCoffeeTableModel();
-        }
-        else if (UnbakedClassicCoffeeTableModel.MODEL_IDS.contains(resourceId)){
-            return new UnbakedClassicCoffeeTableModel();
-        }
-        else if (UnbakedBasicDeskModel.MODEL_IDS.contains(resourceId)){
-            return new UnbakedBasicDeskModel();
-        }
-        else if (UnbakedBasicDeskCabinetModel.MODEL_IDS.contains(resourceId)){
-            return new UnbakedBasicDeskCabinetModel();
-        }
-        else
-            return null;
+    public static void registerCustomModels() {
+        CustomUnbakedBlockStateModel.register(UnbakedMirrorModel.MIRROR_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedMirrorModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedBedModel.BED_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedBedModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedBasicTableModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedBasicTableModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedClassicTableModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedClassicTableModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedLogTableModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedLogTableModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedDinnerTableModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedDinnerTableModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedModernDinnerTableModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedModernDinnerTableModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedClassicNightstandModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedChairModel.CHAIR_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedChairModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedChairDinnerModel.CHAIR_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedChairDinnerModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedChairModernModel.CHAIR_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedChairModernModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedChairClassicModel.CHAIR_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedChairClassicModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedSimpleStoolModel.STOOL_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedSimpleStoolModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedClassicStoolModel.STOOL_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedClassicStoolModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedModernStoolModel.STOOL_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedModernStoolModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedLogStoolModel.STOOL_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedLogStoolModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedKitchenCounterModel.COUNTER_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedKitchenCounterModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedKitchenDrawerModel.DRAWER_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedKitchenDrawerModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedKitchenWallCounterModel.COUNTER_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedKitchenWallCounterModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedKitchenWallDrawerModel.DRAWER_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedKitchenWallDrawerModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedKitchenCabinetModel.CABINET_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedKitchenCabinetModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedKitchenCounterOvenModel.OVEN_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedKitchenCounterOvenModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedKitchenSinkModel.SINK_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedKitchenSinkModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedKitchenWallDrawerSmallModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedIronFridgeModel.IRON_FRIDGE_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedIronFridgeModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedFridgeModel.FRIDGE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedFridgeModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedFreezerModel.FREEZER_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedFreezerModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedBasicLampModel.LAMP_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedBasicLampModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedLadderModel.LADDER_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedLadderModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedCoffeeBasicTableModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedCoffeeBasicTableModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedModernCoffeeTableModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedModernCoffeeTableModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedClassicCoffeeTableModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedClassicCoffeeTableModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedBasicDeskModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedBasicDeskModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedBasicDeskCabinetModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedBasicDeskCabinetModel.MAP_CODEC);
     }
     
     public List<Identifier> provideExtraModels() {

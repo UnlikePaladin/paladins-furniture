@@ -2,20 +2,19 @@ package com.unlikepaladin.pfm.entity.render;
 
 import com.unlikepaladin.pfm.blocks.PlateBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.Vec3d;
 
 public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
@@ -25,7 +24,7 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
         itemRenderer = ctx.getItemRenderer();
     }
     @Override
-    public void render(PlateBlockEntity plateBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light, int overlay) {
+    public void render(PlateBlockEntity plateBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light, int overlay, Vec3d cameraPos) {
         if (plateBlockEntity instanceof PlateBlockEntity) {
             Direction direction = plateBlockEntity.getCachedState().get(PlateBlock.FACING);
             itemStack = plateBlockEntity.getItemInPlate();
@@ -47,7 +46,7 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
                 matrices.translate(0.0, 0.11, 0.05);
             }
             int lightAbove = WorldRenderer.getLightmapCoordinates(plateBlockEntity.getWorld(), plateBlockEntity.getPos().up());
-            this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumerProvider, plateBlockEntity.getWorld(),0);
+            this.itemRenderer.renderItem(itemStack, ItemDisplayContext.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumerProvider, plateBlockEntity.getWorld(),0);
             matrices.pop();
         }
     }

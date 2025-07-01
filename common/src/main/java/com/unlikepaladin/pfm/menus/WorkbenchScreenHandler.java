@@ -67,7 +67,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
             @Override
             public void onTakeItem(PlayerEntity player, ItemStack stack) {
                 if (WorkbenchScreenHandler.this.craft()) {
-                    stack.onCraftByPlayer(player.getWorld(), player, stack.getCount());
+                    stack.onCraftByPlayer(player, stack.getCount());
                     WorkbenchScreenHandler.this.output.unlockLastRecipe(player, List.of());
                     WorkbenchScreenHandler.this.populateResult(player);
                     context.run((world, pos) -> {
@@ -237,7 +237,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
             Item item = itemStack2.getItem();
             itemStack = itemStack2.copy();
             if (index == 0) {
-                item.onCraftByPlayer(itemStack2, player.getWorld(), player);
+                item.onCraftByPlayer(itemStack2, player);
                 if (!this.insertItem(itemStack2, 1, 37, true)) {
                     return ItemStack.EMPTY;
                 }

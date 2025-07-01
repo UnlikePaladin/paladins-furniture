@@ -7,15 +7,13 @@ import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
 import net.blay09.mods.balm.api.fluid.FluidTank;
-import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.util.math.Direction;
 
 import java.util.*;
 
-public interface BlockEntityContract extends BalmProviderHolder {
-    <T> T getProvider(Class<T> clazz);
+public interface BlockEntityContract {
+    /*<T> T getProvider(Class<T> clazz);
     final Map<Class<?>, BalmProvider<?>> providers = new HashMap<>();
 
     default void buildProviders(List<BalmProviderHolder> providers) {
@@ -98,5 +96,5 @@ public interface BlockEntityContract extends BalmProviderHolder {
                 }
             });
         }
-    }
+    }*/
 }

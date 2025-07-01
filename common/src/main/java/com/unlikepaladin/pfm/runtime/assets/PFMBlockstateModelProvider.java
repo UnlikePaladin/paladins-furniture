@@ -1,15 +1,48 @@
 package com.unlikepaladin.pfm.runtime.assets;
 
-import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
+import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
+import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
+import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
+import com.unlikepaladin.pfm.blocks.models.basicTable.UnbakedBasicTableModel;
+import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
+import com.unlikepaladin.pfm.blocks.models.chair.UnbakedChairModel;
+import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel;
+import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
+import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
+import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
+import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
+import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
+import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
+import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedIronFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenDrawer.UnbakedKitchenDrawerModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenSink.UnbakedKitchenSinkModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenWallCounter.UnbakedKitchenWallCounterModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawer.UnbakedKitchenWallDrawerModel;
+import com.unlikepaladin.pfm.blocks.models.kitchenWallDrawerSmall.UnbakedKitchenWallDrawerSmallModel;
+import com.unlikepaladin.pfm.blocks.models.ladder.UnbakedLadderModel;
+import com.unlikepaladin.pfm.blocks.models.logStool.UnbakedLogStoolModel;
+import com.unlikepaladin.pfm.blocks.models.logTable.UnbakedLogTableModel;
+import com.unlikepaladin.pfm.blocks.models.mirror.UnbakedMirrorModel;
+import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffeeTableModel;
+import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
+import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
+import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
 import com.unlikepaladin.pfm.client.model.PFMBedModelRenderer;
 import com.unlikepaladin.pfm.client.model.PFMItemModel;
+import com.unlikepaladin.pfm.client.model.PFMModelVariantExtension;
 import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.mixin.PFMTextureKeyFactory;
@@ -18,17 +51,24 @@ import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.data.*;
 import net.minecraft.client.item.ItemAsset;
 import net.minecraft.client.render.item.model.ItemModel;
 import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
 import net.minecraft.client.render.item.tint.TintSource;
+import net.minecraft.client.render.model.json.*;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Properties;
+import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.collection.Pool;
+import net.minecraft.util.math.AxisRotation;
 import net.minecraft.util.math.Direction;
 
 import java.nio.file.Path;
@@ -36,7 +76,6 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 public class PFMBlockstateModelProvider extends PFMProvider {
 
@@ -54,9 +93,10 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
         Path path = getParent().getOutput();
 
-        Consumer<BlockStateSupplier> blockStateSupplierConsumer = blockStateSupplier -> {
+        Consumer<BlockModelDefinitionCreator> blockStateSupplierConsumer = blockStateSupplier -> {
             Path jsonPath = getBlockStateJsonPath(path, blockStateSupplier.getBlock());
-            String jsonContent = PFMDataGenerator.GSON.toJson(blockStateSupplier.get());
+            JsonElement element = BlockModelDefinition.CODEC.encodeStart(JsonOps.INSTANCE, blockStateSupplier.createBlockModelDefinition()).getOrThrow();
+            String jsonContent = PFMDataGenerator.GSON.toJson(element);
             enqueueJsonWrite(getWriteQueue(), jsonPath, jsonContent);
         };
 
@@ -131,16 +171,29 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         }
 
         public final void registerFurnitureModel(Item item) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(ModelIds.getItemModelId(item), Optional.empty(), List.of()));
+            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.empty(), List.of(), Optional.empty()));
         }
 
         public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(ModelIds.getItemModelId(item), Optional.of(specialModel), List.of()));
+            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), List.of(), Optional.empty()));
         }
 
         public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel, List<TintSource> tints) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(ModelIds.getItemModelId(item), Optional.of(specialModel), tints));
+            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), tints, Optional.empty()));
         }
+
+        public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel, List<TintSource> tints, BlockState state) {
+            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), tints, Optional.of(state)));
+        }
+
+        public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel, BlockState state) {
+            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.of(specialModel), List.of(), Optional.of(state)));
+        }
+
+        public final void registerFurnitureModel(Item item, BlockState state) {
+            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(((BlockItem)item).getBlock(), Optional.empty(), List.of(), Optional.of(state)));
+        }
+
 
         public void register(List<Item> items) {
             Set<Item> processed = new HashSet<>();
@@ -151,9 +204,14 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                 }
             }
 
+
             for (Item item : items) {
                 if (!processed.contains(item)) {
-                    registerFurnitureModel(item);
+                    if (item instanceof BlockItem blockItem && blockItem.getBlock() instanceof CustomItemBlockState itemBlockState) {
+                        registerFurnitureModel(item, itemBlockState.getItemBlockState());
+                    }  else {
+                        registerFurnitureModel(item);
+                    }
                     processed.add(item);
                 }
             }
@@ -163,13 +221,13 @@ public class PFMBlockstateModelProvider extends PFMProvider {
     static class PFMBlockStateModelGenerator {
         public static Map<Model, Identifier> ModelIDS = new HashMap<>();
 
-        final Consumer<BlockStateSupplier> blockStateCollector;
+        final Consumer<BlockModelDefinitionCreator> blockStateCollector;
         final BiConsumer<Identifier, ModelSupplier> modelCollector;
 
         final List<Identifier> generatedStates = new ArrayList<>();
         final PFMBlockstateModelProvider provider;
 
-        PFMBlockStateModelGenerator(PFMBlockstateModelProvider provider, Consumer<BlockStateSupplier> blockStateCollector, BiConsumer<Identifier, ModelSupplier> modelCollector) {
+        PFMBlockStateModelGenerator(PFMBlockstateModelProvider provider, Consumer<BlockModelDefinitionCreator> blockStateCollector, BiConsumer<Identifier, ModelSupplier> modelCollector) {
             this.provider = provider;
             this.blockStateCollector = blockStateCollector;
             this.modelCollector = modelCollector;
@@ -190,147 +248,175 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             registerCounters();
             provider.getParent().log("Generating Lamps");
             registerLamp();
+            provider.getParent().log("Generating Appliances");
+            registerAppliances();
+            provider.getParent().log("Generating Decorations");
+            registerDecorations();
             provider.getParent().log("Generating Desks");
             registerDesks();
         }
 
         public void registerTuckableChairs() {
             provider.getParent().log("Basic Chairs");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap(), "chair", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMapNonBase(), "chair", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap(), "chair", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedChairModel.CHAIR_MODEL_ID, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMapNonBase(), "chair", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedChairModel.CHAIR_MODEL_ID, identifiers, 90));
 
             provider.getParent().log("Dining Chairs");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMap(), "chair_dinner", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMapNonBase(), "chair_dinner", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMap(), "chair_dinner", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedChairDinnerModel.CHAIR_MODEL_ID, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(DinnerChairBlock.class).getVariantToBlockMapNonBase(), "chair_dinner", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedChairDinnerModel.CHAIR_MODEL_ID, identifiers, 90));
 
             provider.getParent().log("Modern Chairs");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMap(), "chair_modern", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMapNonBase(), "chair_modern", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMap(), "chair_modern", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedChairModernModel.CHAIR_MODEL_ID, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernChairBlock.class).getVariantToBlockMapNonBase(), "chair_modern", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedChairModernModel.CHAIR_MODEL_ID, identifiers, 90));
 
             provider.getParent().log("Classic Chairs");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMap(), "chair_classic", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMapNonBase(), "chair_classic", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMap(), "chair_classic", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedChairClassicModel.CHAIR_MODEL_ID, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicChairBlock.class).getVariantToBlockMapNonBase(), "chair_classic", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedChairClassicModel.CHAIR_MODEL_ID, identifiers, 90));
 
             provider.getParent().log("Log Stools");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(LogStoolBlock.class).getVariantToBlockMap(), "log_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(LogStoolBlock.class).getVariantToBlockMap(), "log_stool", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedLogStoolModel.STOOL_MODEL_ID, identifiers, 90));
 
             provider.getParent().log("Simple Stools");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMap(), "simple_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMapNonBase(), "simple_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMap(), "simple_stool", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedSimpleStoolModel.STOOL_MODEL_ID, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(SimpleStoolBlock.class).getVariantToBlockMapNonBase(), "simple_stool", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedSimpleStoolModel.STOOL_MODEL_ID, identifiers, 90));
 
             provider.getParent().log("Classic Stools");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMap(), "classic_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMapNonBase(), "classic_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMap(), "classic_stool", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedClassicStoolModel.STOOL_MODEL_ID, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicStoolBlock.class).getVariantToBlockMapNonBase(), "classic_stool", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedClassicStoolModel.STOOL_MODEL_ID, identifiers, 90));
 
             provider.getParent().log("Modern Stools");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMap(), "modern_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMapNonBase(), "modern_stool", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMap(), "modern_stool", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedModernStoolModel.STOOL_MODEL_ID, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernStoolBlock.class).getVariantToBlockMapNonBase(), "modern_stool", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedModernStoolModel.STOOL_MODEL_ID, identifiers, 90));
         }
 
         public void registerTables() {
             provider.getParent().log("Basic Tables");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicTableBlock.class).getVariantToBlockMap(), "table_basic", PFMBlockStateModelGenerator::createAxisOrientableTableBlockState);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicTableBlock.class).getVariantToBlockMapNonBase(), "table_basic", PFMBlockStateModelGenerator::createAxisOrientableTableBlockState);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicTableBlock.class).getVariantToBlockMap(), "table_basic", (block, id) -> createAxisOrientableTableBlockState(block, UnbakedBasicTableModel.TABLE_MODEL_ID, id));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicTableBlock.class).getVariantToBlockMapNonBase(), "table_basic", (block, id) -> createAxisOrientableTableBlockState(block, UnbakedBasicTableModel.TABLE_MODEL_ID, id));
 
             provider.getParent().log("Classic Tables");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicTableBlock.class).getVariantToBlockMap(), "table_classic", PFMBlockStateModelGenerator::createSingleStateBlockState);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicTableBlock.class).getVariantToBlockMapNonBase(), "table_classic", PFMBlockStateModelGenerator::createSingleStateBlockState);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicTableBlock.class).getVariantToBlockMap(), "table_classic", (block, id) -> createSingleStateBlockState(block, UnbakedClassicTableModel.TABLE_MODEL_ID, id));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicTableBlock.class).getVariantToBlockMapNonBase(), "table_classic", (block, id) -> createSingleStateBlockState(block, UnbakedClassicTableModel.TABLE_MODEL_ID, id));
 
             provider.getParent().log("Log Tables");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(LogTableBlock.class).getVariantToBlockMap(), "log_table", PFMBlockStateModelGenerator::createOrientableTableBlockState);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(LogTableBlock.class).getVariantToBlockMapNonBase(), "log_table", PFMBlockStateModelGenerator::createOrientableTableBlockState);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(LogTableBlock.class).getVariantToBlockMap(), "log_table", (block, id) -> createOrientableTableBlockState(block, UnbakedLogTableModel.TABLE_MODEL_ID, id));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(LogTableBlock.class).getVariantToBlockMapNonBase(), "log_table", (block, id) -> createOrientableTableBlockState(block, UnbakedLogTableModel.TABLE_MODEL_ID, id));
 
             provider.getParent().log("Raw Log Tables");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(RawLogTableBlock.class).getVariantToBlockMap(), "log_table", PFMBlockStateModelGenerator::createOrientableTableBlockState);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(RawLogTableBlock.class).getVariantToBlockMapNonBase(), "log_table", PFMBlockStateModelGenerator::createOrientableTableBlockState);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(RawLogTableBlock.class).getVariantToBlockMap(), "log_table", (block, id) -> createOrientableTableBlockState(block, UnbakedLogTableModel.TABLE_MODEL_ID, id));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(RawLogTableBlock.class).getVariantToBlockMapNonBase(), "log_table", (block, id) -> createOrientableTableBlockState(block, UnbakedLogTableModel.TABLE_MODEL_ID, id));
 
             provider.getParent().log("Dining Tables");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(DinnerTableBlock.class).getVariantToBlockMap(), "dinner_table", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(DinnerTableBlock.class).getVariantToBlockMapNonBase(), "dinner_table", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(DinnerTableBlock.class).getVariantToBlockMap(), "dinner_table", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedDinnerTableModel.TABLE_MODEL_ID, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(DinnerTableBlock.class).getVariantToBlockMapNonBase(), "dinner_table", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedDinnerTableModel.TABLE_MODEL_ID, identifiers, 90));
 
             provider.getParent().log("Modern Dining Tables");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMap(), "modern_dinner_table", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMapNonBase(), "modern_dinner_table", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMap(), "modern_dinner_table", (block, identifiers) -> createAxisOrientableTableBlockState(block, UnbakedModernDinnerTableModel.TABLE_MODEL_ID, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernDinnerTableBlock.class).getVariantToBlockMapNonBase(), "modern_dinner_table", (block, identifiers) -> createAxisOrientableTableBlockState(block, UnbakedModernDinnerTableModel.TABLE_MODEL_ID, identifiers, 90));
 
             provider.getParent().log("Basic Coffee Tables");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_basic", PFMBlockStateModelGenerator::createAxisOrientableTableBlockState);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_basic", PFMBlockStateModelGenerator::createAxisOrientableTableBlockState);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_basic", (block, identifiers) -> createAxisOrientableTableBlockState(block, UnbakedCoffeeBasicTableModel.TABLE_MODEL_ID, identifiers));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_basic", (block, identifiers) -> createAxisOrientableTableBlockState(block, UnbakedCoffeeBasicTableModel.TABLE_MODEL_ID, identifiers));
 
             provider.getParent().log("Modern Coffee Tables");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_modern", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_modern", (block, identifiers) -> createAxisOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_modern", (block, identifiers) -> createAxisOrientableTableBlockState(block, UnbakedModernCoffeeTableModel.TABLE_MODEL_ID, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ModernCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_modern", (block, identifiers) -> createAxisOrientableTableBlockState(block, UnbakedModernCoffeeTableModel.TABLE_MODEL_ID, identifiers, 90));
 
             provider.getParent().log("Classic Coffee Tables");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_classic", PFMBlockStateModelGenerator::createSingleStateBlockState);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_classic", PFMBlockStateModelGenerator::createSingleStateBlockState);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMap(), "coffee_table_classic", (block, id) -> createSingleStateBlockState(block, UnbakedClassicCoffeeTableModel.TABLE_MODEL_ID, id));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), "coffee_table_classic", (block, id) -> createSingleStateBlockState(block, UnbakedClassicCoffeeTableModel.TABLE_MODEL_ID, id));
         }
 
         public void registerDesks() {
             provider.getParent().log("Basic Desks");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskBlock.class).getVariantToBlockMap(), "desk_basic", PFMBlockStateModelGenerator::createSingleStateBlockState);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskBlock.class).getVariantToBlockMapNonBase(), "desk_basic", PFMBlockStateModelGenerator::createSingleStateBlockState);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskBlock.class).getVariantToBlockMap(), "desk_basic", (block, id) -> createSingleStateBlockState(block, UnbakedBasicDeskModel.TABLE_MODEL_ID, id));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskBlock.class).getVariantToBlockMapNonBase(), "desk_basic", (block, id) -> createSingleStateBlockState(block, UnbakedBasicDeskModel.TABLE_MODEL_ID, id));
 
             provider.getParent().log("Basic Desk Cabinets");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMap(), "desk_cabinet_basic", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), "desk_cabinet_basic", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMap(), "desk_cabinet_basic", (block, id) -> createOrientableUvLockedBlock(block, UnbakedBasicDeskCabinetModel.TABLE_MODEL_ID, id));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), "desk_cabinet_basic", (block, id) -> createOrientableUvLockedBlock(block, UnbakedBasicDeskCabinetModel.TABLE_MODEL_ID, id));
         }
 
         public void registerNightStands() {
             provider.getParent().log("Classic Nightstands");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicNightstandBlock.class).getVariantToBlockMap(), "classic_nightstand", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicNightstandBlock.class).getVariantToBlockMapNonBase(), "classic_nightstand", (block, identifiers) -> createOrientableTableBlockState(block, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicNightstandBlock.class).getVariantToBlockMap(), "classic_nightstand", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_ID, identifiers, 90));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicNightstandBlock.class).getVariantToBlockMapNonBase(), "classic_nightstand", (block, identifiers) -> createOrientableTableBlockState(block, UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_ID, identifiers, 90));
         }
 
         public void registerBeds() {
             provider.getParent().log("Simple Beds");
-            generateModelAndBlockStateForBed(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList(), "simple_bed", PFMBlockStateModelGenerator::createBedBlockState);
+            generateModelAndBlockStateForBed(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList(), "simple_bed", (block, identifiers) -> createBedBlockState(block, UnbakedBedModel.BED_MODEL_ID, identifiers));
             provider.getParent().log("Classic Beds");
-            generateModelAndBlockStateForBed(PaladinFurnitureMod.furnitureEntryMap.get(ClassicBedBlock.class).getVariantToBlockMapList(), "simple_bed", PFMBlockStateModelGenerator::createBedBlockState);
+            generateModelAndBlockStateForBed(PaladinFurnitureMod.furnitureEntryMap.get(ClassicBedBlock.class).getVariantToBlockMapList(), "simple_bed", (block, identifiers) -> createBedBlockState(block, UnbakedBedModel.BED_MODEL_ID, identifiers));
         }
 
         public void registerLadders() {
             provider.getParent().log("Simple Bunk Ladders");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBunkLadderBlock.class).getVariantToBlockMap(), "simple_bunk_ladder", PFMBlockStateModelGenerator::createOrientableTableBlockState);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBunkLadderBlock.class).getVariantToBlockMap(), "simple_bunk_ladder", (block, ids) -> createOrientableTableBlockState(block, UnbakedLadderModel.LADDER_MODEL_ID, ids));
         }
 
         public void registerCounters() {
             provider.getParent().log("Kitchen Counters");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMap(), "kitchen_counter", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMap(), "kitchen_counter", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenCounterModel.COUNTER_MODEL_ID, ids));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenCounterModel.COUNTER_MODEL_ID, ids));
 
             provider.getParent().log("Kitchen Drawers");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMap(), "kitchen_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMap(), "kitchen_drawer", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenDrawerModel.DRAWER_MODEL_ID, ids));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_drawer", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenDrawerModel.DRAWER_MODEL_ID, ids));
 
             provider.getParent().log("Kitchen Cabinets");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMap(), "kitchen_cabinet", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMapNonBase(), "kitchen_cabinet", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMap(), "kitchen_cabinet", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenCabinetModel.CABINET_MODEL_ID, ids));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariantToBlockMapNonBase(), "kitchen_cabinet", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenCabinetModel.CABINET_MODEL_ID, ids));
 
             provider.getParent().log("Kitchen Wall Drawers");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMap(), "kitchen_wall_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMap(), "kitchen_wall_drawer", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenWallDrawerModel.DRAWER_MODEL_ID, ids));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_drawer", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenWallDrawerModel.DRAWER_MODEL_ID, ids));
 
             provider.getParent().log("Kitchen Wall Cabinets");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMap(), "kitchen_wall_counter", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_counter", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMap(), "kitchen_wall_counter", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenWallCounterModel.COUNTER_MODEL_ID, ids));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_counter", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenWallCounterModel.COUNTER_MODEL_ID, ids));
 
             provider.getParent().log("Small Kitchen Cabinets");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMap(), "kitchen_wall_small_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_small_drawer", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMap(), "kitchen_wall_small_drawer", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_ID, ids));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), "kitchen_wall_small_drawer", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_ID, ids));
 
             provider.getParent().log("Kitchen Counter Ovens");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMap(), "kitchen_counter_oven", (block, identifiers) -> createOrientableUvLockedBlock(block, identifiers, "", "", "", 180));
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter_oven", (block, identifiers) -> createOrientableUvLockedBlock(block, identifiers, "", "", "", 180));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMap(), "kitchen_counter_oven", (block, identifiers) -> createOrientableUvLockedBlock(block, UnbakedKitchenCounterOvenModel.OVEN_MODEL_ID, identifiers, "", "", "", 180));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).getVariantToBlockMapNonBase(), "kitchen_counter_oven", (block, identifiers) -> createOrientableUvLockedBlock(block, UnbakedKitchenCounterOvenModel.OVEN_MODEL_ID, identifiers, "", "", "", 180));
 
             provider.getParent().log("Kitchen Sinks");
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMap(), "kitchen_sink", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
-            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMapNonBase(), "kitchen_sink", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMap(), "kitchen_sink", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenSinkModel.SINK_MODEL_ID, ids));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getVariantToBlockMapNonBase(), "kitchen_sink", (block, ids) -> createOrientableUvLockedBlock(block, UnbakedKitchenSinkModel.SINK_MODEL_ID, ids));
+        }
+
+        public void registerAppliances() {
+            provider.getParent().log("Fridges");
+            Identifier grayFridgeID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
+            this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.GRAY_FRIDGE, UnbakedFridgeModel.FRIDGE_MODEL_ID, List.of(grayFridgeID), 180));
+            Identifier whiteFridgeID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+            this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, UnbakedFridgeModel.FRIDGE_MODEL_ID, List.of(whiteFridgeID), 180));
+            Identifier ironFridgeID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.IRON_FRIDGE);
+            this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.IRON_FRIDGE, UnbakedIronFridgeModel.IRON_FRIDGE_ID, List.of(ironFridgeID), 180));
+
+            provider.getParent().log("Freezers");
+            Identifier whiteFreezerID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
+            this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.WHITE_FREEZER, UnbakedFreezerModel.FREEZER_MODEL_ID, List.of(whiteFreezerID), 180));
+            Identifier grayFreezerID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.GRAY_FREEZER);
+            this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.GRAY_FREEZER, UnbakedFreezerModel.FREEZER_MODEL_ID, List.of(grayFreezerID), 180));
+        }
+
+        public void registerDecorations() {
+            provider.getParent().log("Mirrors");
+            Identifier grayMirrorID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.GRAY_MIRROR);
+            this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.GRAY_MIRROR, UnbakedMirrorModel.MIRROR_ID, List.of(grayMirrorID)));
+            Identifier whiteMirrorID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.WHITE_MIRROR);
+            this.blockStateCollector.accept(createOrientableTableBlockState(PaladinFurnitureModBlocksItems.WHITE_MIRROR, UnbakedMirrorModel.MIRROR_ID, List.of(whiteMirrorID)));
         }
 
         public void registerLamp() {
             provider.getParent().log("Basic Lamps");
             Identifier modelID = ModelIds.getBlockModelId(PaladinFurnitureModBlocksItems.BASIC_LAMP);
-            this.blockStateCollector.accept(createSingleStateBlockState(PaladinFurnitureModBlocksItems.BASIC_LAMP, List.of(modelID)));
+            this.blockStateCollector.accept(createSingleStateBlockState(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.LAMP_MODEL_ID, List.of(modelID)));
             PFMBlockstateModelProvider.modelPathMap.put(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.getItemModelId());
         }
 
@@ -382,7 +468,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             return new TextureMap().put(LOG_KEY, legs).put(LOG_TOP_KEY, top);
         }
 
-        public void generateBlockStateForBlock(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, BiFunction<Block, List<Identifier>, BlockStateSupplier> stateSupplierBiFunction) {
+        public void generateBlockStateForBlock(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, BiFunction<Block, List<Identifier>, BlockModelDefinitionCreator> stateSupplierBiFunction) {
             variantBaseHashMap.forEach((variantBase, block) -> {
                 if (!generatedStates.contains(Registries.BLOCK.getId(block))) {
                     Identifier modelID = ModelIds.getBlockModelId(block);
@@ -396,7 +482,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             });
         }
 
-        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends Set<?>> variantBaseHashMap, String blockName, BiFunction<Block, List<Identifier>, BlockStateSupplier> stateSupplierBiFunction) {
+        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends Set<?>> variantBaseHashMap, String blockName, BiFunction<Block, List<Identifier>, BlockModelDefinitionCreator> stateSupplierBiFunction) {
             variantBaseHashMap.forEach((variantBase, blockList) -> {
                 blockList.forEach(block1 -> {
                 Block block = (Block) block1;
@@ -413,7 +499,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
         }
 
-        public void generateModelAndBlockStateForVariants(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, Model[] models, BiFunction<Block, List<Identifier>, BlockStateSupplier> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMap> textureBiFunction) {
+        public void generateModelAndBlockStateForVariants(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, Model[] models, BiFunction<Block, List<Identifier>, BlockModelDefinitionCreator> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMap> textureBiFunction) {
             variantBaseHashMap.forEach((variantBase, block) -> {
                 if (!generatedStates.contains(Registries.BLOCK.getId(block))) {
                     String blockName2 = blockName;
@@ -443,7 +529,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             });
         }
 
-        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends List<?>> variantBaseHashMap, String blockName, Model[] models, TriFunc<Block, List<Identifier>, String, BlockStateSupplier> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMap> textureBiFunction) {
+        public void generateModelAndBlockStateForBed(HashMap<VariantBase<?>, ? extends List<?>> variantBaseHashMap, String blockName, Model[] models, TriFunc<Block, List<Identifier>, String, BlockModelDefinitionCreator> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMap> textureBiFunction) {
             variantBaseHashMap.forEach((variantBase, blockList) -> {
                 List<Identifier> allids = new ArrayList<>();
                 blockList.forEach(block1 -> {
@@ -533,16 +619,16 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             return PFMTextureKeyFactory.newTextureKey(name, parent);
         }
 
-        private static BlockStateSupplier createSingleStateBlockState(Block block, List<Identifier> modelIdentifiers) {
-            BlockStateVariant variant;
+        private static BlockModelDefinitionCreator createSingleStateBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
             String path = modelIdentifiers.get(0).getPath();
             //Ugly hack to get the folder name for the Baked Block Model
             Identifier id = Identifier.of(modelIdentifiers.get(0).getNamespace(), path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/')));
-            variant = (BlockStateVariant.create().put(VariantSettings.MODEL, id));
-            return VariantsBlockStateSupplier.create(block, variant);
+            ModelVariant var = new ModelVariant(id);
+            ((PFMModelVariantExtension)(Object)var).pfm$setCustomType(typeId);
+            return VariantsBlockModelDefinitionCreator.of(block, new WeightedVariant(Pool.of(var)));
         }
-        private static BlockStateSupplier createAxisOrientableTableBlockState(Block block, List<Identifier> modelIdentifiers, int rotation) {
-            Map<Direction.Axis, BlockStateVariant> variantMap = new HashMap<>();
+        private static BlockModelDefinitionCreator createAxisOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers, int rotation) {
+            Map<Direction.Axis, AxisRotation> variantMap = new HashMap<>();
             String path = modelIdentifiers.get(0).getPath();
             Identifier id;
 
@@ -553,34 +639,29 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             }
             Integer[] rotationArray = new Integer[]{0, 90};
             for (int i = 0; rotationArray.length > i; i++) {
-                if (rotationArray[i] + rotation > 90) {
-                    if (rotationArray[i] == 90)
-                        rotationArray[i] = 0;
-                    else
-                        rotationArray[i] = 90;
-                } else {
-                    rotationArray[i] += rotation;
-                }
+                rotationArray[i] = (rotationArray[i] + rotation) % 180;
             }
 
-            variantMap.put(Direction.Axis.Z, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[0]))));
-            variantMap.put(Direction.Axis.X, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[1]))));
-            return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(net.minecraft.state.property.Properties.HORIZONTAL_AXIS).register(axis -> {
+            variantMap.put(Direction.Axis.Z, AxisRotation.valueOf('R'+String.valueOf(rotationArray[0])));
+            variantMap.put(Direction.Axis.X, AxisRotation.valueOf('R'+String.valueOf(rotationArray[1])));
+            return VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(Properties.HORIZONTAL_AXIS).generate(axis -> {
                 for (Direction.Axis axis1 : variantMap.keySet()) {
-                    if (axis.equals(axis1))
-                        return variantMap.get(axis1);
+                    if (axis.equals(axis1)) {
+                        ModelVariant variant = new ModelVariant(id).withRotationY(variantMap.get(axis));
+                        ((PFMModelVariantExtension)(Object)variant).pfm$setCustomType(typeId);
+                        return new WeightedVariant(Pool.of(variant));
+                    }
                 }
                 return null;
             }));
         }
-        private static BlockStateSupplier createAxisOrientableTableBlockState(Block block, List<Identifier> modelIdentifiers) {
-            return createAxisOrientableTableBlockState(block, modelIdentifiers, 0);
+        private static BlockModelDefinitionCreator createAxisOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
+            return createAxisOrientableTableBlockState(block, typeId, modelIdentifiers, 0);
         }
-        private static BlockStateSupplier createOrientableTableBlockState(Block block, List<Identifier> modelIdentifiers) {
-            return createOrientableTableBlockState(block,  modelIdentifiers, 0);
+        private static BlockModelDefinitionCreator createOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
+            return createOrientableTableBlockState(block, typeId, modelIdentifiers, 0);
         }
-        private static BlockStateSupplier createOrientableTableBlockState(Block block, List<Identifier> modelIdentifiers, int rotation) {
-            Map<Direction, BlockStateVariant> variantMap = new HashMap<>();
+        private static BlockModelDefinitionCreator createOrientableTableBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers, int rotation) {
             String path = modelIdentifiers.get(0).getPath();
             Identifier id;
             if (modelIdentifiers.size() == 1) {
@@ -590,32 +671,34 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
             for (int i = 0; rotationArray.length > i; i++) {
-                if (rotationArray[i] + rotation > 270) {
-                    if (rotationArray[i] == 270)
-                        rotationArray[i] = 0;
-                    else
-                        rotationArray[i] = 90;
-                } else {
-                    rotationArray[i] += rotation;
-                }
+                rotationArray[i] = (rotationArray[i] + rotation) % 360;
             }
-            variantMap.put(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[0]))));
-            variantMap.put(Direction.EAST, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[1]))));
-            variantMap.put(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[2]))));
-            variantMap.put(Direction.WEST, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[3]))));
-            return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(net.minecraft.state.property.Properties.HORIZONTAL_FACING).register(facing -> {
-                for (Direction direction : variantMap.keySet()) {
-                    if (facing.equals(direction))
-                        return variantMap.get(direction);
-                }
-                return null;
-            }));
+
+            ModelVariant north = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[0])));
+            ((PFMModelVariantExtension)(Object)north).pfm$setCustomType(typeId);
+            ModelVariant east = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[1])));
+            ((PFMModelVariantExtension)(Object)east).pfm$setCustomType(typeId);
+            ModelVariant south = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[2])));
+            ((PFMModelVariantExtension)(Object)south).pfm$setCustomType(typeId);
+            ModelVariant west = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[3])));
+            ((PFMModelVariantExtension)(Object)west).pfm$setCustomType(typeId);
+
+            BlockStateVariantMap<WeightedVariant> variant = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING)
+                    .register(Direction.NORTH, new WeightedVariant(Pool.of(north)))
+                    .register(Direction.EAST, new WeightedVariant(Pool.of(east)))
+                    .register(Direction.SOUTH, new WeightedVariant(Pool.of(south)))
+                    .register(Direction.WEST, new WeightedVariant(Pool.of(west)));
+
+            return VariantsBlockModelDefinitionCreator.of(block).with(variant);
         }
-        private static BlockStateSupplier createOrientableUvLockedBlock(Block block, List<Identifier> modelIdentifiers){
-            return createOrientableUvLockedBlock(block, modelIdentifiers, "", "", "", 0);
+        private static BlockModelDefinitionCreator createOrientableUvLockedBlock(Block block, Identifier typeId, List<Identifier> modelIdentifiers){
+            return createOrientableUvLockedBlock(block, typeId, modelIdentifiers, "", "", "", 0);
         }
-        private static BlockStateSupplier createOrientableUvLockedBlock(Block block, List<Identifier> modelIdentifiers, String override, String furnitureName, String replacement, int rotation) {
-            Map<Direction, BlockStateVariant> variantMap = new HashMap<>();
+        private static BlockModelDefinitionCreator createOrientableUvLockedBlock(Block block, Identifier typeId, List<Identifier> modelIdentifiers, int rotation){
+            return createOrientableUvLockedBlock(block, typeId, modelIdentifiers, "", "", "", rotation);
+        }
+
+        private static BlockModelDefinitionCreator createOrientableUvLockedBlock(Block block, Identifier typeId, List<Identifier> modelIdentifiers, String override, String furnitureName, String replacement, int rotation) {
             String path = modelIdentifiers.get(0).getPath().replaceAll(override, "");
             String name = path.split(path.substring(path.lastIndexOf('/')))[0] + path.substring(path.lastIndexOf('/'));
             Identifier id;
@@ -626,88 +709,92 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
             for (int i = 0; rotationArray.length > i; i++) {
-                if (rotationArray[i] + rotation > 270) {
-                    if (rotationArray[i] == 180)
-                        rotationArray[i] = 0;
-                    else
-                        rotationArray[i] = 90;
-                } else {
-                    rotationArray[i] += rotation;
-                }
+                rotationArray[i] = (rotationArray[i] + rotation) % 360;
             }
-            variantMap.put(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[0]))).put(VariantSettings.UVLOCK, true));
-            variantMap.put(Direction.EAST, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[1]))).put(VariantSettings.UVLOCK, true));
-            variantMap.put(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[2]))).put(VariantSettings.UVLOCK, true));
-            variantMap.put(Direction.WEST, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[3]))).put(VariantSettings.UVLOCK, true));
-            return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(net.minecraft.state.property.Properties.HORIZONTAL_FACING).register(facing -> {
+
+            ModelVariant north = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[0]))).withUVLock(true);
+            ((PFMModelVariantExtension)(Object)north).pfm$setCustomType(typeId);
+            ModelVariant east = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[1]))).withUVLock(true);
+            ((PFMModelVariantExtension)(Object)east).pfm$setCustomType(typeId);
+            ModelVariant south = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[2]))).withUVLock(true);
+            ((PFMModelVariantExtension)(Object)south).pfm$setCustomType(typeId);
+            ModelVariant west = new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[3]))).withUVLock(true);
+            ((PFMModelVariantExtension)(Object)west).pfm$setCustomType(typeId);
+
+            BlockStateVariantMap<WeightedVariant> variant = BlockStateVariantMap.models(Properties.HORIZONTAL_FACING)
+                    .register(Direction.NORTH, new WeightedVariant(Pool.of(north)))
+                    .register(Direction.EAST, new WeightedVariant(Pool.of(east)))
+                    .register(Direction.SOUTH, new WeightedVariant(Pool.of(south)))
+                    .register(Direction.WEST, new WeightedVariant(Pool.of(west)));
+
+            return VariantsBlockModelDefinitionCreator.of(block).with(variant);
+        }
+
+        private static BlockModelDefinitionCreator createKitchenSink(Block block, List<Identifier> modelIdentifiers) {
+            Map<Direction, AxisRotation> rotationMap = new HashMap<>();
+            Integer[] rotation = new Integer[]{0, 90, 180, 270};
+
+            rotationMap.put(Direction.NORTH, AxisRotation.valueOf('R'+String.valueOf(rotation[0])));
+            rotationMap.put(Direction.EAST, AxisRotation.valueOf('R'+String.valueOf(rotation[1])));
+            rotationMap.put(Direction.SOUTH, AxisRotation.valueOf('R'+String.valueOf(rotation[2])));
+            rotationMap.put(Direction.WEST, AxisRotation.valueOf('R'+String.valueOf(rotation[3])));
+
+            return VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(AbstractSinkBlock.LEVEL_4, Properties.HORIZONTAL_FACING).generate(((level, facing) -> {
+                return new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(level)).withRotationY(rotationMap.get(facing)).withUVLock(true)));
+            })));
+        }
+
+        private static BlockModelDefinitionCreator createSmallKitchenDrawer(Block block, List<Identifier> modelIdentifiers, String override, String furnitureName, String replacement) {
+            Map<Direction, ModelVariant> variantMap = new HashMap<>();
+            Map<Direction, ModelVariant> variantMapOpen = new HashMap<>();
+            Integer[] rotation = new Integer[]{0, 90, 180, 270};
+
+            variantMap.put(Direction.NORTH, new ModelVariant(modelIdentifiers.getFirst()).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[0]))).withUVLock(true));
+            variantMap.put(Direction.EAST, new ModelVariant(modelIdentifiers.getFirst()).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[1]))).withUVLock(true));
+            variantMap.put(Direction.SOUTH, new ModelVariant(modelIdentifiers.getFirst()).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[2]))).withUVLock(true));
+            variantMap.put(Direction.WEST, new ModelVariant(modelIdentifiers.getFirst()).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[3]))).withUVLock(true));
+
+            variantMapOpen.put(Direction.NORTH, new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[0]))).withUVLock(true));
+            variantMapOpen.put(Direction.EAST, new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[1]))).withUVLock(true));
+            variantMapOpen.put(Direction.SOUTH, new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[2]))).withUVLock(true));
+            variantMapOpen.put(Direction.WEST, new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotation[3]))).withUVLock(true));
+
+            return VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(net.minecraft.state.property.Properties.HORIZONTAL_FACING, net.minecraft.state.property.Properties.OPEN).generate((facing, open) -> {
                 for (Direction direction : variantMap.keySet()) {
                     if (facing.equals(direction))
-                        return variantMap.get(direction);
+                        return new WeightedVariant(Pool.of(open ? variantMapOpen.get(direction) : variantMap.get(direction)));
                 }
                 return null;
             }));
         }
 
-        private static BlockStateSupplier createKitchenSink(Block block, List<Identifier> modelIdentifiers) {
-            Map<Direction, VariantSettings.Rotation> rotationMap = new HashMap<>();
-            Integer[] rotation = new Integer[]{0, 90, 180, 270};
-            rotationMap.put(Direction.NORTH, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[0])));
-            rotationMap.put(Direction.EAST, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[1])));
-            rotationMap.put(Direction.SOUTH, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[2])));
-            rotationMap.put(Direction.WEST, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[3])));
 
-            return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(net.minecraft.state.property.Properties.HORIZONTAL_FACING, AbstractSinkBlock.LEVEL_4).register((facing, level) -> {
-                return BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(level)).put(VariantSettings.Y, rotationMap.get(facing)).put(VariantSettings.UVLOCK, true);
-            }));
+        private static BlockModelDefinitionCreator createLadderBlockState(Block block, List<Identifier> modelIdentifiers) {
+            MultipartModelCondition northFalse = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.NORTH).put(net.minecraft.state.property.Properties.UP, false).build()));
+            MultipartModelCondition northTrue = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.NORTH).put(net.minecraft.state.property.Properties.UP, true).build()));
+
+            MultipartModelCondition eastFalse = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.EAST).put(net.minecraft.state.property.Properties.UP, false).build()));
+            MultipartModelCondition eastTrue = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.EAST).put(net.minecraft.state.property.Properties.UP, true).build()));
+
+            MultipartModelCondition westFalse = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.WEST).put(net.minecraft.state.property.Properties.UP, false).build()));
+            MultipartModelCondition westTrue = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.WEST).put(net.minecraft.state.property.Properties.UP, true).build()));
+
+            MultipartModelCondition southFalse = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.SOUTH).put(net.minecraft.state.property.Properties.UP, false).build()));
+            MultipartModelCondition southTrue = new MultipartModelCombinedCondition(MultipartModelCombinedCondition.LogicalOperator.AND, List.of(new MultipartModelConditionBuilder().put(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.SOUTH).put(net.minecraft.state.property.Properties.UP, true).build()));
+
+            return MultipartBlockModelDefinitionCreator.create(block)
+                    .with(northFalse, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(0)))))
+                    .with(northTrue, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(1)))))
+                    .with(eastFalse, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(0)).withRotationY(AxisRotation.R90))))
+                    .with(eastTrue, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.R90))))
+                    .with(westFalse, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(0)).withRotationY(AxisRotation.R270))))
+                    .with(westTrue, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.R270))))
+                    .with(southFalse, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(0)).withRotationY(AxisRotation.R180))))
+                    .with(southTrue, new WeightedVariant(Pool.of(new ModelVariant(modelIdentifiers.get(1)).withRotationY(AxisRotation.R180))));
         }
 
-        private static BlockStateSupplier createSmallKitchenDrawer(Block block, List<Identifier> modelIdentifiers, String override, String furnitureName, String replacement) {
-            Map<Direction, BlockStateVariant> variantMap = new HashMap<>();
-            Map<Direction, BlockStateVariant> variantMapOpen = new HashMap<>();
-            Integer[] rotation = new Integer[]{0, 90, 180, 270};
-
-            variantMap.put(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[0]))).put(VariantSettings.UVLOCK, true));
-            variantMap.put(Direction.EAST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[1]))).put(VariantSettings.UVLOCK, true));
-            variantMap.put(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[2]))).put(VariantSettings.UVLOCK, true));
-            variantMap.put(Direction.WEST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[3]))).put(VariantSettings.UVLOCK, true));
-
-            variantMapOpen.put(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[0]))).put(VariantSettings.UVLOCK, true));
-            variantMapOpen.put(Direction.EAST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[1]))).put(VariantSettings.UVLOCK, true));
-            variantMapOpen.put(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[2]))).put(VariantSettings.UVLOCK, true));
-            variantMapOpen.put(Direction.WEST, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotation[3]))).put(VariantSettings.UVLOCK, true));
-
-            return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(net.minecraft.state.property.Properties.HORIZONTAL_FACING, net.minecraft.state.property.Properties.OPEN).register((facing, open) -> {
-                for (Direction direction : variantMap.keySet()) {
-                    if (facing.equals(direction))
-                        return open ? variantMapOpen.get(direction) : variantMap.get(direction);
-                }
-                return null;
-            }));
-        }
-
-
-        private static BlockStateSupplier createLadderBlockState(Block block, List<Identifier> modelIdentifiers) {
-            When.PropertyCondition northFalse = When.create().set(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.NORTH).set(net.minecraft.state.property.Properties.UP, false);
-            When.PropertyCondition northTrue = When.create().set(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.NORTH).set(net.minecraft.state.property.Properties.UP, true);
-            When.PropertyCondition eastFalse = When.create().set(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.EAST).set(net.minecraft.state.property.Properties.UP, false);
-            When.PropertyCondition eastTrue = When.create().set(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.EAST).set(net.minecraft.state.property.Properties.UP, true);
-            When.PropertyCondition westFalse = When.create().set(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.WEST).set(net.minecraft.state.property.Properties.UP, false);
-            When.PropertyCondition westTrue = When.create().set(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.WEST).set(net.minecraft.state.property.Properties.UP, true);
-            When.PropertyCondition southFalse = When.create().set(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.SOUTH).set(net.minecraft.state.property.Properties.UP, false);
-            When.PropertyCondition southTrue = When.create().set(net.minecraft.state.property.Properties.HORIZONTAL_FACING, Direction.SOUTH).set(net.minecraft.state.property.Properties.UP, true);
-            return MultipartBlockStateSupplier.create(block)
-                    .with(northFalse, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)))
-                    .with(northTrue,  BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)))
-                    .with(eastFalse, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.R90))
-                    .with(eastTrue, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.R90))
-                    .with(westFalse, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.R270))
-                    .with(westTrue, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.R270))
-                    .with(southFalse, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(0)).put(VariantSettings.Y, VariantSettings.Rotation.R180))
-                    .with(southTrue, BlockStateVariant.create().put(VariantSettings.MODEL, modelIdentifiers.get(1)).put(VariantSettings.Y, VariantSettings.Rotation.R180));
-        }
-
-        private static BlockStateSupplier createBedBlockState(Block block, List<Identifier> modelIdentifiers) {
-            Map<Direction, BlockStateVariant> variantMap = new HashMap<>();
+        private static BlockModelDefinitionCreator createBedBlockState(Block block, Identifier typeId, List<Identifier> modelIdentifiers) {
+            Map<Direction, AxisRotation> variantMap = new HashMap<>();
             Identifier id;
             if (modelIdentifiers.size() == 1) {
                 id = modelIdentifiers.get(0);
@@ -715,33 +802,30 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                 id = ModelIds.getBlockModelId(block);
             }
             Integer[] rotationArray = new Integer[]{0, 90, 180, 270};
-            variantMap.put(Direction.NORTH, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[0]))));
-            variantMap.put(Direction.EAST, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[1]))));
-            variantMap.put(Direction.SOUTH, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[2]))));
-            variantMap.put(Direction.WEST, BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[3]))));
-            return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(net.minecraft.state.property.Properties.HORIZONTAL_FACING).register(facing -> {
+            variantMap.put(Direction.NORTH, AxisRotation.valueOf('R'+String.valueOf(rotationArray[0])));
+            variantMap.put(Direction.EAST, AxisRotation.valueOf('R'+String.valueOf(rotationArray[1])));
+            variantMap.put(Direction.SOUTH, AxisRotation.valueOf('R'+String.valueOf(rotationArray[2])));
+            variantMap.put(Direction.WEST, AxisRotation.valueOf('R'+String.valueOf(rotationArray[3])));
+
+            return VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(net.minecraft.state.property.Properties.HORIZONTAL_FACING).generate(facing -> {
                 for (Direction direction : variantMap.keySet()) {
-                    if (facing.equals(direction))
-                        return variantMap.get(direction);
+                    if (facing.equals(direction)) {
+                        ModelVariant variant = new ModelVariant(id).withRotationY(variantMap.get(direction));
+                        ((PFMModelVariantExtension)(Object)variant).pfm$setCustomType(typeId);
+                        return new WeightedVariant(Pool.of(variant));
+                    }
                 }
                 return null;
             }));
         }
-        private static BlockStateSupplier createOrientableTuckableBlockState(Block block, List<Identifier> modelIdentifiers) {
+        private static BlockModelDefinitionCreator createOrientableTuckableBlockState(Block block, List<Identifier> modelIdentifiers) {
             return createOrientableTuckableBlockState(block, modelIdentifiers, 0);
         }
-        private static BlockStateSupplier createOrientableTuckableBlockState(Block block, List<Identifier> modelIdentifiers, int rotation) {
-            Map<TuckableVariant, BlockStateVariant> variantList = new HashMap<>();
+        private static BlockModelDefinitionCreator createOrientableTuckableBlockState(Block block, List<Identifier> modelIdentifiers, int rotation) {
+            Map<TuckableVariant, ModelVariant> variantList = new HashMap<>();
             Integer[] rotationArray = new Integer[]{90, 270, 180, 0};
             for (int i = 0; rotationArray.length > i; i++) {
-                if (rotationArray[i] + rotation > 270) {
-                    if (rotationArray[i] == 270)
-                        rotationArray[i] = 0;
-                    else
-                        rotationArray[i] = 90;
-                } else {
-                    rotationArray[i] += rotation;
-                }
+                rotationArray[i] = (rotationArray[i] + rotation) % 360;
             }
             for (int i = 0; i <= 1; i++) {
                 boolean tucked =  i == 1;
@@ -752,28 +836,28 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                         continue;
                     switch (direction) {
                         case NORTH -> {
-                            variantList.put(new TuckableVariant(tucked, direction),BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[0]))));
+                            variantList.put(new TuckableVariant(tucked, direction), new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[0]))));
                             break;
                         }
                         case SOUTH -> {
-                            variantList.put(new TuckableVariant(tucked, direction), BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[1]))));
+                            variantList.put(new TuckableVariant(tucked, direction), new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[1]))));
                             break;
                         }
                         case EAST ->  {
-                            variantList.put(new TuckableVariant(tucked, direction), BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[2]))));
+                            variantList.put(new TuckableVariant(tucked, direction), new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[2]))));
                             break;
                         }
                         case WEST -> {
-                            variantList.put(new TuckableVariant(tucked, direction), BlockStateVariant.create().put(VariantSettings.MODEL, id).put(VariantSettings.Y, VariantSettings.Rotation.valueOf('R'+String.valueOf(rotationArray[3]))));
+                            variantList.put(new TuckableVariant(tucked, direction), new ModelVariant(id).withRotationY(AxisRotation.valueOf('R'+String.valueOf(rotationArray[3]))));
                             break;
                         }
                     }
                 }
             }
-            return VariantsBlockStateSupplier.create(block).coordinate(BlockStateVariantMap.create(Properties.HORIZONTAL_FACING, BasicChairBlock.TUCKED).register((direction, aBoolean) -> {
+            return VariantsBlockModelDefinitionCreator.of(block).with(BlockStateVariantMap.models(Properties.HORIZONTAL_FACING, BasicChairBlock.TUCKED).generate((direction, aBoolean) -> {
                 for (TuckableVariant tuckableVariant : variantList.keySet()){
                     if (tuckableVariant.direction.equals(direction) && tuckableVariant.tucked == aBoolean) {
-                        return variantList.get(tuckableVariant);
+                        return new WeightedVariant(Pool.of(variantList.get(tuckableVariant)));
                     }
                 }
                 return null;

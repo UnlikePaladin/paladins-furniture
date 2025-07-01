@@ -137,9 +137,9 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
         double y = pos.getY();
         double z = pos.getZ() + 0.5;
         if (random.nextDouble() < 0.2)
-            world.addParticle(EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 1), x, y + 0.6, z, 0.8, 1.0, 0.0);
+            world.addParticleClient(EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 1), x, y + 0.6, z, 0.8, 1.0, 0.0);
         if (random.nextDouble() < 0.009) {
-            world.addParticle(EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 1), x, y + 0.6, z, 0.18, 0.0, 0.34);
+            world.addParticleClient(EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 1), x, y + 0.6, z, 0.18, 0.0, 0.34);
         }
     }
 

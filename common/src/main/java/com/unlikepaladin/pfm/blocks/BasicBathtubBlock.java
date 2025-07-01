@@ -16,6 +16,7 @@ import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -123,7 +124,7 @@ public class BasicBathtubBlock extends BedBlock {
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity) {
+    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
         int i = state.get(LEVEL_8);
         if (!world.isClient && entity.isOnFire() && i != 0) {
             entity.extinguish();
@@ -333,24 +334,24 @@ public class BasicBathtubBlock extends BedBlock {
         if (world.isClient) {
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
             if (facing == Direction.EAST) {
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
             }
             else if (facing == Direction.SOUTH){
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.76, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.76, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.76, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.76, 0.0, 0.0, 0.0);
             }
             else if (facing == Direction.NORTH){
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.24, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.24, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.24, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.5, y + 0.8, z + 0.24, 0.0, 0.0, 0.0);
             }
             else {
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
-                world.addParticle(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
+                world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.24, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);
             }
         }
     }

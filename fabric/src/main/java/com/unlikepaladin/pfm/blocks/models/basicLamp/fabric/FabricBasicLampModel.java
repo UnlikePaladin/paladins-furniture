@@ -6,18 +6,15 @@ import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import com.unlikepaladin.pfm.items.PFMComponents;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -27,22 +24,17 @@ import net.minecraft.world.World;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
+
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 
 public class FabricBasicLampModel extends PFMFabricBakedModel {
-    public FabricBasicLampModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
-        super(settings, modelParts);
+    public FabricBasicLampModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+        super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public boolean isVanillaAdapter() {
-        return false;
-    }
-
-    @Override
-    public void emitBlockQuads(QuadEmitter context, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
+    public void emitQuads(QuadEmitter context, BlockRenderView blockView, BlockPos pos, BlockState state, Random random, Predicate<@Nullable Direction> cullTest) {
         WoodVariant variant = WoodVariantRegistry.OAK;
         BlockEntity entity = blockView.getBlockEntity(pos);
         int onOffset = state.get(Properties.LIT) ? 1 : 0;
@@ -53,39 +45,36 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
         boolean down = blockView.getBlockState(pos.down()).getBlock() instanceof BasicLampBlock;
         pushTextureTransform(context, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
         if (up && down) {
-            (getTemplateBakedModels().get(1)).emitBlockQuads(context, blockView, state, pos, randomSupplier, cullTest);
+            (getTemplateBakedModels().get(1)).emitQuads(context, cullTest);
         } else if (up) {
-            (getTemplateBakedModels().get(0)).emitBlockQuads(context, blockView, state, pos, randomSupplier, cullTest);
+            (getTemplateBakedModels().get(0)).emitQuads(context, cullTest);
         } else if (down)
         {
-            (getTemplateBakedModels().get(3)).emitBlockQuads(context, blockView, state, pos, randomSupplier, cullTest);
-            (getTemplateBakedModels().get(5+onOffset)).emitBlockQuads(context, blockView, state, pos, randomSupplier, cullTest);
-            (getTemplateBakedModels().get(4)).emitBlockQuads(context, blockView, state, pos, randomSupplier, cullTest);
+            (getTemplateBakedModels().get(3)).emitQuads(context, cullTest);
+            (getTemplateBakedModels().get(5+onOffset)).emitQuads(context, cullTest);
+            (getTemplateBakedModels().get(4)).emitQuads(context, cullTest);
         }
         else {
-            (getTemplateBakedModels().get(4)).emitBlockQuads(context, blockView, state, pos, randomSupplier, cullTest);
-            (getTemplateBakedModels().get(2)).emitBlockQuads(context, blockView, state, pos, randomSupplier, cullTest);
-            (getTemplateBakedModels().get(5+onOffset)).emitBlockQuads(context, blockView, state, pos, randomSupplier, cullTest);
+            (getTemplateBakedModels().get(4)).emitQuads(context, cullTest);
+            (getTemplateBakedModels().get(2)).emitQuads(context, cullTest);
+            (getTemplateBakedModels().get(5+onOffset)).emitQuads(context, cullTest);
         }
         context.popTransform();
     }
 
     @Override
-    public void emitItemQuads(QuadEmitter context, Supplier<Random> randomSupplier) {
+    public void emitItemQuads(QuadEmitter context, Random randomSupplier) {
         WoodVariant variant = WoodVariantRegistry.OAK;
         if (getVariant() != null) {
             variant = (WoodVariant) getVariant();
         }
-        pushTextureTransform(context, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
-        (getTemplateBakedModels().get(4)).emitItemQuads(context, randomSupplier);
-        (getTemplateBakedModels().get(2)).emitItemQuads(context, randomSupplier);
-        (getTemplateBakedModels().get(5)).emitItemQuads(context, randomSupplier);
-        context.popTransform();
-    }
 
-    @Override
-    public ModelTransformation getTransformation() {
-        return getTemplateBakedModels().get(2).getTransformation();
+        Predicate<Direction> anyPredicate = d -> false;
+        pushTextureTransform(context, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
+        (getTemplateBakedModels().get(4)).emitQuads(context, anyPredicate);
+        (getTemplateBakedModels().get(2)).emitQuads(context, anyPredicate);
+        (getTemplateBakedModels().get(5)).emitQuads(context, anyPredicate);
+        context.popTransform();
     }
 
     static List<Sprite> oakSprite = new ArrayList<>();
@@ -111,7 +100,7 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
 
     @Override
     public Sprite pfm$getParticle(BlockState state) {
-        return getTemplateBakedModels().get(4).getParticleSprite();
+        return getTemplateBakedModels().get(4).particleSprite();
     }
 
     @Override

@@ -1,10 +1,12 @@
 package com.unlikepaladin.pfm.runtime;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.client.screens.overlay.PFMGeneratingOverlay;
 import com.unlikepaladin.pfm.mixin.PFMMinecraftClientAcccessor;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.option.InactivityFpsLimiter;
+import net.minecraft.client.render.Fog;
 import net.minecraft.client.render.RenderTickCounter;
 
 public class ClientOverlaySetter {
@@ -24,11 +26,11 @@ public class ClientOverlaySetter {
             runnable.run();
         }
 
-        client.getFramebuffer().beginWrite(true);
-        client.gameRenderer.render(client.getRenderTickCounter(), shouldTick(client));
-        client.getFramebuffer().endWrite();
+        RenderSystem.getDevice().createCommandEncoder().clearColorAndDepthTextures(client.getFramebuffer().getColorAttachment(), 0, client.getFramebuffer().getDepthAttachment(), 1.0);
+        RenderSystem.setShaderFog(Fog.DUMMY);
 
-        client.getFramebuffer().draw(client.getWindow().getFramebufferWidth(), client.getWindow().getFramebufferHeight());
+        client.gameRenderer.render(client.getRenderTickCounter(), shouldTick(client));
+        client.getFramebuffer().blitToScreen();
 
         if (((PFMMinecraftClientAcccessor)client).getFrameCapturer() != null) {
             ((PFMMinecraftClientAcccessor)client).getFrameCapturer().upload();

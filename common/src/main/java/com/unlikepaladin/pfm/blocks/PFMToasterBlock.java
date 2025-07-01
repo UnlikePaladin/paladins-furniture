@@ -112,23 +112,20 @@ public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
 
     }
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.getBlock() != newState.getBlock()) {
-            BlockEntity be = world.getBlockEntity(pos);
-            if (be instanceof PFMToasterBlockEntity) {
-                PFMToasterBlockEntity blockEntity = (PFMToasterBlockEntity)world.getBlockEntity(pos);
+    public void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
+        BlockEntity be = world.getBlockEntity(pos);
+        if (be instanceof PFMToasterBlockEntity) {
+            PFMToasterBlockEntity blockEntity = (PFMToasterBlockEntity)world.getBlockEntity(pos);
 
-                for(int i = 0; i < 2; ++i) {
-                    ItemEntity item = new ItemEntity(world, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, blockEntity.getItems().get(i));
-                    world.spawnEntity(item);
-                }
-
-                world.updateNeighbors(pos, this);
+            for(int i = 0; i < 2; ++i) {
+                ItemEntity item = new ItemEntity(world, (double)pos.getX() + 0.5D, (double)pos.getY() + 0.5D, (double)pos.getZ() + 0.5D, blockEntity.getItems().get(i));
+                world.spawnEntity(item);
             }
 
-            super.onStateReplaced(state, world, pos, newState, moved);
+            world.updateNeighbors(pos, this);
         }
 
+        super.onStateReplaced(state, world, pos, moved);
     }
 
     @Override
