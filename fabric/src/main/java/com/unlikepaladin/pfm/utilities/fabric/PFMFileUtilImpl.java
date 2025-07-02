@@ -29,4 +29,8 @@ public class PFMFileUtilImpl {
     public static MinecraftServer getCurrentServer() {
         return currentServer;
     }
+
+    public static String pfm$getTypeFieldName() {
+        return "fabric:type";
+    }
 }

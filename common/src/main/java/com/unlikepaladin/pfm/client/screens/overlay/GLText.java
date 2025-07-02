@@ -1,5 +1,7 @@
 package com.unlikepaladin.pfm.client.screens.overlay;
 
+import com.mojang.blaze3d.opengl.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import org.joml.Vector4f;
 
 import java.io.Closeable;
@@ -247,13 +249,16 @@ public class GLText {
     }
 
     public Closeable gltBeginDraw() {
-        glUseProgram(_gltText2DShader);
+        int currentTex = GlStateManager._getActiveTexture();
+        int[] activeProgram = new int[1];
+        glGetIntegerv(GL_CURRENT_PROGRAM, activeProgram);
 
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, _gltText2DFontTexture);
+        GlStateManager._glUseProgram(_gltText2DShader);
+
+        GlStateManager._bindTexture(_gltText2DFontTexture);
         return () -> {
-            glUseProgram(0);
-            glBindTexture(GL_TEXTURE_2D, 0);
+            GlStateManager._glUseProgram(activeProgram[0]);
+            GlStateManager._bindTexture(currentTex);
         };
     }
 

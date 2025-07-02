@@ -1,12 +1,8 @@
 package com.unlikepaladin.pfm.client.screens.overlay;
 
-import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
-import com.mojang.blaze3d.platform.DestFactor;
-import com.mojang.blaze3d.platform.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMResourceProgress;
 import net.fabricmc.api.EnvType;
@@ -17,11 +13,11 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderPhase;
-import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.resource.metadata.TextureResourceMetadata;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.client.texture.TextureContents;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TriState;
@@ -48,7 +44,7 @@ public class PFMGeneratingOverlay extends Overlay {
     private float progress;
     private final MinecraftClient client;
     private final Overlay parent;
-    private int textureWidth, textureHeight;
+    private static int textureWidth, textureHeight;
     private final GLText glText;
     private static final int PFM_ORANGE = ColorHelper.getArgb(255, 231, 95, 9);
     private final GLText.GLTtext progressText;
@@ -60,10 +56,13 @@ public class PFMGeneratingOverlay extends Overlay {
         this.resourceProgress = resourceProgress;
         this.client = client;
         this.parent = parent;
-        client.getTextureManager().registerTexture(pfmLogo, new LogoTexture());
         this.glText = new GLText();
         this.progressText = GLText.gltCreateText();
         this.notificationText = GLText.gltCreateText();
+    }
+
+    public static void registerTextures(TextureManager textureManager) {
+        textureManager.registerTexture(pfmLogo, new LogoTexture());
     }
 
     public static BufferedImage decodeBase64ToImage(String base64Image) throws Exception {
@@ -73,7 +72,7 @@ public class PFMGeneratingOverlay extends Overlay {
         }
     }
 
-    public NativeImage convertToNativeImage(BufferedImage bufferedImage) {
+    public static NativeImage convertToNativeImage(BufferedImage bufferedImage) {
         NativeImage nativeImage = new NativeImage(bufferedImage.getWidth(), bufferedImage.getHeight(), true);
 
         for (int x = 0; x < bufferedImage.getWidth(); x++) {
@@ -93,9 +92,6 @@ public class PFMGeneratingOverlay extends Overlay {
         if (this.reloading && this.reloadStartTime == -1L) {
             this.reloadStartTime = l;
         }
-        float r = (float)(PFM_ORANGE >> 16 & 0xFF) / 255.0f;
-        float g = (float)(PFM_ORANGE >> 8 & 0xFF) / 255.0f;
-        float b = (float)(PFM_ORANGE & 0xFF) / 255.0f;
         RenderSystem.getDevice().createCommandEncoder().clearColorTexture(this.client.getFramebuffer().getColorAttachment(), PFM_ORANGE);
 
 
@@ -183,7 +179,7 @@ public class PFMGeneratingOverlay extends Overlay {
     }
 
     @Environment(value= EnvType.CLIENT)
-    class LogoTexture
+    static class LogoTexture
             extends ResourceTexture {
         public LogoTexture() {
             super(pfmLogo);
@@ -205,17 +201,16 @@ public class PFMGeneratingOverlay extends Overlay {
                 if (nativeImage != null)
                     nativeImage.close();
 
-                return null;
+                return TextureContents.createMissing();
             }
 
             return textureData;
         }
     }
 
-    public static final RenderPipeline PFM_LOGO_PIPELINE = RenderPipelines.register(
+    private static final RenderPipeline PFM_LOGO_PIPELINE = RenderPipelines.register(
             RenderPipeline.builder(RenderPipelines.POSITION_TEX_COLOR_SNIPPET)
                     .withLocation("pipeline/pfm_logo")
-                    .withBlend(new BlendFunction(SourceFactor.SRC_ALPHA, DestFactor.ONE))
                     .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
                     .withDepthWrite(false)
                     .build()

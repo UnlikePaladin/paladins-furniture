@@ -4,6 +4,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.StringIdentifiable;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -67,6 +68,11 @@ public class PFMFileUtil {
 
     @ExpectPlatform
     public static MinecraftServer getCurrentServer() {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static String pfm$getTypeFieldName() {
         throw new AssertionError();
     }
 }

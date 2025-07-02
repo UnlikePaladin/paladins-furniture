@@ -25,6 +25,7 @@
     "ItemRenderStateAccessor",
     "PFMLanguageManagerAccessor",
     "PFMMinecraftClientAcccessor",
+    "PFMMinecraftClientMixin",
     "PFMMixinClientPacketListener",
     "PFMModelVariantMixin",
     "PFMReloadableResourceManagerImplMixin",

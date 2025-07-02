@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.client.model.PFMModelVariantExtension;
+import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.minecraft.client.render.model.json.ModelVariant;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.dynamic.Codecs;
@@ -38,7 +39,7 @@ public class PFMModelVariantMixin implements PFMModelVariantExtension {
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void pfm$redefineCodecs(CallbackInfo ci) {
         MAP_CODEC = RecordCodecBuilder.mapCodec(modelVariantInstance -> modelVariantInstance.group(
-                Identifier.CODEC.optionalFieldOf("fabric:type").forGetter(p -> ((PFMModelVariantExtension)(Object)p).pfm$getCustomType()), Identifier.CODEC.fieldOf("model").forGetter(ModelVariant::modelId), ModelVariant.ModelState.CODEC.forGetter(ModelVariant::modelState)
+                Identifier.CODEC.optionalFieldOf(PFMFileUtil.pfm$getTypeFieldName()).forGetter(p -> ((PFMModelVariantExtension)(Object)p).pfm$getCustomType()), Identifier.CODEC.fieldOf("model").forGetter(ModelVariant::modelId), ModelVariant.ModelState.CODEC.forGetter(ModelVariant::modelState)
         ).apply(modelVariantInstance, (type, model, modelState) -> {
             ModelVariant variant = new ModelVariant(model, modelState);
             ((PFMModelVariantExtension)(Object)variant).pfm$setCustomType(type.orElse(null));
