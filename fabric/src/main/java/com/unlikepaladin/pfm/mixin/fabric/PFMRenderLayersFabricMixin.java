@@ -48,11 +48,17 @@ public abstract class PFMRenderLayersFabricMixin {
                 VariantBase<?> variant = abstractBakedModel.getVariant(state);
                 if (variant != null) {
                     RenderLayer parentLayer = getBlockLayer(variant.getBaseBlock().getDefaultState());
-                    if (parentLayer != RenderLayer.getSolid() || cir.getReturnValue() != RenderLayer.getSolid()) {
+                    RenderLayer selfLayer = cir.getReturnValue();
+
+                    if (parentLayer != RenderLayer.getSolid()) {
                         cir.setReturnValue(parentLayer);
                         pfm$renderLayers.put(state, parentLayer);
+                    } else if (selfLayer != RenderLayer.getSolid()) {
+                        cir.setReturnValue(selfLayer);
+                        pfm$renderLayers.put(state, selfLayer);
                     } else {
-                        pfm$renderLayers.put(state, cir.getReturnValue());
+                        // Both are solid, keep solid.
+                        pfm$renderLayers.put(state, selfLayer);
                     }
                 }
             }
