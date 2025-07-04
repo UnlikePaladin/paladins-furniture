@@ -2,8 +2,6 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
-import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.block.BlockState;
@@ -12,7 +10,7 @@ import net.minecraft.util.math.BlockPos;
 
 import java.util.*;
 
-public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9x3 implements BalmContainerProvider, BalmProviderHolder {
+public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9x3 implements BalmContainerProvider {
     public final KitchenItemProvider itemProvider;
 
     public GenericStorageBlockEntityBalm9x3(BlockPos pos, BlockState state) {
@@ -25,7 +23,7 @@ public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9
         return this;
     }
 
-    public List<BalmProvider<?>> getProviders() {
+    /*public List<BalmProvider<?>> getProviders() {
         return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider));
-    }
+    }*/
 }

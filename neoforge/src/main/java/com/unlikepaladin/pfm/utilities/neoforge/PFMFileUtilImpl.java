@@ -27,4 +27,8 @@ public class PFMFileUtilImpl {
     public static MinecraftServer getCurrentServer() {
         return ServerLifecycleHooks.getCurrentServer();
     }
+
+    public static String pfm$getTypeFieldName() {
+        return "type";
+    }
 }

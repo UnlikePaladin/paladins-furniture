@@ -81,7 +81,7 @@ public record UnbakedChairDinnerModel(ModelVariant variant) implements PFMUnbake
     }
 
     @Override
-    public MapCodec<? extends BlockStateModel.Unbaked> codec() {
+    public MapCodec<? extends BlockStateModel.Unbaked> getCodec() {
         return MAP_CODEC;
     }
 }

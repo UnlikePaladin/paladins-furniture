@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.neoforge;
 import com.google.common.base.Suppliers;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.PathPackRPWrapper;
+import com.unlikepaladin.pfm.client.neoforge.BlockStateModelRegistry;
 import com.unlikepaladin.pfm.client.neoforge.ColorRegistryNeoForge;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.registry.dynamic.neoforge.LateBlockRegistryNeoForge;
@@ -52,6 +53,7 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
         modEventBus.register(SoundRegistryNeoForge.class);
         modEventBus.addListener(NetworkRegistryNeoForge::register);
         modEventBus.addListener(EventPriority.LOW, ColorRegistryNeoForge::registerBlockColors);
+        modEventBus.addListener(BlockStateModelRegistry::registerBlockStateModels);
         LateBlockRegistryNeoForge.addDynamicBlockRegistration(modEventBus);
         PaladinFurnitureMod.isClient = FMLEnvironment.dist == Dist.CLIENT;
         NeoForge.EVENT_BUS.addListener(NetworkRegistryNeoForge::onServerJoin);

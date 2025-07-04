@@ -20,7 +20,7 @@ public class PFMTagProviderImpl {
         private final Function<T, RegistryKey<T>> valueToKey;
 
         ObjectBuilder(TagBuilder arg, Function<T, RegistryKey<T>> function, String modId) {
-            super(arg, modId);
+            super(arg);
             this.valueToKey = function;
         }
 

@@ -10,6 +10,7 @@ import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.container.DefaultContainer;
 import net.blay09.mods.balm.api.container.SubContainer;
 import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
+import net.blay09.mods.balm.api.energy.DefaultEnergyStorage;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.menu.BalmMenuProvider;
 import net.blay09.mods.balm.api.tag.BalmItemTags;
@@ -107,7 +108,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
             return 11;
         }
     };
-    private final EnergyStorage energyStorage = new EnergyStorage(10000) {
+    private final EnergyStorage energyStorage = new DefaultEnergyStorage(10000) {
         public int fill(int maxReceive, boolean simulate) {
             if (!simulate) {
                 StoveBlockEntityBalm.this.markDirty();
@@ -295,7 +296,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
             RecipeEntry<? extends Recipe<T>> recipe = server.getRecipeManager().getFirstMatch(recipeType, recipeInput, this.world).orElse(null);
             if (recipe != null) {
                 ItemStack result = recipe.value().craft(recipeInput, this.world.getRegistryManager());
-                if (!result.isEmpty() && result.contains(DataComponentTypes.FOOD)) {
+                if (!result.isEmpty() && result.has(DataComponentTypes.FOOD)) {
                     return result;
                 }
             }
@@ -316,7 +317,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
         if (itemStack.isEmpty()) {
             return 0;
         } else {
-            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.isIn(BalmItemTags.COOKING_OIL) ? 800 : Balm.getHooks().getBurnTime(world, itemStack);
+            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.isIn(BalmItemTags.COOKING_OIL) ? 800 : 800;
         }
     }
 
@@ -334,18 +335,18 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     @Override
     protected void readNbt(NbtCompound tagCompound, RegistryWrapper.WrapperLookup registryLookup) {
         super.readNbt(tagCompound, registryLookup);
-        this.container.deserialize(tagCompound.getCompound("ItemHandler"), registryLookup);
-        this.furnaceBurnTime = tagCompound.getShort("BurnTime");
-        this.currentItemBurnTime = tagCompound.getShort("CurrentItemBurnTime");
-        this.slotCookTime = tagCompound.getIntArray("CookTimes");
+        this.container.deserialize(tagCompound.getCompound("ItemHandler").orElse(new NbtCompound()), registryLookup);
+        this.furnaceBurnTime = tagCompound.getShort("BurnTime").orElse((short) 0);
+        this.currentItemBurnTime = tagCompound.getShort("CurrentItemBurnTime").orElse((short) 0);
+        this.slotCookTime = tagCompound.getIntArray("CookTimes").orElse(new int[0]);
         if (this.slotCookTime.length != 9) {
             this.slotCookTime = new int[9];
         }
 
-        this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade");
-        this.energyStorage.setEnergy(tagCompound.getInt("EnergyStored"));
-        if (tagCompound.contains("CustomName", 8)) {
-            this.customName = Text.Serialization.fromJson(tagCompound.getString("CustomName"), registryLookup);
+        this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade").orElse(false);
+        this.energyStorage.setEnergy(tagCompound.getInt("EnergyStored").orElse(0));
+        if (tagCompound.contains("CustomName")) {
+            this.customName = Text.Serialization.fromJson(tagCompound.getString("CustomName").orElse(""), registryLookup);
         }
 
     }
@@ -492,7 +493,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     @Override
     public void onDataPacket(ClientConnection connection, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup lookup) {
         super.onDataPacket(connection, pkt, lookup);
-        this.container.deserialize(pkt.getNbt().getCompound("ItemHandler"), lookup);
+        this.container.deserialize(pkt.getNbt().getCompound("ItemHandler").orElse(new NbtCompound()), lookup);
     }
 
     protected void onContainerOpen(World world, BlockPos pos, BlockState state) {

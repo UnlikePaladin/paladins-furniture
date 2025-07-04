@@ -6,9 +6,8 @@
   "client": [
     "BlockColorsAccessor",
     "HandledScreensAccessor",
-    "ItemRendererMixin",
-    "PFMReferencedModelsCollectorMixin",
-    "PFMRenderLayersNeoForgeMixin"
+    "PFMRenderLayersNeoForgeMixin",
+    "PFMUnbakedBlockStateModelMixin"
   ],
   "mixins": [
     "PFMCFBModBlockEntitiesMixin",

@@ -147,7 +147,7 @@ public class LightSwitchItem extends BlockItem {
 
     @Nullable
     public static NbtList getLights(ItemStack stack) {
-        if(stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
+        if(stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) == null) {
             NbtCompound blockEntityTag = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).getNbt();
             if(blockEntityTag.contains("lights")) {
                 return (NbtList) blockEntityTag.get("lights");
@@ -158,7 +158,7 @@ public class LightSwitchItem extends BlockItem {
 
     private static NbtCompound createTag(ItemStack stack)
     {
-        if(!stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA))
+        if(stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) == null)
         {
             NbtCompound nbtCompound = new NbtCompound();
             nbtCompound.putString("id", "pfm:light_switch_block_entity");
@@ -170,7 +170,7 @@ public class LightSwitchItem extends BlockItem {
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
         NbtList nbtList;
-        if (stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA) && (nbtList = getLights(stack)) != null) {
+        if (stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null && (nbtList = getLights(stack)) != null) {
             int lightNum = nbtList.size();
             textConsumer.accept(Text.translatable("tooltip.pfm.light_switch_connected", lightNum));
         }

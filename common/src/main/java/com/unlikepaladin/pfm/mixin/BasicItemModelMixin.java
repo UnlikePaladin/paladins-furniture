@@ -48,7 +48,7 @@ public class BasicItemModelMixin {
             pfm$parentStack = item.getDefaultStack();
             this.pfm$parentTints = exploreForTints(parentModel, world, user, seed, displayContext);
         }
-        if (stack.contains(PFMComponents.VARIANT_COMPONENT)) {
+        if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
             Item item = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT)).getLogBlock().asItem();
 
             Identifier parentModelId = item.getDefaultStack().get(DataComponentTypes.ITEM_MODEL);
@@ -113,7 +113,7 @@ public class BasicItemModelMixin {
 
     @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/tint/TintSource;getTint(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/world/ClientWorld;Lnet/minecraft/entity/LivingEntity;)I"))
     private int swapTintColor(TintSource instance, ItemStack itemStack, ClientWorld clientWorld, LivingEntity livingEntity, Operation<Integer> original, @Share("currentColorIndex")LocalIntRef currentColorIndex) {
-        if (currentColorIndex.get() == 1 && itemStack.contains(PFMComponents.COLOR_COMPONENT)) {
+        if (currentColorIndex.get() == 1 && itemStack.get(PFMComponents.COLOR_COMPONENT) != null) {
             return itemStack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getMapColor().color;
         }
         if (pfm$parentTints != null) {

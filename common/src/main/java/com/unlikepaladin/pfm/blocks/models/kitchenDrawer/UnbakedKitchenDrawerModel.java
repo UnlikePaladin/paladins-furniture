@@ -97,7 +97,7 @@ public record UnbakedKitchenDrawerModel(ModelVariant variant) implements PFMUnba
     }
 
     @Override
-    public MapCodec<? extends BlockStateModel.Unbaked> codec() {
+    public MapCodec<? extends BlockStateModel.Unbaked> getCodec() {
         return MAP_CODEC;
     }
 }

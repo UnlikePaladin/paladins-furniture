@@ -44,8 +44,8 @@ public class LampBlockEntityImpl extends LampBlockEntity {
     @Override
     public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup registryLookup) {
         super.onDataPacket(net, pkt, registryLookup);
-        this.color = DyeColor.byName(pkt.getNbt().getString("color"), DyeColor.WHITE);
-        this.variant = WoodVariantRegistry.getVariant(Identifier.tryParse(pkt.getNbt().getString("variant")));
+        this.color = DyeColor.byId(pkt.getNbt().getString("color").orElse("white"), DyeColor.WHITE);
+        this.variant = WoodVariantRegistry.getVariant(Identifier.tryParse(pkt.getNbt().getString("variant").orElse("minecraft:oak")));
     }
 
 }

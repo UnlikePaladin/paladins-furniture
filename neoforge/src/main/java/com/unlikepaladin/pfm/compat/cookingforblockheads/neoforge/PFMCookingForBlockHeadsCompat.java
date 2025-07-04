@@ -6,13 +6,11 @@ import com.unlikepaladin.pfm.blocks.neoforge.StoveBlockImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.CombinedContainer;
 import net.blay09.mods.balm.api.container.ContainerUtils;
-import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.api.CacheHint;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
@@ -32,7 +30,6 @@ import net.minecraft.item.Items;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -43,10 +40,6 @@ import net.minecraft.world.World;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.function.Function;
-
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Function;
 
@@ -67,7 +60,7 @@ public class PFMCookingForBlockHeadsCompat {
     public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
         StoveBlockEntityBalm stove = (StoveBlockEntityBalm)world.getBlockEntity(pos);
         if (!world.isClient) {
-            Balm.getNetworking().openGui(player, stove);
+            Balm.getNetworking().openMenu(player, stove);
         }
     }
 
@@ -141,7 +134,7 @@ public class PFMCookingForBlockHeadsCompat {
                 }
             }
             if (!level.isClient) {
-                Balm.getNetworking().openGui(player, oven);
+                Balm.getNetworking().openMenu(player, oven);
             }
             return ActionResult.SUCCESS;
         }
@@ -149,7 +142,7 @@ public class PFMCookingForBlockHeadsCompat {
 
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-
+/*
         event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.FREEZER_BLOCK_ENTITY, (entity, side) -> {
             return new ContainerKitchenItemProvider(entity){
                 private final ItemStack snowStack;
@@ -196,6 +189,6 @@ public class PFMCookingForBlockHeadsCompat {
         event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.DRAWER_BLOCK_ENTITY, (entity, side) -> ((GenericStorageBlockEntityBalm9x3)entity).itemProvider);
         event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.FRIDGE_BLOCK_ENTITY, (entity, side) -> ((FridgeBlockEntityBalm)entity).itemProvider);
         event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, (entity, side) -> ((CounterOvenBlockEntityBalm)entity).itemProvider);
-        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, (entity, side) -> ((GenericStorageBlockEntityBalm3x3)entity).itemProvider);
+        event.registerBlockEntity(((NeoForgeBalmProviders)Balm.getProviders()).getBlockCapability(KitchenItemProvider.class), BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, (entity, side) -> ((GenericStorageBlockEntityBalm3x3)entity).itemProvider);*/
     }
 }

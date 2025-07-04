@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
 import com.unlikepaladin.pfm.data.materials.*;
 import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
@@ -14,7 +15,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.*;
 
-public record UnbakedModernStoolModel(ModelVariant variant) implements BlockStateModel.Unbaked {
+public record UnbakedModernStoolModel(ModelVariant variant) implements PFMUnbakedBlockStateModel {
     public static final MapCodec<UnbakedModernStoolModel> MAP_CODEC = RecordCodecBuilder.mapCodec
             (instance ->
                     instance.group(ModelVariant.MAP_CODEC.forGetter(UnbakedModernStoolModel::variant))
@@ -74,5 +75,10 @@ public record UnbakedModernStoolModel(ModelVariant variant) implements BlockStat
     public void resolve(Resolver resolver) {
         for (Identifier c : MODERN_STOOL_PARTS_BASE)
             resolver.markDependency(c);
+    }
+
+    @Override
+    public MapCodec<? extends BlockStateModel.Unbaked> getCodec() {
+        return MAP_CODEC;
     }
 }

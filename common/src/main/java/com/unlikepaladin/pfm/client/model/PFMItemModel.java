@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public abstract class PFMItemModel<T> implements ItemModel {
+public class PFMItemModel<T> implements ItemModel {
     private final SpecialModelRenderer<T> specialModelType;
     protected final Supplier<BlockStateModel> model;
     private final List<TintSource> tints;
@@ -88,7 +88,7 @@ public abstract class PFMItemModel<T> implements ItemModel {
         List<TintSource> tintsToUse = pfm$parentTints.isEmpty() ? this.tints : pfm$parentTints;
 
         int tintCount = tintsToUse.size();
-        if (tintCount == 0 && stack.contains(PFMComponents.COLOR_COMPONENT)) {
+        if (tintCount == 0 && stack.get(PFMComponents.COLOR_COMPONENT) != null) {
             tintCount = 2;
             tintsToUse = new ArrayList<>(tintCount);
 
@@ -99,7 +99,7 @@ public abstract class PFMItemModel<T> implements ItemModel {
         int[] tintArray = layerRenderState.initTints(tintCount);
 
         for (int index = 0; index < tintCount; index++) {
-            if (index == 1 && stack.contains(PFMComponents.COLOR_COMPONENT)) {
+            if (index == 1 && stack.get(PFMComponents.COLOR_COMPONENT) != null) {
                 tintArray[index] =  stack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getMapColor().color;
             } else {
                 tintArray[index] = tintsToUse.get(index).getTint(stack, world, user);
@@ -121,7 +121,7 @@ public abstract class PFMItemModel<T> implements ItemModel {
     protected void setProperties(ItemStack stack) {
         if (stack.getItem() instanceof BlockItem && model.get() instanceof PFMBakedModelSetPropertiesExtension) {
             ((PFMBakedModelSetPropertiesExtension) model.get()).setBlockStateProperty(((BlockItem) stack.getItem()).getBlock().getDefaultState());
-            if (stack.contains(PFMComponents.VARIANT_COMPONENT))
+            if (stack.get(PFMComponents.VARIANT_COMPONENT) != null)
                 ((PFMBakedModelSetPropertiesExtension) model.get()).setVariant(VariantHelper.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT)));
         }
     }

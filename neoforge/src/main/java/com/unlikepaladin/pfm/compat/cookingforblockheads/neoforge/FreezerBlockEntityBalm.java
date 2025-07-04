@@ -1,11 +1,8 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
-import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.blocks.blockentities.neoforge.FreezerBlockEntityImpl;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.container.ContainerUtils;
-import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.cookingforblockheads.api.CacheHint;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
@@ -24,7 +21,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Function;
 
-public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements BalmContainerProvider, BalmProviderHolder {
+public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements BalmContainerProvider {
     private final KitchenItemProvider itemProvider;
 
     public FreezerBlockEntityBalm(BlockPos pos, BlockState state) {
@@ -69,7 +66,7 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements Ba
         return this;
     }
 
-    public List<BalmProvider<?>> getProviders() {
+    /*public List<BalmProvider<?>> getProviders() {
         return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider));
-    }
+    }*/
 }

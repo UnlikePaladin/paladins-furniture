@@ -96,7 +96,7 @@ public record UnbakedCoffeeBasicTableModel(ModelVariant variant) implements PFMU
     }
 
     @Override
-    public MapCodec<? extends BlockStateModel.Unbaked> codec() {
+    public MapCodec<? extends BlockStateModel.Unbaked> getCodec() {
         return MAP_CODEC;
     }
 }

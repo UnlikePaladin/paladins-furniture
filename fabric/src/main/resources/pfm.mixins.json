@@ -3,12 +3,13 @@
   "package": "com.unlikepaladin.pfm.mixin.fabric",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "PFMCrackParticle$ItemFactoryMixin",
     "PFMBlockDustParticleMixin",
     "PFMBlockModelsMixin",
-    "PFMSpriteBillBoardParticleMixin",
+    "PFMCrackParticle$ItemFactoryMixin",
     "PFMRenderLayersFabricMixin",
-    "PFMTitleScreenMixin"
+    "PFMSpriteBillBoardParticleMixin",
+    "PFMTitleScreenMixin",
+    "PFMUnbakedBlockStateModelMixin"
   ],
   "mixins": [
     "PFMAbstractTagProvider$ObjectBuilderMixin",

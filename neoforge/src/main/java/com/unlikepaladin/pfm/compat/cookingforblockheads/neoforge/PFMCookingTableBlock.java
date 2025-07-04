@@ -12,6 +12,7 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -50,7 +51,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
             }
 
             if (!world.isClient) {
-                Balm.getNetworking().openGui(player, cookingTable);
+                Balm.getNetworking().openMenu(player, cookingTable);
             }
         }
 
@@ -73,12 +74,12 @@ public class PFMCookingTableBlock extends BlockWithEntity {
     }
 
 
-    public void onStateReplaced(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onStateReplaced(BlockState state, ServerWorld level, BlockPos pos, BlockState newState, boolean isMoving) {
         CookingTableBlockEntity tileEntity = (CookingTableBlockEntity) level.getBlockEntity(pos);
         if (tileEntity != null && !state.isOf(newState.getBlock())) {
             ItemUtils.spawnItemStack(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, tileEntity.getNoFilterBook());
         }
-        super.onStateReplaced(state, level, pos, newState, isMoving);
+        super.onStateReplaced(state, level, pos, isMoving);
     }
 
     @Nullable

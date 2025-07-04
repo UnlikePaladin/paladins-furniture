@@ -109,7 +109,7 @@ public class ShowerHandleItem extends BlockItem {
 
     @Nullable
     public static NbtLong getShowerHead(ItemStack stack) {
-        if (stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
+        if (stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null) {
             NbtCompound blockEntityTag = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).getNbt();
             if(blockEntityTag.contains("showerHead")) {
                 return NbtLong.of(blockEntityTag.getLong("showerHead").orElse(0L));
@@ -119,7 +119,7 @@ public class ShowerHandleItem extends BlockItem {
     }
 
     private static NbtCompound createNbt(ItemStack stack) {
-        if(!stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA))
+        if(stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) == null)
         {
             NbtCompound nbtCompound = new NbtCompound();
             nbtCompound.putString("id", "pfm:shower_handle_block_entity");
@@ -130,7 +130,7 @@ public class ShowerHandleItem extends BlockItem {
 
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
-        if (stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA) && getShowerHead(stack) != null) {
+        if (stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null && getShowerHead(stack) != null) {
             textConsumer.accept(Text.translatable("tooltip.pfm.shower_handle_connected", 1));
         }
         super.appendTooltip(stack, context, displayComponent, textConsumer, type);

@@ -212,4 +212,16 @@ public abstract class VariantBase<T> implements StringIdentifiable, Comparable<V
     public int compareTo(@NotNull VariantBase<T> o) {
         return identifier.compareTo(o.identifier);
     }
+
+    @Override
+    public boolean equals(Object object) {
+        if (this == object) return true;
+        if (!(object instanceof VariantBase<?> that)) return false;
+        return Objects.equals(identifier, that.identifier);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(identifier);
+    }
 }

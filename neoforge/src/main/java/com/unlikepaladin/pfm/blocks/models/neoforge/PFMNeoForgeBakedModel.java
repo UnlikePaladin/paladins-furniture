@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models.neoforge;
 
+import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
@@ -7,20 +8,18 @@ import com.unlikepaladin.pfm.client.model.PFMBakedModelSetPropertiesExtension;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelGetQuadsExtension;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
 import net.neoforged.neoforge.client.model.IQuadTransformer;
-import net.neoforged.neoforge.client.model.data.ModelData;
-import net.neoforged.neoforge.client.model.data.ModelProperty;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -33,15 +32,10 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
     protected BlockState blockState;
     protected VariantBase<?> variant;
 
-    @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
-        return getQuads(blockState, face, random);
-    }
-
-    Map<Pair<BlockState, Direction>, List<BakedQuad>> cache = new HashMap<>();
+    Map<Pair<Pair<BlockState, VariantBase<?>>, Direction>, List<BakedQuad>> cache = new HashMap<>();
     @Override
     public List<BakedQuad> getQuadsCached(@Nullable Direction face, Random random) {
-        Pair<BlockState, Direction> directionPair = new Pair<>(blockState, face);
+        Pair<Pair<BlockState, VariantBase<?>>, Direction> directionPair = new Pair<>(new Pair<>(blockState, variant), face);
         if (cache.containsKey(directionPair))
             return cache.get(directionPair);
 
@@ -50,19 +44,74 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         return quads;
     }
 
-    public PFMNeoForgeBakedModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
-        super(settings, templateBakedModels);
+    public PFMNeoForgeBakedModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> templateBakedModels) {
+        super(settings, modelSettings, templateBakedModels);
     }
-    public static ModelProperty<BlockState> STATE = new ModelProperty<>();
 
-    @NotNull
-    @Override
-    public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
-        return tileData.derive().with(STATE, state).build();
+    public BlockModelPart getQuadsWithTexture(List<BakedQuad> quads, List<Sprite> toReplace, List<Sprite> replacements) {
+        List<BakedQuad> quadList = getQuadsWithTextureInner(quads, toReplace, replacements);
+        return new BlockModelPart() {
+            @Override
+            public List<BakedQuad> getQuads(@Nullable Direction side) {
+                return quadList;
+            }
+
+            @Override
+            public boolean useAmbientOcclusion() {
+                return true;
+            }
+
+            @Override
+            public Sprite particleSprite() {
+                return replacements.getFirst();
+            }
+        };
+    }
+
+    public BlockModelPart getQuadsWithTexture(BlockModelPart modelPart, List<Sprite> toReplace, List<Sprite> replacements) {
+        return new BlockModelPart() {
+            @Override
+            public List<BakedQuad> getQuads(@Nullable Direction side) {
+                return getQuadsWithTextureInner(modelPart.getQuads(side), toReplace, replacements);
+            }
+
+            @Override
+            public boolean useAmbientOcclusion() {
+                return true;
+            }
+
+            @Override
+            public Sprite particleSprite() {
+                return replacements.getFirst();
+            }
+        };
+    }
+
+    public List<BlockModelPart> getTexturedParts(List<BlockModelPart> quads, List<Sprite> toReplace, List<Sprite> replacements) {
+        List<BlockModelPart> modelParts = new ArrayList<>();
+        for (BlockModelPart quad : quads) {
+            modelParts.add(new BlockModelPart() {
+                @Override
+                public List<BakedQuad> getQuads(@Nullable Direction side) {
+                    return getQuadsWithTextureInner(quad.getQuads(side), toReplace, replacements);
+                }
+
+                @Override
+                public boolean useAmbientOcclusion() {
+                    return quad.useAmbientOcclusion();
+                }
+
+                @Override
+                public Sprite particleSprite() {
+                    return quad.particleSprite();
+                }
+            });
+        }
+        return modelParts;
     }
 
     Map<Pair<Identifier, SpriteData>, List<BakedQuad>> separatedQuads = new ConcurrentHashMap<>();
-    public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, List<Sprite> toReplace, List<Sprite> replacements) {
+    public List<BakedQuad> getQuadsWithTextureInner(List<BakedQuad> quads, List<Sprite> toReplace, List<Sprite> replacements) {
         if (quads == null)
             return Collections.emptyList();
 
@@ -80,7 +129,7 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
             return quads;
 
         for (BakedQuad quad : quads) {
-            SpriteData sprite = new SpriteData(quad.getSprite());
+            SpriteData sprite = new SpriteData(quad.sprite());
             Pair<Identifier, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
             if (separatedQuads.containsKey(pair)) {
                 if (!separatedQuads.get(pair).contains(quad)) {
@@ -122,6 +171,51 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         return transformedQuads;
     }
 
+    Map<Pair<SpriteData, List<BlockModelPart>>, List<BlockModelPart>> partsToTransformedParts = new ConcurrentHashMap<>();
+    public List<BlockModelPart> getPartsWithTexture(List<BlockModelPart> parts, SpriteData spriteData) {
+        Pair<SpriteData, List<BlockModelPart>> pair = new Pair<>(spriteData, parts);
+
+        if (partsToTransformedParts.containsKey(pair)) {
+            return partsToTransformedParts.get(pair);
+        }
+
+        List<BlockModelPart> partsWithTexture = new ArrayList<>();
+        for (BlockModelPart part : parts) {
+            partsWithTexture.add(getPartWithTexture(part, spriteData));
+        }
+        partsToTransformedParts.put(pair, partsWithTexture);
+        return partsWithTexture;
+    }
+
+
+    Map<Pair<SpriteData, BlockModelPart>, BlockModelPart> partToTransformedPart = new ConcurrentHashMap<>();
+    public BlockModelPart getPartWithTexture(BlockModelPart ogPart, SpriteData spriteData) {
+        Pair<SpriteData, BlockModelPart> pair = new Pair<>(spriteData, ogPart);
+
+        if (partToTransformedPart.containsKey(pair)) {
+            return partToTransformedPart.get(pair);
+        }
+
+        BlockModelPart part = new BlockModelPart() {
+            @Override
+            public List<BakedQuad> getQuads(@Nullable Direction side) {
+                return getQuadsWithTexture(ogPart.getQuads(side), spriteData);
+            }
+
+            @Override
+            public boolean useAmbientOcclusion() {
+                return ogPart.useAmbientOcclusion();
+            }
+
+            @Override
+            public Sprite particleSprite() {
+                return ogPart.particleSprite();
+            }
+        };
+        partToTransformedPart.put(pair, part);
+        return part;
+    }
+
     Map<Pair<SpriteData, BakedQuad>, BakedQuad> quadToTransformedQuad = new ConcurrentHashMap<>();
     public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, SpriteData spriteData) {
         List<BakedQuad> transformedQuads = new ArrayList<>(quads.size());
@@ -130,7 +224,7 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         quads.forEach(quad -> {
             Pair<SpriteData, BakedQuad> quadKey = new Pair<>(spriteData, quad);
 
-            if (quad.getSprite().getContents().getId() == spriteData.getId() && !quadToTransformedQuad.containsKey(quadKey)) {
+            if (quad.sprite().getContents().getId() == spriteData.getId() && !quadToTransformedQuad.containsKey(quadKey)) {
                 quadToTransformedQuad.put(quadKey, quad);
                 transformedQuads.add(quad);
             }
@@ -140,19 +234,19 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
             else {
                 Sprite sprite = spriteData.getSprite();
 
-                int[] vertexData = new int[quad.getVertexData().length];
-                System.arraycopy(quad.getVertexData(), 0, vertexData, 0, vertexData.length);
+                int[] vertexData = new int[quad.vertexData().length];
+                System.arraycopy(quad.vertexData(), 0, vertexData, 0, vertexData.length);
                 float[][] uv = new float[4][2];
                 for (int vertexIndx = 0; vertexIndx < 4; vertexIndx++) {
                     unpackUV(vertexData, uv[vertexIndx], vertexIndx);
-                    Sprite originalSprite = quad.getSprite();
+                    Sprite originalSprite = quad.sprite();
                     float frameU = originalSprite.getFrameFromU(uv[vertexIndx][0]);
                     float frameV = originalSprite.getFrameFromV(uv[vertexIndx][1]);
                     uv[vertexIndx][0] = sprite.getFrameU(frameU);
                     uv[vertexIndx][1] = sprite.getFrameV(frameV);
                     packUV(uv[vertexIndx], vertexData, vertexIndx);
                 }
-                BakedQuad transformedQuad = new BakedQuad(vertexData, quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.hasShade(), quad.getLightEmission());
+                BakedQuad transformedQuad = new BakedQuad(vertexData, quad.tintIndex(), quad.face(), quad.sprite(), quad.shade(), quad.lightEmission());
                 quadToTransformedQuad.put(quadKey, transformedQuad);
                 transformedQuads.add(transformedQuad);
             }
@@ -175,16 +269,16 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
     }
 
 
-    private static final Map<Pair<VertexFormatElement.ComponentType, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
-    public static int findVertexElement(VertexFormatElement.ComponentType type, int index) {
-        Pair<VertexFormatElement.ComponentType, Integer> pairToFind = new Pair<>(type, index);
+    private static final Map<Pair<VertexFormatElement.Type, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
+    public static int findVertexElement(VertexFormatElement.Type type, int index) {
+        Pair<VertexFormatElement.Type, Integer> pairToFind = new Pair<>(type, index);
         if (ELEMENT_INTEGER_MAP.containsKey(pairToFind))
             return ELEMENT_INTEGER_MAP.get(pairToFind);
 
         int id = 0;
         for (VertexFormatElement element1 : VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.getElements())
         {
-            if (element1.type() == type && element1.uvIndex() == index)
+            if (element1.type() == type && element1.index() == index)
                 break;
             id++;
         }
@@ -193,10 +287,10 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
     }
 
     @Override
-    public Sprite getParticleIcon(@NotNull ModelData data) {
-        if (data.has(STATE) && data.get(STATE) != null)
-            return getSpriteList(data.get(STATE)).get(0);
-        return super.getParticleIcon(data);
+    public Sprite particleIcon(BlockRenderView level, BlockPos pos, BlockState state) {
+        if (state != null)
+            return getSpriteList(state).get(0);
+        return super.particleIcon(level, pos, state);
     }
 
     @Override
@@ -220,8 +314,8 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
     }
 
     @Override
-    public Sprite getParticleSprite() {
-        return getTemplateBakedModels().get(0).getParticleSprite();
+    public Sprite particleSprite() {
+        return getTemplateBakedModels().get(0).particleSprite();
     }
 
     public static class SpriteData {

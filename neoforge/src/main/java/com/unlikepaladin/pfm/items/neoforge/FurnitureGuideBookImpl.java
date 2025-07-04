@@ -14,6 +14,9 @@ import net.minecraft.world.World;
 import net.neoforged.fml.ModList;
 import vazkii.patchouli.api.PatchouliAPI;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 
 public class FurnitureGuideBookImpl extends FurnitureGuideBook {
     public FurnitureGuideBookImpl(Item.Settings settings) {
@@ -27,8 +30,12 @@ public class FurnitureGuideBookImpl extends FurnitureGuideBook {
         }
         else if (world.isClient && !ModList.get().isLoaded("patchouli"))
         {
-            Text text = Text.translatable("message.pfm.patchouli_not_installed").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/UnlikePaladin/paladins-furniture/wiki")));
-            user.sendMessage(text,false);
+            Text text = null;
+            try {
+                text = Text.translatable("message.pfm.patchouli_not_installed").setStyle(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(new URI("https://github.com/UnlikePaladin/paladins-furniture/wiki"))));
+                user.sendMessage(text,false);
+            } catch (URISyntaxException e) {
+            }
         }
         return ActionResult.PASS;
     }
