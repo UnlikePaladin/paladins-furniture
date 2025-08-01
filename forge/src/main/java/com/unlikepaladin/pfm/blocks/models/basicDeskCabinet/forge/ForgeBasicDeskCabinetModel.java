@@ -6,11 +6,11 @@ import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -27,8 +27,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
-    public ForgeBasicDeskCabinetModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
-        super(settings, modelParts);
+    public ForgeBasicDeskCabinetModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+        super(settings, modelSettings, modelParts);
     }
 
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
@@ -92,9 +92,10 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+        BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof BasicDeskCabinetBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
-            List<BakedQuad> secondaryQuads = new ArrayList<>();
+            List<BlockModelPart> secondaryQuads = new ArrayList<>();
             BasicDeskCabinetBlock block = (BasicDeskCabinetBlock) state.getBlock();
 
             BitSet set = extraData.get(CONNECTIONS).connections;
@@ -106,16 +107,16 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
 
             switch (isFacing) {
                 case SOUTH:
-                    secondaryQuads.addAll(legsDesk(state, side, rand, extraData, renderLayer, north, south, east, west, 18, 19, 16, 17));
+                    secondaryQuads.addAll(legsDesk(north, south, east, west, 18, 19, 16, 17));
                     break;
                 case NORTH:
-                    secondaryQuads.addAll(legsDesk(state, side, rand, extraData, renderLayer, north, south, east, west, 17, 16, 19, 18));
+                    secondaryQuads.addAll(legsDesk(north, south, east, west, 17, 16, 19, 18));
                     break;
                 case EAST:
-                    secondaryQuads.addAll(legsDesk(state, side, rand, extraData, renderLayer, north, south, east, west, 19, 17, 18, 16));
+                    secondaryQuads.addAll(legsDesk(north, south, east, west, 19, 17, 18, 16));
                     break;
                 default:
-                    secondaryQuads.addAll(legsDesk(state, side, rand, extraData, renderLayer, north, south, east, west, 16, 18, 17, 19));
+                    secondaryQuads.addAll(legsDesk(north, south, east, west, 16, 18, 17, 19));
                     break;
             }
 
@@ -132,13 +133,13 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
                 // outer corner
                 if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateFacingDifferentDirection) {
                     if (neighborFacing == isFacing.rotateYCounterclockwise()) {
-                        secondaryQuads.addAll(getTemplateBakedModels().get((4 + openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+                        secondaryQuads.add(getTemplateBakedModels().get((4 + openOffset)));
                     }
                     else {
-                        secondaryQuads.addAll(getTemplateBakedModels().get((5 + openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+                        secondaryQuads.add(getTemplateBakedModels().get((5 + openOffset)));
                     }
                 } else {
-                    secondaryQuads.addAll(middleDesk(state, side, rand, extraData, renderLayer, left, right, openOffset));
+                    secondaryQuads.add(middleDesk(left, right, openOffset));
                 }
             }
             else if (block.canConnect(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
@@ -146,65 +147,64 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
                 // inner corner
                 if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
                     if (neighborFacing == isFacing.rotateYCounterclockwise()) {
-                        secondaryQuads.addAll(getTemplateBakedModels().get((6 + openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+                        secondaryQuads.add(getTemplateBakedModels().get((6 + openOffset)));
                     } else {
-                        secondaryQuads.addAll(getTemplateBakedModels().get((7 + openOffset)).getQuads(state, side, rand, extraData, renderLayer));
+                        secondaryQuads.add(getTemplateBakedModels().get((7 + openOffset)));
                     }
                 } else {
-                    secondaryQuads.addAll(middleDesk(state, side, rand, extraData, renderLayer, left, right, openOffset));
+                    secondaryQuads.add(middleDesk(left, right, openOffset));
                 }
             }
             else {
-                secondaryQuads.addAll(middleDesk(state, side, rand, extraData, renderLayer, left, right, openOffset));
+                secondaryQuads.add(middleDesk(left, right, openOffset));
             }
 
             List<Sprite> spriteList = getSpriteList(state);
-            return getQuadsWithTexture(secondaryQuads, ModelHelper.getOakPlankLogSprites(), spriteList);
+            dest.addAll(getTexturedParts(secondaryQuads, ModelHelper.getOakPlankLogSprites(), spriteList));
         }
-       return Collections.emptyList();
     }
 
-    private List<BakedQuad> legsDesk(BlockState state, Direction side, Random rand, ModelData extraData, RenderLayer renderLayer, boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
-        List<BakedQuad> quads = new ArrayList<>();
+    private List<BlockModelPart> legsDesk(boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
+        List<BlockModelPart> quads = new ArrayList<>();
         if (!north && !east) {
-            quads.addAll(getTemplateBakedModels().get(northLeg).getQuads(state, side, rand, extraData, renderLayer));
+            quads.add(getTemplateBakedModels().get(northLeg));
         }
         if (!north && !west) {
-            quads.addAll(getTemplateBakedModels().get(southLeg).getQuads(state, side, rand, extraData, renderLayer));
+            quads.add(getTemplateBakedModels().get(southLeg));
         }
         if (!south && !west) {
-            quads.addAll(getTemplateBakedModels().get(eastLeg).getQuads(state, side, rand, extraData, renderLayer));
+            quads.add(getTemplateBakedModels().get(eastLeg));
         }
         if (!south && !east) {
-            quads.addAll(getTemplateBakedModels().get(westLeg).getQuads(state, side, rand, extraData, renderLayer));
+            quads.add(getTemplateBakedModels().get(westLeg));
         }
         return quads;
     }
 
 
-    private List<BakedQuad> middleDesk(BlockState state, Direction side, Random rand, ModelData extraData, RenderLayer renderLayer, boolean left, boolean right, int openOffset) {
+    private BlockModelPart middleDesk(boolean left, boolean right, int openOffset) {
         if (left && right) {
-            return getTemplateBakedModels().get((3 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
+            return getTemplateBakedModels().get((3 + openOffset));
         }  else if (left) {
-            return getTemplateBakedModels().get((1 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
+            return getTemplateBakedModels().get((1 + openOffset));
         } else if (right) {
-            return getTemplateBakedModels().get((2 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
+            return getTemplateBakedModels().get((2 + openOffset));
         } else {
-            return getTemplateBakedModels().get((openOffset)).getQuads(state, side, rand, extraData, renderLayer);
+            return getTemplateBakedModels().get((openOffset));
         }
     }
 
     @Override
     public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
         // base
-        List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(null, face, random));
+        List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(face));
 
         List<BakedQuad> secondaryQuads = new ArrayList<>();
         // legs
-        secondaryQuads.addAll(getTemplateBakedModels().get(18).getQuads(null, face, random));
-        secondaryQuads.addAll(getTemplateBakedModels().get(16).getQuads(null, face, random));
-        secondaryQuads.addAll(getTemplateBakedModels().get(17).getQuads(null, face, random));
-        secondaryQuads.addAll(getTemplateBakedModels().get(19).getQuads(null, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(18).getQuads(face));
+        secondaryQuads.addAll(getTemplateBakedModels().get(16).getQuads(face));
+        secondaryQuads.addAll(getTemplateBakedModels().get(17).getQuads(face));
+        secondaryQuads.addAll(getTemplateBakedModels().get(19).getQuads(face));
         // in between pieces
 
 

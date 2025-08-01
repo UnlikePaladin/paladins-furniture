@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.client.neoforge;
 
 import com.mojang.serialization.MapCodec;
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
@@ -40,7 +39,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.client.event.RegisterBlockStateModels;
 import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
 
-public class BlockStateModelRegistry {
+public class BlockStateModelRegistryNeoForge {
 
     @SubscribeEvent
     public static void registerBlockStateModels(RegisterBlockStateModels registerBlockStateModels) {

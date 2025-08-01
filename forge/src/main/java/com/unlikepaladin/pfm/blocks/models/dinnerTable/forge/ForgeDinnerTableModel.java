@@ -5,9 +5,10 @@ import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -21,8 +22,8 @@ import java.util.*;
 import net.minecraft.util.math.random.Random;
 
 public class ForgeDinnerTableModel extends PFMForgeBakedModel {
-    public ForgeDinnerTableModel(ModelBakeSettings settings, List<BakedModel> modelList) {
-        super(settings, modelList);
+    public ForgeDinnerTableModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelList) {
+        super(settings, modelSettings, modelList);
     }
 
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
@@ -50,41 +51,41 @@ public class ForgeDinnerTableModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+        BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof DinnerTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
-            List<BakedQuad> baseQuads = new ArrayList<>();
-            List<BakedQuad> secondaryQuads = new ArrayList<>();
+            List<BlockModelPart> baseQuads = new ArrayList<>();
+            List<BlockModelPart> secondaryQuads = new ArrayList<>();
 
             BitSet set = extraData.get(CONNECTIONS).connections;
             boolean left = set.get(0);
             boolean right = set.get(1);
             Direction dir = state.get(DinnerTableBlock.FACING);
-            baseQuads.addAll(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData, renderType));
+            baseQuads.add(getTemplateBakedModels().get(0));
             if (!left) {
                 int index = dir == Direction.NORTH || dir == Direction.WEST ? 1 : 2;
-                secondaryQuads.addAll(getTemplateBakedModels().get(index).getQuads(state, side, rand, extraData, renderType));
+                secondaryQuads.add(getTemplateBakedModels().get(index));
             }
             if (!right) {
                 int index = dir == Direction.NORTH || dir == Direction.WEST ? 2 : 1;
-                secondaryQuads.addAll(getTemplateBakedModels().get(index).getQuads(state, side, rand, extraData, renderType));
+                secondaryQuads.add(getTemplateBakedModels().get(index));
             }
             if (!right && !left) {
-                secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderType));
+                secondaryQuads.add(getTemplateBakedModels().get(3));
             }
             List<Sprite> spriteList = getSpriteList(state);
-            List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
-            quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
-            return quads;
+            List<BlockModelPart> quads = getPartsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
+            quads.addAll(getPartsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
+            dest.addAll(quads);
         }
-        return Collections.emptyList();
     }
 
     @Override
     public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
         // base
-        List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(null, face, random));
+        List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(face));
         // legs
-        List<BakedQuad> secondaryQuads = new ArrayList<>(getTemplateBakedModels().get(3).getQuads(null, face, random));
+        List<BakedQuad> secondaryQuads = new ArrayList<>(getTemplateBakedModels().get(3).getQuads(face));
 
         List<Sprite> spriteList = getSpriteList(blockState);
         List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));

@@ -4,9 +4,10 @@ import com.unlikepaladin.pfm.blocks.SimpleBunkLadderBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -16,24 +17,22 @@ import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ForgeLadderModel extends PFMForgeBakedModel {
 
-    public ForgeLadderModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
-        super(settings, templateBakedModels);
+    public ForgeLadderModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> templateBakedModels) {
+        super(settings, modelSettings, templateBakedModels);
     }
 
-    @NotNull
-    @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer layer) {
+        @Override
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+        BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof SimpleBunkLadderBlock) {
             int offset = state.get(SimpleBunkLadderBlock.UP) ? 1 : 0;
             Sprite sprite = getSpriteList(state).get(0);
-            return getQuadsWithTexture(getTemplateBakedModels().get(offset).getQuads(state, side, rand, extraData, layer), new SpriteData(sprite));
+            dest.add(getPartWithTexture(getTemplateBakedModels().get(offset), new SpriteData(sprite)));
         }
-        return Collections.emptyList();
     }
 
     @Override
@@ -44,6 +43,6 @@ public class ForgeLadderModel extends PFMForgeBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
         Sprite sprite = getSpriteList(blockState).get(0);
-        return getQuadsWithTexture(getTemplateBakedModels().get(0).getQuads(null, face, random), new SpriteData(sprite));
+        return getQuadsWithTexture(getTemplateBakedModels().get(0).getQuads(face), new SpriteData(sprite));
     }
 }

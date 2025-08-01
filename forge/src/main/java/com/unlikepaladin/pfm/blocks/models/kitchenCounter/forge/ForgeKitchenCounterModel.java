@@ -7,9 +7,10 @@ import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.AbstractFurnaceBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
@@ -24,8 +25,8 @@ import java.util.*;
 import net.minecraft.util.math.random.Random;
 
 public class ForgeKitchenCounterModel extends PFMForgeBakedModel {
-    public ForgeKitchenCounterModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
-        super(settings, modelParts);
+    public ForgeKitchenCounterModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+        super(settings, modelSettings, modelParts);
     }
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     public static ModelProperty<BlockState> NEIGHBOR_FACING = new ModelProperty<>();
@@ -78,9 +79,9 @@ public class ForgeKitchenCounterModel extends PFMForgeBakedModel {
         return tileData;
     }
 
-    @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+        BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof KitchenCounterBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             BitSet set = extraData.get(CONNECTIONS).connections;
             Direction direction = state.get(KitchenCounterBlock.FACING);
@@ -96,13 +97,13 @@ public class ForgeKitchenCounterModel extends PFMForgeBakedModel {
                 Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
                 if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateFacingDifferentDirection) {
                     if (direction2 == direction.rotateYCounterclockwise()) {
-                        return getQuadsWithTexture(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData, renderLayer), ModelHelper.getOakPlankLogSprites(), spriteList);
+                        dest.add(getQuadsWithTexture(getTemplateBakedModels().get(5), ModelHelper.getOakPlankLogSprites(), spriteList));
                     }
                     else {
-                        return getQuadsWithTexture(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData, renderLayer), ModelHelper.getOakPlankLogSprites(), spriteList);
+                        dest.add(getQuadsWithTexture(getTemplateBakedModels().get(6), ModelHelper.getOakPlankLogSprites(), spriteList));
                     }
                 } else {
-                    return getQuadsWithTexture(getMiddleQuads(state, side, rand, extraData, renderLayer, left, right), ModelHelper.getOakPlankLogSprites(), spriteList);
+                    dest.add(getQuadsWithTexture(getMiddleQuads(left, right), ModelHelper.getOakPlankLogSprites(), spriteList));
                 }
             }
             else if (block.canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
@@ -115,36 +116,35 @@ public class ForgeKitchenCounterModel extends PFMForgeBakedModel {
                 }
                 if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
                     if (direction3 == direction.rotateYCounterclockwise()) {
-                        return getQuadsWithTexture(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderLayer), ModelHelper.getOakPlankLogSprites(), spriteList);
+                        dest.add(getQuadsWithTexture(getTemplateBakedModels().get(4), ModelHelper.getOakPlankLogSprites(), spriteList));
                     } else {
-                        return getQuadsWithTexture(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderLayer), ModelHelper.getOakPlankLogSprites(), spriteList);
+                        dest.add(getQuadsWithTexture(getTemplateBakedModels().get(3), ModelHelper.getOakPlankLogSprites(), spriteList));
                     }
                 } else {
-                    return getQuadsWithTexture(getMiddleQuads(state, side, rand, extraData, renderLayer, left, right), ModelHelper.getOakPlankLogSprites(), spriteList);
+                    dest.add(getQuadsWithTexture(getMiddleQuads(left, right), ModelHelper.getOakPlankLogSprites(), spriteList));
                 }
             }
             else {
-                return getQuadsWithTexture(getMiddleQuads(state, side, rand, extraData, renderLayer, left, right), ModelHelper.getOakPlankLogSprites(), spriteList);
+                dest.add(getQuadsWithTexture(getMiddleQuads(left, right), ModelHelper.getOakPlankLogSprites(), spriteList));
             }
         }
-        return Collections.emptyList();
     }
 
     @Override
     public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
         List<Sprite> spriteList = getSpriteList(blockState);
-        return getQuadsWithTexture(getTemplateBakedModels().get(0).getQuads(null, face, random), ModelHelper.getOakPlankLogSprites(), spriteList);
+        return getQuadsWithTextureInner(getTemplateBakedModels().get(0).getQuads(face), ModelHelper.getOakPlankLogSprites(), spriteList);
     }
 
-    private List<BakedQuad> getMiddleQuads(BlockState state, Direction side, Random rand, ModelData extraData, RenderLayer renderLayer, boolean left, boolean right) {
+    private BlockModelPart getMiddleQuads(boolean left, boolean right) {
         if (left && right) {
-            return getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData, renderLayer);
+            return getTemplateBakedModels().get(0);
         } else if (left) {
-            return getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData, renderLayer);
+            return getTemplateBakedModels().get(1);
         } else if (right) {
-            return getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData, renderLayer);
+            return getTemplateBakedModels().get(2);
         } else {
-            return getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData, renderLayer);
+            return getTemplateBakedModels().get(0);
         }
     }
 }

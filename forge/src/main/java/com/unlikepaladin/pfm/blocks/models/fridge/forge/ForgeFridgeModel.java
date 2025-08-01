@@ -3,15 +3,13 @@ package com.unlikepaladin.pfm.blocks.models.fridge.forge;
 import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.blocks.IronFridgeBlock;
-import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
@@ -25,15 +23,15 @@ import net.minecraft.util.math.random.Random;
 
 public class ForgeFridgeModel extends PFMForgeBakedModel {
     private final List<String> modelParts;
-    public ForgeFridgeModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> modelParts) {
-        super(settings, bakedModels.values().stream().toList());
+    public ForgeFridgeModel(ModelBakeSettings settings, Map<String, BlockModelPart> bakedModels, List<String> modelParts) {
+        super(settings, null, bakedModels.values().stream().toList());
         this.modelParts = modelParts;
     }
 
-    @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
-        List<BakedQuad> quads = new ArrayList<>();
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+        List<BlockModelPart> quads = new ArrayList<>();
+        BlockState state = extraData.get(STATE);
         if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             BitSet data = extraData.get(CONNECTIONS).connections;
             boolean bottom = data.get(0);
@@ -41,21 +39,21 @@ public class ForgeFridgeModel extends PFMForgeBakedModel {
             boolean hasFreezer = data.get(2);
             int openOffset = state.get(FridgeBlock.OPEN) ? 6 : 0;
             if (top && hasFreezer) {
-                quads.addAll(getTemplateBakedModels().get(5+openOffset).getQuads(state, side, rand, extraData, renderLayer));
+                quads.add(getTemplateBakedModels().get(5+openOffset));
             }
             else if (top && bottom) {
-                quads.addAll(getTemplateBakedModels().get(2+openOffset).getQuads(state, side, rand, extraData, renderLayer));
+                quads.add(getTemplateBakedModels().get(2+openOffset));
             } else if (bottom) {
-                quads.addAll(getTemplateBakedModels().get(3+openOffset).getQuads(state, side, rand, extraData, renderLayer));
+                quads.add(getTemplateBakedModels().get(3+openOffset));
             } else if (top) {
-                quads.addAll(getTemplateBakedModels().get(1+openOffset).getQuads(state, side, rand, extraData, renderLayer));
+                quads.add(getTemplateBakedModels().get(1+openOffset));
             } else if (hasFreezer) {
-                quads.addAll(getTemplateBakedModels().get(4+openOffset).getQuads(state, side, rand, extraData, renderLayer));
+                quads.add(getTemplateBakedModels().get(4+openOffset));
             } else {
-                quads.addAll(getTemplateBakedModels().get(openOffset).getQuads(state, side, rand, extraData, renderLayer));
+                quads.add(getTemplateBakedModels().get(openOffset));
             }
         }
-        return quads;
+        dest.addAll(quads);
     }
 
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
@@ -70,5 +68,10 @@ public class ForgeFridgeModel extends PFMForgeBakedModel {
         set.set(2, world.getBlockState(pos.up()).getBlock() instanceof FreezerBlock && !(world.getBlockState(pos.up()).getBlock() instanceof IronFridgeBlock));
         builder.with(CONNECTIONS, new ModelBitSetProperty(set));
         return builder.build();
+    }
+
+    @Override
+    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+        return List.of();
     }
 }

@@ -1,9 +1,8 @@
 package com.unlikepaladin.pfm.mixin.forge;
 
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.google.gson.JsonElement;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
@@ -45,19 +44,22 @@ import net.minecraft.client.render.model.BlockStatesLoader;
 import net.minecraft.client.render.model.ReferencedModelsCollector;
 import net.minecraft.client.render.model.ResolvableModel;
 import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.resource.Resource;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
-@Mixin(ReferencedModelsCollector.class)
+@Mixin(BlockStatesLoader.class)
 public abstract class PFMReferencedModelsCollectorMixin {
 
 
@@ -205,8 +207,9 @@ public abstract class PFMReferencedModelsCollectorMixin {
         return olModel;
     }
 
-    @Inject(method = "addGenerated", at = @At("RETURN"))
-    private void onAddStandardModels(CallbackInfo ci) {
+    @Inject(method = "method_65720", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/Codec;parse(Lcom/mojang/serialization/DynamicOps;Ljava/lang/Object;)Lcom/mojang/serialization/DataResult;"))
+    private static void onAddStandardModels(Map.Entry<Identifier, List<Resource>> entry, Function function, CallbackInfoReturnable<BlockStatesLoader.LoadedModels> cir, @Local JsonElement jsonElement, @Local List<BlockStatesLoader.LoadedBlockStateDefinition> blockList) {
+
         PaladinFurnitureModClientForge.registerExtraModels(modelIdentifier -> {
             UnbakedModel model = this.computeResolvedModel(modelIdentifier);
             this.add(model);

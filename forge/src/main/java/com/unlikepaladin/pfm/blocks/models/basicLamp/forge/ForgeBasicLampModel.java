@@ -7,14 +7,13 @@ import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import com.unlikepaladin.pfm.items.PFMComponents;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
@@ -32,8 +31,8 @@ import java.util.*;
 import net.minecraft.util.math.random.Random;
 
 public class ForgeBasicLampModel extends PFMForgeBakedModel {
-    public ForgeBasicLampModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
-        super(settings, modelParts);
+    public ForgeBasicLampModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+        super(settings, modelSettings, modelParts);
     }
 
 
@@ -84,45 +83,39 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
         return spriteList;
     }
 
-    @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, @Nullable RenderLayer renderType) {
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+        BlockState state = extraData.get(STATE);
         if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
-            List<BakedQuad> quads = new ArrayList<>();
+            List<BlockModelPart> quads = new ArrayList<>();
             int onOffset = state.get(Properties.LIT) ? 1 : 0;
             WoodVariant variant = extraData.get(VARIANT);
             BitSet set = extraData.get(CONNECTIONS).connections;
             if (set.get(0) && set.get(1)) {
-                quads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData, renderType));
+                quads.add(getTemplateBakedModels().get(1));
             } else if (set.get(0)) {
-                quads.addAll(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData, renderType));
+                quads.add(getTemplateBakedModels().get(0));
             } else if (set.get(1))
             {
-                quads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderType));
-                quads.addAll(getTemplateBakedModels().get(5+onOffset).getQuads(state, side, rand, extraData, renderType));
-                quads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderType));
+                quads.add(getTemplateBakedModels().get(3));
+                quads.add(getTemplateBakedModels().get(5+onOffset));
+                quads.add(getTemplateBakedModels().get(4));
             }
             else {
-                quads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderType));
-                quads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData, renderType));
-                quads.addAll(getTemplateBakedModels().get(5+onOffset).getQuads(state, side, rand, extraData, renderType));
+                quads.add(getTemplateBakedModels().get(4));
+                quads.add(getTemplateBakedModels().get(2));
+                quads.add(getTemplateBakedModels().get(5+onOffset));
             }
-            return getQuadsWithTexture(quads, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
+            dest.addAll(getTexturedParts(quads, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant)));
         }
-        return Collections.emptyList();
     }
-
+    
     @Override
-    public Sprite getParticleIcon(@NotNull ModelData data) {
+    public Sprite particleIcon(@NotNull ModelData data) {
         if (data != null && data.has(VARIANT)) {
             return getVariantStrippedLogSprite(data.get(VARIANT)).get(0);
         }
-        return super.getParticleIcon(data);
-    }
-
-    @Override
-    public ModelTransformation getTransformation() {
-        return getTemplateBakedModels().get(2).getTransformation();
+        return super.particleIcon(data);
     }
 
     @Override
@@ -132,9 +125,9 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
         if (this.variant != null) {
             variant = (WoodVariant) this.variant;
         }
-        quads.addAll(getTemplateBakedModels().get(4).getQuads(null, face, random));
-        quads.addAll(getTemplateBakedModels().get(2).getQuads(null, face, random));
-        quads.addAll(getTemplateBakedModels().get(5).getQuads(null, face, random));
-        return getQuadsWithTexture(quads, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
+        quads.addAll(getTemplateBakedModels().get(4).getQuads(face));
+        quads.addAll(getTemplateBakedModels().get(2).getQuads(face));
+        quads.addAll(getTemplateBakedModels().get(5).getQuads(face));
+        return getQuadsWithTextureInner(quads, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
     }
 }

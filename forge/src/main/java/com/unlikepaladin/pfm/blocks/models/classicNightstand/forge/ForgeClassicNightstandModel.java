@@ -6,9 +6,10 @@ import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -23,32 +24,31 @@ import net.minecraft.util.math.random.Random;
 
 public class ForgeClassicNightstandModel extends PFMForgeBakedModel {
 
-    public ForgeClassicNightstandModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
-        super(settings, modelParts);
+    public ForgeClassicNightstandModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+        super(settings, modelSettings, modelParts);
     }
 
-    @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+        BlockState state = extraData.get(STATE);
         if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
-            List<BakedQuad> originalQuads = new ArrayList<>();
+            List<BlockModelPart> originalQuads = new ArrayList<>();
             BitSet data = extraData.get(CONNECTIONS).connections;
             boolean left = data.get(0);
             boolean right = data.get(1);
             int openIndexOffset = state.get(ClassicNightstandBlock.OPEN) ? 4 : 0;
             if (left && right) {
-                originalQuads.addAll(getTemplateBakedModels().get(openIndexOffset).getQuads(state, side, rand, extraData, renderType));
+                originalQuads.add(getTemplateBakedModels().get(openIndexOffset));
             } else if (!left && right) {
-                originalQuads.addAll(getTemplateBakedModels().get(1+openIndexOffset).getQuads(state, side, rand, extraData, renderType));
+                originalQuads.add(getTemplateBakedModels().get(1+openIndexOffset));
             } else if (left) {
-                originalQuads.addAll(getTemplateBakedModels().get(2+openIndexOffset).getQuads(state, side, rand, extraData, renderType));
+                originalQuads.add(getTemplateBakedModels().get(2+openIndexOffset));
             } else {
-                originalQuads.addAll(getTemplateBakedModels().get(3+openIndexOffset).getQuads(state, side, rand, extraData, renderType));
+                originalQuads.add(getTemplateBakedModels().get(3+openIndexOffset));
             }
             List<Sprite> spriteList = getSpriteList(state);
-            return getQuadsWithTexture(originalQuads, ModelHelper.getOakPlankLogSprites(), spriteList);
+            dest.addAll(getTexturedParts(originalQuads, ModelHelper.getOakPlankLogSprites(), spriteList));
         }
-        return Collections.emptyList();
     }
 
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
@@ -78,7 +78,7 @@ public class ForgeClassicNightstandModel extends PFMForgeBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
         List<Sprite> spriteList = getSpriteList(blockState);
-        List<BakedQuad> originalQuads = getTemplateBakedModels().get(3).getQuads(null, face, random);
-        return getQuadsWithTexture(originalQuads, ModelHelper.getOakPlankLogSprites(), spriteList);
+        List<BakedQuad> originalQuads = getTemplateBakedModels().get(3).getQuads(face);
+        return getQuadsWithTextureInner(originalQuads, ModelHelper.getOakPlankLogSprites(), spriteList);
     }
 }

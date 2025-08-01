@@ -5,11 +5,11 @@ import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
@@ -25,8 +25,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class ForgeBasicDeskModel extends PFMForgeBakedModel {
-    public ForgeBasicDeskModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
-        super(settings, modelParts);
+    public ForgeBasicDeskModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+        super(settings, modelSettings, modelParts);
     }
 
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
@@ -58,9 +58,10 @@ public class ForgeBasicDeskModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+        BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof BasicDeskBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
-            List<BakedQuad> secondaryQuads = new ArrayList<>();
+            List<BlockModelPart> secondaryQuads = new ArrayList<>();
 
             BitSet set = extraData.get(CONNECTIONS).connections;
             boolean north = set.get(0);
@@ -68,40 +69,40 @@ public class ForgeBasicDeskModel extends PFMForgeBakedModel {
             boolean west = set.get(2);
             boolean south = set.get(3);
 
-            List<BakedQuad> baseQuads = new ArrayList<>((getTemplateBakedModels().get(0)).getQuads(state, side, rand, extraData, renderLayer));
+            List<BlockModelPart> baseQuads = new ArrayList<>();
+            baseQuads.add(getTemplateBakedModels().get(0));
 
             if (!north && !west) {
-                secondaryQuads.addAll((getTemplateBakedModels().get(1)).getQuads(state, side, rand, extraData, renderLayer));
+                secondaryQuads.add((getTemplateBakedModels().get(1)));
             }
             if (!north && !east) {
-                secondaryQuads.addAll((getTemplateBakedModels().get(2)).getQuads(state, side, rand, extraData, renderLayer));
+                secondaryQuads.add((getTemplateBakedModels().get(2)));
             }
             if (!south && !west) {
-                secondaryQuads.addAll((getTemplateBakedModels().get(3)).getQuads(state, side, rand, extraData, renderLayer));
+                secondaryQuads.add((getTemplateBakedModels().get(3)));
             }
             if (!south && !east) {
-                secondaryQuads.addAll((getTemplateBakedModels().get(4)).getQuads(state, side, rand, extraData, renderLayer));
+                secondaryQuads.add((getTemplateBakedModels().get(4)));
             }
             List<Sprite> spriteList = getSpriteList(state);
-            List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
-            quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
-            return quads;
+            List<BlockModelPart> quads = getPartsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
+            quads.addAll(getPartsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
+            dest.addAll(quads);
         }
-       return Collections.emptyList();
     }
 
 
     @Override
     public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
         // base
-        List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(null, face, random));
+        List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(face));
 
         List<BakedQuad> secondaryQuads = new ArrayList<>();
         // legs
-        secondaryQuads.addAll(getTemplateBakedModels().get(1).getQuads(null, face, random));
-        secondaryQuads.addAll(getTemplateBakedModels().get(2).getQuads(null, face, random));
-        secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(null, face, random));
-        secondaryQuads.addAll(getTemplateBakedModels().get(4).getQuads(null, face, random));
+        secondaryQuads.addAll(getTemplateBakedModels().get(1).getQuads(face));
+        secondaryQuads.addAll(getTemplateBakedModels().get(2).getQuads(face));
+        secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(face));
+        secondaryQuads.addAll(getTemplateBakedModels().get(4).getQuads(face));
         // in between pieces
 
 

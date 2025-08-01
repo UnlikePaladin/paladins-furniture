@@ -9,9 +9,10 @@ import net.minecraft.block.BedBlock;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -25,15 +26,16 @@ import java.util.*;
 import net.minecraft.util.math.random.Random;
 
 public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
-    public ForgeBedModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
-        super(settings, modelParts);
+    public ForgeBedModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+        super(settings, modelSettings, modelParts);
     }
 
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
-    @NotNull
+
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
-        List<BakedQuad> quads = new ArrayList<>();
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+        BlockState state = extraData.get(STATE);
+        List<BlockModelPart> quads = new ArrayList<>();
         if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             BedPart part = state.get(BedBlock.PART);
             BitSet data = extraData.get(CONNECTIONS).connections;
@@ -43,42 +45,41 @@ public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
             boolean isClassic = state.getBlock().getTranslationKey().contains("classic");
             int classicOffset = isClassic ? 12 : 0;
             if (part == BedPart.HEAD) {
-                quads.addAll(getTemplateBakedModels().get(classicOffset+3).getQuads(state, side, rand, extraData, renderType));
+                quads.add(getTemplateBakedModels().get(classicOffset+3));
                 if (!right){
-                    quads.addAll(getTemplateBakedModels().get(classicOffset+6).getQuads(state, side, rand, extraData, renderType));
+                    quads.add(getTemplateBakedModels().get(classicOffset+6));
                 }
                 if (!left){
-                    quads.addAll(getTemplateBakedModels().get(classicOffset+7).getQuads(state, side, rand, extraData, renderType));
+                    quads.add(getTemplateBakedModels().get(classicOffset+7));
                 }
                 if (bunk && !isClassic){
-                    quads.addAll(getTemplateBakedModels().get(classicOffset+10).getQuads(state, side, rand, extraData, renderType));
+                    quads.add(getTemplateBakedModels().get(classicOffset+10));
                 }
             } else {
-                quads.addAll(getTemplateBakedModels().get(classicOffset+2).getQuads(state, side, rand, extraData, renderType));
+                quads.add(getTemplateBakedModels().get(classicOffset+2));
                 if (!right){
-                    quads.addAll(getTemplateBakedModels().get(classicOffset+4).getQuads(state, side, rand, extraData, renderType));
+                    quads.add(getTemplateBakedModels().get(classicOffset+4));
                 }
                 if (!left){
-                    quads.addAll(getTemplateBakedModels().get(classicOffset+5).getQuads(state, side, rand, extraData, renderType));
+                    quads.add(getTemplateBakedModels().get(classicOffset+5));
                 }
                 if (!right && bunk){
-                    quads.addAll(getTemplateBakedModels().get(classicOffset+8).getQuads(state, side, rand, extraData, renderType));
+                    quads.add(getTemplateBakedModels().get(classicOffset+8));
                 }
                 if (!left && bunk){
-                    quads.addAll(getTemplateBakedModels().get(classicOffset+9).getQuads(state, side, rand, extraData, renderType));
+                    quads.add(getTemplateBakedModels().get(classicOffset+9));
                 }
             }
             List<Sprite> spriteList = getSpriteList(state);
-            return getQuadsWithTexture(quads, ModelHelper.getOakBedSprites(), spriteList);
+            dest.addAll(getTexturedParts(quads, ModelHelper.getOakBedSprites(), spriteList));
         }
-        return Collections.emptyList();
     }
 
     @Override
     public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
         int classicOffset = blockState.getBlock().getTranslationKey().contains("classic") ? 12 : 0;
         List<Sprite> spriteList = getSpriteList(blockState);
-        return getQuadsWithTexture((getTemplateBakedModels().get((classicOffset+11))).getQuads(null, face, random), ModelHelper.getOakBedSprites(), spriteList);
+        return getQuadsWithTextureInner((getTemplateBakedModels().get((classicOffset+11))).getQuads(face), ModelHelper.getOakBedSprites(), spriteList);
     }
 
     @NotNull

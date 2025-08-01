@@ -296,7 +296,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
             RecipeEntry<? extends Recipe<T>> recipe = server.getRecipeManager().getFirstMatch(recipeType, recipeInput, this.world).orElse(null);
             if (recipe != null) {
                 ItemStack result = recipe.value().craft(recipeInput, this.world.getRegistryManager());
-                if (!result.isEmpty() && result.has(DataComponentTypes.FOOD)) {
+                if (!result.isEmpty() && result.get(DataComponentTypes.FOOD) != null) {
                     return result;
                 }
             }

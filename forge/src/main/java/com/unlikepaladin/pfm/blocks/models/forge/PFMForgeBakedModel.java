@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models.forge;
 
+import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
@@ -7,11 +8,11 @@ import com.unlikepaladin.pfm.client.model.PFMBakedModelGetQuadsExtension;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelSetPropertiesExtension;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.VertexFormatElement;
 import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -33,11 +34,6 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     protected BlockState blockState;
     protected VariantBase<?> variant;
 
-    @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
-        return getQuads(blockState, face, random);
-    }
-
     Map<Pair<BlockState, Direction>, List<BakedQuad>> cache = new HashMap<>();
     @Override
     public List<BakedQuad> getQuadsCached(@Nullable Direction face, Random random) {
@@ -50,8 +46,8 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return quads;
     }
 
-    public PFMForgeBakedModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
-        super(settings, templateBakedModels);
+    public PFMForgeBakedModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> templateBakedModels) {
+        super(settings, modelSettings, templateBakedModels);
     }
     public static ModelProperty<BlockState> STATE = new ModelProperty<>();
 
@@ -63,8 +59,70 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return tileData.derive().with(STATE, state).build();
     }
 
+    public BlockModelPart getQuadsWithTexture(List<BakedQuad> quads, List<Sprite> toReplace, List<Sprite> replacements) {
+        List<BakedQuad> quadList = getQuadsWithTextureInner(quads, toReplace, replacements);
+        return new BlockModelPart() {
+            @Override
+            public List<BakedQuad> getQuads(@Nullable Direction side) {
+                return quadList;
+            }
+
+            @Override
+            public boolean useAmbientOcclusion() {
+                return true;
+            }
+
+            @Override
+            public Sprite particleSprite() {
+                return replacements.getFirst();
+            }
+        };
+    }
+
+    public BlockModelPart getQuadsWithTexture(BlockModelPart modelPart, List<Sprite> toReplace, List<Sprite> replacements) {
+        return new BlockModelPart() {
+            @Override
+            public List<BakedQuad> getQuads(@Nullable Direction side) {
+                return getQuadsWithTextureInner(modelPart.getQuads(side), toReplace, replacements);
+            }
+
+            @Override
+            public boolean useAmbientOcclusion() {
+                return true;
+            }
+
+            @Override
+            public Sprite particleSprite() {
+                return replacements.getFirst();
+            }
+        };
+    }
+
+    public List<BlockModelPart> getTexturedParts(List<BlockModelPart> quads, List<Sprite> toReplace, List<Sprite> replacements) {
+        List<BlockModelPart> modelParts = new ArrayList<>();
+        for (BlockModelPart quad : quads) {
+            modelParts.add(new BlockModelPart() {
+                @Override
+                public List<BakedQuad> getQuads(@Nullable Direction side) {
+                    return getQuadsWithTextureInner(quad.getQuads(side), toReplace, replacements);
+                }
+
+                @Override
+                public boolean useAmbientOcclusion() {
+                    return quad.useAmbientOcclusion();
+                }
+
+                @Override
+                public Sprite particleSprite() {
+                    return quad.particleSprite();
+                }
+            });
+        }
+        return modelParts;
+    }
+
     Map<Pair<Identifier, SpriteData>, List<BakedQuad>> separatedQuads = new ConcurrentHashMap<>();
-    public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, List<Sprite> toReplace, List<Sprite> replacements) {
+    public List<BakedQuad> getQuadsWithTextureInner(List<BakedQuad> quads, List<Sprite> toReplace, List<Sprite> replacements) {
         if (quads == null)
             return Collections.emptyList();
 
@@ -77,15 +135,14 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             PaladinFurnitureMod.GENERAL_LOGGER.debug(replacements);
             return quads;
         }
+
         if (toReplace.equals(replacements))
             return quads;
 
-         for (BakedQuad quad : quads) {
-            SpriteData sprite = new SpriteData(quad.getSprite());
+        for (BakedQuad quad : quads) {
+            SpriteData sprite = new SpriteData(quad.sprite());
             Pair<Identifier, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
             if (separatedQuads.containsKey(pair)) {
-                separatedQuads.putIfAbsent(pair, new ArrayList<>());
-
                 if (!separatedQuads.get(pair).contains(quad)) {
                     List<BakedQuad> newQuadList = new ArrayList<>(separatedQuads.get(pair));
                     newQuadList.add(quad);
@@ -95,9 +152,9 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             } else if (!separatedQuads.isEmpty()) {
                 AtomicReference<Pair<Identifier, SpriteData>> del = new AtomicReference<>(null);
                 separatedQuads.keySet().forEach(identifierSpriteDataPair ->  {
-                        if (identifierSpriteDataPair != null && sprite.getId().equals(identifierSpriteDataPair.getFirst())){
-                            del.set(identifierSpriteDataPair);
-                        }
+                    if (identifierSpriteDataPair != null && sprite.getId().equals(identifierSpriteDataPair.getFirst())){
+                        del.set(identifierSpriteDataPair);
+                    }
                 });
                 if (del.get() != null)
                     separatedQuads.remove(del.get());
@@ -115,7 +172,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                     .findFirst()
                     .orElse(-1);
 
-            if (index != -1 && index < toReplace.size()) {
+            if (index != -1) {
                 SpriteData replacement = new SpriteData(replacements.get(index));
                 transformedQuads.addAll(getQuadsWithTexture(entry.getValue().stream().filter(quads::contains).toList(), replacement));
             } else {
@@ -123,6 +180,51 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             }
         }
         return transformedQuads;
+    }
+
+    Map<Pair<SpriteData, List<BlockModelPart>>, List<BlockModelPart>> partsToTransformedParts = new ConcurrentHashMap<>();
+    public List<BlockModelPart> getPartsWithTexture(List<BlockModelPart> parts, SpriteData spriteData) {
+        Pair<SpriteData, List<BlockModelPart>> pair = new Pair<>(spriteData, parts);
+
+        if (partsToTransformedParts.containsKey(pair)) {
+            return partsToTransformedParts.get(pair);
+        }
+
+        List<BlockModelPart> partsWithTexture = new ArrayList<>();
+        for (BlockModelPart part : parts) {
+            partsWithTexture.add(getPartWithTexture(part, spriteData));
+        }
+        partsToTransformedParts.put(pair, partsWithTexture);
+        return partsWithTexture;
+    }
+
+
+    Map<Pair<SpriteData, BlockModelPart>, BlockModelPart> partToTransformedPart = new ConcurrentHashMap<>();
+    public BlockModelPart getPartWithTexture(BlockModelPart ogPart, SpriteData spriteData) {
+        Pair<SpriteData, BlockModelPart> pair = new Pair<>(spriteData, ogPart);
+
+        if (partToTransformedPart.containsKey(pair)) {
+            return partToTransformedPart.get(pair);
+        }
+
+        BlockModelPart part = new BlockModelPart() {
+            @Override
+            public List<BakedQuad> getQuads(@Nullable Direction side) {
+                return getQuadsWithTexture(ogPart.getQuads(side), spriteData);
+            }
+
+            @Override
+            public boolean useAmbientOcclusion() {
+                return ogPart.useAmbientOcclusion();
+            }
+
+            @Override
+            public Sprite particleSprite() {
+                return ogPart.particleSprite();
+            }
+        };
+        partToTransformedPart.put(pair, part);
+        return part;
     }
 
     Map<Pair<SpriteData, BakedQuad>, BakedQuad> quadToTransformedQuad = new ConcurrentHashMap<>();
@@ -133,7 +235,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         quads.forEach(quad -> {
             Pair<SpriteData, BakedQuad> quadKey = new Pair<>(spriteData, quad);
 
-            if (quad.getSprite().getContents().getId() == spriteData.getId() && !quadToTransformedQuad.containsKey(quadKey)) {
+            if (quad.sprite().getContents().getId() == spriteData.getId() && !quadToTransformedQuad.containsKey(quadKey)) {
                 quadToTransformedQuad.put(quadKey, quad);
                 transformedQuads.add(quad);
             }
@@ -143,19 +245,19 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             else {
                 Sprite sprite = spriteData.getSprite();
 
-                int[] vertexData = new int[quad.getVertexData().length];
-                System.arraycopy(quad.getVertexData(), 0, vertexData, 0, vertexData.length);
+                int[] vertexData = new int[quad.vertexData().length];
+                System.arraycopy(quad.vertexData(), 0, vertexData, 0, vertexData.length);
                 float[][] uv = new float[4][2];
                 for (int vertexIndx = 0; vertexIndx < 4; vertexIndx++) {
                     unpackUV(vertexData, uv[vertexIndx], vertexIndx);
-                    Sprite originalSprite = quad.getSprite();
+                    Sprite originalSprite = quad.sprite();
                     float frameU = originalSprite.getFrameFromU(uv[vertexIndx][0]);
                     float frameV = originalSprite.getFrameFromV(uv[vertexIndx][1]);
                     uv[vertexIndx][0] = sprite.getFrameU(frameU);
                     uv[vertexIndx][1] = sprite.getFrameV(frameV);
                     packUV(uv[vertexIndx], vertexData, vertexIndx);
                 }
-                BakedQuad transformedQuad = new BakedQuad(vertexData, quad.getTintIndex(), quad.getFace(), quad.getSprite(), quad.hasShade(), quad.getLightEmission());
+                BakedQuad transformedQuad = new BakedQuad(vertexData, quad.tintIndex(), quad.face(), quad.sprite(), quad.shade(), quad.lightEmission());
                 quadToTransformedQuad.put(quadKey, transformedQuad);
                 transformedQuads.add(transformedQuad);
             }
@@ -178,16 +280,16 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     }
 
 
-    private static final Map<Pair<VertexFormatElement.ComponentType, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
-    public static int findVertexElement(VertexFormatElement.ComponentType type, int index) {
-        Pair<VertexFormatElement.ComponentType, Integer> pairToFind = new Pair<>(type, index);
+    private static final Map<Pair<VertexFormatElement.Type, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
+    public static int findVertexElement(VertexFormatElement.Type type, int index) {
+        Pair<VertexFormatElement.Type, Integer> pairToFind = new Pair<>(type, index);
         if (ELEMENT_INTEGER_MAP.containsKey(pairToFind))
             return ELEMENT_INTEGER_MAP.get(pairToFind);
 
         int id = 0;
         for (VertexFormatElement element1 : VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.getElements())
         {
-            if (element1.type() == type && element1.uvIndex() == index)
+            if (element1.type() == type && element1.index() == index)
                 break;
             id++;
         }
@@ -196,10 +298,10 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     }
 
     @Override
-    public Sprite getParticleIcon(@NotNull ModelData data) {
+    public Sprite particleIcon(@NotNull ModelData data) {
         if (data.has(STATE) && data.get(STATE) != null)
             return getSpriteList(data.get(STATE)).get(0);
-        return super.getParticleIcon(data);
+        return super.particleIcon(data);
     }
 
     @Override
@@ -223,8 +325,8 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     }
 
     @Override
-    public Sprite getParticleSprite() {
-        return getTemplateBakedModels().get(0).getParticleSprite();
+    public Sprite particleSprite() {
+        return getTemplateBakedModels().get(0).particleSprite();
     }
 
     public static class SpriteData {

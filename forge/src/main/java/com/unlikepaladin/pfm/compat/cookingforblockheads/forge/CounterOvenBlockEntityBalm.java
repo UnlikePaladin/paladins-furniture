@@ -1,19 +1,14 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
-import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
-import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
-import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.block.BlockState;
@@ -29,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
-public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implements BalmContainerProvider, BalmProviderHolder, BlockEntityContract {
+public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implements BalmContainerProvider, BlockEntityContract {
     private final KitchenItemProvider itemProvider;
 
     public CounterOvenBlockEntityBalm(BlockPos pos, BlockState state) {
@@ -41,7 +36,7 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implement
     public Inventory getContainer() {
         return this;
     }
-
+/*
     public List<BalmProvider<?>> getProviders() {
         return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider));
     }
@@ -101,5 +96,5 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implement
         ForgeBalmProviders forgeProviders = (ForgeBalmProviders)Balm.getProviders();
         Capability<?> capability = forgeProviders.getCapability(clazz);
         return (T) this.getCapability(capability).resolve().orElse(null);
-    }
+    }*/
 }
