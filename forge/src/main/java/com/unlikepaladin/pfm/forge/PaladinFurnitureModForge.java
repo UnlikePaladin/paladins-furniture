@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.client.forge.ColorRegistryForge;
 import com.unlikepaladin.pfm.client.forge.ItemModelRegistry;
+import com.unlikepaladin.pfm.client.forge.PaladinFurnitureModClientForge;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.items.forge.PFMComponentsImpl;
 import com.unlikepaladin.pfm.registry.dynamic.forge.LateBlockRegistryForge;
@@ -57,6 +58,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
             ItemModelRegistry.registerItemModelTypes();
             loadContext.getModEventBus().addListener(EventPriority.LOW, ColorRegistryForge::registerBlockColors);
             MinecraftForge.EVENT_BUS.addListener(ItemModelRegistry::registerSpecialModelRenderers);
+            PaladinFurnitureModClientForge.registerCustomModels();
         }
         NetworkRegistryForge.registerPackets();
         LateBlockRegistryForge.addDynamicBlockRegistration(loadContext);

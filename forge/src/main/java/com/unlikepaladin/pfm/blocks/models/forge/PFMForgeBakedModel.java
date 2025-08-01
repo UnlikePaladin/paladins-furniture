@@ -76,6 +76,18 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             public Sprite particleSprite() {
                 return replacements.getFirst();
             }
+
+            @Override
+            public boolean equals(Object obj) {
+                if (!(obj instanceof BlockModelPart))
+                    return false;
+
+                for (Direction direction : Direction.values()) {
+                    if (this.getQuads(direction) != ((BlockModelPart) obj).getQuads(direction))
+                        return false;
+                }
+                return particleSprite().equals(((BlockModelPart) obj).particleSprite()) && useAmbientOcclusion() == ((BlockModelPart) obj).useAmbientOcclusion();
+            }
         };
     }
 
@@ -94,6 +106,18 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             @Override
             public Sprite particleSprite() {
                 return replacements.getFirst();
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                if (!(obj instanceof BlockModelPart))
+                    return false;
+
+                for (Direction direction : Direction.values()) {
+                    if (this.getQuads(direction) != ((BlockModelPart) obj).getQuads(direction))
+                        return false;
+                }
+                return particleSprite().equals(((BlockModelPart) obj).particleSprite()) && useAmbientOcclusion() == ((BlockModelPart) obj).useAmbientOcclusion();
             }
         };
     }
@@ -115,6 +139,19 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                 @Override
                 public Sprite particleSprite() {
                     return quad.particleSprite();
+                }
+
+
+                @Override
+                public boolean equals(Object obj) {
+                    if (!(obj instanceof BlockModelPart))
+                        return false;
+
+                    for (Direction direction : Direction.values()) {
+                        if (this.getQuads(direction) != ((BlockModelPart) obj).getQuads(direction))
+                            return false;
+                    }
+                    return particleSprite().equals(((BlockModelPart) obj).particleSprite()) && useAmbientOcclusion() == ((BlockModelPart) obj).useAmbientOcclusion();
                 }
             });
         }
@@ -182,19 +219,11 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return transformedQuads;
     }
 
-    Map<Pair<SpriteData, List<BlockModelPart>>, List<BlockModelPart>> partsToTransformedParts = new ConcurrentHashMap<>();
     public List<BlockModelPart> getPartsWithTexture(List<BlockModelPart> parts, SpriteData spriteData) {
-        Pair<SpriteData, List<BlockModelPart>> pair = new Pair<>(spriteData, parts);
-
-        if (partsToTransformedParts.containsKey(pair)) {
-            return partsToTransformedParts.get(pair);
-        }
-
         List<BlockModelPart> partsWithTexture = new ArrayList<>();
         for (BlockModelPart part : parts) {
             partsWithTexture.add(getPartWithTexture(part, spriteData));
         }
-        partsToTransformedParts.put(pair, partsWithTexture);
         return partsWithTexture;
     }
 
@@ -221,6 +250,18 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             @Override
             public Sprite particleSprite() {
                 return ogPart.particleSprite();
+            }
+
+            @Override
+            public boolean equals(Object obj) {
+                if (!(obj instanceof BlockModelPart))
+                    return false;
+
+                for (Direction direction : Direction.values()) {
+                    if (this.getQuads(direction) != ((BlockModelPart) obj).getQuads(direction))
+                        return false;
+                }
+                return particleSprite().equals(((BlockModelPart) obj).particleSprite()) && useAmbientOcclusion() == ((BlockModelPart) obj).useAmbientOcclusion();
             }
         };
         partToTransformedPart.put(pair, part);
@@ -298,8 +339,8 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     }
 
     @Override
-    public Sprite particleIcon(@NotNull ModelData data) {
-        if (data.has(STATE) && data.get(STATE) != null)
+    public Sprite particleIcon(ModelData data) {
+        if (data != null && data.has(STATE) && data.get(STATE) != null)
             return getSpriteList(data.get(STATE)).get(0);
         return super.particleIcon(data);
     }

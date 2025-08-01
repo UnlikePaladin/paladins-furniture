@@ -18,6 +18,7 @@ package com.unlikepaladin.pfm.mixin.forge;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.forge.PFMUnbakedBlockStateModelRegistryFabricAPI;
 import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.client.render.model.SimpleBlockStateModel;
@@ -35,11 +36,13 @@ import java.util.function.Function;
 interface BlockStateModelUnbakedMixinFabricAPI {
 	@Redirect(method = "<clinit>()V", at = @At(value = "INVOKE", target = "com/mojang/serialization/Codec.flatComapMap(Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;", remap = false, ordinal = 0))
 	private static Codec<WeightedBlockStateModel.Unbaked> replaceWeightedCodec(Codec<List<Weighted<ModelVariant>>> codec, Function<?, ?> to, Function<?, ?> from) {
+		PaladinFurnitureMod.GENERAL_LOGGER.info("Replacing vanilla weighted codec with pfm");
 		return PFMUnbakedBlockStateModelRegistryFabricAPI.WEIGHTED_MODEL_CODEC;
 	}
 
 	@Redirect(method = "<clinit>()V", at = @At(value = "INVOKE", target = "com/mojang/serialization/Codec.flatComapMap(Ljava/util/function/Function;Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;", remap = false, ordinal = 1))
 	private static Codec<BlockStateModel.Unbaked> replaceCodec(Codec<Either<WeightedBlockStateModel.Unbaked, SimpleBlockStateModel.Unbaked>> codec, Function<?, ?> to, Function<?, ?> from) {
+		PaladinFurnitureMod.GENERAL_LOGGER.info("Replacing vanilla model codec with pfm");
 		return PFMUnbakedBlockStateModelRegistryFabricAPI.MODEL_CODEC;
 	}
 }

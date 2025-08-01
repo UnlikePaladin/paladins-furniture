@@ -6,7 +6,6 @@
   "client": [
     "BlockColorsAccessor",
     "BlockStateModelUnbakedMixinFabricAPI",
-    "PFMReferencedModelsCollectorMixin",
     "PFMRenderLayersForgeMixin"
   ],
   "mixins": [

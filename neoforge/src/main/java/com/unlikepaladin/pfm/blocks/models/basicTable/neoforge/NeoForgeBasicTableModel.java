@@ -26,8 +26,6 @@ public class NeoForgeBasicTableModel extends PFMNeoForgeBakedModel {
 
     @Override
     public void collectParts(BlockRenderView world, BlockPos pos, BlockState state, Random random, List<BlockModelPart> parts) {
-
-
         if (state == null || !(state.getBlock() instanceof BasicTableBlock))
             return;
 

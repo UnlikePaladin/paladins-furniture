@@ -1,5 +1,7 @@
 package com.unlikepaladin.pfm.client.forge;
 
+import com.mojang.serialization.MapCodec;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
@@ -36,6 +38,7 @@ import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
+import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
 import com.unlikepaladin.pfm.client.screens.*;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
@@ -85,6 +88,43 @@ public class PaladinFurnitureModClientForge {
         );
     }
 
+    public static void registerCustomModels() {
+        PaladinFurnitureMod.GENERAL_LOGGER.info("Registering Custom Models");
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedMirrorModel.MIRROR_ID, UnbakedMirrorModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedBedModel.BED_MODEL_ID, UnbakedBedModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedBasicTableModel.TABLE_MODEL_ID, UnbakedBasicTableModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedClassicTableModel.TABLE_MODEL_ID, UnbakedClassicTableModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedLogTableModel.TABLE_MODEL_ID, UnbakedLogTableModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedDinnerTableModel.TABLE_MODEL_ID, UnbakedDinnerTableModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedModernDinnerTableModel.TABLE_MODEL_ID, UnbakedModernDinnerTableModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_ID, UnbakedClassicNightstandModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedChairModel.CHAIR_MODEL_ID, UnbakedChairModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedChairDinnerModel.CHAIR_MODEL_ID, UnbakedChairDinnerModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedChairModernModel.CHAIR_MODEL_ID, UnbakedChairModernModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedChairClassicModel.CHAIR_MODEL_ID, UnbakedChairClassicModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedSimpleStoolModel.STOOL_MODEL_ID, UnbakedSimpleStoolModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedClassicStoolModel.STOOL_MODEL_ID, UnbakedClassicStoolModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedModernStoolModel.STOOL_MODEL_ID, UnbakedModernStoolModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedLogStoolModel.STOOL_MODEL_ID, UnbakedLogStoolModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedKitchenCounterModel.COUNTER_MODEL_ID, UnbakedKitchenCounterModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedKitchenDrawerModel.DRAWER_MODEL_ID, UnbakedKitchenDrawerModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedKitchenWallCounterModel.COUNTER_MODEL_ID, UnbakedKitchenWallCounterModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedKitchenWallDrawerModel.DRAWER_MODEL_ID, UnbakedKitchenWallDrawerModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedKitchenCabinetModel.CABINET_MODEL_ID, UnbakedKitchenCabinetModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedKitchenCounterOvenModel.OVEN_MODEL_ID, UnbakedKitchenCounterOvenModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedKitchenSinkModel.SINK_MODEL_ID, UnbakedKitchenSinkModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_ID, UnbakedKitchenWallDrawerSmallModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedIronFridgeModel.IRON_FRIDGE_ID, UnbakedIronFridgeModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedFridgeModel.FRIDGE_MODEL_ID, UnbakedFridgeModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedFreezerModel.FREEZER_MODEL_ID, UnbakedFreezerModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedBasicLampModel.LAMP_MODEL_ID, UnbakedBasicLampModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedLadderModel.LADDER_MODEL_ID, UnbakedLadderModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedCoffeeBasicTableModel.TABLE_MODEL_ID, UnbakedCoffeeBasicTableModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedModernCoffeeTableModel.TABLE_MODEL_ID, UnbakedModernCoffeeTableModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedClassicCoffeeTableModel.TABLE_MODEL_ID, UnbakedClassicCoffeeTableModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedBasicDeskModel.TABLE_MODEL_ID, UnbakedBasicDeskModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedBasicDeskCabinetModel.TABLE_MODEL_ID, UnbakedBasicDeskCabinetModel.MAP_CODEC);
+    }
 
     public static void registerExtraModels(Consumer<Identifier> event) {
         for (Identifier id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
