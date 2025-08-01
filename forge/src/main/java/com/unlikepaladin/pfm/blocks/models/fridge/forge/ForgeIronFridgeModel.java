@@ -66,6 +66,7 @@ public class ForgeIronFridgeModel extends PFMForgeBakedModel {
         set.set(1, state.isOf(world.getBlockState(pos.down()).getBlock()));
         set.set(2, world.getBlockState(pos.down()).getBlock() instanceof IronFreezerBlock);
         builder.with(CONNECTIONS, new ModelBitSetProperty(set));
+        builder.with(STATE, state);
         return builder.build();
     }
 

@@ -52,6 +52,7 @@ public class ForgeFreezerModel extends PFMForgeBakedModel {
         boolean hasFridge = world.getBlockState(pos.down()).getBlock() instanceof FridgeBlock && !(world.getBlockState(pos.down()).getBlock() instanceof IronFridgeBlock);
         ModelData.Builder builder = ModelData.builder();
         builder.with(HAS_FRIDGE_PROPERTY, hasFridge);
+        builder.with(STATE, state);
         return builder.build();
     }
 
