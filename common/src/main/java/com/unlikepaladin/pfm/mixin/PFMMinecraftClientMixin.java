@@ -20,11 +20,6 @@ public abstract class PFMMinecraftClientMixin extends ReentrantThreadExecutor<Ru
         super("Client");
     }
 
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/TitleScreen;registerTextures(Lnet/minecraft/client/texture/TextureManager;)V"))
-    private void initializeAdditionalTextures(CallbackInfo ci) {
-        PFMGeneratingOverlay.registerTextures(this.textureManager);
-    }
-
     @Override
     public void invoke$runTasks() {
         this.runTasks();

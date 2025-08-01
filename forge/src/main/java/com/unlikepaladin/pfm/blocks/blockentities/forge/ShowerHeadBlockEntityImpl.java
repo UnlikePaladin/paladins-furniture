@@ -35,7 +35,7 @@ public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity {
     @Override
     public void onDataPacket(ClientConnection connection, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup lookup) {
         super.onDataPacket(connection, pkt, lookup);
-        this.isOpen = pkt.getNbt().getBoolean("isOpen");
+        this.isOpen = pkt.getNbt().getBoolean("isOpen").orElse(false);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends ShowerHeadBlockEntity> getFactory() {

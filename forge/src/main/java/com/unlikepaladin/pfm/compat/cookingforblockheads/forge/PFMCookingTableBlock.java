@@ -50,7 +50,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
             }
 
             if (!world.isClient) {
-                Balm.getNetworking().openGui(player, cookingTable);
+                Balm.getNetworking().openMenu(player, cookingTable);
             }
         }
 
@@ -70,14 +70,6 @@ public class PFMCookingTableBlock extends BlockWithEntity {
 
         }
         return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
-    }
-
-    public void onStateReplaced(BlockState state, World level, BlockPos pos, BlockState newState, boolean isMoving) {
-        CookingTableBlockEntity tileEntity = (CookingTableBlockEntity) level.getBlockEntity(pos);
-        if (tileEntity != null && !state.isOf(newState.getBlock())) {
-            ItemUtils.spawnItemStack(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, tileEntity.getNoFilterBook());
-        }
-        super.onStateReplaced(state, level, pos, newState, isMoving);
     }
 
     @Nullable

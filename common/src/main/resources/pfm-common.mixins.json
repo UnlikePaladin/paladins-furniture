@@ -30,6 +30,7 @@
     "PFMModelVariantMixin",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSplashOverlayMixin",
+    "PFMTitleScreenMixin",
     "RangeDispatchItemModelAccessor",
     "SelectItemModelAccessor"
   ],

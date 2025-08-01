@@ -51,7 +51,7 @@ public class PFMCookingForBlockHeadsCompat {
     public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
         StoveBlockEntityBalm stove = (StoveBlockEntityBalm)world.getBlockEntity(pos);
         if (!world.isClient) {
-            Balm.getNetworking().openGui(player, stove);
+            Balm.getNetworking().openMenu(player, stove);
         }
     }
 
@@ -118,14 +118,14 @@ public class PFMCookingForBlockHeadsCompat {
                     player.setStackInHand(hand, heldItem);
 
                     return ActionResult.SUCCESS;
-                } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(heldItem)) {
+                } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(level, heldItem)) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getFuelContainer(), heldItem, false);
                     player.setStackInHand(hand, heldItem);
                     return ActionResult.SUCCESS;
                 }
             }
             if (!level.isClient) {
-                Balm.getNetworking().openGui(player, oven);
+                Balm.getNetworking().openMenu(player, oven);
             }
             return ActionResult.SUCCESS;
         }

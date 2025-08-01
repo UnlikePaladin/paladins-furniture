@@ -1,20 +1,15 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
-import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.forge.FreezerBlockEntityImpl;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
 import net.blay09.mods.balm.api.fluid.FluidTank;
-import net.blay09.mods.balm.api.provider.BalmProvider;
-import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
-import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.api.CacheHint;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
@@ -38,7 +33,7 @@ import net.minecraft.item.Items;
 import java.util.*;
 import java.util.function.Function;
 
-public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements BalmContainerProvider, BalmProviderHolder, BlockEntityContract {
+public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements BalmContainerProvider, BlockEntityContract {
     private final KitchenItemProvider itemProvider;
 
     public FreezerBlockEntityBalm(BlockPos pos, BlockState state) {
@@ -82,7 +77,7 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements Ba
     public Inventory getContainer() {
         return this;
     }
-
+/*
     public List<BalmProvider<?>> getProviders() {
         return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider));
     }
@@ -142,5 +137,5 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements Ba
         ForgeBalmProviders forgeProviders = (ForgeBalmProviders)Balm.getProviders();
         Capability<?> capability = forgeProviders.getCapability(clazz);
         return (T) this.getCapability(capability).resolve().orElse(null);
-    }
+    }*/
 }

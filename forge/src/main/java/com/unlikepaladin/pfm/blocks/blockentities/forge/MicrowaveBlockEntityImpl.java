@@ -58,7 +58,7 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity {
     public void onDataPacket(ClientConnection connection, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup lookup) {
         super.onDataPacket(connection, pkt, lookup);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        this.isActive = pkt.getNbt().getBoolean("isActive");
+        this.isActive = pkt.getNbt().getBoolean("isActive").orElse(false);
         Inventories.readNbt(pkt.getNbt(), this.inventory, lookup);
     }
 

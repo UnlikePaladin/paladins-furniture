@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu;
 
 import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
+import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveFuelSlot;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveResultSlot;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
@@ -34,7 +35,7 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
             this.addSlot(new Slot(container, i, 84 + i * 18 + offsetX, 19));
         }
 
-        this.addSlot(new SlotOvenFuel(container, 3, 61 + offsetX, 59));
+        this.addSlot(new StoveFuelSlot(this, container, 3, 61 + offsetX, 59));
 
         for(i = 0; i < 3; ++i) {
             this.addSlot(new StoveResultSlot(playerInventory.player, oven, container, i + 4, 142 + offsetX, 41 + i * 18));
@@ -87,7 +88,7 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
                 slot.onQuickTransfer(slotStack, itemStack);
             } else if (slotIndex >= 20) {
                 ItemStack smeltingResult = this.tileEntity.getSmeltingResult(slotStack);
-                if (StoveBlockEntityBalm.isItemFuel(slotStack)) {
+                if (StoveBlockEntityBalm.isItemFuel(tileEntity.getWorld(), slotStack)) {
                     if (!this.insertItem(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
