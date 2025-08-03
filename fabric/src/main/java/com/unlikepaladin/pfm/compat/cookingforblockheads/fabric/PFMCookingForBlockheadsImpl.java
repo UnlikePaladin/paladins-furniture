@@ -12,10 +12,16 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
+import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.balm.common.BalmBlockEntity;
 import com.unlikepaladin.pfm.runtime.data.SimpleFurnitureRecipeJsonFactory;
+import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
+import net.blay09.mods.cookingforblockheads.capability.ModCapabilities;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModBlockTags;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
@@ -33,6 +39,9 @@ import java.util.Optional;
 
 //TODO: Fix CFBH compat
 public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
+    public PFMCookingForBlockheadsImpl() {
+    }
+
     private PFMClientModCompatibility clientModCompatibility;
     @Override
     public void generateRecipes(RecipeExporter exporter) {
@@ -57,6 +66,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
 
     @Override
     public void registerBlockEntityTypes() {
+        initCapabilities(Balm.getCapabilities());
         //this.registerLookup("kitchen_item_processor", KitchenItemProcessor.class, BlockEntities.STOVE_BLOCK_ENTITY);
         //this.registerLookup("kitchen_item_provider", KitchenItemProvider.class, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
     }
@@ -94,14 +104,21 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
         builder.add(freezers);
     }
 
-    /*private <T> void registerLookup(String provName, Class<T> clazz, BlockEntityType<?>... blockEntities) {
-        Identifier identifier = Identifier.of(getModId(), provName);
-        BlockApiLookup<T, Void> lookup = BlockApiLookup.get(identifier, clazz, Void.class);
-        lookup.registerForBlockEntities((blockEntity, context) -> {
-            return blockEntity instanceof BalmBlockEntity ? (T) ((BalmBlockEntity) blockEntity).getAtt(clazz) : ((BlockEntityContract)blockEntity).getProvider(clazz);
-        }, blockEntities);
+    public void initCapabilities(BalmCapabilities balmCapabilities) {
+        balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_provider"), ModCapabilities.KITCHEN_ITEM_PROVIDER, ((blockEntity, unused) -> {
+            if (blockEntity instanceof KitchenItemProviderHolder provider) {
+                return provider.getKitchenItemProvider();
+            }
+            return null;
+        }),  () -> List.of(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.STOVE_BLOCK_ENTITY));
+        balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_processor"), ModCapabilities.KITCHEN_ITEM_PROCESSOR, (blockEntity, context) -> {
+            if (blockEntity instanceof KitchenItemProcessorHolder holder) {
+                return holder.getKitchenItemProcessor();
+            }
+            return null;
+        }, () -> List.of(BlockEntities.STOVE_BLOCK_ENTITY));
     }
-*/
+
     public static PFMCookingForBlockheads getInstance() {
         return new PFMCookingForBlockheadsImpl();
     }

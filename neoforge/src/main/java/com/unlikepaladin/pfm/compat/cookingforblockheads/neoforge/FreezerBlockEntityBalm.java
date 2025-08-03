@@ -7,21 +7,21 @@ import net.blay09.mods.cookingforblockheads.api.CacheHint;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.block.entity.FridgeBlockEntity;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
 
-public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements BalmContainerProvider {
+public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements BalmContainerProvider, KitchenItemProviderHolder {
     private final KitchenItemProvider itemProvider;
 
     public FreezerBlockEntityBalm(BlockPos pos, BlockState state) {
@@ -66,7 +66,8 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements Ba
         return this;
     }
 
-    /*public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider));
-    }*/
+    @Override
+    public KitchenItemProvider getKitchenItemProvider() {
+        return itemProvider;
+    }
 }

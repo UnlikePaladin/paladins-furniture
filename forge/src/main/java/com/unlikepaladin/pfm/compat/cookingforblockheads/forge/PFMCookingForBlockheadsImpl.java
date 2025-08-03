@@ -7,16 +7,26 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.client.PFMCookingForBlockheadsClient;
 import com.unlikepaladin.pfm.data.PFMTag;
 import com.unlikepaladin.pfm.data.PFMTags;
+import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.data.SimpleFurnitureRecipeJsonFactory;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
+import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.api.capability.BalmCapabilities;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.block.entity.ModBlockEntities;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
+import net.blay09.mods.cookingforblockheads.capability.ModCapabilities;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModBlockTags;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.registry.tag.BlockTags;
 import net.minecraft.registry.tag.TagKey;
@@ -66,6 +76,11 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     @Override
+    public void registerBlockEntityTypes() {
+        initCapabilities(Balm.getCapabilities());
+    }
+
+    @Override
     public void generateRecipes(RecipeExporter exporter) {
         SimpleFurnitureRecipeJsonFactory.create(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK, 4).group("kitchen").criterion(PFMRecipeProvider.getCriterionNameFromOutput(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK), PFMRecipeProvider.conditionsFromItem(ModItems.recipeBook)).input(ModItems.recipeBook).input(Blocks.WHITE_CONCRETE, 2).input(Blocks.GRAY_CONCRETE).offerTo(exporter, Identifier.of("pfm", PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK.asItem().getTranslationKey().replace("block.pfm.", "")));
     }
@@ -89,5 +104,20 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
         if (clientModCompatibility == null)
             clientModCompatibility = new PFMCookingForBlockheadsClient(this);
         return Optional.of(clientModCompatibility);
+    }
+
+    public void initCapabilities(BalmCapabilities balmCapabilities) {
+        balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_provider"), ModCapabilities.KITCHEN_ITEM_PROVIDER, ((blockEntity, unused) -> {
+            if (blockEntity instanceof KitchenItemProviderHolder provider) {
+                return provider.getKitchenItemProvider();
+            }
+            return null;
+        }),  () -> List.of(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.STOVE_BLOCK_ENTITY));
+        balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_processor"), ModCapabilities.KITCHEN_ITEM_PROCESSOR, (blockEntity, context) -> {
+            if (blockEntity instanceof KitchenItemProcessorHolder holder) {
+                return holder.getKitchenItemProcessor();
+            }
+            return null;
+        }, () -> List.of(BlockEntities.STOVE_BLOCK_ENTITY));
     }
 }

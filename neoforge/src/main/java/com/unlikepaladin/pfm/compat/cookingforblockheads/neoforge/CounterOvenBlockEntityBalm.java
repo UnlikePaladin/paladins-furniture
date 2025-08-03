@@ -3,15 +3,14 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
-
-public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implements BalmContainerProvider {
-    public final KitchenItemProvider itemProvider;
+public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implements BalmContainerProvider, KitchenItemProviderHolder {
+    private final KitchenItemProvider itemProvider;
 
     public CounterOvenBlockEntityBalm(BlockPos pos, BlockState state) {
         super(pos, state);
@@ -23,8 +22,8 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implement
         return this;
     }
 
- /*   @Override
-    public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider));
-    }*/
+    @Override
+    public KitchenItemProvider getKitchenItemProvider() {
+        return itemProvider;
+    }
 }

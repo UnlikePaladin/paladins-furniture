@@ -5,10 +5,7 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu.StoveScre
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.container.BalmContainerProvider;
-import net.blay09.mods.balm.api.container.ContainerUtils;
-import net.blay09.mods.balm.api.container.DefaultContainer;
-import net.blay09.mods.balm.api.container.SubContainer;
+import net.blay09.mods.balm.api.container.*;
 import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
 import net.blay09.mods.balm.api.energy.DefaultEnergyStorage;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
@@ -18,11 +15,15 @@ import net.blay09.mods.balm.common.BalmBlockEntity;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
 import net.blay09.mods.cookingforblockheads.api.event.OvenCookedEvent;
 import net.blay09.mods.cookingforblockheads.block.OvenBlock;
 import net.blay09.mods.cookingforblockheads.block.entity.IMutableNameable;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.compat.Compat;
+import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
@@ -62,7 +63,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItemProcessor, BalmMenuProvider<StoveScreenHandler.StoveData>, IMutableNameable, BalmContainerProvider, BalmEnergyStorageProvider {
+public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItemProcessor, BalmMenuProvider<StoveScreenHandler.StoveData>, IMutableNameable, BalmContainerProvider, BalmEnergyStorageProvider, KitchenItemProcessorHolder, KitchenItemProviderHolder {
     private static final int COOK_TIME = 200;
     private final DefaultContainer container = new DefaultContainer(20) {
         public boolean isValid(int slot, ItemStack itemStack) {
@@ -139,7 +140,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     private boolean hasPowerUpgrade;
     private Direction facing;
     private final Inventory singleSlotRecipeWrapper;
-
+    private KitchenItemProvider itemProvider;
     public StoveBlockEntityBalm(BlockPos pos, BlockState state) {
         super(BlockEntities.STOVE_BLOCK_ENTITY, pos, state);
         this.inputContainer = new SubContainer(this.container, 0, 3);
@@ -150,6 +151,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
         this.isFirstTick = true;
         this.slotCookTime = new int[9];
         this.singleSlotRecipeWrapper = new DefaultContainer(1);
+        this.itemProvider = new ContainerKitchenItemProvider(new CombinedContainer(this.toolsContainer, this.outputContainer));
     }
 
     public boolean onSyncedBlockEvent(int id, int type) {
@@ -559,5 +561,15 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     @Override
     public PacketCodec<RegistryByteBuf, StoveScreenHandler.StoveData> getScreenStreamCodec() {
         return StoveScreenHandler.PACKET_CODEC;
+    }
+
+    @Override
+    public KitchenItemProcessor getKitchenItemProcessor() {
+        return this;
+    }
+
+    @Override
+    public KitchenItemProvider getKitchenItemProvider() {
+        return this.itemProvider;
     }
 }

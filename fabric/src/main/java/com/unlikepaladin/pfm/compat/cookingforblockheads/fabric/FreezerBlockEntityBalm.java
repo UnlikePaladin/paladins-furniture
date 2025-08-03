@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric;
 
-import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.container.ContainerUtils;
@@ -8,21 +7,21 @@ import net.blay09.mods.cookingforblockheads.api.CacheHint;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.block.entity.FridgeBlockEntity;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Blocks;
 import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 import java.util.*;
 import java.util.function.Function;
 
-public class FreezerBlockEntityBalm extends FreezerBlockEntity implements BalmContainerProvider, BlockEntityContract {
+public class FreezerBlockEntityBalm extends FreezerBlockEntity implements BalmContainerProvider, KitchenItemProviderHolder {
     private final KitchenItemProvider itemProvider;
 
     public FreezerBlockEntityBalm(BlockPos pos, BlockState state) {
@@ -67,35 +66,8 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntity implements BalmCo
         return this;
     }
 
-    /*
-    public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider));
-    }
-
-    private final Map<Class<?>, BalmProvider<?>> providers = new HashMap<>();
-    private final Map<Pair<Direction, Class<?>>, BalmProvider<?>> sidedProviders = new HashMap<>();
-    private boolean providersInitialized;
     @Override
-    public <T> T getProvider(Class<T> clazz) {
-        if (!this.providersInitialized) {
-            List<BalmProviderHolder> providers = new ArrayList<>();
-            this.buildProviders(providers);
-
-            for (BalmProviderHolder providerHolder : providers) {
-                for (BalmProvider<?> provider : providerHolder.getProviders()) {
-                    this.providers.put(provider.getProviderClass(), provider);
-                }
-                for (Pair<Direction, BalmProvider<?>> pair : providerHolder.getSidedProviders()) {
-                    Direction direction = pair.getFirst();
-                    BalmProvider<?> provider = pair.getSecond();
-                    this.sidedProviders.put(Pair.of(direction, provider.getProviderClass()), provider);
-                }
-            }
-
-            this.providersInitialized = true;
-        }
-
-        BalmProvider<?> found = this.providers.get(clazz);
-        return found != null ? (T) found.getInstance() : null;
-    }*/
+    public KitchenItemProvider getKitchenItemProvider() {
+        return itemProvider;
+    }
 }

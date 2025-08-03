@@ -3,16 +3,14 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.minecraft.block.BlockState;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.List;
-
-public class FridgeBlockEntityBalm extends FridgeBlockEntity implements BalmContainerProvider {
-
-    public final KitchenItemProvider itemProvider;
+public class FridgeBlockEntityBalm extends FridgeBlockEntity implements BalmContainerProvider, KitchenItemProviderHolder {
+    private final KitchenItemProvider itemProvider;
 
     public FridgeBlockEntityBalm(BlockPos pos, BlockState state) {
         super(pos, state);
@@ -24,7 +22,8 @@ public class FridgeBlockEntityBalm extends FridgeBlockEntity implements BalmCont
         return this;
     }
 
-    /*public List<BalmProvider<?>> getProviders() {
-        return List.of(new BalmProvider<>(KitchenItemProvider.class, this.itemProvider));
-    }*/
+    @Override
+    public KitchenItemProvider getKitchenItemProvider() {
+        return itemProvider;
+    }
 }

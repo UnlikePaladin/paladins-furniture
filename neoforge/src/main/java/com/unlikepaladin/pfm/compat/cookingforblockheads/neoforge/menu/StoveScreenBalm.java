@@ -1,11 +1,15 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.StoveBlockEntityBalm;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
+import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
+import net.blay09.mods.cookingforblockheads.menu.OvenMenu;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
@@ -44,6 +48,13 @@ public class StoveScreenBalm extends HandledScreen<StoveScreenHandlerBalm> {
             if (slot.hasStack()) {
                 ItemStack itemStack = tileEntity.getSmeltingResult(slot.getStack());
                 if (!itemStack.isEmpty()) {
+                    MatrixStack pose = context.getMatrices();
+                    pose.push();
+                    pose.translate(0.0F, 0.0F, 200.0F);
+                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, tileEntity.getCookProgress(i));
+                    context.drawItem(itemStack, slot.x, slot.y);
+                    RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+                    pose.pop();
                 }
             }
         }
@@ -51,22 +62,22 @@ public class StoveScreenBalm extends HandledScreen<StoveScreenHandlerBalm> {
     }
 
     protected void drawBackground(DrawContext context, float partialTicks, int mouseX, int mouseY) {
-        context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + 22, this.y, 0, 0, this.backgroundWidth - 22, this.backgroundHeight, 256, 256);
-        context.drawTexture(RenderLayer::getGuiTextured, texture, this.x, this.y + 10, 176, 30, 25, 87, 256, 256);
+        context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + 22, this.y, 0.0F, 0.0F, this.backgroundWidth - 22, this.backgroundHeight, 256, 256);
+        context.drawTexture(RenderLayer::getGuiTextured, texture, this.x, this.y + 10, 176.0F, 30.0F, 25, 87, 256, 256);
         StoveBlockEntityBalm tileEntity = this.handler.getTileEntity();
         int offsetX = tileEntity.hasPowerUpgrade() ? -5 : 0;
-        context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + 22 + 61 + offsetX, this.y + 18, 176, 117, 76, 76, 256, 256);
-        context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + 22 + 38 + offsetX, this.y + 43, 205, 84, 18, 33, 256, 256);
+        context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + 22 + 61 + offsetX, this.y + 18, 176.0F, 117.0F, 76, 76, 256, 256);
+        context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + 22 + 38 + offsetX, this.y + 43, 205.0F, 84.0F, 18, 33, 256, 256);
         if (tileEntity.isBurning()) {
             int burnTime = (int)(12.0F * tileEntity.getBurnTimeProgress());
-            context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + 22 + 40 + offsetX, this.y + 43 + 12 - burnTime, 176, 12 - burnTime, 14, burnTime + 1, 256, 256);
+            context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + 22 + 40 + offsetX, this.y + 43 + 12 - burnTime, 176.0F, (float)(12 - burnTime), 14, burnTime + 1, 256, 256);
         }
 
         if (tileEntity.hasPowerUpgrade()) {
-            context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + this.backgroundWidth - 25, this.y + 22, 205, 0, 18, 72, 256, 256);
+            context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + this.backgroundWidth - 25, this.y + 22, 205.0F, 0.0F, 18, 72, 256, 256);
             EnergyStorage energyStorage = tileEntity.getEnergyStorage();
             float energyPercentage = (float)energyStorage.getEnergy() / (float)energyStorage.getCapacity();
-            context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + this.backgroundWidth - 25 + 1, this.y + 22 + 1 + 70 - (int)(energyPercentage * 70.0F), 223, 0, 16, (int)(energyPercentage * 70.0F), 256, 256);
+            context.drawTexture(RenderLayer::getGuiTextured, texture, this.x + this.backgroundWidth - 25 + 1, this.y + 22 + 1 + 70 - (int)(energyPercentage * 70.0F), 223.0F, 0.0F, 16, (int)(energyPercentage * 70.0F), 256, 256);
         }
 
     }
