@@ -340,7 +340,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
     @Override
     public Sprite particleIcon(ModelData data) {
-        if (data != null && data.has(STATE) && data.get(STATE) != null)
+        if (data != null && data.has(STATE) && data.get(STATE) != null && getVariant(data.get(STATE)) != null)
             return getSpriteList(data.get(STATE)).get(0);
         return super.particleIcon(data);
     }

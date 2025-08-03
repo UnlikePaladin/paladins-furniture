@@ -328,7 +328,7 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
 
     @Override
     public Sprite particleIcon(BlockRenderView level, BlockPos pos, BlockState state) {
-        if (state != null)
+        if (state != null && getVariant(state) != null)
             return getSpriteList(state).get(0);
         return super.particleIcon(level, pos, state);
     }
