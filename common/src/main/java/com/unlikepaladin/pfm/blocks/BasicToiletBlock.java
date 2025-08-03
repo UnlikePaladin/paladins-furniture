@@ -73,7 +73,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
             player.incrementStat(Statistics.TOILET_USED);
         }
 
-        if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY && (stack.getItem() == Items.POTION) && stack.contains(DataComponentTypes.POTION_CONTENTS) && stack.get(DataComponentTypes.POTION_CONTENTS) != null && stack.get(DataComponentTypes.POTION_CONTENTS).matches(Potions.WATER)) {
+        if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY && (stack.getItem() == Items.POTION) && stack.get(DataComponentTypes.POTION_CONTENTS) != null && stack.get(DataComponentTypes.POTION_CONTENTS).matches(Potions.WATER)) {
             world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
             if (!player.getAbilities().creativeMode)
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.GLASS_BOTTLE)));

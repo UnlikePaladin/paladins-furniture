@@ -78,7 +78,7 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
+        if (itemStack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null) {
             NbtComponent nbtCompound = itemStack.get(DataComponentTypes.BLOCK_ENTITY_DATA);
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (nbtCompound.contains("showerHead") && blockEntity instanceof ShowerHandleBlockEntity) {

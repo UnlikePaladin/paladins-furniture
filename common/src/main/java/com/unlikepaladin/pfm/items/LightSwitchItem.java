@@ -147,7 +147,7 @@ public class LightSwitchItem extends BlockItem {
 
     @Nullable
     public static NbtList getLights(ItemStack stack) {
-        if(stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) == null) {
+        if(stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null) {
             NbtCompound blockEntityTag = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).getNbt();
             if(blockEntityTag.contains("lights")) {
                 return (NbtList) blockEntityTag.get("lights");

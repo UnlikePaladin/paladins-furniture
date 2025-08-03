@@ -63,7 +63,7 @@ public interface BathtubBehavior {
         if (!stack.isIn(ItemTags.DYEABLE)) {
             return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
         }
-        if (!stack.contains(DataComponentTypes.DYED_COLOR)) {
+        if (stack.get(DataComponentTypes.DYED_COLOR) == null) {
             return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
         }
         if (!world.isClient) {

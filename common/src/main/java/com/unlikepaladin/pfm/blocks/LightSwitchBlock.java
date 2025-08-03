@@ -80,7 +80,7 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
+        if (itemStack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null) {
             NbtCompound nbtCompound = itemStack.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT).getNbt();
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (nbtCompound.contains("lights") && blockEntity instanceof LightSwitchBlockEntity) {

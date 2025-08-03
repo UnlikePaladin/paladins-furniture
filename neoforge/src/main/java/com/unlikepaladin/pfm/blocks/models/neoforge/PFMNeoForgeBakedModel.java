@@ -169,7 +169,7 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
             Pair<Identifier, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
             if (separatedQuads.containsKey(pair)) {
                 if (!separatedQuads.get(pair).contains(quad)) {
-                    List<BakedQuad> newQuadList = new ArrayList<>(separatedQuads.get(pair));
+                    List<BakedQuad> newQuadList = new ArrayList<>(separatedQuads.getOrDefault(pair, new ArrayList<>()));
                     newQuadList.add(quad);
                     separatedQuads.put(pair, newQuadList);
                 }

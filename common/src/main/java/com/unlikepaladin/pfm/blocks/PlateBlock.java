@@ -69,7 +69,7 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     protected ActionResult onUseWithItem(ItemStack itemStack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         PlateBlockEntity plateBlockEntity;
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof PlateBlockEntity && (itemStack.contains(DataComponentTypes.FOOD))) {
+        if (blockEntity instanceof PlateBlockEntity && (itemStack.get(DataComponentTypes.FOOD) != null)) {
             if (!world.isClient && ((PlateBlockEntity)blockEntity).addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack)) {
                 player.incrementStat(Statistics.PLATE_USED);
                 return ActionResult.SUCCESS;
