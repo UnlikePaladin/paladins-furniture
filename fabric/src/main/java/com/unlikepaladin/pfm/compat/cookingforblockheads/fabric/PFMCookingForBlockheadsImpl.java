@@ -37,7 +37,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-//TODO: Fix CFBH compat
 public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     public PFMCookingForBlockheadsImpl() {
     }
