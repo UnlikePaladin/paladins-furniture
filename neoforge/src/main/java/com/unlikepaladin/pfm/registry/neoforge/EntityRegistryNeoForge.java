@@ -9,7 +9,6 @@ import net.neoforged.neoforge.event.entity.EntityAttributeCreationEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
 
-@EventBusSubscriber(modid = "pfm")
 public class EntityRegistryNeoForge {
 
     @SubscribeEvent

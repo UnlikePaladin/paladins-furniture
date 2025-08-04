@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.data.materials.VariantHelper;
 import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.mixin.*;
 import com.unlikepaladin.pfm.registry.TriFunc;
+import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -101,9 +102,9 @@ public class PFMItemModel<T> implements ItemModel {
 
         for (int index = 0; index < tintCount; index++) {
             if (index == 1 && stack.get(PFMComponents.COLOR_COMPONENT) != null) {
-                tintArray[index] =  stack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getMapColor().color;
+                tintArray[index] = PFMFileUtil.adjustColor(stack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getMapColor().color);
             } else {
-                tintArray[index] = tintsToUse.get(index).getTint(stack, world, user);
+                tintArray[index] = PFMFileUtil.adjustColor(tintsToUse.get(index).getTint(stack, world, user));
             }
             state.addModelKey(tintArray[index]);
         }
