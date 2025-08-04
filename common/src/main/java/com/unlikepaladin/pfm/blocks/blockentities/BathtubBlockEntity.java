@@ -12,6 +12,8 @@ import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -50,17 +52,17 @@ public class BathtubBlockEntity extends BedBlockEntity {
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        fillTimer = nbt.getInt("tubTimer").orElse(0);
-        isFilling = nbt.getBoolean("isTubFilling").orElse(false);
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        fillTimer = view.getInt("tubTimer", 0);
+        isFilling = view.getBoolean("isTubFilling", false);
+        super.readData(view);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        nbt.putInt("tubTimer", fillTimer);
-        nbt.putBoolean("isTubFilling", isFilling);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        view.putInt("tubTimer", fillTimer);
+        view.putBoolean("isTubFilling", isFilling);
     }
 
     public void setFillTimer(int fillTimer) {

@@ -100,7 +100,7 @@ public class PFMGeneratingOverlay extends Overlay {
 
         int width = this.client.getWindow().getScaledWidth();
         int height = this.client.getWindow().getScaledHeight();
-        context.fill(RenderLayer.getGuiOverlay(), 0, 0, width, height, ColorHelper.withAlpha(PFM_ORANGE, 255));
+        context.fill(0, 0, width, height, ColorHelper.withAlpha(PFM_ORANGE, 255));
 
         float progress = this.resourceProgress.getProgress();
         double minRes = Math.min((double)this.client.getWindow().getScaledWidth() * 0.75, (double)this.client.getWindow().getScaledHeight()) * 0.25;
@@ -120,8 +120,8 @@ public class PFMGeneratingOverlay extends Overlay {
 
         int x = (width - logoWidth) / 2;
         int y = (height - logoHeight) / 2;
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        context.drawTexture(id -> PFM_LOGO, pfmLogo, x, y, 0, 0, logoWidth, logoHeight, logoWidth, logoHeight);
+        //RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        context.drawTexture(PFM_LOGO_PIPELINE, pfmLogo, x, y, 0, 0, logoWidth, logoHeight, logoWidth, logoHeight);
 
         try (Closeable ignored1 = glText.gltBeginDraw()) {
             float textScale = (float) (client.getWindow().getScaleFactor() / 2.0f) * 1.5f;
@@ -221,7 +221,7 @@ public class PFMGeneratingOverlay extends Overlay {
             786432,
             PFM_LOGO_PIPELINE,
             RenderLayer.MultiPhaseParameters.builder()
-                    .texture(new RenderPhase.Texture(pfmLogo, TriState.DEFAULT, false))
+                    .texture(new RenderPhase.Texture(pfmLogo, false))
                     .build(false)
     );
 }

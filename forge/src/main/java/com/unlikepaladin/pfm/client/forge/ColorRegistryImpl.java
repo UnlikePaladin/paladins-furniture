@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.client.forge;
 import net.minecraft.block.Block;
 import net.minecraft.client.color.block.BlockColorProvider;
 import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraftforge.registries.ForgeRegistries;
 
@@ -11,7 +12,7 @@ import java.util.Map;
 
 public class ColorRegistryImpl {
     public static final Map<Block, BlockColorProvider> BLOCK_COLOR_PROVIDER_MAP = new HashMap<>();
-    public static final Map<Block, RenderLayer> BLOCK_RENDER_LAYER_MAP = new HashMap<>();
+    public static final Map<Block, BlockRenderLayer> BLOCK_RENDER_LAYER_MAP = new HashMap<>();
 
     public static BlockColors blockColors;
 
@@ -19,7 +20,7 @@ public class ColorRegistryImpl {
         BLOCK_COLOR_PROVIDER_MAP.put(block, blockColorProvider);
     }
 
-    public static void registerBlockToRenderLayer(Block block, RenderLayer renderLayer) {
+    public static void registerBlockToRenderLayer(Block block, BlockRenderLayer renderLayer) {
         BLOCK_RENDER_LAYER_MAP.put(block, renderLayer);
     }
 

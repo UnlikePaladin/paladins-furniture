@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.client.screens;
 
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -176,9 +177,9 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         int x = this.x;
         int y = this.y;
-        context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
         int k = (int)(41.0f * this.scrollAmount);
-        context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, x + 119, y + 31 + k, 176 + (this.shouldScroll() ? 0 : 12), 0, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT, 256, 256);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, x + 119, y + 31 + k, 176 + (this.shouldScroll() ? 0 : 12), 0, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT, 256, 256);
         int xOffSetForIcons = this.x + RECIPE_LIST_OFFSET_X;
         int yOffsetForIcons = this.y + RECIPE_LIST_OFFSET_Y;
         int scrollOffsetForIcons = this.scrollOffset + 18;
@@ -246,7 +247,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             } else if (mouseX >= k && mouseY >= m && mouseX < k + 16 && mouseY < m + 18) {
                 v += 36;
             }
-            context.drawTexture(RenderLayer::getGuiTextured, TEXTURE, k, m - 1, 0, v, 16, 18, 256, 256);
+            context.drawTexture(RenderPipelines.GUI_TEXTURED, TEXTURE, k, m - 1, 0, v, 16, 18, 256, 256);
         }
     }
 

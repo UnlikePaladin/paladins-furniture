@@ -68,6 +68,7 @@ public class PFMItemModel<T> implements ItemModel {
             specialLayerRenderState.setSpecialModel(this.specialModelType, this.specialModelType.getData(stack));
         }
 
+        state.markAnimated();
         ItemRenderState.LayerRenderState layerRenderState = state.newLayer();
         if (stack.hasGlint()) {
             layerRenderState.setGlint(ItemRenderState.Glint.STANDARD);

@@ -20,6 +20,7 @@ subprojects {
         // mappings loom.officialMojangMappings()
         // The following line declares the yarn mappings you may select this one as well.
         mappings loom.layered {
+            it.mappings(file("$rootProject.projectDir/mappings/mappings.tiny"))
             it.mappings("net.fabricmc:yarn:$rootProject.yarn_mappings:v2")
             it.mappings("dev.architectury:yarn-mappings-patch-neoforge:$rootProject.yarn_mappings_patch_neoforge_version")
         }

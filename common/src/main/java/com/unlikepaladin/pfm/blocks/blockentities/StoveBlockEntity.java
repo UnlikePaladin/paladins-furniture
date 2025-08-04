@@ -13,7 +13,8 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.StackWithSlot;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
@@ -29,6 +30,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
@@ -121,56 +124,45 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        super.readData(view);
         int[] is;
         this.itemsBeingCooked.clear();
-        readNbt(nbt, this.itemsBeingCooked, registryLookup);
-        if (nbt.contains("CookingTimes")) {
-            is = nbt.getIntArray("CookingTimes").orElse(new int[0]);
-            System.arraycopy(is, 0, this.cookingTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
-        }
-        if (nbt.contains("CookingTotalTimes")) {
-            is = nbt.getIntArray("CookingTotalTimes").orElse(new int[0]);
-            System.arraycopy(is, 0, this.cookingTotalTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
-        }
+        readData(view, this.itemsBeingCooked);
+        is = view.getOptionalIntArray("CookingTimes").orElse(new int[0]);
+        System.arraycopy(is, 0, this.cookingTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
+        is = view.getOptionalIntArray("CookingTotalTimes").orElse(new int[0]);
+        System.arraycopy(is, 0, this.cookingTotalTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        this.saveInitialChunkData(nbt, registryLookup);
-        nbt.putIntArray("CookingTimes", this.cookingTimes);
-        nbt.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        writeData(view, this.itemsBeingCooked, true);
+        view.putIntArray("CookingTimes", this.cookingTimes);
+        view.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
     }
 
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        writeNbt(nbt, this.itemsBeingCooked, true, registryLookup);
-        return nbt;
-    }
+    public static void writeData(WriteView view, DefaultedList<ItemStack> stacks, boolean setIfEmpty) {
+        WriteView.ListAppender<StackWithSlot> listAppender = view.getListAppender("CookTopItems", StackWithSlot.CODEC);
 
-    public static NbtCompound writeNbt(NbtCompound nbt, DefaultedList<ItemStack> stacks, boolean setIfEmpty, RegistryWrapper.WrapperLookup registryLookup) {
-        NbtList nbtList = new NbtList();
-        for (int i = 0; i < stacks.size(); ++i) {
+        for (int i = 0; i < stacks.size(); i++) {
             ItemStack itemStack = stacks.get(i);
-            if (itemStack.isEmpty()) continue;
-            NbtCompound nbtCompound = new NbtCompound();
-            nbtCompound.putByte("Slot", (byte)i);
-            nbtList.add(itemStack.toNbt(registryLookup, nbtCompound));
+            if (!itemStack.isEmpty()) {
+                listAppender.add(new StackWithSlot(i, itemStack));
+            }
         }
-        if (!nbtList.isEmpty() || setIfEmpty) {
-            nbt.put("CookTopItems", nbtList);
+
+        if (listAppender.isEmpty() && !setIfEmpty) {
+            view.remove("CookTopItems");
         }
-        return nbt;
     }
 
-    public static void readNbt(NbtCompound nbt, DefaultedList<ItemStack> stacks, RegistryWrapper.WrapperLookup registryLookup) {
-        NbtList nbtList = nbt.getList("CookTopItems").orElse(new NbtList());
-        for (int i = 0; i < nbtList.size(); ++i) {
-            NbtCompound nbtCompound = nbtList.getCompound(i).orElse(new NbtCompound());
-            int j = nbtCompound.getByte("Slot").orElse((byte)0) & 0xFF;
-            if (j < 0 || j >= stacks.size()) continue;
-            stacks.set(j, ItemStack.fromNbt(registryLookup, nbtCompound).orElse(ItemStack.EMPTY));
+    public static void readData(ReadView view, DefaultedList<ItemStack> stacks) {
+        for (StackWithSlot stackWithSlot : view.getTypedListView("CookTopItems", StackWithSlot.CODEC)) {
+            if (stackWithSlot.isValidSlot(stacks.size())) {
+                stacks.set(stackWithSlot.slot(), stackWithSlot.stack());
+            }
         }
     }
 

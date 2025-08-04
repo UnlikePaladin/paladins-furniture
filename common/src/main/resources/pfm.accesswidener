@@ -1,7 +1,6 @@
 accessWidener v1 named
 
 accessible class net/minecraft/block/entity/BlockEntityType$BlockEntityFactory
-accessible class net/minecraft/data/tag/ValueLookupTagProvider$ObjectBuilder
 accessible class net/minecraft/data/DataCache$CachedDataWriter
 accessible class net/minecraft/data/DataCache$CachedData
 accessible field net/minecraft/resource/featuretoggle/FeatureSet universe Lnet/minecraft/resource/featuretoggle/FeatureUniverse;

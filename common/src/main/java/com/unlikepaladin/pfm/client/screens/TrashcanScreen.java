@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.menus.AbstractMicrowaveScreenHandler;
 import com.unlikepaladin.pfm.menus.TrashcanScreenHandler;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -51,7 +52,7 @@ public class TrashcanScreen extends HandledScreen<TrashcanScreenHandler> {
     protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
         int i = this.x;
         int j = this.y;
-        context.drawTexture(RenderLayer::getGuiTextured, background, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, background, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
     }
 
 }

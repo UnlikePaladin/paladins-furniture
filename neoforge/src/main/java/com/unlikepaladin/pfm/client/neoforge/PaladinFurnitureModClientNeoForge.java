@@ -48,7 +48,6 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.client.model.standalone.StandaloneModelBaker;
 import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import org.lwjgl.glfw.GLFW;
 

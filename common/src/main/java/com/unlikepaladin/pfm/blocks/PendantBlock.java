@@ -4,6 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.block.*;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.fluid.FluidState;
@@ -169,7 +170,7 @@ public class PendantBlock extends PowerableBlock implements DynamicRenderLayerIn
 
     @Environment(EnvType.CLIENT)
     @Override
-    public RenderLayer getCustomRenderLayer() {
-        return RenderLayer.getTranslucent();
+    public BlockRenderLayer getCustomRenderLayer() {
+        return BlockRenderLayer.TRANSLUCENT;
     }
 }

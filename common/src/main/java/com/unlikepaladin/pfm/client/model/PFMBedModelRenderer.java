@@ -14,6 +14,9 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.util.DyeColor;
+import org.joml.Vector3f;
+
+import java.util.Set;
 
 public class PFMBedModelRenderer implements SimpleSpecialModelRenderer {
     private final PFMBedBlockEntityRenderer blockEntityRenderer;
@@ -29,6 +32,11 @@ public class PFMBedModelRenderer implements SimpleSpecialModelRenderer {
             ItemDisplayContext modelTransformationMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean glint
     ) {
         this.blockEntityRenderer.renderAsItem(matrices, vertexConsumers, light, overlay, this.textureId);
+    }
+
+    @Override
+    public void collectVertices(Set<Vector3f> vertices) {
+        this.blockEntityRenderer.collectVertices(vertices);
     }
 
     @Environment(EnvType.CLIENT)

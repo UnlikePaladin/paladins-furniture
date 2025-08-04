@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.google.common.collect.Maps;
+import com.mojang.serialization.Codec;
 import com.unlikepaladin.pfm.blocks.FreezerBlock;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -34,6 +35,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.registry.tag.TagKey;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -50,6 +53,8 @@ import java.util.Map;
 
 public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker, RecipeInputProvider {
     private final ServerRecipeManager.MatchGetter<SingleStackRecipeInput, ? extends AbstractCookingRecipe> matchGetter;
+    private static final Codec<Map<RegistryKey<Recipe<?>>, Integer>> CODEC = Codec.unboundedMap(Recipe.KEY_CODEC, Codec.INT);
+
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.FREEZER_BLOCK_ENTITY, pos, state);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
@@ -322,30 +327,26 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        super.readData(view);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readNbt(nbt, this.inventory, registryLookup);
-        this.fuelTime = nbt.getShort("FuelTimeLeft").orElse((short) 0);
-        this.freezeTime = nbt.getShort("FreezeTime").orElse((short) 0);
-        this.freezeTimeTotal = nbt.getShort("FreezeTimeTotal").orElse((short) 0);
+        Inventories.readData(view, this.inventory);
+        this.fuelTime = view.getShort("FuelTimeLeft", (short)0);
+        this.freezeTime = view.getShort("FreezeTime", (short) 0);
+        this.freezeTimeTotal = view.getShort("FreezeTimeTotal", (short) 0);
         this.fuelTimeTotal = this.getFuelTime(this.inventory.get(1));
-        NbtCompound nbtCompound = nbt.getCompound("RecipesUsed").orElse(new NbtCompound());
-        for (String string : nbtCompound.getKeys()) {
-            this.recipesUsed.put(RegistryKey.of(RegistryKeys.RECIPE, Identifier.of(string)), nbtCompound.getInt(string).orElse(0));
-        }
+        this.recipesUsed.clear();
+        this.recipesUsed.putAll(view.read("RecipesUsed", CODEC).orElse(Map.of()));
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        Inventories.writeNbt(nbt, this.inventory, registryLookup);
-        nbt.putShort("FuelTimeLeft", (short)this.fuelTime);
-        nbt.putShort("FreezeTime", (short)this.freezeTime);
-        nbt.putShort("FreezeTimeTotal", (short)this.freezeTimeTotal);
-        NbtCompound nbtCompound = new NbtCompound();
-        this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.getValue().toString(), integer));
-        nbt.put("RecipesUsed", nbtCompound);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        Inventories.writeData(view, this.inventory);
+        view.putShort("FuelTimeLeft", (short)this.fuelTime);
+        view.putShort("FreezeTime", (short)this.freezeTime);
+        view.putShort("FreezeTimeTotal", (short)this.freezeTimeTotal);
+        view.put("RecipesUsed", CODEC, this.recipesUsed);
     }
 
 

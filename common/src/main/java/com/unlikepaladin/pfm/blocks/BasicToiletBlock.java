@@ -17,8 +17,8 @@ import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemUsage;
 import net.minecraft.item.Items;
-import net.minecraft.particle.EntityEffectParticleEffect;
 import net.minecraft.particle.ParticleTypes;
+import net.minecraft.particle.TintedParticleEffect;
 import net.minecraft.potion.Potions;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
@@ -137,9 +137,9 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
         double y = pos.getY();
         double z = pos.getZ() + 0.5;
         if (random.nextDouble() < 0.2)
-            world.addParticleClient(EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 1), x, y + 0.6, z, 0.8, 1.0, 0.0);
+            world.addParticleClient(TintedParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 1), x, y + 0.6, z, 0.8, 1.0, 0.0);
         if (random.nextDouble() < 0.009) {
-            world.addParticleClient(EntityEffectParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 1), x, y + 0.6, z, 0.18, 0.0, 0.34);
+            world.addParticleClient(TintedParticleEffect.create(ParticleTypes.ENTITY_EFFECT, 1), x, y + 0.6, z, 0.18, 0.0, 0.34);
         }
     }
 

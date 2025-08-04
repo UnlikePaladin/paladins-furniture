@@ -260,7 +260,7 @@ public class PaladinFurnitureModUpdateChecker {
 
     public static String getReleaseTarget() {
         // If this is a snapshot, you must change backupVersionNumber!
-        return SharedConstants.getGameVersion().isStable() ? SharedConstants.getGameVersion().getName() : backupVersionNumber;
+        return SharedConstants.getGameVersion().stable() ? SharedConstants.getGameVersion().name() : backupVersionNumber;
     }
 
 }

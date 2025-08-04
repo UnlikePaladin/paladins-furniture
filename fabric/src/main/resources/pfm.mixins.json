@@ -12,7 +12,6 @@
     "PFMUnbakedBlockStateModelMixin"
   ],
   "mixins": [
-    "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMCFBModBlockEntitiesMixin",
     "PFMCookingPotBlockEntityMixin",
     "PFMMinecraftServerMixin",

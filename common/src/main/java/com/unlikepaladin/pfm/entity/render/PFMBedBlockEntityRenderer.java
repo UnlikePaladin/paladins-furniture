@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.entity.render;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
-import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.client.EntityRenderIDs;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import net.minecraft.block.BedBlock;
@@ -16,11 +15,9 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.VertexConsumer;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BedBlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
 import net.minecraft.client.render.block.entity.LightmapCoordinatesRetriever;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
 import net.minecraft.client.render.entity.model.LoadedEntityModels;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
@@ -29,6 +26,9 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
+import org.joml.Vector3f;
+
+import java.util.Set;
 
 public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBlockEntity> {
     public PFMBedBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
@@ -114,5 +114,17 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
         matrices.pop();
     }
 
+    public void collectVertices(Set<Vector3f> vertices) {
+        MatrixStack matrixStack = new MatrixStack();
+        setTransforms(matrixStack, false);
+        this.bedHead.getRootPart().collectVertices(matrixStack, vertices);
+        matrixStack.loadIdentity();
+        setTransforms(matrixStack, true);
+        this.bedFoot.getRootPart().collectVertices(matrixStack, vertices);
+    }
 
+    private static void setTransforms(MatrixStack matrices, boolean isFoot) {
+        matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(90.0f));
+        matrices.translate(-1.0,0, !isFoot ? 1.0F : 0.0F);
+    }
 }

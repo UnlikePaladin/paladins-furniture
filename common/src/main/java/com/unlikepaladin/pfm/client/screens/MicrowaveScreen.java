@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.menus.AbstractMicrowaveScreenHandler;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -71,10 +72,10 @@ public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
         int k;
         int i = this.x;
         int j = this.y;
-        context.drawTexture(RenderLayer::getGuiTextured, this.background, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.background, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight, 256, 256);
         k = this.handler.getCookProgress();
         k = Math.round(k * 1.75f);
-        context.drawTexture(RenderLayer::getGuiTextured, this.background, i + 147, j + 66 + -k, 176, 40 - k, 13, k +1, 256, 256);
+        context.drawTexture(RenderPipelines.GUI_TEXTURED, this.background, i + 147, j + 66 + -k, 176, 40 - k, 13, k +1, 256, 256);
     }
 
     @Override

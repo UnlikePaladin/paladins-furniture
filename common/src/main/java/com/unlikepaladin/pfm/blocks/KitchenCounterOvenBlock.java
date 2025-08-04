@@ -11,6 +11,7 @@ import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.player.PlayerEntity;
@@ -146,8 +147,8 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
 
     @Environment(EnvType.CLIENT)
     @Override
-    public RenderLayer getCustomRenderLayer() {
-        return RenderLayer.getTranslucent();
+    public BlockRenderLayer getCustomRenderLayer() {
+        return BlockRenderLayer.TRANSLUCENT;
     }
 
     @Override

@@ -35,7 +35,7 @@ public class PFMModResourcePackCreatorMixin {
     private void addPFMResources(Consumer<ResourcePackProfile> consumer, CallbackInfo ci) {
         if (type == ResourceType.CLIENT_RESOURCES) {
             AbstractBakedModel.reloading = true;
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().packVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
             ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
                 @Override
                 public ResourcePack open(ResourcePackInfo info) {
@@ -52,7 +52,7 @@ public class PFMModResourcePackCreatorMixin {
             };
             consumer.accept(ResourcePackProfile.create(new ResourcePackInfo("pfm-asset-resources", Text.literal("PFM Assets"), ResourcePackSource.NONE, Optional.of(new VersionedIdentifier(PaladinFurnitureMod.MOD_ID, "pfm_assets", Version.getCurrentVersion()))), packFactory, ResourceType.CLIENT_RESOURCES, new ResourcePackPosition(true, ResourcePackProfile.InsertionPosition.BOTTOM, false)));
         } else if (type == ResourceType.SERVER_DATA) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.SERVER_DATA), Optional.empty());
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().packVersion(ResourceType.SERVER_DATA), Optional.empty());
             ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
                 @Override
                 public ResourcePack open(ResourcePackInfo name) {

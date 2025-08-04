@@ -11,6 +11,7 @@ import net.minecraft.block.cauldron.CauldronBehavior;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.CollisionEvent;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityCollisionHandler;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -203,12 +204,17 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
 
     @Override
     public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
-        if (world instanceof ServerWorld serverWorld && entity.isOnFire() && this.isEntityTouchingFluid(state, pos, entity)) {
-            entity.extinguish();
-            if (entity.canModifyAt(serverWorld, pos)) {
-                this.onFireCollision(state, world, pos);
-            }
+        if (world instanceof ServerWorld serverWorld) {
+            BlockPos blockPos = pos.toImmutable();
+            handler.addPreCallback(CollisionEvent.EXTINGUISH, (collidedEntity) -> {
+                if (collidedEntity.isOnFire() && collidedEntity.canModifyAt(serverWorld, blockPos)) {
+                    this.onFireCollision(state, world, blockPos);
+                }
+
+            });
         }
+
+        handler.addEvent(CollisionEvent.EXTINGUISH);
     }
 
     @Override

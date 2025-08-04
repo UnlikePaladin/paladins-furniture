@@ -1,20 +1,16 @@
 package com.unlikepaladin.pfm.compat.farmersdelight.fabric;
 
 import com.unlikepaladin.pfm.blocks.IronStoveBlock;
-import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.compat.farmersdelight.PFMFarmersDelight;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import net.minecraft.block.Block;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
 import vectorwing.farmersdelight.FarmersDelight;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class PFMFarmersDelightImpl extends PFMFarmersDelight {
     public static PFMFarmersDelight getInstance() {
@@ -27,7 +23,7 @@ public class PFMFarmersDelightImpl extends PFMFarmersDelight {
         stoves.addAll(IronStoveBlock.streamIronStoves().map(FurnitureBlock::getBlock).toList());
         stoves.add(PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP);
         PFMTagProvider.getOrCreateTagBuilder(HEAT_SOURCES)
-                .add(stoves.toArray(new Block[0]));
+                .addTags(stoves.toArray(new Block[0]));
     }
 
     @Override

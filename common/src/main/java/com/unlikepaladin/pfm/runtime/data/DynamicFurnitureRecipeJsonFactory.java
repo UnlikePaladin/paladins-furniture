@@ -126,7 +126,7 @@ public class DynamicFurnitureRecipeJsonFactory {
     }
 
     public DynamicFurnitureRecipeJsonFactory vanillaInput(RegistryEntryList<Item> tag) {
-        return this.vanillaInput(Ingredient.fromTag(tag));
+        return this.vanillaInput(Ingredient.ofTag(tag));
     }
 
     public DynamicFurnitureRecipeJsonFactory vanillaInput(Ingredient ingredient) {

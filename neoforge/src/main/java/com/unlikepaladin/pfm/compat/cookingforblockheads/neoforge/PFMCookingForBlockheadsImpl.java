@@ -6,7 +6,6 @@ import com.unlikepaladin.pfm.compat.PFMClientModCompatibility;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.client.PFMCookingForBlockheadsClient;
 import com.unlikepaladin.pfm.data.PFMTag;
-import com.unlikepaladin.pfm.data.PFMTags;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
@@ -25,7 +24,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -43,10 +41,10 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
         super.generateTags();
 
         PFMTagProvider.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
-                .add(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK);
+                .addTags(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK);
 
         PFMTagProvider.getOrCreateTagBuilder(ModBlockTags.COOKING_TABLES)
-                .add(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK);
+                .addTags(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK);
 
         List<Block> storageBlocks = new ArrayList<>(PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).getAllBlocks());
         storageBlocks.addAll(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getAllBlocks());
@@ -57,18 +55,18 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
         storageBlocks.addAll(List.of(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, PaladinFurnitureModBlocksItems.XBOX_FRIDGE, PaladinFurnitureModBlocksItems.GRAY_FRIDGE, PaladinFurnitureModBlocksItems.IRON_FRIDGE));
 
         PFMTagProvider.getOrCreateTagBuilder(ModBlockTags.KITCHEN_ITEM_PROVIDERS)
-                .add(storageBlocks.toArray(new Block[0]));
+                .addTags(storageBlocks.toArray(new Block[0]));
 
         Block[] ovens = {PaladinFurnitureModBlocksItems.WHITE_STOVE, PaladinFurnitureModBlocksItems.GRAY_STOVE, PaladinFurnitureModBlocksItems.IRON_STOVE};
         Block[] freezers = {PaladinFurnitureModBlocksItems.GRAY_FREEZER, PaladinFurnitureModBlocksItems.IRON_FREEZER, PaladinFurnitureModBlocksItems.WHITE_FREEZER};
 
         PFMTag<Block> builder = PFMTagProvider.getOrCreateTagBuilder(ModBlockTags.KITCHEN_CONNECTORS);
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getAllBlocks().forEach(builder::add);
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getAllBlocks().forEach(builder::add);
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getAllBlocks().forEach(builder::add);
-        builder.add(storageBlocks.toArray(new Block[0]));
-        builder.add(ovens);
-        builder.add(freezers);
+        PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getAllBlocks().forEach(builder::addTags);
+        PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getAllBlocks().forEach(builder::addTags);
+        PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getAllBlocks().forEach(builder::addTags);
+        builder.addTags(storageBlocks.toArray(new Block[0]));
+        builder.addTags(ovens);
+        builder.addTags(freezers);
     }
 
     @Override

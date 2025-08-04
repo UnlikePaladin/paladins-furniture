@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayers;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,18 +24,18 @@ import java.util.Map;
 public abstract class PFMRenderLayersNeoForgeMixin {
     @Shadow
     @Deprecated
-    public static RenderLayer getBlockLayer(BlockState state) {
+    public static BlockRenderLayer getBlockLayer(BlockState state) {
         throw new AssertionError();
     }
 
     @Unique
-    private static final Map<BlockState, RenderLayer> pfm$renderLayers = new HashMap<>();
+    private static final Map<BlockState, BlockRenderLayer> pfm$renderLayers = new HashMap<>();
     @Inject(method = "getBlockLayer", at = @At("TAIL"), cancellable = true)
-    private static void modifyFurnitureRenderLayer(BlockState state, CallbackInfoReturnable<RenderLayer> cir) {
+    private static void modifyFurnitureRenderLayer(BlockState state, CallbackInfoReturnable<BlockRenderLayer> cir) {
         if (state.getBlock() instanceof DynamicRenderLayerInterface) {
-            RenderLayer renderLayer = ((DynamicRenderLayerInterface) state.getBlock()).getCustomRenderLayer();
+            BlockRenderLayer renderLayer = ((DynamicRenderLayerInterface) state.getBlock()).getCustomRenderLayer();
             if (PaladinFurnitureMod.getPFMConfig().isShaderSolidFixOn())
-                cir.setReturnValue(PaladinFurnitureModClient.areShadersOn() ? RenderLayer.getSolid() : renderLayer);
+                cir.setReturnValue(PaladinFurnitureModClient.areShadersOn() ? BlockRenderLayer.SOLID : renderLayer);
             else
                 cir.setReturnValue(renderLayer);
         }
@@ -47,13 +48,13 @@ public abstract class PFMRenderLayersNeoForgeMixin {
             if (MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(state) instanceof AbstractBakedModel abstractBakedModel) {
                 VariantBase<?> variant = abstractBakedModel.getVariant(state);
                 if (variant != null) {
-                    RenderLayer parentLayer = getBlockLayer(variant.getBaseBlock().getDefaultState());
-                    RenderLayer selfLayer = cir.getReturnValue();
+                    BlockRenderLayer parentLayer = getBlockLayer(variant.getBaseBlock().getDefaultState());
+                    BlockRenderLayer selfLayer = cir.getReturnValue();
 
-                    if (parentLayer != RenderLayer.getSolid()) {
+                    if (parentLayer != BlockRenderLayer.SOLID) {
                         cir.setReturnValue(parentLayer);
                         pfm$renderLayers.put(state, parentLayer);
-                    } else if (selfLayer != RenderLayer.getSolid()) {
+                    } else if (selfLayer != BlockRenderLayer.SOLID) {
                         cir.setReturnValue(selfLayer);
                         pfm$renderLayers.put(state, selfLayer);
                     } else {

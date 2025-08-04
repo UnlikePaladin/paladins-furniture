@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
+import com.mojang.serialization.Codec;
 import com.unlikepaladin.pfm.blocks.MicrowaveBlock;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -23,6 +24,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.recipe.*;
 import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.PropertyDelegate;
@@ -31,6 +33,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -41,11 +45,13 @@ import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Map;
 import java.util.Optional;
 
 public class MicrowaveBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker{
     public boolean isActive = false;
     private final ServerRecipeManager.MatchGetter<SingleStackRecipeInput, ? extends AbstractCookingRecipe> matchGetter;
+    private static final Codec<Map<Identifier, Integer>> CODEC = Codec.unboundedMap(Identifier.CODEC, Codec.INT);
 
     public MicrowaveBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.MICROWAVE_BLOCK_ENTITY, pos, state);
@@ -170,29 +176,25 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        super.readData(view);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readNbt(nbt, this.inventory, registryLookup);
-        this.cookTime = nbt.getShort("CookTime").orElse((short)0);
-        this.cookTimeTotal = nbt.getShort("CookTimeTotal").orElse((short)0);
-        NbtCompound nbtCompound = nbt.getCompound("RecipesUsed").orElse(new NbtCompound());
-        this.isActive = nbt.getBoolean("isActive").orElse(false);
-        for (String string : nbtCompound.getKeys()) {
-            this.recipesUsed.put(Identifier.of(string), nbtCompound.getInt(string).orElse(0));
-        }
+        Inventories.readData(view, this.inventory);
+        this.cookTime = view.getShort("CookTime", (short)0);
+        this.cookTimeTotal = view.getShort("CookTimeTotal", (short)0);
+        this.isActive = view.getBoolean("isActive", false);
+        this.recipesUsed.clear();
+        this.recipesUsed.putAll(view.read("RecipesUsed", CODEC).orElse(Map.of()));
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        nbt.putShort("CookTime", (short)this.cookTime);
-        nbt.putShort("CookTimeTotal", (short)this.cookTimeTotal);
-        Inventories.writeNbt(nbt, this.inventory, registryLookup);
-        NbtCompound nbtCompound = new NbtCompound();
-        nbt.putBoolean("isActive", this.isActive);
-        this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), (int)integer));
-        nbt.put("RecipesUsed", nbtCompound);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        view.putShort("CookTime", (short)this.cookTime);
+        view.putShort("CookTimeTotal", (short)this.cookTimeTotal);
+        Inventories.writeData(view, this.inventory);
+        view.putBoolean("isActive", this.isActive);
+        view.put("RecipesUsed", CODEC, this.recipesUsed);
     }
 
     @Override
@@ -402,7 +404,6 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         this.isActive = active;
         NbtCompound nbtCompound = new NbtCompound();
         nbtCompound.putBoolean("isActive", active);
-        this.writeNbt(nbtCompound, world.getRegistryManager());
         this.markDirty();
         world.setBlockState(pos, this.getCachedState().with(MicrowaveBlock.POWERED, true), Block.NOTIFY_LISTENERS);
     }

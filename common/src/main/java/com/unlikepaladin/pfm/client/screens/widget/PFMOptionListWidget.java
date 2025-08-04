@@ -111,7 +111,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
 
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.text.setStyle(Style.EMPTY.withBold(true)), (PFMOptionListWidget.this.client.currentScreen.width / 2 - this.textWidth / 2), y + entryHeight - (PFMOptionListWidget.this).client.textRenderer.fontHeight - 1, 0xFFFFFF, true);
+            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.text.setStyle(Style.EMPTY.withBold(true)), (PFMOptionListWidget.this.client.currentScreen.width / 2 - this.textWidth / 2), y + entryHeight - (PFMOptionListWidget.this).client.textRenderer.fontHeight - 1, PFMFileUtil.adjustColor(0xFFFFFF), true);
         }
 
         public boolean changeFocus(boolean lookForwards) {
@@ -155,7 +155,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             this.configOption = configOption;
             this.optionName = optionName;
             this.index = index;
-            final MutableText sideText = configOption.getSide() == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+            final MutableText sideText = configOption.getSide() == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(PFMFileUtil.adjustColor(0xf77f34))) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(PFMFileUtil.adjustColor(0xf77f34))));
             final MutableText styledTooltip = ((MutableText)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(Formatting.WHITE));
             final Text tooltipText = sideText.append(Text.literal("\n")).append(styledTooltip);
             this.supplier = Tooltip.of(tooltipText);
@@ -176,7 +176,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
 
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), 0xFFFFFF, false);
+            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF), false);
             this.resetButton.setX(x + 190);
             this.resetButton.setY(y);
             this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption)) : !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption));;
@@ -223,7 +223,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         ButtonEntry(Side side, final Text optionName, Text buttonText, Text tooltip, ButtonWidget.PressAction pressAction) {
             this.optionName = optionName;
             this.side = side;
-            final MutableText sideText = side == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+            final MutableText sideText = side == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(PFMFileUtil.adjustColor(0xf77f34))) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(PFMFileUtil.adjustColor(0xf77f34))));
             final MutableText styledTooltip = ((MutableText)tooltip).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(Formatting.WHITE));
             final Text tooltipText = sideText.append(Text.literal("\n")).append(styledTooltip);
             this.supplier = Tooltip.of(tooltipText);
@@ -239,7 +239,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
 
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), 0xFFFFFF, false);
+            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF), false);
             this.button.setX(x+105);
             this.button.setY(y);
             this.button.render(context, mouseX, mouseY, tickDelta);

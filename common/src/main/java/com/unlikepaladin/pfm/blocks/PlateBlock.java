@@ -97,7 +97,7 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
             plateBlockEntity = (PlateBlockEntity)blockEntity;
                 if (!plateBlockEntity.getItemInPlate().isEmpty()) {
                     ItemStack stack = plateBlockEntity.getItemInPlate();
-                    spawnItemParticles(player, stack, 16);
+                    player.spawnItemParticles(stack, 16);
                     if (Registries.ITEM.getId(stack.getItem()).toString().equals("sandwichable:sandwich")) {
                        eatSandwich(stack, world, player);
                     }
@@ -194,20 +194,6 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
         super.onStateReplaced(state, world, pos, moved);
     }
 
-    protected final Random random = new Random();
-    private void spawnItemParticles(LivingEntity entity, ItemStack stack, int count) {
-        for (int i = 0; i < count; ++i) {
-            Vec3d vec3d = new Vec3d(((double)this.random.nextFloat() - 0.5) * 0.1, Math.random() * 0.1 + 0.1, 0.0);
-            vec3d = vec3d.rotateX(-entity.getPitch() * ((float)Math.PI / 180));
-            vec3d = vec3d.rotateY(-entity.getYaw() * ((float)Math.PI / 180));
-            double d = (double)(-this.random.nextFloat()) * 0.6 - 0.3;
-            Vec3d vec3d2 = new Vec3d(((double)this.random.nextFloat() - 0.5) * 0.3, d, 0.6);
-            vec3d2 = vec3d2.rotateX(-entity.getPitch() * ((float)Math.PI / 180));
-            vec3d2 = vec3d2.rotateY(-entity.getYaw() * ((float)Math.PI / 180));
-            vec3d2 = vec3d2.add(entity.getX(), entity.getEyeY(), entity.getZ());
-            entity.getEntityWorld().addParticleClient(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
-        }
-    }
     @Override
     public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
         Direction direction = Direction.DOWN;

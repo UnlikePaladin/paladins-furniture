@@ -58,7 +58,7 @@ public class PFMAssetGenerator extends PFMGenerator {
 
             WoodVariantRegistry.getVariants().stream().sorted().forEach(woodVariant -> variants.add(woodVariant.identifier));
             StoneVariantRegistry.getVariants().stream().sorted().forEach(stoneVariant -> variants.add(stoneVariant.identifier));
-            PFMCache current = new PFMCache(SharedConstants.getGameVersion().getName(), Version.getCurrentVersion(), PFMFileUtil.getModLoader(), hashToCompare, variants);
+            PFMCache current = new PFMCache(SharedConstants.getGameVersion().name(), Version.getCurrentVersion(), PFMFileUtil.getModLoader(), hashToCompare, variants);
 
             if (!cached.equals(current)) {
                 List<PFMProvider> providers = new ArrayList<>();
@@ -118,7 +118,7 @@ public class PFMAssetGenerator extends PFMGenerator {
                 Files.deleteIfExists(pfmCacheDataFile);
                 Files.createFile(pfmCacheDataFile);
                 List<String> newDataHash = hashDirectory(output.toFile(), false);
-                PFMCache cache = new PFMCache(SharedConstants.getGameVersion().getName(), Version.getCurrentVersion(), PFMFileUtil.getModLoader(), newDataHash, variants);
+                PFMCache cache = new PFMCache(SharedConstants.getGameVersion().name(), Version.getCurrentVersion(), PFMFileUtil.getModLoader(), newDataHash, variants);
                 Files.writeString(pfmCacheDataFile, GSON.toJson(cache.toJson()), StandardOpenOption.APPEND);
             } else {
                 getLogger().info("Data Hash for Assets and Variant List matched, skipping generation");

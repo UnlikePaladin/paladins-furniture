@@ -1,0 +1,3 @@
+tiny	2	0	intermediary	named
+c	mezz/jei/library/plugins/vanilla/crafting/JeiShapedRecipe	mezz/jei/library/plugins/vanilla/crafting/JeiShapedRecipe
+	m	()Ljava/util/List;	getDisplays	jei$getDisplays

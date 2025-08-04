@@ -33,7 +33,7 @@ public class PFMMCMetaProvider extends PFMProvider {
             writer.write("{\n");
             writer.write("  \"pack\":\n   {\n");
             writer.write("          \"pack_format\": ");
-            writer.write(String.valueOf(SharedConstants.getGameVersion().getResourceVersion(info.type)));
+            writer.write(String.valueOf(SharedConstants.getGameVersion().packVersion(info.type)));
             writer.write(",\n           \"description\" : \"" + info.description + "\"\n  }\n");
             writer.write("}");
         } catch (IOException e) {

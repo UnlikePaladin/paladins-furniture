@@ -23,6 +23,8 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.SingleStackRecipeInput;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.Clearable;
 import net.minecraft.util.ItemScatterer;
 import net.minecraft.util.collection.DefaultedList;
@@ -116,32 +118,23 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    protected void readData(ReadView view) {
         int[] is;
-        super.readNbt(nbt, registryLookup);
+        super.readData(view);
         this.itemsBeingCooked.clear();
-        Inventories.readNbt(nbt, this.itemsBeingCooked, registryLookup);
-        if (nbt.contains("CookingTimes")) {
-            is = nbt.getIntArray("CookingTimes").orElse(new int[0]);
-            System.arraycopy(is, 0, this.cookingTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
-        }
-        if (nbt.contains("CookingTotalTimes")) {
-            is = nbt.getIntArray("CookingTotalTimes").orElse(new int[0]);
-            System.arraycopy(is, 0, this.cookingTotalTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
-        }
+        Inventories.readData(view, this.itemsBeingCooked);
+        is = view.getOptionalIntArray("CookingTimes").orElse(new int[0]);
+        System.arraycopy(is, 0, this.cookingTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
+        is = view.getOptionalIntArray("CookingTotalTimes").orElse(new int[0]);
+        System.arraycopy(is, 0, this.cookingTotalTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        this.saveInitialChunkData(nbt, registryLookup);
-        nbt.putIntArray("CookingTimes", this.cookingTimes);
-        nbt.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
-    }
-
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        Inventories.writeNbt(nbt, this.itemsBeingCooked, true, registryLookup);
-        return nbt;
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        view.putIntArray("CookingTimes", this.cookingTimes);
+        view.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
+        Inventories.writeData(view, this.itemsBeingCooked, true);
     }
 
     public ItemStack removeStack(int slot) {

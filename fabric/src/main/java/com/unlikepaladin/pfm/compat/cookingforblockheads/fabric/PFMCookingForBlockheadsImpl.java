@@ -6,7 +6,6 @@ import com.unlikepaladin.pfm.compat.PFMClientModCompatibility;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.client.PFMCookingForBlockheadsClient;
 import com.unlikepaladin.pfm.data.PFMTag;
-import com.unlikepaladin.pfm.data.PFMTags;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
@@ -14,28 +13,23 @@ import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.capability.BalmCapabilities;
-import net.blay09.mods.balm.common.BalmBlockEntity;
 import com.unlikepaladin.pfm.runtime.data.SimpleFurnitureRecipeJsonFactory;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
-import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
-import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.capability.ModCapabilities;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModBlockTags;
-import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.data.recipe.RecipeExporter;
 import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.registry.tag.TagKey;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     public PFMCookingForBlockheadsImpl() {
@@ -75,10 +69,10 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
         super.generateTags();
 
         PFMTagProvider.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
-                .add(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK);
+                .addTags(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK);
 
         PFMTagProvider.getOrCreateTagBuilder(ModBlockTags.COOKING_TABLES)
-                .add(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK);
+                .addTags(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK);
 
         List<Block> storageBlocks = new ArrayList<>(PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).getAllBlocks());
         storageBlocks.addAll(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).getAllBlocks());
@@ -89,18 +83,18 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
         storageBlocks.addAll(List.of(PaladinFurnitureModBlocksItems.WHITE_FRIDGE, PaladinFurnitureModBlocksItems.XBOX_FRIDGE, PaladinFurnitureModBlocksItems.GRAY_FRIDGE, PaladinFurnitureModBlocksItems.IRON_FRIDGE));
 
         PFMTagProvider.getOrCreateTagBuilder(ModBlockTags.KITCHEN_ITEM_PROVIDERS)
-                .add(storageBlocks.toArray(new Block[0]));
+                .addTags(storageBlocks.toArray(new Block[0]));
 
         Block[] ovens = {PaladinFurnitureModBlocksItems.WHITE_STOVE, PaladinFurnitureModBlocksItems.GRAY_STOVE, PaladinFurnitureModBlocksItems.IRON_STOVE};
         Block[] freezers = {PaladinFurnitureModBlocksItems.GRAY_FREEZER, PaladinFurnitureModBlocksItems.IRON_FREEZER, PaladinFurnitureModBlocksItems.WHITE_FREEZER};
 
         PFMTag<Block> builder = PFMTagProvider.getOrCreateTagBuilder(ModBlockTags.KITCHEN_CONNECTORS);
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getAllBlocks().forEach(builder::add);
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getAllBlocks().forEach(builder::add);
-        PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getAllBlocks().forEach(builder::add);
-        builder.add(storageBlocks.toArray(new Block[0]));
-        builder.add(ovens);
-        builder.add(freezers);
+        PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterBlock.class).getAllBlocks().forEach(builder::addTags);
+        PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).getAllBlocks().forEach(builder::addTags);
+        PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).getAllBlocks().forEach(builder::addTags);
+        builder.addTags(storageBlocks.toArray(new Block[0]));
+        builder.addTags(ovens);
+        builder.addTags(freezers);
     }
 
     public void initCapabilities(BalmCapabilities balmCapabilities) {
@@ -109,13 +103,13 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
                 return provider.getKitchenItemProvider();
             }
             return null;
-        }),  () -> List.of(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.STOVE_BLOCK_ENTITY));
+        }),  () -> Set.of(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.STOVE_BLOCK_ENTITY));
         balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_processor"), ModCapabilities.KITCHEN_ITEM_PROCESSOR, (blockEntity, context) -> {
             if (blockEntity instanceof KitchenItemProcessorHolder holder) {
                 return holder.getKitchenItemProcessor();
             }
             return null;
-        }, () -> List.of(BlockEntities.STOVE_BLOCK_ENTITY));
+        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY));
     }
 
     public static PFMCookingForBlockheads getInstance() {

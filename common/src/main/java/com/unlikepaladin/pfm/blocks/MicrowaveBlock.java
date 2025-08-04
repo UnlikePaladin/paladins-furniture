@@ -13,6 +13,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.CampfireBlockEntity;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
@@ -183,7 +184,7 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
 
     @Environment(EnvType.CLIENT)
     @Override
-    public RenderLayer getCustomRenderLayer() {
-        return RenderLayer.getTranslucent();
+    public BlockRenderLayer getCustomRenderLayer() {
+        return BlockRenderLayer.TRANSLUCENT;
     }
 }

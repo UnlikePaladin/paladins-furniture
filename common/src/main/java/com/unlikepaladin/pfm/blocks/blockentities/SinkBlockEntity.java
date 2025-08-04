@@ -12,6 +12,8 @@ import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -28,17 +30,17 @@ public class SinkBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        nbt.putInt("sinkTimer", sinkTimer);
-        nbt.putBoolean("isFilling", isFilling);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        view.putInt("sinkTimer", sinkTimer);
+        view.putBoolean("isFilling", isFilling);
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        sinkTimer = nbt.getInt("sinkTimer").orElse(0);
-        isFilling = nbt.getBoolean("isFilling").orElse(false);
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        sinkTimer = view.getInt("sinkTimer", 0);
+        isFilling = view.getBoolean("isFilling", false);
+        super.readData(view);
     }
 
     public void setSinkTimer(int sinkTimer) {

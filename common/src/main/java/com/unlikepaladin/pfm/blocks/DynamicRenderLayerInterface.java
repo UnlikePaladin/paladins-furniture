@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 
 /**
@@ -10,5 +11,5 @@ import net.minecraft.client.render.RenderLayer;
  **/
 public interface DynamicRenderLayerInterface {
     @Environment(EnvType.CLIENT)
-    RenderLayer getCustomRenderLayer();
+    BlockRenderLayer getCustomRenderLayer();
 }

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
+import com.mojang.serialization.Codec;
 import com.unlikepaladin.pfm.blocks.PowerableBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -8,11 +9,14 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.ComponentMap;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
+import net.minecraft.inventory.StackWithSlot;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtLong;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 
@@ -27,21 +31,19 @@ public class LightSwitchBlockEntity extends BlockEntity {
 
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        NbtList tagList = new NbtList();
-        lights.forEach(blockPos -> tagList.add(NbtLong.of(blockPos.asLong())));
-        nbt.put("lights", tagList);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        WriteView.ListAppender<Long> listAppender = view.getListAppender("Items", Codec.LONG);
+        lights.forEach(blockPos -> listAppender.add(blockPos.asLong()));
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
-        if(nbt.contains("lights")){
+    protected void readData(ReadView view) {
+        super.readData(view);
+        view.getOptionalTypedListView("lights", Codec.LONG).ifPresent((longs) -> {
             lights.clear();
-            NbtList lightTagList = nbt.getList("lights").orElse(new NbtList());
-            lightTagList.forEach(nbtElement -> addLight(((NbtLong)nbtElement).longValue()));
-        }
+            longs.forEach(this::addLight);
+        });
     }
     public void addLight(long pos)
     {

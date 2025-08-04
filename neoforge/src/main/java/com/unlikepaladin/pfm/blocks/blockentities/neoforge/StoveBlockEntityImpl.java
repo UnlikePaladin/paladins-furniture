@@ -43,7 +43,7 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
 
     @Override
     public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        this.readNbt(tag, registryLookup);
+        this.readData(tag, registryLookup);
     }
 
     @Override

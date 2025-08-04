@@ -8,7 +8,6 @@ import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.Framebuffer;
 import net.minecraft.client.option.InactivityFpsLimiter;
-import net.minecraft.client.render.Fog;
 import net.minecraft.client.render.RenderTickCounter;
 
 public class ClientOverlaySetter {
@@ -32,10 +31,10 @@ public class ClientOverlaySetter {
 
         Framebuffer framebuffer = client.getFramebuffer();
         RenderSystem.getDevice().createCommandEncoder().clearColorAndDepthTextures(framebuffer.getColorAttachment(), 0, framebuffer.getDepthAttachment(), 1.0);
-        RenderSystem.setShaderFog(Fog.DUMMY);
 
         client.gameRenderer.render(client.getRenderTickCounter(), shouldTick(client));
-        client.getFramebuffer().blitToScreen();
+        if (!client.getWindow().hasZeroWidthOrHeight())
+            client.getFramebuffer().blitToScreen();
 
         if (((PFMMinecraftClientAcccessor)client).getFrameCapturer() != null) {
             ((PFMMinecraftClientAcccessor)client).getFrameCapturer().upload();

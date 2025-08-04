@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.client.screens.widget.PFMOptionListWidget;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.config.option.Side;
+import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmScreen;
@@ -110,7 +111,7 @@ public class PFMConfigScreen extends Screen {
         if (this.optionListWidget != null)
             this.optionListWidget.render(context, mouseX, mouseY, delta);
 
-        context.drawCenteredTextWithShadow(this.textRenderer, TITLE.setStyle(Style.EMPTY.withColor(0xf77f34).withBold(true)), this.width / 2, 8, 0xFFFFFF);
+        context.drawCenteredTextWithShadow(this.textRenderer, TITLE.setStyle(Style.EMPTY.withColor(PFMFileUtil.adjustColor(0xf77f34)).withBold(true)), this.width / 2, 8, PFMFileUtil.adjustColor(0xFFFFFF));
         boolean bl = false;
         for (Map.Entry<AbstractConfigOption, Boolean> optionEntry : optionListWidget.newConfigValues.entrySet()) {
             if (optionEntry.getValue() == optionEntry.getKey().getDefaultValue()) continue;

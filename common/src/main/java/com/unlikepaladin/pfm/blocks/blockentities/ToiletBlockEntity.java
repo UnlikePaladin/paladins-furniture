@@ -7,6 +7,8 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
@@ -23,15 +25,15 @@ public class ToiletBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        nbt.putInt("flushTimer", flushTimer);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        view.putInt("flushTimer", flushTimer);
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        flushTimer = nbt.getInt("flushTimer").orElse(0);
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        flushTimer = view.getInt("flushTimer", 0);
+        super.readData(view);
     }
 
     public void setFlushTimer(int flushTimer) {

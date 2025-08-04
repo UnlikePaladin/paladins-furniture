@@ -8,7 +8,11 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtElement;
 import net.minecraft.nbt.NbtLong;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.math.BlockPos;
+
+import java.util.Optional;
 
 public class ShowerHandleBlockEntity extends BlockEntity {
     protected BlockPos showerOffset;
@@ -18,20 +22,18 @@ public class ShowerHandleBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
         if (this.showerOffset != null) {
-            NbtLong showerHeadPos = NbtLong.of(this.showerOffset.asLong());
-            nbt.put("showerHead", showerHeadPos);
+            view.putLong("showerHead", this.showerOffset.asLong());
         }
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
-        if(nbt.contains("showerHead") && nbt.get("showerHead").getType() == NbtElement.LONG_TYPE){
-            this.showerOffset = BlockPos.fromLong(nbt.getLong("showerHead").get());
-        }
+    protected void readData(ReadView view) {
+        super.readData(view);
+        view.getOptionalLong("showerHead").ifPresent(
+                aLong -> this.showerOffset = BlockPos.fromLong(aLong));
     }
 
     public void setState(boolean open)

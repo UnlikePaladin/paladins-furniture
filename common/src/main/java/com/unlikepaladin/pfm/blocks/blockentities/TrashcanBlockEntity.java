@@ -18,6 +18,8 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -96,19 +98,19 @@ public class TrashcanBlockEntity extends LootableContainerBlockEntity {
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        super.readData(view);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        if (!this.readLootTable(nbt)) {
-            Inventories.readNbt(nbt, this.inventory, registryLookup);
+        if (!this.readLootTable(view)) {
+            Inventories.readData(view, this.inventory);
         }
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        if (!this.writeLootTable(nbt)) {
-            Inventories.writeNbt(nbt, this.inventory, registryLookup);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        if (!this.writeLootTable(view)) {
+            Inventories.writeData(view, this.inventory);
         }
     }
 

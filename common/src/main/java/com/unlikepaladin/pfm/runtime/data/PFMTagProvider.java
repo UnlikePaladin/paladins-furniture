@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.runtime.data;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
@@ -12,7 +11,6 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.PFMTag;
 import com.unlikepaladin.pfm.data.PFMTags;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -21,19 +19,11 @@ import net.minecraft.registry.Registries;
 import net.minecraft.registry.tag.*;
 import net.minecraft.util.Identifier;
 import net.minecraft.registry.Registry;
-import net.minecraft.util.JsonHelper;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class PFMTagProvider extends PFMProvider {
@@ -93,56 +83,56 @@ public class PFMTagProvider extends PFMProvider {
         ShowerTowelBlock[] showerTowels = ShowerTowelBlock.streamShowerTowels().map(FurnitureBlock::getBlock).toArray(ShowerTowelBlock[]::new);
 
         getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
-                .add(showerTowels)
-                .add(stoneCounters)
-                .add(stoneCabinets)
-                .add(stoneDrawers)
-                .add(stoneCounterOvens)
-                .add(stoneSinks)
-                .add(stoneBasicChairs)
-                .add(stoneBasicTables)
-                .add(stoneClassicChairs)
-                .add(stoneDyeableClassicChairs)
-                .add(stoneClassicStools)
-                .add(stoneClassicTables)
-                .add(stoneDinnerChairs)
-                .add(stoneDinnerTables)
-                .add(stoneModernDinnerTables)
-                .add(stoneModernChairs)
-                .add(stoneModernStools)
-                .add(stoneSimpleStools)
-                .add(pendantLights)
-                .add(simpleLights)
-                .add(fridges)
-                .add(freezers)
-                .add(lightSwitches)
-                .add(microwaves)
-                .add(kitchenStovetops)
-                .add(ironStoves)
-                .add(froggyChairs)
-                .add(stove)
-                .add(stoneWallCounters)
-                .add(stoneWallDrawers)
-                .add(stoneWallSmallDrawers)
-                .add(stoneNaturalTables)
-                .add(stoneClassicNightstands)
-                .add(plates)
-                .add(cutleries)
-                .add(basicToilets)
-                .add(rangeHoods)
-                .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE)
-                .add(PaladinFurnitureModBlocksItems.IRON_CHAIN)
-                .add(sinkBlocks)
-                .add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE)
-                .add(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD)
-                .add(PaladinFurnitureModBlocksItems.BASIC_BATHTUB)
-                .add(PaladinFurnitureModBlocksItems.TRASHCAN)
-                .add(PaladinFurnitureModBlocksItems.MESH_TRASHCAN)
-                .add(stoneBasicCoffeeTables)
-                .add(stoneModernCoffeeTables)
-                .add(stoneClassicCoffeeTables)
-                .add(stoneBasicDesks)
-                .add(stoneBasicDeskCabinets);
+                .addTags(showerTowels)
+                .addTags(stoneCounters)
+                .addTags(stoneCabinets)
+                .addTags(stoneDrawers)
+                .addTags(stoneCounterOvens)
+                .addTags(stoneSinks)
+                .addTags(stoneBasicChairs)
+                .addTags(stoneBasicTables)
+                .addTags(stoneClassicChairs)
+                .addTags(stoneDyeableClassicChairs)
+                .addTags(stoneClassicStools)
+                .addTags(stoneClassicTables)
+                .addTags(stoneDinnerChairs)
+                .addTags(stoneDinnerTables)
+                .addTags(stoneModernDinnerTables)
+                .addTags(stoneModernChairs)
+                .addTags(stoneModernStools)
+                .addTags(stoneSimpleStools)
+                .addTags(pendantLights)
+                .addTags(simpleLights)
+                .addTags(fridges)
+                .addTags(freezers)
+                .addTags(lightSwitches)
+                .addTags(microwaves)
+                .addTags(kitchenStovetops)
+                .addTags(ironStoves)
+                .addTags(froggyChairs)
+                .addTags(stove)
+                .addTags(stoneWallCounters)
+                .addTags(stoneWallDrawers)
+                .addTags(stoneWallSmallDrawers)
+                .addTags(stoneNaturalTables)
+                .addTags(stoneClassicNightstands)
+                .addTags(plates)
+                .addTags(cutleries)
+                .addTags(basicToilets)
+                .addTags(rangeHoods)
+                .addTags(PaladinFurnitureModBlocksItems.RAW_CONCRETE)
+                .addTags(PaladinFurnitureModBlocksItems.IRON_CHAIN)
+                .addTags(sinkBlocks)
+                .addTags(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE)
+                .addTags(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD)
+                .addTags(PaladinFurnitureModBlocksItems.BASIC_BATHTUB)
+                .addTags(PaladinFurnitureModBlocksItems.TRASHCAN)
+                .addTags(PaladinFurnitureModBlocksItems.MESH_TRASHCAN)
+                .addTags(stoneBasicCoffeeTables)
+                .addTags(stoneModernCoffeeTables)
+                .addTags(stoneClassicCoffeeTables)
+                .addTags(stoneBasicDesks)
+                .addTags(stoneBasicDeskCabinets);
 
         KitchenCounterBlock[] woodCounters = KitchenCounterBlock.streamWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
         KitchenWallCounterBlock[] woodWallCounters = KitchenWallCounterBlock.streamWallWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenWallCounterBlock[]::new);
@@ -185,73 +175,73 @@ public class PFMTagProvider extends PFMProvider {
         BasicDeskCabinetBlock[] woodBasicDeskCabinets = BasicDeskCabinetBlock.streamWoodBasicDeskCabinets().map(FurnitureBlock::getBlock).toArray(BasicDeskCabinetBlock[]::new);
 
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
-                .add(showerTowels)
-                .add(woodCounters)
-                .add(woodCabinets)
-                .add(woodDrawers)
-                .add(woodCounterOvens)
-                .add(woodSinks)
-                .add(woodBasicChairs)
-                .add(woodBasicTables)
-                .add(woodClassicChairs)
-                .add(woodDyeableClassicChairs)
-                .add(woodClassicStools)
-                .add(woodClassicTables)
-                .add(woodDinnerChairs)
-                .add(woodDinnerTables)
-                .add(woodLogStools)
-                .add(woodLogTables)
-                .add(woodModernDinnerTables)
-                .add(woodModernChairs)
-                .add(woodModernStools)
-                .add(woodSimpleStools)
-                .add(simpleSofas)
-                .add(armChairDyeables)
-                .add(armChairs)
-                .add(woodClassicNightstands)
-                .add(workingTables)
-                .add(herringbonePlanks)
-                .add(simpleBeds)
-                .add(woodWallDrawers)
-                .add(woodWallCounters)
-                .add(woodWallSmallDrawers)
-                .add(simpleBunkLadders)
-                .add(classicBeds)
-                .add(logTables)
-                .add(PaladinFurnitureModBlocksItems.BASIC_LAMP)
-                .add(woodBasicCoffeeTables)
-                .add(woodModernCoffeeTables)
-                .add(woodClassicCoffeeTables)
-                .add(woodBasicDesks)
-                .add(woodBasicDeskCabinets);
+                .addTags(showerTowels)
+                .addTags(woodCounters)
+                .addTags(woodCabinets)
+                .addTags(woodDrawers)
+                .addTags(woodCounterOvens)
+                .addTags(woodSinks)
+                .addTags(woodBasicChairs)
+                .addTags(woodBasicTables)
+                .addTags(woodClassicChairs)
+                .addTags(woodDyeableClassicChairs)
+                .addTags(woodClassicStools)
+                .addTags(woodClassicTables)
+                .addTags(woodDinnerChairs)
+                .addTags(woodDinnerTables)
+                .addTags(woodLogStools)
+                .addTags(woodLogTables)
+                .addTags(woodModernDinnerTables)
+                .addTags(woodModernChairs)
+                .addTags(woodModernStools)
+                .addTags(woodSimpleStools)
+                .addTags(simpleSofas)
+                .addTags(armChairDyeables)
+                .addTags(armChairs)
+                .addTags(woodClassicNightstands)
+                .addTags(workingTables)
+                .addTags(herringbonePlanks)
+                .addTags(simpleBeds)
+                .addTags(woodWallDrawers)
+                .addTags(woodWallCounters)
+                .addTags(woodWallSmallDrawers)
+                .addTags(simpleBunkLadders)
+                .addTags(classicBeds)
+                .addTags(logTables)
+                .addTags(PaladinFurnitureModBlocksItems.BASIC_LAMP)
+                .addTags(woodBasicCoffeeTables)
+                .addTags(woodModernCoffeeTables)
+                .addTags(woodClassicCoffeeTables)
+                .addTags(woodBasicDesks)
+                .addTags(woodBasicDeskCabinets);
 
         getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
-                .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
+                .addTags(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
 
         getOrCreateTagBuilder(BlockTags.BEDS)
-                .add(simpleBeds)
-                .add(classicBeds);
+                .addTags(simpleBeds)
+                .addTags(classicBeds);
 
         getOrCreateTagBuilder(BlockTags.CLIMBABLE)
-                .add(simpleBunkLadders);
+                .addTags(simpleBunkLadders);
 
         getOrCreateTagBuilder(PFMTags.TUCKABLE_BLOCKS)
-                .add(woodBasicTables)
-                .add(stoneBasicTables)
-                .add(woodClassicTables)
-                .add(stoneClassicTables)
-                .add(woodDinnerTables)
-                .add(stoneDinnerTables)
-                .add(woodModernDinnerTables)
-                .add(stoneModernDinnerTables)
-                .add(woodLogTables)
-                .add(stoneNaturalTables)
-                .add(logTables)
-                .add(woodBasicDesks)
-                .add(stoneBasicDesks);
+                .addTags(woodBasicTables)
+                .addTags(stoneBasicTables)
+                .addTags(woodClassicTables)
+                .addTags(stoneClassicTables)
+                .addTags(woodDinnerTables)
+                .addTags(stoneDinnerTables)
+                .addTags(woodModernDinnerTables)
+                .addTags(stoneModernDinnerTables)
+                .addTags(woodLogTables)
+                .addTags(stoneNaturalTables)
+                .addTags(logTables)
+                .addTags(woodBasicDesks)
+                .addTags(stoneBasicDesks);
 
         getOrCreateTagBuilder(PFMTags.FURNITURE)
-                .add(PaladinFurnitureModBlocksItems.BLOCKS.toArray(Block[]::new));
+                .addTags(PaladinFurnitureModBlocksItems.BLOCKS.toArray(Block[]::new));
 
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::generateTags);
     }

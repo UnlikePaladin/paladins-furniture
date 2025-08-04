@@ -30,6 +30,8 @@ import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.Hand;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
@@ -58,30 +60,30 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        super.readData(view);
         items = DefaultedList.ofSize(2, ItemStack.EMPTY);
-        toastProgress = nbt.getInt("toastProgress").orElse(0);
-        toasting = nbt.getBoolean("toasting").orElse(false);
-        smokeProgress = nbt.getInt("smokeProgress").orElse(0);
-        smoking = nbt.getBoolean("smoking").orElse(false);
-        if (nbt.contains("lastUser")) {
-            this.lastUser = UUID.fromString(nbt.getString("lastUser").orElse(""));
-        } else this.lastUser = null;
-        Inventories.readNbt(nbt, items, registryLookup);
+        toastProgress = view.getInt("toastProgress", 0);
+        toasting = view.getBoolean("toasting", false);
+        smokeProgress = view.getInt("smokeProgress", 0);
+        smoking = view.getBoolean("smoking", false);
+        view.getOptionalString("lastUser").ifPresent((str) -> {
+            this.lastUser = UUID.fromString(str);
+        });
+        Inventories.readData(view, items);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        nbt.putInt("toastProgress", toastProgress);
-        nbt.putBoolean("toasting", toasting);
-        nbt.putInt("smokeProgress", smokeProgress);
-        nbt.putBoolean("smoking", smoking);
+    protected void writeData(WriteView view) {
+        view.putInt("toastProgress", toastProgress);
+        view.putBoolean("toasting", toasting);
+        view.putInt("smokeProgress", smokeProgress);
+        view.putBoolean("smoking", smoking);
         if (this.lastUser == null) {
-            nbt.remove("lastUser");
-        } else nbt.putString("lastUser", this.lastUser.toString());
-        Inventories.writeNbt(nbt, items, registryLookup);
-        super.writeNbt(nbt, registryLookup);
+            view.remove("lastUser");
+        } else view.putString("lastUser", this.lastUser.toString());
+        Inventories.writeData(view, items);
+        super.writeData(view);
     }
 
     @Nullable

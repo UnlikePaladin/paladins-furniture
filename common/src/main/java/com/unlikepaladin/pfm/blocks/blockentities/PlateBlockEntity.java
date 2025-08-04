@@ -13,7 +13,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.NbtWriteView;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.Clearable;
+import net.minecraft.util.ErrorReporter;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.Nullable;
@@ -25,15 +29,16 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void readData(ReadView view) {
+        super.readData(view);
         this.itemInPlate.clear();
-        Inventories.readNbt(nbt, this.itemInPlate, registryLookup);
+        Inventories.readData(view, this.itemInPlate);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        this.saveInitialChunkData(nbt);
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        Inventories.writeData(view, this.itemInPlate);
     }
 
     @Override
@@ -54,12 +59,6 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
             return true;
         }
         return false;
-    }
-
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt) {
-        super.writeNbt(nbt, world.getRegistryManager());
-        Inventories.writeNbt(nbt, this.itemInPlate, true, world.getRegistryManager());
-        return nbt;
     }
 
     public ItemStack getItemInPlate() {

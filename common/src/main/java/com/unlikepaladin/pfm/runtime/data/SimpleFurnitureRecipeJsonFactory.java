@@ -70,7 +70,7 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
     }
 
     public SimpleFurnitureRecipeJsonFactory input(RegistryEntryList<Item> tag) {
-        return this.input(Ingredient.fromTag(tag));
+        return this.input(Ingredient.ofTag(tag));
     }
 
     public SimpleFurnitureRecipeJsonFactory input(ItemConvertible itemProvider) {
