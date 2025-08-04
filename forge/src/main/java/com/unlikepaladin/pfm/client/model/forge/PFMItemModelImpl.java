@@ -5,15 +5,18 @@ import com.unlikepaladin.pfm.client.model.PFMBakedModelGetQuadsExtension;
 import com.unlikepaladin.pfm.client.model.PFMItemModel;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.minecraft.client.render.item.ItemRenderState;
+import net.minecraft.client.render.item.model.BasicItemModel;
 import net.minecraft.client.render.item.model.ItemModel;
 import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
 import net.minecraft.client.render.item.tint.TintSource;
+import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
@@ -27,21 +30,27 @@ public class PFMItemModelImpl {
             if (((PFMForgeBakedModel) model).getItemDisplaySettings() != null)
                 ((PFMForgeBakedModel) model).getItemDisplaySettings().addSettings(layerRenderState, context);
 
+            List<BakedQuad> quads = new ArrayList<>();
             long seed = 42L;
             for (Direction direction : Direction.values()) {
                 random.setSeed(seed);
-                layerRenderState.getQuads().addAll(((PFMBakedModelGetQuadsExtension) model).getQuadsCached(direction, random));
+                quads.addAll(((PFMBakedModelGetQuadsExtension) model).getQuadsCached(direction, random));
             }
 
             random.setSeed(seed);
-            layerRenderState.getQuads().addAll(((PFMBakedModelGetQuadsExtension) model).getQuadsCached(null, random));
+            quads.addAll(((PFMBakedModelGetQuadsExtension) model).getQuadsCached(null, random));
+            layerRenderState.setVector(() -> BasicItemModel.bakeQuads(quads));
+            layerRenderState.getQuads().addAll(quads);
         } else {
             List<BlockModelPart> parts;
             parts = model.getParts(random);
+            List<BakedQuad> quads = new ArrayList<>();
             for (Direction direction : Direction.values()) {
-                layerRenderState.getQuads().addAll(parts.stream().flatMap(p -> p.getQuads(direction).stream()).toList());
+                quads.addAll(parts.stream().flatMap(p -> p.getQuads(direction).stream()).toList());
             }
-            layerRenderState.getQuads().addAll(parts.stream().flatMap(p -> p.getQuads(null).stream()).toList());
+            quads.addAll(parts.stream().flatMap(p -> p.getQuads(null).stream()).toList());
+            layerRenderState.setVector(() -> BasicItemModel.bakeQuads(quads));
+            layerRenderState.getQuads().addAll(quads);
         }
     }
 }
