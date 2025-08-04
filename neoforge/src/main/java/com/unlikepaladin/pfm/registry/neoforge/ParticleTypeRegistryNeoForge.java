@@ -10,7 +10,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
-@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "pfm")
 public class ParticleTypeRegistryNeoForge {
     @SubscribeEvent
     public static void register(RegisterEvent event) {

@@ -7,7 +7,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
-@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "pfm")
 public class StatisticsRegistryNeoForge {
     @SubscribeEvent
     public static void registerStatistics(RegisterEvent event) {

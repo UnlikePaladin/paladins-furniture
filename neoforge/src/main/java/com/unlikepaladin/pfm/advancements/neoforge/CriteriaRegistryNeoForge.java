@@ -11,7 +11,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.registries.RegisterEvent;
 
-@EventBusSubscriber(modid="pfm", bus= EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid="pfm")
 public class CriteriaRegistryNeoForge {
     @SubscribeEvent
     public static void registerCriteria(RegisterEvent event) {

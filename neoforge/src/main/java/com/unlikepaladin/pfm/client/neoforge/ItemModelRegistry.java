@@ -14,7 +14,7 @@ import net.neoforged.neoforge.client.event.RegisterItemModelsEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialBlockModelRendererEvent;
 import net.neoforged.neoforge.client.event.RegisterSpecialModelRendererEvent;
 
-@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = "pfm", value = Dist.CLIENT)
 public class ItemModelRegistry {
     @SubscribeEvent
     public static void registerItemModelTypes(RegisterItemModelsEvent event) {

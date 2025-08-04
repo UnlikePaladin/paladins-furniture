@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,26 +36,24 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
         return BlockEntityUpdateS2CPacket.create(this);
     }
 
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        Inventories.writeNbt(nbt, items, true, registryLookup);
-        return nbt;
+    protected NbtCompound saveInitialChunkData(RegistryWrapper.WrapperLookup registryLookup) {
+        return createNbt(registryLookup);
     }
 
     @Override
     public @NotNull NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return this.saveInitialChunkData(new NbtCompound(), registryLookup);
+        return this.saveInitialChunkData(registryLookup);
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        this.readNbt(tag, registryLookup);
+    public void handleUpdateTag(ReadView input) {
+        super.handleUpdateTag(input);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.onDataPacket(net, pkt, registryLookup);
+    public void onDataPacket(ClientConnection net, ReadView valueInput) {
+        super.onDataPacket(net, valueInput);
         this.getItems().clear();
-        Inventories.readNbt(pkt.getNbt(), this.items, registryLookup);
+        Inventories.readData(valueInput, this.items);
     }
 }

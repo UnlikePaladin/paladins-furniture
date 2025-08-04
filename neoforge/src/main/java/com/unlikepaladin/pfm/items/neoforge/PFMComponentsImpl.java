@@ -11,7 +11,7 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "pfm")
 public class PFMComponentsImpl {
     public static Map<Identifier, ComponentType<?>> components = new HashMap<>();
     public static <T> ComponentType<T> register(Identifier id, ComponentType<T> type) {

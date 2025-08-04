@@ -11,7 +11,7 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import java.io.IOException;
 import java.util.HashMap;
 
-@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
+@EventBusSubscriber(modid = "pfm", value = Dist.CLIENT)
 public class LeaveEventHandlerNeoForge {
     public static final HashMap<String, Object> originalConfigValues = new HashMap<>();
 

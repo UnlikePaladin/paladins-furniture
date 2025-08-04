@@ -8,6 +8,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -37,15 +38,14 @@ public class LampBlockEntityImpl extends LampBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        this.readNbt(tag, registryLookup);
+    public void handleUpdateTag(ReadView input) {
+        super.handleUpdateTag(input);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.onDataPacket(net, pkt, registryLookup);
-        this.color = DyeColor.byId(pkt.getNbt().getString("color").orElse("white"), DyeColor.WHITE);
-        this.variant = WoodVariantRegistry.getVariant(Identifier.tryParse(pkt.getNbt().getString("variant").orElse("minecraft:oak")));
+    public void onDataPacket(ClientConnection net, ReadView valueInput) {
+        super.onDataPacket(net, valueInput);
+        this.color = DyeColor.byId(valueInput.getString("color", "white"), DyeColor.WHITE);
+        this.variant = WoodVariantRegistry.getVariant(Identifier.tryParse(valueInput.getString("variant", "minecraft:oak")));
     }
-
 }

@@ -32,7 +32,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Supplier;
 
-@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "pfm")
 public class LateBlockRegistryImpl {
 
     public static Map<String, Block> blocks = new LinkedHashMap<>();

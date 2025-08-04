@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.BasicCoffeeTableBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BlockModelPart;
@@ -61,7 +62,7 @@ public class ForgeCoffeeBasicTableModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public void collectParts(Random random, List<BlockModelPart> parts, ModelData extraData, @Nullable RenderLayer renderType) {
+    public void collectParts(Random random, List<BlockModelPart> parts, ModelData extraData, @Nullable BlockRenderLayer renderType) {
         BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof BasicCoffeeTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             List<BlockModelPart> baseQuads = new ArrayList<>();

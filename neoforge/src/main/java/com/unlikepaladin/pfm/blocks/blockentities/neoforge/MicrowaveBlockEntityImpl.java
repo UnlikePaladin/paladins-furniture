@@ -13,6 +13,7 @@ import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.server.world.ServerWorld;
+import net.minecraft.storage.ReadView;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.chunk.WorldChunk;
@@ -40,24 +41,21 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
 
     @Override
     public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        NbtCompound nbt = super.toInitialChunkDataNbt(registryLookup);
-        nbt.putBoolean("isActive", this.isActive);
-        Inventories.writeNbt(nbt, this.inventory, registryLookup);
+        NbtCompound nbt = createNbt(registryLookup);
         return nbt;
     }
 
-
     @Override
-    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup lookupProvider) {
-        this.readNbt(tag, lookupProvider);
+    public void handleUpdateTag(ReadView input) {
+        this.readData(input);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup lookupProvider) {
-        super.onDataPacket(net, pkt, lookupProvider);
+    public void onDataPacket(ClientConnection net, ReadView valueInput) {
+        super.onDataPacket(net, valueInput);
         this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        this.isActive = pkt.getNbt().getBoolean("isActive").orElse(false);
-        Inventories.readNbt(pkt.getNbt(), this.inventory, lookupProvider);
+        this.isActive = valueInput.getBoolean("isActive", false);
+        Inventories.readData(valueInput, this.inventory);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends MicrowaveBlockEntity> getFactory() {

@@ -27,7 +27,7 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 
 import java.util.*;
 
-@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = "pfm")
 public class BlockItemRegistryNeoForge {
     @SubscribeEvent
     public static void registerBlocks(RegisterEvent event) {

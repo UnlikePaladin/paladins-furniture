@@ -19,16 +19,23 @@ import net.minecraft.SharedConstants;
 import net.minecraft.resource.metadata.PackResourceMetadata;
 import net.minecraft.text.Text;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.CreateSpecialBlockRendererEvent;
+import net.minecraftforge.client.event.RegisterColorHandlersEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddPackFindersEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.bus.BusGroup;
+import net.minecraftforge.eventbus.api.listener.Priority;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.IModBusEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.fml.loading.FMLPaths;
+import net.minecraftforge.registries.RegisterEvent;
 
 import java.io.IOException;
+import java.lang.invoke.MethodHandles;
 import java.util.Optional;
 
 
@@ -45,32 +52,34 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
             GENERAL_LOGGER.error("", e);
         }
         this.commonInit();
-        MinecraftForge.EVENT_BUS.register(EntityRegistryForge.class);
-        MinecraftForge.EVENT_BUS.register(BlockItemRegistryForge.class);
-        MinecraftForge.EVENT_BUS.register(StatisticsRegistryForge.class);
-        MinecraftForge.EVENT_BUS.register(ScreenHandlerRegistryForge.class);
-        MinecraftForge.EVENT_BUS.register(RecipeRegistryForge.class);
-        MinecraftForge.EVENT_BUS.register(BlockEntityRegistryForge.class);
-        MinecraftForge.EVENT_BUS.register(SoundRegistryForge.class);
-        MinecraftForge.EVENT_BUS.register(NetworkRegistryForge.class);
-        MinecraftForge.EVENT_BUS.register(PFMComponentsImpl.class);
+        BusGroup.DEFAULT.register(MethodHandles.lookup(), EntityRegistryForge.class);
+        BusGroup.DEFAULT.register(MethodHandles.lookup(), BlockItemRegistryForge.class);
+        BusGroup.DEFAULT.register(MethodHandles.lookup(), StatisticsRegistryForge.class);
+        BusGroup.DEFAULT.register(MethodHandles.lookup(), ScreenHandlerRegistryForge.class);
+        BusGroup.DEFAULT.register(MethodHandles.lookup(), RecipeRegistryForge.class);
+        BusGroup.DEFAULT.register(MethodHandles.lookup(), BlockEntityRegistryForge.class);
+        BusGroup.DEFAULT.register(MethodHandles.lookup(), SoundRegistryForge.class);
+        BusGroup.DEFAULT.register(MethodHandles.lookup(), NetworkRegistryForge.class);
+        BusGroup.DEFAULT.register(MethodHandles.lookup(), PFMComponentsImpl.class);
+        BusGroup modBusGroup = loadContext.getModBusGroup();
         if (isClient) {
             ItemModelRegistry.registerItemModelTypes();
-            loadContext.getModEventBus().addListener(EventPriority.LOW, ColorRegistryForge::registerBlockColors);
-            MinecraftForge.EVENT_BUS.addListener(ItemModelRegistry::registerSpecialModelRenderers);
+            var blockColorsBus = RegisterColorHandlersEvent.Block.getBus(modBusGroup);
+            blockColorsBus.addListener(Priority.LOW, ColorRegistryForge::registerBlockColors);
+            CreateSpecialBlockRendererEvent.BUS.addListener(ItemModelRegistry::registerSpecialModelRenderers);
             PaladinFurnitureModClientForge.registerCustomModels();
         }
         NetworkRegistryForge.registerPackets();
         LateBlockRegistryForge.addDynamicBlockRegistration(loadContext);
-        loadContext.getModEventBus().addListener(ItemGroupRegistryForge::registerItemGroups);
-        loadContext.getModEventBus().addListener(ItemGroupRegistryForge::addToVanillaItemGroups);
-        loadContext.getModEventBus().addListener(PaladinFurnitureModForge::generateResources);
+        RegisterEvent.getBus(modBusGroup).addListener(ItemGroupRegistryForge::registerItemGroups);
+        BuildCreativeModeTabContentsEvent.getBus(modBusGroup).addListener(ItemGroupRegistryForge::addToVanillaItemGroups);
+        AddPackFindersEvent.getBus(modBusGroup).addListener(PaladinFurnitureModForge::generateResources);
     }
 
     @SubscribeEvent
     public static void generateResources(AddPackFindersEvent event) {
         if (event.getPackType() == ResourceType.CLIENT_RESOURCES) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().packVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
             ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
                 @Override
                 public ResourcePack open(ResourcePackInfo info) {
@@ -89,7 +98,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
                 profileAdder.accept(ResourcePackProfile.create(new ResourcePackInfo("pfm-asset-resources", Text.literal("PFM Assets"), ResourcePackSource.NONE, Optional.of(new VersionedIdentifier(PaladinFurnitureMod.MOD_ID, "pfm_assets", Version.getCurrentVersion()))),  packFactory, ResourceType.CLIENT_RESOURCES, new ResourcePackPosition(true, ResourcePackProfile.InsertionPosition.BOTTOM, false)));
             });
         } else if (event.getPackType() == ResourceType.SERVER_DATA) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.SERVER_DATA), Optional.empty());
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().packVersion(ResourceType.SERVER_DATA), Optional.empty());
             ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
                 @Override
                 public ResourcePack open(ResourcePackInfo info) {

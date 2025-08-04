@@ -2,9 +2,9 @@ package com.unlikepaladin.pfm.client.model;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.ColorRegistry;
+import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.VariantHelper;
 import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.mixin.*;
@@ -34,10 +34,8 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
-import net.minecraft.state.property.Properties;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,12 +58,14 @@ public class PFMItemModel<T> implements ItemModel {
 
     @Override
     public void update(ItemRenderState state, ItemStack stack, ItemModelManager resolver, ItemDisplayContext displayContext, @Nullable ClientWorld world, @Nullable LivingEntity user, int seed) {
+        state.addModelKey(this);
         if (specialModelType != null) {
             ItemRenderState.LayerRenderState specialLayerRenderState = state.newLayer();
             if (model.get() instanceof AbstractBakedModel) {
                 ((AbstractBakedModel)model.get()).itemDisplaySettings.addSettings(specialLayerRenderState, displayContext);
             }
             specialLayerRenderState.setSpecialModel(this.specialModelType, this.specialModelType.getData(stack));
+            state.addModelKey(specialLayerRenderState);
         }
 
         state.markAnimated();
@@ -105,9 +105,10 @@ public class PFMItemModel<T> implements ItemModel {
             } else {
                 tintArray[index] = tintsToUse.get(index).getTint(stack, world, user);
             }
+            state.addModelKey(tintArray[index]);
         }
 
-        setProperties(stack);
+        setProperties(stack, state);
 
         Random random = Random.create(seed);
         // finally emit item quads
@@ -119,11 +120,16 @@ public class PFMItemModel<T> implements ItemModel {
         throw new AssertionError();
     }
 
-    protected void setProperties(ItemStack stack) {
+    protected void setProperties(ItemStack stack, ItemRenderState state) {
         if (stack.getItem() instanceof BlockItem && model.get() instanceof PFMBakedModelSetPropertiesExtension) {
-            ((PFMBakedModelSetPropertiesExtension) model.get()).setBlockStateProperty(((BlockItem) stack.getItem()).getBlock().getDefaultState());
-            if (stack.get(PFMComponents.VARIANT_COMPONENT) != null)
-                ((PFMBakedModelSetPropertiesExtension) model.get()).setVariant(VariantHelper.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT)));
+            BlockState blockState = ((BlockItem) stack.getItem()).getBlock().getDefaultState();
+            ((PFMBakedModelSetPropertiesExtension) model.get()).setBlockStateProperty(blockState);
+            state.addModelKey(blockState);
+            if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
+                VariantBase<?> variantBase = VariantHelper.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
+                ((PFMBakedModelSetPropertiesExtension) model.get()).setVariant(variantBase);
+                state.addModelKey(variantBase);
+            }
         }
     }
 

@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.client.model.fabric;
 
 import com.unlikepaladin.pfm.client.model.PFMItemModel;
+import net.minecraft.client.render.item.ItemRenderState;
 import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
 import net.minecraft.client.render.item.tint.TintSource;
 import net.minecraft.client.render.model.BlockStateModel;
@@ -15,8 +16,8 @@ public class PFMFabricItemModel<T> extends PFMItemModel<T>  {
     }
 
     @Override
-    protected void setProperties(ItemStack stack) {
-        super.setProperties(stack);
+    protected void setProperties(ItemStack stack, ItemRenderState state) {
+        super.setProperties(stack, state);
         //TODO FIX ME
         /*
         BakedModel model1 = UnwrappableBakedModel.unwrap(this.model, m -> m instanceof PFMBakedModelSetPropertiesExtension);

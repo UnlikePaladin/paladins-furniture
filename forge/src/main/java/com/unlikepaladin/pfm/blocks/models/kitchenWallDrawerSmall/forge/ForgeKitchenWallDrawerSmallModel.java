@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.KitchenWallDrawerSmallBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BlockModelPart;
@@ -27,7 +28,7 @@ public class ForgeKitchenWallDrawerSmallModel extends PFMForgeBakedModel {
     }
 
         @Override
-    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable BlockRenderLayer renderType) {
         BlockState state = extraData.get(STATE);
         if (state != null && extraData.get(OPEN) != null) {
             int openOffset = extraData.get(OPEN) ? 1 : 0;

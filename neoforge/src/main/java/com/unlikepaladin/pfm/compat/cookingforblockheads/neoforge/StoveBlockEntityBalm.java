@@ -30,6 +30,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
@@ -52,7 +53,10 @@ import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.property.Properties;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.text.Text;
+import net.minecraft.text.TextCodecs;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Direction;
@@ -335,42 +339,39 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     }
 
     @Override
-    protected void readNbt(NbtCompound tagCompound, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(tagCompound, registryLookup);
-        this.container.deserialize(tagCompound.getCompound("ItemHandler").orElse(new NbtCompound()), registryLookup);
-        this.furnaceBurnTime = tagCompound.getShort("BurnTime").orElse((short) 0);
-        this.currentItemBurnTime = tagCompound.getShort("CurrentItemBurnTime").orElse((short) 0);
-        this.slotCookTime = tagCompound.getIntArray("CookTimes").orElse(new int[0]);
+    protected void readData(ReadView view) {
+        super.readData(view);
+        view.getOptionalReadView("ItemHandler").ifPresent((it) -> {
+            Inventories.readData(it, this.container.getItems());
+        });
+        this.furnaceBurnTime = view.getShort("BurnTime", (short) 0);
+        this.currentItemBurnTime = view.getShort("CurrentItemBurnTime", (short) 0);
+        this.slotCookTime = view.getOptionalIntArray("CookTimes").orElse(new int[0]);
         if (this.slotCookTime.length != 9) {
             this.slotCookTime = new int[9];
         }
 
-        this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade").orElse(false);
-        this.energyStorage.setEnergy(tagCompound.getInt("EnergyStored").orElse(0));
-        if (tagCompound.contains("CustomName")) {
-            this.customName = Text.Serialization.fromJson(tagCompound.getString("CustomName").orElse(""), registryLookup);
-        }
-
+        this.hasPowerUpgrade = view.getBoolean("HasPowerUpgrade", false);
+        this.energyStorage.setEnergy(view.getInt("EnergyStored", 0));
+        this.customName = view.read("CustomNameV2", TextCodecs.CODEC).orElse(null);
     }
 
     @Override
-    protected void writeNbt(NbtCompound tagCompound, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(tagCompound, registryLookup);
-        tagCompound.put("ItemHandler", this.container.serialize(registryLookup));
-        tagCompound.putShort("BurnTime", (short)this.furnaceBurnTime);
-        tagCompound.putShort("CurrentItemBurnTime", (short)this.currentItemBurnTime);
-        tagCompound.putIntArray("CookTimes", ArrayUtils.clone(this.slotCookTime));
-        tagCompound.putBoolean("HasPowerUpgrade", this.hasPowerUpgrade);
-        tagCompound.putInt("EnergyStored", this.energyStorage.getEnergy());
-        if (this.customName != null) {
-            tagCompound.putString("CustomName", Text.Serialization.toJsonString(this.customName, registryLookup));
-        }
+    protected void writeData(WriteView view) {
+        super.writeData(view);
+        Inventories.writeData(view.get("ItemHandler"), this.container.getItems());
+        view.putShort("BurnTime", (short)this.furnaceBurnTime);
+        view.putShort("CurrentItemBurnTime", (short)this.currentItemBurnTime);
+        view.putIntArray("CookTimes", ArrayUtils.clone(this.slotCookTime));
+        view.putBoolean("HasPowerUpgrade", this.hasPowerUpgrade);
+        view.putInt("EnergyStored", this.energyStorage.getEnergy());
+        view.putNullable("CustomNameV2", TextCodecs.CODEC, this.customName);
     }
 
     @Override
-    protected void writeUpdateTag(NbtCompound tag) {
-        this.writeNbt(tag, this.world.getRegistryManager());
-        super.writeUpdateTag(tag);
+    protected void writeUpdateTag(WriteView view) {
+        this.writeData(view);
+        super.writeUpdateTag(view);
     }
 
     public boolean hasPowerUpgrade() {
@@ -481,21 +482,13 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
 
     @Override
     public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup provider) {
-        NbtCompound nbt = super.toInitialChunkDataNbt(provider);
-        nbt.put("ItemHandler", this.container.serialize(provider));
-        return nbt;
+        return createNbt(provider);
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup holders) {
-        this.readNbt(tag, holders);
-        super.handleUpdateTag(tag, holders);
-    }
-
-    @Override
-    public void onDataPacket(ClientConnection connection, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup lookup) {
-        super.onDataPacket(connection, pkt, lookup);
-        this.container.deserialize(pkt.getNbt().getCompound("ItemHandler").orElse(new NbtCompound()), lookup);
+    public void handleUpdateTag(ReadView input) {
+        this.readData(input);
+        super.handleUpdateTag(input);
     }
 
     protected void onContainerOpen(World world, BlockPos pos, BlockState state) {

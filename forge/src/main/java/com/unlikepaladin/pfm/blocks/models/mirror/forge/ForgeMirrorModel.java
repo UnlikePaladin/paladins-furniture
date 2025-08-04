@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.render.BlockRenderLayer;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BlockModelPart;
@@ -29,7 +30,7 @@ public class ForgeMirrorModel extends PFMForgeBakedModel {
     public static ModelProperty<ModelBitSetProperty> DIRECTIONS = new ModelProperty<>();
 
     @Override
-    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable RenderLayer renderType) {
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable BlockRenderLayer renderType) {
         BlockState state = extraData.get(STATE);
         List<BlockModelPart> quads = new ArrayList<>();
         quads.add(getTemplateBakedModels().get((0)));

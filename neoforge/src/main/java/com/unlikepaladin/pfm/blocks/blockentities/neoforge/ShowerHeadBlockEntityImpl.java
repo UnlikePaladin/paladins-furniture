@@ -7,6 +7,7 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.ClientConnection;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,9 +29,9 @@ public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity {
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup lookupProvider) {
-        super.onDataPacket(net, pkt, lookupProvider);
-        this.isOpen = pkt.getNbt().getBoolean("isOpen").orElse(false);
+    public void onDataPacket(ClientConnection net, ReadView valueInput) {
+        super.onDataPacket(net, valueInput);
+        this.isOpen = valueInput.getBoolean("isOpen", false);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends ShowerHeadBlockEntity> getFactory() {

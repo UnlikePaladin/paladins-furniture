@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.registry.forge;
 
 import com.unlikepaladin.pfm.registry.ScreenHandlerRegistry;
 import net.minecraft.screen.ScreenHandlerType;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;

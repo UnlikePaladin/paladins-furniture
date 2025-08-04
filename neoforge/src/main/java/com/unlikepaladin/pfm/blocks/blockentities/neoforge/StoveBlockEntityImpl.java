@@ -13,6 +13,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,21 +37,20 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
 
     @Override
     public @NotNull NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        NbtCompound nbt =  this.saveInitialChunkData(new NbtCompound(), registryLookup);
-        Inventories.writeNbt(nbt, this.itemsBeingCooked, true, registryLookup);
-        return nbt;
+        return this.createNbt(registryLookup);
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        this.readData(tag, registryLookup);
+    public void handleUpdateTag(ReadView input) {
+        super.handleUpdateTag(input);
+        this.readData(input);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.onDataPacket(net, pkt, registryLookup);
+    public void onDataPacket(ClientConnection net, ReadView valueInput) {
+        super.onDataPacket(net, valueInput);
         this.itemsBeingCooked.clear();
-        Inventories.readNbt(pkt.getNbt(), this.itemsBeingCooked, registryLookup);
+        Inventories.readData(valueInput, this.itemsBeingCooked);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends BlockEntity> getFactory() {

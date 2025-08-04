@@ -10,6 +10,7 @@ import net.minecraft.network.packet.Packet;
 import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.storage.ReadView;
 import net.minecraft.util.math.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,21 +29,19 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
 
     @Override
     public @NotNull NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        NbtCompound nbt = this.saveInitialChunkData(new NbtCompound());
-        Inventories.writeNbt(nbt, this.itemInPlate, true, registryLookup);
-        return nbt;
+        return this.createNbt(registryLookup);
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        this.readNbt(tag, registryLookup);
+    public void handleUpdateTag(ReadView input) {
+        super.handleUpdateTag(input);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.onDataPacket(net, pkt, registryLookup);
+    public void onDataPacket(ClientConnection net, ReadView valueInput) {
+        super.onDataPacket(net, valueInput);
         this.itemInPlate.clear();
-        Inventories.readNbt(pkt.getNbt(), this.itemInPlate, registryLookup);
+        Inventories.readData(valueInput, this.itemInPlate);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends PlateBlockEntity> getFactory() {
