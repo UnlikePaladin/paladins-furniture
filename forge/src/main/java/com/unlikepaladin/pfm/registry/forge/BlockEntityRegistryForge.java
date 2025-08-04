@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Stream;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class BlockEntityRegistryForge {
 
     @SubscribeEvent

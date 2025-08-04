@@ -11,7 +11,6 @@ import net.minecraftforge.registries.RegisterEvent;
 import java.util.HashMap;
 import java.util.Map;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class PFMComponentsImpl {
     public static Map<Identifier, ComponentType<?>> components = new HashMap<>();
     public static <T> ComponentType<T> register(Identifier id, ComponentType<T> type) {

@@ -51,17 +51,17 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
             GENERAL_LOGGER.error("Failed to initialize Paladin's Furniture configuration, default values will be used instead");
             GENERAL_LOGGER.error("", e);
         }
+        BusGroup modBusGroup = loadContext.getModBusGroup();
         this.commonInit();
         BusGroup.DEFAULT.register(MethodHandles.lookup(), EntityRegistryForge.class);
         BusGroup.DEFAULT.register(MethodHandles.lookup(), BlockItemRegistryForge.class);
-        BusGroup.DEFAULT.register(MethodHandles.lookup(), StatisticsRegistryForge.class);
-        BusGroup.DEFAULT.register(MethodHandles.lookup(), ScreenHandlerRegistryForge.class);
+        RegisterEvent.getBus(modBusGroup).addListener(StatisticsRegistryForge::registerStatistics);
+        RegisterEvent.getBus(modBusGroup).addListener(ScreenHandlerRegistryForge::registerScreenHandlers);
         BusGroup.DEFAULT.register(MethodHandles.lookup(), RecipeRegistryForge.class);
-        BusGroup.DEFAULT.register(MethodHandles.lookup(), BlockEntityRegistryForge.class);
-        BusGroup.DEFAULT.register(MethodHandles.lookup(), SoundRegistryForge.class);
+        RegisterEvent.getBus(modBusGroup).addListener(BlockEntityRegistryForge::registerEntities);
+        RegisterEvent.getBus(modBusGroup).addListener(SoundRegistryForge::registerSounds);
         BusGroup.DEFAULT.register(MethodHandles.lookup(), NetworkRegistryForge.class);
-        BusGroup.DEFAULT.register(MethodHandles.lookup(), PFMComponentsImpl.class);
-        BusGroup modBusGroup = loadContext.getModBusGroup();
+        RegisterEvent.getBus(modBusGroup).addListener(PFMComponentsImpl::registerComponents);
         if (isClient) {
             ItemModelRegistry.registerItemModelTypes();
             var blockColorsBus = RegisterColorHandlersEvent.Block.getBus(modBusGroup);

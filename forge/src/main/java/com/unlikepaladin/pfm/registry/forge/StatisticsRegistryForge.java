@@ -9,7 +9,6 @@ import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegisterEvent;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class StatisticsRegistryForge {
     @SubscribeEvent
     public static void registerStatistics(RegisterEvent event) {

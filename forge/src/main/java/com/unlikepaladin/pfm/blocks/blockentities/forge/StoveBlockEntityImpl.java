@@ -41,15 +41,15 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
 
     @Override
     public void handleUpdateTag(ReadView tag, RegistryWrapper.WrapperLookup holders) {
-        super.handleUpdateTag(tag, holders);
         this.readData(tag);
+        super.handleUpdateTag(tag, holders);
     }
 
     @Override
     public void onDataPacket(ClientConnection connection, ReadView data, RegistryWrapper.WrapperLookup lookup) {
-        super.onDataPacket(connection, data, lookup);
         this.itemsBeingCooked.clear();
         Inventories.readData(data, this.itemsBeingCooked);
+        super.onDataPacket(connection, data, lookup);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends BlockEntity> getFactory() {

@@ -11,7 +11,6 @@ import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.Map;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SoundRegistryForge {
     @SubscribeEvent
     public static void registerSounds(RegisterEvent event) {
