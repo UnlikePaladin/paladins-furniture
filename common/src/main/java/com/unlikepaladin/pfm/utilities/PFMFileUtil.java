@@ -8,6 +8,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 public class PFMFileUtil {
 
@@ -65,6 +66,11 @@ public class PFMFileUtil {
 
     @ExpectPlatform
     public static boolean isModLoaded(String modId) {
+        throw new AssertionError();
+    }
+
+    @ExpectPlatform
+    public static Optional<String> getVersion(String modId) {
         throw new AssertionError();
     }
 }
