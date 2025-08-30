@@ -22,7 +22,8 @@
     "PFMMixinClientPacketListener",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSpriteAccessor",
-    "PFMSplashOverlayMixin"
+    "PFMSplashOverlayMixin",
+    "PFMTitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
