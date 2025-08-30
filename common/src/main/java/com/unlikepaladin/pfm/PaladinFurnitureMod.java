@@ -113,14 +113,21 @@ public class PaladinFurnitureMod {
 		throw new AssertionError();
 	}
 
+	private static Boolean optifine = null;
 	public static boolean isOptifineLoaded() {
-		try {
-			Class.forName("net.optifine.shaders.Shaders");
-			return true;
-		} catch (ClassNotFoundException e) {
-			return false;
+		if (optifine == null) {
+			try {
+				Class.forName("net.optifine.shaders.Shaders");
+				optifine = true;
+				return true;
+			} catch (ClassNotFoundException e) {
+				optifine = false;
+				return false;
+			}
 		}
+		return optifine;
 	}
+
 	public enum Loader implements StringIdentifiable {
 		FORGE("forge"),
 		FABRIC_LIKE("fabric_like");
