@@ -2,6 +2,8 @@ package com.unlikepaladin.pfm.utilities.forge;
 
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.minecraft.resource.ResourcePack;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.loading.FMLLoader;
 import net.minecraftforge.fml.loading.FMLPaths;
 
 import java.nio.file.Path;
@@ -19,5 +21,9 @@ public class PFMFileUtilImpl {
 
     public static PFMFileUtil.ModLoader getModLoader() {
         return PFMFileUtil.ModLoader.MINECRAFTFORGE;
+    }
+
+    public static boolean isModLoaded(String modId) {
+        return ModList.get().isLoaded(modId);
     }
 }

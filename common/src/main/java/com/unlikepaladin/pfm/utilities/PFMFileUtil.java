@@ -62,4 +62,9 @@ public class PFMFileUtil {
             return loader;
         }
     }
+
+    @ExpectPlatform
+    public static boolean isModLoaded(String modId) {
+        throw new AssertionError();
+    }
 }

@@ -17,6 +17,7 @@ import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypeAccessor;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
+import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.block.BlockState;
@@ -45,6 +46,9 @@ public class PaladinFurnitureMod {
 	public static boolean isClient = false;
 	public static List<PFMModCompatibility> pfmModCompatibilities = new ArrayList<>();
 	public void commonInit() {
+		if (PFMFileUtil.isModLoaded("connectormod")) {
+			GENERAL_LOGGER.error("Sinytra Connector has been detected, this mod can cause rendering and other issues. PFM is not responsible for any issues it may cause.");
+		}
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.

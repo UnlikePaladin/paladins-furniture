@@ -27,4 +27,8 @@ public class PFMFileUtilImpl {
     public static PFMFileUtil.ModLoader getModLoader() {
         return PFMFileUtil.ModLoader.FABRIC;
     }
+
+    public static boolean isModLoaded(String modId) {
+        return FabricLoader.getInstance().isModLoaded(modId);
+    }
 }
