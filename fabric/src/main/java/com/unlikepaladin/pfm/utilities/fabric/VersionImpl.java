@@ -12,7 +12,7 @@ import java.util.Optional;
 public class VersionImpl {
     public static boolean getVersion(String targetVersionNum) {
         Optional<ModContainer> modContainer = FabricLoader.getInstance().getModContainer("pfm");
-        if (modContainer.isPresent()) {
+        if (!modContainer.isPresent()) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Couldn't find container for PFM, something is incredibly wrong");
             return false;
         }
@@ -29,7 +29,7 @@ public class VersionImpl {
     }
 
     public static String getCurrentVersion() {
-        if (FabricLoader.getInstance().getModContainer("pfm").isEmpty()) {
+        if (!FabricLoader.getInstance().getModContainer("pfm").isPresent()) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Couldn't find container for PFM, something is incredibly wrong");
             return "0";
         }

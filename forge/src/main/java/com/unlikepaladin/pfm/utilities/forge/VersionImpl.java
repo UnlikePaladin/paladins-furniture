@@ -14,7 +14,7 @@ import java.util.Optional;
 public class VersionImpl {
     public static boolean getVersion(String targetVersionNum) {
         Optional<? extends ModContainer> modInfo = ModList.get().getModContainerById("pfm");
-        if (modInfo.isEmpty()) {
+        if (!modInfo.isPresent()) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Couldn't find container for PFM, something is incredibly wrong");
             return false;
         }
