@@ -213,6 +213,9 @@
   "pfm.compat.failure.reason.indiumNotFound": "To use Paladin's Furniture mod with Sodium you will need Indium. Please download the latest version of it, place it on your mods folder, then re-launch the game.",
   "pfm.compat.failure.indiumDownload": "Download Indium",
   "pfm.compat.failure.title": "Paladin's Furniture Mod failed to load!",
+  "pfm.compat.issue.title": "Paladin's Furniture Mod detected an issue!",
+  "pfm.compat.issue.reason.connectorMod": "The Sinytra Connector Mod has been detected, this mod can introduce severe rendering issues such as invisible furniture. The game is still playable but at your own risk. This is fixable on the Forgified Fabric API Mod's Side, not Paladin's Furniture, the link is provided, feel free to upvote the issue.",
+  "pfm.compat.issue.connectorReport": "Open Issue",
 
   "emi.category.pfm.freezer": "Freezing",
   "emi.category.pfm.furniture": "Workbench",
