@@ -1,8 +1,4 @@
-#### PFM 1.4.3 Changes and Fixes:
-
-- 1.21.1 exclusive fixes a crash when using a block display on a lamp
-
-#### PFM 1.4.2 Changes and Fixes:
+#### PFM 1.4.4 Changes and Fixes:
 
 - Fix random crashes with block rendering on Forge and Neo
 - Fix lag when checking for Optifine
@@ -11,6 +7,11 @@
 - Released for 1.21.5 and 1.21.8
 - Added a warning screen when Connector Mod is used
 - Fix random crashes related to blocks with color like sinks or toilets
+- Fix missing recipes for some furniture sets like Concrete or Dark Oak Deepslate
+- Add changes from 1.4.3 
+
+#### PFM 1.4.3 Changes and Fixes:
+- 1.21.1 exclusive fixes a crash when using a block display on a lamp
 
 #### PFM 1.4.2 Changes and Fixes:
 
