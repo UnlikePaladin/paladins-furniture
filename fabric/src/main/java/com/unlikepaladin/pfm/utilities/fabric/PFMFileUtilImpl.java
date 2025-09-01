@@ -7,6 +7,7 @@ import net.minecraft.resource.ResourcePack;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class PFMFileUtilImpl {
     public static Path getGamePath() {
@@ -19,5 +20,16 @@ public class PFMFileUtilImpl {
 
     public static PFMFileUtil.ModLoader getModLoader() {
         return PFMFileUtil.ModLoader.FABRIC;
+    }
+
+    public static boolean isModLoaded(String modId) {
+        return FabricLoader.getInstance().isModLoaded(modId);
+    }
+
+    public static Optional<String> getVersion(String modId) {
+        if (FabricLoader.getInstance().isModLoaded(modId)) {
+            return Optional.of(FabricLoader.getInstance().getModContainer(modId).get().getMetadata().getVersion().getFriendlyString());
+        }
+        return Optional.empty();
     }
 }

@@ -154,10 +154,10 @@ public class ColorRegistry {
     }
 
     private static BlockColorProvider addToiletColor() {
-        return (state, view, pos, index) -> view != null ? state.get(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : 0x534230 : 0xFFFFFF;
+        return (state, view, pos, index) -> view != null && state.get(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : state.get(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? 0x3c44a9 : 0x534230;
     }
 
     private static BlockColorProvider addWaterColor() {
-        return (state, view, pos, index) -> index == 1 ? view != null ? BiomeColors.getWaterColor(view, pos) : 0x3c44a9 : 0xFFFFFF;
+        return (state, view, pos, index) -> view != null && index == 1 ? BiomeColors.getWaterColor(view, pos) : index == 1 ? 0x3c44a9 : 0xFFFFFF;
     }
 }
