@@ -18,7 +18,8 @@
     "PFMLanguageManagerAccessor",
     "PFMMixinClientPacketListener",
     "PFMReloadableResourceManagerImplMixin",
-    "PFMSplashOverlayMixin"
+    "PFMSplashOverlayMixin",
+    "PFMTitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
