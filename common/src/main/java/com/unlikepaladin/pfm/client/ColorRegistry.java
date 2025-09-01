@@ -32,15 +32,17 @@ public class ColorRegistry {
         registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB, addWaterColor());
         registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_SINK, addWaterColor());
         registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_LAMP, (state, world, pos, tintIndex) -> {
-            BlockEntity entity = world.getBlockEntity(pos);
-            if (entity != null && tintIndex == 1) {
-                if (entity instanceof LampBlockEntity) {
-                    DyeColor color = ((LampBlockEntity)entity).getPFMColor();
-                    return color.getMapColor().color;
-                }
-            } else if (entity != null && tintIndex == 0) {
-                if (entity instanceof LampBlockEntity && getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()) != null) {
-                    return getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()).getColor(state, world, pos, tintIndex);
+            if (world != null)    {
+                BlockEntity entity = world.getBlockEntity(pos);
+                if (entity != null && tintIndex == 1) {
+                    if (entity instanceof LampBlockEntity) {
+                        DyeColor color = ((LampBlockEntity)entity).getPFMColor();
+                        return color.getMapColor().color;
+                    }
+                } else if (entity != null && tintIndex == 0) {
+                    if (entity instanceof LampBlockEntity && getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()) != null) {
+                        return getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()).getColor(state, world, pos, tintIndex);
+                    }
                 }
             }
             return 0xFFFFFF;
@@ -152,10 +154,10 @@ public class ColorRegistry {
     }
 
     private static BlockColorProvider addToiletColor() {
-        return (state, view, pos, index) -> state.get(BasicToiletBlock.TOILET_STATE) !=  ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : 0x534230;
+        return (state, view, pos, index) -> view != null && state.get(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : state.get(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? 0x3c44a9 : 0x534230;
     }
 
     private static BlockColorProvider addWaterColor() {
-        return (state, view, pos, index) -> index == 1 ? BiomeColors.getWaterColor(view, pos) : 0xFFFFFF;
+        return (state, view, pos, index) -> view != null && index == 1 ? BiomeColors.getWaterColor(view, pos) : index == 1 ? 0x3c44a9 : 0xFFFFFF;
     }
 }
