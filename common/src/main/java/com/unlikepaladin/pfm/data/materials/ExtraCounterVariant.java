@@ -56,7 +56,7 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
         this.secondaryBlock = secondaryBlock;
     }
     ExtraCounterVariant(Block baseBlock, Block secondaryBlock, String name) {
-        this(Identifier.of("", name), baseBlock, secondaryBlock);
+        this(Identifier.of("minecraft", name), baseBlock, secondaryBlock);
     }
 
     @Override
