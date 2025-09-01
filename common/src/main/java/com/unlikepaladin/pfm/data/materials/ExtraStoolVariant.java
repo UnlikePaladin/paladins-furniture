@@ -45,7 +45,7 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
         this.secondaryBlock = secondaryBlock;
     }
     ExtraStoolVariant(Block baseBlock, Block secondaryBlock, String name) {
-        this(Identifier.of("", name), baseBlock, secondaryBlock);
+        this(Identifier.of("minecraft", name), baseBlock, secondaryBlock);
     }
 
     @Override

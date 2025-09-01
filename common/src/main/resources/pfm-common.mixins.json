@@ -29,7 +29,8 @@
     "PFMReloadableResourceManagerImplMixin",
     "RangeDispatchItemModelAccessor",
     "SelectItemModelAccessor",
-    "PFMSplashOverlayMixin"
+    "PFMSplashOverlayMixin",
+    "PFMTitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

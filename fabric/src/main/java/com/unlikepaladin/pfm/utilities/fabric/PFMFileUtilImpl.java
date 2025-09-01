@@ -9,6 +9,7 @@ import org.jetbrains.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 public class PFMFileUtilImpl {
     @Nullable
@@ -28,5 +29,16 @@ public class PFMFileUtilImpl {
 
     public static MinecraftServer getCurrentServer() {
         return currentServer;
+    }
+
+    public static boolean isModLoaded(String modId) {
+        return FabricLoader.getInstance().isModLoaded(modId);
+    }
+
+    public static Optional<String> getVersion(String modId) {
+        if (FabricLoader.getInstance().isModLoaded(modId)) {
+            return Optional.of(FabricLoader.getInstance().getModContainer(modId).get().getMetadata().getVersion().getFriendlyString());
+        }
+        return Optional.empty();
     }
 }
