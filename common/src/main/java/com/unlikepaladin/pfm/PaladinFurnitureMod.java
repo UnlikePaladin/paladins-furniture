@@ -19,6 +19,7 @@ import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypeAccessor;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
+import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
@@ -53,6 +54,9 @@ public class PaladinFurnitureMod {
 	public static boolean isClient = false;
 	public static List<PFMModCompatibility> pfmModCompatibilities = new ArrayList<>();
 	public void commonInit() {
+		if (PFMFileUtil.isModLoaded("connectormod")) {
+			GENERAL_LOGGER.error("Sinytra Connector has been detected, this mod can cause rendering and other issues. PFM is not responsible for any issues it may cause.");
+		}
 		// This code runs as soon as Minecraft is in a mod-load-ready state.
 		// However, some things (like resources) may still be uninitialized.
 		// Proceed with mild caution.
@@ -102,14 +106,21 @@ public class PaladinFurnitureMod {
 		throw new AssertionError();
 	}
 
+	private static Boolean optifine = null;
 	public static boolean isOptifineLoaded() {
-		try {
-			Class.forName("net.optifine.shaders.Shaders");
-			return true;
-		} catch (ClassNotFoundException e) {
-			return false;
+		if (optifine == null) {
+			try {
+				Class.forName("net.optifine.shaders.Shaders");
+				optifine = true;
+				return true;
+			} catch (ClassNotFoundException e) {
+				optifine = false;
+				return false;
+			}
 		}
+		return optifine;
 	}
+
 	public enum Loader implements StringIdentifiable {
 		FORGE("forge"),
 		FABRIC_LIKE("fabric_like");
