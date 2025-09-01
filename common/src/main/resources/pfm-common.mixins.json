@@ -32,7 +32,8 @@
     "PFMSplashOverlayMixin",
     "PFMTitleScreenMixin",
     "RangeDispatchItemModelAccessor",
-    "SelectItemModelAccessor"
+    "SelectItemModelAccessor",
+    "PFMTitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1
