@@ -69,7 +69,8 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
         if (!namespace.equals("cozy_home") && name != null && !namespace.equals("securitycraft") &&
                 !namespace.equals("absentbydesign") && !(namespace.equals("terrestria") && path.contains("sakura")) &&
                 !(namespace.equals("betternether") && path.contains("nether_mushroom")) && !namespace.equals("chipped")
-                && !(namespace.equals("regions_unexplored") && path.contains("alpha")) && !namespace.equals("modernlife")) {
+                && !(namespace.equals("regions_unexplored") && path.contains("alpha")) && !namespace.equals("modernlife")
+                && !namespace.equals("excessive_building")) {
 
             BlockState state = baseBlock.getDefaultState();
             // can't check if the block is a full one, so I do this. Adding some checks here
