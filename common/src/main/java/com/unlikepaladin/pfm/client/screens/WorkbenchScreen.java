@@ -3,10 +3,12 @@ package com.unlikepaladin.pfm.client.screens;
 import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
+import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.search.SearchManager;
 import net.minecraft.client.search.SearchableContainer;
 import net.minecraft.client.sound.PositionedSoundInstance;
@@ -27,11 +29,13 @@ import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Language;
 import net.minecraft.util.math.MathHelper;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     private static final Identifier TEXTURE = new Identifier("pfm:textures/gui/container/working_table.png");
@@ -121,21 +125,10 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             this.handler.searching = false;
         } else {
             this.handler.updateInput();
-            SearchableContainer<ItemStack> searchable;
-            if (string.startsWith("#")) {
-                string = string.substring(1);
-                searchable = this.client.getSearchableContainer(SearchManager.ITEM_TAG);
-                this.searchForTags(string);
-            } else {
-                searchable = this.client.getSearchableContainer(SearchManager.ITEM_TOOLTIP);
-            }
-            List<Item> items = new ArrayList<>();
-            searchable.findAll(string.toLowerCase(Locale.ROOT)).forEach(itemStack -> items.add(itemStack.getItem()));
-            this.handler.getSortedRecipes().forEach(furnitureRecipe -> {
-                if (items.contains(furnitureRecipe.getOutput().getItem())) {
-                    this.handler.getSearchableRecipes().add(furnitureRecipe);
-                }
-            });
+            List<FurnitureRecipe.CraftableFurnitureRecipe> filteredRecipes = handler.getSortedRecipes().stream()
+                    .filter(recipe -> I18n.translate(recipe.getOutput().getTranslationKey())
+                    .toLowerCase().contains(string.trim().toLowerCase())).toList();
+            this.handler.getSearchableRecipes().addAll(filteredRecipes);
             this.handler.searching = true;
         }
         this.scrollAmount = 0.0f;
