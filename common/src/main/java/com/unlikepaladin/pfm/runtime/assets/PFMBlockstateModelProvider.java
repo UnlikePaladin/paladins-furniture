@@ -204,6 +204,11 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             provider.getParent().log("Basic Desk Cabinets");
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMap(), "desk_cabinet_basic", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
             generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), "desk_cabinet_basic", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+
+            provider.getParent().log("Classic Desks");
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskBlock.class).getVariantToBlockMap(), "desk_classic", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskBlock.class).getVariantToBlockMapNonBase(), "desk_classic", PFMBlockStateModelGenerator::createOrientableUvLockedBlock);
+
         }
 
         public void registerNightStands() {

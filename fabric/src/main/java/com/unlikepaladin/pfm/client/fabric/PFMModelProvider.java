@@ -12,6 +12,7 @@ import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel
 import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
 import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
 import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
+import com.unlikepaladin.pfm.blocks.models.classicDesk.UnbakedClassicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
@@ -146,6 +147,9 @@ public class PFMModelProvider implements ModelResourceProvider {
         }
         else if (UnbakedBasicDeskCabinetModel.MODEL_IDS.contains(resourceId)){
             return new UnbakedBasicDeskCabinetModel();
+        }
+        else if (UnbakedClassicDeskModel.MODEL_IDS.contains(resourceId)){
+            return new UnbakedClassicDeskModel();
         }
         else
             return null;

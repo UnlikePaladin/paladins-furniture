@@ -62,6 +62,7 @@ public class PFMTagProvider extends PFMProvider {
         ClassicCoffeeTableBlock[] stoneClassicCoffeeTables = ClassicCoffeeTableBlock.streamStoneClassicTables().map(FurnitureBlock::getBlock).toArray(ClassicCoffeeTableBlock[]::new);
         BasicDeskBlock[] stoneBasicDesks = BasicDeskBlock.streamStoneBasicDesks().map(FurnitureBlock::getBlock).toArray(BasicDeskBlock[]::new);
         BasicDeskCabinetBlock[] stoneBasicDeskCabinets = BasicDeskCabinetBlock.streamStoneBasicDeskCabinets().map(FurnitureBlock::getBlock).toArray(BasicDeskCabinetBlock[]::new);
+        ClassicDeskBlock[] stoneClassicDesks = ClassicDeskBlock.streamStoneClassicDesks().map(FurnitureBlock::getBlock).toArray(ClassicDeskBlock[]::new);
 
         SimpleStoolBlock[] stoneSimpleStools = SimpleStoolBlock.streamStoneSimpleStools().map(FurnitureBlock::getBlock).toArray(SimpleStoolBlock[]::new);
         PendantBlock[] pendantLights = PendantBlock.streamPendantLights().toList().toArray(new PendantBlock[0]);
@@ -133,7 +134,8 @@ public class PFMTagProvider extends PFMProvider {
                 .add(stoneModernCoffeeTables)
                 .add(stoneClassicCoffeeTables)
                 .add(stoneBasicDesks)
-                .add(stoneBasicDeskCabinets);
+                .add(stoneBasicDeskCabinets)
+                .add(stoneClassicDesks);
 
         KitchenCounterBlock[] woodCounters = KitchenCounterBlock.streamWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
         KitchenWallCounterBlock[] woodWallCounters = KitchenWallCounterBlock.streamWallWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenWallCounterBlock[]::new);
@@ -174,6 +176,7 @@ public class PFMTagProvider extends PFMProvider {
         SimpleBunkLadderBlock[] simpleBunkLadders = SimpleBunkLadderBlock.streamSimpleBunkLadder().map(FurnitureBlock::getBlock).toArray(SimpleBunkLadderBlock[]::new);
         BasicDeskBlock[] woodBasicDesks = BasicDeskBlock.streamWoodBasicDesks().map(FurnitureBlock::getBlock).toArray(BasicDeskBlock[]::new);
         BasicDeskCabinetBlock[] woodBasicDeskCabinets = BasicDeskCabinetBlock.streamWoodBasicDeskCabinets().map(FurnitureBlock::getBlock).toArray(BasicDeskCabinetBlock[]::new);
+        ClassicDeskBlock[] woodClassicDesks= ClassicDeskBlock.streamWoodClassicDesks().map(FurnitureBlock::getBlock).toArray(ClassicDeskBlock[]::new);
 
         getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
                 .add(showerTowels)
@@ -214,7 +217,8 @@ public class PFMTagProvider extends PFMProvider {
                 .add(woodModernCoffeeTables)
                 .add(woodClassicCoffeeTables)
                 .add(woodBasicDesks)
-                .add(woodBasicDeskCabinets);
+                .add(woodBasicDeskCabinets)
+                .add(woodClassicDesks);
 
         getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
                 .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
@@ -239,7 +243,9 @@ public class PFMTagProvider extends PFMProvider {
                 .add(stoneNaturalTables)
                 .add(logTables)
                 .add(woodBasicDesks)
-                .add(stoneBasicDesks);
+                .add(stoneBasicDesks)
+                .add(woodClassicDesks)
+                .add(stoneClassicDesks);
 
         getOrCreateTagBuilder(PFMTags.FURNITURE)
                 .add(PaladinFurnitureModBlocksItems.BLOCKS.toArray(Block[]::new));

@@ -256,6 +256,17 @@ public class LateBlockRegistry {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_cabinet_basic", () -> new BasicDeskCabinetBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
+        PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ClassicDeskBlock.class, new FurnitureEntry<>() {{
+            for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
+                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                if (variant.hasStripped())
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+            }
+            for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
+                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+            }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ClassicNightstandBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();
