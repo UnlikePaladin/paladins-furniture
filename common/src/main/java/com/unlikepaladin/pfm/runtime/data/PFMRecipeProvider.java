@@ -308,6 +308,7 @@ public class PFMRecipeProvider extends PFMProvider {
         offerBasicDeskRecipe(BasicDeskBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskBlock.class).getVariants(), exporter);
         offerBasicDeskCabinetRecipe(BasicDeskCabinetBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariants(), exporter);
         offerClassicDeskRecipe(ClassicDeskBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskBlock.class).getVariants(), exporter);
+        offerClassicDeskCabinetRecipe(ClassicDeskCabinetBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariants(), exporter);
 
         PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> pfmModCompatibility.generateRecipes(exporter));
     }
@@ -389,15 +390,19 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static void offerBasicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
-    }
-
-    public static void offerClassicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 4).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerBasicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).vanillaInput(Ingredient.ofItems(Items.CHEST)).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 4).childInput(baseMaterial, 3).vanillaInput(Ingredient.ofItems(Items.CHEST)).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    }
+
+    public static void offerClassicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    }
+
+    public static void offerClassicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").vanillaInput(Ingredient.ofItems(Items.CHEST)).childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerBasicCoffeeTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {

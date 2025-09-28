@@ -176,7 +176,7 @@ public class ClassicDeskBlock extends HorizontalFacingBlock {
     public boolean canConnect(BlockView world, BlockState state, BlockPos neighborPos, BlockPos pos){
         BlockState neighborState = world.getBlockState(neighborPos);
         if (neighborState.contains(FACING)) {
-            return neighborState.get(FACING) == state.get(FACING) && canConnect(neighborState);
+            return canConnect(neighborState);
         }
         return false;
     }

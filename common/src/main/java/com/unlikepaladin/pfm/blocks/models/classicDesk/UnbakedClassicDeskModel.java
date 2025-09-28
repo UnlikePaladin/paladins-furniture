@@ -50,6 +50,31 @@ public class UnbakedClassicDeskModel implements UnbakedModel {
             new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_south_west_corner"),
 
             new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_all"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_all"),
+
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_closed"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_open"),
+
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_middle_closed"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_middle_open"),
+
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_right_closed"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_right_open"),
+
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_left_closed"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_left_open"),
+
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_outer_corner_closed"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_outer_corner_open"),
+
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_inside_corner_closed"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_inside_corner_open"),
+
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_outer_corner_mirrored_closed"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_outer_corner_mirrored_open"),
+
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_inside_corner_mirrored_closed"),
+            new Identifier(PaladinFurnitureMod.MOD_ID, "block/classic_desk/classic_desk_cabinet_inside_corner_mirrored_open"),
     };
     private static final Identifier PARENT = new Identifier("block/block");
     public static final Identifier TABLE_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/desk_classic");
@@ -57,11 +82,15 @@ public class UnbakedClassicDeskModel implements UnbakedModel {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_desk_classic"));
-                if (variant.hasStripped())
+                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_desk_cabinet_classic"));
+                if (variant.hasStripped()) {
                     add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_desk_classic"));
+                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_desk_cabinet_classic"));
+                }
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_desk_classic"));
+                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_desk_cabinet_classic"));
             }
             add(TABLE_MODEL_ID);
         }
