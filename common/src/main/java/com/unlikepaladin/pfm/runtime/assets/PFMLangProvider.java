@@ -160,6 +160,8 @@ public class PFMLangProvider extends PFMProvider {
             generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariantToBlockMap(), writer, "block.pfm.desk_cabinet_classic", this::simpleStrippedFurnitureTranslation);
             generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.desk_cabinet_classic", this::simpleStrippedFurnitureTranslation);
 
+            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(HerringbonePlankBlock.class).getVariantToBlockMap(), writer, "block.pfm.herringbone_plank", this::simpleStrippedFurnitureTranslation);
+
             writer.write("    \"pfm.dummy.entry\": \"dummy entry\"\n");
             writer.write("}");
         }

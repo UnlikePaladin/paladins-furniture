@@ -139,5 +139,6 @@ public class PFMExtraModelProvider implements ExtraModelProvider {
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(out::accept);
+        out.accept(new Identifier("minecraft:block/cube_all"));
     }
 }

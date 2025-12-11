@@ -75,6 +75,8 @@ dependencies {
 
     modCompileOnly "curse.maven:farmers-delight-forge-398521:${rootProject.farmers_delight_version_forge}"
     modCompileOnly ("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}")
+
+    include(implementation("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}"))
 }
 
 if(rootProject.jei_compatibility == "true") {

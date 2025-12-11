@@ -17,14 +17,6 @@ public class BlockItemRegistry {
     public static void registerCommonBlocks() {
         registerFurniture("working_table", PaladinFurnitureModBlocksItems.WORKING_TABLE, true);
 
-        registerBlock("oak_herringbone_planks", PaladinFurnitureModBlocksItems.OAK_HERRINGBONE_PLANKS, true);
-        registerBlock("spruce_herringbone_planks", PaladinFurnitureModBlocksItems.SPRUCE_HERRINGBONE_PLANKS, true);
-        registerBlock("birch_herringbone_planks", PaladinFurnitureModBlocksItems.BIRCH_HERRINGBONE_PLANKS, true);
-        registerBlock("jungle_herringbone_planks", PaladinFurnitureModBlocksItems.JUNGLE_HERRINGBONE_PLANKS, true);
-        registerBlock("acacia_herringbone_planks", PaladinFurnitureModBlocksItems.ACACIA_HERRINGBONE_PLANKS, true);
-        registerBlock("dark_oak_herringbone_planks", PaladinFurnitureModBlocksItems.DARK_OAK_HERRINGBONE_PLANKS, true);
-        registerBlock("crimson_herringbone_planks", PaladinFurnitureModBlocksItems.CRIMSON_HERRINGBONE_PLANKS, true);
-        registerBlock("warped_herringbone_planks", PaladinFurnitureModBlocksItems.WARPED_HERRINGBONE_PLANKS, true);
 
         registerBlock("raw_concrete", PaladinFurnitureModBlocksItems.RAW_CONCRETE, true);
         registerBlock("raw_concrete_powder", PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER, true);

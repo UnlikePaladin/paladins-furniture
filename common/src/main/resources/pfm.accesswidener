@@ -8,3 +8,4 @@ accessible class net/minecraft/data/server/AbstractTagProvider$ObjectBuilder
 accessible method net/minecraft/client/render/item/ItemRenderer renderBakedItemModel (Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;)V
 accessible field net/minecraft/block/AbstractBlock$Settings material Lnet/minecraft/block/Material;
 accessible method net/minecraft/client/gui/screen/DialogScreen <init> (Lnet/minecraft/text/Text;Ljava/util/List;Lcom/google/common/collect/ImmutableList;)V
+accessible field net/minecraft/client/texture/Sprite images [Lnet/minecraft/client/texture/NativeImage;

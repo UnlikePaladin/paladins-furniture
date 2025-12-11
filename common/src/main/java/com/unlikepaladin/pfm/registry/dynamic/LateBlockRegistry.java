@@ -50,6 +50,12 @@ public class LateBlockRegistry {
 
     public static void registerBlocks() throws InvocationTargetException, InstantiationException, IllegalAccessException {
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::createBlocks);
+        PaladinFurnitureModBlocksItems.furnitureEntryMap.put(HerringbonePlankBlock.class, new FurnitureEntry<>() {{
+            for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
+                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_herringbone_planks", () -> new HerringbonePlankBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).sounds(BlockSoundGroup.WOOD).mapColor(color).nonOpaque()), true, ItemGroup.BUILDING_BLOCKS), true);
+            }
+        }});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(BasicChairBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();

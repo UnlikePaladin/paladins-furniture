@@ -122,6 +122,12 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             registerLamp();
             provider.getParent().log("Generating Desks");
             registerDesks();
+            provider.getParent().log("Generating Miscellaneous Blocks");
+            registerMiscellaneousBlocks();
+        }
+
+        public void registerMiscellaneousBlocks() {
+            generateBlockStateForBlock(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(HerringbonePlankBlock.class).getVariantToBlockMap(), "herringbone_planks", PFMBlockStateModelGenerator::createSingleStateBlockState);
         }
 
         public void registerTuckableChairs() {

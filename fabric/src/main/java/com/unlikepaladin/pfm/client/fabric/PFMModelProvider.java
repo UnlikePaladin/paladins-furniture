@@ -20,6 +20,7 @@ import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFridgeModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedIronFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.herringbone.UnbakedHerringboneModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
@@ -43,6 +44,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class PFMModelProvider implements ModelResourceProvider {
     @Override
@@ -150,6 +152,9 @@ public class PFMModelProvider implements ModelResourceProvider {
         }
         else if (UnbakedClassicDeskModel.MODEL_IDS.contains(resourceId)){
             return new UnbakedClassicDeskModel();
+        }
+        else if (UnbakedHerringboneModel.MODEL_IDS.contains(resourceId)){
+            return new UnbakedHerringboneModel(resourceId);
         }
         else
             return null;
