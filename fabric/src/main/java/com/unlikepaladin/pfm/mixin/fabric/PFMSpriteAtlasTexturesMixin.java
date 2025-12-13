@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.mixin;
+package com.unlikepaladin.pfm.mixin.fabric;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.unlikepaladin.pfm.client.PFMSpriteRegistry;

@@ -1,9 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models.classicDesk.fabric;
 
-import com.mojang.datafixers.util.Function12;
 import com.mojang.datafixers.util.Function4;
-import com.unlikepaladin.pfm.blocks.BasicDeskCabinetBlock;
-import com.unlikepaladin.pfm.blocks.BasicTableBlock;
 import com.unlikepaladin.pfm.blocks.ClassicDeskBlock;
 import com.unlikepaladin.pfm.blocks.ClassicDeskCabinetBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;

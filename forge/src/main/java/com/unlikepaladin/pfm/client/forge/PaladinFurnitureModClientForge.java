@@ -176,5 +176,6 @@ public class PaladinFurnitureModClientForge {
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
+        ModelLoader.addSpecialModel(new Identifier("minecraft:block/cube_all"));
     }
 }
