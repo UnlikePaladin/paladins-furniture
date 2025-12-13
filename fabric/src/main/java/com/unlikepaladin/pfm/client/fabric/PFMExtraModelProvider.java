@@ -35,6 +35,7 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
+import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import net.fabricmc.fabric.api.client.model.ExtraModelProvider;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -140,5 +141,6 @@ public class PFMExtraModelProvider implements ExtraModelProvider {
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(out::accept);
         out.accept(new Identifier("minecraft:block/cube_all"));
+        out.accept(OfficeChairEntityRenderer.MODEL_ID);
     }
 }

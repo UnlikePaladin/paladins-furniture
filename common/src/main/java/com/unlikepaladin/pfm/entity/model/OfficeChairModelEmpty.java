@@ -1,17 +1,16 @@
 package com.unlikepaladin.pfm.entity.model;
 
+
 import com.google.common.collect.ImmutableList;
 import com.unlikepaladin.pfm.entity.ChairEntity;
+import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.AnimalModel;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
-import net.minecraft.entity.mob.MobEntity;
 
-public class ModelEmpty extends AnimalModel<ChairEntity> {
-    private final ModelPart base;
+public class OfficeChairModelEmpty extends AnimalModel<OfficeChairEntity> {
 
-    public ModelEmpty(ModelPart modelPart) {
-        this.base = modelPart.getChild(EntityModelPartNames.CUBE);
+    public OfficeChairModelEmpty() {
     }
 
 
@@ -26,10 +25,6 @@ public class ModelEmpty extends AnimalModel<ChairEntity> {
         return ImmutableList.of();
     }
 
-    @Override
-    public void setAngles(ChairEntity entity, float limbAngle, float limbDistance, float customAngle, float headYaw, float headPitch) {
-
-    }
     public static TexturedModelData getTexturedModelData() {
         ModelData modelData = new ModelData();
         ModelPartData modelPartData = modelData.getRoot();
@@ -37,4 +32,8 @@ public class ModelEmpty extends AnimalModel<ChairEntity> {
         return TexturedModelData.of(modelData, 16, 16);
     }
 
+    @Override
+    public void setAngles(OfficeChairEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+
+    }
 }
