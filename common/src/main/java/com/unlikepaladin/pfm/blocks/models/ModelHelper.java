@@ -83,17 +83,26 @@ public class ModelHelper {
         int[] basePalette = convertPaletteToColorArray(generatePalette(baseTexture, colorCount));
         int[] colorPalette = convertPaletteToColorArray(generatePalette(color, colorCount));
 
-        Arrays.sort(basePalette);
-        Arrays.sort(colorPalette);
+        Integer[] base = Arrays.stream(basePalette).boxed().toArray(Integer[]::new);
+        Integer[] target = Arrays.stream(colorPalette).boxed().toArray(Integer[]::new);
+
+        Arrays.sort(base, Comparator.comparingDouble(ModelHelper::luminance));
+        Arrays.sort(target, Comparator.comparingDouble(ModelHelper::luminance));
 
         Map<Integer, Integer> colorMap = new HashMap<>();
         for (int i = 0; i < basePalette.length; i++) {
-            colorMap.put(basePalette[i], colorPalette[i]);
+            colorMap.put(base[i], target[i]);
         }
 
         TextureReloadQueue.recolorAndWriteImage(id, getSpriteBufferedImage(baseTexture), colorMap);
     }
 
+    static double luminance(int argb) {
+        int r = (argb >> 16) & 0xFF;
+        int g = (argb >> 8) & 0xFF;
+        int b = argb & 0xFF;
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
 
     public static Identifier getTextureSpritePath(Identifier id) {
         return new Identifier(id.getNamespace(), String.format("textures/%s%s", id.getPath(), ".png"));
