@@ -1,7 +1,5 @@
 package com.unlikepaladin.pfm.entity;
 
-import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
-import com.unlikepaladin.pfm.blocks.blockentities.DyeableFurnitureBlockEntity;
 import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.entity.*;
@@ -12,11 +10,11 @@ import net.minecraft.entity.data.DataTracker;
 import net.minecraft.entity.data.TrackedData;
 import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
@@ -47,6 +45,14 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     protected void initDataTracker() {
         super.initDataTracker();
         this.dataTracker.startTracking(COLOR, (byte)0);
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+        if (isAlive() && timeUntilRegen == 0) {
+            heal(0.1f);
+        }
     }
 
     @Override
@@ -222,7 +228,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
 
 
     public static DefaultAttributeContainer.Builder createMobAttributes(){
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 0)
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D)
                 .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.1f);
     }
 
@@ -271,5 +277,15 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     @Override
     public void takeKnockback(double strength, double x, double z) {
 
+    }
+
+    @Override
+    protected @Nullable SoundEvent getDeathSound() {
+        return SoundEvents.BLOCK_STONE_BREAK;
+    }
+
+    @Override
+    protected @Nullable SoundEvent getHurtSound(DamageSource source) {
+        return SoundEvents.BLOCK_STONE_HIT;
     }
 }

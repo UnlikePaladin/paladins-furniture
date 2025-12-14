@@ -1,21 +1,19 @@
 package com.unlikepaladin.pfm.items;
 
 import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
-import com.unlikepaladin.pfm.data.materials.WoodVariant;
-import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.vehicle.BoatEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.TypedActionResult;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.HitResult;
@@ -84,7 +82,7 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
             }
 
             if (hitResult.getType() == HitResult.Type.BLOCK) {
-                OfficeChairEntity boatEntity = new OfficeChairEntity(world, hitResult.getPos().x, hitResult.getPos().y, hitResult.getPos().z);
+                OfficeChairEntity boatEntity = new OfficeChairEntity(world, hitResult.getPos().x, hitResult.getPos().y+0.1f, hitResult.getPos().z);
                 DyeColor color = DyeColor.WHITE;
                 if (itemStack.hasNbt()) {
                     NbtCompound nbt = itemStack.getNbt();
@@ -95,6 +93,8 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
 
                 boatEntity.setPFMColor(color);
                 boatEntity.setYaw(user.getYaw());
+                world.playSound(null, new BlockPos(hitResult.getPos()), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+
                 if (!world.isSpaceEmpty(boatEntity, boatEntity.getBoundingBox().expand(-0.1))) {
                     return TypedActionResult.fail(itemStack);
                 } else {
