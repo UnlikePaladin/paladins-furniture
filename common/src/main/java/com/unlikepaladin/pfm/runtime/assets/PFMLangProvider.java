@@ -285,6 +285,12 @@ public class PFMLangProvider extends PFMProvider {
         if (translationMap.containsKey(variant))
             return translationMap.get(variant);
 
+        String key = "block.pfm.variant."+variant.getIdentifier().getPath();
+        if (!key.equals(translate(key))) {
+            translationMap.put(variant, translate(key));
+            return translationMap.get(variant);
+        }
+
         AtomicReference<String> variantName = new AtomicReference<>(translate(variant.getSecondaryBlock().getTranslationKey()));
         String baseBlockName = translate(variant.getBaseBlock().getTranslationKey());
         List<String> common = findCommonWords(variantName.get(), baseBlockName);
@@ -329,11 +335,7 @@ public class PFMLangProvider extends PFMProvider {
                     throw new RuntimeException(e);
                 }
             } else {
-                String key = "block.pfm.variant."+variant.getIdentifier().getPath();
-                String translatedVariantName = translate(key);
-                if (translatedVariantName.equals(key) || !variant.isVanilla()) {
-                    translatedVariantName = getTranslatedVariantName(variant);
-                }
+                String translatedVariantName = getTranslatedVariantName(variant);
                 String translatedFurnitureName = StringUtils.normalizeSpace(blockStringStringStringStringQuadFunc.apply(block, furnitureKey, "", translatedVariantName));
                 try {
                     writer.write(String.format("    \"%1$s\": \"%2$s\",", block.getTranslationKey(), translatedFurnitureName));
