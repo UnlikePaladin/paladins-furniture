@@ -138,6 +138,7 @@ public class PFMLangProvider extends PFMProvider {
             generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_wall_small_drawer", this::simpleStrippedFurnitureTranslation);
 
             generateTranslationForLampBlock(writer);
+            generateTranslationForOfficeChair(writer);
 
             generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.coffee_table_basic", this::simpleStrippedFurnitureTranslation);
             generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.coffee_table_basic", this::simpleStrippedFurnitureTranslation);
@@ -258,6 +259,24 @@ public class PFMLangProvider extends PFMProvider {
                 }
                 i++;
             }
+        }
+    }
+
+    public void generateTranslationForOfficeChair(BufferedWriter writer) {
+        int i = 0;
+        for (DyeColor color : DyeColor.values()) {
+            if (i > 15)
+                break;
+            try {
+                String translatedColor = translate("color.minecraft."+color.getName());
+                String translatedFurnitureName = StringUtils.normalizeSpace(translate("block.pfm.office_chair", translatedColor));
+                writer.write(String.format("    \"%1$s\": \"%2$s\",", String.format("block.pfm.%s_office_chair", color.asString()), translatedFurnitureName));
+                writer.write("\n");
+            } catch (IOException e) {
+                getParent().getLogger().error("Writer exception: " + e);
+                throw new RuntimeException(e);
+            }
+            i++;
         }
     }
 

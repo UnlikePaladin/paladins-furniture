@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.materials.*;
 import com.unlikepaladin.pfm.items.LampItem;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
+import com.unlikepaladin.pfm.items.OfficeChairItem;
 import com.unlikepaladin.pfm.items.ShowerHandleItem;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -284,6 +285,8 @@ public class LateBlockRegistry {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
+        PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = new OfficeChairItem(new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+        LateBlockRegistry.registerLateItem("office_chair", () -> PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM);
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ClassicNightstandBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();

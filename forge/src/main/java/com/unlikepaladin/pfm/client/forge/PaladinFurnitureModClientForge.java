@@ -178,6 +178,8 @@ public class PaladinFurnitureModClientForge {
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(ModelLoader::addSpecialModel);
         ModelLoader.addSpecialModel(new Identifier("minecraft:block/cube_all"));
-        ModelLoader.addSpecialModel(OfficeChairEntityRenderer.MODEL_ID);
+        for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
+            ModelLoader.addSpecialModel(id);
+        }
     }
 }

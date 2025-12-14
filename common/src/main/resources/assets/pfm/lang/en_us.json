@@ -305,6 +305,7 @@
   "block.pfm.desk_classic": "Classic %s %s Desk",
   "block.pfm.desk_cabinet_classic": "Classic %s %s Desk Cabinet",
   "block.pfm.herringbone_plank": "%s %s Herringbone Planks",
+  "block.pfm.office_chair": "%s Office Chair",
 
   "message.pfm.toilet_use": "To use the toilet you must first fill it with water, use a water bucket or a water bottle on it. To automatically fill it, you must place a water source 1 block under the floor.",
 

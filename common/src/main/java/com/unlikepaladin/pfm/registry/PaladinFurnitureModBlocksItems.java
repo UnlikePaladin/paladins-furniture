@@ -96,6 +96,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final BasicShowerHandleBlock BASIC_SHOWER_HANDLE = new BasicShowerHandleBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque());
     public static Item BASIC_SHOWER_HANDLE_ITEM;
     public static Item BASIC_LAMP_ITEM;
+    public static Item OFFICE_CHAIR_ITEM;
 
     public static final BasicSinkBlock BASIC_SINK = new BasicSinkBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque(), LeveledCauldronBlock.RAIN_PREDICATE, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final List<BedBlock> beds = new ArrayList<>();

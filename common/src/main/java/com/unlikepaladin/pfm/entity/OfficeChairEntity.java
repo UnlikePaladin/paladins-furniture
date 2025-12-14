@@ -1,26 +1,53 @@
 package com.unlikepaladin.pfm.entity;
 
 import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
+import com.unlikepaladin.pfm.blocks.blockentities.DyeableFurnitureBlockEntity;
+import com.unlikepaladin.pfm.registry.Entities;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.entity.*;
 import net.minecraft.entity.attribute.DefaultAttributeContainer;
 import net.minecraft.entity.attribute.EntityAttributes;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.entity.data.DataTracker;
+import net.minecraft.entity.data.TrackedData;
+import net.minecraft.entity.data.TrackedDataHandlerRegistry;
 import net.minecraft.entity.mob.MobEntity;
+import net.minecraft.entity.passive.SheepEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtElement;
 import net.minecraft.util.ActionResult;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
-public class OfficeChairEntity extends MobEntity {
+public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEntity<OfficeChairEntity> {
     private float yawVelocity = 0.0F;
     private int rotationInputTicks = 0;  // Track how long player has been pressing same direction
     private float lastRotationDirection = 0.0F;  // Track last rotation direction
+    private float wheelSpinAngle = 0.0F;  // Accumulated wheel spin angle
+    private static final TrackedData<Byte> COLOR = DataTracker.registerData(OfficeChairEntity.class, TrackedDataHandlerRegistry.BYTE);
 
     public OfficeChairEntity(EntityType<? extends OfficeChairEntity> type, World world) {
         super(type, world);
     }
 
+    public OfficeChairEntity(World world, double x, double y, double z) {
+        super(Entities.OFFICE_CHAIR, world);
+        this.setPos(x, y, z);
+        this.prevX = x;
+        this.prevY = y;
+        this.prevZ = z;
+    }
+
+    @Override
+    protected void initDataTracker() {
+        super.initDataTracker();
+        this.dataTracker.startTracking(COLOR, (byte)0);
+    }
 
     @Override
     public void travel(Vec3d movementInput) {
@@ -40,7 +67,7 @@ public class OfficeChairEntity extends MobEntity {
                 this.setMovementSpeed((float)this.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED));
                 final float baseRotationSensitivity = 0.5F;
                 final float maxRotationSensitivity = 2.0F;
-                final float accelerationRate = 0.05F;  // How fast sensitivity ramps up
+
                 final int maxAccelerationTicks = 30;  // Ticks to reach max speed
                 final float decay = 0.85F;
 
@@ -79,11 +106,31 @@ public class OfficeChairEntity extends MobEntity {
                 this.setVelocity(Vec3d.ZERO);
             }
 
+            // Accumulate wheel spin based on distance traveled this tick
+            double speed = this.getVelocity().horizontalLength();
+            wheelSpinAngle += (float)(speed * 200);  // Adjust multiplier to control spin speed
+
             this.tryCheckBlockCollision();
         } else {
             this.flyingSpeed = 0.02F;
             super.travel(movementInput);
         }
+    }
+
+    public float getWheelSpinAngle() {
+        return wheelSpinAngle;
+    }
+
+    @Override
+    public void writeCustomDataToNbt(NbtCompound nbt) {
+        super.writeCustomDataToNbt(nbt);
+        nbt.putByte("Color", (byte)this.getPFMColor().getId());
+    }
+
+    @Override
+    public void readCustomDataFromNbt(NbtCompound nbt) {
+        super.readCustomDataFromNbt(nbt);
+        this.setPFMColor(DyeColor.byId(nbt.getByte("Color")));
     }
 
     @Override
@@ -115,13 +162,14 @@ public class OfficeChairEntity extends MobEntity {
 
     @Override
     public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
+        if (player.isSpectator() || player.isSneaking()) {
+            return ActionResult.PASS;
+        }
+
         if (world.isClient) {
             return ActionResult.CONSUME;
         }
 
-        if (player.isSpectator() || player.isSneaking()) {
-            return ActionResult.FAIL;
-        }
 
         if (!this.hasPassengers() && !player.isSneaking() && hand == Hand.MAIN_HAND) {
             player.startRiding(this, true);
@@ -181,5 +229,47 @@ public class OfficeChairEntity extends MobEntity {
     @Override
     public double getMountedHeightOffset() {
         return 0.55;
+    }
+
+    @Override
+    public void setPFMColor(DyeColor color) {
+        byte b = this.dataTracker.get(COLOR);
+        this.dataTracker.set(COLOR, (byte)(b & 240 | color.getId() & 15));
+    }
+
+    @Override
+    public DyeColor getPFMColor() {
+        return DyeColor.byId(this.dataTracker.get(COLOR) & 15);
+    }
+
+    @Override
+    public NbtCompound writeColor(NbtCompound nbt) {
+        nbt.putByte("Color", (byte)this.getPFMColor().getId());
+        return nbt;
+    }
+
+    @Override
+    public OfficeChairEntity getEntity() {
+        return this;
+    }
+
+    @Override
+    public void onDeath(DamageSource source) {
+        super.onDeath(source);
+    }
+
+    @Override
+    protected void drop(DamageSource source) {
+        super.drop(source);
+        ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultStack();
+        stack.getOrCreateNbt().putString("Color", this.getPFMColor().asString());
+
+        ItemEntity itemEntity = new ItemEntity(world, this.getX(), this.getY(), this.getZ(), stack);
+        this.world.spawnEntity(itemEntity);
+    }
+
+    @Override
+    public void takeKnockback(double strength, double x, double z) {
+
     }
 }

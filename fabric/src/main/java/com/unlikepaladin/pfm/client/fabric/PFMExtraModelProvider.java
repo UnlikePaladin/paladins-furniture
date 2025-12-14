@@ -141,6 +141,8 @@ public class PFMExtraModelProvider implements ExtraModelProvider {
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(out::accept);
         out.accept(new Identifier("minecraft:block/cube_all"));
-        out.accept(OfficeChairEntityRenderer.MODEL_ID);
+        for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
+            out.accept(id);
+        }
     }
 }
