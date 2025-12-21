@@ -7,13 +7,14 @@
     "PFMBlockModelsMixin",
     "PFMCrackParticleMixin",
     "PFMRenderLayersFabricMixin",
+    "PFMSpriteAtlasTexturesMixin",
     "PFMEntryWidgetAccessor"
   ],
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
+    "PFMGroupResourcePackAccessor",
     "PFMModResourcePackCreatorMixin",
-    "PFMReloadableResourceManagerImplMixin",
-    "PFMGroupResourcePackAccessor"
+    "PFMReloadableResourceManagerImplMixin"
   ],
   "injectors": {
     "defaultRequire": 1

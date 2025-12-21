@@ -12,7 +12,6 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import com.unlikepaladin.pfm.mixin.PFMIngredientMatchingStacksAccessor;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -86,6 +85,12 @@ public class PFMRecipeProvider extends PFMProvider {
     protected static Identifier getId(Block block) {
         throw new AssertionError();    
     }
+
+    @ExpectPlatform
+    protected static Identifier getId(Item item) {
+        throw new AssertionError();
+    }
+
     protected void generateRecipes(Consumer<RecipeJsonProvider> exporter) {
         List<Identifier> generatedRecipes = new ArrayList<>();
 
@@ -286,6 +291,10 @@ public class PFMRecipeProvider extends PFMProvider {
             SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.TRASHCAN, 1).input(Items.IRON_INGOT, 1).input(Items.ENDER_PEARL, 1).input(Blocks.IRON_BARS, 4).offerTo(exporter, new Identifier("pfm", PaladinFurnitureModBlocksItems.TRASHCAN.asItem().getTranslationKey().replace("block.pfm.", "")));
             generatedRecipes.add(getId(PaladinFurnitureModBlocksItems.TRASHCAN));
         }
+        if (!generatedRecipes.contains(getId(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM))) {
+            offerOfficeChairRecipes(exporter);
+            generatedRecipes.add(getId(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM));
+        }
 
         List<FurnitureBlock> showerTowels = ShowerTowelBlock.streamShowerTowels().collect(Collectors.toList());
         for (FurnitureBlock towel : showerTowels) {
@@ -310,6 +319,8 @@ public class PFMRecipeProvider extends PFMProvider {
         offerClassicCoffeeTableRecipe(ClassicCoffeeTableBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariants(), exporter);
         offerBasicDeskRecipe(BasicDeskBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskBlock.class).getVariants(), exporter);
         offerBasicDeskCabinetRecipe(BasicDeskCabinetBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariants(), exporter);
+        offerClassicDeskRecipe(ClassicDeskBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskBlock.class).getVariants(), exporter);
+        offerClassicDeskCabinetRecipe(ClassicDeskCabinetBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariants(), exporter);
 
         PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> pfmModCompatibility.generateRecipes(exporter));
     }
@@ -323,6 +334,14 @@ public class PFMRecipeProvider extends PFMProvider {
             tag.putBoolean("variantInNbt", true);
 
             DynamicFurnitureRecipeJsonFactory.create(BasicLampBlock.class, 1,  WoodVariantRegistry.getVariants().stream().map(woodVariant -> woodVariant.identifier).collect(Collectors.toList()), tag).vanillaInput(ModelHelper.getWoolColor(color.asString()), 3).vanillaInput(Items.TORCH).vanillaInput(Items.REDSTONE).childInput("stripped_log", 2).offerTo(exporter, new Identifier("pfm", String.format("basic_%s_lamp", color.asString())));
+        }
+    }
+
+    public static void offerOfficeChairRecipes(Consumer<RecipeJsonProvider> exporter) {
+        for (DyeColor color : DyeColor.values()) {
+            NbtCompound tag = new NbtCompound();
+            tag.putString("Color", color.asString());
+            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, tag).input(ModelHelper.getWoolColor(color.asString()), 3).input(Items.IRON_INGOT, 2).input(Items.IRON_NUGGET).input(Items.STONE_BUTTON, 4).offerTo(exporter, new Identifier("pfm", String.format("%s_office_chair", color.asString())));
         }
     }
 
@@ -391,11 +410,19 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static void offerBasicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 4).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerBasicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("tables").childInput(legMaterial, 4).childInput(baseMaterial, 3).vanillaInput(Ingredient.ofItems(Items.CHEST)).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 4).childInput(baseMaterial, 3).vanillaInput(Ingredient.ofItems(Items.CHEST)).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    }
+
+    public static void offerClassicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+    }
+
+    public static void offerClassicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").vanillaInput(Ingredient.ofItems(Items.CHEST)).childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerBasicCoffeeTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {

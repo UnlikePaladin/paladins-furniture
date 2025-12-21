@@ -60,19 +60,9 @@ public class PaladinFurnitureModBlocksItems {
     public static final Item DYE_KIT_CYAN = new DyeKit(new Item.Settings().maxCount(16), DyeColor.CYAN);
     public static final Item DYE_KIT_GRAY = new DyeKit(new Item.Settings().maxCount(16), DyeColor.GRAY);
 
-    public static final Block ACACIA_HERRINGBONE_PLANKS = new HerringbonePlankBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.ACACIA_PLANKS).sounds(BlockSoundGroup.WOOD), ToolType.AXE));
-    public static final Block SPRUCE_HERRINGBONE_PLANKS = new HerringbonePlankBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.SPRUCE_PLANKS).sounds(BlockSoundGroup.WOOD), ToolType.AXE));
-    public static final Block OAK_HERRINGBONE_PLANKS = new HerringbonePlankBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).sounds(BlockSoundGroup.WOOD), ToolType.AXE));
-    public static final Block DARK_OAK_HERRINGBONE_PLANKS = new HerringbonePlankBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.DARK_OAK_PLANKS).sounds(BlockSoundGroup.WOOD), ToolType.AXE));
-    public static final Block JUNGLE_HERRINGBONE_PLANKS = new HerringbonePlankBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.JUNGLE_PLANKS).sounds(BlockSoundGroup.WOOD), ToolType.AXE));
-    public static final Block BIRCH_HERRINGBONE_PLANKS = new HerringbonePlankBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.BIRCH_PLANKS).sounds(BlockSoundGroup.WOOD), ToolType.AXE));
-    public static final Block WARPED_HERRINGBONE_PLANKS = new HerringbonePlankBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.WARPED_PLANKS).sounds(BlockSoundGroup.WOOD), ToolType.AXE));
-    public static final Block CRIMSON_HERRINGBONE_PLANKS = new HerringbonePlankBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.CRIMSON_PLANKS).sounds(BlockSoundGroup.WOOD), ToolType.AXE));
-
-
-    public static final Block RAW_CONCRETE = new Block(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE), ToolType.PICKAXE));
-    public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND), ToolType.SHOVEL));
-    public static final Block LEATHER_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.ORANGE_WOOL).sounds(BlockSoundGroup.WOOL));
+    public static final Block RAW_CONCRETE = new Block(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE));
+    public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND));
+    public static final Block LEATHER_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.WHITE_WOOL).sounds(BlockSoundGroup.WOOL).mapColor(MapColor.ORANGE));
 
     public static final Block IRON_CHAIN = new ChainBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.IRON_BARS).sounds(BlockSoundGroup.METAL), ToolType.PICKAXE));
     public static final PendantBlock GRAY_MODERN_PENDANT = new PendantBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.METAL, MapColor.GRAY).requiresTool().strength(5.0F, 6.0F).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)), ToolType.PICKAXE));
@@ -108,6 +98,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final BasicShowerHandleBlock BASIC_SHOWER_HANDLE = new BasicShowerHandleBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque(), ToolType.PICKAXE));
     public static Item BASIC_SHOWER_HANDLE_ITEM;
     public static Item BASIC_LAMP_ITEM;
+    public static Item OFFICE_CHAIR_ITEM;
 
     public static final BasicSinkBlock BASIC_SINK = new BasicSinkBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque(), ToolType.PICKAXE), SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final List<BedBlock> beds = new ArrayList<>();

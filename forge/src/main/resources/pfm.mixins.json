@@ -8,7 +8,8 @@
     "ItemColorsAccessor",
     "PFMClientModLoaderMixin",
     "PFMModelLoaderMixin",
-    "PFMRenderLayersForgeMixin"
+    "PFMRenderLayersForgeMixin",
+    "PFMSpriteAtlasTexturesMixin"
   ],
   "mixins": [
     "PFMCookingPotBlockEntityMixin",

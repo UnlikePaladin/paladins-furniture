@@ -23,6 +23,9 @@
     "PFMReloadableResourceManagerImplMixin",
     "PFMSpriteAccessor",
     "PFMSplashOverlayMixin",
+    "PFMSpriteAtlasTextureAccessor",
+    "PFMSpriteInfoAccesor",
+    "PFMSpriteMixin",
     "PFMTitleScreenMixin"
   ],
   "injectors": {

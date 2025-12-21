@@ -39,6 +39,8 @@ public class EntityRenderRegistry {
 
     public static void registerEntityRenderers() {
         registerEntityRender(Entities.CHAIR, ChairEntityRenderer::new);
+        registerEntityRender(Entities.OFFICE_CHAIR, OfficeChairEntityRenderer::new);
+
         PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> {
             if (pfmModCompatibility.getClientModCompatiblity().isPresent()){
                 pfmModCompatibility.getClientModCompatiblity().get().registerEntityRenderer();

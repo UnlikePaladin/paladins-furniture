@@ -7,14 +7,17 @@ import com.google.gson.*;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import com.unlikepaladin.pfm.utilities.Version;
+import net.minecraft.SharedConstants;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public abstract class PFMGenerator implements PFMResourceProgress {
@@ -118,18 +121,18 @@ public abstract class PFMGenerator implements PFMResourceProgress {
             logger.debug(s, p0, p1);
     }
 
-    public List<String> hashDirectory(File directory, boolean includeHiddenFiles) throws IOException {
+    public static List<String> hashDirectory(File directory, boolean includeHiddenFiles, Logger logger) throws IOException {
         if (!directory.isDirectory()) {
             logger.error("Not a directory");
             throw new IllegalArgumentException("Not a directory");
         }
         Vector<String> fileStreams = new Vector<>();
-        collectFiles(directory, fileStreams, includeHiddenFiles);
+        collectFiles(directory, fileStreams, includeHiddenFiles, logger);
         return fileStreams;
     }
 
-    private void collectFiles(File directory, List<String> hashList,
-                                     boolean includeHiddenFiles) throws IOException {
+    private static void collectFiles(File directory, List<String> hashList,
+                                     boolean includeHiddenFiles, Logger logger) throws IOException {
         File[] fileArray = directory.listFiles();
         if (fileArray != null) {
             List<File> files = new ArrayList<>(Arrays.asList(fileArray));
@@ -141,7 +144,7 @@ public abstract class PFMGenerator implements PFMResourceProgress {
                     continue;
                 if (includeHiddenFiles || !Files.isHidden(file.toPath())) {
                     if (file.isDirectory()) {
-                        collectFiles(file, hashList, includeHiddenFiles);
+                        collectFiles(file, hashList, includeHiddenFiles, logger);
                     } else {
                         FileInputStream stream = new FileInputStream(file);
                         try {
@@ -189,6 +192,20 @@ public abstract class PFMGenerator implements PFMResourceProgress {
             this.modLoader = modLoader;
             this.folderHash = folderHash;
             this.variants = variants;
+        }
+
+        public static void createAndWriteCacheToDisk(Path output, List<Identifier> variants, Logger logger) throws IOException {
+            Path pfmCacheDataFile = output.resolve("pfmCacheData.json");
+
+            Files.deleteIfExists(pfmCacheDataFile);
+            Files.createFile(pfmCacheDataFile);
+            List<String> newDataHash = hashDirectory(output.toFile(), false, logger);
+            PFMCache cache = new PFMCache(SharedConstants.getGameVersion().getName(), Version.getCurrentVersion(), PFMFileUtil.getModLoader(), newDataHash, variants);
+            Files.write(
+                    pfmCacheDataFile,
+                    GSON.toJson(cache.toJson()).getBytes(StandardCharsets.UTF_8),
+                    StandardOpenOption.APPEND
+            );
         }
 
         public String gameVersion() {

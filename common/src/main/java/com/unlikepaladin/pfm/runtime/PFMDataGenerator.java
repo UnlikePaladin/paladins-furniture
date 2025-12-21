@@ -57,7 +57,7 @@ public class PFMDataGenerator extends PFMGenerator {
             }
             String fileContent = new String(Files.readAllBytes(pfmCacheDataFile), StandardCharsets.UTF_8);
             PFMCache cached = PFMCache.fromJson(JSON_PARSER.parse(fileContent));
-            List<String> hashToCompare = hashDirectory(output.toFile(), false);
+            List<String> hashToCompare = hashDirectory(output.toFile(), false, getLogger());
             List<Identifier> variants = new ArrayList<>();
 
             WoodVariantRegistry.getVariants().stream().sorted().forEach(woodVariant -> variants.add(woodVariant.identifier));
@@ -113,15 +113,7 @@ public class PFMDataGenerator extends PFMGenerator {
 
                 getLogger().info("Data providers took: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
 
-                Files.deleteIfExists(pfmCacheDataFile);
-                Files.createFile(pfmCacheDataFile);
-                List<String> newDataHash = hashDirectory(output.toFile(), false);
-                PFMCache cache = new PFMCache(SharedConstants.getGameVersion().getName(), Version.getCurrentVersion(), PFMFileUtil.getModLoader(), newDataHash, variants);
-                Files.write(
-                        pfmCacheDataFile,
-                        GSON.toJson(cache.toJson()).getBytes(StandardCharsets.UTF_8),
-                        StandardOpenOption.APPEND
-                );
+                PFMCache.createAndWriteCacheToDisk(output, variants, getLogger());
             } else {
                 getLogger().info("Data Hash for Game Data and Variant List matched, skipping generation");
             }
