@@ -267,11 +267,13 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     @Override
     protected void drop(DamageSource source) {
         super.drop(source);
-        ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultStack();
-        stack.getOrCreateNbt().putString("Color", this.getPFMColor().asString());
+        if (!source.isSourceCreativePlayer()) {
+            ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultStack();
+            stack.getOrCreateNbt().putString("Color", this.getPFMColor().asString());
 
-        ItemEntity itemEntity = new ItemEntity(world, this.getX(), this.getY(), this.getZ(), stack);
-        this.world.spawnEntity(itemEntity);
+            ItemEntity itemEntity = new ItemEntity(world, this.getX(), this.getY(), this.getZ(), stack);
+            this.world.spawnEntity(itemEntity);
+        }
     }
 
     @Override
