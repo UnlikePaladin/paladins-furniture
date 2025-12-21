@@ -15,6 +15,7 @@ import net.minecraft.stat.Stats;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.util.TypedActionResult;
+import net.minecraft.util.UseAction;
 import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
@@ -60,6 +61,11 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
         }
     }
 
+    @Override
+    public UseAction getUseAction(ItemStack stack) {
+        return UseAction.BLOCK;
+    }
+
     public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         HitResult hitResult = raycast(world, user, RaycastContext.FluidHandling.ANY);
@@ -82,7 +88,7 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
             }
 
             if (hitResult.getType() == HitResult.Type.BLOCK) {
-                OfficeChairEntity boatEntity = new OfficeChairEntity(world, hitResult.getPos().x, hitResult.getPos().y+0.1f, hitResult.getPos().z);
+                OfficeChairEntity chair = new OfficeChairEntity(world, hitResult.getPos().x, hitResult.getPos().y+0.1f, hitResult.getPos().z);
                 DyeColor color = DyeColor.WHITE;
                 if (itemStack.hasNbt()) {
                     NbtCompound nbt = itemStack.getNbt();
@@ -91,24 +97,21 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
                     }
                 }
 
-                boatEntity.setPFMColor(color);
-                boatEntity.setYaw(user.getYaw());
-                world.playSound(null, new BlockPos(hitResult.getPos()), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+            chair.setPFMColor(color);
+            chair.setYaw(user.getYaw());
+            world.playSound(null, new BlockPos(hitResult.getPos()), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
-                if (!world.isSpaceEmpty(boatEntity, boatEntity.getBoundingBox().expand(-0.1))) {
-                    return TypedActionResult.fail(itemStack);
-                } else {
-                    if (!world.isClient) {
-                        world.spawnEntity(boatEntity);
-                        world.emitGameEvent(user, GameEvent.ENTITY_PLACE, new BlockPos(hitResult.getPos()));
-                        if (!user.getAbilities().creativeMode) {
-                            itemStack.decrement(1);
-                        }
+                if (!world.isClient) {
+                    world.spawnEntity(chair);
+                    world.emitGameEvent(user, GameEvent.ENTITY_PLACE, new BlockPos(hitResult.getPos()));
+                    if (!user.getAbilities().creativeMode) {
+                        itemStack.decrement(1);
                     }
-
-                    user.incrementStat(Stats.USED.getOrCreateStat(this));
-                    return TypedActionResult.success(itemStack, world.isClient());
                 }
+
+                user.incrementStat(Stats.USED.getOrCreateStat(this));
+                return TypedActionResult.success(itemStack, world.isClient());
+
             } else {
                 return TypedActionResult.pass(itemStack);
             }

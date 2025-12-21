@@ -10,7 +10,7 @@ public class Entities {
             .setDimensions(0.0F, 0.0F).makeFireImmune().disableSummon().build("chair");
 
     public static final EntityType<OfficeChairEntity> OFFICE_CHAIR = EntityType.Builder.
-            <OfficeChairEntity>create(OfficeChairEntity::new, SpawnGroup.MISC).setDimensions(1.0F, 1.0F)
+            <OfficeChairEntity>create(OfficeChairEntity::new, SpawnGroup.MISC).setDimensions(0.9F, 0.9F)
             .makeFireImmune().build("office_chair");
 
 }
