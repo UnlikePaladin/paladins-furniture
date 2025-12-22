@@ -25,7 +25,7 @@ public class PFMSpriteRegistryImpl {
 
     @SubscribeEvent
     public static void register(TextureStitchEvent.Pre event) {
-        if (event.getMap().getId() == PlayerScreenHandler.BLOCK_ATLAS_TEXTURE) {
+        if (event.getAtlas().getId() == PlayerScreenHandler.BLOCK_ATLAS_TEXTURE) {
             PFMSpriteRegistry.registerAdditionalSprites();
             while (!REGISTER.isEmpty()) {
                 event.addSprite(REGISTER.poll());
