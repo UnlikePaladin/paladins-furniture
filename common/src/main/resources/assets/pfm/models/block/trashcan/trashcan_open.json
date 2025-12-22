@@ -1,4 +1,5 @@
 {
+	"format_version": "1.21.6",
 	"credit": "By UnlikePaladin",
 	"texture_size": [32, 32],
 	"textures": {
@@ -34,7 +35,7 @@
 		},
 		{
 			"from": [12.75, 0.25, 6.5],
-			"to": [13.75, 1.25, 8.5],
+			"to": [14.25, 0.25, 8.5],
 			"rotation": {"angle": 22.5, "axis": "z", "origin": [7.5, 15.75, 7.5]},
 			"faces": {
 				"north": {"uv": [7, 2, 7.5, 2.5], "rotation": 270, "texture": "#3"},
@@ -46,8 +47,8 @@
 			}
 		},
 		{
-			"from": [12.75, 7.25, 6.5],
-			"to": [13.75, 8.25, 8.5],
+			"from": [12.75, 8.25, 6.5],
+			"to": [14.25, 8.25, 8.5],
 			"rotation": {"angle": 22.5, "axis": "z", "origin": [7.5, 15.75, 7.5]},
 			"faces": {
 				"north": {"uv": [7, 2, 7.5, 2.5], "rotation": 270, "texture": "#3"},
@@ -59,9 +60,9 @@
 			}
 		},
 		{
-			"from": [13.75, 0.25, 6.5],
-			"to": [14.75, 8.25, 8.5],
-			"rotation": {"angle": 22.5, "axis": "z", "origin": [7.5, 15.75, 7.5]},
+			"from": [14.25, 0.05, 6.5],
+			"to": [14.25, 8.05, 8.5],
+			"rotation": {"angle": 22.5, "axis": "z", "origin": [7, 15.55, 7.5]},
 			"faces": {
 				"north": {"uv": [7, 2, 11, 2.5], "rotation": 270, "texture": "#3"},
 				"east": {"uv": [7, 2, 11, 3], "rotation": 90, "texture": "#3"},
