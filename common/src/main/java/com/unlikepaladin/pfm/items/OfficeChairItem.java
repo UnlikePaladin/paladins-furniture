@@ -96,6 +96,8 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
                         color = DyeColor.byName(nbt.getString("Color"), DyeColor.WHITE);
                     }
                 }
+
+                chair.setPersistent();
                 chair.refreshPositionAndAngles(hitResult.getPos().x, hitResult.getPos().y+0.1f, hitResult.getPos().z, user.yaw, 0);
                 chair.setPFMColor(color);
                 chair.yaw = (user.yaw);
