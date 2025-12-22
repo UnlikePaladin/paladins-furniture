@@ -102,7 +102,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
                 .getBuffer(ModelLoader.BLOCK_DESTRUCTION_RENDER_LAYERS.get(damageStage));
 
         VertexConsumer solid =
-                vertexConsumerProvider.getBuffer(RenderLayer.getSolid());
+                vertexConsumerProvider.getBuffer(RenderLayer.getCutoutMipped());
 
         // base
         matrixStack.push();

@@ -1,7 +1,9 @@
 package com.unlikepaladin.pfm.items;
 
 import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
+import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
+import com.unlikepaladin.pfm.registry.Entities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -77,7 +79,8 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
             }
 
             if (hitResult.getType() == HitResult.Type.BLOCK) {
-                OfficeChairEntity chair = new OfficeChairEntity(world, hitResult.getPos().x, hitResult.getPos().y+0.1f, hitResult.getPos().z);
+                OfficeChairEntity chair = Entities.OFFICE_CHAIR.create(world);
+
                 DyeColor color = DyeColor.WHITE;
                 if (itemStack.hasNbt()) {
                     NbtCompound nbt = itemStack.getNbt();
@@ -86,6 +89,9 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
                     }
                 }
 
+                chair.refreshPositionAndAngles(hitResult.getPos().x, hitResult.getPos().y+0.1f,
+                        hitResult.getPos().z, user.getYaw(), 0);
+                chair.setPersistent();
                 chair.setPFMColor(color);
                 chair.setYaw(user.getYaw());
                 BlockPos pos = new BlockPos((int) hitResult.getPos().x, (int) hitResult.getPos().y, (int) hitResult.getPos().z);
