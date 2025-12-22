@@ -44,7 +44,7 @@ public class PaladinFurnitureModConfig {
             renderImmersivePortalsMirrors = new BooleanConfigOption(Text.translatable("pfm.option.renderImmersivePortalsMirrors"), Text.translatable("pfm.option.renderImmersivePortalsMirrors.tooltip"), GAMEPLAY_OPTIONS, true, Side.CLIENT),
             spawnImmersivePortalsMirror  = new BooleanConfigOption(Text.translatable("pfm.option.spawnImmersivePortalsMirror"), Text.translatable("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
             disableGeneratingScreen  = new BooleanConfigOption(Text.translatable("pfm.option.disableGeneratingScreen"), Text.translatable("pfm.option.disableGeneratingScreen.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
-            disableSinytraWarning  = new BooleanConfigOption(new TranslatableText("pfm.option.disableSinytraWarning"), new TranslatableText("pfm.option.disableSinytraWarning.tooltip"), MOD_OPTIONS, false, Side.CLIENT)
+            disableSinytraWarning  = new BooleanConfigOption(Text.translatable("pfm.option.disableSinytraWarning"), Text.translatable("pfm.option.disableSinytraWarning.tooltip"), MOD_OPTIONS, false, Side.CLIENT)
         );
         this.propertiesPath = propertiesPath.resolve("pfm.json");
         this.directoryPath = propertiesPath;

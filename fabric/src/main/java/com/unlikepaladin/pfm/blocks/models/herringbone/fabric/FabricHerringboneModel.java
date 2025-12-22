@@ -20,10 +20,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Supplier;
 
 public class FabricHerringboneModel extends PFMFabricBakedModel {

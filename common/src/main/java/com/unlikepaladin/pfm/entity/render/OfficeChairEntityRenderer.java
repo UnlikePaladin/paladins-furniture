@@ -19,11 +19,12 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3f;
+import net.minecraft.util.math.random.LocalRandom;
+import net.minecraft.util.math.random.Random;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEntity, OfficeChairModelEmpty> {
     public static final Identifier[] MODEL_IDS = {new Identifier("pfm:block/office_chair/office_chair"), new Identifier("pfm:block/office_chair/office_chair_top"),
@@ -54,7 +55,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
 
         stack.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
-        Random random = new Random(42L);
+        Random random = new LocalRandom(42L);
         List<BakedQuad> quads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> chairModel.getQuads(null, direction, random))
                 .flatMap(List::stream).toList());
 

@@ -89,16 +89,20 @@ public final class TextureReloadQueue {
 
     static void reloadSingleSprite(ResourceManager resourceManager, SpriteAtlasTexture spriteAtlas, Identifier id) throws IOException {
         Identifier path = ModelHelper.getTextureSpritePath(id);
-        Resource resource = resourceManager.getResource(path);
+        Optional<Resource> optionalResource = resourceManager.getResource(path);
 
-        Sprite original = spriteAtlas.getSprite(id);
-
-        AnimationResourceMetadata animationResourceMetadata = resource.getMetadata(AnimationResourceMetadata.READER);
-        if (animationResourceMetadata == null) {
-            animationResourceMetadata = AnimationResourceMetadata.EMPTY;
+        if (optionalResource.isEmpty()) {
+            PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to reload texture at {}, resource not found", id);
+            return;
         }
 
-        PngFile pngFile = new PngFile(resource.toString(), resource.getInputStream());
+        Resource resource = optionalResource.get();
+        Sprite original = spriteAtlas.getSprite(id);
+
+        AnimationResourceMetadata animationResourceMetadata = resource.getMetadata().decode(AnimationResourceMetadata.READER)
+                .orElse(AnimationResourceMetadata.EMPTY);
+
+        PngFile pngFile = new PngFile(path::toString, resource.getInputStream());
         Sprite.Info info = new Sprite.Info(id, pngFile.width, pngFile.height, animationResourceMetadata);
 
         SpriteCoordinates coords = PFMSpriteRegistry.PFM_SPRITE_COORDINATES.get(id);

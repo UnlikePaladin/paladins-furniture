@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.blocks.ClassicDeskCabinetBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.block.*;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -16,10 +17,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+
+import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,7 +29,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -37,13 +38,12 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public @NotNull IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
+    public @NotNull ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
         if (state.getBlock() instanceof ClassicDeskBlock || state.getBlock() instanceof ClassicDeskCabinetBlock) {
-            ModelDataMap.Builder builder = new ModelDataMap.Builder();
-            appendProperties(builder);
+            ModelData.Builder builder = ModelData.builder();
 
-            IModelData data = builder.build();
-            super.getModelData(world, pos, state, data);
+            ModelData data = builder.build();
+            data = super.getModelData(world, pos, state, data);
 
             Direction dir = state.get(HorizontalFacingBlock.FACING);
             Function4<BlockView, BlockState, BlockPos, BlockPos, Boolean> canConnect = state.getBlock() instanceof ClassicDeskBlock desk ? desk::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
@@ -98,19 +98,13 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
                     cornerSouthEast, cornerSouthWest, hasCornerNorthWest, hasCornerNorthEast,
                     hasCornerSouthEast, hasCornerSouthWest, left, right, leftCabinet, rightCabinet,
                     rightState, leftState, neighborStateFacing, neighborStateOpposite, neighborStateFacingNeighbor, neigborStateOppositeNeigbor, dir);
-            data.setData(DESK_DATA, deskModelData);
+            data = data.derive().with(DESK_DATA, deskModelData).build();
             return data;
         }
         return tileData;
     }
 
     public static ModelProperty<DeskModelData> DESK_DATA = new ModelProperty<>();
-
-    @Override
-    public void appendProperties(ModelDataMap.Builder builder) {
-        super.appendProperties(builder);
-        builder.withProperty(DESK_DATA);
-    }
 
     public static class DeskModelData {
         public final boolean north, south, east, west, cornerNorthWest, cornerNorthEast,
@@ -150,8 +144,8 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
 
 
     @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
-        DeskModelData deskData = extraData.getData(DESK_DATA);
+    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
+        DeskModelData deskData = extraData.get(DESK_DATA);
         if (deskData != null && (state.getBlock() instanceof ClassicDeskBlock || state.getBlock() instanceof ClassicDeskCabinetBlock)) {
 
             boolean isCabinet = state.getBlock() instanceof ClassicDeskCabinetBlock;
@@ -180,7 +174,7 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
             BlockState neighborStateFacingNeighbor = deskData.neighborStateFacingNeighbor;
             BlockState neigborStateOppositeNeigbor = deskData.neigborStateOppositeNeigbor;
 
-            List<BakedQuad> blockQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData));
+            List<BakedQuad> blockQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData, renderLayer));
 
             boolean wasOuterCorner = false;
             if (isCabinet) {
@@ -189,13 +183,13 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
                     // inner corner
                     if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && !canConnectSimple.apply(neighborStateFacingNeighbor)) {
                         if (neighborFacing == dir.rotateYClockwise()) {
-                            blockQuads.addAll(getTemplateBakedModels().get((34 + openOffset)).getQuads(state, side, rand, extraData));
+                            blockQuads.addAll(getTemplateBakedModels().get((34 + openOffset)).getQuads(state, side, rand, extraData, renderLayer));
                         }
                         else {
-                            blockQuads.addAll(getTemplateBakedModels().get((30 + openOffset)).getQuads(state, side, rand, extraData));
+                            blockQuads.addAll(getTemplateBakedModels().get((30 + openOffset)).getQuads(state, side, rand, extraData, renderLayer));
                         }
                     } else {
-                        blockQuads.addAll(middleDesk(state, side, rand, extraData, leftCabinet, rightCabinet, openOffset));
+                        blockQuads.addAll(middleDesk(state, side, rand, renderLayer, extraData, leftCabinet, rightCabinet, openOffset));
                     }
                 }
                 else if (canConnectSimple.apply(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
@@ -203,266 +197,266 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
                     // outer corner
                     if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && !canConnectSimple.apply(neigborStateOppositeNeigbor)) {
                         if (neighborFacing == dir.rotateYClockwise()) {
-                            blockQuads.addAll(getTemplateBakedModels().get((32 + openOffset)).getQuads(state, side, rand, extraData));
+                            blockQuads.addAll(getTemplateBakedModels().get((32 + openOffset)).getQuads(state, side, rand, extraData, renderLayer));
                         } else {
-                            blockQuads.addAll(getTemplateBakedModels().get((28 + openOffset)).getQuads(state, side, rand, extraData));
+                            blockQuads.addAll(getTemplateBakedModels().get((28 + openOffset)).getQuads(state, side, rand, extraData, renderLayer));
                         }
                         wasOuterCorner = true;
                     } else {
-                        blockQuads.addAll(middleDesk(state, side, rand, extraData, leftCabinet, rightCabinet, openOffset));
+                        blockQuads.addAll(middleDesk(state, side, rand, renderLayer, extraData, leftCabinet, rightCabinet, openOffset));
                     }
                 }
                 else {
-                    blockQuads.addAll(middleDesk(state, side, rand, extraData, leftCabinet, rightCabinet, openOffset));
+                    blockQuads.addAll(middleDesk(state, side, rand, renderLayer, extraData, leftCabinet, rightCabinet, openOffset));
                 }
             }
 
             if (dir == Direction.NORTH) {
                 // le legs
                 if (!east && !north || (isCabinet && right && !rightCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!west && !north || (isCabinet && left && !leftCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!south && !east || (isCabinet && right && !rightCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!south && !west || (isCabinet && left && !leftCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 // east & west & north bits
                 if (!west && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(13).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(13).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!east && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(12).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(12).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!north && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(11).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(11).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 // side connecting bits
                 if (north && !east && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData, renderLayer));
                 if (south && !east  && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData, renderLayer));
 
                 if (north && !west && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(9).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(9).getQuads(state, side, rand, extraData, renderLayer));
                 if (south && !west && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(10).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(10).getQuads(state, side, rand, extraData, renderLayer));
 
                 // the connection up front, this here to avoid it when centered
                 if (west && !(hasCornerNorthWest))
-                    blockQuads.addAll(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData, renderLayer));
                 if (east && !(hasCornerNorthEast))
-                    blockQuads.addAll(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData, renderLayer));
 
                 // corners
                 if (cornerNorthWest) {
-                    blockQuads.addAll(getTemplateBakedModels().get(15).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(15).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerNorthEast) {
-                    blockQuads.addAll(getTemplateBakedModels().get(14).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(14).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerSouthWest) {
-                    blockQuads.addAll(getTemplateBakedModels().get(17).getQuads(state, side, rand, extraData));
-                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(17).getQuads(state, side, rand, extraData, renderLayer));
+                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerSouthEast) {
-                    blockQuads.addAll(getTemplateBakedModels().get(16).getQuads(state, side, rand, extraData));
-                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(16).getQuads(state, side, rand, extraData, renderLayer));
+                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderLayer));
                 }
             } else if (dir == Direction.SOUTH){
                 // le legs
                 if (!east && !north || (isCabinet && left && !leftCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!west && !north || (isCabinet && right && !rightCabinet))  {
-                   blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
+                   blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!south && !east || (isCabinet && left && !leftCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!south && !west || (isCabinet && right && !rightCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 // east & west & north bits
                 if (!west && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(12).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(12).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!east && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(13).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(13).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!south && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(11).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(11).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 // side connecting bits
                 if (north && !west && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData, renderLayer));
                 if (south && !west && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData, renderLayer));
 
                 if (north && !east && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(10).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(10).getQuads(state, side, rand, extraData, renderLayer));
                 if (south && !east && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(9).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(9).getQuads(state, side, rand, extraData, renderLayer));
 
                 // the connection up front, this here to avoid it when centered
                 if (west && !(hasCornerSouthWest))
-                    blockQuads.addAll(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData, renderLayer));
                 if (east && !(hasCornerSouthEast))
-                  blockQuads.addAll(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData));
+                  blockQuads.addAll(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData, renderLayer));
 
                 // corners
                 if (cornerNorthWest) {
-                    blockQuads.addAll(getTemplateBakedModels().get(16).getQuads(state, side, rand, extraData));
-                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(16).getQuads(state, side, rand, extraData, renderLayer));
+                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerNorthEast) {
-                    blockQuads.addAll(getTemplateBakedModels().get(17).getQuads(state, side, rand, extraData));
-                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(17).getQuads(state, side, rand, extraData, renderLayer));
+                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerSouthWest) {
-                    blockQuads.addAll(getTemplateBakedModels().get(14).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(14).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerSouthEast) {
-                    blockQuads.addAll(getTemplateBakedModels().get(15).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(15).getQuads(state, side, rand, extraData, renderLayer));
                 }
             } else if (dir == Direction.EAST){
                 // le legs
                 if (!east && !north || (isCabinet && left && !leftCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!west && !north || (isCabinet && left && !leftCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!south && !east || (isCabinet && right && !rightCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!south && !west || (isCabinet && right && !rightCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 // east & west & north bits
                 if (!south && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(12).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(12).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!north && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(13).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(13).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!east && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(11).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(11).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 // side connecting bits
                 if (west && !south && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData, renderLayer));
                 if (east && !south && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData, renderLayer));
 
                 if (west && !north && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(10).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(10).getQuads(state, side, rand, extraData, renderLayer));
                 if (east && !north && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(9).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(9).getQuads(state, side, rand, extraData, renderLayer));
 
                 // the connection up front, this here to avoid it when centered
                 if (north && !(hasCornerNorthEast))
-                    blockQuads.addAll(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData, renderLayer));
                 if (south && !(hasCornerSouthEast))
-                    blockQuads.addAll(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData, renderLayer));
 
 
                 // corners
                 if (cornerSouthWest) {
-                    blockQuads.addAll(getTemplateBakedModels().get(16).getQuads(state, side, rand, extraData));
-                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(16).getQuads(state, side, rand, extraData, renderLayer));
+                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerNorthWest) {
-                    blockQuads.addAll(getTemplateBakedModels().get(17).getQuads(state, side, rand, extraData));
-                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(17).getQuads(state, side, rand, extraData, renderLayer));
+                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerSouthEast) {
-                    blockQuads.addAll(getTemplateBakedModels().get(14).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(14).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerNorthEast) {
-                    blockQuads.addAll(getTemplateBakedModels().get(15).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(15).getQuads(state, side, rand, extraData, renderLayer));
                 }
             } else {
                 // le legs
                 if (!east && !north || (isCabinet && right && !rightCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!west && !north || (isCabinet && right && !rightCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(1).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!south && !east || (isCabinet && left && !leftCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!south && !west || (isCabinet && left && !leftCabinet))  {
-                    blockQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(2).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 // east & west & north bits
                 if (!south && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(13).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(13).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!north && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(12).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(12).getQuads(state, side, rand, extraData, renderLayer));
                 }
                 if (!west && !wasOuterCorner) {
-                    blockQuads.addAll(getTemplateBakedModels().get(11).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(11).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 // side connecting bits
                 if (west && !south && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(9).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(9).getQuads(state, side, rand, extraData, renderLayer));
                 if (east && !south && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(10).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(10).getQuads(state, side, rand, extraData, renderLayer));
 
 
                 if (west && !north && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, side, rand, extraData, renderLayer));
                 if (east && !north && !wasOuterCorner)
-                    blockQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData, renderLayer));
 
                 // the connection up front, this here to avoid it when centered
                 if (north && !(hasCornerNorthWest))
-                    blockQuads.addAll(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(5).getQuads(state, side, rand, extraData, renderLayer));
                 if (south && !(hasCornerSouthWest))
-                    blockQuads.addAll(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(6).getQuads(state, side, rand, extraData, renderLayer));
 
 
                 // corners
                 if (cornerNorthEast) {
-                    blockQuads.addAll(getTemplateBakedModels().get(16).getQuads(state, side, rand, extraData));
-                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(16).getQuads(state, side, rand, extraData, renderLayer));
+                    blockQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerSouthEast) {
-                    blockQuads.addAll(getTemplateBakedModels().get(17).getQuads(state, side, rand, extraData));
-                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(17).getQuads(state, side, rand, extraData, renderLayer));
+                    blockQuads.addAll(getTemplateBakedModels().get(4).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerNorthWest) {
-                    blockQuads.addAll(getTemplateBakedModels().get(14).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(14).getQuads(state, side, rand, extraData, renderLayer));
                 }
 
                 if (cornerSouthWest) {
-                    blockQuads.addAll(getTemplateBakedModels().get(15).getQuads(state, side, rand, extraData));
+                    blockQuads.addAll(getTemplateBakedModels().get(15).getQuads(state, side, rand, extraData, renderLayer));
                 }
             }
             return getQuadsWithTexture(blockQuads, ModelHelper.getOakPlankLogSprites(), getSpriteList(state));
@@ -470,15 +464,15 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
         return Collections.emptyList();
     }
 
-    private List<BakedQuad> middleDesk(BlockState state, Direction side, Random rand, IModelData extraData, boolean left, boolean right, int openOffset) {
+    private List<BakedQuad> middleDesk(BlockState state, Direction side, Random rand, RenderLayer renderLayer, ModelData extraData, boolean left, boolean right, int openOffset) {
         if (left && right) {
-            return getTemplateBakedModels().get((22 + openOffset)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get((22 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
         }  else if (left) {
-            return getTemplateBakedModels().get((26 + openOffset)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get((26 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
         } else if (right) {
-            return getTemplateBakedModels().get((24 + openOffset)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get((24 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
         } else {
-            return getTemplateBakedModels().get(20+(openOffset)).getQuads(state, side, rand, extraData);
+            return getTemplateBakedModels().get(20+(openOffset)).getQuads(state, side, rand, extraData, renderLayer);
         }
     }
 
