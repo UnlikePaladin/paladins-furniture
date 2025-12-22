@@ -6,11 +6,13 @@
     "PFMBlockDustParticleMixin",
     "PFMBlockModelsMixin",
     "PFMCrackParticleMixin",
-    "PFMRenderLayersFabricMixin"
+    "PFMRenderLayersFabricMixin",
+    "PFMSpriteAtlasTexturesMixin"
   ],
   "mixins": [
     "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMCookingPotBlockEntityMixin",
+    "PFMGroupResourcePackAccessor",
     "PFMModResourcePackCreatorMixin",
     "PFMReloadableResourceManagerImplMixin",
     "PFMGroupResourcePackAccessor",

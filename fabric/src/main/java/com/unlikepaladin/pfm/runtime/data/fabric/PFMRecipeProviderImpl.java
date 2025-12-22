@@ -8,4 +8,8 @@ public class PFMRecipeProviderImpl {
     public static Identifier getId(Block block) {
         return Registries.BLOCK.getId(block);
     }
+
+    public static Identifier getId(Item item) {
+        return Registries.ITEM.getId(item);
+    }
 }

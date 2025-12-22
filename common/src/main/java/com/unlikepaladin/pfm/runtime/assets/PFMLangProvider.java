@@ -138,6 +138,7 @@ public class PFMLangProvider extends PFMProvider {
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.kitchen_wall_small_drawer", this::simpleStrippedFurnitureTranslation);
 
             generateTranslationForLampBlock(writer);
+            generateTranslationForOfficeChair(writer);
 
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMap(), writer, "block.pfm.coffee_table_basic", this::simpleStrippedFurnitureTranslation);
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicCoffeeTableBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.coffee_table_basic", this::simpleStrippedFurnitureTranslation);
@@ -153,6 +154,14 @@ public class PFMLangProvider extends PFMProvider {
 
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMap(), writer, "block.pfm.desk_cabinet_basic", this::simpleStrippedFurnitureTranslation);
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.desk_cabinet_basic", this::simpleStrippedFurnitureTranslation);
+
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskBlock.class).getVariantToBlockMap(), writer, "block.pfm.desk_classic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.desk_classic", this::simpleStrippedFurnitureTranslation);
+
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariantToBlockMap(), writer, "block.pfm.desk_cabinet_classic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.desk_cabinet_classic", this::simpleStrippedFurnitureTranslation);
+
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(HerringbonePlankBlock.class).getVariantToBlockMap(), writer, "block.pfm.herringbone_plank", this::simpleStrippedFurnitureTranslation);
 
             writer.write("    \"pfm.dummy.entry\": \"dummy entry\"\n");
             writer.write("}");
@@ -253,10 +262,34 @@ public class PFMLangProvider extends PFMProvider {
         }
     }
 
+    public void generateTranslationForOfficeChair(BufferedWriter writer) {
+        int i = 0;
+        for (DyeColor color : DyeColor.values()) {
+            if (i > 15)
+                break;
+            try {
+                String translatedColor = translate("color.minecraft."+color.getName());
+                String translatedFurnitureName = StringUtils.normalizeSpace(translate("block.pfm.office_chair", translatedColor));
+                writer.write(String.format("    \"%1$s\": \"%2$s\",", String.format("block.pfm.%s_office_chair", color.asString()), translatedFurnitureName));
+                writer.write("\n");
+            } catch (IOException e) {
+                getParent().getLogger().error("Writer exception: " + e);
+                throw new RuntimeException(e);
+            }
+            i++;
+        }
+    }
+
     private final HashMap<VariantBase<?>, String> translationMap = new HashMap<>();
     public String getTranslatedVariantName(VariantBase<?> variant) {
         if (translationMap.containsKey(variant))
             return translationMap.get(variant);
+
+        String key = "block.pfm.variant."+variant.getIdentifier().getPath();
+        if (!key.equals(translate(key))) {
+            translationMap.put(variant, translate(key));
+            return translationMap.get(variant);
+        }
 
         AtomicReference<String> variantName = new AtomicReference<>(translate(variant.getSecondaryBlock().getTranslationKey()));
         String baseBlockName = translate(variant.getBaseBlock().getTranslationKey());
@@ -305,11 +338,7 @@ public class PFMLangProvider extends PFMProvider {
                     throw new RuntimeException(e);
                 }
             } else {
-                String key = "block.pfm.variant."+variant.getIdentifier().getPath();
-                String translatedVariantName = translate(key);
-                if (translatedVariantName.equals(key) || !variant.isVanilla()) {
-                    translatedVariantName = getTranslatedVariantName(variant);
-                }
+                String translatedVariantName = getTranslatedVariantName(variant);
                 String translatedFurnitureName = StringUtils.normalizeSpace(blockStringStringStringStringQuadFunc.apply(block, furnitureKey, "", translatedVariantName));
                 try {
                     writer.write(String.format("    \"%1$s\": \"%2$s\",", block.getTranslationKey(), translatedFurnitureName));

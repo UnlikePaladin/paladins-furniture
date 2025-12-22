@@ -58,7 +58,10 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
         String namespace = blockId.getNamespace();
         if (!namespace.equals("cozy_home") && !namespace.equals("adorn") && name != null && !namespace.equals("securitycraft") &&
                 !namespace.equals("absentbydesign") && !namespace.equals("chipped") && !namespace.equals("polydecorations") && !namespace.equals("extshape") && !namespace.equals("modernlife") && !(namespace.equals("ars_nouveau") && path.contains("sconce"))
-                && !namespace.equals("excessive_building")) {
+                && !namespace.equals("excessive_building") && !namespace.equals("furnies")
+                && !path.contains("cabinet") && !path.contains("shelf") && !path.contains("slab") && !path.contains("stairs")
+                && !path.contains("fence") && !path.contains("door") && !path.contains("trapdoor") && !path.contains("sign")
+                && !path.contains("button")) {
 
             BlockState state = baseBlock.getDefaultState();
             // can't check if the block is a full one, so I do this. Adding some checks here

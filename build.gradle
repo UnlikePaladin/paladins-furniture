@@ -20,6 +20,8 @@ subprojects {
         // mappings loom.officialMojangMappings()
         // The following line declares the yarn mappings you may select this one as well.
         mappings "net.fabricmc:yarn:${rootProject.yarn_mappings}:v2"
+
+        implementation("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}")
     }
 }
 
