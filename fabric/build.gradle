@@ -199,6 +199,8 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
         transitive(false)
     }
+
+    include(implementation("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}"))
 }
 
 dependencies {
