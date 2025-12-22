@@ -13,3 +13,4 @@ accessible field net/minecraft/resource/featuretoggle/FeatureSet featuresMask J
 mutable field net/minecraft/resource/featuretoggle/FeatureFlag mask J
 accessible field net/minecraft/resource/featuretoggle/FeatureFlag mask J
 accessible class net/minecraft/data/server/tag/TagProvider$ProvidedTagBuilder
+accessible method net/minecraft/client/gui/screen/DialogScreen <init> (Lnet/minecraft/text/Text;Ljava/util/List;Lcom/google/common/collect/ImmutableList;)V

@@ -72,6 +72,7 @@ public class ItemGroupRegistryForge {
                     }).build();
             helper.register(new Identifier(MOD_ID, "furniture"), furnitureGroup);
             PaladinFurnitureMod.FURNITURE_GROUP.setRight(furnitureGroup);
+            PaladinFurnitureMod.BUILDING_BLOCKS.setRight(Registries.ITEM_GROUP.get(ItemGroups.BUILDING_BLOCKS));
         });
     }
 
@@ -101,6 +102,16 @@ public class ItemGroupRegistryForge {
                                 stack.setSubNbt("BlockEntityTag", beTag);
                                 stacks.add(stack);
                             }
+                        }
+                        stacks.forEach(creativeModeTabEvent::add);
+                    } else if (item == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
+                        List<ItemStack> stacks = new ArrayList<>();
+                        for (DyeColor color : DyeColor.values()) {
+                            ItemStack stack = new ItemStack(item);
+                            NbtCompound beTag = new NbtCompound();
+                            beTag.putString("Color", color.asString());
+                            stack.setNbt(beTag);
+                            stacks.add(stack);
                         }
                         stacks.forEach(creativeModeTabEvent::add);
                     } else {
