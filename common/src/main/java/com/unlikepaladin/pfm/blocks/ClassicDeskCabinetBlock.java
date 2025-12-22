@@ -65,11 +65,6 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
-    }
-
-    @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (!state.isOf(state.getBlock())) {
             this.baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
@@ -301,8 +296,8 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return GenericStorageBlockEntity3x3.getFactory().create(pos, state);
+    public BlockEntity createBlockEntity(BlockView blockView) {
+        return GenericStorageBlockEntity3x3.getFactory().get();
     }
 
     @Override

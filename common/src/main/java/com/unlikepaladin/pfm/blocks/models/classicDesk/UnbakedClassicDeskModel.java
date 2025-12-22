@@ -78,7 +78,7 @@ public class UnbakedClassicDeskModel implements UnbakedModel {
     };
     private static final Identifier PARENT = new Identifier("block/block");
     public static final Identifier TABLE_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/desk_classic");
-    public static final List<Identifier> MODEL_IDS = new ArrayList<>() {
+    public static final List<Identifier> MODEL_IDS = new ArrayList<Identifier>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_desk_classic"));
@@ -98,7 +98,7 @@ public class UnbakedClassicDeskModel implements UnbakedModel {
 
     @Override
     public Collection<Identifier> getModelDependencies() {
-        return List.of(PARENT);
+        return Collections.singleton(PARENT);
     }
     @Override
     public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {

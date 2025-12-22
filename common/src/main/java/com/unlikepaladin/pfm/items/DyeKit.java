@@ -97,7 +97,7 @@ public class DyeKit extends Item {
             }
         } else if (entity instanceof DyeableFurnitureEntity<?>) {
             if (((DyeableFurnitureEntity<?>) entity).getPFMColor() != getColor()){
-                entity.world.playSoundFromEntity(user, entity, SoundEvents.ITEM_DYE_USE, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                entity.world.playSoundFromEntity(user, entity, SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.PLAYERS, 1.0F, 1.0F);
                 if (!user.world.isClient) {
                     ((DyeableFurnitureEntity<?>) entity).setPFMColor(getColor());
                     stack.decrement(1);

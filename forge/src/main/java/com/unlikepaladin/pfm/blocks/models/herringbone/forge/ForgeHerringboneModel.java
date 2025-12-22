@@ -37,16 +37,16 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public Sprite getParticleIcon(@NotNull IModelData data) {
+    public Sprite getParticleTexture(@NotNull IModelData data) {
         if (!data.hasProperty(STATE) || data.getData(STATE) == null) {
-            return super.getParticleIcon(data);
+            return super.getParticleTexture(data);
         }
         BlockState state = data.getData(STATE);
         VariantBase<?> variant = getVariant(state);
         if (variant instanceof WoodVariant) {
             return generateTextureIfNeeded(variant);
         }
-        return super.getParticleIcon(data);
+        return super.getParticleTexture(data);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     @Override
     public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
         Pair<ItemStack, Direction> directionPair = new Pair<>(stack, face);
-        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && cache.get(directionPair).get(0).getSprite().getId() == MissingSprite.getMissingSpriteId()) {
+        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && cache.get(directionPair).get(0).func_187508_a().getId() == MissingSprite.getMissingSpriteId()) {
             cache.remove(directionPair);
         }
         return super.getQuadsCached(stack, state, face, random);

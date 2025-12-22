@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import com.unlikepaladin.pfm.entity.model.OfficeChairModelEmpty;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.entity.EntityRendererFactory;
+import net.minecraft.client.render.entity.EntityRenderDispatcher;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEntity, OfficeChairModelEmpty> {
     public static final Identifier[] MODEL_IDS = {new Identifier("pfm:block/office_chair/office_chair"), new Identifier("pfm:block/office_chair/office_chair_top"),
@@ -37,7 +38,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         {0f, -0.35f}  // back-left
     };
 
-    public OfficeChairEntityRenderer(EntityRendererFactory.Context context) {
+    public OfficeChairEntityRenderer(EntityRenderDispatcher context) {
         super(context, new OfficeChairModelEmpty(), 0f);
     }
 
@@ -55,8 +56,8 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         stack.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
         Random random = new Random(42L);
-        List<BakedQuad> quads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> chairModel.getQuads(null, direction, random))
-                .flatMap(List::stream).toList());
+        List<BakedQuad> quads = Arrays.stream(Direction.values()).map(direction -> chairModel.getQuads(null, direction, random))
+                .flatMap(List::stream).collect(Collectors.toList());
 
         quads.addAll(chairModel.getQuads(null, null, random));
 
@@ -71,8 +72,8 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             float blue = 1.0f;
 
 
-            if (itemStack.getNbt().contains("Color") && quad.hasColor()) {
-                int colorInt = DyeColor.byName(itemStack.getNbt().getString("Color"), DyeColor.WHITE).getFireworkColor();
+            if (itemStack.getTag() != null && itemStack.getTag().contains("Color") && quad.hasColor()) {
+                int colorInt = DyeColor.byName(itemStack.getTag().getString("Color"), DyeColor.WHITE).getFireworkColor();
                 red = ((colorInt >> 16) & 0xFF) / 255.0f;
                 green = ((colorInt >> 8) & 0xFF) / 255.0f;
                 blue = (colorInt & 0xFF) / 255.0f;
@@ -91,7 +92,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
     }
     @Override
     public void render(OfficeChairEntity mobEntity, float f, float g, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
-        if (mobEntity.isRemoved() || !mobEntity.isAlive()) {
+        if (mobEntity.removed || !mobEntity.isAlive()) {
             return;
         }
 
@@ -108,8 +109,8 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         matrixStack.translate(-0.45, 0, -0.5);
 
         BakedModel modelBase = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(MODEL_IDS[2]);
-        List<BakedQuad> baseQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> modelBase.getQuads(null, direction, mobEntity.world.random))
-                .flatMap(List::stream).toList());
+        List<BakedQuad> baseQuads = Arrays.stream(Direction.values()).map(direction -> modelBase.getQuads(null, direction, mobEntity.world.random))
+                .flatMap(List::stream).collect(Collectors.toList());
         baseQuads.addAll(modelBase.getQuads(null, null, mobEntity.world.random));
         for (BakedQuad quad : baseQuads) {
             float brightness = mobEntity.world.getBrightness(quad.getFace(), quad.hasShade());
@@ -128,14 +129,14 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
 
         // wheels - render 4 times at different positions
         BakedModel wheelModel = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(MODEL_IDS[3]);
-        List<BakedQuad> wheelQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> wheelModel.getQuads(null, direction, mobEntity.world.random))
-                .flatMap(List::stream).toList());
+        List<BakedQuad> wheelQuads = Arrays.stream(Direction.values()).map(direction -> wheelModel.getQuads(null, direction, mobEntity.world.random))
+                .flatMap(List::stream).collect(Collectors.toList());
         wheelQuads.addAll(wheelModel.getQuads(null, null, mobEntity.world.random));
 
         // Calculate wheel rotation based on movement direction
         Vec3d velocity = mobEntity.getVelocity();
         float wheelYaw = 0.0F;
-        double speed = velocity.horizontalLength();
+        double speed = OfficeChairEntity.horizontalLength(velocity);
         if (speed > 1.0E-7) {
             wheelYaw = (float) (MathHelper.atan2(velocity.z, velocity.x) * (180.0 / Math.PI)) - 90.0F;
         }
@@ -185,8 +186,8 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
 
         BakedModel model = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(MODEL_IDS[1]);
 
-        List<BakedQuad> chairQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> model.getQuads(null, direction, mobEntity.world.random))
-                .flatMap(List::stream).toList());
+        List<BakedQuad> chairQuads = Arrays.stream(Direction.values()).map(direction -> model.getQuads(null, direction, mobEntity.world.random))
+                .flatMap(List::stream).collect(Collectors.toList());
         chairQuads.addAll(model.getQuads(null, null, mobEntity.world.random));
 
 

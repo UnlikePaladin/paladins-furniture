@@ -22,6 +22,8 @@ import net.minecraft.util.math.*;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEntity<OfficeChairEntity> {
     private float yawVelocity = 0.0F;
     private int rotationInputTicks = 0;  // Track how long player has been pressing same direction
@@ -31,14 +33,6 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
 
     public OfficeChairEntity(EntityType<? extends OfficeChairEntity> type, World world) {
         super(type, world);
-    }
-
-    public OfficeChairEntity(World world, double x, double y, double z) {
-        super(Entities.OFFICE_CHAIR, world);
-        this.setPos(x, y, z);
-        this.prevX = x;
-        this.prevY = y;
-        this.prevZ = z;
     }
 
     @Override
@@ -59,10 +53,10 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     public void travel(Vec3d movementInput) {
         if (this.hasPassengers() && this.canBeControlledByRider()) {
             LivingEntity livingEntity = (LivingEntity)this.getPrimaryPassenger();
-            this.prevYaw = this.getYaw();
-            this.setPitch(livingEntity.getPitch() * 0.5F);
-            this.setRotation(this.getYaw(), this.getPitch());
-            this.bodyYaw = this.getYaw();
+            this.prevYaw = this.yaw;
+            this.pitch = livingEntity.pitch * 0.5F;
+            this.setRotation(this.yaw, this.pitch);
+            this.bodyYaw = this.yaw;
             this.headYaw = this.bodyYaw;
 
             float forwardsSpeed = livingEntity.forwardSpeed;
@@ -100,10 +94,10 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
                 }
 
                 yawVelocity *= decay;
-                this.setYaw(this.getYaw() + yawVelocity);
+                this.yaw = (this.yaw + yawVelocity);
 
-                this.setRotation(this.getYaw(), this.getPitch());
-                this.bodyYaw = this.getYaw();
+                this.setRotation(this.yaw, this.pitch);
+                this.bodyYaw = this.yaw;
                 this.headYaw = this.bodyYaw;
 
                 super.travel(new Vec3d(0, movementInput.y, forwardsSpeed));
@@ -113,14 +107,18 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
             }
 
             // Accumulate wheel spin based on distance traveled this tick
-            double speed = this.getVelocity().horizontalLength();
+            double speed = horizontalLength(this.getVelocity());
             wheelSpinAngle += (float)(speed * 200);  // Adjust multiplier to control spin speed
 
-            this.tryCheckBlockCollision();
+            this.checkBlockCollision();
         } else {
             this.flyingSpeed = 0.02F;
             super.travel(movementInput);
         }
+    }
+
+    public static double horizontalLength(Vec3d v) {
+        return Math.sqrt(v.x * v.x + v.z * v.z);
     }
 
     public float getWheelSpinAngle() {
@@ -142,23 +140,23 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     @Override
     public void updatePassengerPosition(Entity passenger) {
         if (this.hasPassenger(passenger)) {
-            float g = (float)((this.isRemoved() ? 0.01F : this.getMountedHeightOffset()) + passenger.getHeightOffset());
+            float g = (float)((this.removed ? 0.01F : this.getMountedHeightOffset()) + passenger.getHeightOffset());
 
-            Vec3d offset = new Vec3d(0.0, 0.0, -0.1).rotateY(-this.getYaw() * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
+            Vec3d offset = new Vec3d(0.0, 0.0, -0.1).rotateY(-this.yaw * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
             passenger.setPosition(this.getX() + offset.x, this.getY() + (double)g, this.getZ() + offset.z);
-            passenger.setYaw(passenger.getYaw() + this.yawVelocity);
+            passenger.yaw = (passenger.yaw + this.yawVelocity);
             passenger.setHeadYaw(passenger.getHeadYaw() + this.yawVelocity);
             this.copyEntityData(passenger);
         }
     }
 
     protected void copyEntityData(Entity entity) {
-        entity.setBodyYaw(this.getYaw());
-        float f = MathHelper.wrapDegrees(entity.getYaw() - this.getYaw());
+        entity.setBodyYaw(this.yaw);
+        float f = MathHelper.wrapDegrees(entity.yaw - this.yaw);
         float g = MathHelper.clamp(f, -105.0F, 105.0F);
         entity.prevYaw += g - f;
-        entity.setYaw(entity.getYaw() + g - f);
-        entity.setHeadYaw(entity.getYaw());
+        entity.yaw = (entity.yaw + g - f);
+        entity.setHeadYaw(entity.yaw);
     }
 
     @Override
@@ -186,7 +184,8 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
 
     @Override
     public @Nullable Entity getPrimaryPassenger() {
-        return getFirstPassenger();
+        List<Entity> list = this.getPassengerList();
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Override
@@ -269,7 +268,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
         super.drop(source);
         if (!source.isSourceCreativePlayer()) {
             ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultStack();
-            stack.getOrCreateNbt().putString("Color", this.getPFMColor().asString());
+            stack.getOrCreateTag().putString("Color", this.getPFMColor().asString());
 
             ItemEntity itemEntity = new ItemEntity(world, this.getX(), this.getY(), this.getZ(), stack);
             this.world.spawnEntity(itemEntity);
@@ -277,7 +276,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     }
 
     @Override
-    public void takeKnockback(double strength, double x, double z) {
+    public void takeKnockback(float strength, double x, double z) {
 
     }
 

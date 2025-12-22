@@ -82,7 +82,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             PaladinFurnitureMod.GENERAL_LOGGER.warn("Replacement list was null, skipping transformation");
             return quads;
         } else if (toReplace.size() != replacements.size()) {
-            PaladinFurnitureMod.GENERAL_LOGGER.warn("Replacement list was not the same size, skipping transformation, expected {} sprites, got {}", toReplace.size(), replacements.size());
+            PaladinFurnitureMod.GENERAL_LOGGER.warn(String.format("Replacement list was not the same size, skipping transformation, expected %S sprites, got %s", String.valueOf(toReplace.size()), String.valueOf(replacements.size())));
             PaladinFurnitureMod.GENERAL_LOGGER.debug(toReplace);
             PaladinFurnitureMod.GENERAL_LOGGER.debug(replacements);
             return quads;
@@ -193,7 +193,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                 break;
             id++;
         }
-        ELEMENT_INTEGER_MAP.put(pairToFind, id);
+        ELEMENT_INTEGER_MAP.put(pairToFind, Integer.valueOf(id));
         return id;
     }
 
@@ -263,7 +263,8 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
         @Override
         public int hashCode() {
-            return Objects.hash(minU, maxU, minV, maxV, x, y, id);
+            return Objects.hash(Float.valueOf(minU), Float.valueOf(maxU),
+                    Float.valueOf(minV), Float.valueOf(maxV), Integer.valueOf(x), Integer.valueOf(y), id);
         }
     }
 

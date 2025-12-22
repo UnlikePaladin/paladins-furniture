@@ -41,8 +41,8 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
         if (state.getBlock() instanceof ClassicDeskBlock || state.getBlock() instanceof ClassicDeskCabinetBlock) {
             Direction dir = state.get(HorizontalFacingBlock.FACING);
             boolean isCabinet = state.getBlock() instanceof ClassicDeskCabinetBlock;
-            Function4<BlockView, BlockState, BlockPos, BlockPos, Boolean> canConnect = state.getBlock() instanceof ClassicDeskBlock desk ? desk::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
-            Function<BlockState, Boolean> canConnectSimple = state.getBlock() instanceof ClassicDeskBlock desk ? desk::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
+            Function4<BlockView, BlockState, BlockPos, BlockPos, Boolean> canConnect = state.getBlock() instanceof ClassicDeskBlock ? ((ClassicDeskBlock) state.getBlock())::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
+            Function<BlockState, Boolean> canConnectSimple = state.getBlock() instanceof ClassicDeskBlock ? ((ClassicDeskBlock) state.getBlock())::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
 
             boolean north = canConnect.apply(world, state, pos.north(), pos);
             boolean east = canConnect.apply(world, state, pos.east(), pos);

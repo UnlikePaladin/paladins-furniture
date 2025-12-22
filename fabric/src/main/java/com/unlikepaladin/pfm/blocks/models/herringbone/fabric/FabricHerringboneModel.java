@@ -43,7 +43,7 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
             }
             return mainTexture.getSprite();
         }
-        return super.getParticleSprite();
+        return super.getSprite();
     }
 
     @Override

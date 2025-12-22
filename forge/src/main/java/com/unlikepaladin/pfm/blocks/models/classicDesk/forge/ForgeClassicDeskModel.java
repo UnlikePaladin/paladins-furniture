@@ -46,8 +46,8 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
             super.getModelData(world, pos, state, data);
 
             Direction dir = state.get(HorizontalFacingBlock.FACING);
-            Function4<BlockView, BlockState, BlockPos, BlockPos, Boolean> canConnect = state.getBlock() instanceof ClassicDeskBlock desk ? desk::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
-            Function<BlockState, Boolean> canConnectSimple = state.getBlock() instanceof ClassicDeskBlock desk ? desk::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
+            Function4<BlockView, BlockState, BlockPos, BlockPos, Boolean> canConnect = state.getBlock() instanceof ClassicDeskBlock ? ((ClassicDeskBlock) state.getBlock())::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
+            Function<BlockState, Boolean> canConnectSimple = state.getBlock() instanceof ClassicDeskBlock ? ((ClassicDeskBlock) state.getBlock())::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
 
             boolean north = canConnect.apply(world, state, pos.north(), pos);
             boolean east = canConnect.apply(world, state, pos.east(), pos);
@@ -176,7 +176,7 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
             BlockState neighborStateFacing = deskData.neighborStateFacing;
             BlockState neighborStateOpposite = deskData.neighborStateOpposite;
             Direction dir = deskData.facing;
-            Function<BlockState, Boolean> canConnectSimple = state.getBlock() instanceof ClassicDeskBlock desk ? desk::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
+            Function<BlockState, Boolean> canConnectSimple = state.getBlock() instanceof ClassicDeskBlock ? ((ClassicDeskBlock) state.getBlock())::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
             BlockState neighborStateFacingNeighbor = deskData.neighborStateFacingNeighbor;
             BlockState neigborStateOppositeNeigbor = deskData.neigborStateOppositeNeigbor;
 

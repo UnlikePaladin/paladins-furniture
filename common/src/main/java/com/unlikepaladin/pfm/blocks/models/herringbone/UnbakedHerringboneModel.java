@@ -21,13 +21,13 @@ import java.util.function.Function;
 
 public class UnbakedHerringboneModel implements UnbakedModel {
 
-    private static final List<Identifier> TEMPLATE_MODEL = List.of(new Identifier("minecraft:block/cube_all"));
+    private static final List<Identifier> TEMPLATE_MODEL = Collections.singletonList(new Identifier("minecraft:block/cube_all"));
     private final Identifier id;
     public UnbakedHerringboneModel(Identifier id) {
         this.id = id;
     }
 
-    public static final List<Identifier> MODEL_IDS = new ArrayList<>() {
+    public static final List<Identifier> MODEL_IDS = new ArrayList<Identifier>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_herringbone_planks"));

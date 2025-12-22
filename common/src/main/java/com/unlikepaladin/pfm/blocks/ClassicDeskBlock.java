@@ -52,11 +52,6 @@ public class ClassicDeskBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
-        return false;
-    }
-
-    @Override
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (!state.isOf(state.getBlock())) {
             this.baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);

@@ -173,7 +173,7 @@ public class ModelHelper {
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
-                int abgr = atlasImage.getColor(i, j); // NativeImage returns ABGR (AABBGGRR)
+                int abgr = atlasImage.getPixelColor(i, j); // NativeImage returns ABGR (AABBGGRR)
                 int argb = abgrToArgb(abgr);
                 bufferedImage.setRGB(i, j, argb);
             }
@@ -205,7 +205,7 @@ public class ModelHelper {
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int abgr = nativeImage.getColor(x, y);
+                int abgr = nativeImage.getPixelColor(x, y);
                 int argb = abgrToArgb(abgr);
                 bufferedImage.setRGB(x, y, argb);
             }

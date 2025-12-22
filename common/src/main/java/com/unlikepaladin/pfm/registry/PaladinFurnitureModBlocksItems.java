@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.data.PFMBlockSettings;
 import com.unlikepaladin.pfm.data.ToolType;
+import com.unlikepaladin.pfm.ducks.AbstractBlock$SettingsExtension;
 import com.unlikepaladin.pfm.items.DyeKit;
 import com.unlikepaladin.pfm.registry.dynamic.FurnitureEntry;
 import net.minecraft.block.*;
@@ -62,7 +63,7 @@ public class PaladinFurnitureModBlocksItems {
 
     public static final Block RAW_CONCRETE = new Block(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE));
     public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND));
-    public static final Block LEATHER_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.WHITE_WOOL).sounds(BlockSoundGroup.WOOL).mapColor(MapColor.ORANGE));
+    public static final Block LEATHER_BLOCK = new Block(((AbstractBlock$SettingsExtension)AbstractBlock.Settings.copy(Blocks.WHITE_WOOL).sounds(BlockSoundGroup.WOOL)).pfm$setMapColor(MapColor.ORANGE));
 
     public static final Block IRON_CHAIN = new ChainBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.IRON_BARS).sounds(BlockSoundGroup.METAL), ToolType.PICKAXE));
     public static final PendantBlock GRAY_MODERN_PENDANT = new PendantBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.METAL, MapColor.GRAY).requiresTool().strength(5.0F, 6.0F).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)), ToolType.PICKAXE));

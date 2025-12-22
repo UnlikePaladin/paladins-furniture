@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
+import com.unlikepaladin.pfm.mixin.PFMSpriteAccessor;
 import com.unlikepaladin.pfm.mixin.PFMSpriteAtlasTextureAccessor;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import com.unlikepaladin.pfm.utilities.Version;
@@ -23,10 +24,7 @@ import net.minecraft.util.Identifier;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.nio.file.FileAlreadyExistsException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.*;
 
 public final class TextureReloadQueue {
@@ -41,12 +39,12 @@ public final class TextureReloadQueue {
                     int srcAlpha = (srcArgb >> 24) & 0xFF;      // Preserve original alpha
 
                     int mappedArgb;
-                    if (palette.containsKey(srcArgbNoAlpha)) {
-                        mappedArgb = palette.get(srcArgbNoAlpha);
+                    if (palette.containsKey(Integer.valueOf(srcArgbNoAlpha))) {
+                        mappedArgb = palette.get(Integer.valueOf(srcArgbNoAlpha));
                     } else {
                         // Use lab color distance to find closest color in palette, black magic
                         mappedArgb = findClosestColorLab(srcArgbNoAlpha, palette);
-                        palette.put(srcArgbNoAlpha, mappedArgb);
+                        palette.put(Integer.valueOf(srcArgbNoAlpha), Integer.valueOf(mappedArgb));
                     }
 
                     // Apply original alpha to the mapped color
@@ -59,8 +57,8 @@ public final class TextureReloadQueue {
             // write image
             String file = PFMRuntimeResources.getAssetPackDirectory().resolve("assets/pfm/textures/").toString();
             try {
-                Files.createDirectories(Path.of(file));
-                Files.createDirectory(Path.of(file+"/block"));
+                Files.createDirectories(Paths.get(file));
+                Files.createDirectory(Paths.get(file+"/block"));
             } catch (FileAlreadyExistsException ignored) {
             } catch (IOException e) {
                 PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to create directories for recolored image {}: {}", identifier, e.getMessage());
@@ -111,10 +109,10 @@ public final class TextureReloadQueue {
             atlasWidth = coords.atlasWidth;
             atlasHeight = coords.atlasHeight;
         } else {
-            x = original.getX();
-            y = original.getY();
-            atlasWidth = Math.round(original.getX() / original.getMinU());
-            atlasHeight = Math.round(original.getY() / original.getMinV());
+            x = ((PFMSpriteAccessor)original).pfm$getX();
+            y = ((PFMSpriteAccessor)original).pfm$getY();
+            atlasWidth = Math.round(x / original.getMinU());
+            atlasHeight = Math.round(y / original.getMinV());
         }
         int mipMapSize = ((PFMSpriteExtensions)original).pfm$getMipmapLevel();
 
@@ -131,7 +129,8 @@ public final class TextureReloadQueue {
         ResourceManager resourceManager = MinecraftClient.getInstance().getResourceManager();
         AbstractTexture abstractTexture = textureManager.getTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
         try {
-            if (abstractTexture instanceof SpriteAtlasTexture spriteAtlas) {
+            if (abstractTexture instanceof SpriteAtlasTexture) {
+                SpriteAtlasTexture spriteAtlas = (SpriteAtlasTexture) abstractTexture;
                 spriteAtlas.bindTexture();
 
                 for (Identifier spriteId : id) {
@@ -161,8 +160,78 @@ public final class TextureReloadQueue {
 
     }
 
-    public record SpriteCoordinates(int x, int y, int width, int height, int atlasWidth, int atlasHeight) {
-    }
+    public static final class SpriteCoordinates {
+        private final int x;
+        private final int y;
+        private final int width;
+        private final int height;
+        private final int atlasWidth;
+        private final int atlasHeight;
+
+        public SpriteCoordinates(int x, int y, int width, int height, int atlasWidth, int atlasHeight) {
+            this.x = x;
+            this.y = y;
+            this.width = width;
+            this.height = height;
+            this.atlasWidth = atlasWidth;
+            this.atlasHeight = atlasHeight;
+        }
+
+        public int getX() {
+            return x;
+        }
+
+        public int getY() {
+            return y;
+        }
+
+        public int getWidth() {
+            return width;
+        }
+
+        public int getHeight() {
+            return height;
+        }
+
+        public int getAtlasWidth() {
+            return atlasWidth;
+        }
+
+        public int getAtlasHeight() {
+            return atlasHeight;
+        }
+
+        @Override
+        public boolean equals(Object obj) {
+            if (obj == this) return true;
+            if (obj == null || obj.getClass() != this.getClass()) return false;
+            SpriteCoordinates that = (SpriteCoordinates) obj;
+            return this.x == that.x &&
+                    this.y == that.y &&
+                    this.width == that.width &&
+                    this.height == that.height &&
+                    this.atlasWidth == that.atlasWidth &&
+                    this.atlasHeight == that.atlasHeight;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(Integer.valueOf(x), Integer.valueOf(y), Integer.valueOf(width),
+                    Integer.valueOf(height), Integer.valueOf(atlasWidth), Integer.valueOf(atlasHeight));
+        }
+
+        @Override
+        public String toString() {
+            return "SpriteCoordinates[" +
+                    "x=" + x + ", " +
+                    "y=" + y + ", " +
+                    "width=" + width + ", " +
+                    "height=" + height + ", " +
+                    "atlasWidth=" + atlasWidth + ", " +
+                    "atlasHeight=" + atlasHeight + ']';
+        }
+
+        }
 
     /*
     Color distance calculation in CIE Lab color space

@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.items;
 
 import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
+import com.unlikepaladin.pfm.registry.Entities;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
@@ -23,7 +24,6 @@ import net.minecraft.util.math.Box;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.RaycastContext;
 import net.minecraft.world.World;
-import net.minecraft.world.event.GameEvent;
 
 import java.util.List;
 
@@ -35,9 +35,9 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
     @Override
     public String getTranslationKey(ItemStack stack) {
         DyeColor color = DyeColor.WHITE;
-        if (stack.hasNbt()) {
-            if (stack.getNbt().contains("Color")) {
-                color = DyeColor.byName(stack.getNbt().getString("Color"), DyeColor.WHITE);
+        if (stack.hasTag()) {
+            if (stack.getTag().contains("Color")) {
+                color = DyeColor.byName(stack.getTag().getString("Color"), DyeColor.WHITE);
             }
         }
         return String.format("block.pfm.%s_office_chair", color.asString());
@@ -46,7 +46,7 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
     @Override
     public ItemStack getDefaultStack() {
         ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putString("Color", DyeColor.WHITE.asString());
+        stack.getOrCreateTag().putString("Color", DyeColor.WHITE.asString());
         return stack;
     }
 
@@ -55,7 +55,7 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
         if (this.isIn(group)) {
             for (DyeColor color : DyeColor.values()) {
                 ItemStack stack = new ItemStack(this);
-                stack.getOrCreateNbt().putString("Color", color.asString());
+                stack.getOrCreateTag().putString("Color", color.asString());
                 stacks.add(stack);
             }
         }
@@ -77,7 +77,7 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
             List<Entity> list = world.getOtherEntities(user, user.getBoundingBox().stretch(vec3d.multiply(boxSize)).expand(1.0F),
                     EntityPredicates.EXCEPT_SPECTATOR.and(Entity::collides));
             if (!list.isEmpty()) {
-                Vec3d eyePos = user.getEyePos();
+                Vec3d eyePos = user.getCameraPosVec(1.0f);
 
                 for(Entity entity : list) {
                     Box box = entity.getBoundingBox().expand(entity.getTargetingMargin());
@@ -88,23 +88,22 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
             }
 
             if (hitResult.getType() == HitResult.Type.BLOCK) {
-                OfficeChairEntity chair = new OfficeChairEntity(world, hitResult.getPos().x, hitResult.getPos().y+0.1f, hitResult.getPos().z);
+                OfficeChairEntity chair = Entities.OFFICE_CHAIR.create(world);
                 DyeColor color = DyeColor.WHITE;
-                if (itemStack.hasNbt()) {
-                    NbtCompound nbt = itemStack.getNbt();
+                if (itemStack.hasTag()) {
+                    NbtCompound nbt = itemStack.getTag();
                     if (nbt.contains("Color")) {
                         color = DyeColor.byName(nbt.getString("Color"), DyeColor.WHITE);
                     }
                 }
-
-            chair.setPFMColor(color);
-            chair.setYaw(user.getYaw());
-            world.playSound(null, new BlockPos(hitResult.getPos()), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                chair.refreshPositionAndAngles(hitResult.getPos().x, hitResult.getPos().y+0.1f, hitResult.getPos().z, user.yaw, 0);
+                chair.setPFMColor(color);
+                chair.yaw = (user.yaw);
+                world.playSound(null, new BlockPos(hitResult.getPos()), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
                 if (!world.isClient) {
                     world.spawnEntity(chair);
-                    world.emitGameEvent(user, GameEvent.ENTITY_PLACE, new BlockPos(hitResult.getPos()));
-                    if (!user.getAbilities().creativeMode) {
+                    if (!user.abilities.creativeMode) {
                         itemStack.decrement(1);
                     }
                 }
