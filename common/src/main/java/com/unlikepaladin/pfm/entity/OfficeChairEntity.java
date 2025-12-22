@@ -138,12 +138,12 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     }
 
     @Override
-    public void updatePassengerPosition(Entity passenger) {
+    public void updatePassengerPosition(Entity passenger, PositionUpdater updater) {
         if (this.hasPassenger(passenger)) {
             float g = (float)((this.isRemoved() ? 0.01F : this.getMountedHeightOffset()) + passenger.getHeightOffset());
 
             Vec3d offset = new Vec3d(0.0, 0.0, -0.1).rotateY(-this.getYaw() * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
-            passenger.setPosition(this.getX() + offset.x, this.getY() + (double)g, this.getZ() + offset.z);
+            updater.accept(passenger, this.getX() + offset.x, this.getY() + (double)g, this.getZ() + offset.z);
             passenger.setYaw(passenger.getYaw() + this.yawVelocity);
             passenger.setHeadYaw(passenger.getHeadYaw() + this.yawVelocity);
             this.copyEntityData(passenger);
@@ -170,7 +170,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
             return ActionResult.PASS;
         }
 
-        if (world.isClient) {
+        if (getWorld().isClient) {
             return ActionResult.CONSUME;
         }
 
@@ -206,10 +206,10 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
                 Box box = passenger.getBoundingBox(entityPose);
                 for (int[] dismountingOffset : dismountingOffsets) {
                     dismountPos.set(chairPos.getX() + dismountingOffset[0], chairPos.getY() + 0.3, chairPos.getZ() + dismountingOffset[1]);
-                    double dismountHeight = this.world.getDismountHeight(dismountPos);
+                    double dismountHeight = this.getWorld().getDismountHeight(dismountPos);
                     if (Dismounting.canDismountInBlock(dismountHeight)) {
                         Vec3d vec3d = Vec3d.ofCenter(dismountPos, dismountHeight);
-                        if (Dismounting.canPlaceEntityAt(this.world, passenger, box.offset(vec3d))) {
+                        if (Dismounting.canPlaceEntityAt(this.getWorld(), passenger, box.offset(vec3d))) {
                             passenger.setPose(entityPose);
                             return vec3d;
                         }
@@ -265,8 +265,8 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
             ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultStack();
             stack.getOrCreateNbt().putString("Color", this.getPFMColor().asString());
 
-            ItemEntity itemEntity = new ItemEntity(world, this.getX(), this.getY(), this.getZ(), stack);
-            this.world.spawnEntity(itemEntity);
+            ItemEntity itemEntity = new ItemEntity(getWorld(), this.getX(), this.getY(), this.getZ(), stack);
+            this.getWorld().spawnEntity(itemEntity);
         }
     }
 

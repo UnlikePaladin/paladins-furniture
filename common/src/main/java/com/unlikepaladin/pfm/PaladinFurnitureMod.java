@@ -50,7 +50,7 @@ public class PaladinFurnitureMod {
 
 	public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 	public static Pair<String, ItemGroup> FURNITURE_GROUP = new Pair<>("furniture", null);
-    public static Pair<String, ItemGroup> BUILDING_BLOCKS = new Pair<>("building_blocks", ItemGroups.BUILDING_BLOCKS);
+    public static Pair<String, ItemGroup> BUILDING_BLOCKS = new Pair<>("building_blocks", null);
     public static Pair<String, ItemGroup> DYE_KITS = new Pair<>("dye_kits", null);;
 	private static PaladinFurnitureModUpdateChecker updateChecker;
 	public static boolean isClient = false;

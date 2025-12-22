@@ -72,6 +72,7 @@ public class ItemGroupRegistryForge {
                     }).build();
             helper.register(new Identifier(MOD_ID, "furniture"), furnitureGroup);
             PaladinFurnitureMod.FURNITURE_GROUP.setRight(furnitureGroup);
+            PaladinFurnitureMod.BUILDING_BLOCKS.setRight(Registries.ITEM_GROUP.get(ItemGroups.BUILDING_BLOCKS));
         });
     }
 

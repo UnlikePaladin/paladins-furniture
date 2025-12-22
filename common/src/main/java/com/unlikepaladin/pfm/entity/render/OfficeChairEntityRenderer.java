@@ -110,11 +110,11 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         matrixStack.translate(-0.45, 0, -0.5);
 
         BakedModel modelBase = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(MODEL_IDS[2]);
-        List<BakedQuad> baseQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> modelBase.getQuads(null, direction, mobEntity.world.random))
+        List<BakedQuad> baseQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> modelBase.getQuads(null, direction, mobEntity.getWorld().random))
                 .flatMap(List::stream).toList());
-        baseQuads.addAll(modelBase.getQuads(null, null, mobEntity.world.random));
+        baseQuads.addAll(modelBase.getQuads(null, null, mobEntity.getWorld().random));
         for (BakedQuad quad : baseQuads) {
-            float brightness = mobEntity.world.getBrightness(quad.getFace(), quad.hasShade());
+            float brightness = mobEntity.getWorld().getBrightness(quad.getFace(), quad.hasShade());
 
             solid.quad(matrixStack.peek(), quad, brightness, brightness, brightness,  light, OverlayTexture.DEFAULT_UV);
             VertexConsumer damage = new OverlayVertexConsumer(
@@ -130,9 +130,9 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
 
         // wheels - render 4 times at different positions
         BakedModel wheelModel = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(MODEL_IDS[3]);
-        List<BakedQuad> wheelQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> wheelModel.getQuads(null, direction, mobEntity.world.random))
+        List<BakedQuad> wheelQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> wheelModel.getQuads(null, direction, mobEntity.getWorld().random))
                 .flatMap(List::stream).toList());
-        wheelQuads.addAll(wheelModel.getQuads(null, null, mobEntity.world.random));
+        wheelQuads.addAll(wheelModel.getQuads(null, null, mobEntity.getWorld().random));
 
         // Calculate wheel rotation based on movement direction
         Vec3d velocity = mobEntity.getVelocity();
@@ -164,7 +164,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             matrixStack.translate(-0.5, -0.08, -0.5);
 
             for (BakedQuad quad : wheelQuads) {
-                float brightness = mobEntity.world.getBrightness(quad.getFace(), quad.hasShade());
+                float brightness = mobEntity.getWorld().getBrightness(quad.getFace(), quad.hasShade());
 
                 solid.quad(matrixStack.peek(), quad, brightness, brightness, brightness, light, OverlayTexture.DEFAULT_UV);
                 VertexConsumer damage = new OverlayVertexConsumer(
@@ -187,13 +187,13 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
 
         BakedModel model = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(MODEL_IDS[1]);
 
-        List<BakedQuad> chairQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> model.getQuads(null, direction, mobEntity.world.random))
+        List<BakedQuad> chairQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> model.getQuads(null, direction, mobEntity.getWorld().random))
                 .flatMap(List::stream).toList());
-        chairQuads.addAll(model.getQuads(null, null, mobEntity.world.random));
+        chairQuads.addAll(model.getQuads(null, null, mobEntity.getWorld().random));
 
 
         for (BakedQuad quad : chairQuads) {
-            float brightness = mobEntity.world.getBrightness(quad.getFace(), quad.hasShade());
+            float brightness = mobEntity.getWorld().getBrightness(quad.getFace(), quad.hasShade());
 
             float red = 1.0f;
             float green = 1.0f;
