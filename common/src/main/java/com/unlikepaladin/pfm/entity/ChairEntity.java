@@ -37,32 +37,32 @@ public class ChairEntity extends MobEntity {
 
     @Override
     public void tick() {
-            if (!this.hasPassengers()) {
-                if (!this.world.isClient){
-                    this.discard();
-                }
+        this.setVelocity(Vec3d.ZERO);
+        if (!this.hasPassengers()) {
+            if (!this.world.isClient){
+                this.discard();
             }
-            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicToiletBlock && world.isClient()){
-                if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed() && this.world.getBlockState(this.getBlockPos()).get(BasicToiletBlock.TOILET_STATE) == ToiletState.CLEAN) {
-                    fart(this.getBlockPos());
-                }
-                super.tick();
+        }
+        else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicToiletBlock && world.isClient()){
+            if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed() && this.world.getBlockState(this.getBlockPos()).get(BasicToiletBlock.TOILET_STATE) == ToiletState.CLEAN) {
+                fart(this.getBlockPos());
             }
-            else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock || this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicBathtubBlock){
-                super.tick();
+            super.tick();
+        }
+        else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock || this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicBathtubBlock){
+            super.tick();
+        }
+        else {
+            if (!this.world.isClient) {
+                this.removeAllPassengers();
+                this.discard();
             }
-            else {
-                if (!this.world.isClient){
-                    this.removeAllPassengers();
-                    this.discard();
-                }
-            }
+        }
     }
 
     @Override
     public void tickMovement() {
         super.tickMovement();
-        this.setVelocity(Vec3d.ZERO);
     }
 
     @Override
@@ -110,7 +110,8 @@ public class ChairEntity extends MobEntity {
     }
 
     public static DefaultAttributeContainer.Builder createMobAttributes(){
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 0);
+        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 0)
+                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f);
     }
 
     @Override
