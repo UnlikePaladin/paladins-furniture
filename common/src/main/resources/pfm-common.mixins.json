@@ -15,14 +15,17 @@
     "PFMMixinDedicatedServer"
   ],
   "client": [
+    "PFMAtlasLoaderMixin",
     "PFMBakedModelManagerMixin",
     "PFMItemRendererMixin",
     "PFMLanguageManagerAccessor",
+    "PFMMissingSpriteAccessor",
     "PFMMixinClientPacketListener",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSplashOverlayMixin",
     "PFMSpriteAtlasTextureAccessor",
-    "PFMSpriteInfoAccesor",
+    "PFMSpriteContentsAccessor",
+    "PFMSpriteContentsMixin",
     "PFMSpriteMixin",
     "PFMTitleScreenMixin"
   ],

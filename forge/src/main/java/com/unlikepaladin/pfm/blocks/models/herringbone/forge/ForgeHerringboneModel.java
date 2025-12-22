@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
+import com.unlikepaladin.pfm.ducks.PFMSpriteContentExtensions;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.model.BakedModel;
@@ -82,7 +83,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     private Sprite generateTextureIfNeeded(VariantBase<?> variant) {
         Identifier finalId = new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
         SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, finalId);
-        if (mainTexture.getSprite().getId() == MissingSprite.getMissingSpriteId()) {
+        if (!((PFMSpriteContentExtensions)mainTexture.getSprite().getContents()).pfm$isInitialized()) {
             SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
             ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
         }
@@ -92,7 +93,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     @Override
     public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
         Pair<ItemStack, Direction> directionPair = new Pair<>(stack, face);
-        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && cache.get(directionPair).get(0).getSprite().getId() == MissingSprite.getMissingSpriteId()) {
+        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && !((PFMSpriteContentExtensions)cache.get(directionPair).get(0).getSprite().getContents()).pfm$isInitialized()) {
             cache.remove(directionPair);
         }
         return super.getQuadsCached(stack, state, face, random);

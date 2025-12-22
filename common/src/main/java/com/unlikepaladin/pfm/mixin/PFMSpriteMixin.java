@@ -3,25 +3,28 @@ package com.unlikepaladin.pfm.mixin;
 import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.Sprite;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
+import net.minecraft.client.texture.SpriteContents;
+import org.spongepowered.asm.mixin.*;
 
 @Mixin(Sprite.class)
 public abstract class PFMSpriteMixin implements PFMSpriteExtensions {
     @Mutable
     @Shadow
     @Final
-    public NativeImage[] images;
+    private SpriteContents contents;
 
     @Override
     public int pfm$getMipmapLevel() {
-        return (images.length-1);
+        return (((PFMSpriteContentsAccessor)contents).pfm$getImages().length-1);
     }
 
     @Override
     public void pfm$setImages(NativeImage[] images) {
-        this.images = images;
+        ((PFMSpriteContentsAccessor)this.contents).pfm$setImages(images);
+    }
+
+    @Override
+    public void pfm$setContents(SpriteContents contents) {
+        this.contents = contents;
     }
 }

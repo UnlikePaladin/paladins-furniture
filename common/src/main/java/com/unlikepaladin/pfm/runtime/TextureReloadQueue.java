@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
 import com.unlikepaladin.pfm.mixin.PFMSpriteAtlasTextureAccessor;
+import com.unlikepaladin.pfm.mixin.PFMSpriteContentsAccessor;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import com.unlikepaladin.pfm.utilities.Version;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -15,7 +16,6 @@ import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.metadata.AnimationResourceMetadata;
 import net.minecraft.client.texture.*;
-import net.minecraft.client.util.PngFile;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.screen.PlayerScreenHandler;
@@ -99,35 +99,11 @@ public final class TextureReloadQueue {
         Resource resource = optionalResource.get();
         Sprite original = spriteAtlas.getSprite(id);
 
-        AnimationResourceMetadata animationResourceMetadata = resource.getMetadata().decode(AnimationResourceMetadata.READER)
-                .orElse(AnimationResourceMetadata.EMPTY);
-
-        PngFile pngFile = new PngFile(path::toString, resource.getInputStream());
-        Sprite.Info info = new Sprite.Info(id, pngFile.width, pngFile.height, animationResourceMetadata);
-
-        SpriteCoordinates coords = PFMSpriteRegistry.PFM_SPRITE_COORDINATES.get(id);
-        int x, y;
-        int atlasWidth, atlasHeight;
-
-        if (coords != null) {
-            x = coords.x;
-            y = coords.y;
-            atlasWidth = coords.atlasWidth;
-            atlasHeight = coords.atlasHeight;
-        } else {
-            x = original.getX();
-            y = original.getY();
-            atlasWidth = Math.round(original.getX() / original.getMinU());
-            atlasHeight = Math.round(original.getY() / original.getMinV());
-        }
-        int mipMapSize = ((PFMSpriteExtensions)original).pfm$getMipmapLevel();
-
-        Sprite newSprite = ((PFMSpriteAtlasTextureAccessor)spriteAtlas).invoke$loadSprite(resourceManager, info, atlasWidth, atlasHeight, mipMapSize, x, y);
-
-        ((PFMSpriteAtlasTextureAccessor)spriteAtlas).pfm$getSprites().put(id, newSprite);
-
-        newSprite.upload();
-        original.close();
+        SpriteContents newContents = SpriteLoader.load(id, resource);
+        ((PFMSpriteExtensions) original).pfm$setContents(newContents);
+        original.upload();
+        newContents.generateMipmaps(MinecraftClient.getInstance().options.getMipmapLevels().getValue());
+        original.upload();
     }
 
     public static void reloadSpritesOnClientThread(List<Identifier> id) {

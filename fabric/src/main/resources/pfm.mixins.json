@@ -6,8 +6,7 @@
     "PFMBlockDustParticleMixin",
     "PFMBlockModelsMixin",
     "PFMCrackParticleMixin",
-    "PFMRenderLayersFabricMixin",
-    "PFMSpriteAtlasTexturesMixin"
+    "PFMRenderLayersFabricMixin"
   ],
   "mixins": [
     "PFMAbstractTagProvider$ObjectBuilderMixin",

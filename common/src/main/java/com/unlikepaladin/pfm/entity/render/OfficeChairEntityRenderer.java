@@ -17,8 +17,8 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3f;
 import net.minecraft.util.math.random.LocalRandom;
 import net.minecraft.util.math.random.Random;
 
@@ -119,7 +119,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             VertexConsumer damage = new OverlayVertexConsumer(
                     damageConsumer,
                     matrixStack.peek().getPositionMatrix(),
-                    matrixStack.peek().getNormalMatrix()
+                    matrixStack.peek().getNormalMatrix(), 1.0f
             );
             if (mobEntity.timeUntilRegen > 0)
                 damage.quad(matrixStack.peek(), quad, brightness, brightness, brightness, light, OverlayTexture.DEFAULT_UV);
@@ -151,7 +151,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             matrixStack.translate(wheelOffset[0], 0, wheelOffset[1]);
 
             // Rotate wheel to face movement direction around its own Y axis
-            matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(-wheelYaw));
+            matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-wheelYaw));
 
             // Offset for the model first
             matrixStack.translate(-0.45, 0, -0.5);
@@ -159,7 +159,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             // Move to wheel's center, spin, then move back
             // Assuming wheel center is roughly at (0.5, 0.05, 0.5) in model space
             matrixStack.translate(0.5, 0.08, 0.5);
-            matrixStack.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(wheelSpin));
+            matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(wheelSpin));
             matrixStack.translate(-0.5, -0.08, -0.5);
 
             for (BakedQuad quad : wheelQuads) {
@@ -169,7 +169,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
                 VertexConsumer damage = new OverlayVertexConsumer(
                         damageConsumer,
                         matrixStack.peek().getPositionMatrix(),
-                        matrixStack.peek().getNormalMatrix()
+                        matrixStack.peek().getNormalMatrix(), 1.0f
                 );
                 if (mobEntity.timeUntilRegen > 0)
                     damage.quad(matrixStack.peek(), quad, brightness, brightness, brightness, light, OverlayTexture.DEFAULT_UV);
@@ -180,7 +180,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
 
         // top
         matrixStack.push();
-        matrixStack.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(180.0F - f));
+        matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F - f));
 
         matrixStack.translate(-0.45, 0, -0.5);
 
@@ -210,7 +210,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             VertexConsumer damage = new OverlayVertexConsumer(
                     damageConsumer,
                     matrixStack.peek().getPositionMatrix(),
-                    matrixStack.peek().getNormalMatrix()
+                    matrixStack.peek().getNormalMatrix(), 1.0f
             );
             if (mobEntity.timeUntilRegen > 0)
                 damage.quad(matrixStack.peek(), quad, brightness, brightness, brightness, light, OverlayTexture.DEFAULT_UV);

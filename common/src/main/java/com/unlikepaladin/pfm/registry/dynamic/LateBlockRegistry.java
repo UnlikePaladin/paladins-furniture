@@ -17,6 +17,7 @@ import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.resource.featuretoggle.FeatureFlag;
 import net.minecraft.sound.BlockSoundGroup;
 import net.minecraft.util.DyeColor;
@@ -56,7 +57,7 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.furnitureEntryMap.put(HerringbonePlankBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_herringbone_planks", () -> new HerringbonePlankBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).sounds(BlockSoundGroup.WOOD).mapColor(color).nonOpaque()), true, ItemGroup.BUILDING_BLOCKS), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_herringbone_planks", () -> new HerringbonePlankBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).sounds(BlockSoundGroup.WOOD).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.BUILDING_BLOCKS), true);
             }
         }});
         PaladinFurnitureMod.furnitureEntryMap.put(BasicChairBlock.class, new FurnitureEntry<>() {{
@@ -287,8 +288,8 @@ public class LateBlockRegistry {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
-        PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = new OfficeChairItem(new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
-        LateBlockRegistry.registerLateItem("office_chair", () -> PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM);
+        PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = new OfficeChairItem(new Item.Settings());
+        LateBlockRegistry.registerLateItem("office_chair", () -> PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, PaladinFurnitureMod.FURNITURE_GROUP);
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicNightstandBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();

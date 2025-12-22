@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.*;
+import com.unlikepaladin.pfm.mixin.PFMSpriteContentsAccessor;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
@@ -129,13 +130,13 @@ public class ModelHelper {
     public static int[][] generatePalette(Sprite texture, int colorCount) {
         if (texture == null)
             return null;
-        else if (paletteCache.containsKey(Pair.of(texture.getId(), colorCount)))
-            return paletteCache.get(Pair.of(texture.getId(), colorCount));
+        else if (paletteCache.containsKey(Pair.of(texture.getContents().getId(), colorCount)))
+            return paletteCache.get(Pair.of(texture.getContents().getId(), colorCount));
 
         BufferedImage image = getSpriteBufferedImage(texture);
         int[][] palette = ColorThief.getPalette(image, colorCount, 5, false);
-        paletteCache.put(new Pair<>(texture.getId(), colorCount), palette);
-        String filename = texture.getId().getNamespace().replace("/", "") + "_" + texture.getId().getPath().replace("/", "") + "_original.png";
+        paletteCache.put(new Pair<>(texture.getContents().getId(), colorCount), palette);
+        String filename = texture.getContents().getId().getNamespace().replace("/", "") + "_" + texture.getContents().getId().getPath().replace("/", "") + "_original.png";
         //writeBufferedImageToFile(image, filename);
 
         //writePaletteToImage(palette, texture.getId().getNamespace().replace("/", "") + "_" + texture.getId().getPath().replace("/", "") + "_palette.png");
@@ -166,11 +167,11 @@ public class ModelHelper {
     }
 
     public static BufferedImage getSpriteBufferedImage(Sprite sprite) {
-        int width = sprite.getWidth();
-        int height = sprite.getHeight();
+        int width = sprite.getContents().getWidth();
+        int height = sprite.getContents().getHeight();
         // Upload the sprite to ensure underlying NativeImage data is present
         sprite.upload();
-        NativeImage atlasImage = sprite.images[0];
+        NativeImage atlasImage = ((PFMSpriteContentsAccessor)sprite.getContents()).pfm$getImages()[0];
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {

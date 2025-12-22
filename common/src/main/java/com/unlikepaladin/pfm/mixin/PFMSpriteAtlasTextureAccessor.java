@@ -12,9 +12,6 @@ import java.util.Map;
 
 @Mixin(SpriteAtlasTexture.class)
 public interface PFMSpriteAtlasTextureAccessor {
-    @Invoker("loadSprite")
-    Sprite invoke$loadSprite(ResourceManager container, Sprite.Info info, int atlasWidth, int atlasHeight, int maxLevel, int x, int y);
-
     @Accessor("sprites")
     Map<Identifier, Sprite> pfm$getSprites();
 }

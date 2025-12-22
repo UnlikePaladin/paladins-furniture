@@ -51,17 +51,6 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        if (this.isIn(group)) {
-            for (DyeColor color : DyeColor.values()) {
-                ItemStack stack = new ItemStack(this);
-                stack.getOrCreateNbt().putString("Color", color.asString());
-                stacks.add(stack);
-            }
-        }
-    }
-
-    @Override
     public UseAction getUseAction(ItemStack stack) {
         return UseAction.BLOCK;
     }
@@ -75,7 +64,7 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
             Vec3d vec3d = user.getRotationVec(1.0F);
             double boxSize = 5.0F;
             List<Entity> list = world.getOtherEntities(user, user.getBoundingBox().stretch(vec3d.multiply(boxSize)).expand(1.0F),
-                    EntityPredicates.EXCEPT_SPECTATOR.and(Entity::collides));
+                    EntityPredicates.EXCEPT_SPECTATOR.and(Entity::canHit));
             if (!list.isEmpty()) {
                 Vec3d eyePos = user.getEyePos();
 

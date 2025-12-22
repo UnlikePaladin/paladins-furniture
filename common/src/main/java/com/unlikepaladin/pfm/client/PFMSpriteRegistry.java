@@ -7,19 +7,19 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteContents;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.Pair;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class PFMSpriteRegistry {
     public static Identifier HERRINGBONE_PLANKS = new Identifier(PaladinFurnitureMod.MOD_ID, "block/template_herringbone_planks");
-    public static Map<Identifier, Function<Sprite.Info, List<Sprite.Info>>> DYNAMIC_SPRITE_GENERATORS = new HashMap<>();
+    public static Map<Identifier, Function<SpriteContents, List<Pair<Identifier, SpriteContents>>>> DYNAMIC_SPRITE_GENERATORS = new HashMap<>();
     public static Map<Identifier, TextureReloadQueue.SpriteCoordinates> PFM_SPRITE_COORDINATES = new HashMap<>();
+    public static Map<Identifier, Identifier> PFM_SPRITES = new HashMap<>();
 
     public static void registerAdditionalSprites() {
         List<VariantBase<?>> variantBaseList = new ArrayList<>(WoodVariantRegistry.getVariants());
