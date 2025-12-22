@@ -11,6 +11,7 @@ import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelLoader;
 import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DyeColor;
@@ -42,7 +43,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         super(context, new OfficeChairModelEmpty(), 0f);
     }
 
-    public static void renderItem(ItemStack itemStack, MatrixStack stack, ModelTransformation.Mode mode, VertexConsumerProvider provider,
+    public static void renderItem(ItemStack itemStack, MatrixStack stack, ModelTransformationMode mode, VertexConsumerProvider provider,
                                   boolean leftHanded, int light, int overlay) {
         stack.push();
 
@@ -50,8 +51,8 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
                 .pfm$getModelFromNormalID(OfficeChairEntityRenderer.MODEL_IDS[0]);
 
         chairModel.getTransformation().getTransformation(mode).apply(
-                mode == ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND ||
-                        mode == ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, stack);
+                mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND ||
+                        mode == ModelTransformationMode.THIRD_PERSON_LEFT_HAND, stack);
 
         stack.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 

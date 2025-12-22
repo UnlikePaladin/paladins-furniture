@@ -12,6 +12,7 @@ import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel
 import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
 import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
 import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
+import com.unlikepaladin.pfm.blocks.models.classicDesk.UnbakedClassicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
@@ -19,6 +20,7 @@ import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFridgeModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedIronFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.herringbone.UnbakedHerringboneModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
@@ -35,6 +37,7 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
+import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelResolver;
 import net.minecraft.client.render.model.UnbakedModel;
@@ -42,6 +45,7 @@ import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PFMModelLoadingPlugin implements ModelLoadingPlugin {
@@ -153,6 +157,12 @@ public class PFMModelLoadingPlugin implements ModelLoadingPlugin {
         else if (UnbakedBasicDeskCabinetModel.MODEL_IDS.contains(resourceId)){
             return new UnbakedBasicDeskCabinetModel();
         }
+        else if (UnbakedClassicDeskModel.MODEL_IDS.contains(resourceId)){
+            return new UnbakedClassicDeskModel();
+        }
+        else if (UnbakedHerringboneModel.MODEL_IDS.contains(resourceId)){
+            return new UnbakedHerringboneModel(resourceId);
+        }
         else
             return null;
     }
@@ -246,11 +256,16 @@ public class PFMModelLoadingPlugin implements ModelLoadingPlugin {
         for (Identifier id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
             out.add(id);
         }
+        for (Identifier id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
+            out.add(id);
+        }
         out.addAll(UnbakedMirrorModel.ALL_MODEL_IDS);
         out.addAll(UnbakedIronFridgeModel.ALL_MODEL_IDS);
         out.addAll(UnbakedFridgeModel.ALL_MODEL_IDS);
         out.addAll(UnbakedFreezerModel.ALL_MODEL_IDS);
         out.addAll(UnbakedBasicLampModel.ALL_MODEL_IDS);
+        out.add(new Identifier("minecraft:block/cube_all"));
+        out.addAll(Arrays.asList(OfficeChairEntityRenderer.MODEL_IDS));
         return out;
     }
 }

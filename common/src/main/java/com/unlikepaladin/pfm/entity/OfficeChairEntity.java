@@ -57,7 +57,8 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
 
     @Override
     public void travel(Vec3d movementInput) {
-        if (this.hasPassengers() && this.getPrimaryPassenger() instanceof LivingEntity livingEntity) {
+        if (this.hasPassengers() && this.getControllingPassenger() instanceof LivingEntity) {
+            LivingEntity livingEntity = this.getControllingPassenger();
             this.prevYaw = this.getYaw();
             this.setPitch(livingEntity.getPitch() * 0.5F);
             this.setRotation(this.getYaw(), this.getPitch());
@@ -182,13 +183,14 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     }
 
     @Override
-    public @Nullable Entity getPrimaryPassenger() {
-        return getFirstPassenger();
-    }
-
-    @Override
-    public boolean canBeRiddenInWater() {
-        return true;
+    public @Nullable LivingEntity getControllingPassenger() {
+        if (this.hasPassengers()) {
+            Entity entity = this.getFirstPassenger();
+            if (entity instanceof LivingEntity livingEntity) {
+                return livingEntity;
+            }
+        }
+        return super.getControllingPassenger();
     }
 
     @Override
