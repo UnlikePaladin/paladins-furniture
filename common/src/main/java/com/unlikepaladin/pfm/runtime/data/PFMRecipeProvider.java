@@ -315,8 +315,8 @@ public class PFMRecipeProvider extends PFMProvider {
         offerClassicCoffeeTableRecipe(ClassicCoffeeTableBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(ClassicCoffeeTableBlock.class).getVariants(), exporter);
         offerBasicDeskRecipe(BasicDeskBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskBlock.class).getVariants(), exporter);
         offerBasicDeskCabinetRecipe(BasicDeskCabinetBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariants(), exporter);
-        offerClassicDeskRecipe(ClassicDeskBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskBlock.class).getVariants(), exporter);
-        offerClassicDeskCabinetRecipe(ClassicDeskCabinetBlock.class, "secondary", "base", PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariants(), exporter);
+        offerClassicDeskRecipe(ClassicDeskBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskBlock.class).getVariants(), exporter);
+        offerClassicDeskCabinetRecipe(ClassicDeskCabinetBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariants(), exporter);
 
         PaladinFurnitureMod.pfmModCompatibilities.forEach(pfmModCompatibility -> pfmModCompatibility.generateRecipes(exporter));
     }

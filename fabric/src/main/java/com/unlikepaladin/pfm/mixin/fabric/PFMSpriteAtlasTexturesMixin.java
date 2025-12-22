@@ -38,7 +38,7 @@ public class PFMSpriteAtlasTexturesMixin {
         }
     }
 
-    @Inject(method = "loadSprite", at = @At(value = "INVOKE", target = "Lorg/apache/logging/log4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", shift = At.Shift.BEFORE), cancellable = true)
+    @Inject(method = "loadSprite", at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;error(Ljava/lang/String;Ljava/lang/Object;Ljava/lang/Object;)V", shift = At.Shift.BEFORE), cancellable = true)
     public void cancelErrorForPFMTextures(ResourceManager container, Sprite.Info info, int atlasWidth, int atlasHeight, int maxLevel, int x, int y, CallbackInfoReturnable<Sprite> cir) {
         if (PFMSpriteRegistry.PFM_SPRITE_COORDINATES.containsKey(info.getId())) {
             cir.setReturnValue(null);

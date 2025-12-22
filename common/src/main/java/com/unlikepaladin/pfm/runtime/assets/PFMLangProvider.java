@@ -160,13 +160,13 @@ public class PFMLangProvider extends PFMProvider {
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMap(), writer, "block.pfm.desk_cabinet_basic", this::simpleStrippedFurnitureTranslation);
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.desk_cabinet_basic", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskBlock.class).getVariantToBlockMap(), writer, "block.pfm.desk_classic", this::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.desk_classic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskBlock.class).getVariantToBlockMap(), writer, "block.pfm.desk_classic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.desk_classic", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariantToBlockMap(), writer, "block.pfm.desk_cabinet_classic", this::simpleStrippedFurnitureTranslation);
-            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.desk_cabinet_classic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariantToBlockMap(), writer, "block.pfm.desk_cabinet_classic", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.desk_cabinet_classic", this::simpleStrippedFurnitureTranslation);
 
-            generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(HerringbonePlankBlock.class).getVariantToBlockMap(), writer, "block.pfm.herringbone_plank", this::simpleStrippedFurnitureTranslation);
+            generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(HerringbonePlankBlock.class).getVariantToBlockMap(), writer, "block.pfm.herringbone_plank", this::simpleStrippedFurnitureTranslation);
 
             writer.write("    \"pfm.dummy.entry\": \"dummy entry\"\n");
             writer.write("}");
