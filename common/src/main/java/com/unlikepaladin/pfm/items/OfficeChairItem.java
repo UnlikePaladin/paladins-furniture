@@ -97,9 +97,10 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
                     }
                 }
 
-            chair.setPFMColor(color);
-            chair.setYaw(user.getYaw());
-            world.playSound(null, new BlockPos(hitResult.getPos()), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                chair.setPersistent();
+                chair.setPFMColor(color);
+                chair.setYaw(user.getYaw());
+                world.playSound(null, new BlockPos(hitResult.getPos()), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
                 if (!world.isClient) {
                     world.spawnEntity(chair);
