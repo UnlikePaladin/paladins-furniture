@@ -101,8 +101,11 @@ public final class TextureReloadQueue {
 
         SpriteContents newContents = SpriteLoader.load(id, resource);
         ((PFMSpriteExtensions) original).pfm$setContents(newContents);
-        original.upload();
-        newContents.generateMipmaps(MinecraftClient.getInstance().options.getMipmapLevels().getValue());
+        try {
+            newContents.generateMipmaps(MinecraftClient.getInstance().options.getMipmapLevels().getValue());
+        } catch (NullPointerException e) {
+            PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to generate mipmaps for texture {}: {}", id, e.getMessage());
+        }
         original.upload();
     }
 
