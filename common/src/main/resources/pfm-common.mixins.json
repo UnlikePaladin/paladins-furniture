@@ -19,6 +19,9 @@
     "PFMMixinClientPacketListener",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSplashOverlayMixin",
+    "PFMSpriteAtlasTextureAccessor",
+    "PFMSpriteInfoAccesor",
+    "PFMSpriteMixin",
     "PFMTitleScreenMixin"
   ],
   "injectors": {

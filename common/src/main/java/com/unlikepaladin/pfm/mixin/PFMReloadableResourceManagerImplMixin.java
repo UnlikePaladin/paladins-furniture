@@ -22,6 +22,7 @@ public class PFMReloadableResourceManagerImplMixin {
     private void createReload(Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage, List<ResourcePack> packs, CallbackInfoReturnable<ResourceReload> cir) {
         PFMRuntimeResources.modelCacheMap.clear();
         ModelHelper.blockToTextureMap.clear();
+        ModelHelper.GENERATED_TEXTURE_IDS.clear();
         if (ModelHelper.OAK_SPRITES_PLANKS_TO_REPLACE != null)
             ModelHelper.OAK_SPRITES_PLANKS_TO_REPLACE = null;
         if (ModelHelper.OAK_SPRITES_BED_TO_REPLACE != null)

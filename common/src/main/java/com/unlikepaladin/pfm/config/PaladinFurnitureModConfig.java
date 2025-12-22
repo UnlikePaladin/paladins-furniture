@@ -42,7 +42,8 @@ public class PaladinFurnitureModConfig {
             mobsSitOnChairs = new BooleanConfigOption(new TranslatableText("pfm.option.mobsSitOnChairs"), new TranslatableText("pfm.option.mobsSitOnChairs.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
             renderImmersivePortalsMirrors = new BooleanConfigOption(new TranslatableText("pfm.option.renderImmersivePortalsMirrors"), new TranslatableText("pfm.option.renderImmersivePortalsMirrors.tooltip"), GAMEPLAY_OPTIONS, true, Side.CLIENT),
             spawnImmersivePortalsMirror  = new BooleanConfigOption(new TranslatableText("pfm.option.spawnImmersivePortalsMirror"), new TranslatableText("pfm.option.spawnImmersivePortalsMirror.tooltip"), GAMEPLAY_OPTIONS, true, Side.SERVER),
-            disableGeneratingScreen  = new BooleanConfigOption(new TranslatableText("pfm.option.disableGeneratingScreen"), new TranslatableText("pfm.option.disableGeneratingScreen.tooltip"), MOD_OPTIONS, false, Side.CLIENT)
+            disableGeneratingScreen  = new BooleanConfigOption(new TranslatableText("pfm.option.disableGeneratingScreen"), new TranslatableText("pfm.option.disableGeneratingScreen.tooltip"), MOD_OPTIONS, false, Side.CLIENT),
+            disableSinytraWarning  = new BooleanConfigOption(new TranslatableText("pfm.option.disableSinytraWarning"), new TranslatableText("pfm.option.disableSinytraWarning.tooltip"), MOD_OPTIONS, false, Side.CLIENT)
         );
         this.propertiesPath = propertiesPath.resolve("pfm.json");
         this.directoryPath = propertiesPath;
@@ -112,6 +113,9 @@ public class PaladinFurnitureModConfig {
     public boolean disableGeneratingScreen() {
         return disableGeneratingScreen.getValue();
     }
+    public boolean disableSinytraWarning() {
+        return disableSinytraWarning.getValue();
+    }
 
     private BooleanConfigOption checkForUpdates;
 
@@ -132,6 +136,7 @@ public class PaladinFurnitureModConfig {
     private BooleanConfigOption renderImmersivePortalsMirrors;
     private BooleanConfigOption spawnImmersivePortalsMirror;
     private BooleanConfigOption disableGeneratingScreen;
+    public BooleanConfigOption disableSinytraWarning;
 
 
     public Path getPath() {
@@ -171,6 +176,7 @@ public class PaladinFurnitureModConfig {
         renderImmersivePortalsMirrors.setValue(getFromJsonElement(config.get("renderImmersivePortalsMirrors"), true));
         spawnImmersivePortalsMirror.setValue(getFromJsonElement(config.get("spawnImmersivePortalsMirror"), true));
         disableGeneratingScreen.setValue(getFromJsonElement(config.get("disableGeneratingScreen"), false));
+        disableSinytraWarning.setValue(getFromJsonElement(config.get("disableSinytraWarning"), false));
         for (String key : options.keySet()) {
             if (!config.has(key.replace("pfm.option.", ""))){
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Missing Config Option: " +  key.replace("pfm.option.", "") + ", resetting to default value.");
@@ -222,6 +228,7 @@ public class PaladinFurnitureModConfig {
         renderImmersivePortalsMirrors.setValue("true".equals(properties.getProperty("renderImmersivePortalsMirrors")));
         spawnImmersivePortalsMirror.setValue("true".equals(properties.getProperty("spawnImmersivePortalsMirror")));
         disableGeneratingScreen.setValue("true".equals(properties.get("disableGeneratingScreen")));
+        disableSinytraWarning.setValue("true".equals(properties.get("disableSinytraWarning")));
         save();
         Files.delete(legacyConfigFile);
         PaladinFurnitureMod.GENERAL_LOGGER.info("Successfully migrated to new config");
@@ -246,6 +253,7 @@ public class PaladinFurnitureModConfig {
         object.addProperty("renderImmersivePortalsMirrors", renderImmersivePortalsMirrors.getValue());
         object.addProperty("spawnImmersivePortalsMirror", spawnImmersivePortalsMirror.getValue());
         object.addProperty("disableGeneratingScreen", disableGeneratingScreen.getValue());
+        object.addProperty("disableSinytraWarning", disableSinytraWarning.getValue());
 
         try (FileWriter writer = new FileWriter(propertiesPath.toString())) {
             GSON.toJson(object, writer);

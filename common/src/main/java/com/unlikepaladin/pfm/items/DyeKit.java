@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.items;
 
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.DyeableFurnitureBlockEntity;
+import com.unlikepaladin.pfm.entity.DyeableFurnitureEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.LivingEntity;
@@ -18,6 +19,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Box;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.World;
 
@@ -39,9 +41,9 @@ public class DyeKit extends Item {
         BlockPos blockPos = context.getBlockPos();
         World world = context.getWorld();
         BlockState blockState = world.getBlockState(blockPos);
-        if (playerEntity.isSneaking()) {
-            boolean dyed = false;
-            if(blockState.getBlock() instanceof DyeableFurnitureBlock && stack.getItem() instanceof DyeKit) {
+        if (playerEntity.isSneaking() && stack.getItem() instanceof DyeKit) {
+            boolean dyed;
+            if(blockState.getBlock() instanceof DyeableFurnitureBlock) {
                 world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
                 String newBlock= blockState.getBlock().toString();
                 newBlock = newBlock.replace(((DyeableFurnitureBlock) blockState.getBlock()).getPFMColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
@@ -50,15 +52,17 @@ public class DyeKit extends Item {
                 stack.decrement(1);
                 dyed = true;
             }
-            if (world.getBlockEntity(blockPos) instanceof DyeableFurnitureBlockEntity && stack.getItem() instanceof DyeKit) {
+            else if (world.getBlockEntity(blockPos) instanceof DyeableFurnitureBlockEntity<?>) {
                 world.playSound(null, blockPos, SoundEvents.ITEM_DYE_USE, SoundCategory.BLOCKS, 1.0F, 1.0F);
-                DyeableFurnitureBlockEntity dyeableFurnitureBlockEntity = (DyeableFurnitureBlockEntity) world.getBlockEntity(blockPos);
+                DyeableFurnitureBlockEntity<?> dyeableFurnitureBlockEntity = (DyeableFurnitureBlockEntity<?>) world.getBlockEntity(blockPos);
                 dyeableFurnitureBlockEntity.setPFMColor(getColor());
                 world.updateListeners(blockPos, blockState, blockState, Block.NOTIFY_ALL);
-                if (!dyed)
-                    stack.decrement(1);
+                stack.decrement(1);
                 dyed = true;
+            } else {
+                dyed = false;
             }
+            
             if (dyed)
                 return ActionResult.CONSUME;
         }
@@ -76,6 +80,15 @@ public class DyeKit extends Item {
                     stack.decrement(1);
                 }
 
+                return ActionResult.success(user.world.isClient);
+            }
+        } else if (entity instanceof DyeableFurnitureEntity<?>) {
+            if (((DyeableFurnitureEntity<?>) entity).getPFMColor() != getColor()){
+                entity.world.playSoundFromEntity(user, entity, SoundEvents.ITEM_DYE_USE, SoundCategory.PLAYERS, 1.0F, 1.0F);
+                if (!user.world.isClient) {
+                    ((DyeableFurnitureEntity<?>) entity).setPFMColor(getColor());
+                    stack.decrement(1);
+                }
                 return ActionResult.success(user.world.isClient);
             }
         }

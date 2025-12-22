@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.registry;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.entity.ChairEntity;
+import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
@@ -12,11 +13,13 @@ public class EntityRegistry {
 
     public static void registerEntityTypes() {
         registerEntityType("chair", Entities.CHAIR);
+        registerEntityType("office_chair", Entities.OFFICE_CHAIR);
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerEntityTypes);
     }
 
     public static void registerAttributes() {
         registerAttribute(Entities.CHAIR, ChairEntity.createMobAttributes());
+        registerAttribute(Entities.OFFICE_CHAIR, OfficeChairEntity.createMobAttributes());
     }
 
     @ExpectPlatform

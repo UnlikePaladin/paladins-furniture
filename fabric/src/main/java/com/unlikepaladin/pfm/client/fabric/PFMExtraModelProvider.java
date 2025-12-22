@@ -11,7 +11,7 @@ import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel
 import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
 import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
 import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
-import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.fabric.UnbakedClassicCoffeeTableModelImpl;
+import com.unlikepaladin.pfm.blocks.models.classicDesk.UnbakedClassicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
@@ -35,6 +35,7 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
+import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import net.fabricmc.fabric.api.client.model.ExtraModelProvider;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
@@ -131,10 +132,17 @@ public class PFMExtraModelProvider implements ExtraModelProvider {
         for (Identifier id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
             out.accept(id);
         }
+        for (Identifier id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
+            out.accept(id);
+        }
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(out::accept);
+        out.accept(new Identifier("minecraft:block/cube_all"));
+        for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
+            out.accept(id);
+        }
     }
 }
