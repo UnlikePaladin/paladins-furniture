@@ -141,7 +141,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
         if (this.hasPassenger(passenger)) {
             float g = (float)((this.isRemoved() ? 0.01F : this.getMountedHeightOffset()) + passenger.getHeightOffset());
 
-            Vec3d offset = new Vec3d(0.0, 0.0, -0.1).rotateY(-this.getYaw() * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
+            Vec3d offset = new Vec3d(0.0, 0.0, 0.0).rotateY(-this.getYaw() * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
             passenger.setPosition(this.getX() + offset.x, this.getY() + (double)g, this.getZ() + offset.z);
             passenger.setYaw(passenger.getYaw() + this.yawVelocity);
             passenger.setHeadYaw(passenger.getHeadYaw() + this.yawVelocity);
