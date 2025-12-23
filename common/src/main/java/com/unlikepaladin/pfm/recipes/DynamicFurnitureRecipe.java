@@ -74,8 +74,9 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
                  else {
                      compound = new NbtCompound();
                      outputCompound.put("BlockEntityTag", compound);
-                }
-                compound.putString("variant", id.toString());
+                 }
+                 outputCompound.remove("variantInNbt");
+                 compound.putString("variant", id.toString());
             }
             ItemStack output = new ItemStack(optionalOutput.get().asItem(), furnitureOutput.getOutputCount());
             if (outputCompound != null && !outputCompound.isEmpty())
