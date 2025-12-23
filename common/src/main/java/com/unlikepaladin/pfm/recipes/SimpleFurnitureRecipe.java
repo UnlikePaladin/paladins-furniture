@@ -142,38 +142,10 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
             }) : DataResult.success(item);
         });
 
-        private static final Codec<NbtCompound> NBT_CODEC = Codecs.xor(
-                Codec.STRING, NbtCompound.CODEC
-        ).flatXmap(either -> either.map(s -> {
-            try {
-                return DataResult.success(StringNbtReader.parse(s));
-            } catch (CommandSyntaxException e) {
-                return DataResult.error(e::getMessage);
-            }
-        }, DataResult::success), nbtCompound -> DataResult.success(Either.left(nbtCompound.asString())));
-
-
-        public static final Codec<NbtCompound> OUTPUT_TAGS = Codec.unboundedMap(Codec.STRING, NBT_CODEC).comapFlatMap(stringNbtCompoundMap -> {
-            NbtCompound compound = new NbtCompound();
-            stringNbtCompoundMap.forEach(compound::put);
-            return DataResult.success(compound);
-        }, nbtCompound -> {
-            Map<String, NbtCompound> map = new HashMap<>();
-            Set<String> keys = nbtCompound.getKeys();
-            keys.forEach(s -> {
-                NbtCompound compound = new NbtCompound();
-                if (nbtCompound.get(s) instanceof NbtCompound) {
-                    compound = nbtCompound.getCompound(s);
-                } else {
-                    compound.put(s, nbtCompound.get(s));
-                }
-                map.put(s, compound);
-            });
-            return map;
-        });
-
         public static final Codec<ItemStack> FURNITURE_RESULT = RecordCodecBuilder.create((instance) -> {
-            return instance.group(CRAFTING_RESULT_ITEM.fieldOf("item").forGetter(ItemStack::getItem), Codecs.createStrictOptionalFieldCodec(Codecs.POSITIVE_INT, "count", 1).forGetter(ItemStack::getCount), Codecs.createStrictOptionalFieldCodec(OUTPUT_TAGS, "tag", new NbtCompound()).forGetter(ItemStack::getNbt)).apply(instance, (item, integer, nbtElement) -> {
+            return instance.group(CRAFTING_RESULT_ITEM.fieldOf("item").forGetter(ItemStack::getItem), Codecs.createStrictOptionalFieldCodec(Codecs.POSITIVE_INT, "count", 1)
+                            .forGetter(ItemStack::getCount), Codecs.createStrictOptionalFieldCodec(NbtCompound.CODEC, "tag", new NbtCompound()).forGetter(ItemStack::getNbt))
+                    .apply(instance, (item, integer, nbtElement) -> {
                 ItemStack stack = new ItemStack(item, integer);
                 stack.setNbt(nbtElement);
                 return stack;
