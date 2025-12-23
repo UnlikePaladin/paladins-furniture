@@ -56,7 +56,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
             ModelData.Builder builder = ModelData.builder();
 
             ModelData data = builder.build();
-            super.getModelData(world, pos, state, data);
+            data = super.getModelData(world, pos, state, data);
             return data;
         }
         return super.getModelData(world, pos, state, tileData);
