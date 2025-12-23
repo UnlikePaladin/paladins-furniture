@@ -11,6 +11,7 @@ import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel
 import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
 import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
 import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
+import com.unlikepaladin.pfm.blocks.models.classicDesk.UnbakedClassicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
@@ -173,6 +174,9 @@ public class PaladinFurnitureModClientForge {
             event.register(id);
         }
         for (Identifier id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
+            event.register(id);
+        }
+        for (Identifier id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
             event.register(id);
         }
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(event::register);
