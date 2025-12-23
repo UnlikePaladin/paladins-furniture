@@ -140,7 +140,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     @Override
     public void updatePassengerPosition(Entity passenger, PositionUpdater updater) {
         if (this.hasPassenger(passenger)) {
-            float g = (float)((this.isRemoved() ? 0.01F : this.getMountedHeightOffset()) + passenger.getHeightOffset());
+            float g = (float)((this.isRemoved() ? 0.01F : this.getPassengerRidingPos(passenger).y) + passenger.getRidingOffset(this));
 
             Vec3d offset = new Vec3d(0.0, 0.0, -0.1).rotateY(-this.getYaw() * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
             updater.accept(passenger, this.getX() + offset.x, this.getY() + (double)g, this.getZ() + offset.z);
@@ -227,8 +227,8 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     }
 
     @Override
-    public double getMountedHeightOffset() {
-        return 0.55;
+    public Vec3d getPassengerRidingPos(Entity passenger) {
+        return new Vec3d(0, 0.55, 0);
     }
 
     @Override

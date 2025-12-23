@@ -99,7 +99,7 @@ public final class TextureReloadQueue {
         Resource resource = optionalResource.get();
         Sprite original = spriteAtlas.getSprite(id);
 
-        SpriteContents newContents = SpriteLoader.load(id, resource);
+        SpriteContents newContents = SpriteOpener.create(SpriteLoader.METADATA_READERS).loadSprite(id, resource);
         ((PFMSpriteExtensions) original).pfm$setContents(newContents);
         try {
             newContents.generateMipmaps(MinecraftClient.getInstance().options.getMipmapLevels().getValue());

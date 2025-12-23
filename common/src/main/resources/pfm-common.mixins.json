@@ -26,6 +26,7 @@
     "PFMSpriteAtlasTextureAccessor",
     "PFMSpriteContentsAccessor",
     "PFMSpriteContentsMixin",
+    "PFMSpriteLoaderMixin",
     "PFMSpriteMixin",
     "PFMTitleScreenMixin"
   ],

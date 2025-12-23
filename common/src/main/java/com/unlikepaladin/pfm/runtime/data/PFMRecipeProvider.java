@@ -355,7 +355,7 @@ public class PFMRecipeProvider extends PFMProvider {
         }
     }
 
-    public static void offerOfficeChairRecipes(Consumer<RecipeJsonProvider> exporter) {
+    public static void offerOfficeChairRecipes(RecipeExporter exporter) {
         for (DyeColor color : DyeColor.values()) {
             NbtCompound tag = new NbtCompound();
             tag.putString("Color", color.asString());
@@ -435,11 +435,11 @@ public class PFMRecipeProvider extends PFMProvider {
         DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 4).childInput(baseMaterial, 3).vanillaInput(Ingredient.ofItems(Items.CHEST)).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerClassicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
+    public static void offerClassicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeExporter exporter) {
         DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
-    public static void offerClassicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, Consumer<RecipeJsonProvider> exporter) {
+    public static void offerClassicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeExporter exporter) {
         DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").vanillaInput(Ingredient.ofItems(Items.CHEST)).childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 

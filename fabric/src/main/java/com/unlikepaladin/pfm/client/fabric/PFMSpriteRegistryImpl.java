@@ -9,6 +9,7 @@ import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.SpriteContents;
 import net.minecraft.client.texture.SpriteDimensions;
+import net.minecraft.resource.metadata.ResourceMetadata;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
@@ -30,7 +31,7 @@ public class PFMSpriteRegistryImpl {
                 Identifier templateId = info.getId();
                 Identifier variantSpriteId = new Identifier(templateId.getNamespace(), templateId.getPath().replace("template", variantBase.getPath()));
                 SpriteContents variantInfo = new SpriteContents(variantSpriteId, new SpriteDimensions(info.getWidth(), info.getHeight()),
-                        image, AnimationResourceMetadata.EMPTY);
+                        image, ResourceMetadata.NONE);
                 ((PFMSpriteContentExtensions)variantInfo).pfm$setInitialized(false);
                 infos.add(new Pair<>(variantSpriteId, variantInfo));
             }
