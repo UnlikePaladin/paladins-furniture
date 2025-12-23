@@ -15,7 +15,6 @@
     "PFMMixinDedicatedServer"
   ],
   "client": [
-    "PFMAtlasLoaderMixin",
     "PFMBakedModelManagerMixin",
     "PFMItemRendererMixin",
     "PFMLanguageManagerAccessor",

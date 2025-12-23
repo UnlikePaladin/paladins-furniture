@@ -20,11 +20,9 @@ import java.util.List;
 public class PFMSpriteRegistryImpl {
 
     public static void registerSprite(Identifier spriteId) {
-        PFMSpriteRegistry.PFM_SPRITES.put(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, spriteId);
     }
 
     public static void registerDynamicSprite(Identifier spriteId, List<VariantBase<?>> variantBaseList) {
-        PFMSpriteRegistry.PFM_SPRITES.put(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, spriteId);
         PFMSpriteRegistry.DYNAMIC_SPRITE_GENERATORS.put(spriteId, (info) -> {
             List<Pair<Identifier, SpriteContents>> infos = new ArrayList<>();
             NativeImage image = PFMMissingSpriteAccessor.pfm$invokeCreateImage(info.getWidth(), info.getHeight());
