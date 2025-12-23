@@ -96,7 +96,8 @@ public class CutleryBlock extends HorizontalFacingBlock {
         if(block instanceof PlateBlock) {
             BlockState newState = block.getDefaultState();
             world.setBlockState(pos, newState.with(PlateBlock.CUTLERY, true).with(FACING, state.get(FACING)));
-            itemStack.decrement(1);
+            if (!player.isCreative())
+                itemStack.decrement(1);
             return ActionResult.SUCCESS;
         }
         return super.onUse(state, world, pos, player, hand, hit);

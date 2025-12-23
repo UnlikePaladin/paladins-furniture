@@ -18,9 +18,15 @@
     "PFMBakedModelManagerMixin",
     "PFMItemRendererMixin",
     "PFMLanguageManagerAccessor",
+    "PFMMissingSpriteAccessor",
     "PFMMixinClientPacketListener",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSplashOverlayMixin",
+    "PFMSpriteAtlasTextureAccessor",
+    "PFMSpriteContentsAccessor",
+    "PFMSpriteContentsMixin",
+    "PFMSpriteLoaderMixin",
+    "PFMSpriteMixin",
     "PFMTitleScreenMixin"
   ],
   "injectors": {
