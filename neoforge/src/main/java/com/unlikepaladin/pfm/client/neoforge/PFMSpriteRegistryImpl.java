@@ -17,7 +17,6 @@ import net.neoforged.fml.common.Mod;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class PFMSpriteRegistryImpl {
 
     public static void registerSprite(Identifier spriteId) {
