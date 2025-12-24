@@ -29,8 +29,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEntity, OfficeChairModelEmpty> {
-    public static final Identifier[] MODEL_IDS = {new Identifier("pfm:block/office_chair/office_chair"), new Identifier("pfm:block/office_chair/office_chair_top"),
-    new Identifier("pfm:block/office_chair/office_chair_bottom"), new Identifier("pfm:block/office_chair/office_chair_wheels")};
+    public static final Identifier[] MODEL_IDS = {Identifier.of("pfm:block/office_chair/office_chair"), Identifier.of("pfm:block/office_chair/office_chair_top"),
+    Identifier.of("pfm:block/office_chair/office_chair_bottom"), Identifier.of("pfm:block/office_chair/office_chair_wheels")};
 
     // Wheel positions relative to center (x, z offsets)
     private static final float[][] WHEEL_OFFSETS = {

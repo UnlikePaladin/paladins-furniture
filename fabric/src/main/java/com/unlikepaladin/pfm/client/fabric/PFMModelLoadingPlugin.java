@@ -264,7 +264,7 @@ public class PFMModelLoadingPlugin implements ModelLoadingPlugin {
         out.addAll(UnbakedFridgeModel.ALL_MODEL_IDS);
         out.addAll(UnbakedFreezerModel.ALL_MODEL_IDS);
         out.addAll(UnbakedBasicLampModel.ALL_MODEL_IDS);
-        out.add(new Identifier("minecraft:block/cube_all"));
+        out.add(Identifier.of("minecraft:block/cube_all"));
         out.addAll(Arrays.asList(OfficeChairEntityRenderer.MODEL_IDS));
         return out;
     }

@@ -14,6 +14,7 @@ import net.minecraft.entity.mob.MobEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.util.ActionResult;
@@ -260,8 +261,8 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     }
 
     @Override
-    protected void drop(DamageSource source) {
-        super.drop(source);
+    protected void drop(ServerWorld world, DamageSource source) {
+        super.drop(world, source);
         if (!source.isSourceCreativePlayer()) {
             ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultStack();
             stack.set(PFMComponents.COLOR_COMPONENT, this.getPFMColor());

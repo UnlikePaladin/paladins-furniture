@@ -372,7 +372,7 @@ public class PFMRecipeProvider extends PFMProvider {
         for (DyeColor color : DyeColor.values()) {
             ComponentChanges.Builder builder = ComponentChanges.builder();
             builder.add(PFMComponents.COLOR_COMPONENT, color);
-            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, builder.build()).input(ModelHelper.getWoolColor(color.asString()), 3).input(Items.IRON_INGOT, 2).input(Items.IRON_NUGGET).input(Items.STONE_BUTTON, 4).offerTo(exporter, new Identifier("pfm", String.format("%s_office_chair", color.asString())));
+            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, builder.build()).input(ModelHelper.getWoolColor(color.asString()), 3).input(Items.IRON_INGOT, 2).input(Items.IRON_NUGGET).input(Items.STONE_BUTTON, 4).offerTo(exporter, Identifier.of("pfm", String.format("%s_office_chair", color.asString())));
         }
     }
 
@@ -448,11 +448,11 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static void offerClassicDeskRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeExporter exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, Identifier.of("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerClassicDeskCabinetRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeExporter exporter) {
-        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").vanillaInput(Ingredient.ofItems(Items.CHEST)).childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, new Identifier("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
+        DynamicFurnitureRecipeJsonFactory.create(output, 4, variants).group("desks").vanillaInput(Ingredient.ofItems(Items.CHEST)).childInput(legMaterial, 5).childInput(baseMaterial, 3).offerTo(exporter, Identifier.of("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US)));
     }
 
     public static void offerBasicCoffeeTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<Identifier> variants, RecipeExporter exporter) {

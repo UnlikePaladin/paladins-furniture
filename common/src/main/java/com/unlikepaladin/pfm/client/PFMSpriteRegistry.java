@@ -15,7 +15,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class PFMSpriteRegistry {
-    public static Identifier HERRINGBONE_PLANKS = new Identifier(PaladinFurnitureMod.MOD_ID, "block/template_herringbone_planks");
+    public static Identifier HERRINGBONE_PLANKS = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/template_herringbone_planks");
     public static Map<Identifier, Function<SpriteContents, List<Pair<Identifier, SpriteContents>>>> DYNAMIC_SPRITE_GENERATORS = new HashMap<>();
 
     public static void registerAdditionalSprites() {

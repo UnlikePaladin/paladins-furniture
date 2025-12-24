@@ -108,7 +108,7 @@ public class ModelHelper {
     }
 
     public static Identifier getTextureSpritePath(Identifier id) {
-        return new Identifier(id.getNamespace(), String.format("textures/%s%s", id.getPath(), ".png"));
+        return Identifier.of(id.getNamespace(), String.format("textures/%s%s", id.getPath(), ".png"));
     }
 
     public static int[] convertPaletteToColorArray(int[][] palette) {

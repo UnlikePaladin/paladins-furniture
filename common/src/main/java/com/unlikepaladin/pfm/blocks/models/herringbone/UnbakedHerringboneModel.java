@@ -18,19 +18,19 @@ import java.util.function.Function;
 
 public class UnbakedHerringboneModel implements UnbakedModel {
 
-    private static final List<Identifier> TEMPLATE_MODEL = List.of(new Identifier("minecraft:block/cube_all"));
+    private static final List<Identifier> TEMPLATE_MODEL = List.of(Identifier.of("minecraft:block/cube_all"));
     private final Identifier id;
     public UnbakedHerringboneModel(Identifier id) {
         this.id = id;
     }
 
-    public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/herringbone_planks");
+    public static final Identifier ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/herringbone_planks");
     public static final List<Identifier> MODEL_IDS = new ArrayList<>() {
         {
             add(ID);
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_herringbone_planks"));
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + variant.asString() + "_herringbone_planks"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_herringbone_planks"));
+                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + variant.asString() + "_herringbone_planks"));
             }
         }
     };
@@ -47,7 +47,7 @@ public class UnbakedHerringboneModel implements UnbakedModel {
     }
 
     @Override
-    public @Nullable BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public @Nullable BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(id) && PFMRuntimeResources.modelCacheMap.get(id).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(id, rotationContainer, PFMRuntimeResources.modelCacheMap.get(id).getCachedModelParts().get(rotationContainer));
 
