@@ -96,7 +96,7 @@ public abstract class VariantBase<T> implements StringIdentifiable, Comparable<V
     @Nullable
     public Item getItemOfThis(String key) {
         Object v = this.getChild(key);
-        return v instanceof Item ? (Item) v : null;
+        return v instanceof ItemConvertible ? ((ItemConvertible) v).asItem() : null;
     }
 
     @Nullable
