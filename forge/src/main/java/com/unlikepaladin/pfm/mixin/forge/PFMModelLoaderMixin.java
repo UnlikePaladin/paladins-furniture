@@ -63,7 +63,9 @@ public abstract class PFMModelLoaderMixin {
     @Inject(method = "loadModel", at = @At("HEAD"), cancellable = true)
     private void pfm$loadModels(Identifier resourceId, CallbackInfo ci) {
         Identifier modifiedId = resourceId;
-         if (resourceId instanceof ModelIdentifier) {
+         if (resourceId instanceof ModelIdentifier && Objects.requireNonNull(((ModelIdentifier) resourceId).getVariant()).startsWith("inventory")) {
+            modifiedId = new Identifier(resourceId.getNamespace(), "item/" + resourceId.getPath());
+        } else if (resourceId instanceof ModelIdentifier) {
             modifiedId = new Identifier(resourceId.getNamespace(), "block/" + resourceId.getPath());
         }
 
