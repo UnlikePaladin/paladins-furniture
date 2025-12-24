@@ -6,7 +6,6 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.client.texture.atlas.Sprite;
 import net.minecraft.client.texture.SpriteContents;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;

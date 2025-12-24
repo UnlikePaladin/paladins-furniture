@@ -36,19 +36,14 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
 
     @Override
     public String getTranslationKey(ItemStack stack) {
-        DyeColor color = DyeColor.WHITE;
-        if (stack.hasNbt()) {
-            if (stack.getNbt().contains("Color")) {
-                color = DyeColor.byName(stack.getNbt().getString("Color"), DyeColor.WHITE);
-            }
-        }
+        DyeColor color = stack.getComponents().getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE);
         return String.format("block.pfm.%s_office_chair", color.asString());
     }
 
     @Override
     public ItemStack getDefaultStack() {
         ItemStack stack = new ItemStack(this);
-        stack.getOrCreateNbt().putString("Color", DyeColor.WHITE.asString());
+        stack.set(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE);
         return stack;
     }
 
@@ -81,13 +76,7 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
             if (hitResult.getType() == HitResult.Type.BLOCK) {
                 OfficeChairEntity chair = Entities.OFFICE_CHAIR.create(world);
 
-                DyeColor color = DyeColor.WHITE;
-                if (itemStack.hasNbt()) {
-                    NbtCompound nbt = itemStack.getNbt();
-                    if (nbt.contains("Color")) {
-                        color = DyeColor.byName(nbt.getString("Color"), DyeColor.WHITE);
-                    }
-                }
+                DyeColor color = itemStack.getComponents().getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE);
 
                 chair.refreshPositionAndAngles(hitResult.getPos().x, hitResult.getPos().y+0.1f,
                         hitResult.getPos().z, user.getYaw(), 0);

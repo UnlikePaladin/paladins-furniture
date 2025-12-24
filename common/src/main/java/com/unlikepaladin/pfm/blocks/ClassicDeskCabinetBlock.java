@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.component.Component;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.mob.PiglinBrain;
@@ -83,7 +84,7 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
         if (!state.isOf(state.getBlock())) {
             this.baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
-            this.baseBlock.onBlockAdded(this.baseBlockState, world, pos, oldState, false);
+            this.onBlockAdded(this.baseBlockState, world, pos, oldState, false);
         }
     }
 
@@ -305,7 +306,7 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean canPathfindThrough(BlockState state, NavigationType type) {
         return false;
     }
 
@@ -321,15 +322,7 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        BlockEntity blockEntity;
-        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof GenericStorageBlockEntity3x3) {
-            ((GenericStorageBlockEntity3x3)blockEntity).setCustomName(itemStack.getName());
-        }
-    }
-
-    @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
         if (world.isClient) {
             return ActionResult.SUCCESS;
         }

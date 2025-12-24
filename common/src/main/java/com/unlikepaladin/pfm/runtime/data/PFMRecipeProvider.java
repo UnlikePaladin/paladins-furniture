@@ -371,9 +371,9 @@ public class PFMRecipeProvider extends PFMProvider {
 
     public static void offerOfficeChairRecipes(RecipeExporter exporter) {
         for (DyeColor color : DyeColor.values()) {
-            NbtCompound tag = new NbtCompound();
-            tag.putString("Color", color.asString());
-            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, tag).input(ModelHelper.getWoolColor(color.asString()), 3).input(Items.IRON_INGOT, 2).input(Items.IRON_NUGGET).input(Items.STONE_BUTTON, 4).offerTo(exporter, new Identifier("pfm", String.format("%s_office_chair", color.asString())));
+            ComponentChanges.Builder builder = ComponentChanges.builder();
+            builder.add(PFMComponents.COLOR_COMPONENT, color);
+            SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, builder.build()).input(ModelHelper.getWoolColor(color.asString()), 3).input(Items.IRON_INGOT, 2).input(Items.IRON_NUGGET).input(Items.STONE_BUTTON, 4).offerTo(exporter, new Identifier("pfm", String.format("%s_office_chair", color.asString())));
         }
     }
 

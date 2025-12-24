@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.entity;
 
+import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.entity.*;
@@ -42,9 +43,9 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(COLOR, (byte)0);
+    protected void initDataTracker(DataTracker.Builder builder) {
+        super.initDataTracker(builder);
+        builder.add(COLOR, (byte)0);
     }
 
     @Override
@@ -140,7 +141,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     @Override
     public void updatePassengerPosition(Entity passenger, PositionUpdater updater) {
         if (this.hasPassenger(passenger)) {
-            float g = (float)((this.isRemoved() ? 0.01F : this.getPassengerRidingPos(passenger).y) + passenger.getRidingOffset(this));
+            float g = (float)((this.isRemoved() ? 0.01F : this.getPassengerRidingPos(passenger).y));
 
             Vec3d offset = new Vec3d(0.0, 0.0, 0.0).rotateY(-this.getYaw() * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
             updater.accept(passenger, this.getX() + offset.x, this.getY() + (double)g, this.getZ() + offset.z);
@@ -228,7 +229,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
 
     @Override
     public Vec3d getPassengerRidingPos(Entity passenger) {
-        return new Vec3d(0, 0.75, 0);
+        return new Vec3d(0, 0.15, 0);
     }
 
     @Override
@@ -263,7 +264,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
         super.drop(source);
         if (!source.isSourceCreativePlayer()) {
             ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultStack();
-            stack.getOrCreateNbt().putString("Color", this.getPFMColor().asString());
+            stack.set(PFMComponents.COLOR_COMPONENT, this.getPFMColor());
 
             ItemEntity itemEntity = new ItemEntity(getWorld(), this.getX(), this.getY(), this.getZ(), stack);
             this.getWorld().spawnEntity(itemEntity);

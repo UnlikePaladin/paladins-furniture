@@ -293,7 +293,7 @@ public class LateBlockRegistry {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
-        PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = new OfficeChairItem(new Item.Settings());
+        PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = new OfficeChairItem(new Item.Settings().component(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE));
         LateBlockRegistry.registerLateItem("office_chair", () -> PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, PaladinFurnitureMod.FURNITURE_GROUP);
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicNightstandBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {

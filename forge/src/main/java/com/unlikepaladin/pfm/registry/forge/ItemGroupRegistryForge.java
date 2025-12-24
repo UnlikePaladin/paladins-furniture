@@ -110,9 +110,7 @@ public class ItemGroupRegistryForge {
                         List<ItemStack> stacks = new ArrayList<>();
                         for (DyeColor color : DyeColor.values()) {
                             ItemStack stack = new ItemStack(item);
-                            NbtCompound beTag = new NbtCompound();
-                            beTag.putString("Color", color.asString());
-                            stack.setNbt(beTag);
+                            stack.set(PFMComponents.COLOR_COMPONENT, color);
                             stacks.add(stack);
                         }
                         stacks.forEach(creativeModeTabEvent::add);

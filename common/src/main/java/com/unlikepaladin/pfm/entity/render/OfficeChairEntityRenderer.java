@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.entity.render;
 import com.unlikepaladin.pfm.client.PFMBakedModelManagerAccessor;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import com.unlikepaladin.pfm.entity.model.OfficeChairModelEmpty;
+import com.unlikepaladin.pfm.items.PFMComponents;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.entity.EntityRendererFactory;
@@ -73,8 +74,8 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             float blue = 1.0f;
 
 
-            if (itemStack.getNbt().contains("Color") && quad.hasColor()) {
-                int colorInt = DyeColor.byName(itemStack.getNbt().getString("Color"), DyeColor.WHITE).getFireworkColor();
+            if (itemStack.contains(PFMComponents.COLOR_COMPONENT) && quad.hasColor()) {
+                int colorInt = itemStack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getFireworkColor();
                 red = ((colorInt >> 16) & 0xFF) / 255.0f;
                 green = ((colorInt >> 8) & 0xFF) / 255.0f;
                 blue = (colorInt & 0xFF) / 255.0f;
@@ -82,7 +83,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
 
 
             provider.getBuffer(RenderLayers.getItemLayer(itemStack, true))
-                    .quad(stack.peek(), quad, red, green, blue, light, overlay);
+                    .quad(stack.peek(), quad, red, green, blue, 1.0f, light, overlay);
         }
 
         if (!chairModel.isSideLit()) {
@@ -116,14 +117,13 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         for (BakedQuad quad : baseQuads) {
             float brightness = mobEntity.getWorld().getBrightness(quad.getFace(), quad.hasShade());
 
-            solid.quad(matrixStack.peek(), quad, brightness, brightness, brightness,  light, OverlayTexture.DEFAULT_UV);
+            solid.quad(matrixStack.peek(), quad, brightness, brightness, brightness, 1.0f, light, OverlayTexture.DEFAULT_UV);
             VertexConsumer damage = new OverlayVertexConsumer(
                     damageConsumer,
-                    matrixStack.peek().getPositionMatrix(),
-                    matrixStack.peek().getNormalMatrix(), 1.0f
+                    matrixStack.peek(), 1.0f
             );
             if (mobEntity.timeUntilRegen > 0)
-                damage.quad(matrixStack.peek(), quad, brightness, brightness, brightness, light, OverlayTexture.DEFAULT_UV);
+                damage.quad(matrixStack.peek(), quad, brightness, brightness, brightness, 1.0f, light, OverlayTexture.DEFAULT_UV);
         }
 
         matrixStack.pop();
@@ -166,14 +166,13 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             for (BakedQuad quad : wheelQuads) {
                 float brightness = mobEntity.getWorld().getBrightness(quad.getFace(), quad.hasShade());
 
-                solid.quad(matrixStack.peek(), quad, brightness, brightness, brightness, light, OverlayTexture.DEFAULT_UV);
+                solid.quad(matrixStack.peek(), quad, brightness, brightness, brightness, 1.0f, light, OverlayTexture.DEFAULT_UV);
                 VertexConsumer damage = new OverlayVertexConsumer(
                         damageConsumer,
-                        matrixStack.peek().getPositionMatrix(),
-                        matrixStack.peek().getNormalMatrix(), 1.0f
+                        matrixStack.peek(), 1.0f
                 );
                 if (mobEntity.timeUntilRegen > 0)
-                    damage.quad(matrixStack.peek(), quad, brightness, brightness, brightness, light, OverlayTexture.DEFAULT_UV);
+                    damage.quad(matrixStack.peek(), quad, brightness, brightness, brightness,1.0f, light, OverlayTexture.DEFAULT_UV);
             }
 
             matrixStack.pop();
@@ -206,15 +205,14 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
                 blue = (colorInt & 0xFF) / 255.0f;
             }
 
-            solid.quad(matrixStack.peek(), quad, red*brightness, green*brightness, blue*brightness, light, OverlayTexture.DEFAULT_UV);
+            solid.quad(matrixStack.peek(), quad, red*brightness, green*brightness, blue*brightness, 1.0f, light, OverlayTexture.DEFAULT_UV);
 
             VertexConsumer damage = new OverlayVertexConsumer(
                     damageConsumer,
-                    matrixStack.peek().getPositionMatrix(),
-                    matrixStack.peek().getNormalMatrix(), 1.0f
+                    matrixStack.peek(), 1.0f
             );
             if (mobEntity.timeUntilRegen > 0)
-                damage.quad(matrixStack.peek(), quad, brightness, brightness, brightness, light, OverlayTexture.DEFAULT_UV);
+                damage.quad(matrixStack.peek(), quad, brightness, brightness, brightness, 1.0f, light, OverlayTexture.DEFAULT_UV);
         }
 
         matrixStack.pop();

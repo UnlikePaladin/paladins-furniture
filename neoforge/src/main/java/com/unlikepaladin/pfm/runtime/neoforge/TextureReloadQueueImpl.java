@@ -4,8 +4,9 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.util.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.event.TickEvent;
+import net.neoforged.neoforge.client.event.RenderFrameEvent;
 
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
 import static com.unlikepaladin.pfm.runtime.TextureReloadQueue.list;
 import static com.unlikepaladin.pfm.runtime.TextureReloadQueue.reloadSpritesOnClientThread;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
 public class TextureReloadQueueImpl {
     public static void registerTextureReload() {
         // quick check to avoid scheduling empty work
@@ -28,10 +29,7 @@ public class TextureReloadQueueImpl {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.RenderTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-
+    public static void onClientTick(RenderFrameEvent.Pre event) {
         registerTextureReload();
-
     }
 }
