@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.registry.*;
@@ -116,9 +117,10 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                 .displayName(Text.translatable("itemGroup.pfm.furniture"))
                 .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultStack())
                 .entries((displayContext, stacks) -> {
-
-                        }
+                }
                 ).build()));
+
+        PaladinFurnitureMod.BUILDING_BLOCKS.setRight(Registries.ITEM_GROUP.get( ItemGroups.BUILDING_BLOCKS));
     }
 
     @Override

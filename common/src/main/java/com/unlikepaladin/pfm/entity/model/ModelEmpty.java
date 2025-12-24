@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.entity.ChairEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.render.entity.model.AnimalModel;
 import net.minecraft.client.render.entity.model.EntityModelPartNames;
+import net.minecraft.entity.mob.MobEntity;
 
 public class ModelEmpty extends AnimalModel<ChairEntity> {
     private final ModelPart base;

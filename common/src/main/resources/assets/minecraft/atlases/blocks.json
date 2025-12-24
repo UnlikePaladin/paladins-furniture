@@ -4,6 +4,10 @@
       "type": "directory",
       "source": "entity/bed",
       "prefix": "entity/bed/"
+    },
+    {
+      "type": "single",
+      "resource": "pfm:block/template_herringbone_planks"
     }
   ]
 }

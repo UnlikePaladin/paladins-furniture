@@ -12,6 +12,7 @@ import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel
 import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
 import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
 import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
+import com.unlikepaladin.pfm.blocks.models.classicDesk.UnbakedClassicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
@@ -19,6 +20,7 @@ import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFridgeModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedIronFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.herringbone.UnbakedHerringboneModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
@@ -61,8 +63,10 @@ public abstract class PFMModelLoaderMixin {
     @Inject(method = "loadModel", at = @At("HEAD"), cancellable = true)
     private void pfm$loadModels(Identifier resourceId, CallbackInfo ci) {
         Identifier modifiedId = resourceId;
-        if (resourceId instanceof ModelIdentifier && Objects.equals(((ModelIdentifier)resourceId).getVariant(), "inventory")) {
+         if (resourceId instanceof ModelIdentifier && Objects.requireNonNull(((ModelIdentifier) resourceId).getVariant()).startsWith("inventory")) {
             modifiedId = new Identifier(resourceId.getNamespace(), "item/" + resourceId.getPath());
+        } else if (resourceId instanceof ModelIdentifier) {
+            modifiedId = new Identifier(resourceId.getNamespace(), "block/" + resourceId.getPath());
         }
 
         if (ModelHelper.containsIdentifier(UnbakedMirrorModel.MIRROR_MODEL_IDS, modifiedId)){
@@ -264,6 +268,18 @@ public abstract class PFMModelLoaderMixin {
         }
         else if (UnbakedBasicDeskCabinetModel.MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedBasicDeskCabinetModel();
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (UnbakedClassicDeskModel.MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedClassicDeskModel();
+            this.unbakedModels.put(resourceId, model);
+            this.modelsToBake.put(resourceId, model);
+            ci.cancel();
+        }
+        else if (UnbakedHerringboneModel.MODEL_IDS.contains(modifiedId)){
+            UnbakedModel model = new UnbakedHerringboneModel(resourceId);
             this.unbakedModels.put(resourceId, model);
             this.modelsToBake.put(resourceId, model);
             ci.cancel();

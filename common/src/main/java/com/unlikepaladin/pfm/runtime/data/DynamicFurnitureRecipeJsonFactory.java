@@ -81,6 +81,7 @@ public class DynamicFurnitureRecipeJsonFactory {
     }
 
 
+
     public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, Map<String, Integer> variantChildren, List<Ingredient> inputs, ComponentChanges nbtElement) {
         return new DynamicFurnitureRecipeJsonFactory(output, outputCount, supportedVariants, variantChildren, inputs, nbtElement);
     }

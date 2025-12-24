@@ -9,8 +9,10 @@ import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
+import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKeys;
 import net.minecraft.resource.featuretoggle.FeatureFlag;
 import net.minecraft.text.Text;
@@ -46,6 +48,7 @@ public class ItemGroupRegistryNeoForge {
                     }).build();
             helper.register(new Identifier(MOD_ID, "furniture"), furnitureGroup);
             PaladinFurnitureMod.FURNITURE_GROUP.setRight(furnitureGroup);
+            PaladinFurnitureMod.BUILDING_BLOCKS.setRight(Registries.ITEM_GROUP.get(ItemGroups.BUILDING_BLOCKS));
         });
     }
 
@@ -73,6 +76,16 @@ public class ItemGroupRegistryNeoForge {
                                 stack.set(PFMComponents.COLOR_COMPONENT, color);
                                 stacks.add(stack);
                             }
+                        }
+                        stacks.forEach(creativeModeTabEvent::add);
+                    } else if (item == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
+                        List<ItemStack> stacks = new ArrayList<>();
+                        for (DyeColor color : DyeColor.values()) {
+                            ItemStack stack = new ItemStack(item);
+                            NbtCompound beTag = new NbtCompound();
+                            beTag.putString("Color", color.asString());
+                            stack.setNbt(beTag);
+                            stacks.add(stack);
                         }
                         stacks.forEach(creativeModeTabEvent::add);
                     } else {

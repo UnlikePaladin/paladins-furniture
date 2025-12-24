@@ -16,13 +16,11 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.Util;
 import org.apache.logging.log4j.LogManager;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -53,7 +51,7 @@ public class PFMAssetGenerator extends PFMGenerator {
                 Files.writeString(pfmCacheDataFile, "{}");
             }
             PFMCache cached = PFMCache.fromJson(JSON_PARSER.parse(Files.readString(pfmCacheDataFile)));
-            List<String> hashToCompare = hashDirectory(output.toFile(), false);
+            List<String> hashToCompare = hashDirectory(output.toFile(), false, getLogger());
             List<Identifier> variants = new ArrayList<>();
 
             WoodVariantRegistry.getVariants().stream().sorted().forEach(woodVariant -> variants.add(woodVariant.identifier));
@@ -111,11 +109,7 @@ public class PFMAssetGenerator extends PFMGenerator {
                 getLogger().info("Asset providers took: {} ms", stopwatch.elapsed(TimeUnit.MILLISECONDS));
                 this.createPackIcon();
 
-                Files.deleteIfExists(pfmCacheDataFile);
-                Files.createFile(pfmCacheDataFile);
-                List<String> newDataHash = hashDirectory(output.toFile(), false);
-                PFMCache cache = new PFMCache(SharedConstants.getGameVersion().getName(), Version.getCurrentVersion(), PFMFileUtil.getModLoader(), newDataHash, variants);
-                Files.writeString(pfmCacheDataFile, GSON.toJson(cache.toJson()), StandardOpenOption.APPEND);
+                PFMCache.createAndWriteCacheToDisk(output, variants, getLogger());
             } else {
                 getLogger().info("Data Hash for Assets and Variant List matched, skipping generation");
             }
