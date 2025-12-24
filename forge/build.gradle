@@ -81,7 +81,7 @@ dependencies {
     modCompileOnly "curse.maven:farmers-delight-forge-398521:${rootProject.farmers_delight_version_forge}"
     modCompileOnly ("curse.maven:imm_ptl-355440:${rootProject.immersive_portals_version_forge}")
 
-    include(forgeRuntimeLibrary("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}"))
+    shadowCommon(forgeRuntimeLibrary("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}"))
 }
 
 if(rootProject.jei_compatibility == "true") {
@@ -143,6 +143,7 @@ shadowJar {
     exclude "fabric.mod.json"
     exclude "architectury.common.json"
 
+    relocate 'com.github.SvenWoltmann', "${project.group}.com.github.SvenWoltmann"
     configurations = [project.configurations.shadowCommon]
     archiveClassifier = "dev-shadow"
 }

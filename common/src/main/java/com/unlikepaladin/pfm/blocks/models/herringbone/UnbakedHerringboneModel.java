@@ -27,17 +27,17 @@ public class UnbakedHerringboneModel implements UnbakedModel {
         this.id = id;
     }
 
+    public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/herringbone_planks");
     public static final List<Identifier> MODEL_IDS = new ArrayList<>() {
         {
+            add(ID);
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_herringbone_planks"));
                 add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + variant.asString() + "_herringbone_planks"));
             }
-            add(ID);
         }
     };
 
-    public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/herringbone_planks");
 
     @Override
     public Collection<Identifier> getModelDependencies() {

@@ -193,7 +193,8 @@ public class FurnitureBlock extends Material {
         if (block.getTranslationKey().contains("stripped")) {
             slabName.replace("stripped_", "");
         }
-        this.slab =  Registry.BLOCK.get(new Identifier("minecraft:" + slabName));
+        Identifier originalId = Registry.BLOCK.getId(block);
+        this.slab =  Registry.BLOCK.get(new Identifier(originalId.getNamespace(), slabName));
         return slab;
     }
 
