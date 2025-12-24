@@ -99,7 +99,7 @@ public abstract class VariantBase<T> implements StringIdentifiable, Comparable<V
     @Nullable
     public Item getItemOfThis(String key) {
         var v = this.getChild(key);
-        return v instanceof Item i ? i : null;
+        return v instanceof ItemConvertible i ? i.asItem() : null;
     }
 
     @Nullable

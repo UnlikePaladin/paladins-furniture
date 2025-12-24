@@ -171,10 +171,13 @@ public class PFMRecipeProvider extends PFMProvider {
         offerWallDrawerSmallRecipe(KitchenWallDrawerSmallBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getVariants(), Ingredient.ofItems(Items.CHEST), exporter);
         offerCabinetRecipe(KitchenCabinetBlock.class, "secondary", "base", PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).getVariants(), Ingredient.ofItems(Items.CHEST), exporter);
 
-        FurnitureBlock[] herringbonePlanks = HerringbonePlankBlock.streamPlanks().toList().toArray(new FurnitureBlock[0]);
-        for (FurnitureBlock herringbonePlank : herringbonePlanks) {
-            if (!generatedRecipes.contains(getId(herringbonePlank.getBlock()))) {
-                offerHerringbonePlanks(herringbonePlank.getBlock(), herringbonePlank.getSlab().asItem(), exporter);
+        for (Map.Entry<VariantBase<?>, ? extends Block> herringbonePlank : PaladinFurnitureMod.furnitureEntryMap.get(HerringbonePlankBlock.class).entrySet()) {
+            if (!generatedRecipes.contains(getId(herringbonePlank.getValue()))) {
+                Item material = herringbonePlank.getKey().getItemOfThis("slab") != null
+                        ? herringbonePlank.getKey().getItemOfThis("slab") :
+                        herringbonePlank.getKey().getBaseBlock().asItem();
+
+                offerHerringbonePlanks(herringbonePlank.getValue(), material, exporter);
             }
         }
         FurnitureBlock[] fridges = FridgeBlock.streamFridges().toList().toArray(new FurnitureBlock[0]);
