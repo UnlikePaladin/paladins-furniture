@@ -34,6 +34,7 @@ public class BlockEntityRegistry {
         BlockEntities.TOILET_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("toilet_block_entity", new Block[]{PaladinFurnitureModBlocksItems.BASIC_TOILET}, ToiletBlockEntity::new);
         List<Block> storage3x3Blocks = new ArrayList<>(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).getAllBlocks());
         storage3x3Blocks.addAll(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getAllBlocks());
+        storage3x3Blocks.addAll(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getAllBlocks());
         BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("small_storage_block_entity", storage3x3Blocks.toArray(new Block[0]), GenericStorageBlockEntity3x3.getFactory());
         BlockEntities.TRASHCAN_BLOCK_ENTITY = BlockEntityRegistry.registerBlockEntity("trashcan_block_entity", new Block[]{PaladinFurnitureModBlocksItems.TRASHCAN, PaladinFurnitureModBlocksItems.MESH_TRASHCAN}, TrashcanBlockEntity.getFactory());
         List<Block> sinks = new ArrayList<>(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).getAllBlocks());
