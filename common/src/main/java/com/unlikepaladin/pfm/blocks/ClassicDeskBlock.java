@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.block.*;
@@ -26,6 +27,7 @@ import java.util.stream.Stream;
 public class ClassicDeskBlock extends HorizontalFacingBlock {
     private final Block baseBlock;
 
+    public static final MapCodec<ClassicDeskBlock> CODEC = createCodec(ClassicDeskBlock::new);
     private static final List<FurnitureBlock> WOOD_CLASSIC_DESKS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_CLASSIC_DESKS = new ArrayList<>();
     private final BlockState baseBlockState;
@@ -49,6 +51,11 @@ public class ClassicDeskBlock extends HorizontalFacingBlock {
     }
     public static Stream<FurnitureBlock> streamStoneClassicDesks() {
         return STONE_CLASSIC_DESKS.stream();
+    }
+
+    @Override
+    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+        return CODEC;
     }
 
     @Override

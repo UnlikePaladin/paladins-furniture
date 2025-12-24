@@ -1,11 +1,13 @@
 package com.unlikepaladin.pfm.blocks;
 
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity3x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.ai.pathing.NavigationType;
 import net.minecraft.entity.mob.PiglinBrain;
@@ -39,6 +41,8 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     private final Block baseBlock;
     public static BooleanProperty OPEN = Properties.OPEN;
 
+
+    public static final MapCodec<ClassicDeskCabinetBlock> CODEC = createCodec(ClassicDeskCabinetBlock::new);
     private static final List<FurnitureBlock> WOOD_CLASSIC_DESK_CABINETS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_CLASSIC_DESK_CABINETS = new ArrayList<>();
     private final BlockState baseBlockState;
@@ -55,6 +59,12 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         else if (this.getClass().isAssignableFrom(ClassicDeskCabinetBlock.class)){
             STONE_CLASSIC_DESK_CABINETS.add(deskCabinetBlock);
         }
+    }
+
+
+    @Override
+    protected MapCodec<? extends BlockWithEntity> getCodec() {
+        return CODEC;
     }
 
     public static Stream<FurnitureBlock> streamWoodClassicDeskCabinets() {
