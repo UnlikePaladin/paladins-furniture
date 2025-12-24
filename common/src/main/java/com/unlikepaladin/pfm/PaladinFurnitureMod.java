@@ -25,6 +25,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.registry.Registries;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.util.Identifier;
@@ -46,7 +47,8 @@ public class PaladinFurnitureMod {
 
 	public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 	public static Pair<String, ItemGroup> FURNITURE_GROUP = new Pair<>("furniture", null);
-	public static Pair<String, ItemGroup> DYE_KITS = new Pair<>("dye_kits", null);;
+    public static Pair<String, ItemGroup> BUILDING_BLOCKS = new Pair<>("building_blocks", null);
+    public static Pair<String, ItemGroup> DYE_KITS = new Pair<>("dye_kits", null);;
 	private static PaladinFurnitureModUpdateChecker updateChecker;
 	public static boolean isClient = false;
 	public static List<PFMModCompatibility> pfmModCompatibilities = new ArrayList<>();
