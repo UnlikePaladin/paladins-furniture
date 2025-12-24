@@ -178,7 +178,7 @@ public class PaladinFurnitureModClientForge {
             event.register(new ModelIdentifier(id, "block"));
         }
         for (Identifier id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
-            event.register(id);
+            event.register(new ModelIdentifier(id, "block"));
         }
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(model -> event.register(new ModelIdentifier(model, "block")));
         UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(model -> event.register(new ModelIdentifier(model, "block")));

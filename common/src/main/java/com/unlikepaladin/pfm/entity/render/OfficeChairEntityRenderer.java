@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.entity.render;
 
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.client.PFMBakedModelManagerAccessor;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import com.unlikepaladin.pfm.entity.model.OfficeChairModelEmpty;
@@ -48,8 +49,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
                                   boolean leftHanded, int light, int overlay) {
         stack.push();
 
-        BakedModel chairModel = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager())
-                .pfm$getModelFromNormalID(OfficeChairEntityRenderer.MODEL_IDS[0]);
+        BakedModel chairModel = ModelHelper.getModelFromIdentifier(OfficeChairEntityRenderer.MODEL_IDS[0]);
 
         chairModel.getTransformation().getTransformation(mode).apply(
                 mode == ModelTransformationMode.FIRST_PERSON_LEFT_HAND ||
@@ -110,7 +110,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
 
         matrixStack.translate(-0.45, 0, -0.5);
 
-        BakedModel modelBase = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(MODEL_IDS[2]);
+        BakedModel modelBase = ModelHelper.getModelFromIdentifier(MODEL_IDS[2]);
         List<BakedQuad> baseQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> modelBase.getQuads(null, direction, mobEntity.getWorld().random))
                 .flatMap(List::stream).toList());
         baseQuads.addAll(modelBase.getQuads(null, null, mobEntity.getWorld().random));
@@ -129,7 +129,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         matrixStack.pop();
 
         // wheels - render 4 times at different positions
-        BakedModel wheelModel = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(MODEL_IDS[3]);
+        BakedModel wheelModel = ModelHelper.getModelFromIdentifier(MODEL_IDS[3]);
         List<BakedQuad> wheelQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> wheelModel.getQuads(null, direction, mobEntity.getWorld().random))
                 .flatMap(List::stream).toList());
         wheelQuads.addAll(wheelModel.getQuads(null, null, mobEntity.getWorld().random));
@@ -184,7 +184,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
 
         matrixStack.translate(-0.45, 0, -0.5);
 
-        BakedModel model = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(MODEL_IDS[1]);
+        BakedModel model = ModelHelper.getModelFromIdentifier(MODEL_IDS[1]);
 
         List<BakedQuad> chairQuads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> model.getQuads(null, direction, mobEntity.getWorld().random))
                 .flatMap(List::stream).toList());

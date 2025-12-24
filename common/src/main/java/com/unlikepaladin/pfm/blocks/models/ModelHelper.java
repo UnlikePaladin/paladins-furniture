@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
 import de.androidpit.colorthief.ColorThief;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
@@ -16,6 +17,7 @@ import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.*;
+import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.registry.Registries;
@@ -268,6 +270,11 @@ public class ModelHelper {
                 selectedVariant = woodVariant;
         }
         return selectedVariant != null ? selectedVariant : WoodVariantRegistry.OAK;
+    }
+
+    @ExpectPlatform
+    public static BakedModel getModelFromIdentifier(Identifier id) {
+        throw new AssertionError();
     }
 
     public static DyeColor getColor(Identifier identifier) {

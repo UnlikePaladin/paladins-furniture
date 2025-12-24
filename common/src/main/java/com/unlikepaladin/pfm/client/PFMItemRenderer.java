@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.client;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
@@ -62,7 +63,7 @@ public class PFMItemRenderer extends BuiltinModelItemRenderer {
         for (WoodVariant woodVariant : WoodVariantRegistry.getVariants()) {
             bakedModels.put(woodVariant, new LinkedHashMap<>());
             for (String part : modelParts) {
-                bakedModels.get(woodVariant).put(part, ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(Identifier.of(PaladinFurnitureMod.MOD_ID, part.replaceAll("template", woodVariant.asString()))));
+                bakedModels.get(woodVariant).put(part, ModelHelper.getModelFromIdentifier(Identifier.of(PaladinFurnitureMod.MOD_ID, part.replaceAll("template", woodVariant.asString()))));
             }
         }
         return bakedModels.get(variantBase).get(modelParts.get(index));
