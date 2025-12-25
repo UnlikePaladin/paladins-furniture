@@ -38,7 +38,7 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         return getQuads(blockState, face, random);
     }
 
-    Map<Pair<BlockState, Direction>, List<BakedQuad>> cache = new HashMap<>();
+    protected Map<Pair<BlockState, Direction>, List<BakedQuad>> cache = new HashMap<>();
     @Override
     public List<BakedQuad> getQuadsCached(@Nullable Direction face, Random random) {
         Pair<BlockState, Direction> directionPair = new Pair<>(blockState, face);

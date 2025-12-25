@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.advancement.*;
 import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
+import net.minecraft.component.ComponentChanges;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.data.recipe.CraftingRecipeJsonBuilder;
@@ -40,21 +41,21 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
         this.stack = new ItemStack(output, outputCount);
     }
 
-    public SimpleFurnitureRecipeJsonFactory(ItemConvertible output, int outputCount, NbtCompound nbtElement) {
+    public SimpleFurnitureRecipeJsonFactory(ItemConvertible output, int outputCount, @NotNull ComponentChanges components) {
         this.stack = new ItemStack(output, outputCount);
-        this.stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbtElement));
+        this.stack.applyChanges(components);
     }
 
     public SimpleFurnitureRecipeJsonFactory(ItemStack stack) {
         this.stack = stack;
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, int count, NbtCompound nbtElement) {
-        return new SimpleFurnitureRecipeJsonFactory(output, count, nbtElement);
+    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, int count, ComponentChanges components) {
+        return new SimpleFurnitureRecipeJsonFactory(output, count, components);
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, NbtCompound nbtElement) {
-        return new SimpleFurnitureRecipeJsonFactory(output, 1, nbtElement);
+    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, ComponentChanges components) {
+        return new SimpleFurnitureRecipeJsonFactory(output, 1, components);
     }
 
     public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output) {
