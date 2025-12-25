@@ -6,6 +6,7 @@
   "client": [
     "BlockColorsAccessor",
     "ItemColorsAccessor",
+    "PFMItemRendererMixinForge",
     "PFMReferencedModelsCollectorMixin",
     "PFMRenderLayersForgeMixin"
   ],
