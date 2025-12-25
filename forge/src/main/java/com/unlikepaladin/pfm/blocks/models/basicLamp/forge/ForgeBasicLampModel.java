@@ -45,6 +45,15 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
         builder.withProperty(VARIANT);
     }
 
+    @Override
+    public void getPropertiesForItem(ItemStack stack, IModelData data) {
+        super.getPropertiesForItem(stack, data);
+        if (stack.hasNbt() && stack.getNbt().contains("BlockEntityTag") && stack.getSubNbt("BlockEntityTag").contains("variant")) {
+            WoodVariant variant = WoodVariantRegistry.getVariant(Identifier.tryParse(stack.getSubNbt("BlockEntityTag").getString("variant")));
+            data.setData(VARIANT, variant);
+        }
+    }
+
     @NotNull
     @Override
     public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
