@@ -111,7 +111,7 @@ public class ChairEntity extends MobEntity {
 
     public static DefaultAttributeContainer.Builder createMobAttributes(){
         return MobEntity.createMobAttributes().add(EntityAttributes.MAX_HEALTH, 0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f);
+                .add(EntityAttributes.MOVEMENT_SPEED, 0.5f);
     }
 
     @Override

@@ -90,7 +90,7 @@ public class DyeKit extends Item {
                     ((DyeableFurnitureEntity<?>) entity).setPFMColor(getColor());
                     stack.decrement(1);
                 }
-                return ActionResult.success(user.getWorld().isClient);
+                return ActionResult.SUCCESS_SERVER;
             }
         }
         return ActionResult.PASS;

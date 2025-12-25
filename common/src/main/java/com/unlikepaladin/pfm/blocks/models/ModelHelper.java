@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.*;
+import com.unlikepaladin.pfm.mixin.PFMNativeImageAccessor;
 import com.unlikepaladin.pfm.mixin.PFMSpriteContentsAccessor;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
@@ -17,7 +18,6 @@ import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.texture.*;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.registry.Registries;
@@ -28,7 +28,6 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.math.Direction;
-import net.minecraft.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
@@ -177,7 +176,7 @@ public class ModelHelper {
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
-                int abgr = atlasImage.getColor(i, j); // NativeImage returns ABGR (AABBGGRR)
+                int abgr = ((PFMNativeImageAccessor)(Object)atlasImage).pfm$getColor(i, j); // NativeImage returns ABGR (AABBGGRR)
                 int argb = abgrToArgb(abgr);
                 bufferedImage.setRGB(i, j, argb);
             }
@@ -209,12 +208,34 @@ public class ModelHelper {
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                int abgr = nativeImage.getColor(x, y);
+                int abgr = ((PFMNativeImageAccessor)(Object)nativeImage).pfm$getColor(x, y);
                 int argb = abgrToArgb(abgr);
                 bufferedImage.setRGB(x, y, argb);
             }
         }
         return bufferedImage;
+    }
+
+
+    public static float getBrightness(Direction direction, boolean shaded, boolean bl) {
+        if (!shaded) {
+            return bl ? 0.9F : 1.0F;
+        } else {
+            switch (direction) {
+                case DOWN:
+                    return bl ? 0.9F : 0.5F;
+                case UP:
+                    return bl ? 0.9F : 1.0F;
+                case NORTH:
+                case SOUTH:
+                    return 0.8F;
+                case WEST:
+                case EAST:
+                    return 0.6F;
+                default:
+                    return 1.0F;
+            }
+        }
     }
 
 

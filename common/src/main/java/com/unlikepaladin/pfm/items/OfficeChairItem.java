@@ -5,20 +5,21 @@ import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.SpawnReason;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.consume.UseAction;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.predicate.entity.EntityPredicates;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.stat.Stats;
+import net.minecraft.text.Text;
+import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Box;
@@ -35,9 +36,9 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack) {
+    public Text getName(ItemStack stack) {
         DyeColor color = stack.getComponents().getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE);
-        return String.format("block.pfm.%s_office_chair", color.asString());
+        return Text.translatable(String.format("block.pfm.%s_office_chair", color.asString()));
     }
 
     @Override
@@ -52,11 +53,11 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
         return UseAction.BLOCK;
     }
 
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
+    public ActionResult use(World world, PlayerEntity user, Hand hand) {
         ItemStack itemStack = user.getStackInHand(hand);
         HitResult hitResult = raycast(world, user, RaycastContext.FluidHandling.ANY);
         if (hitResult.getType() == HitResult.Type.MISS) {
-            return TypedActionResult.pass(itemStack);
+            return ActionResult.PASS;
         } else {
             Vec3d vec3d = user.getRotationVec(1.0F);
             double boxSize = 5.0F;
@@ -68,13 +69,13 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
                 for(Entity entity : list) {
                     Box box = entity.getBoundingBox().expand(entity.getTargetingMargin());
                     if (box.contains(eyePos)) {
-                        return TypedActionResult.pass(itemStack);
+                        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
                     }
                 }
             }
 
             if (hitResult.getType() == HitResult.Type.BLOCK) {
-                OfficeChairEntity chair = Entities.OFFICE_CHAIR.create(world);
+                OfficeChairEntity chair = Entities.OFFICE_CHAIR.create(world, SpawnReason.SPAWN_ITEM_USE);
 
                 DyeColor color = itemStack.getComponents().getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE);
 
@@ -95,10 +96,10 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
                 }
 
                 user.incrementStat(Stats.USED.getOrCreateStat(this));
-                return TypedActionResult.success(itemStack, world.isClient());
+                return ActionResult.SUCCESS.withNewHandStack(itemStack);
 
             } else {
-                return TypedActionResult.pass(itemStack);
+                return ActionResult.PASS;
             }
         }
     }

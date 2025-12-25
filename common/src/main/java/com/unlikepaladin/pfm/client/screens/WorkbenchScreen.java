@@ -125,7 +125,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
         } else {
             this.handler.updateInput();
             List<FurnitureRecipe.CraftableFurnitureRecipe> filteredRecipes = handler.getSortedRecipes().stream()
-                    .filter(recipe -> I18n.translate(recipe.getRecipeOuput().getTranslationKey())
+                    .filter(recipe -> I18n.translate(recipe.getRecipeOuput().getName().getString())
                     .toLowerCase().contains(string.trim().toLowerCase())).toList();
             this.handler.getSearchableRecipes().addAll(filteredRecipes);
             this.handler.searching = true;

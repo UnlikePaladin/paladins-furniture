@@ -61,9 +61,9 @@ public class PaladinFurnitureModBlocksItems {
     public static final Item DYE_KIT_CYAN = new DyeKit(new Item.Settings().maxCount(16).registryKey(LateBlockRegistry.getItemRegistryKey("dye_kit_cyan")), DyeColor.CYAN);
     public static final Item DYE_KIT_GRAY = new DyeKit(new Item.Settings().maxCount(16).registryKey(LateBlockRegistry.getItemRegistryKey("dye_kit_gray")), DyeColor.GRAY);
 
-    public static final Block RAW_CONCRETE = new Block(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE));
-    public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND));
-    public static final Block LEATHER_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.WHITE_WOOL).sounds(BlockSoundGroup.WOOL).mapColor(MapColor.ORANGE));
+    public static final Block RAW_CONCRETE = new Block(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE).registryKey(LateBlockRegistry.getBlockRegistryKey("raw_concrete")));
+    public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND).registryKey(LateBlockRegistry.getBlockRegistryKey("raw_concrete_powder")));
+    public static final Block LEATHER_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.WHITE_WOOL).sounds(BlockSoundGroup.WOOL).mapColor(MapColor.ORANGE).registryKey(LateBlockRegistry.getBlockRegistryKey("leather_block")));
 
     public static final Block IRON_CHAIN = new ChainBlock(AbstractBlock.Settings.copy(Blocks.IRON_BARS).sounds(BlockSoundGroup.METAL).registryKey(LateBlockRegistry.getBlockRegistryKey("iron_chain")));
     public static final PendantBlock GRAY_MODERN_PENDANT = new PendantBlock(AbstractBlock.Settings.copy(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)).mapColor(MapColor.GRAY).registryKey(LateBlockRegistry.getBlockRegistryKey("gray_modern_pendant")));

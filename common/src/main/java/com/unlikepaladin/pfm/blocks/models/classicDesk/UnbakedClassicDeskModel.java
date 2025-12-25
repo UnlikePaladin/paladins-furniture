@@ -94,13 +94,10 @@ public class UnbakedClassicDeskModel implements UnbakedModel {
     };
 
     @Override
-    public Collection<Identifier> getModelDependencies() {
-        return List.of(PARENT);
-    }
-
-    @Override
-    public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
-
+    public void resolve(Resolver resolver) {
+        for (Identifier modelPart : BASIC_MODEL_PARTS_BASE) {
+            resolver.resolve(modelPart);
+        }
     }
 
     public static final Map<ModelBakeSettings, List<BakedModel>> CACHED_MODELS = new ConcurrentHashMap<>();

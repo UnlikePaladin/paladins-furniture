@@ -20,3 +20,5 @@ accessible field net/minecraft/client/render/RenderPhase ALWAYS_DEPTH_TEST Lnet/
 accessible field net/minecraft/client/render/RenderPhase COLOR_MASK Lnet/minecraft/client/render/RenderPhase$WriteMaskState;
 accessible method net/minecraft/client/render/RenderLayer of (Ljava/lang/String;Lnet/minecraft/client/render/VertexFormat;Lnet/minecraft/client/render/VertexFormat$DrawMode;ILnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;)Lnet/minecraft/client/render/RenderLayer$MultiPhase;
 accessible class net/minecraft/client/texture/atlas/AtlasSource$SpriteRegion
+accessible class net/minecraft/client/render/block/BlockModelRenderer$AmbientOcclusionCalculator
+accessible field net/minecraft/client/render/block/BlockModelRenderer$AmbientOcclusionCalculator brightness [F

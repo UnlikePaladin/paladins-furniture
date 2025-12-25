@@ -71,7 +71,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
             float rotationInput = livingEntity.sidewaysSpeed;
 
             if (this.isLogicalSideForUpdatingMovement()) {
-                this.setMovementSpeed((float)this.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED));
+                this.setMovementSpeed((float)this.getAttributeValue(EntityAttributes.MOVEMENT_SPEED));
                 final float baseRotationSensitivity = 0.5F;
                 final float maxRotationSensitivity = 2.0F;
 
@@ -117,7 +117,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
             double speed = this.getVelocity().horizontalLength();
             wheelSpinAngle += (float)(speed * 200);  // Adjust multiplier to control spin speed
 
-            this.tryCheckBlockCollision();
+            this.tickBlockCollision();
         } else {
             super.travel(movementInput);
         }
@@ -224,8 +224,8 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
 
 
     public static DefaultAttributeContainer.Builder createMobAttributes(){
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.1f);
+        return MobEntity.createMobAttributes().add(EntityAttributes.MAX_HEALTH, 10.0D)
+                .add(EntityAttributes.MOVEMENT_SPEED, 0.1f);
     }
 
     @Override

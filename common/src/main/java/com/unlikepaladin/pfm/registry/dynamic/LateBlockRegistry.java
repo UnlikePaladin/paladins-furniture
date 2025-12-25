@@ -78,8 +78,9 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::createBlocks);
         PaladinFurnitureMod.furnitureEntryMap.put(HerringbonePlankBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
+                RegistryKey<Block> blockRegistryKey = getBlockRegistryKey(variant.asString()+"_herringbone_planks");
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_herringbone_planks", () -> new HerringbonePlankBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).sounds(BlockSoundGroup.WOOD).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.BUILDING_BLOCKS), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_herringbone_planks", () -> new HerringbonePlankBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).sounds(BlockSoundGroup.WOOD).registryKey(blockRegistryKey).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.BUILDING_BLOCKS), true);
             }
         }});
         PaladinFurnitureMod.furnitureEntryMap.put(BasicChairBlock.class, new FurnitureEntry<>() {{
@@ -351,26 +352,34 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicDeskBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                RegistryKey<Block> blockRegistryKey = getBlockRegistryKey(variant.asString()+"_desk_classic");
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque().registryKey(blockRegistryKey)), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                if (variant.hasStripped()) {
+                    RegistryKey<Block> strippedBlockRegistryKey = getBlockRegistryKey("stripped_" + variant.asString()+"_desk_classic");
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque().registryKey(strippedBlockRegistryKey)), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                }
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                RegistryKey<Block> blockRegistryKey = getBlockRegistryKey(variant.asString()+"_desk_classic");
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque().registryKey(blockRegistryKey)), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicDeskCabinetBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                RegistryKey<Block> blockRegistryKey = getBlockRegistryKey(variant.asString()+"_desk_cabinet_classic");
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque().registryKey(blockRegistryKey)), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                if (variant.hasStripped()) {
+                    RegistryKey<Block> strippedBlockRegistryKey = getBlockRegistryKey("stripped_" + variant.asString()+"_desk_cabinet_classic");
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque().registryKey(strippedBlockRegistryKey)), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                }
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().getDefaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                RegistryKey<Block> blockRegistryKey = getBlockRegistryKey(variant.asString()+"_desk_cabinet_classic");
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque().registryKey(blockRegistryKey)), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
-        PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = new OfficeChairItem(new Item.Settings().component(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE));
+        PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = new OfficeChairItem(new Item.Settings().component(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).registryKey(getItemRegistryKey("office_chair")));
         LateBlockRegistry.registerLateItem("office_chair", () -> PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, PaladinFurnitureMod.FURNITURE_GROUP);
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicNightstandBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {

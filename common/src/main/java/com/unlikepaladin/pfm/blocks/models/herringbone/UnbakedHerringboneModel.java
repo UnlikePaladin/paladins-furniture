@@ -35,15 +35,11 @@ public class UnbakedHerringboneModel implements UnbakedModel {
         }
     };
 
-
     @Override
-    public Collection<Identifier> getModelDependencies() {
-        return TEMPLATE_MODEL;
-    }
-
-    @Override
-    public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
-
+    public void resolve(Resolver resolver) {
+        for (Identifier modelPart : TEMPLATE_MODEL) {
+            resolver.resolve(modelPart);
+        }
     }
 
     @Override
