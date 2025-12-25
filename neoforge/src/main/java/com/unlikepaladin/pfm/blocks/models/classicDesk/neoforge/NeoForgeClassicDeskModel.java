@@ -477,13 +477,13 @@ public class NeoForgeClassicDeskModel extends PFMNeoForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
-        if (stack.getItem() instanceof BlockItem) {
-            int offset = ((BlockItem) stack.getItem()).getBlock() instanceof ClassicDeskCabinetBlock ? 1 : 0;
+    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+        if (blockState != null) {
+            int offset = blockState.getBlock() instanceof ClassicDeskCabinetBlock ? 1 : 0;
             // base
-            return getQuadsWithTexture(getTemplateBakedModels().get(18+offset).getQuads(state, face, random), ModelHelper.getOakPlankLogSprites(), getSpriteList(stack));
+            return getQuadsWithTexture(getTemplateBakedModels().get(18+offset).getQuads(null, face, random), ModelHelper.getOakPlankLogSprites(), getSpriteList(blockState));
         }
-        return super.getQuads(stack, state, face, random);
+        return super.getQuads(face, random);
     }
 
     @Override

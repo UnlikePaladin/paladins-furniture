@@ -22,3 +22,5 @@ accessible method net/minecraft/client/render/RenderLayer of (Ljava/lang/String;
 accessible class net/minecraft/client/texture/atlas/AtlasSource$SpriteRegion
 accessible class net/minecraft/client/render/block/BlockModelRenderer$AmbientOcclusionCalculator
 accessible field net/minecraft/client/render/block/BlockModelRenderer$AmbientOcclusionCalculator brightness [F
+accessible class net/minecraft/client/render/model/ModelBaker$BakerImpl
+accessible method net/minecraft/client/render/model/ModelBaker$BakerImpl <init>	(Lnet/minecraft/client/render/model/ModelBaker;Lnet/minecraft/client/render/model/ModelBaker$ErrorCollectingSpriteGetter;Lnet/minecraft/client/model/ModelNameSupplier;)V

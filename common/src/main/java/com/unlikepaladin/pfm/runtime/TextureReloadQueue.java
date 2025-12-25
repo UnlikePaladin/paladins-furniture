@@ -99,7 +99,7 @@ public final class TextureReloadQueue {
         Resource resource = optionalResource.get();
         Sprite original = spriteAtlas.getSprite(id);
 
-        SpriteContents newContents = SpriteOpener.create(SpriteLoader.METADATA_READERS).loadSprite(id, resource);
+        SpriteContents newContents = SpriteOpener.create(SpriteLoader.METADATA_SERIALIZERS).loadSprite(id, resource);
         ((PFMSpriteExtensions) original).pfm$setContents(newContents);
         try {
             newContents.generateMipmaps(MinecraftClient.getInstance().options.getMipmapLevels().getValue());
@@ -112,7 +112,7 @@ public final class TextureReloadQueue {
     public static void reloadSpritesOnClientThread(List<Identifier> id) {
         TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
         ResourceManager resourceManager = MinecraftClient.getInstance().getResourceManager();
-        AbstractTexture abstractTexture = textureManager.getTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+        AbstractTexture abstractTexture = textureManager.getTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
         try {
             if (abstractTexture instanceof SpriteAtlasTexture spriteAtlas) {
                 spriteAtlas.bindTexture();

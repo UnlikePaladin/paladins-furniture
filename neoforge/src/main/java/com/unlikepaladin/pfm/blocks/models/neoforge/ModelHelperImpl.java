@@ -7,6 +7,6 @@ import net.minecraft.util.Identifier;
 
 public class ModelHelperImpl {
     public static BakedModel getModelFromIdentifier(Identifier id) {
-        return MinecraftClient.getInstance().getBakedModelManager().getModel(ModelIdentifier.standalone(id));
+        return MinecraftClient.getInstance().getBakedModelManager().getStandaloneModel(id);
     }
 }

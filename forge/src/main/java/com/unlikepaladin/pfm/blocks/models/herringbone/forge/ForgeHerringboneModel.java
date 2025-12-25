@@ -16,6 +16,7 @@ import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -62,7 +63,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
         return super.getModelData(world, pos, state, tileData);
     }
 
-    static SpriteIdentifier herringboneTextureId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, PFMSpriteRegistry.HERRINGBONE_PLANKS);
+    static SpriteIdentifier herringboneTextureId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, PFMSpriteRegistry.HERRINGBONE_PLANKS);
 
     @Override
     public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
@@ -82,34 +83,34 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
 
     private Sprite generateTextureIfNeeded(VariantBase<?> variant) {
         Identifier finalId = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
-        SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, finalId);
+        SpriteIdentifier mainTexture = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, finalId);
         if (!((PFMSpriteContentExtensions)mainTexture.getSprite().getContents()).pfm$isInitialized()) {
-            SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
+            SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
             ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
         }
         return mainTexture.getSprite();
     }
 
     @Override
-    public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
-        Pair<ItemStack, Direction> directionPair = new Pair<>(stack, face);
+    public List<BakedQuad> getQuadsCached(@Nullable Direction face, Random random) {
+        Pair<BlockState, Direction> directionPair = new Pair<>(blockState, face);
         if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && !((PFMSpriteContentExtensions)cache.get(directionPair).get(0).getSprite().getContents()).pfm$isInitialized()) {
             cache.remove(directionPair);
         }
-        return super.getQuadsCached(stack, state, face, random);
+        return super.getQuadsCached(face, random);
     }
 
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
-        VariantBase<?> variant = getVariant(((BlockItem) stack.getItem()).getBlock().getDefaultState());
+    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+        VariantBase<?> variant = getVariant(blockState);
         if (variant instanceof WoodVariant) {
             Sprite replacement = generateTextureIfNeeded(variant);
             List<BakedQuad> quads = new ArrayList<>();
             for (BakedModel model : getTemplateBakedModels()) {
-                quads.addAll(model.getQuads(state, face, random));
+                quads.addAll(model.getQuads(null, face, random));
             }
             return getQuadsWithTexture(quads, new SpriteData(replacement));
         }
-        return super.getQuads(stack, state, face, random);
+        return super.getQuads(face, random);
     }
 }

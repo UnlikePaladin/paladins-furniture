@@ -5,8 +5,8 @@ import com.unlikepaladin.pfm.blocks.ClassicDeskBlock;
 import com.unlikepaladin.pfm.blocks.ClassicDeskCabinetBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.client.render.model.BakedModel;
@@ -21,9 +21,11 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
 import net.minecraft.world.BlockView;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class FabricClassicDeskModel extends PFMFabricBakedModel {
@@ -37,7 +39,7 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(QuadEmitter context, BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
         if (state.getBlock() instanceof ClassicDeskBlock || state.getBlock() instanceof ClassicDeskCabinetBlock) {
             Direction dir = state.get(HorizontalFacingBlock.FACING);
             boolean isCabinet = state.getBlock() instanceof ClassicDeskCabinetBlock;
@@ -89,7 +91,7 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
 
             List<Sprite> spriteList = getSpriteList(state);
             pushTextureTransform(context, spriteList.get(0));
-            ((FabricBakedModel) getTemplateBakedModels().get(0)).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getTemplateBakedModels().get(0)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
             context.popTransform();
 
 
@@ -102,13 +104,13 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
                     // inner corner
                     if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && !canConnectSimple.apply(world.getBlockState(pos.offset(neighborFacing)))) {
                         if (neighborFacing == dir.rotateYClockwise()) {
-                            ((FabricBakedModel) getTemplateBakedModels().get((34 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                            ((FabricBakedModel) getTemplateBakedModels().get((34 + openOffset))).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                         }
                         else {
-                            ((FabricBakedModel) getTemplateBakedModels().get((30 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                            ((FabricBakedModel) getTemplateBakedModels().get((30 + openOffset))).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                         }
                     } else {
-                        middleDesk(world, state, pos, randomSupplier, context, leftCabinet, rightCabinet, openOffset);
+                        middleDesk(world, state, pos, randomSupplier, context, leftCabinet, rightCabinet, openOffset, cullTest);
                     }
                 }
                 else if (canConnectSimple.apply(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
@@ -116,293 +118,293 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
                     // outer corner
                     if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && !canConnectSimple.apply(world.getBlockState(pos.offset(neighborFacing.getOpposite())))) {
                         if (neighborFacing == dir.rotateYClockwise()) {
-                            ((FabricBakedModel) getTemplateBakedModels().get((32 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                            ((FabricBakedModel) getTemplateBakedModels().get((32 + openOffset))).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                         } else {
-                            ((FabricBakedModel) getTemplateBakedModels().get((28 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+                            ((FabricBakedModel) getTemplateBakedModels().get((28 + openOffset))).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                         }
                         wasOuterCorner = true;
                     } else {
-                        middleDesk(world, state, pos, randomSupplier, context, leftCabinet, rightCabinet, openOffset);
+                        middleDesk(world, state, pos, randomSupplier, context, leftCabinet, rightCabinet, openOffset, cullTest);
                     }
                 }
                 else {
-                    middleDesk(world, state, pos, randomSupplier, context, leftCabinet, rightCabinet, openOffset);
+                    middleDesk(world, state, pos, randomSupplier, context, leftCabinet, rightCabinet, openOffset, cullTest);
                 }
             }
 
             if (dir == Direction.NORTH) {
                 // le legs
                 if (!east && !north || (isCabinet && right && !rightCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(1)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(1)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!west && !north || (isCabinet && left && !leftCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(2)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(2)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!south && !east || (isCabinet && right && !rightCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!south && !west || (isCabinet && left && !leftCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 // east & west & north bits
                 if (!west && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(13)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(13)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!east && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(12)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(12)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!north && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(11)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(11)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 // side connecting bits
                 if (north && !east && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(7)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(7)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (south && !east  && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(8)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(8)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
                 if (north && !west && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(9)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(9)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (south && !west && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(10)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(10)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
                 // the connection up front, this here to avoid it when centered
                 if (west && !(hasCornerNorthWest))
-                    ((FabricBakedModel) getTemplateBakedModels().get(6)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(6)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (east && !(hasCornerNorthEast))
-                    ((FabricBakedModel) getTemplateBakedModels().get(5)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(5)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
                 // corners
                 if (cornerNorthWest) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(15)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(15)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerNorthEast) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(14)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(14)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerSouthWest) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(17)).emitBlockQuads(world, state, pos, randomSupplier, context);
-                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(17)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
+                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerSouthEast) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(16)).emitBlockQuads(world, state, pos, randomSupplier, context);
-                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(16)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
+                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
             } else if (dir == Direction.SOUTH){
                 // le legs
                 if (!east && !north || (isCabinet && left && !leftCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!west && !north || (isCabinet && right && !rightCabinet))  {
-                   ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                   ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!south && !east || (isCabinet && left && !leftCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(2)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(2)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!south && !west || (isCabinet && right && !rightCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(1)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(1)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 // east & west & north bits
                 if (!west && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(12)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(12)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!east && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(13)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(13)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!south && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(11)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(11)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 // side connecting bits
                 if (north && !west && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(8)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(8)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (south && !west && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(7)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(7)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
                 if (north && !east && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(10)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(10)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (south && !east && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(9)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(9)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
                 // the connection up front, this here to avoid it when centered
                 if (west && !(hasCornerSouthWest))
-                    ((FabricBakedModel) getTemplateBakedModels().get(5)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(5)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (east && !(hasCornerSouthEast))
-                  ((FabricBakedModel) getTemplateBakedModels().get(6)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                  ((FabricBakedModel) getTemplateBakedModels().get(6)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
                 // corners
                 if (cornerNorthWest) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(16)).emitBlockQuads(world, state, pos, randomSupplier, context);
-                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(16)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
+                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerNorthEast) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(17)).emitBlockQuads(world, state, pos, randomSupplier, context);
-                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(17)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
+                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerSouthWest) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(14)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(14)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerSouthEast) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(15)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(15)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
             } else if (dir == Direction.EAST){
                 // le legs
                 if (!east && !north || (isCabinet && left && !leftCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(2)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(2)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!west && !north || (isCabinet && left && !leftCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!south && !east || (isCabinet && right && !rightCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(1)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(1)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!south && !west || (isCabinet && right && !rightCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 // east & west & north bits
                 if (!south && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(12)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(12)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!north && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(13)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(13)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!east && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(11)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(11)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 // side connecting bits
                 if (west && !south && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(8)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(8)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (east && !south && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(7)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(7)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
                 if (west && !north && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(10)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(10)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (east && !north && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(9)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(9)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
                 // the connection up front, this here to avoid it when centered
                 if (north && !(hasCornerNorthEast))
-                    ((FabricBakedModel) getTemplateBakedModels().get(6)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(6)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (south && !(hasCornerSouthEast))
-                    ((FabricBakedModel) getTemplateBakedModels().get(5)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(5)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
 
                 // corners
                 if (cornerSouthWest) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(16)).emitBlockQuads(world, state, pos, randomSupplier, context);
-                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(16)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
+                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerNorthWest) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(17)).emitBlockQuads(world, state, pos, randomSupplier, context);
-                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(17)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
+                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerSouthEast) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(14)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(14)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerNorthEast) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(15)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(15)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
             } else {
                 // le legs
                 if (!east && !north || (isCabinet && right && !rightCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!west && !north || (isCabinet && right && !rightCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(1)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(1)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!south && !east || (isCabinet && left && !leftCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!south && !west || (isCabinet && left && !leftCabinet))  {
-                    ((FabricBakedModel) getTemplateBakedModels().get(2)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(2)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 // east & west & north bits
                 if (!south && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(13)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(13)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!north && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(12)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(12)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
                 if (!west && !wasOuterCorner) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(11)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(11)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 // side connecting bits
                 if (west && !south && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(9)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(9)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (east && !south && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(10)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(10)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
 
                 if (west && !north && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(7)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(7)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (east && !north && !wasOuterCorner)
-                    ((FabricBakedModel) getTemplateBakedModels().get(8)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(8)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
                 // the connection up front, this here to avoid it when centered
                 if (north && !(hasCornerNorthWest))
-                    ((FabricBakedModel) getTemplateBakedModels().get(5)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(5)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 if (south && !(hasCornerSouthWest))
-                    ((FabricBakedModel) getTemplateBakedModels().get(6)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(6)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
 
 
                 // corners
                 if (cornerNorthEast) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(16)).emitBlockQuads(world, state, pos, randomSupplier, context);
-                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(16)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
+                    ((FabricBakedModel) getTemplateBakedModels().get(3)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerSouthEast) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(17)).emitBlockQuads(world, state, pos, randomSupplier, context);
-                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(17)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
+                    ((FabricBakedModel) getTemplateBakedModels().get(4)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerNorthWest) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(14)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(14)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
 
                 if (cornerSouthWest) {
-                    ((FabricBakedModel) getTemplateBakedModels().get(15)).emitBlockQuads(world, state, pos, randomSupplier, context);
+                    ((FabricBakedModel) getTemplateBakedModels().get(15)).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
                 }
             }
             context.popTransform();
         }
     }
 
-    private void middleDesk(BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, boolean left, boolean right, int openOffset) {
+    private void middleDesk(BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, QuadEmitter context, boolean left, boolean right, int openOffset, Predicate<@Nullable  Direction> cullTest) {
         if (left && right) {
-            ((FabricBakedModel) getTemplateBakedModels().get((22 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getTemplateBakedModels().get((22 + openOffset))).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
         }  else if (left) {
-            ((FabricBakedModel) getTemplateBakedModels().get((26 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getTemplateBakedModels().get((26 + openOffset))).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
         } else if (right) {
-            ((FabricBakedModel) getTemplateBakedModels().get((24 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getTemplateBakedModels().get((24 + openOffset))).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
         } else {
-            ((FabricBakedModel) getTemplateBakedModels().get(20+(openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
+            ((FabricBakedModel) getTemplateBakedModels().get(20+(openOffset))).emitBlockQuads(context, world, state, pos, randomSupplier, cullTest);
         }
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        if (stack.getItem() instanceof BlockItem) {
-            int offset = ((BlockItem) stack.getItem()).getBlock() instanceof ClassicDeskCabinetBlock ? 1 : 0;
-            pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), getSpriteList(stack));
-            // base
-            ((FabricBakedModel) getTemplateBakedModels().get(18+offset)).emitItemQuads(stack, randomSupplier, context);
-            context.popTransform();
-        }
+    public void emitItemQuads(QuadEmitter emitter, Supplier<Random> randomSupplier) {
+        if (blockState == null) return;
+
+        int offset = blockState.getBlock() instanceof ClassicDeskCabinetBlock ? 1 : 0;
+        pushTextureTransform(emitter, ModelHelper.getOakPlankLogSprites(), getSpriteList(blockState));
+        // base
+        ((FabricBakedModel) getTemplateBakedModels().get(18+offset)).emitItemQuads(emitter, randomSupplier);
+        emitter.popTransform();
     }
 
     @Override

@@ -8,23 +8,27 @@ import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.ducks.PFMSpriteContentExtensions;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.PlayerScreenHandler;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.random.Random;
 import net.minecraft.world.BlockRenderView;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public class FabricHerringboneModel extends PFMFabricBakedModel {
@@ -37,9 +41,9 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
         VariantBase<?> variant = getVariant(state);
         if (variant instanceof WoodVariant) {
             Identifier finalId = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
-            SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, finalId);
+            SpriteIdentifier mainTexture = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, finalId);
             if (!((PFMSpriteContentExtensions)mainTexture.getSprite().getContents()).pfm$isInitialized()) {
-                SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
+                SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
                 ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
             }
             return mainTexture.getSprite();
@@ -52,40 +56,40 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
         return false;
     }
 
-    static SpriteIdentifier herringboneTextureId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, PFMSpriteRegistry.HERRINGBONE_PLANKS);
+    static SpriteIdentifier herringboneTextureId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, PFMSpriteRegistry.HERRINGBONE_PLANKS);
     @Override
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(QuadEmitter emitter, BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, Predicate<@Nullable Direction> cullTest) {
         VariantBase<?> variant = getVariant(state);
         if (variant instanceof WoodVariant) {
-            generateTextureIfNeeded(context, variant);
+            generateTextureIfNeeded(emitter, variant);
             for (BakedModel model : getTemplateBakedModels()) {
-                ((FabricBakedModel)model).emitBlockQuads(blockView, state, pos, randomSupplier, context);
+                ((FabricBakedModel)model).emitBlockQuads(emitter, blockView, state, pos, randomSupplier, cullTest);
             }
-            context.popTransform();
+            emitter.popTransform();
         }
     }
 
-    private void generateTextureIfNeeded(RenderContext context, VariantBase<?> variant) {
+    private void generateTextureIfNeeded(QuadEmitter context, VariantBase<?> variant) {
         Identifier finalId = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
-        SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, finalId);
+        SpriteIdentifier mainTexture = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, finalId);
         if (!((PFMSpriteContentExtensions)mainTexture.getSprite().getContents()).pfm$isInitialized()) {
-            SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
+            SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
             ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
         }
         pushTextureTransform(context, mainTexture.getSprite());
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        if (!(stack.getItem() instanceof BlockItem)) return;
+    public void emitItemQuads(QuadEmitter emitter, Supplier<Random> randomSupplier) {
+        if (blockState == null) return;
 
-        VariantBase<?> variant = getVariant(((BlockItem) stack.getItem()).getBlock().getDefaultState());
+        VariantBase<?> variant = getVariant(blockState);
         if (variant instanceof WoodVariant) {
-            generateTextureIfNeeded(context, variant);
+            generateTextureIfNeeded(emitter, variant);
             for (BakedModel model : getTemplateBakedModels()) {
-                ((FabricBakedModel)model).emitItemQuads(stack, randomSupplier, context);
+                ((FabricBakedModel)model).emitItemQuads(emitter, randomSupplier);
             }
-            context.popTransform();
+            emitter.popTransform();
         }
     }
 }

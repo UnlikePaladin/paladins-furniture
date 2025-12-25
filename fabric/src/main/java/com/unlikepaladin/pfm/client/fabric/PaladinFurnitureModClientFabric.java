@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.fabric.modelLoaders.PFMModelLoadingV1;
+import com.unlikepaladin.pfm.client.model.FurnitureTintSource;
 import com.unlikepaladin.pfm.client.model.PFMBedModelRenderer;
 import com.unlikepaladin.pfm.client.model.PFMItemModel;
 import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
@@ -32,6 +33,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.item.model.ItemModelTypes;
 import net.minecraft.client.render.item.model.special.SpecialModelTypes;
+import net.minecraft.client.render.item.tint.TintSourceTypes;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
@@ -72,6 +74,7 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
     public static void registerModels() {
         ItemModelTypes.ID_MAPPER.put(Identifier.of(PaladinFurnitureMod.MOD_ID, "furniture_model"), PFMItemModel.Unbaked.CODEC);
         SpecialModelTypes.ID_MAPPER.put(Identifier.of(PaladinFurnitureMod.MOD_ID, "pfm_bed"), PFMBedModelRenderer.Unbaked.CODEC);
+        TintSourceTypes.ID_MAPPER.put(Identifier.of(PaladinFurnitureMod.MOD_ID, "furniture_color"), FurnitureTintSource.CODEC);
         for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
             if (block instanceof DyeableFurnitureBlock)
                 SpecialBlockRendererRegistry.register(block, new PFMBedModelRenderer.Unbaked(((DyeableFurnitureBlock) block).getPFMColor()));

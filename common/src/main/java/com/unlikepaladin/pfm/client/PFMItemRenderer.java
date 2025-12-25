@@ -10,6 +10,7 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import com.unlikepaladin.pfm.entity.render.PFMBedBlockEntityRenderer;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
@@ -65,8 +66,6 @@ public class PFMItemRenderer {
             BlockEntityRenderer<PFMBedBlockEntity> blockEntityRenderer = blockEntityRenderDispatcher.get(renderBed);
             blockEntityRenderer.render(renderBed, 1.0f, matrices, vertexConsumers, light, overlay);
             matrices.pop();
-        } else if (stack.getItem() == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
-            OfficeChairEntityRenderer.renderItem(stack, matrices, mode, vertexConsumers, leftHanded, light, overlay);
         }
     }
 }

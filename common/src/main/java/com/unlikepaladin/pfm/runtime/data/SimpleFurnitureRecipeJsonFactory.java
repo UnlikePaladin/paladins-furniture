@@ -22,6 +22,7 @@ import net.minecraft.registry.RegistryKeys;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;

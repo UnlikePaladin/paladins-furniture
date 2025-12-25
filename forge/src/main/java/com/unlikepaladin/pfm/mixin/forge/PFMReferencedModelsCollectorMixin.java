@@ -43,10 +43,7 @@ import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinner
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
 import com.unlikepaladin.pfm.client.forge.PaladinFurnitureModClientForge;
-import net.minecraft.client.render.model.BlockStatesLoader;
-import net.minecraft.client.render.model.ReferencedModelsCollector;
-import net.minecraft.client.render.model.ResolvableModel;
-import net.minecraft.client.render.model.UnbakedModel;
+import net.minecraft.client.render.model.*;
 import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.*;
@@ -215,11 +212,9 @@ public abstract class PFMReferencedModelsCollectorMixin {
         return olModel;
     }
 
-    @Inject(method = "addGenerated", at = @At("RETURN"))
-    private void onAddStandardModels(CallbackInfo ci) {
-        PaladinFurnitureModClientForge.registerExtraModels(modelIdentifier -> {
-            UnbakedModel model = this.computeResolvedModel(modelIdentifier);
-            this.add(model);
-        });
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void onReturnInit(CallbackInfo ci) {
+        PaladinFurnitureModClientForge.registerExtraModels(this::computeResolvedModel);
     }
+
 }

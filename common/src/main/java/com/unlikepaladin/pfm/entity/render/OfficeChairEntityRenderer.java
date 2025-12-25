@@ -46,8 +46,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         return new OfficeChairEntityRenderState();
     }
 
-    public static void renderItem(ItemStack itemStack, MatrixStack stack, ModelTransformationMode mode, VertexConsumerProvider provider,
-                                  boolean leftHanded, int light, int overlay) {
+    public static void renderItem(DyeColor color, MatrixStack stack, ModelTransformationMode mode, VertexConsumerProvider provider, int light, int overlay) {
         stack.push();
 
         BakedModel chairModel = ModelHelper.getModelFromIdentifier(OfficeChairEntityRenderer.MODEL_IDS[0]);
@@ -75,15 +74,15 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             float blue = 1.0f;
 
 
-            if (itemStack.contains(PFMComponents.COLOR_COMPONENT) && quad.hasColor()) {
-                int colorInt = itemStack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getFireworkColor();
+            if (quad.hasTint()) {
+                int colorInt = color.getFireworkColor();
                 red = ((colorInt >> 16) & 0xFF) / 255.0f;
                 green = ((colorInt >> 8) & 0xFF) / 255.0f;
                 blue = (colorInt & 0xFF) / 255.0f;
             }
 
 
-            provider.getBuffer(RenderLayers.getItemLayer(itemStack))
+            provider.getBuffer(TexturedRenderLayers.getItemEntityTranslucentCull())
                     .quad(stack.peek(), quad, red, green, blue, 1.0f, light, overlay);
         }
 
@@ -99,9 +98,6 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         int damageStage = (int) (mobEntity.maxHealth - mobEntity.health);
         VertexConsumer damageConsumer = MinecraftClient.getInstance().getBufferBuilders().getEffectVertexConsumers()
                 .getBuffer(ModelBaker.BLOCK_DESTRUCTION_RENDER_LAYERS.get(damageStage));
-
-        BitSet bitSet = new BitSet(3);
-        float[] fs = new float[Direction.values().length * 2];
 
         VertexConsumer solid =
                 vertexConsumerProvider.getBuffer(RenderLayer.getCutoutMipped());
@@ -199,7 +195,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             float green = 1.0f;
             float blue = 1.0f;
 
-            if (mobEntity.color != null && quad.hasColor()) {
+            if (mobEntity.color != null && quad.hasTint()) {
                 int colorInt = mobEntity.color.getFireworkColor();
                 red = ((colorInt >> 16) & 0xFF) / 255.0f;
                 green = ((colorInt >> 8) & 0xFF) / 255.0f;
