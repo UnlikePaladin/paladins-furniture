@@ -34,12 +34,14 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
+import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.client.util.InputUtil;
@@ -66,6 +68,7 @@ public class PaladinFurnitureModClientNeoForge {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
+        PFMSpriteRegistry.registerAdditionalSprites();
         ColorRegistryNeoForge.registerBlockRenderLayers();
         event.enqueueWork(PaladinFurnitureModClientNeoForge::registerScreens);
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,
@@ -184,6 +187,10 @@ public class PaladinFurnitureModClientNeoForge {
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(model -> event.register(ModelIdentifier.standalone(model)));
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(model -> event.register(ModelIdentifier.standalone(model)));
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(model -> event.register(ModelIdentifier.standalone(model)));
+        event.register(ModelIdentifier.standalone(Identifier.of("minecraft:block/cube_all")));
+        for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
+            event.register(ModelIdentifier.standalone(id));
+        }
     }
 
 }

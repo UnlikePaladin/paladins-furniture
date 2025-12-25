@@ -20,10 +20,16 @@
     "PFMBakedModelManagerMixin",
     "PFMItemRendererMixin",
     "PFMLanguageManagerAccessor",
+    "PFMMissingSpriteAccessor",
     "PFMMinecraftClientAcccessor",
     "PFMMixinClientPacketListener",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSplashOverlayMixin",
+    "PFMSpriteAtlasTextureAccessor",
+    "PFMSpriteContentsAccessor",
+    "PFMSpriteContentsMixin",
+    "PFMSpriteLoaderMixin",
+    "PFMSpriteMixin",
     "PFMTitleScreenMixin"
   ],
   "injectors": {

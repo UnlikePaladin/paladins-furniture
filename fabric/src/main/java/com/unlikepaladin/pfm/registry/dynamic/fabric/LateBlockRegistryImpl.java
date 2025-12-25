@@ -69,6 +69,16 @@ public class LateBlockRegistryImpl {
                 }
                 entries.addAll(stacks);
             } );
+        } else if (item == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
+            ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group.getRight()).get()).register(entries -> {
+                List<ItemStack> stacks = new ArrayList<>();
+                for (DyeColor color : DyeColor.values()) {
+                    ItemStack stack = new ItemStack(item);
+                    stack.set(PFMComponents.COLOR_COMPONENT, color);
+                    stacks.add(stack);
+                }
+                entries.addAll(stacks);
+            } );
         } else {
             ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group.getRight()).get()).register(entries -> entries.add(item));
         }

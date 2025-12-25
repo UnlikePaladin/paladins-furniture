@@ -11,6 +11,7 @@ import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel
 import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
 import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
 import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
+import com.unlikepaladin.pfm.blocks.models.classicDesk.UnbakedClassicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
@@ -34,9 +35,11 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
+import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
+import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.client.util.ModelIdentifier;
@@ -61,6 +64,7 @@ public class PaladinFurnitureModClientForge {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
+        PFMSpriteRegistry.registerAdditionalSprites();
         ColorRegistryForge.registerBlockRenderLayers();
         event.enqueueWork(PaladinFurnitureModClientForge::registerScreens);
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
@@ -175,10 +179,17 @@ public class PaladinFurnitureModClientForge {
         for (Identifier id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
             event.accept(new ModelIdentifier(id, "block"));
         }
+        for (Identifier id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
+            event.accept(new ModelIdentifier(id, "block"));
+        }
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelIdentifier(model, "block")));
         UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelIdentifier(model, "block")));
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelIdentifier(model, "block")));
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelIdentifier(model, "block")));
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelIdentifier(model, "block")));
+        event.accept(new ModelIdentifier(Identifier.of("minecraft:block/cube_all"), "block"));
+        for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
+            event.accept(new ModelIdentifier(id, "block"));
+        }
     }
 }

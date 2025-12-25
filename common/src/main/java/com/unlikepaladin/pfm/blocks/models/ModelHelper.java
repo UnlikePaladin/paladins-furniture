@@ -4,16 +4,20 @@ import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.*;
+import com.unlikepaladin.pfm.mixin.PFMSpriteContentsAccessor;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
+import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
+import de.androidpit.colorthief.ColorThief;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.Block;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.texture.MissingSprite;
-import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.texture.*;
+import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.data.client.TextureMap;
 import net.minecraft.registry.Registries;
@@ -27,6 +31,8 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.registry.Registry;
 import org.jetbrains.annotations.Nullable;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -61,6 +67,9 @@ public class ModelHelper {
         }
         return OAK_SPRITES_LOG_TOP_TO_REPLACE;
     }
+
+    public static Set<Identifier> GENERATED_TEXTURE_IDS = new HashSet<>();
+
     public static boolean containsIdentifier(Identifier[] modelIds, Identifier comparison) {
         AtomicBoolean contains = new AtomicBoolean(false);
         Arrays.stream(modelIds).forEach(identifier -> {
@@ -70,6 +79,144 @@ public class ModelHelper {
         });
         return contains.get();
     }
+
+    public static void generateTexture(Sprite baseTexture, Sprite color, int colorCount, Identifier id) {
+        if (GENERATED_TEXTURE_IDS.contains(id)) {
+            return;
+        }
+        GENERATED_TEXTURE_IDS.add(id);
+        int[] basePalette = convertPaletteToColorArray(generatePalette(baseTexture, colorCount));
+        int[] colorPalette = convertPaletteToColorArray(generatePalette(color, colorCount));
+
+        Integer[] base = Arrays.stream(basePalette).boxed().toArray(Integer[]::new);
+        Integer[] target = Arrays.stream(colorPalette).boxed().toArray(Integer[]::new);
+
+        Arrays.sort(base, Comparator.comparingDouble(ModelHelper::luminance));
+        Arrays.sort(target, Comparator.comparingDouble(ModelHelper::luminance));
+
+        Map<Integer, Integer> colorMap = new HashMap<>();
+        for (int i = 0; i < basePalette.length; i++) {
+            colorMap.put(base[i], target[i]);
+        }
+
+        TextureReloadQueue.recolorAndWriteImage(id, getSpriteBufferedImage(baseTexture), colorMap);
+    }
+
+    static double luminance(int argb) {
+        int r = (argb >> 16) & 0xFF;
+        int g = (argb >> 8) & 0xFF;
+        int b = argb & 0xFF;
+        return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    }
+
+    public static Identifier getTextureSpritePath(Identifier id) {
+        return Identifier.of(id.getNamespace(), String.format("textures/%s%s", id.getPath(), ".png"));
+    }
+
+    public static int[] convertPaletteToColorArray(int[][] palette) {
+        int[] colors = new int[palette.length];
+        for (int i = 0; i < palette.length; i++) {
+            colors[i] = convertColor(palette[i]);
+        }
+        return colors;
+    }
+
+    public static int convertColor(int[] color) {
+        int r = color[0];
+        int g = color[1];
+        int b = color[2];
+        return (r << 16) | (g << 8) | b;
+    }
+
+    static Map<Pair<Identifier, Integer>, int[][]> paletteCache = new HashMap<>();
+    public static int[][] generatePalette(Sprite texture, int colorCount) {
+        if (texture == null)
+            return null;
+        else if (paletteCache.containsKey(Pair.of(texture.getContents().getId(), colorCount)))
+            return paletteCache.get(Pair.of(texture.getContents().getId(), colorCount));
+
+        BufferedImage image = getSpriteBufferedImage(texture);
+        int[][] palette = ColorThief.getPalette(image, colorCount, 5, false);
+        paletteCache.put(new Pair<>(texture.getContents().getId(), colorCount), palette);
+        String filename = texture.getContents().getId().getNamespace().replace("/", "") + "_" + texture.getContents().getId().getPath().replace("/", "") + "_original.png";
+        //writeBufferedImageToFile(image, filename);
+
+        //writePaletteToImage(palette, texture.getId().getNamespace().replace("/", "") + "_" + texture.getId().getPath().replace("/", "") + "_palette.png");
+        return palette;
+    }
+
+    public static void writePaletteToImage(int[][] palette, String filename) throws IOException {
+        int width = palette.length;
+        int height = 1;
+        BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
+        int[] convertedPalette = convertPaletteToColorArray(palette);
+        Arrays.sort(convertedPalette);
+        for (int x = 0; x < width; x++) {
+            image.setRGB(x, 0, convertedPalette[x]);
+        }
+
+        writeBufferedImageToFile(image, filename);
+    }
+
+    public static void writeBufferedImageToFile(BufferedImage image, String filename) {
+        try {
+            File file = new File(filename);
+            file.createNewFile();
+            ImageIO.write(image, "png", file);
+        } catch (IOException e) {
+            PaladinFurnitureMod.GENERAL_LOGGER.error("Error while writing image to file", e);
+        }
+    }
+
+    public static BufferedImage getSpriteBufferedImage(Sprite sprite) {
+        int width = sprite.getContents().getWidth();
+        int height = sprite.getContents().getHeight();
+        // Upload the sprite to ensure underlying NativeImage data is present
+        sprite.upload();
+        NativeImage atlasImage = ((PFMSpriteContentsAccessor)sprite.getContents()).pfm$getImages()[0];
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        for (int j = 0; j < height; j++) {
+            for (int i = 0; i < width; i++) {
+                int abgr = atlasImage.getColor(i, j); // NativeImage returns ABGR (AABBGGRR)
+                int argb = abgrToArgb(abgr);
+                bufferedImage.setRGB(i, j, argb);
+            }
+        }
+        return bufferedImage;
+    }
+
+    // Convert ABGR (AABBGGRR) to ARGB (AARRGGBB)
+    public static int abgrToArgb(int abgr) {
+        int a = (abgr >> 24) & 0xFF;
+        int b = (abgr >> 16) & 0xFF;
+        int g = (abgr >> 8) & 0xFF;
+        int r = (abgr) & 0xFF;
+        return (a << 24) | (r << 16) | (g << 8) | b;
+    }
+
+    // Convert single ARGB int (0xAARRGGBB) -> RGBA int (0xRRGGBBAA)
+    public static int argbToRgbaInt(int argb) {
+        int a = (argb >> 24) & 0xFF;
+        int r = (argb >> 16) & 0xFF;
+        int g = (argb >> 8) & 0xFF;
+        int b = argb & 0xFF;
+        return (r << 24) | (g << 16) | (b << 8) | a;
+    }
+
+    public static BufferedImage nativeImageToBufferedImage(NativeImage nativeImage) {
+        int width = nativeImage.getWidth();
+        int height = nativeImage.getHeight();
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                int abgr = nativeImage.getColor(x, y);
+                int argb = abgrToArgb(abgr);
+                bufferedImage.setRGB(x, y, argb);
+            }
+        }
+        return bufferedImage;
+    }
+
 
     public static BlockType getBlockType(Identifier identifier) {
         if (identifier.getPath().contains("stripped_")) {
@@ -123,6 +270,11 @@ public class ModelHelper {
                 selectedVariant = woodVariant;
         }
         return selectedVariant != null ? selectedVariant : WoodVariantRegistry.OAK;
+    }
+
+    @ExpectPlatform
+    public static BakedModel getModelFromIdentifier(Identifier id) {
+        throw new AssertionError();
     }
 
     public static DyeColor getColor(Identifier identifier) {
