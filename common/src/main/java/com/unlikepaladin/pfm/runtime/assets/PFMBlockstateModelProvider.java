@@ -17,6 +17,7 @@ import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel
 import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
 import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
 import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
+import com.unlikepaladin.pfm.blocks.models.classicDesk.UnbakedClassicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
@@ -24,6 +25,7 @@ import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFridgeModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedIronFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.herringbone.UnbakedHerringboneModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
@@ -254,6 +256,12 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             registerDecorations();
             provider.getParent().log("Generating Desks");
             registerDesks();
+            provider.getParent().log("Generating Miscellaneous Blocks");
+            registerMiscellaneousBlocks();
+        }
+
+        public void registerMiscellaneousBlocks() {
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(HerringbonePlankBlock.class).getVariantToBlockMap(), "herringbone_planks",  (block, id) -> createSingleStateBlockState(block, UnbakedHerringboneModel.ID, id));
         }
 
         public void registerTuckableChairs() {
@@ -335,6 +343,14 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             provider.getParent().log("Basic Desk Cabinets");
             generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMap(), "desk_cabinet_basic", (block, id) -> createOrientableUvLockedBlock(block, UnbakedBasicDeskCabinetModel.TABLE_MODEL_ID, id));
             generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(BasicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), "desk_cabinet_basic", (block, id) -> createOrientableUvLockedBlock(block, UnbakedBasicDeskCabinetModel.TABLE_MODEL_ID, id));
+
+            provider.getParent().log("Classic Desks");
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskBlock.class).getVariantToBlockMap(), "desk_classic", (block, id) -> createOrientableUvLockedBlock(block, UnbakedClassicDeskModel.TABLE_MODEL_ID, id));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskBlock.class).getVariantToBlockMapNonBase(), "desk_classic", (block, id) -> createOrientableUvLockedBlock(block, UnbakedClassicDeskModel.TABLE_MODEL_ID, id));
+
+            provider.getParent().log("Classic Desk Cabinets");
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariantToBlockMap(), "desk_classic", (block, id) -> createOrientableUvLockedBlock(block, UnbakedClassicDeskModel.TABLE_MODEL_ID, id));
+            generateBlockStateForBlock(PaladinFurnitureMod.furnitureEntryMap.get(ClassicDeskCabinetBlock.class).getVariantToBlockMapNonBase(), "desk_classic", (block, id) -> createOrientableUvLockedBlock(block, UnbakedClassicDeskModel.TABLE_MODEL_ID, id));
         }
 
         public void registerNightStands() {

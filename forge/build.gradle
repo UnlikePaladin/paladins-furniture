@@ -84,6 +84,8 @@ dependencies {
     modCompileOnly "curse.maven:farmers-delight-forge-398521:${rootProject.farmers_delight_version_forge}"
     modCompileOnly(files("../libs/immersive-portals-2.5.4-mc1.19.3-forge.jar"))
 
+    include(forgeRuntimeLibrary("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}"))
+
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
     implementation(include("io.github.llamalad7:mixinextras-forge:0.4.1"))
 }

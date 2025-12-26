@@ -26,6 +26,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     final ItemStack output;
     final DefaultedList<Ingredient> input;
 
+
     public SimpleFurnitureRecipe(String group, ItemStack output, List<Ingredient> input) {
         this.group = group;
         this.output = output;
@@ -70,7 +71,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
 
     @Override
     public ItemStack craft(FurnitureRecipe.FurnitureRecipeInput playerInventory, RegistryWrapper.WrapperLookup registryManager) {
-        if (!this.output.getComponents().isEmpty() && output.contains(DataComponentTypes.BLOCK_ENTITY_DATA) && output.get(DataComponentTypes.BLOCK_ENTITY_DATA).isEmpty()) {
+        if (!this.output.getComponents().isEmpty() && output.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null && output.get(DataComponentTypes.BLOCK_ENTITY_DATA).isEmpty()) {
             ItemStack stack = this.output.copy();
             stack.remove(DataComponentTypes.BLOCK_ENTITY_DATA);
             return stack;

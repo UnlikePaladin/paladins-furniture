@@ -61,19 +61,6 @@ public class PaladinFurnitureModBlocksItems {
     public static final Item DYE_KIT_CYAN = new DyeKit(new Item.Settings().maxCount(16).registryKey(LateBlockRegistry.getItemRegistryKey("dye_kit_cyan")), DyeColor.CYAN);
     public static final Item DYE_KIT_GRAY = new DyeKit(new Item.Settings().maxCount(16).registryKey(LateBlockRegistry.getItemRegistryKey("dye_kit_gray")), DyeColor.GRAY);
 
-    public static final Block ACACIA_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.ACACIA_PLANKS).sounds(BlockSoundGroup.WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("acacia_herringbone_planks")));
-    public static final Block SPRUCE_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.SPRUCE_PLANKS).sounds(BlockSoundGroup.WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("spruce_herringbone_planks")));
-    public static final Block OAK_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).sounds(BlockSoundGroup.WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("oak_herringbone_planks")));
-    public static final Block DARK_OAK_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.DARK_OAK_PLANKS).sounds(BlockSoundGroup.WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("dark_oak_herringbone_planks")));
-    public static final Block JUNGLE_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.JUNGLE_PLANKS).sounds(BlockSoundGroup.WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("jungle_herringbone_planks")));
-    public static final Block BIRCH_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.BIRCH_PLANKS).sounds(BlockSoundGroup.WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("birch_herringbone_planks")));
-    public static final Block WARPED_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.WARPED_PLANKS).sounds(BlockSoundGroup.WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("warped_herringbone_planks")));
-    public static final Block CRIMSON_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.CRIMSON_PLANKS).sounds(BlockSoundGroup.WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("crimson_herringbone_planks")));
-    public static final Block MANGROVE_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.MANGROVE_PLANKS).sounds(BlockSoundGroup.WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("mangrove_herringbone_planks")));
-    public static final Block BAMBOO_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.BAMBOO_PLANKS).sounds(BlockSoundGroup.BAMBOO_WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("bamboo_herringbone_planks")));
-    public static final Block CHERRY_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.CHERRY_PLANKS).sounds(BlockSoundGroup.CHERRY_WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("cherry_herringbone_planks")));
-    public static final Block PALE_OAK_HERRINGBONE_PLANKS = new HerringbonePlankBlock(AbstractBlock.Settings.copy(Blocks.PALE_OAK_PLANKS).sounds(BlockSoundGroup.WOOD).registryKey(LateBlockRegistry.getBlockRegistryKey("pale_oak_herringbone_planks")));
-
     public static final Block RAW_CONCRETE = new Block(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE).registryKey(LateBlockRegistry.getBlockRegistryKey("raw_concrete")));
     public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND).registryKey(LateBlockRegistry.getBlockRegistryKey("raw_concrete_powder")));
     public static final Block LEATHER_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.WHITE_WOOL).sounds(BlockSoundGroup.WOOL).mapColor(MapColor.ORANGE).registryKey(LateBlockRegistry.getBlockRegistryKey("leather_block")));
@@ -112,6 +99,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final BasicShowerHandleBlock BASIC_SHOWER_HANDLE = new BasicShowerHandleBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque().registryKey(LateBlockRegistry.getBlockRegistryKey("basic_shower_handle")));
     public static Item BASIC_SHOWER_HANDLE_ITEM;
     public static Item BASIC_LAMP_ITEM;
+    public static Item OFFICE_CHAIR_ITEM;
 
     public static final BasicSinkBlock BASIC_SINK = new BasicSinkBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque().registryKey(LateBlockRegistry.getBlockRegistryKey("basic_sink")), Biome.Precipitation.RAIN, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final List<BedBlock> beds = new ArrayList<>();

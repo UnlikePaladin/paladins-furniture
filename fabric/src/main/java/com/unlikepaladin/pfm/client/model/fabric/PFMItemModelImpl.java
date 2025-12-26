@@ -1,7 +1,9 @@
 package com.unlikepaladin.pfm.client.model.fabric;
 
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
+import com.unlikepaladin.pfm.mixin.fabric.PFMWrapperBlockstateModelAccessor;
 import com.unlikepaladin.pfm.registry.TriFunc;
+import net.fabricmc.fabric.api.client.model.loading.v1.wrapper.WrapperBlockStateModel;
 import net.minecraft.client.render.item.ItemRenderState;
 import net.minecraft.client.render.item.model.ItemModel;
 import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
@@ -21,11 +23,21 @@ public class PFMItemModelImpl {
     }
 
     public static void emitItemModelQuads(ItemRenderState.LayerRenderState layerRenderState, BlockStateModel model, ItemDisplayContext context, Random random) {
-        if (model instanceof PFMFabricBakedModel) {
-            if (((PFMFabricBakedModel) model).getItemDisplaySettings() != null)
-                ((PFMFabricBakedModel) model).getItemDisplaySettings().addSettings(layerRenderState, context);
+        BlockStateModel model1 = model;
 
-            ((PFMFabricBakedModel) model).emitItemQuads(layerRenderState.emitter(), random);
+        int ctr = 0;
+        while (model1 instanceof WrapperBlockStateModel) {
+            model1 = ((PFMWrapperBlockstateModelAccessor) model1).pfm$getWrapped();
+            ctr++;
+            if (ctr > 15)
+                break;
+        }
+
+        if (model1 instanceof PFMFabricBakedModel) {
+            if (((PFMFabricBakedModel) model1).getItemDisplaySettings() != null)
+                ((PFMFabricBakedModel) model1).getItemDisplaySettings().addSettings(layerRenderState, context);
+
+            ((PFMFabricBakedModel) model1).emitItemQuads(layerRenderState.emitter(), random);
         } else {
             List<BlockModelPart> parts;
             parts = model.getParts(random);

@@ -57,13 +57,18 @@ public class PFMItemModel<T> implements ItemModel {
         this.specialModelType = specialModelType;
     }
 
+    public BlockStateModel unwrapBlockStateModel(BlockStateModel model) {
+        return model;
+    }
+
     @Override
     public void update(ItemRenderState state, ItemStack stack, ItemModelManager resolver, ItemDisplayContext displayContext, @Nullable ClientWorld world, @Nullable LivingEntity user, int seed) {
         state.addModelKey(this);
+        BlockStateModel unwrapped = unwrapBlockStateModel(model.get());
         if (specialModelType != null) {
             ItemRenderState.LayerRenderState specialLayerRenderState = state.newLayer();
-            if (model.get() instanceof AbstractBakedModel) {
-                ((AbstractBakedModel)model.get()).itemDisplaySettings.addSettings(specialLayerRenderState, displayContext);
+            if (unwrapped instanceof AbstractBakedModel) {
+                ((AbstractBakedModel)unwrapped).itemDisplaySettings.addSettings(specialLayerRenderState, displayContext);
             }
             specialLayerRenderState.setSpecialModel(this.specialModelType, this.specialModelType.getData(stack));
             state.addModelKey(specialLayerRenderState);

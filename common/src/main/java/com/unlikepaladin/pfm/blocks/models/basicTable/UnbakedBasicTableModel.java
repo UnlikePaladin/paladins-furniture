@@ -64,7 +64,7 @@ public record UnbakedBasicTableModel(ModelVariant variant) implements PFMUnbaked
     @Override
     public BlockStateModel bake(Baker baker){
         ModelBakeSettings settings = variant.modelState().asModelBakeSettings();
-        ModelSettings itemSettings = ModelSettings.resolveSettings(baker, baker.getModel(BASIC_MODEL_PARTS_BASE[0]), baker.getModel(BASIC_MODEL_PARTS_BASE[0]).getTextures());
+        ModelSettings itemSettings = ModelSettings.resolveSettings(baker, baker.getModel(BASIC_MODEL_PARTS_BASE[2]), baker.getModel(BASIC_MODEL_PARTS_BASE[2]).getTextures());
 
         if (PFMRuntimeResources.modelCacheMap.containsKey(TABLE_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().containsKey(settings))
             return getBakedModel(TABLE_MODEL_ID, settings, itemSettings, PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().get(settings));

@@ -34,10 +34,14 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
+import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.client.render.model.SimpleModel;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
@@ -54,7 +58,9 @@ import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @EventBusSubscriber(modid = "pfm", value = Dist.CLIENT)
 public class PaladinFurnitureModClientNeoForge {
@@ -64,6 +70,7 @@ public class PaladinFurnitureModClientNeoForge {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
+        PFMSpriteRegistry.registerAdditionalSprites();
         ColorRegistryNeoForge.registerBlockRenderLayers();
         event.enqueueWork(PaladinFurnitureModClientNeoForge::registerScreens);
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,
@@ -88,9 +95,14 @@ public class PaladinFurnitureModClientNeoForge {
         );
     }
 
+    public static Map<Identifier, StandaloneModelKey<BlockStateModel>> modelKeyMap = new HashMap<>();
     @SubscribeEvent
     public static void registerExtraModels(ModelEvent.RegisterStandalone event) {
-        provideExtraModels().forEach(identifier -> {event.register(new StandaloneModelKey<>(identifier::toString), SimpleUnbakedStandaloneModel.blockStateModel(identifier));});
+        provideExtraModels().forEach(identifier -> {
+            StandaloneModelKey<BlockStateModel> modelKey = new StandaloneModelKey<>(identifier::toString);
+            modelKeyMap.put(identifier, modelKey);
+            event.register(modelKey, SimpleUnbakedStandaloneModel.blockStateModel(identifier));
+        });
     }
 
     public static List<Identifier> provideExtraModels() {
@@ -187,6 +199,11 @@ public class PaladinFurnitureModClientNeoForge {
         out.addAll(UnbakedFridgeModel.ALL_MODEL_IDS);
         out.addAll(UnbakedFreezerModel.ALL_MODEL_IDS);
         out.addAll(UnbakedBasicLampModel.ALL_MODEL_IDS);
+        out.add(Identifier.of("minecraft:block/cube_all"));
+        out.add(Identifier.of("minecraft:block/block"));
+        for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
+            out.add(id);
+        }
         return out;
     }
 

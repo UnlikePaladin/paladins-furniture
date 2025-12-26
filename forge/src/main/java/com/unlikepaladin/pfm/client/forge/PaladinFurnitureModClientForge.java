@@ -13,6 +13,7 @@ import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel
 import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
 import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
 import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
+import com.unlikepaladin.pfm.blocks.models.classicDesk.UnbakedClassicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
@@ -20,6 +21,7 @@ import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFridgeModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedIronFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.herringbone.UnbakedHerringboneModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
@@ -36,10 +38,12 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
+import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
 import com.unlikepaladin.pfm.client.screens.*;
+import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
@@ -63,6 +67,7 @@ public class PaladinFurnitureModClientForge {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
+        PFMSpriteRegistry.registerAdditionalSprites();
         ColorRegistryForge.registerBlockRenderLayers();
         event.enqueueWork(PaladinFurnitureModClientForge::registerScreens);
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
@@ -124,6 +129,8 @@ public class PaladinFurnitureModClientForge {
         PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedClassicCoffeeTableModel.TABLE_MODEL_ID, UnbakedClassicCoffeeTableModel.MAP_CODEC);
         PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedBasicDeskModel.TABLE_MODEL_ID, UnbakedBasicDeskModel.MAP_CODEC);
         PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedBasicDeskCabinetModel.TABLE_MODEL_ID, UnbakedBasicDeskCabinetModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedClassicDeskModel.TABLE_MODEL_ID, UnbakedClassicDeskModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedHerringboneModel.ID, UnbakedHerringboneModel.MAP_CODEC);
     }
 
     public static void registerExtraModels(Consumer<Identifier> event) {
@@ -214,10 +221,17 @@ public class PaladinFurnitureModClientForge {
         for (Identifier id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
             event.accept(id);
         }
+        for (Identifier id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
+            event.accept(id);
+        }
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(event);
         UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(event);
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(event);
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(event);
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(event);
+        event.accept(Identifier.of("minecraft:block/cube_all"));
+        for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
+            event.accept(id);
+        }
     }
 }

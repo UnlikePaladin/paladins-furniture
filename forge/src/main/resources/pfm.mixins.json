@@ -5,6 +5,9 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "BlockColorsAccessor",
+    "PFMBakedModelManagerMixin",
+    "PFMModelBakerBakedModelsMixin",
+    "PFMModelBakerMixin",
     "BlockStateModelUnbakedMixinFabricAPI",
     "PFMRenderLayersForgeMixin"
   ],

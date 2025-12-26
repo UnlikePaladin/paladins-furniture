@@ -12,6 +12,7 @@ import com.unlikepaladin.pfm.blocks.models.chairClassic.UnbakedChairClassicModel
 import com.unlikepaladin.pfm.blocks.models.chairDinner.UnbakedChairDinnerModel;
 import com.unlikepaladin.pfm.blocks.models.chairModern.UnbakedChairModernModel;
 import com.unlikepaladin.pfm.blocks.models.classicCoffeeTable.UnbakedClassicCoffeeTableModel;
+import com.unlikepaladin.pfm.blocks.models.classicDesk.UnbakedClassicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.classicNightstand.UnbakedClassicNightstandModel;
 import com.unlikepaladin.pfm.blocks.models.classicStool.UnbakedClassicStoolModel;
 import com.unlikepaladin.pfm.blocks.models.classicTable.UnbakedClassicTableModel;
@@ -19,6 +20,7 @@ import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFridgeModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedIronFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.herringbone.UnbakedHerringboneModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
@@ -77,5 +79,8 @@ public class BlockStateModelRegistryNeoForge {
         registerBlockStateModels.registerModel(UnbakedClassicCoffeeTableModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedClassicCoffeeTableModel.MAP_CODEC);
         registerBlockStateModels.registerModel(UnbakedBasicDeskModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedBasicDeskModel.MAP_CODEC);
         registerBlockStateModels.registerModel(UnbakedBasicDeskCabinetModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedBasicDeskCabinetModel.MAP_CODEC);
+        registerBlockStateModels.registerModel(UnbakedClassicDeskModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedClassicDeskModel.MAP_CODEC);
+        registerBlockStateModels.registerModel(UnbakedHerringboneModel.ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedHerringboneModel.MAP_CODEC);
+
     }
 }
