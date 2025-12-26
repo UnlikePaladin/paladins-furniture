@@ -190,11 +190,12 @@ public class PaladinFurnitureModClientNeoForge {
         out.addAll(UnbakedFridgeModel.ALL_MODEL_IDS);
         out.addAll(UnbakedFreezerModel.ALL_MODEL_IDS);
         out.addAll(UnbakedBasicLampModel.ALL_MODEL_IDS);
-        return out;
-        event.register(Identifier.of("minecraft:block/cube_all"));
+        out.add(Identifier.of("minecraft:block/cube_all"));
+        out.add(Identifier.of("minecraft:block/block"));
         for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
-            event.register(id);
+            out.add(id);
         }
+        return out;
     }
 
 }

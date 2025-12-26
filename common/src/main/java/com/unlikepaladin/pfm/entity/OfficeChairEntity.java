@@ -35,14 +35,6 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
         super(type, world);
     }
 
-    public OfficeChairEntity(World world, double x, double y, double z) {
-        super(Entities.OFFICE_CHAIR, world);
-        this.setPos(x, y, z);
-        this.prevX = x;
-        this.prevY = y;
-        this.prevZ = z;
-    }
-
     @Override
     protected void initDataTracker(DataTracker.Builder builder) {
         super.initDataTracker(builder);
@@ -61,7 +53,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     public void travel(Vec3d movementInput) {
         if (this.hasPassengers() && this.getControllingPassenger() instanceof LivingEntity) {
             LivingEntity livingEntity = this.getControllingPassenger();
-            this.prevYaw = this.getYaw();
+            this.lastYaw = this.getYaw();
             this.setPitch(livingEntity.getPitch() * 0.5F);
             this.setRotation(this.getYaw(), this.getPitch());
             this.bodyYaw = this.getYaw();
@@ -130,13 +122,13 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     @Override
     public void writeCustomDataToNbt(NbtCompound nbt) {
         super.writeCustomDataToNbt(nbt);
-        nbt.putByte("Color", (byte)this.getPFMColor().getId());
+        nbt.put("Color", DyeColor.INDEX_CODEC, this.getPFMColor());
     }
 
     @Override
     public void readCustomDataFromNbt(NbtCompound nbt) {
         super.readCustomDataFromNbt(nbt);
-        this.setPFMColor(DyeColor.byId(nbt.getByte("Color")));
+        this.setPFMColor(nbt.get("Color", DyeColor.INDEX_CODEC).orElse(DyeColor.WHITE));
     }
 
     @Override
@@ -156,7 +148,7 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
         entity.setBodyYaw(this.getYaw());
         float f = MathHelper.wrapDegrees(entity.getYaw() - this.getYaw());
         float g = MathHelper.clamp(f, -105.0F, 105.0F);
-        entity.prevYaw += g - f;
+        entity.lastYaw += g - f;
         entity.setYaw(entity.getYaw() + g - f);
         entity.setHeadYaw(entity.getYaw());
     }
@@ -236,17 +228,17 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     @Override
     public void setPFMColor(DyeColor color) {
         byte b = this.dataTracker.get(COLOR);
-        this.dataTracker.set(COLOR, (byte)(b & 240 | color.getId() & 15));
+        this.dataTracker.set(COLOR, (byte)(b & 240 | color.getIndex() & 15));
     }
 
     @Override
     public DyeColor getPFMColor() {
-        return DyeColor.byId(this.dataTracker.get(COLOR) & 15);
+        return DyeColor.byIndex(this.dataTracker.get(COLOR) & 15);
     }
 
     @Override
     public NbtCompound writeColor(NbtCompound nbt) {
-        nbt.putByte("Color", (byte)this.getPFMColor().getId());
+        nbt.putByte("Color", (byte)this.getPFMColor().getIndex());
         return nbt;
     }
 

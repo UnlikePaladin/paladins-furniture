@@ -11,9 +11,10 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.ducks.PFMSpriteContentExtensions;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
+import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
+import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.MissingSprite;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -34,21 +35,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ForgeHerringboneModel extends PFMForgeBakedModel {
-    public ForgeHerringboneModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
-        super(settings, templateBakedModels);
+    public ForgeHerringboneModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+        super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public Sprite getParticleIcon(@NotNull ModelData data) {
+    public Sprite particleIcon(@NotNull ModelData data) {
         if (!data.has(STATE) || data.get(STATE) == null) {
-            return super.getParticleIcon(data);
+            return super.particleIcon(data);
         }
         BlockState state = data.get(STATE);
         VariantBase<?> variant = getVariant(state);
         if (variant instanceof WoodVariant) {
             return generateTextureIfNeeded(variant);
         }
-        return super.getParticleIcon(data);
+        return super.particleIcon(data);
     }
 
     @Override
@@ -66,19 +67,17 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     static SpriteIdentifier herringboneTextureId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, PFMSpriteRegistry.HERRINGBONE_PLANKS);
 
     @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
+    public void collectParts(Random random, List<BlockModelPart> dest, ModelData data, @Nullable RenderLayer renderType) {
+        BlockState state = data.get(STATE);
         if (state != null) {
             VariantBase<?> variant = getVariant(state);
             if (variant instanceof WoodVariant) {
                 Sprite replacement = generateTextureIfNeeded(variant);
-                List<BakedQuad> quads = new ArrayList<>();
-                for (BakedModel model : getTemplateBakedModels()) {
-                    quads.addAll(model.getQuads(state, side, rand, extraData, renderLayer));
+                for (BlockModelPart model : getTemplateBakedModels()) {
+                    dest.add(getPartWithTexture(model, new SpriteData(replacement)));
                 }
-                return getQuadsWithTexture(quads, new SpriteData(replacement));
             }
         }
-        return super.getQuads(state, side, rand, extraData, renderLayer);
     }
 
     private Sprite generateTextureIfNeeded(VariantBase<?> variant) {
@@ -94,7 +93,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     @Override
     public List<BakedQuad> getQuadsCached(@Nullable Direction face, Random random) {
         Pair<BlockState, Direction> directionPair = new Pair<>(blockState, face);
-        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && !((PFMSpriteContentExtensions)cache.get(directionPair).get(0).getSprite().getContents()).pfm$isInitialized()) {
+        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && !((PFMSpriteContentExtensions)cache.get(directionPair).get(0).sprite().getContents()).pfm$isInitialized()) {
             cache.remove(directionPair);
         }
         return super.getQuadsCached(face, random);
@@ -106,11 +105,11 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
         if (variant instanceof WoodVariant) {
             Sprite replacement = generateTextureIfNeeded(variant);
             List<BakedQuad> quads = new ArrayList<>();
-            for (BakedModel model : getTemplateBakedModels()) {
-                quads.addAll(model.getQuads(null, face, random));
+            for (BlockModelPart model : getTemplateBakedModels()) {
+                quads.addAll(model.getQuads(face));
             }
             return getQuadsWithTexture(quads, new SpriteData(replacement));
         }
-        return super.getQuads(face, random);
+        return List.of();
     }
 }

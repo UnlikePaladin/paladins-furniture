@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.client.fabric;
 
 import com.mojang.serialization.MapCodec;
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
@@ -42,17 +43,23 @@ import net.fabricmc.fabric.api.client.model.loading.v1.CustomUnbakedBlockStateMo
 import net.fabricmc.fabric.api.client.model.loading.v1.ExtraModelKey;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.fabricmc.fabric.api.client.model.loading.v1.SimpleUnbakedExtraModel;
+import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.client.render.model.UnbakedModel;
 import net.minecraft.util.Identifier;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class PFMModelLoadingPlugin implements ModelLoadingPlugin {
+
+    public static Map<Identifier, ExtraModelKey<BlockStateModel>> modelKeyMap = new HashMap<>();
     @Override
     public void initialize(Context pluginContext) {
-        provideExtraModels().forEach(identifier -> {pluginContext.addModel(ExtraModelKey.create(identifier::getPath), SimpleUnbakedExtraModel.blockStateModel(identifier));});
+        PaladinFurnitureMod.GENERAL_LOGGER.info("Initializing PFM Model Loading Plugin");
+        provideExtraModels().forEach(identifier -> {
+            ExtraModelKey<BlockStateModel> modelKey = ExtraModelKey.create(identifier::toString);
+            modelKeyMap.put(identifier, modelKey);
+            pluginContext.addModel(modelKey, SimpleUnbakedExtraModel.blockStateModel(identifier));
+        });
     }
 
     public static void registerCustomModels() {
@@ -90,6 +97,8 @@ public class PFMModelLoadingPlugin implements ModelLoadingPlugin {
         CustomUnbakedBlockStateModel.register(UnbakedClassicCoffeeTableModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedClassicCoffeeTableModel.MAP_CODEC);
         CustomUnbakedBlockStateModel.register(UnbakedBasicDeskModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedBasicDeskModel.MAP_CODEC);
         CustomUnbakedBlockStateModel.register(UnbakedBasicDeskCabinetModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedBasicDeskCabinetModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedHerringboneModel.ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedHerringboneModel.MAP_CODEC);
+        CustomUnbakedBlockStateModel.register(UnbakedClassicDeskModel.TABLE_MODEL_ID, (MapCodec<? extends CustomUnbakedBlockStateModel>) (Object) UnbakedClassicDeskModel.MAP_CODEC);
     }
     
     public List<Identifier> provideExtraModels() {
@@ -190,7 +199,9 @@ public class PFMModelLoadingPlugin implements ModelLoadingPlugin {
         out.addAll(UnbakedFreezerModel.ALL_MODEL_IDS);
         out.addAll(UnbakedBasicLampModel.ALL_MODEL_IDS);
         out.add(Identifier.of("minecraft:block/cube_all"));
+        out.add(Identifier.of("minecraft:block/block"));
         out.addAll(Arrays.asList(OfficeChairEntityRenderer.MODEL_IDS));
+        PaladinFurnitureMod.GENERAL_LOGGER.info(OfficeChairEntityRenderer.MODEL_IDS);
         return out;
     }
 

@@ -18,10 +18,7 @@ accessible field net/minecraft/client/render/item/model/special/SpecialModelType
 accessible method net/minecraft/client/gl/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
 accessible field net/minecraft/client/gl/RenderPipelines POSITION_TEX_COLOR_SNIPPET Lcom/mojang/blaze3d/pipeline/RenderPipeline$Snippet;
 accessible class net/minecraft/client/texture/atlas/AtlasSource$SpriteRegion
-accessible class net/minecraft/client/render/block/BlockModelRenderer$AmbientOcclusionCalculator
-accessible field net/minecraft/client/render/block/BlockModelRenderer$AmbientOcclusionCalculator brightness [F
 accessible class net/minecraft/client/render/model/ModelBaker$BakerImpl
-accessible method net/minecraft/client/render/model/ModelBaker$BakerImpl <init>	(Lnet/minecraft/client/render/model/ModelBaker;Lnet/minecraft/client/render/model/ModelBaker$ErrorCollectingSpriteGetter;Lnet/minecraft/client/model/ModelNameSupplier;)V
 
 accessible method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder texture (Lnet/minecraft/client/render/RenderPhase$TextureBase;)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder;
 accessible method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder build (Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;

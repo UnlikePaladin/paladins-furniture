@@ -23,10 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Executor;
@@ -43,6 +40,7 @@ public class PFMSpriteLoaderMixin {
 
         List<SpriteContents> spritesCopy = new ArrayList<>(sprites);
 
+        Set<Identifier> ids = sprites.stream().map(SpriteContents::getId).collect(Collectors.toSet());
         List<SpriteContents> matchingContents = sprites.stream()
             .filter(sc -> {
                 try {
@@ -54,7 +52,8 @@ public class PFMSpriteLoaderMixin {
             .toList();
 
         for (SpriteContents sc : matchingContents) {
-            spritesCopy.addAll(PFMSpriteRegistry.DYNAMIC_SPRITE_GENERATORS.get(sc.getId()).apply(sc).stream().map(Pair::getRight).toList());
+            spritesCopy.addAll(PFMSpriteRegistry.DYNAMIC_SPRITE_GENERATORS.get(sc.getId()).apply(sc).stream()
+                    .filter(a -> !ids.contains(a.getLeft())).map(Pair::getRight).toList());
         }
 
         spriteList.set(spritesCopy);

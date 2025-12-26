@@ -36,6 +36,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Supplier;
+
 import net.minecraft.util.math.random.Random;
 
 public class ModelHelper {
@@ -80,25 +82,28 @@ public class ModelHelper {
     }
 
     public static void generateTexture(Sprite baseTexture, Sprite color, int colorCount, Identifier id) {
-        if (GENERATED_TEXTURE_IDS.contains(id)) {
-            return;
-        }
-        GENERATED_TEXTURE_IDS.add(id);
-        int[] basePalette = convertPaletteToColorArray(generatePalette(baseTexture, colorCount));
-        int[] colorPalette = convertPaletteToColorArray(generatePalette(color, colorCount));
+        MinecraftClient.getInstance().execute(() -> {
+            if (GENERATED_TEXTURE_IDS.contains(id)) {
+                return;
+            }
+            GENERATED_TEXTURE_IDS.add(id);
+            int[] basePalette = convertPaletteToColorArray(generatePalette(baseTexture, colorCount));
+            int[] colorPalette = convertPaletteToColorArray(generatePalette(color, colorCount));
 
-        Integer[] base = Arrays.stream(basePalette).boxed().toArray(Integer[]::new);
-        Integer[] target = Arrays.stream(colorPalette).boxed().toArray(Integer[]::new);
+            Integer[] base = Arrays.stream(basePalette).boxed().toArray(Integer[]::new);
+            Integer[] target = Arrays.stream(colorPalette).boxed().toArray(Integer[]::new);
 
-        Arrays.sort(base, Comparator.comparingDouble(ModelHelper::luminance));
-        Arrays.sort(target, Comparator.comparingDouble(ModelHelper::luminance));
+            Arrays.sort(base, Comparator.comparingDouble(ModelHelper::luminance));
+            Arrays.sort(target, Comparator.comparingDouble(ModelHelper::luminance));
 
-        Map<Integer, Integer> colorMap = new HashMap<>();
-        for (int i = 0; i < basePalette.length; i++) {
-            colorMap.put(base[i], target[i]);
-        }
+            Map<Integer, Integer> colorMap = new HashMap<>();
+            for (int i = 0; i < basePalette.length; i++) {
+                colorMap.put(base[i], target[i]);
 
-        TextureReloadQueue.recolorAndWriteImage(id, getSpriteBufferedImage(baseTexture), colorMap);
+            }
+
+            TextureReloadQueue.recolorAndWriteImage(id, getSpriteBufferedImage(baseTexture), colorMap);
+        });
     }
 
     static double luminance(int argb) {
@@ -171,7 +176,8 @@ public class ModelHelper {
         int width = sprite.getContents().getWidth();
         int height = sprite.getContents().getHeight();
         // Upload the sprite to ensure underlying NativeImage data is present
-        sprite.upload();
+        AbstractTexture spriteAtlasTexture = MinecraftClient.getInstance().getTextureManager().getTexture(sprite.getAtlasId());
+        sprite.upload(spriteAtlasTexture.getGlTexture());
         NativeImage atlasImage = ((PFMSpriteContentsAccessor)sprite.getContents()).pfm$getImages()[0];
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (int j = 0; j < height; j++) {
@@ -294,7 +300,7 @@ public class ModelHelper {
     }
 
     @ExpectPlatform
-    public static BakedModel getModelFromIdentifier(Identifier id) {
+    public static BlockStateModel getModelFromIdentifier(Identifier id) {
         throw new AssertionError();
     }
 

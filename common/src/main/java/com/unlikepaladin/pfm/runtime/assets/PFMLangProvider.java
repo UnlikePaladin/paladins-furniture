@@ -272,7 +272,7 @@ public class PFMLangProvider extends PFMProvider {
             if (i > 15)
                 break;
             try {
-                String translatedColor = translate("color.minecraft."+color.getName());
+                String translatedColor = translate("color.minecraft."+color.getId());
                 String translatedFurnitureName = StringUtils.normalizeSpace(translate("block.pfm.office_chair", translatedColor));
                 writer.write(String.format("    \"%1$s\": \"%2$s\",", String.format("block.pfm.%s_office_chair", color.asString()), translatedFurnitureName));
                 writer.write("\n");

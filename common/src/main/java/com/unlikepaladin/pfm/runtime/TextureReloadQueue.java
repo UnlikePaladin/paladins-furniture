@@ -106,7 +106,7 @@ public final class TextureReloadQueue {
         } catch (NullPointerException e) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to generate mipmaps for texture {}: {}", id, e.getMessage());
         }
-        original.upload();
+        original.upload(spriteAtlas.getGlTexture());
     }
 
     public static void reloadSpritesOnClientThread(List<Identifier> id) {
@@ -115,8 +115,6 @@ public final class TextureReloadQueue {
         AbstractTexture abstractTexture = textureManager.getTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
         try {
             if (abstractTexture instanceof SpriteAtlasTexture spriteAtlas) {
-                spriteAtlas.bindTexture();
-
                 for (Identifier spriteId : id) {
                     reloadSingleSprite(resourceManager, spriteAtlas, spriteId);
                 }
