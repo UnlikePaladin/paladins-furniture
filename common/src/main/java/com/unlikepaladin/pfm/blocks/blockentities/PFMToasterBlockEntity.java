@@ -182,7 +182,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
                     items.set(i, match.get().value().result().copy());
                     changed = true;
                 } else {
-                    if(items.get(i).contains(DataComponentTypes.FOOD)) {
+                    if(items.get(i).get(DataComponentTypes.FOOD) != null) {
                         Item item = Items.COAL;
                         items.set(i, new ItemStack(item, 1));
                         changed = true;

@@ -6,10 +6,8 @@
   "client": [
     "BlockColorsAccessor",
     "PFMBakedModelManagerMixin",
-    "PFMItemRendererMixinForge",
     "PFMModelBakerBakedModelsMixin",
     "PFMModelBakerMixin",
-    "PFMReferencedModelsCollectorMixin",
     "BlockStateModelUnbakedMixinFabricAPI",
     "PFMRenderLayersForgeMixin"
   ],

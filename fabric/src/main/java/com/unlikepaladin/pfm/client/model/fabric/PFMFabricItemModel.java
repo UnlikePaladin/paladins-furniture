@@ -42,7 +42,7 @@ public class PFMFabricItemModel<T> extends PFMItemModel<T>  {
 
         if (model1 != null && stack.getItem() instanceof BlockItem && model1 instanceof PFMBakedModelSetPropertiesExtension) {
             ((PFMBakedModelSetPropertiesExtension) model1).setBlockStateProperty(((BlockItem) stack.getItem()).getBlock().getDefaultState());
-            if (stack.contains(PFMComponents.VARIANT_COMPONENT))
+            if (stack.get(PFMComponents.VARIANT_COMPONENT) != null)
                 ((PFMBakedModelSetPropertiesExtension) model1).setVariant(VariantHelper.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT)));
         }
     }

@@ -41,6 +41,7 @@ import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 import net.neoforged.api.distmarker.Dist;
@@ -56,9 +57,11 @@ import net.neoforged.neoforge.client.model.standalone.StandaloneModelKey;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = "pfm", value = Dist.CLIENT)
 public class PaladinFurnitureModClientNeoForge {
 
     private PaladinFurnitureModClientNeoForge() {
@@ -91,9 +94,14 @@ public class PaladinFurnitureModClientNeoForge {
         );
     }
 
+    public static Map<Identifier, StandaloneModelKey<BlockStateModel>> modelKeyMap = new HashMap<>();
     @SubscribeEvent
     public static void registerExtraModels(ModelEvent.RegisterStandalone event) {
-        provideExtraModels().forEach(identifier -> {event.register(new StandaloneModelKey<>(identifier), StandaloneModelBaker.blockStateModel());});
+        provideExtraModels().forEach(identifier -> {
+            StandaloneModelKey<BlockStateModel> modelKey = new StandaloneModelKey<>(identifier);
+            modelKeyMap.put(identifier, modelKey);
+            event.register(modelKey, StandaloneModelBaker.blockStateModel());
+        });
     }
 
     public static List<Identifier> provideExtraModels() {

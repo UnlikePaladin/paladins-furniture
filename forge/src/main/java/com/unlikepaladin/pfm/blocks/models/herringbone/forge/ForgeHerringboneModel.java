@@ -40,8 +40,8 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public Sprite particleIcon(@NotNull ModelData data) {
-        if (!data.has(STATE) || data.get(STATE) == null) {
+    public Sprite particleIcon(ModelData data) {
+        if (data == null || !data.has(STATE) || data.get(STATE) == null) {
             return super.particleIcon(data);
         }
         BlockState state = data.get(STATE);

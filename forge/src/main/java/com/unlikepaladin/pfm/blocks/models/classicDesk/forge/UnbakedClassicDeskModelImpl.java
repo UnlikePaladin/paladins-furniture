@@ -13,7 +13,7 @@ public class UnbakedClassicDeskModelImpl {
         if (PFMRuntimeResources.modelCacheMap.get(modelId).getBakedModels().containsKey(settings))
             return PFMRuntimeResources.modelCacheMap.get(modelId).getBakedModels().get(settings);
 
-        BlockStateModel model = new ForgeBasicDeskModel(settings, itemSettings, modelParts);
+        BlockStateModel model = new ForgeClassicDeskModel(settings, itemSettings, modelParts);
         PFMRuntimeResources.modelCacheMap.get(modelId).getBakedModels().put(settings,model);
         return model;
     }

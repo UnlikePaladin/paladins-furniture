@@ -17,7 +17,7 @@ public record FurnitureTintSource(int defaultColor) implements TintSource {
 
     @Override
     public int getTint(ItemStack stack, @Nullable ClientWorld world, @Nullable LivingEntity user) {
-        if (stack.contains(PFMComponents.COLOR_COMPONENT))
+        if (stack.get(PFMComponents.COLOR_COMPONENT) != null)
             return ColorHelper.fullAlpha(stack.get(PFMComponents.COLOR_COMPONENT).getFireworkColor());
         return defaultColor;
     }

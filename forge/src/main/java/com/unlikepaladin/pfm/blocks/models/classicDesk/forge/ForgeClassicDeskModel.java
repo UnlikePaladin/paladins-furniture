@@ -476,7 +476,7 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
-        if (face == null) return Collections.emptyList();
+        if (blockState == null) return Collections.emptyList();
 
         int offset = blockState.getBlock() instanceof ClassicDeskCabinetBlock ? 1 : 0;
         // base

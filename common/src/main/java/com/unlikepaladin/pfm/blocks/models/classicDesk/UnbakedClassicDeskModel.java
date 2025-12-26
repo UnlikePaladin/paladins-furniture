@@ -111,7 +111,7 @@ public record UnbakedClassicDeskModel(ModelVariant variant) implements PFMUnbake
     @Override
     public BlockStateModel bake(Baker loader) {
         ModelBakeSettings settings = variant.modelState().asModelBakeSettings();
-        ModelSettings itemSettings = ModelSettings.resolveSettings(loader, loader.getModel(BASIC_MODEL_PARTS_BASE[0]), loader.getModel(BASIC_MODEL_PARTS_BASE[0]).getTextures());
+        ModelSettings itemSettings = ModelSettings.resolveSettings(loader, loader.getModel(BASIC_MODEL_PARTS_BASE[19]), loader.getModel(BASIC_MODEL_PARTS_BASE[19]).getTextures());
 
         if (PFMRuntimeResources.modelCacheMap.containsKey(TABLE_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().containsKey(settings))
             return getBakedModel(TABLE_MODEL_ID, settings, itemSettings, PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().get(settings));

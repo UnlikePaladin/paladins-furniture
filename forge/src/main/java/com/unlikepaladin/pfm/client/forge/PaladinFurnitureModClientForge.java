@@ -21,6 +21,7 @@ import com.unlikepaladin.pfm.blocks.models.dinnerTable.UnbakedDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFreezerModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedFridgeModel;
 import com.unlikepaladin.pfm.blocks.models.fridge.UnbakedIronFridgeModel;
+import com.unlikepaladin.pfm.blocks.models.herringbone.UnbakedHerringboneModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCabinet.UnbakedKitchenCabinetModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounter.UnbakedKitchenCounterModel;
 import com.unlikepaladin.pfm.blocks.models.kitchenCounterOven.UnbakedKitchenCounterOvenModel;
@@ -128,6 +129,8 @@ public class PaladinFurnitureModClientForge {
         PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedClassicCoffeeTableModel.TABLE_MODEL_ID, UnbakedClassicCoffeeTableModel.MAP_CODEC);
         PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedBasicDeskModel.TABLE_MODEL_ID, UnbakedBasicDeskModel.MAP_CODEC);
         PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedBasicDeskCabinetModel.TABLE_MODEL_ID, UnbakedBasicDeskCabinetModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedClassicDeskModel.TABLE_MODEL_ID, UnbakedClassicDeskModel.MAP_CODEC);
+        PFMUnbakedBlockStateModelRegistryFabricAPI.register(UnbakedHerringboneModel.ID, UnbakedHerringboneModel.MAP_CODEC);
     }
 
     public static void registerExtraModels(Consumer<Identifier> event) {
