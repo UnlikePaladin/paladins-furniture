@@ -135,8 +135,8 @@ public class PFMTagProvider extends PFMProvider {
                 .addTags(stoneClassicCoffeeTables)
                 .addTags(stoneBasicDesks)
                 .addTags(stoneBasicDeskCabinets)
-                .add(stoneClassicDesks)
-                .add(stoneClassicDeskCabinets);
+                .addTags(stoneClassicDesks)
+                .addTags(stoneClassicDeskCabinets);
 
         KitchenCounterBlock[] woodCounters = KitchenCounterBlock.streamWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenCounterBlock[]::new);
         KitchenWallCounterBlock[] woodWallCounters = KitchenWallCounterBlock.streamWallWoodCounters().map(FurnitureBlock::getBlock).toArray(KitchenWallCounterBlock[]::new);
@@ -220,8 +220,8 @@ public class PFMTagProvider extends PFMProvider {
                 .addTags(woodClassicCoffeeTables)
                 .addTags(woodBasicDesks)
                 .addTags(woodBasicDeskCabinets)
-                .add(woodClassicDesks)
-                .add(woodClassicDeskCabinets);
+                .addTags(woodClassicDesks)
+                .addTags(woodClassicDeskCabinets);
 
         getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
                 .addTags(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
@@ -247,8 +247,8 @@ public class PFMTagProvider extends PFMProvider {
                 .addTags(logTables)
                 .addTags(woodBasicDesks)
                 .addTags(stoneBasicDesks)
-                .add(woodClassicDesks)
-                .add(stoneClassicDesks);
+                .addTags(woodClassicDesks)
+                .addTags(stoneClassicDesks);
 
         getOrCreateTagBuilder(PFMTags.FURNITURE)
                 .addTags(PaladinFurnitureModBlocksItems.BLOCKS.toArray(Block[]::new));

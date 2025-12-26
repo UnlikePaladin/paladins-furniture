@@ -65,7 +65,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
         this.searchBox.setMaxLength(50);
         this.searchBox.setDrawsBackground(false);
         this.searchBox.setVisible(true);
-        this.searchBox.setEditableColor(0xFFFFFF);
+        this.searchBox.setEditableColor(0xFFFFFFFF);
         this.addSelectableChild(this.searchBox);
         this.backgroundHeight = 180;
         this.backgroundWidth = 176;

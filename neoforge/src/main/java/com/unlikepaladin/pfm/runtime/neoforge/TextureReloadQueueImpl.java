@@ -15,7 +15,7 @@ import java.util.List;
 import static com.unlikepaladin.pfm.runtime.TextureReloadQueue.list;
 import static com.unlikepaladin.pfm.runtime.TextureReloadQueue.reloadSpritesOnClientThread;
 
-@EventBusSubscriber(modid = "pfm", bus = EventBusSubscriber.Bus.GAME, value = Dist.CLIENT)
+@EventBusSubscriber(modid = "pfm", value = Dist.CLIENT)
 public class TextureReloadQueueImpl {
     public static void registerTextureReload() {
         // quick check to avoid scheduling empty work

@@ -17,6 +17,8 @@ import net.minecraft.nbt.NbtCompound;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
+import net.minecraft.storage.ReadView;
+import net.minecraft.storage.WriteView;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Hand;
@@ -120,15 +122,15 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void writeCustomData(WriteView nbt) {
+        super.writeCustomData(nbt);
         nbt.put("Color", DyeColor.INDEX_CODEC, this.getPFMColor());
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
-        this.setPFMColor(nbt.get("Color", DyeColor.INDEX_CODEC).orElse(DyeColor.WHITE));
+    public void readCustomData(ReadView nbt) {
+        super.readCustomData(nbt);
+        this.setPFMColor(nbt.read("Color", DyeColor.INDEX_CODEC).orElse(DyeColor.WHITE));
     }
 
     @Override

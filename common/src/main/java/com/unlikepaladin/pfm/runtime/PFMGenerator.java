@@ -199,7 +199,7 @@ public abstract class PFMGenerator implements PFMResourceProgress {
             Files.deleteIfExists(pfmCacheDataFile);
             Files.createFile(pfmCacheDataFile);
             List<String> newDataHash = hashDirectory(output.toFile(), false, logger);
-            PFMCache cache = new PFMCache(SharedConstants.getGameVersion().getName(), Version.getCurrentVersion(), PFMFileUtil.getModLoader(), newDataHash, variants);
+            PFMCache cache = new PFMCache(SharedConstants.getGameVersion().name(), Version.getCurrentVersion(), PFMFileUtil.getModLoader(), newDataHash, variants);
             Files.writeString(pfmCacheDataFile, GSON.toJson(cache.toJson()), StandardOpenOption.APPEND);
         }
 

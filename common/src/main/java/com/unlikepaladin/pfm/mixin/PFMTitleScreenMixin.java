@@ -1,13 +1,11 @@
 package com.unlikepaladin.pfm.mixin;
 
-import com.google.common.collect.ImmutableList;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import com.unlikepaladin.pfm.utilities.Version;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmScreen;
-import net.minecraft.client.gui.screen.DialogScreen;
 import net.minecraft.client.gui.screen.Screen;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.unlikepaladin.pfm.client.screens.overlay.PFMGeneratingOverlay;
@@ -22,10 +20,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.List;
 
 @Mixin(TitleScreen.class)
 public abstract class PFMTitleScreenMixin extends Screen {
