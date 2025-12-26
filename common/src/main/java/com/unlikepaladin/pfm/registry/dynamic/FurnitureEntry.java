@@ -137,4 +137,11 @@ public class FurnitureEntry<T extends Block> {
     public Class<T> getTClass() {
         return this.type;
     }
+
+    public Set<Map.Entry<VariantBase<?>, T>> entrySet() {
+        Set<Map.Entry<VariantBase<?>, T>> entries = new LinkedHashSet<>();
+        entries.addAll(variantToBlockMap.entrySet());
+        entries.addAll(variantToBlockMapNonBase.entrySet());
+        return entries;
+    }
 }

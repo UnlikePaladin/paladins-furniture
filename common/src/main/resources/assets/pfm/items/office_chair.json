@@ -1,0 +1,12 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "pfm:block/office_chair/office_chair",
+    "tints": [
+      {
+        "type": "pfm:furniture_color",
+        "default": -6265536
+      }
+    ]
+  }
+}
