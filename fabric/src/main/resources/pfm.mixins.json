@@ -8,7 +8,8 @@
     "PFMCrackParticle$ItemFactoryMixin",
     "PFMRenderLayersFabricMixin",
     "PFMSpriteBillBoardParticleMixin",
-    "PFMUnbakedBlockStateModelMixin"
+    "PFMUnbakedBlockStateModelMixin",
+    "PFMWrapperBlockstateModelAccessor"
   ],
   "mixins": [
     "PFMAbstractTagProvider$ObjectBuilderMixin",
