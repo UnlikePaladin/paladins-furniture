@@ -7,6 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.render.TexturedRenderLayers;
 import net.minecraft.client.render.VertexConsumerProvider;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.model.LoadedEntityModels;
 import net.minecraft.client.render.item.model.special.SimpleSpecialModelRenderer;
 import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
@@ -27,11 +28,11 @@ public class PFMBedModelRenderer implements SimpleSpecialModelRenderer {
         this.textureId = textureId;
     }
 
+
     @Override
-    public void render(
-            ItemDisplayContext modelTransformationMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean glint
-    ) {
-        this.blockEntityRenderer.renderAsItem(matrices, vertexConsumers, light, overlay, this.textureId);
+    public void render(ItemDisplayContext displayContext, MatrixStack matrices, OrderedRenderCommandQueue queue, int light, int overlay, boolean glint, int i) {
+        this.blockEntityRenderer.renderAsItem(matrices, queue, light, overlay, this.textureId, i);
+
     }
 
     @Override
@@ -51,8 +52,8 @@ public class PFMBedModelRenderer implements SimpleSpecialModelRenderer {
         }
 
         @Override
-        public SpecialModelRenderer<?> bake(LoadedEntityModels entityModels) {
-            return new PFMBedModelRenderer(new PFMBedBlockEntityRenderer(entityModels), TexturedRenderLayers.createBedTextureId(color));
+        public SpecialModelRenderer<?> bake(BakeContext context) {
+            return new PFMBedModelRenderer(new PFMBedBlockEntityRenderer(context), TexturedRenderLayers.createBedTextureId(color));
         }
     }
 }

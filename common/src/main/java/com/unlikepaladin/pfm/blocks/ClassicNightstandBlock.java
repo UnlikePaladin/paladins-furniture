@@ -84,7 +84,7 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity impl
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.CONSUME;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);

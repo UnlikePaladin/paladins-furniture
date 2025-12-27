@@ -59,7 +59,7 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
                 "key.pfm.toiletUse", // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 GLFW.GLFW_KEY_U, // The keycode of the key
-                "keybindings.category.pfm" // The translation key of the keybinding's category.
+                PaladinFurnitureModClient.PFM_CATEGORY // The translation key of the keybinding's category.
         ));
         EntityRenderRegistryFabric.registerRender();
 

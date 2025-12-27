@@ -97,7 +97,7 @@ public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.SUCCESS;
         }
         if (world.getBlockEntity(pos) instanceof ShowerHeadBlockEntity) {

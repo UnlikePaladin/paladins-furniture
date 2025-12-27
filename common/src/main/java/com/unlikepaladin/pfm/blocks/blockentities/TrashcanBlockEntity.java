@@ -7,6 +7,7 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LootableContainerBlockEntity;
+import net.minecraft.entity.ContainerUser;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -84,15 +85,15 @@ public class TrashcanBlockEntity extends LootableContainerBlockEntity {
 
 
     @Override
-    public void onOpen(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
+    public void onOpen(ContainerUser player) {
+        if (!this.removed && !player.asLivingEntity().isSpectator()) {
             this.onContainerOpen(this.getCachedState());
         }
     }
 
     @Override
-    public void onClose(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
+    public void onClose(ContainerUser player) {
+        if (!this.removed && !player.asLivingEntity().isSpectator()) {
             this.onContainerClose(this.getCachedState());
         }
     }

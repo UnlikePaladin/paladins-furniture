@@ -24,6 +24,9 @@ import net.neoforged.neoforge.items.wrapper.ForwardingItemHandler;
 import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforge.registries.RegisterEvent;
+import net.neoforged.neoforge.transfer.DelegatingResourceHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.VanillaContainerWrapper;
 
 import java.util.*;
 
@@ -58,12 +61,8 @@ public class BlockItemRegistryNeoForge {
 
     @SubscribeEvent
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, BlockEntities.FREEZER_BLOCK_ENTITY, (freezerBlockEntity, side) -> {
-            if (side == null) {
-                return new ForwardingItemHandler(() -> new InvWrapper(freezerBlockEntity));
-            } else {
-                return new ForwardingItemHandler(() -> new SidedInvWrapper(freezerBlockEntity, side));
-            }
+        event.registerBlockEntity(Capabilities.Item.BLOCK, BlockEntities.FREEZER_BLOCK_ENTITY, (freezerBlockEntity, side) -> {
+            return VanillaContainerWrapper.of(freezerBlockEntity);
         });
 
         if (ModList.get().isLoaded("cookingforblockheads")) {

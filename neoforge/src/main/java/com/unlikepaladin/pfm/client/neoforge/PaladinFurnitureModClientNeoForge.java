@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.client.neoforge;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
@@ -83,10 +84,11 @@ public class PaladinFurnitureModClientNeoForge {
 
     @SubscribeEvent
     public static void registerKeyBinding(RegisterKeyMappingsEvent event) {
-        event.register(PaladinFurnitureModClient.USE_TOILET_KEYBIND = registerKey("key.pfm.toiletUse", "keybindings.category.pfm", GLFW.GLFW_KEY_U));
+        event.registerCategory(PaladinFurnitureModClient.PFM_CATEGORY);
+        event.register(PaladinFurnitureModClient.USE_TOILET_KEYBIND = registerKey("key.pfm.toiletUse", PaladinFurnitureModClient.PFM_CATEGORY, GLFW.GLFW_KEY_U));
     }
 
-    public static KeyBinding registerKey(String name, String category, int keyCode) {
+    public static KeyBinding registerKey(String name, KeyBinding.Category category, int keyCode) {
         return new KeyBinding(
                 name, // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.

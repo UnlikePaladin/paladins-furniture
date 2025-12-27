@@ -145,7 +145,7 @@ if (rootProject.lazy_dfu_enabled == "true"){
 }
 if (rootProject.jei_compatibility == "true") {
     dependencies {
-        modRuntimeOnly("mezz.jei:jei-1.21.8-fabric:${rootProject.jei_version}")
+        modRuntimeOnly("mezz.jei:jei-1.21.10-fabric:${rootProject.jei_version}")
     }
 }
 
@@ -182,7 +182,7 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modCompileOnlyApi("mezz.jei:jei-1.21.8-fabric:${rootProject.jei_version}") {
+    modCompileOnlyApi("mezz.jei:jei-1.21.10-fabric:${rootProject.jei_version}") {
         exclude group: "mezz.jei"
     }
 

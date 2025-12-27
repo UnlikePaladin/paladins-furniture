@@ -104,7 +104,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+    protected int getComparatorOutput(BlockState state, World world, BlockPos pos, Direction direction) {
         return state.get(LEVEL_4);
     }
 
@@ -141,7 +141,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     }
 
     public static void spawnParticles(Direction facing, World world, BlockPos pos) {
-        if (world.isClient) {
+        if (world.isClient()) {
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
             if (facing == Direction.EAST) {
                 world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 1.19, z + 0.5, 0.0, 0.0, 0.0);
@@ -203,14 +203,13 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl) {
         if (world instanceof ServerWorld serverWorld) {
             BlockPos blockPos = pos.toImmutable();
             handler.addPreCallback(CollisionEvent.EXTINGUISH, (collidedEntity) -> {
                 if (collidedEntity.isOnFire() && collidedEntity.canModifyAt(serverWorld, blockPos)) {
                     this.onFireCollision(state, world, blockPos);
                 }
-
             });
         }
 

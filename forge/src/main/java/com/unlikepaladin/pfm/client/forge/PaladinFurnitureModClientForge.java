@@ -81,10 +81,10 @@ public class PaladinFurnitureModClientForge {
 
     @SubscribeEvent
     public static void registerKeyBinding(RegisterKeyMappingsEvent event) {
-        event.register(PaladinFurnitureModClient.USE_TOILET_KEYBIND = registerKey("key.pfm.toiletUse", "keybindings.category.pfm", GLFW.GLFW_KEY_U));
+        event.register(PaladinFurnitureModClient.USE_TOILET_KEYBIND = registerKey("key.pfm.toiletUse", PaladinFurnitureModClient.PFM_CATEGORY, GLFW.GLFW_KEY_U));
     }
 
-    public static KeyBinding registerKey(String name, String category, int keyCode) {
+    public static KeyBinding registerKey(String name, KeyBinding.Category category, int keyCode) {
         return new KeyBinding(
                 name, // The translation key of the keybinding's name
                 InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.

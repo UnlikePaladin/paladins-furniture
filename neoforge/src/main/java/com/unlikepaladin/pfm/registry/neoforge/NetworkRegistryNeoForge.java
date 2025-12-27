@@ -36,11 +36,11 @@ public class NetworkRegistryNeoForge {
             });
         }));
 
-        registrar.playToServer(NetworkIDs.TRASHCAN_CLEAR, TrashcanClearPayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayerEntity) context.player()));
+        registrar.playToServer(NetworkIDs.TRASHCAN_CLEAR, TrashcanClearPayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle((context.player()).getEntityWorld().getServer(), (ServerPlayerEntity) context.player()));
 
-        registrar.playToServer(NetworkIDs.TOILET_USE_ID, ToiletUsePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayerEntity) context.player()));
+        registrar.playToServer(NetworkIDs.TOILET_USE_ID, ToiletUsePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getEntityWorld().getServer(), (ServerPlayerEntity) context.player()));
 
-        registrar.playToServer(NetworkIDs.MICROWAVE_ACTIVATE_PACKET_ID, MicrowaveActivatePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayerEntity) context.player()));
+        registrar.playToServer(NetworkIDs.MICROWAVE_ACTIVATE_PACKET_ID, MicrowaveActivatePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getEntityWorld().getServer(), (ServerPlayerEntity) context.player()));
 
         registrar.playToClient(NetworkIDs.MICROWAVE_UPDATE_PACKET_ID, MicrowaveUpdatePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player(), MinecraftClient.getInstance()));
 

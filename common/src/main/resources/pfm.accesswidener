@@ -23,3 +23,4 @@ accessible method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$B
 accessible method net/minecraft/client/render/RenderLayer$MultiPhaseParameters$Builder build (Z)Lnet/minecraft/client/render/RenderLayer$MultiPhaseParameters;
 
 accessible class net/minecraft/client/render/model/BlockStatesLoader$LoadedBlockStateDefinition
+accessible field net/minecraft/client/texture/AtlasManager ATLAS_METADATA Ljava/util/List;

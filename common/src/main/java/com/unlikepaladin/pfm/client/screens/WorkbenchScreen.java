@@ -4,9 +4,12 @@ import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.GameRenderer;
@@ -83,34 +86,34 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     }
 
     @Override
-    public boolean charTyped(char chr, int modifiers) {
+    public boolean charTyped(CharInput input) {
         String string = this.searchBox.getText();
-        if (this.searchBox.charTyped(chr, modifiers)) {
+        if (this.searchBox.charTyped(input)) {
             if (!Objects.equals(string, this.searchBox.getText())) {
                 this.search();
             }
             return true;
         }
-        return super.charTyped(chr, modifiers);
+        return super.charTyped(input);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        boolean bl2 = InputUtil.fromKeyCode(keyCode, scanCode).toInt().isPresent();
-        if (bl2 && this.handleHotbarKeyPressed(keyCode, scanCode)) {
+    public boolean keyPressed(KeyInput input) {
+        boolean bl2 = InputUtil.fromKeyCode(input).toInt().isPresent();
+        if (bl2 && this.handleHotbarKeyPressed(input)) {
             return true;
         }
         String string = this.searchBox.getText();
-        if (this.searchBox.keyPressed(keyCode, scanCode, modifiers)) {
+        if (this.searchBox.keyPressed(input)) {
             if (!Objects.equals(string, this.searchBox.getText())) {
                 this.search();
             }
             return true;
         }
-        if (this.searchBox.isFocused() && this.searchBox.isVisible() && keyCode != GLFW.GLFW_KEY_ESCAPE) {
+        if (this.searchBox.isFocused() && this.searchBox.isVisible() && input.getKeycode() != GLFW.GLFW_KEY_ESCAPE) {
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(input);
     }
     private final Set<TagKey<Item>> searchResultTags = new HashSet<>();
 
@@ -254,7 +257,10 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(Click click, boolean doubled) {
+        double mouseX = click.x();
+        double mouseY = click.y();
+
         this.mouseClicked = false;
         if (this.canCraft) {
             int xOffsetForMouseClick = this.x + RECIPE_LIST_OFFSET_X;
@@ -282,11 +288,12 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
                 this.mouseClicked = true;
             }
         }
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(click, doubled);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    public boolean mouseDragged(Click click, double offsetX, double offsetY) {
+        double mouseY = click.y();
         if (this.mouseClicked && this.shouldScroll()) {
             int i = this.y + 30;
             int j = i + 54;
@@ -295,7 +302,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             this.scrollOffset = (int)((double)(this.scrollAmount * (float)this.getMaxScroll()) + 0.5) * RECIPE_LIST_COLUMNS;
             return true;
         }
-        return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        return super.mouseDragged(click, offsetX, offsetY);
     }
 
     @Override

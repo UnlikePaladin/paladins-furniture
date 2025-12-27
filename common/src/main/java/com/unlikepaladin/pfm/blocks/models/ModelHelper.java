@@ -24,6 +24,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.registry.Registries;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.util.Atlases;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.StringIdentifiable;
@@ -46,7 +47,7 @@ public class ModelHelper {
         if (OAK_SPRITES_PLANKS_TO_REPLACE == null) {
             SpriteIdentifier planksId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Identifier.of("minecraft:block/oak_planks"));
             SpriteIdentifier logId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Identifier.of("minecraft:block/oak_log"));
-            OAK_SPRITES_PLANKS_TO_REPLACE = Arrays.asList(planksId.getSprite(), logId.getSprite());
+            OAK_SPRITES_PLANKS_TO_REPLACE = Arrays.asList(getSprite(planksId), getSprite(logId));
         }
         return OAK_SPRITES_PLANKS_TO_REPLACE;
     }
@@ -55,7 +56,7 @@ public class ModelHelper {
         if (OAK_SPRITES_BED_TO_REPLACE == null) {
             SpriteIdentifier planksId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Identifier.of("minecraft:block/oak_planks"));
             SpriteIdentifier bedId = TexturedRenderLayers.getBedTextureId(DyeColor.RED);
-            OAK_SPRITES_BED_TO_REPLACE = Arrays.asList(planksId.getSprite(), bedId.getSprite());
+            OAK_SPRITES_BED_TO_REPLACE = Arrays.asList(getSprite(planksId), getSprite(bedId));
         }
         return OAK_SPRITES_BED_TO_REPLACE;
     }
@@ -64,7 +65,7 @@ public class ModelHelper {
         if (OAK_SPRITES_LOG_TOP_TO_REPLACE == null) {
             SpriteIdentifier logId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Identifier.of("minecraft:block/oak_log"));
             SpriteIdentifier logTopId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Identifier.of("minecraft:block/oak_log_top"));
-            OAK_SPRITES_LOG_TOP_TO_REPLACE = Arrays.asList(logId.getSprite(), logTopId.getSprite());
+            OAK_SPRITES_LOG_TOP_TO_REPLACE = Arrays.asList(getSprite(logId), getSprite(logTopId));
         }
         return OAK_SPRITES_LOG_TOP_TO_REPLACE;
     }
@@ -255,6 +256,10 @@ public class ModelHelper {
             }
         }
         return BlockType.BLOCK;
+    }
+
+    public static Sprite getSprite(SpriteIdentifier identifier) {
+        return MinecraftClient.getInstance().getAtlasManager().getSprite(identifier);
     }
 
     public static VariantBase<?> getVariant(Identifier identifier) {

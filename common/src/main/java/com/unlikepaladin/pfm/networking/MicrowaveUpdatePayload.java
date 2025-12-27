@@ -43,9 +43,9 @@ public record MicrowaveUpdatePayload(BlockPos pos, Boolean isActive) implements 
     }
 
     public void handle(PlayerEntity player, MinecraftClient client) {
-        if (player.getWorld().isChunkLoaded(pos)) {
+        if (player.getEntityWorld().isChunkLoaded(pos)) {
             client.execute(() -> {
-                MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) player.getWorld().getBlockEntity(pos);
+                MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) player.getEntityWorld().getBlockEntity(pos);
                 if (Objects.nonNull(client.currentScreen) && client.currentScreen instanceof MicrowaveScreen currentScreen)  {
                     currentScreen.getScreenHandler().setActive(blockEntity, isActive);}
             });

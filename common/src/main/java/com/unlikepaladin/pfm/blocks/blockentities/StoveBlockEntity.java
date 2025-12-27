@@ -10,6 +10,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.ContainerUser;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -74,15 +75,15 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    public void onClose(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
+    public void onClose(ContainerUser user) {
+        if (!this.removed && !user.asLivingEntity().isSpectator()) {
             this.onContainerClose(this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
 
     @Override
-    public void onOpen(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
+    public void onOpen(ContainerUser player) {
+        if (!this.removed && !player.asLivingEntity().isSpectator()) {
             this.onContainerOpen(this.getWorld(), this.getPos(), this.getCachedState());
         }
     }

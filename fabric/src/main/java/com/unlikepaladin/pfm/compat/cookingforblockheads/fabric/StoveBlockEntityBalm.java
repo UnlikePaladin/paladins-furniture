@@ -195,7 +195,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
             --this.furnaceBurnTime;
         }
 
-        if (!level.isClient) {
+        if (!level.isClient()) {
             int firstEmptySlot;
             ItemStack containerItem;
             if (this.furnaceBurnTime == 0 && this.shouldConsumeFuel()) {

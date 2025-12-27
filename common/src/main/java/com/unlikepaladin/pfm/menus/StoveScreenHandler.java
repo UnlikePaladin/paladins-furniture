@@ -21,7 +21,7 @@ public class StoveScreenHandler extends AbstractFurnaceScreenHandler {
     private final Inventory inventory;
     public StoveScreenHandler(int syncId, PlayerInventory playerInventory, StoveData data) {
         super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipePropertySet.SMOKER_INPUT, RecipeBookType.SMOKER, syncId, playerInventory);
-        this.inventory = (Inventory) playerInventory.player.getWorld().getBlockEntity(data.pos());
+        this.inventory = (Inventory) playerInventory.player.getEntityWorld().getBlockEntity(data.pos());
         inventory.onOpen(playerInventory.player);
     }
 

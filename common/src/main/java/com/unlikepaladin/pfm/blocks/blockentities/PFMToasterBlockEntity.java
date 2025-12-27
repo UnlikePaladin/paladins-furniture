@@ -98,7 +98,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     }
 
     private void explode() {
-        if(!world.isClient) {
+        if(!world.isClient()) {
             world.removeBlock(pos, true);
             PlayerEntity player = world.getClosestPlayer(pos.getX(), pos.getZ(), 8, 10, false);
             world.createExplosion(player, world.getDamageSources().explosion(player, player), null, pos.getX(), pos.getY(), pos.getZ(), 2.2f, true, World.ExplosionSourceType.BLOCK);
@@ -332,7 +332,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements SidedInventory
     }
 
     public static void sync(PFMToasterBlockEntity blockEntity, World world) {
-        if (!world.isClient)
+        if (!world.isClient())
             ((ServerWorld) world).getChunkManager().markForUpdate(blockEntity.getPos());
     }
 

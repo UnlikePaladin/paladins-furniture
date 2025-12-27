@@ -84,7 +84,7 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock implem
     public float height;
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.CONSUME;
         }
 
@@ -162,7 +162,7 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock implem
         chairEntity.setYaw(yaw);
         chairEntity.setBodyYaw(yaw);
         if (world.spawnEntity(chairEntity)) {
-            entityToSit.startRiding(chairEntity, true);
+            entityToSit.startRiding(chairEntity, true, true);
             entityToSit.setYaw(yaw);
             entityToSit.setHeadYaw(yaw);
             chairEntity.setYaw(yaw);
@@ -175,8 +175,8 @@ public abstract class AbstractSittableBlock extends HorizontalFacingBlock implem
     }
 
     @Override
-    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
-        super.onEntityCollision(state, world, pos, entity, handler);
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl) {
+        super.onEntityCollision(state, world, pos, entity, handler, bl);
         List<ChairEntity> active = world.getEntitiesByClass(ChairEntity.class, new Box(pos), Entity::hasPassengers);
         if (active == null || !active.isEmpty())
             return;

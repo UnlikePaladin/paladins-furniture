@@ -38,8 +38,8 @@ public record MicrowaveActivatePayload(BlockPos pos, Boolean isActive) implement
 
     public void handle(MinecraftServer server, ServerPlayerEntity player) {
         server.submitAndJoin(() -> {
-            if(Objects.nonNull(player.getWorld().getBlockEntity(pos))){
-                World world = player.getWorld();
+            if(Objects.nonNull(player.getEntityWorld().getBlockEntity(pos))){
+                World world = player.getEntityWorld();
                 if (world.isChunkLoaded(pos)) {
                     MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(pos);
                     microwaveBlockEntity.setActive(isActive);

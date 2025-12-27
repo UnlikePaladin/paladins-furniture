@@ -6,6 +6,7 @@
   "mixins": [
     "PFMDataCache$CachedDataMixin",
     "PFMFeatureFlagFactory",
+    "PFMGlStateManagerMixin",
     "PFMPlayerInventoryMixin",
     "PFMPointOfInterestTypeAccessor",
     "PFMPointOfInterestTypesAccessor",
@@ -33,16 +34,14 @@
     "PFMNativeImageAccessor",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSplashOverlayMixin",
-    "PFMTitleScreenMixin",
-    "RangeDispatchItemModelAccessor",
-    "SelectItemModelAccessor",
-    "PFMSplashOverlayMixin",
     "PFMSpriteAtlasTextureAccessor",
     "PFMSpriteContentsAccessor",
     "PFMSpriteContentsMixin",
     "PFMSpriteLoaderMixin",
     "PFMSpriteMixin",
-    "PFMTitleScreenMixin"
+    "PFMTitleScreenMixin",
+    "RangeDispatchItemModelAccessor",
+    "SelectItemModelAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

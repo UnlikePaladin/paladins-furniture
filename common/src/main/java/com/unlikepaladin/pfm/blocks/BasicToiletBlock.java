@@ -69,17 +69,17 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
 
     @Override
     protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
             player.incrementStat(Statistics.TOILET_USED);
         }
 
-        if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY && (stack.getItem() == Items.POTION) && stack.get(DataComponentTypes.POTION_CONTENTS) != null && stack.get(DataComponentTypes.POTION_CONTENTS).matches(Potions.WATER)) {
+        if (!world.isClient() && state.get(TOILET_STATE) == ToiletState.EMPTY && (stack.getItem() == Items.POTION) && stack.get(DataComponentTypes.POTION_CONTENTS) != null && stack.get(DataComponentTypes.POTION_CONTENTS).matches(Potions.WATER)) {
             world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
             if (!player.getAbilities().creativeMode)
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
             world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.ITEM_BOTTLE_EMPTY, SoundCategory.BLOCKS, 1.0f, 1.0f);
             return ActionResult.SUCCESS;
-        } else if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY && (player.getStackInHand(hand).getItem() == Items.WATER_BUCKET)) {
+        } else if (!world.isClient() && state.get(TOILET_STATE) == ToiletState.EMPTY && (player.getStackInHand(hand).getItem() == Items.WATER_BUCKET)) {
             world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.CLEAN));
             if (!player.getAbilities().creativeMode)
                 player.setStackInHand(hand, ItemUsage.exchangeStack(stack, player, new ItemStack(Items.BUCKET)));
@@ -92,7 +92,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (!world.isClient && state.get(TOILET_STATE) == ToiletState.EMPTY) {
+        if (!world.isClient() && state.get(TOILET_STATE) == ToiletState.EMPTY) {
             BlockPos sourcePos = pos.down().down();
             BlockState sourceState = world.getBlockState(sourcePos);
             if (sourceState.getFluidState().getFluid() == Fluids.WATER && !sourceState.getFluidState().isEmpty()) {
@@ -107,7 +107,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements BlockEnti
                 player.sendMessage(Text.translatable("message.pfm.toilet_use"), false);
             }
         }
-        else if (!world.isClient && (state.get(TOILET_STATE) == ToiletState.DIRTY)) {
+        else if (!world.isClient() && (state.get(TOILET_STATE) == ToiletState.DIRTY)) {
             world.setBlockState(pos, state.with(TOILET_STATE, ToiletState.FLUSHING));
             world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundIDs.TOILET_FLUSHING_EVENT, SoundCategory.BLOCKS, 0.3f, 1.0f);
             ToiletBlockEntity blockEntity = (ToiletBlockEntity) world.getBlockEntity(pos);

@@ -50,7 +50,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
                 }
             }
 
-            if (!world.isClient) {
+            if (!world.isClient()) {
                 Balm.getNetworking().openMenu(player, cookingTable);
             }
         }

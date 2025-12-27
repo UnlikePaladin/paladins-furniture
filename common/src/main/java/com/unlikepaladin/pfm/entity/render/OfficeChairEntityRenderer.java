@@ -6,12 +6,14 @@ import com.unlikepaladin.pfm.entity.model.OfficeChairModelEmpty;
 import com.unlikepaladin.pfm.entity.render.state.OfficeChairEntityRenderState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.BlockStateModel;
 import net.minecraft.client.render.model.ModelBaker;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.*;
@@ -41,57 +43,20 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
     }
 
     @Override
-    public void render(OfficeChairEntityRenderState mobEntity, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
+    public void render(OfficeChairEntityRenderState mobEntity, MatrixStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue, CameraRenderState cameraRenderState) {
         int damageStage = (int) (mobEntity.maxHealth - mobEntity.health);
-        VertexConsumer damageConsumer = MinecraftClient.getInstance().getBufferBuilders().getEffectVertexConsumers()
-                .getBuffer(ModelBaker.BLOCK_DESTRUCTION_RENDER_LAYERS.get(damageStage));
 
-        VertexConsumer solid =
-                vertexConsumerProvider.getBuffer(RenderLayer.getCutoutMipped());
-
+        RenderLayer damagedLayer = ModelBaker.BLOCK_DESTRUCTION_RENDER_LAYERS.get(damageStage);
         // base
         matrixStack.push();
 
         matrixStack.translate(-0.45, 0, -0.5);
 
         BlockStateModel modelBase = ModelHelper.getModelFromIdentifier(MODEL_IDS[2]);
-        List<BakedQuad> baseQuads = new ArrayList<>();
-        Random rand = mobEntity.random;
-
-        for (BlockModelPart part : modelBase.getParts(rand)) {
-            for (Direction direction : Direction.values()) {
-                baseQuads.addAll(part.getQuads(direction));
-            }
-            baseQuads.addAll(part.getQuads(null));
-        }
-
-
-        for (BakedQuad quad : baseQuads) {
-            float brightness = ModelHelper.getBrightness(quad.face(), quad.shade(), mobEntity.isDarkenedDim);
-
-            solid.quad(matrixStack.peek(), quad, brightness, brightness, brightness, 1.0f, light, OverlayTexture.DEFAULT_UV);
-            VertexConsumer damage = new OverlayVertexConsumer(
-                    damageConsumer,
-                    matrixStack.peek(), 1.0f
-            );
-            if (mobEntity.timeUntilRegen > 0)
-                damage.quad(matrixStack.peek(), quad, brightness, brightness, brightness, 1.0f, light, OverlayTexture.DEFAULT_UV);
-        }
-
-        matrixStack.pop();
+        submitBlockPart(mobEntity, matrixStack, orderedRenderCommandQueue, damagedLayer, modelBase, 1.0f, 1.0f, 1.0f);
 
         // wheels - render 4 times at different positions
         BlockStateModel wheelModel = ModelHelper.getModelFromIdentifier(MODEL_IDS[3]);
-
-        List<BakedQuad> wheelQuads = new ArrayList<>();
-
-        for (BlockModelPart part : wheelModel.getParts(rand)) {
-            for (Direction direction : Direction.values()) {
-                wheelQuads.addAll(part.getQuads(direction));
-            }
-            wheelQuads.addAll(part.getQuads(null));
-        }
-
 
         // Calculate wheel rotation based on movement direction
         Vec3d velocity = mobEntity.velocity;
@@ -122,61 +87,38 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             matrixStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(wheelSpin));
             matrixStack.translate(-0.5, -0.08, -0.5);
 
-            for (BakedQuad quad : wheelQuads) {
-                float brightness = ModelHelper.getBrightness(quad.face(), quad.shade(), mobEntity.isDarkenedDim);
-
-                solid.quad(matrixStack.peek(), quad, brightness, brightness, brightness, 1.0f, light, OverlayTexture.DEFAULT_UV);
-                VertexConsumer damage = new OverlayVertexConsumer(
-                        damageConsumer,
-                        matrixStack.peek(), 1.0f
-                );
-                if (mobEntity.timeUntilRegen > 0)
-                    damage.quad(matrixStack.peek(), quad, brightness, brightness, brightness,1.0f, light, OverlayTexture.DEFAULT_UV);
-            }
-
-            matrixStack.pop();
+            submitBlockPart(mobEntity, matrixStack, orderedRenderCommandQueue, damagedLayer, wheelModel, 1.0f, 1.0f, 1.0f);
         }
 
         // top
+        float red = 1.0f;
+        float green = 1.0f;
+        float blue = 1.0f;
+
+        if (mobEntity.color != null) {
+            int colorInt = mobEntity.color.getFireworkColor();
+            red = ((colorInt >> 16) & 0xFF) / 255.0f;
+            green = ((colorInt >> 8) & 0xFF) / 255.0f;
+            blue = (colorInt & 0xFF) / 255.0f;
+        }
+
         matrixStack.push();
         matrixStack.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(180.0F - mobEntity.bodyYaw));
 
         matrixStack.translate(-0.45, 0, -0.5);
 
         BlockStateModel model = ModelHelper.getModelFromIdentifier(MODEL_IDS[1]);
+        submitBlockPart(mobEntity, matrixStack, orderedRenderCommandQueue, damagedLayer, model, red, green, blue);
+    }
 
-        List<BakedQuad> chairQuads = new ArrayList<>();
-
-        for (BlockModelPart part : model.getParts(rand)) {
-            for (Direction direction : Direction.values()) {
-                chairQuads.addAll(part.getQuads(direction));
-            }
-            chairQuads.addAll(part.getQuads(null));
-        }
-
-
-        for (BakedQuad quad : chairQuads) {
-            float brightness = ModelHelper.getBrightness(quad.face(), quad.shade(), mobEntity.isDarkenedDim);
-
-            float red = 1.0f;
-            float green = 1.0f;
-            float blue = 1.0f;
-
-            if (mobEntity.color != null && quad.hasTint()) {
-                int colorInt = mobEntity.color.getFireworkColor();
-                red = ((colorInt >> 16) & 0xFF) / 255.0f;
-                green = ((colorInt >> 8) & 0xFF) / 255.0f;
-                blue = (colorInt & 0xFF) / 255.0f;
-            }
-
-            solid.quad(matrixStack.peek(), quad, red*brightness, green*brightness, blue*brightness, 1.0f, light, OverlayTexture.DEFAULT_UV);
-
-            VertexConsumer damage = new OverlayVertexConsumer(
-                    damageConsumer,
-                    matrixStack.peek(), 1.0f
-            );
-            if (mobEntity.timeUntilRegen > 0)
-                damage.quad(matrixStack.peek(), quad, 1.0f, 1.0f, 1.0f, 1.0f, light, OverlayTexture.DEFAULT_UV);
+    private void submitBlockPart(OfficeChairEntityRenderState mobEntity, MatrixStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue, RenderLayer damagedLayer, BlockStateModel model, float red, float green, float blue) {
+        orderedRenderCommandQueue.submitBlockStateModel(matrixStack, RenderLayer.getCutoutMipped(), model, red, green, blue, mobEntity.light,
+                OverlayTexture.DEFAULT_UV,
+                mobEntity.outlineColor);
+        if (mobEntity.timeUntilRegen > 0) {
+            orderedRenderCommandQueue.submitBlockStateModel(matrixStack, damagedLayer, model, 1.0f, 1.0f, 1.0f, mobEntity.light,
+                    OverlayTexture.DEFAULT_UV,
+                    mobEntity.outlineColor);
         }
 
         matrixStack.pop();
@@ -196,9 +138,9 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         livingEntityRenderState.velocity = livingEntity.getVelocity();
         livingEntityRenderState.timeUntilRegen = livingEntity.timeUntilRegen;
         livingEntityRenderState.wheelSpinAngle = livingEntity.getWheelSpinAngle();
-        livingEntityRenderState.world = livingEntity.getWorld();
-        livingEntityRenderState.pos = livingEntity.getPos();
+        livingEntityRenderState.world = livingEntity.getEntityWorld();
+        livingEntityRenderState.pos = livingEntity.getEntityPos();
         livingEntityRenderState.random = livingEntity.getRandom();
-        livingEntityRenderState.isDarkenedDim = !livingEntity.getWorld().getDimension().bedWorks();
+        livingEntityRenderState.isDarkenedDim = !livingEntity.getEntityWorld().getDimension().bedWorks();
     }
 }

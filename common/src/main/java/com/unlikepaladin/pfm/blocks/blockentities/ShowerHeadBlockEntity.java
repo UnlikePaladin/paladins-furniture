@@ -50,7 +50,7 @@ public class ShowerHeadBlockEntity extends BlockEntity {
     }
 
     public static void tick(World world, BlockPos pos, BlockState state, ShowerHeadBlockEntity blockEntity) {
-        if (blockEntity.isOpen && world.isClient) {
+        if (blockEntity.isOpen && world.isClient()) {
             spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
         }
         if (blockEntity.isOpen) {
@@ -59,7 +59,7 @@ public class ShowerHeadBlockEntity extends BlockEntity {
     }
 
     public static void spawnParticles(Direction facing, World world, BlockPos pos) {
-        if (world.isClient) {
+        if (world.isClient()) {
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
             if (facing == Direction.WEST) {
                 addShowerParticles(world, pos, new float[]{0.55f, 0.2f, 0.5f}, new float[]{0.1f, 0f, 0.1f});

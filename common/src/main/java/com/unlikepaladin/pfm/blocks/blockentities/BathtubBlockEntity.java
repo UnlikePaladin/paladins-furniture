@@ -82,7 +82,7 @@ public class BathtubBlockEntity extends BedBlockEntity {
                 blockEntity.setFillTimer(0);
                 blockEntity.setFilling(false);
             } else {
-                if (world.isClient) {
+                if (world.isClient()) {
                     BasicBathtubBlock.spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
                 }
                 blockEntity.fillTimer++;

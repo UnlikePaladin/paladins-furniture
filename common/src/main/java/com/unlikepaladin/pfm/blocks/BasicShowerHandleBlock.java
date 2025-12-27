@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHandleBlockEntity;
+import com.unlikepaladin.pfm.items.PFMComponents;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.DataComponentTypes;
@@ -66,7 +67,7 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.SUCCESS;
         }
         BlockState blockState = this.toggleOpen(state, world, pos, false, false);
@@ -79,10 +80,9 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         if (itemStack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null) {
-            NbtComponent nbtCompound = itemStack.get(DataComponentTypes.BLOCK_ENTITY_DATA);
             BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (nbtCompound.contains("showerHead") && blockEntity instanceof ShowerHandleBlockEntity) {
-                itemStack.remove(DataComponentTypes.BLOCK_ENTITY_DATA);
+            if (itemStack.get(PFMComponents.ACTIVATOR_COMPONENT) != null && blockEntity instanceof ShowerHandleBlockEntity) {
+                itemStack.remove(PFMComponents.ACTIVATOR_COMPONENT);
             }
         }
 

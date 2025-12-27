@@ -44,7 +44,7 @@ public class StoveBlockImpl {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             return PFMCookingForBlockHeadsCompat.getStoveTicker(world, type);
         } else {
-            if (world.isClient) {
+            if (world.isClient()) {
                 return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::clientTick);
             } else {
                 return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::litServerTick);

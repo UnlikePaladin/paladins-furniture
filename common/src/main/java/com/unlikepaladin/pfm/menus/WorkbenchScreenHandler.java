@@ -55,7 +55,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     public WorkbenchScreenHandler(int syncId, PlayerInventory playerInventory, final ScreenHandlerContext context) {
         super(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, syncId);
         this.context = context;
-        this.world = playerInventory.player.getWorld();
+        this.world = playerInventory.player.getEntityWorld();
         this.playerInventory = playerInventory;
         this.contentsChangedListener = () -> {
         };
@@ -129,8 +129,8 @@ public class WorkbenchScreenHandler extends ScreenHandler {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe.CraftableFurnitureRecipe simpleFurnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
             FurnitureRecipe.FurnitureRecipeInput furnitureRecipeInput = new FurnitureRecipe.FurnitureRecipeInput(playerInventory);
-            if (simpleFurnitureRecipe.matches(furnitureRecipeInput, playerInventory.player.getWorld())) {
-               simpleFurnitureRecipe.craftAndRemoveItems(furnitureRecipeInput, playerInventory.player.getWorld().getRegistryManager());
+            if (simpleFurnitureRecipe.matches(furnitureRecipeInput, playerInventory.player.getEntityWorld())) {
+               simpleFurnitureRecipe.craftAndRemoveItems(furnitureRecipeInput, playerInventory.player.getEntityWorld().getRegistryManager());
                 return true;
             }
         }
@@ -140,7 +140,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     void populateResult(PlayerEntity player) {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe.CraftableFurnitureRecipe simpleFurnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
-            this.outputSlot.setStack(simpleFurnitureRecipe.craft(new FurnitureRecipe.FurnitureRecipeInput(player.getInventory()), player.getWorld().getRegistryManager()));
+            this.outputSlot.setStack(simpleFurnitureRecipe.craft(new FurnitureRecipe.FurnitureRecipeInput(player.getInventory()), player.getEntityWorld().getRegistryManager()));
         } else {
             this.outputSlot.setStack(ItemStack.EMPTY);
         }

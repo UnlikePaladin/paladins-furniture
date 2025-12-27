@@ -32,22 +32,20 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class LightSwitchItem extends BlockItem {
-    private Block block;
 
     public LightSwitchItem(Block block, Settings settings) {
         super(block, settings);
-        this.block = block;
     }
 
     @Override
     public ActionResult use(World world, PlayerEntity player, Hand hand) {
         ItemStack stack = player.getStackInHand(hand);
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.FAIL;
         }
         if (player.isSneaking()) {
             stack.remove(DataComponentTypes.BLOCK_ENTITY_DATA);
-            createTag(stack);
+            createComponents(stack);
             return ActionResult.SUCCESS.withNewHandStack(stack);
         }
         return ActionResult.PASS;
@@ -68,7 +66,7 @@ public class LightSwitchItem extends BlockItem {
                     addLight(context.getStack(), pos);
                }
                else {
-                    if (context.getWorld().isClient)
+                    if (context.getWorld().isClient())
                         context.getPlayer().sendMessage(Text.translatable("message.pfm.light_switch_not_canopy"), false);
                }
            }
@@ -85,7 +83,7 @@ public class LightSwitchItem extends BlockItem {
         BlockPos pos = context.getBlockPos();
         WorldView world = context.getWorld();
         Direction side = context.getSide();
-        NbtList lights = getLights(context.getStack());
+        List<BlockPos> lights = getLights(context.getStack());
         boolean canPlace = state.canPlaceAt(world, pos) && side.getAxis().isHorizontal();
 
         if (!canPlace) {
@@ -94,24 +92,22 @@ public class LightSwitchItem extends BlockItem {
         if (lights != null) {
             ArrayList<BlockPos> removedLights = new ArrayList<>();
             ArrayList<BlockPos> lightOffsets = new ArrayList<>();
-            for (Iterator<NbtElement> iterator = lights.iterator(); iterator.hasNext();) {
-                NbtElement nbtElement = iterator.next();
-                BlockPos lightPos = BlockPos.fromLong(((NbtLong) nbtElement).longValue());
+            for (BlockPos lightPos : lights) {
                 double distance = Math.sqrt(lightPos.getSquaredDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
                 if (distance > 16) {
-                    removedLights.add(BlockPos.fromLong(((NbtLong) nbtElement).longValue()));
-                    iterator.remove();
+                    removedLights.add(lightPos);
+                    lights.remove(lightPos);
                 } else {
                     lightOffsets.add(pos.subtract(lightPos));
                 }
             }
-            context.getStack().remove(DataComponentTypes.BLOCK_ENTITY_DATA);
-            createTag(context.getStack());
+            context.getStack().remove(PFMComponents.ACTIVATOR_COMPONENT);
+            createComponents(context.getStack());
             for (BlockPos blockPos : lightOffsets) {
                 addLight(context.getStack(), blockPos);
             }
 
-            if (!removedLights.isEmpty() && context.getWorld().isClient){
+            if (!removedLights.isEmpty() && context.getWorld().isClient()){
                 context.getPlayer().sendMessage(Text.translatable("message.pfm.light_switch_far", removedLights.toString()), false);
             }
         }
@@ -120,58 +116,32 @@ public class LightSwitchItem extends BlockItem {
 
     private void addLight(ItemStack stack, BlockPos pos)
     {
-        NbtCompound nbtCompound = createTag(stack);
-        if(!nbtCompound.contains("lights")) {
-            nbtCompound.put("lights", new NbtList());
+        createComponents(stack);
+        if (!stack.get(PFMComponents.ACTIVATOR_COMPONENT).contains(pos)) {
+            stack.get(PFMComponents.ACTIVATOR_COMPONENT).add(pos);
         }
-
-        NbtList tagList = (NbtList) nbtCompound.get("lights");
-        if(!containsLight(tagList, pos))  {
-            tagList.add(NbtLong.of(pos.asLong()));
-        }
-        stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbtCompound));
-    }
-
-    private boolean containsLight(NbtList tagList, BlockPos pos)
-    {
-        for(int i = 0; i < tagList.size(); i++)
-        {
-            NbtLong tagLong = (NbtLong) tagList.get(i);
-            if(tagLong.longValue() == pos.asLong())
-            {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Nullable
-    public static NbtList getLights(ItemStack stack) {
-        if(stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null) {
-            NbtCompound blockEntityTag = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).getNbt();
-            if(blockEntityTag.contains("lights")) {
-                return (NbtList) blockEntityTag.get("lights");
-            }
+    public static List<BlockPos> getLights(ItemStack stack) {
+        if(stack.get(PFMComponents.ACTIVATOR_COMPONENT) != null) {
+            return stack.get(PFMComponents.ACTIVATOR_COMPONENT);
         }
         return null;
     }
 
-    private static NbtCompound createTag(ItemStack stack)
+    private static void createComponents(ItemStack stack)
     {
-        if(stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) == null)
+        if(stack.get(PFMComponents.ACTIVATOR_COMPONENT) == null)
         {
-            NbtCompound nbtCompound = new NbtCompound();
-            nbtCompound.putString("id", "pfm:light_switch_block_entity");
-            stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbtCompound));
+            stack.set(PFMComponents.ACTIVATOR_COMPONENT, new ArrayList<>());
         }
-        return stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).copyNbt();
     }
 
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
-        NbtList nbtList;
-        if (stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null && (nbtList = getLights(stack)) != null) {
-            int lightNum = nbtList.size();
+        if (stack.get(PFMComponents.ACTIVATOR_COMPONENT) != null) {
+            int lightNum = stack.get(PFMComponents.ACTIVATOR_COMPONENT).size();
             textConsumer.accept(Text.translatable("tooltip.pfm.light_switch_connected", lightNum));
         }
         super.appendTooltip(stack, context, displayComponent, textConsumer, type);

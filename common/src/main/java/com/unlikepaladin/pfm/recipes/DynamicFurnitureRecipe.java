@@ -159,7 +159,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         for (Identifier id : furnitureInnerRecipes.keySet()) {
             List<FurnitureInnerRecipe> recipes = furnitureInnerRecipes.get(id);
             for (FurnitureInnerRecipe recipe : recipes) {
-                if (recipe.isInnerEnabled(inventory.player.getWorld().getEnabledFeatures()) && recipe.matches(input, inventory.player.getWorld()))
+                if (recipe.isInnerEnabled(inventory.player.getEntityWorld().getEnabledFeatures()) && recipe.matches(input, inventory.player.getEntityWorld()))
                     stacks.add(recipe);
             }
         }

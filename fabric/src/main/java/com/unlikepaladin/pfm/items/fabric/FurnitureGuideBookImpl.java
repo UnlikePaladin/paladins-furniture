@@ -26,7 +26,7 @@ public class FurnitureGuideBookImpl extends FurnitureGuideBook {
                 PatchouliAPI.get().openBookGUI((ServerPlayerEntity) user, Identifier.of("pfm:guide_book"));
             return ActionResult.SUCCESS;
         }
-        else if (world.isClient && !FabricLoader.getInstance().isModLoaded("patchouli"))
+        else if (world.isClient() && !FabricLoader.getInstance().isModLoaded("patchouli"))
         {
             Text text = Text.translatable("message.pfm.patchouli_not_installed").setStyle(Style.EMPTY.withClickEvent(new ClickEvent.OpenUrl(URI.create("https://github.com/UnlikePaladin/paladins-furniture/wiki"))));
             user.sendMessage(text,false);

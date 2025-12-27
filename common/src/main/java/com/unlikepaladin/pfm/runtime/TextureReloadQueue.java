@@ -18,7 +18,9 @@ import net.minecraft.client.resource.metadata.AnimationResourceMetadata;
 import net.minecraft.client.texture.*;
 import net.minecraft.resource.Resource;
 import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.metadata.ResourceMetadataSerializer;
 import net.minecraft.screen.PlayerScreenHandler;
+import net.minecraft.util.Atlases;
 import net.minecraft.util.Identifier;
 
 import java.awt.image.BufferedImage;
@@ -99,7 +101,10 @@ public final class TextureReloadQueue {
         Resource resource = optionalResource.get();
         Sprite original = spriteAtlas.getSprite(id);
 
-        SpriteContents newContents = SpriteOpener.create(SpriteLoader.METADATA_SERIALIZERS).loadSprite(id, resource);
+        AtlasManager.Metadata manager = AtlasManager.ATLAS_METADATA.stream().filter(me -> me.textureId() == SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE).findFirst().orElse(null);
+        Set<ResourceMetadataSerializer<?>> set = manager != null ? manager.additionalMetadata() : Set.of();
+
+        SpriteContents newContents = SpriteOpener.create(set).loadSprite(id, resource);
         ((PFMSpriteExtensions) original).pfm$setContents(newContents);
         try {
             newContents.generateMipmaps(MinecraftClient.getInstance().options.getMipmapLevels().getValue());
@@ -110,14 +115,12 @@ public final class TextureReloadQueue {
     }
 
     public static void reloadSpritesOnClientThread(List<Identifier> id) {
-        TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
+        AtlasManager textureManager = MinecraftClient.getInstance().getAtlasManager();
         ResourceManager resourceManager = MinecraftClient.getInstance().getResourceManager();
-        AbstractTexture abstractTexture = textureManager.getTexture(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
         try {
-            if (abstractTexture instanceof SpriteAtlasTexture spriteAtlas) {
-                for (Identifier spriteId : id) {
-                    reloadSingleSprite(resourceManager, spriteAtlas, spriteId);
-                }
+            SpriteAtlasTexture spriteAtlas = textureManager.getAtlasTexture(Atlases.BLOCKS);
+            for (Identifier spriteId : id) {
+                reloadSingleSprite(resourceManager, spriteAtlas, spriteId);
             }
         } catch (IOException e) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to reload texture at {}", id, e);

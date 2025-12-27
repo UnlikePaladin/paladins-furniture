@@ -7,6 +7,9 @@ import net.minecraft.component.ComponentType;
 import net.minecraft.network.codec.PacketCodecs;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
+
+import java.util.List;
 
 public class PFMComponents {
     public static void registerComponents() {
@@ -20,6 +23,13 @@ public class PFMComponents {
                 Identifier.of(PaladinFurnitureMod.MOD_ID, "color"),
                 ComponentType.<DyeColor>builder().codec(DyeColor.CODEC).packetCodec(DyeColor.PACKET_CODEC).build()
         );
+        ACTIVATOR_COMPONENT = register(
+                Identifier.of(PaladinFurnitureMod.MOD_ID, "activator"),
+                ComponentType.<List<BlockPos>>builder()
+                        .codec(BlockPos.CODEC.listOf())
+                        .packetCodec(BlockPos.PACKET_CODEC.collect(PacketCodecs.toList()))
+                        .build()
+        );
     }
 
     @ExpectPlatform
@@ -30,4 +40,7 @@ public class PFMComponents {
     public static ComponentType<Identifier> VARIANT_COMPONENT;
 
     public static ComponentType<DyeColor> COLOR_COMPONENT;
+
+    public static ComponentType<List<BlockPos>> ACTIVATOR_COMPONENT;
+
 }

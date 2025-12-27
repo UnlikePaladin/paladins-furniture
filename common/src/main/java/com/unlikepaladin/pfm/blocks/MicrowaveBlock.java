@@ -82,7 +82,7 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
     }
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
             openScreen(player, state, world, pos);
             player.incrementStat(Statistics.MICROWAVE_USED);
             PiglinBrain.onGuardedBlockInteracted((ServerWorld) world,player, true);
@@ -139,7 +139,7 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
 
     @Nullable
     protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends MicrowaveBlockEntity> expectedType) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
             ServerRecipeManager.MatchGetter<SingleStackRecipeInput, SmokingRecipe> cachedcheck = ServerRecipeManager.createCachedMatchGetter(
                     RecipeType.SMOKING
             );

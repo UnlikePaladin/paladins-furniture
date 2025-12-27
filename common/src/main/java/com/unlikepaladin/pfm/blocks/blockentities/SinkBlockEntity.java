@@ -60,7 +60,7 @@ public class SinkBlockEntity extends BlockEntity {
                 blockEntity.setSinkTimer(0);
                 blockEntity.setFilling(false);
             } else {
-                if (world.isClient) {
+                if (world.isClient()) {
                     KitchenSinkBlock.spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
                 }
                 blockEntity.sinkTimer++;

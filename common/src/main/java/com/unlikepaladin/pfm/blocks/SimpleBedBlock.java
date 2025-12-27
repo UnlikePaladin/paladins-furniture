@@ -71,7 +71,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.CONSUME;
         }
         if (state.get(PART) != BedPart.HEAD && !((state = world.getBlockState(pos = pos.offset(state.get(FACING)))).getBlock() instanceof SimpleBedBlock)) {
@@ -125,7 +125,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
         BlockPos blockPos;
         BlockState blockState;
         BedPart bedPart;
-        if (!world.isClient && player.isCreative() && (bedPart = state.get(PART)) == BedPart.FOOT && (blockState = world.getBlockState(blockPos = pos.offset(getDirectionTowardsOtherPart(bedPart, state.get(FACING))))).isOf(this) && blockState.get(PART) == BedPart.HEAD) {
+        if (!world.isClient() && player.isCreative() && (bedPart = state.get(PART)) == BedPart.FOOT && (blockState = world.getBlockState(blockPos = pos.offset(getDirectionTowardsOtherPart(bedPart, state.get(FACING))))).isOf(this) && blockState.get(PART) == BedPart.HEAD) {
             world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.SKIP_DROPS);
             world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
         }

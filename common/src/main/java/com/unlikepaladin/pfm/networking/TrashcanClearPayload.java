@@ -41,8 +41,8 @@ public record TrashcanClearPayload(BlockPos pos) implements CustomPayload {
 
     public void handle(MinecraftServer server, ServerPlayerEntity player) {
         server.submitAndJoin(() -> {
-            if(Objects.nonNull(player.getWorld().getBlockEntity(pos))){
-                World world = player.getWorld();
+            if(Objects.nonNull(player.getEntityWorld().getBlockEntity(pos))){
+                World world = player.getEntityWorld();
                 if (world.isChunkLoaded(pos)) {
                     TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(pos);
                     trashcanBlockEntity.clear();

@@ -13,6 +13,7 @@ import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
@@ -110,8 +111,8 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.text.setStyle(Style.EMPTY.withBold(true)), (PFMOptionListWidget.this.client.currentScreen.width / 2 - this.textWidth / 2), y + entryHeight - (PFMOptionListWidget.this).client.textRenderer.fontHeight - 1, PFMFileUtil.adjustColor(0xFFFFFF), true);
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.text.setStyle(Style.EMPTY.withBold(true)), (PFMOptionListWidget.this.client.currentScreen.width / 2 - this.textWidth / 2), getY() + itemHeight - (PFMOptionListWidget.this).client.textRenderer.fontHeight - 1, PFMFileUtil.adjustColor(0xFFFFFF), true);
         }
 
         public boolean changeFocus(boolean lookForwards) {
@@ -175,14 +176,14 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF), false);
-            this.resetButton.setX(x + 190);
-            this.resetButton.setY(y);
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.optionName, (getX() + 90 - PFMOptionListWidget.this.maxKeyNameLength), (getY() + itemHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF), false);
+            this.resetButton.setX(getX() + 190);
+            this.resetButton.setY(getY());
             this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption)) : !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption));;
             this.resetButton.render(context, mouseX, mouseY, tickDelta);
-            this.valueButton.setX(x + 105);
-            this.valueButton.setY(y);
+            this.valueButton.setX(getX() + 105);
+            this.valueButton.setY(getY());
             this.valueButton.setMessage(PFMOptionListWidget.this.newConfigValues.get(configOption) ? ScreenTexts.YES : ScreenTexts.NO);
             this.valueButton.active = this.configOption.getSide() != Side.SERVER || !PFMConfigScreen.isOnServer;
             this.valueButton.render(context, mouseX, mouseY, tickDelta);
@@ -199,16 +200,16 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            if (this.valueButton.mouseClicked(mouseX, mouseY, button)) {
+        public boolean mouseClicked(Click click, boolean doubled) {
+            if (this.valueButton.mouseClicked(click, doubled)) {
                 return true;
             }
-            return this.resetButton.mouseClicked(mouseX, mouseY, button);
+            return this.resetButton.mouseClicked(click, doubled);
         }
 
         @Override
-        public boolean mouseReleased(double mouseX, double mouseY, int button) {
-            return this.valueButton.mouseReleased(mouseX, mouseY, button) || this.resetButton.mouseReleased(mouseX, mouseY, button);
+        public boolean mouseReleased(Click click) {
+            return this.valueButton.mouseReleased(click) || this.resetButton.mouseReleased(click);
         }
     }
 
@@ -238,11 +239,11 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF), false);
-            this.button.setX(x+105);
-            this.button.setY(y);
-            this.button.render(context, mouseX, mouseY, tickDelta);
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.optionName, (getX() + 90 - PFMOptionListWidget.this.maxKeyNameLength), (getY() + itemHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), PFMFileUtil.adjustColor(0xFFFFFF), false);
+            this.button.setX(getX()+105);
+            this.button.setY(getY());
+            this.button.render(context, mouseX, mouseY, deltaTicks);
         }
 
         @Override
@@ -256,13 +257,13 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         }
 
         @Override
-        public boolean mouseClicked(double mouseX, double mouseY, int button) {
-            return this.button.mouseClicked(mouseX, mouseY, button);
+        public boolean mouseClicked(Click click, boolean doubled) {
+            return this.button.mouseClicked(click, doubled);
         }
 
         @Override
-        public boolean mouseReleased(double mouseX, double mouseY, int button) {
-            return this.button.mouseReleased(mouseX, mouseY, button);
+        public boolean mouseReleased(Click click) {
+            return this.button.mouseReleased(click);
         }
     }
 

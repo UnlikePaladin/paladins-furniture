@@ -106,7 +106,7 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
     public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof LampBlockEntity lampBlockEntity) {
-            if (!world.isClient && !player.isCreative()) {
+            if (!world.isClient() && !player.isCreative()) {
                 ItemStack itemStack = new ItemStack(PaladinFurnitureModBlocksItems.BASIC_LAMP);
                 itemStack.set(PFMComponents.VARIANT_COMPONENT, lampBlockEntity.getVariant().identifier);
                 itemStack.set(PFMComponents.COLOR_COMPONENT, lampBlockEntity.getPFMColor());
@@ -148,7 +148,7 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.SUCCESS;
         }
 

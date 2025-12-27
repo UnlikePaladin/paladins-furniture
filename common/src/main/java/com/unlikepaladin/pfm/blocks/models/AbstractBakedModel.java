@@ -18,6 +18,7 @@ import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
+import net.minecraft.util.Atlases;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Pair;
 import net.minecraft.util.math.random.Random;
@@ -75,7 +76,7 @@ public abstract class AbstractBakedModel implements BlockStateModel {
             VariantBase<?> variant = WoodVariantRegistry.OAK;
             SpriteIdentifier mainTexture = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(variant.getBaseBlock()));
             SpriteIdentifier secondTexture = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(variant.getSecondaryBlock()));
-            return List.of(mainTexture.getSprite(), secondTexture.getSprite());
+            return List.of(ModelHelper.getSprite(mainTexture), ModelHelper.getSprite(secondTexture));
         }
         return spriteList;
     }
@@ -136,30 +137,30 @@ public abstract class AbstractBakedModel implements BlockStateModel {
             DyeColor color = ModelHelper.getColor(Registries.BLOCK.getId(state.getBlock()));
             SpriteIdentifier mainTexture = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PLANKS));
             SpriteIdentifier spriteIdentifier = TexturedRenderLayers.getBedTextureId(color);
-            list.add(mainTexture.getSprite());
-            list.add(spriteIdentifier.getSprite());
+            list.add(ModelHelper.getSprite(mainTexture));
+            list.add(ModelHelper.getSprite(spriteIdentifier));
         }  else if (state.getBlock() instanceof LogStoolBlock) {
             SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.LOG));
             SpriteIdentifier secondTexture = stripped ? new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG_TOP)) : new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.LOG_TOP));
-            list.add(mainTexture.getSprite());
-            list.add(secondTexture.getSprite());
+            list.add(ModelHelper.getSprite(mainTexture));
+            list.add(ModelHelper.getSprite(secondTexture));
         } else if (!state.getBlock().getTranslationKey().contains("_raw_")) {
             SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
             SpriteIdentifier secondTexture = stripped ? new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY)) : new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.SECONDARY));
-            list.add(mainTexture.getSprite());
-            list.add(secondTexture.getSprite());
+            list.add(ModelHelper.getSprite(mainTexture));
+            list.add(ModelHelper.getSprite(secondTexture));
         } else {
             SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.SECONDARY));
-            list.add(mainTexture.getSprite());
-            list.add(mainTexture.getSprite());
+            list.add(ModelHelper.getSprite(mainTexture));
+            list.add(ModelHelper.getSprite(mainTexture));
         }
         boolean isKitchen = state.getBlock().getTranslationKey().contains("kitchen_");
         if (isKitchen && !(variant instanceof WoodVariant)) {
             Pair<Block, Block> counterMaterials = PFMRecipeProvider.getCounterMaterials(variant);
             SpriteIdentifier mainTexture = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(counterMaterials.getLeft()));
             SpriteIdentifier secondTexture = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(counterMaterials.getRight()));
-            list.set(0, mainTexture.getSprite());
-            list.set(1, secondTexture.getSprite());
+            list.set(0, ModelHelper.getSprite(mainTexture));
+            list.set(1, ModelHelper.getSprite(secondTexture));
         }
         spriteList.put(state.getBlock(), list);
         return list;

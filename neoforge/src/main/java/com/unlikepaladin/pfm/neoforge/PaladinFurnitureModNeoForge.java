@@ -16,6 +16,7 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.SharedConstants;
 import net.minecraft.resource.metadata.PackResourceMetadata;
 import net.minecraft.text.Text;
+import net.minecraft.util.dynamic.Range;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
@@ -53,7 +54,7 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
         modEventBus.addListener(EventPriority.LOW, ColorRegistryNeoForge::registerBlockColors);
         modEventBus.addListener(BlockStateModelRegistryNeoForge::registerBlockStateModels);
         LateBlockRegistryNeoForge.addDynamicBlockRegistration(modEventBus);
-        PaladinFurnitureMod.isClient = FMLEnvironment.dist == Dist.CLIENT;
+        PaladinFurnitureMod.isClient = FMLEnvironment.getDist() == Dist.CLIENT;
         NeoForge.EVENT_BUS.addListener(NetworkRegistryNeoForge::onServerJoin);
         modEventBus.addListener(ItemGroupRegistryNeoForge::registerItemGroups);
         modEventBus.addListener(ItemGroupRegistryNeoForge::addToVanillaItemGroups);
@@ -62,10 +63,8 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
 
     @SubscribeEvent
     public static void generateResources(AddPackFindersEvent event) {
-        int data = SharedConstants.getGameVersion().packVersion(ResourceType.SERVER_DATA);
-        int resource = SharedConstants.getGameVersion().packVersion(ResourceType.CLIENT_RESOURCES);
         if (event.getPackType() == ResourceType.CLIENT_RESOURCES) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().packVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), new Range<>(SharedConstants.getGameVersion().packVersion(ResourceType.CLIENT_RESOURCES)));
             ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
                 @Override
                 public ResourcePack open(ResourcePackInfo info) {
@@ -84,7 +83,7 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
                 profileAdder.accept(ResourcePackProfile.create(new ResourcePackInfo("pfm-asset-resources", Text.literal("PFM Assets"), ResourcePackSource.NONE, Optional.of(new VersionedIdentifier(PaladinFurnitureMod.MOD_ID, "pfm_assets", Version.getCurrentVersion()))),  packFactory, ResourceType.CLIENT_RESOURCES, new ResourcePackPosition(true, ResourcePackProfile.InsertionPosition.BOTTOM, false)));
             });
         } else if (event.getPackType() == ResourceType.SERVER_DATA) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().packVersion(ResourceType.SERVER_DATA), Optional.empty());
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), new Range<>(SharedConstants.getGameVersion().packVersion(ResourceType.SERVER_DATA)));
             ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
                 @Override
                 public ResourcePack open(ResourcePackInfo info) {

@@ -16,6 +16,7 @@ import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
+import net.minecraft.util.Atlases;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -37,11 +38,11 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
         if (variant instanceof WoodVariant) {
             Identifier finalId = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
             SpriteIdentifier mainTexture = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, finalId);
-            if (!((PFMSpriteContentExtensions)mainTexture.getSprite().getContents()).pfm$isInitialized()) {
+            if (!((PFMSpriteContentExtensions)(ModelHelper.getSprite(mainTexture)).getContents()).pfm$isInitialized()) {
                 SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
-                ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
+                ModelHelper.generateTexture(ModelHelper.getSprite(herringboneTextureId), ModelHelper.getSprite(baseTextureSpriteId), 7, finalId);
             }
-            return mainTexture.getSprite();
+            return ModelHelper.getSprite(mainTexture);
         }
         return super.particleSprite();
     }
@@ -62,11 +63,11 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
     private void generateTextureIfNeeded(QuadEmitter context, VariantBase<?> variant) {
         Identifier finalId = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
         SpriteIdentifier mainTexture = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, finalId);
-        if (!((PFMSpriteContentExtensions)mainTexture.getSprite().getContents()).pfm$isInitialized()) {
+        if (!((PFMSpriteContentExtensions)(ModelHelper.getSprite(mainTexture)).getContents()).pfm$isInitialized()) {
             SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
-            ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
+            ModelHelper.generateTexture(ModelHelper.getSprite(herringboneTextureId), ModelHelper.getSprite(baseTextureSpriteId), 7, finalId);
         }
-        pushTextureTransform(context, mainTexture.getSprite());
+        pushTextureTransform(context, ModelHelper.getSprite(mainTexture));
     }
 
     @Override

@@ -13,6 +13,6 @@ public class ParticleProviderRegistryNeoForge {
 
     @SubscribeEvent
     public static void registerParticleFactory(RegisterParticleProvidersEvent event) {
-        event.registerSprite(ParticleIDs.WATER_DROP, BlockLeakParticle::createFallingWater);
+        event.registerSpriteSet(ParticleIDs.WATER_DROP, BlockLeakParticle.FallingWaterFactory::new);
     }
 }

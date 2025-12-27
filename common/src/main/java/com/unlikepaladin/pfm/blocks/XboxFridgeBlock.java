@@ -51,7 +51,7 @@ public class XboxFridgeBlock extends FridgeBlock
     }
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
@@ -69,7 +69,7 @@ public class XboxFridgeBlock extends FridgeBlock
 
     @Override
     public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient && player.isCreative()) {
+        if (!world.isClient() && player.isCreative()) {
             this.onBreakInCreative(world, pos, state, player);
         }
         return super.onBreak(world, pos, state, player);

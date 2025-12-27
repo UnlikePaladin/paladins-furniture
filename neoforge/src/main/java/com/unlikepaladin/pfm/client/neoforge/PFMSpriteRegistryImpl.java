@@ -30,7 +30,7 @@ public class PFMSpriteRegistryImpl {
                 Identifier templateId = info.getId();
                 Identifier variantSpriteId = Identifier.of(templateId.getNamespace(), templateId.getPath().replace("template", variantBase.getPath()));
                 SpriteContents variantInfo = new SpriteContents(variantSpriteId, new SpriteDimensions(info.getWidth(), info.getHeight()),
-                        image, ResourceMetadata.NONE);
+                        image);
                 ((PFMSpriteContentExtensions)variantInfo).pfm$setInitialized(false);
                 infos.add(new Pair<>(variantSpriteId, variantInfo));
             }

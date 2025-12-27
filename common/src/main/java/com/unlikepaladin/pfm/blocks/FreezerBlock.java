@@ -66,7 +66,7 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-         if (!world.isClient) {
+         if (!world.isClient()) {
                 NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
                 if (screenHandlerFactory != null) {
                     player.incrementStat(Statistics.FREEZER_OPENED);
@@ -151,7 +151,7 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient && player.isCreative()) {
+        if (!world.isClient() && player.isCreative()) {
             this.onBreakInCreative(world, pos,state, player);
         }
         return super.onBreak(world, pos, state, player);
@@ -190,7 +190,7 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
 
     @Nullable
     protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends FreezerBlockEntity> expectedType) {
-        return world.isClient ? null : validateTicker(givenType, expectedType, FreezerBlockEntity::tick);
+        return world.isClient() ? null : validateTicker(givenType, expectedType, FreezerBlockEntity::tick);
     }
 
     @Override

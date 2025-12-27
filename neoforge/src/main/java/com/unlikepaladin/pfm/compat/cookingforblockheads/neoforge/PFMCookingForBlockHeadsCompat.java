@@ -48,7 +48,7 @@ public class PFMCookingForBlockHeadsCompat {
     public static TriFunc<Integer, PlayerInventory, StoveScreenHandler.StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
         return (integer, playerInventory, data) -> {
             BlockPos pos = data.pos();
-            BlockEntity blockEntity = playerInventory.player.getWorld().getBlockEntity(pos);
+            BlockEntity blockEntity = playerInventory.player.getEntityWorld().getBlockEntity(pos);
             return new StoveScreenHandlerBalm(integer, playerInventory, (StoveBlockEntityBalm)blockEntity);
         };
     }
@@ -59,7 +59,7 @@ public class PFMCookingForBlockHeadsCompat {
 
     public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
         StoveBlockEntityBalm stove = (StoveBlockEntityBalm)world.getBlockEntity(pos);
-        if (!world.isClient) {
+        if (!world.isClient()) {
             Balm.getNetworking().openMenu(player, stove);
         }
     }
@@ -69,7 +69,7 @@ public class PFMCookingForBlockHeadsCompat {
     }
 
     public static <T extends BlockEntity> BlockEntityTicker<T> getStoveTicker(World world, BlockEntityType<T> type) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return StoveBlockImpl.checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityBalm::clientTick);
         } else {
             return StoveBlockImpl.checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityBalm::serverTick);
@@ -133,7 +133,7 @@ public class PFMCookingForBlockHeadsCompat {
                     return ActionResult.SUCCESS;
                 }
             }
-            if (!level.isClient) {
+            if (!level.isClient()) {
                 Balm.getNetworking().openMenu(player, oven);
             }
             return ActionResult.SUCCESS;

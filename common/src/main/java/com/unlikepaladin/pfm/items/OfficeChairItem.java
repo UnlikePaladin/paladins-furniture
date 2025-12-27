@@ -87,7 +87,7 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
                 BlockPos pos = new BlockPos((int) hitResult.getPos().x, (int) hitResult.getPos().y, (int) hitResult.getPos().z);
                 world.playSound(null, pos, SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
 
-                if (!world.isClient) {
+                if (!world.isClient()) {
                     world.spawnEntity(chair);
                     world.emitGameEvent(user, GameEvent.ENTITY_PLACE, pos);
                     if (!user.getAbilities().creativeMode) {

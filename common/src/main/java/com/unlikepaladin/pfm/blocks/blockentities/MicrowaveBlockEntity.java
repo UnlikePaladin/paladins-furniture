@@ -13,6 +13,7 @@ import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.block.entity.ViewerCountManager;
+import net.minecraft.entity.ContainerUser;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -83,7 +84,7 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
         }
 
         @Override
-        protected boolean isPlayerViewing(PlayerEntity player) {
+        public boolean isPlayerViewing(PlayerEntity player) {
             if (player.currentScreenHandler instanceof MicrowaveScreenHandler) {
                 Inventory inventory = ((MicrowaveScreenHandler) player.currentScreenHandler).getInventory();
                 return inventory == MicrowaveBlockEntity.this;
@@ -148,16 +149,16 @@ public class MicrowaveBlockEntity extends LockableContainerBlockEntity implement
     private final RecipeType<? extends AbstractCookingRecipe> recipeType;
 
     @Override
-    public void onOpen(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
-            this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+    public void onOpen(ContainerUser player) {
+        if (!this.removed && !player.asLivingEntity().isSpectator()) {
+            this.stateManager.openContainer(player.asLivingEntity(), this.getWorld(), this.getPos(), this.getCachedState(), player.getContainerInteractionRange());
         }
     }
 
     @Override
-    public void onClose(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
-            this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+    public void onClose(ContainerUser player) {
+        if (!this.removed && !player.asLivingEntity().isSpectator()) {
+            this.stateManager.closeContainer(player.asLivingEntity(), this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
 

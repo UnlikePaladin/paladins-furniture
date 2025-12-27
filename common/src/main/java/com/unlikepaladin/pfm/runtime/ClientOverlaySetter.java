@@ -22,12 +22,9 @@ public class ClientOverlaySetter {
     public static void updateScreen() {
         MinecraftClient client = MinecraftClient.getInstance();
 
-        Runnable runnable;
-        while((runnable = ((PFMMinecraftClientAcccessor)client).getRenderTasks().poll()) != null) {
-            runnable.run();
-        }
-
         ((PFMClientExtension) MinecraftClient.getInstance()).invoke$runTasks();
+
+        RenderSystem.executePendingTasks();
 
         Framebuffer framebuffer = client.getFramebuffer();
         RenderSystem.getDevice().createCommandEncoder().clearColorAndDepthTextures(framebuffer.getColorAttachment(), 0, framebuffer.getDepthAttachment(), 1.0);

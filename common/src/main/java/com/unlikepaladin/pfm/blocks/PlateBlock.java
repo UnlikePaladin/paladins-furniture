@@ -70,7 +70,7 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
         PlateBlockEntity plateBlockEntity;
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof PlateBlockEntity && (itemStack.get(DataComponentTypes.FOOD) != null)) {
-            if (!world.isClient && ((PlateBlockEntity)blockEntity).addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack)) {
+            if (!world.isClient() && ((PlateBlockEntity)blockEntity).addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack)) {
                 player.incrementStat(Statistics.PLATE_USED);
                 return ActionResult.SUCCESS;
             }
@@ -84,7 +84,7 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
         if (player.isSneaking() && blockEntity instanceof PlateBlockEntity) {
             plateBlockEntity = (PlateBlockEntity)blockEntity;
             if (!plateBlockEntity.getItemInPlate().isEmpty()) {
-                if (!world.isClient) {
+                if (!world.isClient()) {
                     ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, plateBlockEntity.removeItem());
                     world.spawnEntity(itemEntity);
                     player.incrementStat(Statistics.PLATE_USED);

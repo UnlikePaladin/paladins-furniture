@@ -42,7 +42,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final KitchenRangeHoodBlock IRON_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque().registryKey(LateBlockRegistry.getBlockRegistryKey("iron_oven_range_hood")));
     public static final MicrowaveBlock IRON_MICROWAVE = new MicrowaveBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).registryKey(LateBlockRegistry.getBlockRegistryKey("iron_microwave")));
     public static final TrashcanBlock TRASHCAN = new TrashcanBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).registryKey(LateBlockRegistry.getBlockRegistryKey("trashcan")));
-    public static final InnerTrashcanBlock MESH_TRASHCAN = new InnerTrashcanBlock(AbstractBlock.Settings.copy(Blocks.CHAIN).nonOpaque().registryKey(LateBlockRegistry.getBlockRegistryKey("mesh_trashcan")));
+    public static final InnerTrashcanBlock MESH_TRASHCAN = new InnerTrashcanBlock(AbstractBlock.Settings.copy(Blocks.IRON_CHAIN).nonOpaque().registryKey(LateBlockRegistry.getBlockRegistryKey("mesh_trashcan")));
 
     public static final Item DYE_KIT_YELLOW = new DyeKit(new Item.Settings().maxCount(16).registryKey(LateBlockRegistry.getItemRegistryKey("dye_kit_yellow")), DyeColor.YELLOW);
     public static final Item DYE_KIT_BLUE = new DyeKit(new Item.Settings().maxCount(16).registryKey(LateBlockRegistry.getItemRegistryKey("dye_kit_blue")), DyeColor.BLUE);

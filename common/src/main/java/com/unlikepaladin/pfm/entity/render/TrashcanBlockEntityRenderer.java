@@ -3,37 +3,50 @@ package com.unlikepaladin.pfm.entity.render;
 import com.unlikepaladin.pfm.blocks.InnerTrashcanBlock;
 import com.unlikepaladin.pfm.blocks.TrashcanBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.item.ItemModelManager;
+import net.minecraft.client.render.OverlayTexture;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.WorldRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.render.block.entity.state.BlockEntityRenderState;
+import net.minecraft.client.render.command.ModelCommandRenderer;
+import net.minecraft.client.render.command.OrderedRenderCommandQueue;
+import net.minecraft.client.render.item.ItemRenderState;
 import net.minecraft.client.render.item.ItemRenderer;
+import net.minecraft.client.render.state.CameraRenderState;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
 import net.minecraft.util.math.Vec3d;
+import org.jetbrains.annotations.Nullable;
 
-public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implements BlockEntityRenderer<T> {
-    public ItemStack itemStack;
-    private final ItemRenderer itemRenderer;
+import java.util.ArrayList;
+import java.util.List;
+
+public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implements BlockEntityRenderer<T, TrashcanBlockEntityRenderer.TrashcanBlockEntityRenderState> {
+
+    private final ItemModelManager itemModelManager;
     public TrashcanBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
-        this.itemRenderer = ctx.getItemRenderer();
+        this.itemModelManager = ctx.itemModelManager();
     }
 
     @Override
-    public void render(T trashcanBlockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int light, int overlay, Vec3d cameraPos) {
-        if (!(trashcanBlockEntity.getCachedState().getBlock() instanceof TrashcanBlock) && trashcanBlockEntity instanceof TrashcanBlockEntity) {
+    public void render(TrashcanBlockEntityRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
+
+        if (!(state.blockState.getBlock() instanceof TrashcanBlock)) {
             for (int i = 0; i < 9; i++)
             {
-                Direction direction = trashcanBlockEntity.getCachedState().get(InnerTrashcanBlock.FACING);
+                Direction direction = state.blockState.get(InnerTrashcanBlock.FACING);
                 matrices.push();
                 Direction direction2 = Direction.fromHorizontalQuarterTurns((direction.getHorizontalQuarterTurns()) % 4);
                 float g = -direction2.getPositiveHorizontalDegrees();
-                itemStack = trashcanBlockEntity.getStack(i);
                 switch (i) {
                     case 0: {
                         matrices.translate(0.5, 0.08, 0.3);
@@ -72,18 +85,45 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implemen
                         break;
                     }
                 }
-                if (!(itemStack.getItem() instanceof BlockItem)) {
+                Item item = state.items.get(i);
+                if (!(item instanceof BlockItem)) {
                     matrices.translate(0.0, 0.0, 0.1);
-                } else if (Registries.ITEM.getId(itemStack.getItem()).getNamespace().equals("pfm")) {
+                } else if (Registries.ITEM.getId(item).getNamespace().equals("pfm")) {
                     matrices.translate(0.0, 0.0, 0.15);
                 }
                 int rot = 90;
                 matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rot));
-                int lightAbove = WorldRenderer.getLightmapCoordinates(trashcanBlockEntity.getWorld(), trashcanBlockEntity.getPos().up());
                 matrices.scale(0.8f, 0.8f, 0.8f);
-                this.itemRenderer.renderItem(itemStack, ItemDisplayContext.GROUND, lightAbove, overlay, matrices, vertexConsumerProvider, trashcanBlockEntity.getWorld(), (int) (trashcanBlockEntity.getPos().asLong()+ i));
+                state.itemRenderStates.get(i).render(matrices, queue, state.lightAbove, OverlayTexture.DEFAULT_UV, 0);
                 matrices.pop();
             }
         }
+    }
+
+    @Override
+    public TrashcanBlockEntityRenderState createRenderState() {
+        return new TrashcanBlockEntityRenderState();
+    }
+
+    @Override
+    public void updateRenderState(T blockEntity, TrashcanBlockEntityRenderState state, float tickProgress, Vec3d cameraPos, @Nullable ModelCommandRenderer.CrumblingOverlayCommand crumblingOverlay) {
+        BlockEntityRenderer.super.updateRenderState(blockEntity, state, tickProgress, cameraPos, crumblingOverlay);
+        state.blockState = blockEntity.getCachedState();
+        state.itemRenderStates = new ArrayList<>();
+        state.items = new ArrayList<>();
+        for (int i = 0; i < 9; i++) {
+            ItemRenderState itemState = new ItemRenderState();
+            itemModelManager.clearAndUpdate(itemState, blockEntity.getStack(i), ItemDisplayContext.GROUND, blockEntity.getWorld(), null, 0);
+            state.itemRenderStates.add(itemState);
+            state.items.add(blockEntity.getStack(i).getItem());
+        }
+        state.lightAbove = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up());
+    }
+
+    public static class TrashcanBlockEntityRenderState extends BlockEntityRenderState {
+        public BlockState blockState;
+        public List<ItemRenderState> itemRenderStates;
+        public List<Item> items;
+        public int lightAbove;
     }
 }

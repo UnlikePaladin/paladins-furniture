@@ -166,13 +166,13 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
             return ActionResult.PASS;
         }
 
-        if (getWorld().isClient) {
+        if (getEntityWorld().isClient()) {
             return ActionResult.CONSUME;
         }
 
 
         if (!this.hasPassengers() && !player.isSneaking() && hand == Hand.MAIN_HAND) {
-            player.startRiding(this, true);
+            player.startRiding(this, true, true);
             return ActionResult.SUCCESS;
         }
         return super.interactAt(player, hitPos, hand);
@@ -202,10 +202,10 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
                 Box box = passenger.getBoundingBox(entityPose);
                 for (int[] dismountingOffset : dismountingOffsets) {
                     dismountPos.set(chairPos.getX() + dismountingOffset[0], chairPos.getY() + 0.3, chairPos.getZ() + dismountingOffset[1]);
-                    double dismountHeight = this.getWorld().getDismountHeight(dismountPos);
+                    double dismountHeight = this.getEntityWorld().getDismountHeight(dismountPos);
                     if (Dismounting.canDismountInBlock(dismountHeight)) {
                         Vec3d vec3d = Vec3d.ofCenter(dismountPos, dismountHeight);
-                        if (Dismounting.canPlaceEntityAt(this.getWorld(), passenger, box.offset(vec3d))) {
+                        if (Dismounting.canPlaceEntityAt(this.getEntityWorld(), passenger, box.offset(vec3d))) {
                             passenger.setPose(entityPose);
                             return vec3d;
                         }
@@ -261,8 +261,8 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
             ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultStack();
             stack.set(PFMComponents.COLOR_COMPONENT, this.getPFMColor());
 
-            ItemEntity itemEntity = new ItemEntity(getWorld(), this.getX(), this.getY(), this.getZ(), stack);
-            this.getWorld().spawnEntity(itemEntity);
+            ItemEntity itemEntity = new ItemEntity(getEntityWorld(), this.getX(), this.getY(), this.getZ(), stack);
+            this.getEntityWorld().spawnEntity(itemEntity);
         }
     }
 

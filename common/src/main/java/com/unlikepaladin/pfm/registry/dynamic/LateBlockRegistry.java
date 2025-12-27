@@ -33,6 +33,7 @@ import net.minecraft.util.Pair;
 import net.minecraft.world.biome.Biome;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.ArrayList;
 import java.util.function.Supplier;
 
 public class LateBlockRegistry {
@@ -582,9 +583,7 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.furnitureEntryMap.put(SimpleLightBlock.class, new FurnitureEntry<SimpleLightBlock>() {{
             this.addBlock( LateBlockRegistry.registerLateBlock( "simple_light",() -> PaladinFurnitureModBlocksItems.SIMPLE_LIGHT, true, PaladinFurnitureMod.FURNITURE_GROUP));
         }});
-        NbtCompound compound = new NbtCompound();
-        compound.putString("id", "pfm:light_switch_block_entity");
-        PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().component(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(compound)).registryKey(getItemRegistryKey("light_switch")).useBlockPrefixedTranslationKey());
+        PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().component(PFMComponents.ACTIVATOR_COMPONENT, new ArrayList<>()).registryKey(getItemRegistryKey("light_switch")).useBlockPrefixedTranslationKey());
         PaladinFurnitureMod.furnitureEntryMap.put(LightSwitchBlock.class, new FurnitureEntry<LightSwitchBlock>() {{
             this.addBlock( LateBlockRegistry.registerLateBlock( "light_switch",() -> PaladinFurnitureModBlocksItems.LIGHT_SWITCH, false, PaladinFurnitureMod.FURNITURE_GROUP));
             PaladinFurnitureModBlocksItems.BLOCKS.add(PaladinFurnitureModBlocksItems.LIGHT_SWITCH);
@@ -605,9 +604,7 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.furnitureEntryMap.put(BasicShowerHeadBlock.class, new FurnitureEntry<BasicShowerHeadBlock>() {{
             this.addBlock( LateBlockRegistry.registerLateBlock( "basic_shower_head",() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD, true, PaladinFurnitureMod.FURNITURE_GROUP));
         }});
-        compound = new NbtCompound();
-        compound.putString("id", "pfm:shower_handle_block_entity");
-        PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM = new ShowerHandleItem(() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, new Item.Settings().component(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(compound)).registryKey(getItemRegistryKey("basic_shower_handle")).useBlockPrefixedTranslationKey());
+        PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM = new ShowerHandleItem(() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, new Item.Settings().component(PFMComponents.ACTIVATOR_COMPONENT, new ArrayList<>()).registryKey(getItemRegistryKey("basic_shower_handle")).useBlockPrefixedTranslationKey());
         PaladinFurnitureMod.furnitureEntryMap.put(BasicShowerHandleBlock.class, new FurnitureEntry<BasicShowerHandleBlock>() {{
             this.addBlock( LateBlockRegistry.registerLateBlock( "basic_shower_handle",() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, false, PaladinFurnitureMod.FURNITURE_GROUP));
             LateBlockRegistry.registerLateItem( "basic_shower_handle",() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM, PaladinFurnitureMod.FURNITURE_GROUP);

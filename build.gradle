@@ -1,6 +1,6 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.10-SNAPSHOT" apply false
+    id "dev.architectury.loom" version "1.13-SNAPSHOT" apply false
 }
 
 architectury {
@@ -23,6 +23,7 @@ subprojects {
             it.mappings(file("$rootProject.projectDir/mappings/mappings.tiny"))
             it.mappings("net.fabricmc:yarn:$rootProject.yarn_mappings:v2")
             it.mappings("dev.architectury:yarn-mappings-patch-neoforge:$rootProject.yarn_mappings_patch_neoforge_version")
+            it.mappings("dev.architectury:yarn-mappings-patch-forge:$rootProject.yarn_mappings_patch_forge_version")
         }
 
         implementation("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}")

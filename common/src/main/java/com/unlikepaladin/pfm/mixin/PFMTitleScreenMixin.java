@@ -50,7 +50,7 @@ public abstract class PFMTitleScreenMixin extends Screen {
 
         if (PFMFileUtil.getModLoader() == PFMFileUtil.ModLoader.FABRIC && PFMFileUtil.isModLoaded("sodium") && !PFMFileUtil.isModLoaded("indium")) {
             reason = "pfm.compat.failure.reason.indiumNotFound";
-            url = "https://modrinth.com/mod/indium/versions?g=" + SharedConstants.VERSION_NAME;
+            url = "https://modrinth.com/mod/indium/versions?g=" + SharedConstants.getGameVersion().name();
             if (!Version.compareVersions(PFMFileUtil.getVersion("sodium").get(), "0.6")) {
 
             MinecraftClient.getInstance().setScreen(new ConfirmScreen(

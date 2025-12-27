@@ -20,6 +20,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.HeldItemContext;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,7 +39,7 @@ public class BasicItemModelMixin {
     private List<TintSource> pfm$parentTints;
 
     @Inject(method = "update", at = @At(value = "HEAD", target = "Lnet/minecraft/client/render/item/ItemRenderState$LayerRenderState;initTints(I)[I"))
-    private void inject(ItemRenderState state, ItemStack stack, ItemModelManager resolver, ItemDisplayContext displayContext, ClientWorld world, LivingEntity user, int seed, CallbackInfo ci) {
+    private void inject(ItemRenderState state, ItemStack stack, ItemModelManager resolver, ItemDisplayContext displayContext, ClientWorld world, HeldItemContext heldItemContext, int seed, CallbackInfo ci) {
         if (ColorRegistry.itemColorProviders.containsKey(stack.getItem()) && pfm$parentTints == null) {
             Item item = ColorRegistry.itemColorProviders.get(stack.getItem()).asItem();
 
@@ -46,7 +47,7 @@ public class BasicItemModelMixin {
 
             ItemModel parentModel = MinecraftClient.getInstance().getBakedModelManager().getItemModel(parentModelId);
             pfm$parentStack = item.getDefaultStack();
-            this.pfm$parentTints = exploreForTints(parentModel, world, user, seed, displayContext);
+            this.pfm$parentTints = exploreForTints(parentModel, world, heldItemContext.getEntity(), seed, displayContext);
         }
         if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
             Item item = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT)).getLogBlock().asItem();
@@ -55,7 +56,7 @@ public class BasicItemModelMixin {
 
             ItemModel parentModel = MinecraftClient.getInstance().getBakedModelManager().getItemModel(parentModelId);
             pfm$parentStack = item.getDefaultStack();
-            this.pfm$parentTints = exploreForTints(parentModel, world, user, seed, displayContext);
+            this.pfm$parentTints = exploreForTints(parentModel, world, heldItemContext.getEntity(), seed, displayContext);
         }
     }
 

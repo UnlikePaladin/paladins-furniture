@@ -33,7 +33,7 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
     String outputClass();
 
     default List<CraftableFurnitureRecipe> getAvailableOutputs(FurnitureRecipe.FurnitureRecipeInput inventory, RegistryWrapper.WrapperLookup registryManager) {
-        return getInnerRecipes(inventory.playerInventory.player.getWorld().getEnabledFeatures());
+        return getInnerRecipes(inventory.playerInventory.player.getEntityWorld().getEnabledFeatures());
     }
 
     static int getSlotWithStackIgnoreNBT(PlayerInventory inventory, Item item) {

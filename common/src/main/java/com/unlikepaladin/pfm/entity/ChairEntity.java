@@ -39,21 +39,21 @@ public class ChairEntity extends MobEntity {
     public void tick() {
         this.setVelocity(Vec3d.ZERO);
         if (!this.hasPassengers()) {
-            if (!this.getWorld().isClient){
+            if (!this.getEntityWorld().isClient()){
                 this.discard();
             }
         }
-        else if (this.getWorld().getBlockState(this.getBlockPos()).getBlock() instanceof BasicToiletBlock && getWorld().isClient()){
-            if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed() && this.getWorld().getBlockState(this.getBlockPos()).get(BasicToiletBlock.TOILET_STATE) == ToiletState.CLEAN) {
+        else if (this.getEntityWorld().getBlockState(this.getBlockPos()).getBlock() instanceof BasicToiletBlock && getEntityWorld().isClient()){
+            if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed() && this.getEntityWorld().getBlockState(this.getBlockPos()).get(BasicToiletBlock.TOILET_STATE) == ToiletState.CLEAN) {
                 fart(this.getBlockPos());
             }
             super.tick();
         }
-        else if (this.getWorld().getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock || this.getWorld().getBlockState(this.getBlockPos()).getBlock() instanceof BasicBathtubBlock){
+        else if (this.getEntityWorld().getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock || this.getEntityWorld().getBlockState(this.getBlockPos()).getBlock() instanceof BasicBathtubBlock){
             super.tick();
         }
         else {
-            if (!this.getWorld().isClient) {
+            if (!this.getEntityWorld().isClient()) {
                 this.removeAllPassengers();
                 this.discard();
             }
@@ -83,8 +83,8 @@ public class ChairEntity extends MobEntity {
     @Override
     public Vec3d updatePassengerForDismount(LivingEntity passenger) {
         Direction direction = this.getMovementDirection();
-        if (this.getWorld().getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock) {
-            direction = this.getWorld().getBlockState(this.getBlockPos()).get(AbstractSittableBlock.FACING).getOpposite();
+        if (this.getEntityWorld().getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock) {
+            direction = this.getEntityWorld().getBlockState(this.getBlockPos()).get(AbstractSittableBlock.FACING).getOpposite();
         }
         if (direction.getAxis() != Direction.Axis.Y) {
             int[][] dismountingOffsets = Dismounting.getDismountOffsets(direction);
@@ -95,10 +95,10 @@ public class ChairEntity extends MobEntity {
                 Box box = passenger.getBoundingBox(entityPose);
                 for (int[] dismountingOffset : dismountingOffsets) {
                     dismountPos.set(chairPos.getX() + dismountingOffset[0], chairPos.getY() + 0.3, chairPos.getZ() + dismountingOffset[1]);
-                    double dismountHeight = this.getWorld().getDismountHeight(dismountPos);
+                    double dismountHeight = this.getEntityWorld().getDismountHeight(dismountPos);
                     if (Dismounting.canDismountInBlock(dismountHeight)) {
                         Vec3d vec3d = Vec3d.ofCenter(dismountPos, dismountHeight);
-                        if (Dismounting.canPlaceEntityAt(this.getWorld(), passenger, box.offset(vec3d))) {
+                        if (Dismounting.canPlaceEntityAt(this.getEntityWorld(), passenger, box.offset(vec3d))) {
                             passenger.setPose(entityPose);
                             return vec3d;
                         }

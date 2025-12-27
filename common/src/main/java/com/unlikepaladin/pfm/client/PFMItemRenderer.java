@@ -8,7 +8,6 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
 import net.minecraft.client.render.block.entity.BlockEntityRenderer;
 import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.BakedQuad;
@@ -26,7 +25,7 @@ import net.minecraft.util.math.Direction;
 import java.util.*;
 
 public class PFMItemRenderer {
-    private final PFMBedBlockEntity renderBed;
+    /*private final PFMBedBlockEntity renderBed;
     private final BlockEntityRenderDispatcher blockEntityRenderDispatcher;
     public PFMItemRenderer(BlockEntityRenderDispatcher blockEntityRenderDispatcher) {
         this.blockEntityRenderDispatcher = blockEntityRenderDispatcher;
@@ -61,5 +60,5 @@ public class PFMItemRenderer {
             blockEntityRenderer.render(renderBed, 1.0f, matrices, vertexConsumers, light, overlay, cameraPos);
             matrices.pop();
         }
-    }
+    }*/
 }

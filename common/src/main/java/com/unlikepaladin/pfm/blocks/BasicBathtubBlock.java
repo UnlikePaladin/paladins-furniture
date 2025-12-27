@@ -96,7 +96,7 @@ public class BasicBathtubBlock extends BedBlock {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
             world.setBlockState(pos.offset(state.get(FACING)), this.getDefaultState().with(FACING, state.get(FACING)).with(PART, BedPart.HEAD), 3);
         }
     }
@@ -116,7 +116,7 @@ public class BasicBathtubBlock extends BedBlock {
         BlockPos blockPos;
         BlockState blockState;
         BedPart bedPart;
-        if (!world.isClient && player.isCreative() && (bedPart = state.get(PART)) == BedPart.FOOT && (blockState = world.getBlockState(blockPos = pos.offset(BasicBathtubBlock.getDirectionTowardsOtherPart(bedPart, state.get(FACING))))).getBlock() == this && blockState.get(PART) == BedPart.HEAD) {
+        if (!world.isClient() && player.isCreative() && (bedPart = state.get(PART)) == BedPart.FOOT && (blockState = world.getBlockState(blockPos = pos.offset(BasicBathtubBlock.getDirectionTowardsOtherPart(bedPart, state.get(FACING))))).getBlock() == this && blockState.get(PART) == BedPart.HEAD) {
             world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), 35);
             world.syncWorldEvent(player, 2001, blockPos, Block.getRawIdFromState(blockState));
         }
@@ -124,16 +124,16 @@ public class BasicBathtubBlock extends BedBlock {
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler) {
+    protected void onEntityCollision(BlockState state, World world, BlockPos pos, Entity entity, EntityCollisionHandler handler, boolean bl) {
         int i = state.get(LEVEL_8);
-        if (!world.isClient && entity.isOnFire() && i != 0) {
+        if (!world.isClient() && entity.isOnFire() && i != 0) {
             entity.extinguish();
             this.onFireCollision(state, world, pos);
         }
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
+    protected int getComparatorOutput(BlockState state, World world, BlockPos pos, Direction direction) {
         return state.get(LEVEL_8);
     }
 
@@ -218,7 +218,7 @@ public class BasicBathtubBlock extends BedBlock {
     }
 
     public ActionResult sit(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (!world.isClient) {
+        if (!world.isClient()) {
             if (player.isSpectator() || player.isSneaking()) {
                 return ActionResult.PASS;
             }
@@ -246,7 +246,7 @@ public class BasicBathtubBlock extends BedBlock {
             entity.setHeadYaw(yaw);
             entity.setBodyYaw(yaw);
             if (world.spawnEntity(entity)) {
-                player.startRiding(entity, true);
+                player.startRiding(entity, true, true);
                 player.setHeadYaw(yaw);
                 entity.setBodyYaw(yaw);
                 entity.setHeadYaw(yaw);
@@ -331,7 +331,7 @@ public class BasicBathtubBlock extends BedBlock {
     }
     
     public static void spawnParticles(Direction facing, World world, BlockPos pos) {
-        if (world.isClient) {
+        if (world.isClient()) {
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
             if (facing == Direction.EAST) {
                 world.addParticleClient(ParticleIDs.WATER_DROP, true, true, x + 0.76, y + 0.8, z + 0.5, 0.0, 0.0, 0.0);

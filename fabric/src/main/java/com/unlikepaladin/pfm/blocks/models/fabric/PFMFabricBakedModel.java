@@ -15,6 +15,7 @@ import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
+import net.minecraft.util.Atlases;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.random.Random;
@@ -36,7 +37,7 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
 
     public void pushTextureTransform(QuadEmitter context, Sprite sprite) {
         context.pushTransform(quad -> {
-            Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getBakedModelManager().getAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)).find(quad, 0);
+            Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getAtlasManager().getAtlasTexture(Atlases.BLOCKS)).find(quad, 0);
             if (originalSprite.getContents().getId() != sprite.getContents().getId()) {
                 for (int index = 0; index < 4; index++) {
                     float frameU = originalSprite.getFrameFromU(quad.u(index));
@@ -48,12 +49,12 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
         });
     }
     public void pushTextureTransform(QuadEmitter context, List<Sprite> toReplace, List<Sprite> replacement) {
-        pushTextureTransform(context, toReplace, replacement, SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
+        pushTextureTransform(context, toReplace, replacement, Atlases.BLOCKS);
     }
     public void pushTextureTransform(QuadEmitter context, List<Sprite> toReplace, List<Sprite> replacement, Identifier atlasId) {
         context.pushTransform(quad -> {
             if (replacement != null && toReplace != null ){
-                Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getBakedModelManager().getAtlas(atlasId)).find(quad, 0);
+                Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getAtlasManager().getAtlasTexture(atlasId)).find(quad, 0);
                 Identifier keyId = originalSprite.getContents().getId();
                 int textureIndex = IntStream.range(0, toReplace.size())
                         .filter(i -> keyId.equals(toReplace.get(i).getContents().getId()))

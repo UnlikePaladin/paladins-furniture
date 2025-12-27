@@ -157,7 +157,7 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        if (world.isClient) {
+        if (world.isClient()) {
             if (state.get(LIT)) {
                 return BasicToiletBlock.checkType(type, BlockEntities.STOVE_TOP_BLOCK_ENTITY, StovetopBlockEntity::clientTick);
             }

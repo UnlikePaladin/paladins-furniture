@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.client.screens.overlay;
 
 import com.mojang.blaze3d.opengl.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.unlikepaladin.pfm.mixin.PFMGlStateManagerMixin;
 import org.joml.Vector4f;
 
 import java.io.Closeable;
@@ -249,7 +250,7 @@ public class GLText {
     }
 
     public Closeable gltBeginDraw() {
-        int currentTex = GlStateManager._getActiveTexture();
+        int currentTex = PFMGlStateManagerMixin.pfm$getActiveTexture();
         int[] activeProgram = new int[1];
         glGetIntegerv(GL_CURRENT_PROGRAM, activeProgram);
 

@@ -83,7 +83,7 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
                 slot.onQuickTransfer(slotStack, itemStack);
             } else if (slotIndex >= 20) {
                 ItemStack smeltingResult = this.tileEntity.getSmeltingResult(slotStack);
-                if (StoveBlockEntityBalm.isItemFuel(player.getWorld(), slotStack)) {
+                if (StoveBlockEntityBalm.isItemFuel(player.getEntityWorld(), slotStack)) {
                     if (!this.insertItem(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }

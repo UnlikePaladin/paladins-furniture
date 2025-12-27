@@ -17,8 +17,6 @@ public interface PFMMinecraftClientAcccessor {
     @Accessor("tracyFrameCapturer")
     TracyFrameCapturer getFrameCapturer();
 
-    @Accessor("renderTaskQueue")
-    Queue<Runnable> getRenderTasks();
 
     @Mutable
     @Accessor("inactivityFpsLimiter")

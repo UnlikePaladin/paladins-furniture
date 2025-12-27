@@ -28,7 +28,7 @@ public class FurnitureGuideBookImpl extends FurnitureGuideBook {
             PatchouliAPI.get().openBookGUI((ServerPlayerEntity) user, Identifier.of("pfm:guide_book"));
             return ActionResult.SUCCESS;
         }
-        else if (world.isClient && !ModList.get().isLoaded("patchouli"))
+        else if (world.isClient() && !ModList.get().isLoaded("patchouli"))
         {
             Text text = null;
             try {

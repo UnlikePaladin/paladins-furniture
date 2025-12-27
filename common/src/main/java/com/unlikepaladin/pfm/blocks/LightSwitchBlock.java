@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.LightSwitchBlockEntity;
+import com.unlikepaladin.pfm.items.PFMComponents;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.DataComponentTypes;
@@ -68,7 +69,7 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.SUCCESS;
         }
         BlockState blockState = this.togglePower(state, world, pos, false, false);
@@ -80,15 +81,10 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null) {
-            NbtCompound nbtCompound = itemStack.getOrDefault(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.DEFAULT).getNbt();
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (nbtCompound.contains("lights") && blockEntity instanceof LightSwitchBlockEntity) {
-                nbtCompound.remove("lights");
-                itemStack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbtCompound));
-            }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (itemStack.get(PFMComponents.ACTIVATOR_COMPONENT) != null && blockEntity instanceof LightSwitchBlockEntity) {
+            itemStack.remove(PFMComponents.ACTIVATOR_COMPONENT);
         }
-
     }
 
     @Override

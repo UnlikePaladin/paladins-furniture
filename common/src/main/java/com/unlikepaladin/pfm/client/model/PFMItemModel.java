@@ -36,6 +36,7 @@ import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.registry.Registries;
 import net.minecraft.util.DyeColor;
+import net.minecraft.util.HeldItemContext;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
 import org.jetbrains.annotations.Nullable;
@@ -62,7 +63,7 @@ public class PFMItemModel<T> implements ItemModel {
     }
 
     @Override
-    public void update(ItemRenderState state, ItemStack stack, ItemModelManager resolver, ItemDisplayContext displayContext, @Nullable ClientWorld world, @Nullable LivingEntity user, int seed) {
+    public void update(ItemRenderState state, ItemStack stack, ItemModelManager resolver, ItemDisplayContext displayContext, @Nullable ClientWorld world, @Nullable HeldItemContext heldItemContext, int seed) {
         state.addModelKey(this);
         BlockStateModel unwrapped = unwrapBlockStateModel(model.get());
         if (specialModelType != null) {
@@ -89,7 +90,7 @@ public class PFMItemModel<T> implements ItemModel {
             Identifier parentModelId = item.getDefaultStack().get(DataComponentTypes.ITEM_MODEL);
 
             ItemModel parentModel = MinecraftClient.getInstance().getBakedModelManager().getItemModel(parentModelId);
-            pfm$parentTints.addAll(exploreForTints(stack, parentModel, world, user, seed, displayContext));
+            pfm$parentTints.addAll(exploreForTints(stack, parentModel, world, heldItemContext, seed, displayContext));
         }
 
         List<TintSource> tintsToUse = pfm$parentTints.isEmpty() ? this.tints : pfm$parentTints;
@@ -109,7 +110,7 @@ public class PFMItemModel<T> implements ItemModel {
             if (index == 1 && stack.get(PFMComponents.COLOR_COMPONENT) != null) {
                 tintArray[index] = PFMFileUtil.adjustColor(stack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getMapColor().color);
             } else {
-                tintArray[index] = PFMFileUtil.adjustColor(tintsToUse.get(index).getTint(stack, world, user));
+                tintArray[index] = PFMFileUtil.adjustColor(tintsToUse.get(index).getTint(stack, world, heldItemContext != null ? heldItemContext.getEntity() : null));
             }
             state.addModelKey(tintArray[index]);
         }
@@ -139,39 +140,39 @@ public class PFMItemModel<T> implements ItemModel {
         }
     }
 
-    private List<TintSource> exploreForTints(ItemStack itemStack, ItemModel model, ClientWorld world, LivingEntity user, int seed, ItemDisplayContext transformationMode) {
+    private List<TintSource> exploreForTints(ItemStack itemStack, ItemModel model, ClientWorld world, HeldItemContext heldItemContext, int seed, ItemDisplayContext transformationMode) {
         switch (model) {
             case BasicItemModelAccessor accessor -> {
                 return accessor.getTints();
             }
             case CompositeItemModelAccessor accessor -> {
                 for (ItemModel itemModel : accessor.getItemModels()) {
-                    List<TintSource> src = exploreForTints(itemStack, itemModel, world, user, seed, transformationMode);
+                    List<TintSource> src = exploreForTints(itemStack, itemModel, world, heldItemContext, seed, transformationMode);
                     if (!src.isEmpty())
                         return src;
                 }
             }
             case ConditionItemModelAccessor accessor -> {
-                boolean property = accessor.getProperty().test(itemStack, world, user, seed, transformationMode);
+                boolean property = accessor.getProperty().test(itemStack, world, heldItemContext != null ? heldItemContext.getEntity() : null, seed, transformationMode);
                 if (property)
-                    return exploreForTints(itemStack, accessor.getOnTrue(), world, user, seed, transformationMode);
+                    return exploreForTints(itemStack, accessor.getOnTrue(), world, heldItemContext, seed, transformationMode);
                 else
-                    return exploreForTints(itemStack, accessor.getOnFalse(), world, user, seed, transformationMode);
+                    return exploreForTints(itemStack, accessor.getOnFalse(), world, heldItemContext, seed, transformationMode);
             }
             case SelectItemModelAccessor accessor -> {
-                ItemModel itemModel = accessor.getSelector().get(accessor.getProperty().getValue(itemStack, world, user, seed, transformationMode), world);
-                return exploreForTints(itemStack, itemModel, world, user, seed, transformationMode);
+                ItemModel itemModel = accessor.getSelector().get(accessor.getProperty().getValue(itemStack, world, heldItemContext != null ? heldItemContext.getEntity() : null, seed, transformationMode), world);
+                return exploreForTints(itemStack, itemModel, world, heldItemContext, seed, transformationMode);
             }
             case RangeDispatchItemModelAccessor accessor -> {
                 ItemModel itemModel;
-                float select = accessor.getProperty().getValue(itemStack, world, user, seed) * accessor.getScale();
+                float select = accessor.getProperty().getValue(itemStack, world, heldItemContext, seed) * accessor.getScale();
                 if (Float.isNaN(select)) {
                     itemModel = accessor.getFallback();
                 } else {
                     int i = RangeDispatchItemModelAccessor.getIndex(accessor.getThresholds(), select);
                     itemModel = i == -1 ? accessor.getFallback() : accessor.getModels()[i];
                 }
-                return exploreForTints(itemStack, itemModel, world, user, seed, transformationMode);
+                return exploreForTints(itemStack, itemModel, world, heldItemContext, seed, transformationMode);
             }
             case null, default -> {
                 return List.of();
@@ -200,7 +201,7 @@ public class PFMItemModel<T> implements ItemModel {
         public ItemModel bake(BakeContext context) {
             Supplier<BlockStateModel> model = () -> MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(blockState.orElse(block.getDefaultState()));
             if (specialModel.isPresent()) {
-                SpecialModelRenderer<?> specialModelRenderer = this.specialModel.get().bake(context.entityModelSet());
+                SpecialModelRenderer<?> specialModelRenderer = this.specialModel.get().bake(context);
                 return getItemModelFunc().apply(model, specialModelRenderer, this.tints);
             }
             return getItemModelFunc().apply(model, null, this.tints);

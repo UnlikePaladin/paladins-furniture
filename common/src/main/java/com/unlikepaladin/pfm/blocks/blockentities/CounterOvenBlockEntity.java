@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.menus.IronStoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.entity.ContainerUser;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.recipe.RecipeType;
@@ -54,15 +55,15 @@ public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    public void onClose(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
+    public void onClose(ContainerUser player) {
+        if (!this.removed && !player.asLivingEntity().isSpectator()) {
             this.onContainerClose(this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
 
     @Override
-    public void onOpen(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
+    public void onOpen(ContainerUser player) {
+        if (!this.removed && !player.asLivingEntity().isSpectator()) {
             this.onContainerOpen(this.getWorld(), this.getPos(), this.getCachedState());
         }
     }

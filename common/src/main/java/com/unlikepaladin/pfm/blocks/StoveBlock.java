@@ -87,7 +87,7 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             return onUseCookingForBlockheads(state, world, pos, player, hand, hit);
         } else {
-            if (world.isClient) {
+            if (world.isClient()) {
                 return ActionResult.SUCCESS;
             }
             if (hit.getSide() == Direction.UP && world.getBlockEntity(pos) instanceof StoveBlockEntity) {

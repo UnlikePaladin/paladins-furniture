@@ -45,7 +45,7 @@ public record ToiletUsePayload(BlockPos pos) implements CustomPayload {
         BlockPos blockPos = pos();
         server.submitAndJoin(() -> {
             // Use the pos in the main thread
-            World world = player.getWorld();
+            World world = player.getEntityWorld();
             if (world.isChunkLoaded(blockPos)) {
                 world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
                 world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);

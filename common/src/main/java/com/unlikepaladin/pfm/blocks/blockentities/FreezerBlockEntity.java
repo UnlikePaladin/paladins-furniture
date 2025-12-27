@@ -13,6 +13,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.block.entity.LockableContainerBlockEntity;
 import net.minecraft.block.entity.ViewerCountManager;
+import net.minecraft.entity.ContainerUser;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
@@ -86,7 +87,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         }
 
         @Override
-        protected boolean isPlayerViewing(PlayerEntity player) {
+        public boolean isPlayerViewing(PlayerEntity player) {
             if (player.currentScreenHandler instanceof FreezerScreenHandler) {
                 Inventory inventory = ((FreezerScreenHandler)player.currentScreenHandler).getInventory();
                 return inventory == FreezerBlockEntity.this;
@@ -97,16 +98,16 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
 
     @Override
-    public void onOpen(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
-            this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+    public void onOpen(ContainerUser player) {
+        if (!this.removed && !player.asLivingEntity().isSpectator()) {
+            this.stateManager.openContainer(player.asLivingEntity(), this.getWorld(), this.getPos(), this.getCachedState(), player.getContainerInteractionRange());
         }
     }
 
     @Override
-    public void onClose(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
-            this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+    public void onClose(ContainerUser player) {
+        if (!this.removed && !player.asLivingEntity().isSpectator()) {
+            this.stateManager.closeContainer(player.asLivingEntity(), this.getWorld(), this.getPos(), this.getCachedState());
         }
     }
 

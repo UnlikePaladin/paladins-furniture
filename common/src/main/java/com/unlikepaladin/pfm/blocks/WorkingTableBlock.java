@@ -59,7 +59,7 @@ public class WorkingTableBlock extends HorizontalFacingBlock implements Waterlog
     private static final Text TITLE = Text.translatable("container.pfm.working_table");
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
+        if (world.isClient()) {
             return ActionResult.SUCCESS;
         }
         player.openHandledScreen(state.createScreenHandlerFactory(world, pos));

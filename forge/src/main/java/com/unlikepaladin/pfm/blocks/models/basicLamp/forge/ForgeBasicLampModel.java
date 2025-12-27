@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks.models.basicLamp.forge;
 
 import com.unlikepaladin.pfm.blocks.BasicLampBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import com.unlikepaladin.pfm.data.materials.BlockType;
@@ -19,6 +20,7 @@ import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.util.SpriteIdentifier;
 import net.minecraft.state.property.Properties;
+import net.minecraft.util.Atlases;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -67,7 +69,7 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
     static List<Sprite> getOakStrippedLogSprite() {
         if (!oakSprite.isEmpty())
             return oakSprite;
-        Sprite wood = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE,  Identifier.of("minecraft:block/stripped_oak_log")).getSprite();
+        Sprite wood = ModelHelper.getSprite(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE,  Identifier.of("minecraft:block/stripped_oak_log")));
         oakSprite.add(wood);
         return oakSprite;
     }
@@ -77,7 +79,7 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
         if (sprites.containsKey(variant))
             return sprites.get(variant);
 
-        Sprite wood = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)).getSprite();
+        Sprite wood = ModelHelper.getSprite(new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)));
         List<Sprite> spriteList = new ArrayList<>();
         spriteList.add(wood);
         sprites.put(variant, spriteList);
