@@ -23,7 +23,7 @@ public class TrashcanClearPacket {
         ctx.enqueueWork(() -> {
             ServerPlayerEntity player = ctx.getSender();
             BlockPos entityPos = msg.blockPos;
-            World world = Objects.requireNonNull(player).getWorld();
+            World world = Objects.requireNonNull(player).getEntityWorld();
             ctx.enqueueWork(() -> {
                 if (world.isChunkLoaded(entityPos)) {
                     TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(entityPos);

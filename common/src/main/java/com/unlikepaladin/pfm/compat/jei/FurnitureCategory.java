@@ -1,5 +1,5 @@
 package com.unlikepaladin.pfm.compat.jei;
-/*
+
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -11,16 +11,14 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocus;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -34,16 +32,17 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private static final int craftOutputSlot = 9;
     private static final int craftInputSlot1 = 0;
     private int itemsPerInnerRecipe;
-
+    private FeatureSet set;
     public FurnitureCategory(IGuiHelper guiHelper) {
         ICON = guiHelper.createDrawableIngredient(VanillaTypes.ITEM_STACK, new ItemStack(PaladinFurnitureModBlocksItems.WORKING_TABLE));
         this.BACKGROUND = guiHelper.createDrawable(TEXTURE_GUI_VANILLA, 0, 60, 116, 54);
         craftingGridHelper = guiHelper.createCraftingGridHelper();
+        this.set = MinecraftClient.getInstance().world.getEnabledFeatures();
     }
     public static final Identifier IDENTIFIER = Identifier.of(PaladinFurnitureMod.MOD_ID, "crafting");
 
     @Override
-    public RecipeType<FurnitureRecipe> getRecipeType() {
+    public IRecipeType<FurnitureRecipe> getRecipeType() {
         return PaladinFurnitureModJEI.FURNITURE_RECIPE;
     }
 
@@ -67,9 +66,8 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         this.itemsPerInnerRecipe = recipe.getMaxInnerRecipeSize();
         if (!inputCache.containsKey(recipe)) {
             List<ItemStack> inputEntries = new ArrayList<>();
-
             // needed for registration apparently or something
-            for (FurnitureRecipe.CraftableFurnitureRecipe innerRecipe: recipe.getInnerRecipes()) {
+            for (FurnitureRecipe.CraftableFurnitureRecipe innerRecipe: recipe.getInnerRecipes(set)) {
                 List<List<ItemStack>> finalList = collectIngredientsFromRecipe(innerRecipe);
                 finalList.forEach(inputEntries::addAll);
             }
@@ -117,7 +115,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
                 for (int i = 0; i < itemsPerInnerRecipe; i++)
                     finalInput.add(new ArrayList<>());
 
-                for (FurnitureRecipe.CraftableFurnitureRecipe inner : recipe.getInnerRecipes()) {
+                for (FurnitureRecipe.CraftableFurnitureRecipe inner : recipe.getInnerRecipes(set)) {
                     List<List<ItemStack>> stsk = collectIngredientsFromRecipe(inner);
                     for (int i = 0; i < stsk.size(); i++) {
                         // add to the right slot by adding to the right list
@@ -134,18 +132,8 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     Map<ItemStack, List<List<ItemStack>>> itemStackListMap = new HashMap<>();
     public List<List<ItemStack>> collectIngredientsFromRecipe(FurnitureRecipe.CraftableFurnitureRecipe recipe) {
         if (itemStackListMap.containsKey(recipe.getRecipeOuput())) return itemStackListMap.get(recipe.getRecipeOuput());
+        Map<Item, Integer> containedItems = recipe.getItemCounts();
 
-        List<Ingredient> ingredients = recipe.getIngredients();
-        HashMap<Item, Integer> containedItems = new HashMap<>();
-        for (Ingredient ingredient : ingredients) {
-            for (RegistryEntry<Item> itemRegistryEntry : ingredient.getMatchingItems().toList()) {
-                if (!containedItems.containsKey(itemRegistryEntry.value())) {
-                    containedItems.put(itemRegistryEntry.value(), stack.getCount());
-                } else {
-                    containedItems.put(itemRegistryEntry.value(), containedItems.get(itemRegistryEntry.value()) + stack.getCount());
-                }
-            }
-        }
         List<List<ItemStack>> listOfList = new ArrayList<>();
         for (Map.Entry<Item, Integer> entry: containedItems.entrySet()) {
             listOfList.add(List.of(new ItemStack(entry.getKey(), entry.getValue())));
@@ -164,8 +152,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private final Map<FurnitureRecipe, List<ItemStack>> outputs = new HashMap<>();
     public List<ItemStack> getOutputEntries(FurnitureRecipe recipe) {
         if (!outputs.containsKey(recipe))
-            outputs.put(recipe, recipe.getInnerRecipes().stream().map(FurnitureRecipe.CraftableFurnitureRecipe::getRecipeOuput).toList());
+            outputs.put(recipe, recipe.getInnerRecipes(set).stream().map(FurnitureRecipe.CraftableFurnitureRecipe::getRecipeOuput).toList());
         return outputs.get(recipe);
     }
 }
-*/

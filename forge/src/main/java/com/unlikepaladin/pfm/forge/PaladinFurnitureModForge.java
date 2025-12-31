@@ -18,6 +18,7 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.SharedConstants;
 import net.minecraft.resource.metadata.PackResourceMetadata;
 import net.minecraft.text.Text;
+import net.minecraft.util.dynamic.Range;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.CreateSpecialBlockRendererEvent;
 import net.minecraftforge.client.event.RegisterColorHandlersEvent;
@@ -76,10 +77,9 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         AddPackFindersEvent.getBus(modBusGroup).addListener(PaladinFurnitureModForge::generateResources);
     }
 
-    @SubscribeEvent
     public static void generateResources(AddPackFindersEvent event) {
         if (event.getPackType() == ResourceType.CLIENT_RESOURCES) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().packVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), new Range<>(SharedConstants.getGameVersion().packVersion(ResourceType.CLIENT_RESOURCES)));
             ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
                 @Override
                 public ResourcePack open(ResourcePackInfo info) {
@@ -98,7 +98,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
                 profileAdder.accept(ResourcePackProfile.create(new ResourcePackInfo("pfm-asset-resources", Text.literal("PFM Assets"), ResourcePackSource.NONE, Optional.of(new VersionedIdentifier(PaladinFurnitureMod.MOD_ID, "pfm_assets", Version.getCurrentVersion()))),  packFactory, ResourceType.CLIENT_RESOURCES, new ResourcePackPosition(true, ResourcePackProfile.InsertionPosition.BOTTOM, false)));
             });
         } else if (event.getPackType() == ResourceType.SERVER_DATA) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().packVersion(ResourceType.SERVER_DATA), Optional.empty());
+            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), new Range<>(SharedConstants.getGameVersion().packVersion(ResourceType.SERVER_DATA)));
             ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
                 @Override
                 public ResourcePack open(ResourcePackInfo info) {

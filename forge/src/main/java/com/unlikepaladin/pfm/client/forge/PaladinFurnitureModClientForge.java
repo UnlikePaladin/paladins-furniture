@@ -59,7 +59,7 @@ import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.BOTH, value = Dist.CLIENT)
 public class PaladinFurnitureModClientForge {
 
     private PaladinFurnitureModClientForge() {
@@ -71,8 +71,7 @@ public class PaladinFurnitureModClientForge {
         ColorRegistryForge.registerBlockRenderLayers();
         event.enqueueWork(PaladinFurnitureModClientForge::registerScreens);
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
-                () -> new ConfigScreenHandler.ConfigScreenFactory(
-                        (client, parent) -> new PFMConfigScreen(client, parent)));
+                () -> new ConfigScreenHandler.ConfigScreenFactory(PFMConfigScreen::new));
     }
 
     private static void registerScreens() {

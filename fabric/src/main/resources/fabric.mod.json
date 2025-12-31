@@ -39,6 +39,9 @@
     ],
     "server": [
       "com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric"
+    ],
+    "jei_mod_plugin": [
+      "com.unlikepaladin.pfm.compat.jei.fabric.PaladinFurnitureModJEIPlugin"
     ]
   },
   "mixins": [

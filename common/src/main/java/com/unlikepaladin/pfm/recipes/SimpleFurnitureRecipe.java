@@ -125,6 +125,11 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     }
 
     @Override
+    public CraftableFurnitureRecipe getInnerRecipeFromOutput(ItemStack itemStack) {
+        return this;
+    }
+
+    @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (!(object instanceof SimpleFurnitureRecipe that)) return false;

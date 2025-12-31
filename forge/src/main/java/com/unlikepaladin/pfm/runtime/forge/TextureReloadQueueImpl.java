@@ -27,10 +27,7 @@ public class TextureReloadQueueImpl {
     }
 
     @SubscribeEvent
-    public static void onClientTick(TickEvent.PlayerTickEvent event) {
-        if (event.phase != TickEvent.Phase.END) return;
-
+    public static void onClientTick(TickEvent.PlayerTickEvent.Pre event) {
         registerTextureReload();
-
     }
 }

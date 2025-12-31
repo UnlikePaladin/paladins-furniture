@@ -12,7 +12,7 @@ import net.minecraftforge.client.event.EntityRenderersEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.BOTH, value = Dist.CLIENT)
 public class EntityRenderRegistryForge {
     @SubscribeEvent
     public static void registerRender(EntityRenderersEvent.RegisterRenderers renderersEvent){

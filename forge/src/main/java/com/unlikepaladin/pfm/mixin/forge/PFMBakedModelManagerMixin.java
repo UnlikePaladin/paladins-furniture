@@ -44,13 +44,13 @@ public abstract class PFMBakedModelManagerMixin implements PFMBakedModelManagerE
     }
 
     @Inject(method = "reload", at = @At("HEAD"))
-    private void onHeadReload(ResourceReloader.Synchronizer synchronizer, ResourceManager manager, Executor prepareExecutor, Executor applyExecutor, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
+    private void onHeadReload(ResourceReloader.Store arg, Executor executor, ResourceReloader.Synchronizer arg2, Executor executor2, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
         List<Identifier> ids = new ArrayList<>();
         PaladinFurnitureModClientForge.registerExtraModels(ids::add);
         PFMExtraModelsForge.registerExtraModels(ids);
     }
 
-    @Inject(method = "upload", at = @At(value = "INVOKE", target = "net/minecraft/util/profiler/Profiler.swap(Ljava/lang/String;)V", ordinal = 0))
+    @Inject(method = "upload", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/client/ForgeHooksClient;onModelBake(Lnet/minecraft/client/render/model/BakedModelManager;Lnet/minecraft/client/render/model/ModelBaker;)V", ordinal = 0))
     private void onUpload(CallbackInfo ci, @Local ModelBaker.BakedModels bakedModels) {
         pfm$extraModels = ((PFModelBakerBakedExtensions) (Object) bakedModels).pfm_getExtraModels();
     }

@@ -1,5 +1,5 @@
 package com.unlikepaladin.pfm.compat.jei;
-/*
+
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
@@ -14,8 +14,8 @@ import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -56,7 +56,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     }
 
     @Override
-    public RecipeType<FreezingRecipe> getRecipeType() {
+    public IRecipeType<FreezingRecipe> getRecipeType() {
         return PaladinFurnitureModJEI.FREEZING_RECIPE;
     }
 
@@ -81,11 +81,9 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, FreezingRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(INPUT, 1, 1)
-                .addIngredients(recipe.ingredient());
+        builder.addSlot(INPUT, 1, 1).add(recipe.ingredient());
 
-        builder.addSlot(OUTPUT, 61, 19)
-                .addItemStack(recipe.result());
+        builder.addSlot(OUTPUT, 61, 19).add(recipe.result());
     }
 
     protected IDrawableAnimated getArrow(FreezingRecipe recipe) {
@@ -129,4 +127,4 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
         drawExperience(recipe, context, 0);
         drawFreezeTime(recipe, context, 45);
     }
-}*/
+}

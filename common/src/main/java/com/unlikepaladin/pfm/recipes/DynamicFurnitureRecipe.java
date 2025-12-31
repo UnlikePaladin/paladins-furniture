@@ -270,6 +270,15 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
     }
 
     @Override
+    public CraftableFurnitureRecipe getInnerRecipeFromOutput(ItemStack stack) {
+        constructInnerRecipes();
+        if(outputToInnerRecipe.containsKey(stack)) {
+            return outputToInnerRecipe.get(stack);
+        }
+        return outputItemToInnerRecipe.get(stack.getItem());
+    }
+
+    @Override
     public boolean equals(Object object) {
         if (this == object) return true;
         if (!(object instanceof DynamicFurnitureRecipe that)) return false;

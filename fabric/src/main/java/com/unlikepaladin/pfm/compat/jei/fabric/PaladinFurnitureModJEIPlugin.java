@@ -1,5 +1,5 @@
 package com.unlikepaladin.pfm.compat.jei.fabric;
-/*
+
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.jei.FreezingCategory;
 import com.unlikepaladin.pfm.compat.jei.FurnitureCategory;
@@ -12,15 +12,16 @@ import com.unlikepaladin.pfm.registry.RecipeTypes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.ModIds;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.common.Internal;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.item.ItemStack;
 import net.minecraft.recipe.CraftingRecipe;
+import net.minecraft.recipe.PreparedRecipes;
 import net.minecraft.recipe.RecipeEntry;
 import net.minecraft.util.Identifier;
 
@@ -37,13 +38,16 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        ClientWorld world = Objects.requireNonNull(mc.world);
+        PreparedRecipes clientSyncedRecipes = Internal.getClientSyncedRecipes();
 
-        List<FreezingRecipe> freezingRecipes = world.getRecipeManager().listAllOfType(RecipeTypes.FREEZING_RECIPE).stream().map(RecipeEntry::value).collect(Collectors.toList());;
+        if (clientSyncedRecipes.recipes().isEmpty()) {
+            return;
+        }
+
+        List<FreezingRecipe> freezingRecipes = clientSyncedRecipes.getAll(RecipeTypes.FREEZING_RECIPE).stream().map(RecipeEntry::value).collect(Collectors.toList());;
         registration.addRecipes(PaladinFurnitureModJEI.FREEZING_RECIPE, freezingRecipes);
 
-        List<FurnitureRecipe> furnitureRecipes = world.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeEntry::value).collect(Collectors.toList());
+        List<FurnitureRecipe> furnitureRecipes = clientSyncedRecipes.getAll(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeEntry::value).collect(Collectors.toList());
         registration.addRecipes(PaladinFurnitureModJEI.FURNITURE_RECIPE, furnitureRecipes);
     }
 
@@ -56,20 +60,21 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration)
     {
-        registration.addRecipeCatalyst(new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FREEZER), PaladinFurnitureModJEI.FREEZING_RECIPE);
-        registration.addRecipeCatalyst(new ItemStack(PaladinFurnitureModBlocksItems.IRON_FREEZER), PaladinFurnitureModJEI.FREEZING_RECIPE);
-        registration.addRecipeCatalyst(new ItemStack(PaladinFurnitureModBlocksItems.GRAY_FREEZER), PaladinFurnitureModJEI.FREEZING_RECIPE);
-        registration.addRecipeCatalyst(new ItemStack(PaladinFurnitureModBlocksItems.WORKING_TABLE), PaladinFurnitureModJEI.FURNITURE_RECIPE);
+        registration.addCraftingStation(PaladinFurnitureModJEI.FREEZING_RECIPE, new ItemStack(PaladinFurnitureModBlocksItems.WHITE_FREEZER));
+        registration.addCraftingStation(PaladinFurnitureModJEI.FREEZING_RECIPE, new ItemStack(PaladinFurnitureModBlocksItems.IRON_FREEZER));
+        registration.addCraftingStation(PaladinFurnitureModJEI.FREEZING_RECIPE, new ItemStack(PaladinFurnitureModBlocksItems.GRAY_FREEZER));
+        registration.addCraftingStation(PaladinFurnitureModJEI.FURNITURE_RECIPE, new ItemStack(PaladinFurnitureModBlocksItems.WORKING_TABLE));
     }
 
     @Override
     public void registerItemSubtypes(ISubtypeRegistration registration) {
         registration.registerSubtypeInterpreter(PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM, (ingredient, context)
                 -> ingredient.get(PFMComponents.COLOR_COMPONENT).asString() + "_"+ingredient.get(PFMComponents.VARIANT_COMPONENT).toString());
+        registration.registerFromDataComponentTypes(PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, PFMComponents.COLOR_COMPONENT);
     }
 
     @Override
     public Identifier getPluginUid() {
         return Identifier.of(PaladinFurnitureMod.MOD_ID, "jei_plugin");
     }
-}*/
+}

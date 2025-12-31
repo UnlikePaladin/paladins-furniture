@@ -24,7 +24,7 @@ import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.Map;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
+@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.BOTH)
 public class EntityRegistryForge {
 
     @SubscribeEvent
@@ -35,9 +35,13 @@ public class EntityRegistryForge {
         });
     }
 
+    static boolean fired = false;
     @SubscribeEvent
     public static void registerAttributes(EntityAttributeCreationEvent event) {
+        if (fired) return;
+
         EntityRegistry.registerAttributes();
+        fired = true;
         EntityRegistryImpl.attributeMap.forEach((entityType, builder) -> {
             event.put(entityType, builder.build());
         });

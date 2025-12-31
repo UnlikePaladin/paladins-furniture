@@ -7,11 +7,11 @@ import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-@Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = "pfm", value = Dist.CLIENT)
 public class ParticleProviderRegistryForge {
 
     @SubscribeEvent
     public static void registerParticleFactory(RegisterParticleProvidersEvent event) {
-        event.registerSprite(ParticleIDs.WATER_DROP, BlockLeakParticle::createFallingWater);
+        event.registerSpriteSet(ParticleIDs.WATER_DROP, BlockLeakParticle.FallingWaterFactory::new);
     }
 }

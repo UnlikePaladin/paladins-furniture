@@ -77,6 +77,8 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
         return getIngredientPlacement().getIngredients();
     }
 
+    CraftableFurnitureRecipe getInnerRecipeFromOutput(ItemStack itemStack);
+
     interface CraftableFurnitureRecipe extends Comparable<CraftableFurnitureRecipe> {
         List<Ingredient> getIngredients();
         ItemStack getResult(RegistryWrapper.WrapperLookup registryManager);

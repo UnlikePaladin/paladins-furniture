@@ -26,7 +26,7 @@ public class ToiletUsePacket {
             ServerPlayerEntity player = ctx.getSender(); // the client that sent this packet
 
             BlockPos blockPos = msg.blockPos;
-            World world = Objects.requireNonNull(player).getWorld();
+            World world = Objects.requireNonNull(player).getEntityWorld();
             ctx.enqueueWork(() -> {
                 if (world.isChunkLoaded(blockPos)) {
                     world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
