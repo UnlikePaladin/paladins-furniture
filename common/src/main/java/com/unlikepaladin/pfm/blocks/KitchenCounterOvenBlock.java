@@ -104,9 +104,14 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
     public void openScreen(World world, BlockPos pos, PlayerEntity player) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof CounterOvenBlockEntity) {
-            player.openHandledScreen((NamedScreenHandlerFactory)blockEntity);
+            openMenuScreen(world, pos, player);
             player.incrementStat(Statistics.STOVE_OPENED);
         }
+    }
+
+    @ExpectPlatform
+    public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
+
     }
 
     protected static final VoxelShape COUNTER_OVEN = VoxelShapes.union(createCuboidShape(0, 1, 0, 16, 14, 14),createCuboidShape(0, 0, 0, 16, 1, 12),createCuboidShape(0, 14, 0, 16, 16, 16),createCuboidShape(2, 10, 14.1, 14, 11, 15.1),createCuboidShape(4, 2, 14.1, 12, 3, 15.1));

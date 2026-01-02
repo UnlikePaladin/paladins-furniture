@@ -31,13 +31,11 @@ public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity {
     @Override
     public void handleUpdateTag(ReadView tag, RegistryWrapper.WrapperLookup holders) {
         super.handleUpdateTag(tag, holders);
-        this.readData(tag);
     }
 
     @Override
     public void onDataPacket(ClientConnection connection, ReadView data, RegistryWrapper.WrapperLookup lookup) {
         super.onDataPacket(connection, data, lookup);
-        this.isOpen = data.getBoolean("isOpen", false);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends ShowerHeadBlockEntity> getFactory() {

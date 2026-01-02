@@ -43,14 +43,11 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
     @Override
     public void handleUpdateTag(ReadView input) {
         super.handleUpdateTag(input);
-        this.readData(input);
     }
 
     @Override
     public void onDataPacket(ClientConnection net, ReadView valueInput) {
         super.onDataPacket(net, valueInput);
-        this.itemsBeingCooked.clear();
-        Inventories.readData(valueInput, this.itemsBeingCooked);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends BlockEntity> getFactory() {

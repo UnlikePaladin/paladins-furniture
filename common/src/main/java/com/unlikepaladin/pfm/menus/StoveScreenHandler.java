@@ -14,13 +14,15 @@ import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.book.RecipeBookCategory;
 import net.minecraft.recipe.book.RecipeBookType;
 import net.minecraft.screen.AbstractFurnaceScreenHandler;
+import net.minecraft.screen.ArrayPropertyDelegate;
 import net.minecraft.screen.PropertyDelegate;
 import net.minecraft.util.math.BlockPos;
 
 public class StoveScreenHandler extends AbstractFurnaceScreenHandler {
     private final Inventory inventory;
     public StoveScreenHandler(int syncId, PlayerInventory playerInventory, StoveData data) {
-        super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipePropertySet.SMOKER_INPUT, RecipeBookType.SMOKER, syncId, playerInventory);
+        super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipePropertySet.SMOKER_INPUT, RecipeBookType.SMOKER, syncId, playerInventory,
+                (Inventory) playerInventory.player.getEntityWorld().getBlockEntity(data.pos()), new ArrayPropertyDelegate(4));
         this.inventory = (Inventory) playerInventory.player.getEntityWorld().getBlockEntity(data.pos());
         inventory.onOpen(playerInventory.player);
     }

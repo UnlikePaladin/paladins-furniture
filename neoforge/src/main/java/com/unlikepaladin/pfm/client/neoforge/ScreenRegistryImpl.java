@@ -1,22 +1,19 @@
 package com.unlikepaladin.pfm.client.neoforge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.client.screens.OvenScreen;
 import com.unlikepaladin.pfm.client.screens.StoveScreen;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.client.PFMCookingForBlockheadsClient;
+import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.mixin.neoforge.HandledScreensAccessor;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
 import net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.text.Text;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class ScreenRegistryImpl {
     public static <T extends ScreenHandler, J extends Screen & ScreenHandlerProvider<T>> void registerScreen(ScreenHandlerType<T> screenType, TriFunc<T, PlayerInventory, Text, J> factory) {
@@ -30,5 +27,9 @@ public class ScreenRegistryImpl {
         } else {
             return (t, playerInventory, text) -> (J) new StoveScreen((StoveScreenHandler) t, playerInventory, text);
         }
+    }
+
+    public static <T extends ScreenHandler, J extends Screen & ScreenHandlerProvider<T>> TriFunc<T, PlayerInventory, Text, J> getOvenFactory() {
+        return (t, playerInventory, text) -> (J) new OvenScreen((OvenScreenHandler) t, playerInventory, text);
     }
 }

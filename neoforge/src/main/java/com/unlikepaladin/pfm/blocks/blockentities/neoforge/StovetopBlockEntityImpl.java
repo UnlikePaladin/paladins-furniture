@@ -39,8 +39,6 @@ public class StovetopBlockEntityImpl extends StovetopBlockEntity {
     @Override
     public void onDataPacket(ClientConnection net, ReadView valueInput) {
         super.onDataPacket(net, valueInput);
-        this.itemsBeingCooked.clear();
-        Inventories.readData(valueInput, this.itemsBeingCooked);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends StovetopBlockEntity> getFactory() {

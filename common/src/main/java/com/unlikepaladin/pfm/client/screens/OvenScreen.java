@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.client.screens;
 
-import com.unlikepaladin.pfm.menus.IronStoveScreenHandler;
+import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import net.minecraft.client.gui.screen.ingame.AbstractFurnaceScreen;
 import net.minecraft.client.gui.screen.recipebook.RecipeBookWidget;
 import net.minecraft.client.recipebook.RecipeBookType;
@@ -12,7 +12,7 @@ import net.minecraft.util.Identifier;
 
 import java.util.List;
 
-public class IronStoveScreen extends AbstractFurnaceScreen<IronStoveScreenHandler> {
+public class OvenScreen extends AbstractFurnaceScreen<OvenScreenHandler> {
     //You can replace the background with whatever you like, just remember there will always be the recipe book button
     private static final Identifier BACKGROUND = Identifier.of("textures/gui/container/smoker.png");
 
@@ -23,7 +23,7 @@ public class IronStoveScreen extends AbstractFurnaceScreen<IronStoveScreenHandle
             new RecipeBookWidget.Tab(RecipeBookType.SMOKER), new RecipeBookWidget.Tab(Items.PORKCHOP, RecipeBookCategories.SMOKER_FOOD)
     );
 
-    public IronStoveScreen(IronStoveScreenHandler handler, PlayerInventory inventory, Text title) {
+    public OvenScreen(OvenScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title, TOGGLE_SMOKABLE_TEXT, BACKGROUND, LIT_PROGRESS_TEXTURE, BURN_PROGRESS_TEXTURE, TABS);
     }
 }

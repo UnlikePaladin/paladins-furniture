@@ -487,7 +487,6 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
 
     @Override
     public void handleUpdateTag(ReadView input) {
-        this.readData(input);
         super.handleUpdateTag(input);
     }
 

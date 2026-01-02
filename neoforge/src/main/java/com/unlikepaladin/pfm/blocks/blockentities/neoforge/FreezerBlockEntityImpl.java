@@ -6,14 +6,6 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.FreezerBlockEn
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
 
 public class FreezerBlockEntityImpl extends FreezerBlockEntity {
     public FreezerBlockEntityImpl(BlockPos pos, BlockState state) {

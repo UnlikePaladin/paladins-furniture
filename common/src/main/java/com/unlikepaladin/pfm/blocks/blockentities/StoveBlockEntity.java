@@ -54,7 +54,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     public StoveBlockEntity(BlockEntityType<?> entity, BlockPos pos, BlockState state) {
         super(entity, pos, state, RecipeType.SMOKING);
     }
-     String blockname = this.getCachedState().getBlock().getTranslationKey();
+    String blockname = this.getCachedState().getBlock().getTranslationKey();
 
     protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
         if (state.getBlock() instanceof StoveBlock){

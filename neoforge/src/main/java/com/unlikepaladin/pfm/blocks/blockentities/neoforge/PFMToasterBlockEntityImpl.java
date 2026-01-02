@@ -53,7 +53,5 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
     @Override
     public void onDataPacket(ClientConnection net, ReadView valueInput) {
         super.onDataPacket(net, valueInput);
-        this.getItems().clear();
-        Inventories.readData(valueInput, this.items);
     }
 }

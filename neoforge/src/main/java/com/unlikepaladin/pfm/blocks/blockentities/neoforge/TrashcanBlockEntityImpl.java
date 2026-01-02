@@ -36,15 +36,12 @@ public class TrashcanBlockEntityImpl extends TrashcanBlockEntity {
 
     @Override
     public void handleUpdateTag(ReadView input) {
-        this.readData(input);
         super.handleUpdateTag(input);
     }
 
     @Override
     public void onDataPacket(ClientConnection net, ReadView valueInput) {
         super.onDataPacket(net, valueInput);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readData(valueInput, this.inventory);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends TrashcanBlockEntity> getFactory() {

@@ -1,6 +1,7 @@
 
 package com.unlikepaladin.pfm.menus;
 
+import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
@@ -18,12 +19,11 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 
 public class TrashcanScreenHandler extends ScreenHandler {
-    private final Inventory inventory;
+    private Inventory inventory;
     protected final World world;
     public TrashcanBlockEntity trashcanBlockEntity;
     public TrashcanScreenHandler(int syncId, PlayerInventory playerInventory, TrashCanData canData) {
-        this(null, syncId, playerInventory, new SimpleInventory(9));
-        trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(canData.pos());
+        this((TrashcanBlockEntity) playerInventory.player.getEntityWorld().getBlockEntity(canData.pos()), syncId, playerInventory, (TrashcanBlockEntity) playerInventory.player.getEntityWorld().getBlockEntity(canData.pos()));
     }
 
     public TrashcanScreenHandler(TrashcanBlockEntity trashcanBlockEntity, int syncId, PlayerInventory playerInventory, Inventory inventory) {
@@ -31,7 +31,7 @@ public class TrashcanScreenHandler extends ScreenHandler {
         int j;
         int i;
         this.trashcanBlockEntity = trashcanBlockEntity;
-        TrashcanScreenHandler.checkSize(inventory, 9);
+        checkSize(inventory, 9);
         this.inventory = inventory;
         this.world = playerInventory.player.getEntityWorld();
         inventory.onOpen(playerInventory.player);
@@ -40,14 +40,7 @@ public class TrashcanScreenHandler extends ScreenHandler {
                 this.addSlot(new Slot(inventory, j + i * 3, 62 + j * 18, 17 + i * 18));
             }
         }
-        for (i = 0; i < 3; ++i) {
-            for (j = 0; j < 9; ++j) {
-                this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
-            }
-        }
-        for (i = 0; i < 9; ++i) {
-            this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
-        }
+        this.addPlayerSlots(playerInventory, 8, 84);
     }
 
     @ExpectPlatform

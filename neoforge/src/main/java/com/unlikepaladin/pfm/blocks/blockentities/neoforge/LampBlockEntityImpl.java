@@ -31,10 +31,7 @@ public class LampBlockEntityImpl extends LampBlockEntity {
 
     @Override
     public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        NbtCompound nbt = super.toInitialChunkDataNbt(registryLookup);
-        nbt.putString("color", this.color.asString());
-        nbt.putString("variant", this.variant.getIdentifier().toString());
-        return nbt;
+        return createNbt(registryLookup);
     }
 
     @Override
@@ -45,7 +42,5 @@ public class LampBlockEntityImpl extends LampBlockEntity {
     @Override
     public void onDataPacket(ClientConnection net, ReadView valueInput) {
         super.onDataPacket(net, valueInput);
-        this.color = DyeColor.byId(valueInput.getString("color", "white"), DyeColor.WHITE);
-        this.variant = WoodVariantRegistry.getVariant(Identifier.tryParse(valueInput.getString("variant", "minecraft:oak")));
     }
 }

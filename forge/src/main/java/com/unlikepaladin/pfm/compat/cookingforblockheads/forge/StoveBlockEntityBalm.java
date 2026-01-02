@@ -488,7 +488,6 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     @Override
     public void handleUpdateTag(ReadView tag, RegistryWrapper.WrapperLookup holders) {
         super.handleUpdateTag(tag, holders);
-        this.readData(tag);
     }
 
     protected void onContainerOpen(World world, BlockPos pos, BlockState state) {

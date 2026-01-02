@@ -41,8 +41,7 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
 
     @Override
     public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        NbtCompound nbt = createNbt(registryLookup);
-        return nbt;
+        return createNbt(registryLookup);
     }
 
     @Override
@@ -53,9 +52,6 @@ public class MicrowaveBlockEntityImpl  extends MicrowaveBlockEntity {
     @Override
     public void onDataPacket(ClientConnection net, ReadView valueInput) {
         super.onDataPacket(net, valueInput);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        this.isActive = valueInput.getBoolean("isActive", false);
-        Inventories.readData(valueInput, this.inventory);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends MicrowaveBlockEntity> getFactory() {

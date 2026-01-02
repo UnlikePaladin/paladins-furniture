@@ -1,8 +1,10 @@
 package com.unlikepaladin.pfm.client.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.client.screens.OvenScreen;
 import com.unlikepaladin.pfm.client.screens.StoveScreen;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.client.PFMCookingForBlockheadsClient;
+import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.minecraft.client.gui.screen.Screen;
@@ -24,5 +26,9 @@ public class ScreenRegistryImpl {
         } else {
             return (t, playerInventory, text) -> (J) new StoveScreen((StoveScreenHandler) t, playerInventory, text);
         }
+    }
+
+    public static <T extends ScreenHandler, J extends Screen & ScreenHandlerProvider<T>> TriFunc<T, PlayerInventory, Text, J> getOvenFactory() {
+        return (t, playerInventory, text) -> (J) new OvenScreen((OvenScreenHandler) t, playerInventory, text);
     }
 }

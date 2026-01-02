@@ -35,7 +35,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
 
     // Client Constructor
     protected AbstractMicrowaveScreenHandler(ScreenHandlerType<?> type, RecipeType<? extends AbstractCookingRecipe> recipeType, RecipeBookType category, int syncId, PlayerInventory playerInventory, MicrowaveData packet) {
-        this((MicrowaveBlockEntity) playerInventory.player.getEntityWorld().getBlockEntity(packet.pos()), type, recipeType, category, syncId, playerInventory, new SimpleInventory(1), new ArrayPropertyDelegate(2));
+        this((MicrowaveBlockEntity) playerInventory.player.getEntityWorld().getBlockEntity(packet.pos()), type, recipeType, category, syncId, playerInventory, (MicrowaveBlockEntity) playerInventory.player.getEntityWorld().getBlockEntity(packet.pos()), new ArrayPropertyDelegate(2));
         this.isActive = packet.isActive();
     }
 

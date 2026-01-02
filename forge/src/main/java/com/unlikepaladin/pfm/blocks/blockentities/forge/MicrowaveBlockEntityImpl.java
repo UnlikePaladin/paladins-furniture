@@ -50,15 +50,11 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity {
     @Override
     public void handleUpdateTag(ReadView tag, RegistryWrapper.WrapperLookup holders) {
         super.handleUpdateTag(tag, holders);
-        this.readData(tag);
     }
 
     @Override
     public void onDataPacket(ClientConnection connection, ReadView data, RegistryWrapper.WrapperLookup lookup) {
         super.onDataPacket(connection, data, lookup);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        this.isActive = data.getBoolean("isActive", false);
-        Inventories.readData(data, this.inventory);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends MicrowaveBlockEntity> getFactory() {

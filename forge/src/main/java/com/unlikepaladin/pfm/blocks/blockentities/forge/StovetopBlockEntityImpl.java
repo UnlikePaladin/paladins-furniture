@@ -40,8 +40,6 @@ public class StovetopBlockEntityImpl extends StovetopBlockEntity {
     @Override
     public void onDataPacket(ClientConnection connection, ReadView data, RegistryWrapper.WrapperLookup lookup) {
         super.onDataPacket(connection, data, lookup);
-        this.itemsBeingCooked.clear();
-        Inventories.readData(data, this.itemsBeingCooked);
     }
 
     public static BlockEntityType.BlockEntityFactory<? extends StovetopBlockEntity> getFactory() {

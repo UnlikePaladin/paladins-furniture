@@ -1,7 +1,8 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.blocks.KitchenCounterOvenBlock;
-import com.unlikepaladin.pfm.menus.IronStoveScreenHandler;
+import com.unlikepaladin.pfm.menus.OvenScreenHandler;
+import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
@@ -10,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
@@ -32,9 +34,8 @@ public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
 
     @Override
     protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new IronStoveScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
+        return new OvenScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
     }
-
 
     protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
         if (state.getBlock() instanceof KitchenCounterOvenBlock){
@@ -80,5 +81,9 @@ public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
     @Override
     public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
         return createScreenHandler(syncId, inv);
+    }
+
+    public StoveScreenHandler.StoveData getScreenOpeningData(ServerPlayerEntity player) {
+        return new StoveScreenHandler.StoveData(this.pos);
     }
 }

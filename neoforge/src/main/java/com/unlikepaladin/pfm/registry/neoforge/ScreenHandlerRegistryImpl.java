@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.registry.neoforge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.PFMCookingForBlockHeadsCompat;
+import com.unlikepaladin.pfm.menus.OvenScreenHandler;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.minecraft.entity.player.PlayerInventory;
@@ -52,5 +52,9 @@ public class ScreenHandlerRegistryImpl {
         }
         else
             return new Pair<>((integer, playerInventory, data) -> (T) new StoveScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
+    }
+
+    public static <T extends ScreenHandler> Pair<TriFunc<Integer, PlayerInventory, StoveScreenHandler.StoveData, T>, PacketCodec<RegistryByteBuf, StoveScreenHandler.StoveData>> getOvenMenuFactory() {
+        return new Pair<>((integer, playerInventory, data) -> (T) new OvenScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
     }
 }

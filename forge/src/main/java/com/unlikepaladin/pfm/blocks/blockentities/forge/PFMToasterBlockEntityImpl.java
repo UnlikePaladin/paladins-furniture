@@ -50,13 +50,10 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
     @Override
     public void handleUpdateTag(ReadView tag, RegistryWrapper.WrapperLookup holders) {
         super.handleUpdateTag(tag, holders);
-        this.readData(tag);
     }
 
     @Override
     public void onDataPacket(ClientConnection connection, ReadView data, RegistryWrapper.WrapperLookup lookup) {
         super.onDataPacket(connection, data, lookup);
-        this.getItems().clear();
-        Inventories.readData(data, this.items);
     }
 }
