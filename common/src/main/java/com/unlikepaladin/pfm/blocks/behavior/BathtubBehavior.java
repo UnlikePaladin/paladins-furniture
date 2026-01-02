@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks.behavior;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -32,7 +33,7 @@ public interface BathtubBehavior {
     BathtubBehavior FILL_TUB_WITH_WATER = (state, world, pos, player, hand, stack) -> BathtubBehavior.fillTub(world, pos, player, hand, stack, state, SoundEvents.ITEM_BUCKET_EMPTY, true);
     Map<Item, BathtubBehavior> TUB_BEHAVIOR = BathtubBehavior.createMap();
 
-    Codec<Map<Item, BathtubBehavior>> CODEC = Codec.unit(TUB_BEHAVIOR);
+    Codec<Map<Item, BathtubBehavior>> CODEC = MapCodec.unit(TUB_BEHAVIOR).codec();
     static Object2ObjectOpenHashMap<Item, BathtubBehavior> createMap() {
         return (Object2ObjectOpenHashMap)Util.make(new Object2ObjectOpenHashMap(), (map) -> {
             map.defaultReturnValue(null);});

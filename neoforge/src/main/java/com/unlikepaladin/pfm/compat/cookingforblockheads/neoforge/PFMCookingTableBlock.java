@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
 import com.mojang.serialization.MapCodec;
-import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.cookingforblockheads.block.entity.CookingTableBlockEntity;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.util.ItemUtils;
@@ -51,7 +51,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
             }
 
             if (!world.isClient()) {
-                Balm.getNetworking().openMenu(player, cookingTable);
+                Balm.networking().openMenu(player, cookingTable);
             }
         }
 

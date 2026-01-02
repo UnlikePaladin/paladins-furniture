@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.neoforge.FreezerBlockEntityImpl;
-import net.blay09.mods.balm.api.container.BalmContainerProvider;
-import net.blay09.mods.balm.api.container.ContainerUtils;
+import net.blay09.mods.balm.world.BalmContainerProvider;
+import net.blay09.mods.balm.world.ContainerUtils;
 import net.blay09.mods.cookingforblockheads.api.CacheHint;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;

@@ -14,4 +14,7 @@ import java.util.Map;
 public interface PFMSpriteAtlasTextureAccessor {
     @Accessor("sprites")
     Map<Identifier, Sprite> pfm$getSprites();
+
+    @Accessor("mipLevel")
+    int pfm$getMipLevel();
 }

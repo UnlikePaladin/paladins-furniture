@@ -52,8 +52,13 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     }
 
     @Override
-    public IDrawable getBackground() {
-        return BACKGROUND;
+    public int getWidth() {
+        return BACKGROUND.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return BACKGROUND.getHeight();
     }
 
     @Override

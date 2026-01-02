@@ -17,18 +17,19 @@ import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.*;
 import net.minecraft.util.Formatting;
+import net.minecraft.util.Identifier;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.Entry> {
@@ -37,6 +38,9 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
     public BitSet hasChanges;
     public Map<AbstractConfigOption, Boolean> newConfigValues;
     public Map<AbstractConfigOption, Integer> configOptionToIndexForHasChanges;
+    private static final ButtonTextures VANILLA_TEXTURES = new ButtonTextures(
+            Identifier.ofVanilla("widget/button"), Identifier.ofVanilla("widget/button_disabled"), Identifier.ofVanilla("widget/button_highlighted")
+    );
 
     public PFMOptionListWidget(PFMConfigScreen parent, MinecraftClient client) {
         super(client, parent.width + 125, parent.height - 75, 43, 20);
@@ -229,7 +233,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             final Text tooltipText = sideText.append(Text.literal("\n")).append(styledTooltip);
             this.supplier = Tooltip.of(tooltipText);
 
-            this.button = new ButtonWidget(0, 0, 135, 20, buttonText, pressAction, Supplier::get){
+            this.button = new TexturedButtonWidget(0, 0, 135, 20, VANILLA_TEXTURES, pressAction, buttonText) {
                 @Override
                 protected MutableText getNarrationMessage() {
                     return (MutableText) optionName;

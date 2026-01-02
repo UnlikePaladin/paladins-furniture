@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
-import net.blay09.mods.balm.api.energy.EnergyStorage;
+import net.blay09.mods.balm.platform.energy.EnergyStorage;
 import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
 import net.blay09.mods.cookingforblockheads.menu.OvenMenu;
 import net.minecraft.client.MinecraftClient;

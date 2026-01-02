@@ -16,8 +16,10 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemDisplayContext;
 import net.minecraft.util.DyeColor;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class PFMBedModelRenderer implements SimpleSpecialModelRenderer {
     private final PFMBedBlockEntityRenderer blockEntityRenderer;
@@ -36,7 +38,7 @@ public class PFMBedModelRenderer implements SimpleSpecialModelRenderer {
     }
 
     @Override
-    public void collectVertices(Set<Vector3f> vertices) {
+    public void collectVertices(Consumer<Vector3fc> vertices) {
         this.blockEntityRenderer.collectVertices(vertices);
     }
 

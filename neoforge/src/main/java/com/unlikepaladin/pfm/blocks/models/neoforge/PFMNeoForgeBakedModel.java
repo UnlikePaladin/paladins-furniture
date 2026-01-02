@@ -18,7 +18,6 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.BlockRenderView;
-import net.neoforged.neoforge.client.model.IQuadTransformer;
 import net.neoforged.neoforge.client.model.block.CustomUnbakedBlockStateModel;
 import org.jetbrains.annotations.Nullable;
 
@@ -273,7 +272,6 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
             }
             else {
                 Sprite sprite = spriteData.getSprite();
-
                 int[] vertexData = new int[quad.vertexData().length];
                 System.arraycopy(quad.vertexData(), 0, vertexData, 0, vertexData.length);
                 float[][] uv = new float[4][2];
@@ -286,7 +284,8 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
                     uv[vertexIndx][1] = sprite.getFrameV(frameV);
                     packUV(uv[vertexIndx], vertexData, vertexIndx);
                 }
-                BakedQuad transformedQuad = new BakedQuad(vertexData, quad.tintIndex(), quad.face(), quad.sprite(), quad.shade(), quad.lightEmission());
+                BakedQuad transformedQuad = new BakedQuad(quad.position0(), quad.position1(), quad.position2(), quad.position3(),
+                        , quad.tintIndex(), quad.face(), quad.sprite(), quad.shade(), quad.lightEmission());
                 quadToTransformedQuad.put(quadKey, transformedQuad);
                 transformedQuads.add(transformedQuad);
             }

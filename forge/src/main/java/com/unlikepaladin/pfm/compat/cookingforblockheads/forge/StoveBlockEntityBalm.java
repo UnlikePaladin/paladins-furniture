@@ -4,14 +4,13 @@ import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.container.*;
-import net.blay09.mods.balm.api.energy.BalmEnergyStorageProvider;
-import net.blay09.mods.balm.api.energy.DefaultEnergyStorage;
-import net.blay09.mods.balm.api.energy.EnergyStorage;
-import net.blay09.mods.balm.api.menu.BalmMenuProvider;
-import net.blay09.mods.balm.api.tag.BalmItemTags;
-import net.blay09.mods.balm.common.BalmBlockEntity;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.energy.BalmEnergyStorageProvider;
+import net.blay09.mods.balm.platform.energy.DefaultEnergyStorage;
+import net.blay09.mods.balm.platform.energy.EnergyStorage;
+import net.blay09.mods.balm.tags.BalmItemTags;
+import net.blay09.mods.balm.world.*;
+import net.blay09.mods.balm.world.level.block.entity.BalmBlockEntityUtils;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheadsConfig;
 import net.blay09.mods.cookingforblockheads.api.IngredientToken;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
@@ -26,6 +25,7 @@ import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.entity.BedBlockEntity;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.component.DataComponentTypes;
 import net.minecraft.entity.player.PlayerEntity;
@@ -67,7 +67,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItemProcessor, BalmMenuProvider<StoveScreenHandler.StoveData>, IMutableNameable, BalmContainerProvider, BalmEnergyStorageProvider, KitchenItemProcessorHolder, KitchenItemProviderHolder {
+public class StoveBlockEntityBalm extends BlockEntity implements KitchenItemProcessor, BalmMenuProvider<StoveScreenHandler.StoveData>, IMutableNameable, BalmContainerProvider, BalmEnergyStorageProvider, KitchenItemProcessorHolder, KitchenItemProviderHolder {
     private static final int COOK_TIME = 200;
     private final DefaultContainer container = new DefaultContainer(20) {
         public boolean isValid(int slot, ItemStack itemStack) {
@@ -184,7 +184,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
         }
 
         if (this.isDirty) {
-            this.sync();
+            BalmBlockEntityUtils.sync(this);
             this.isDirty = false;
         }
 
@@ -207,7 +207,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
                     if (!fuelItem.isEmpty()) {
                         this.currentItemBurnTime = this.furnaceBurnTime = (int)Math.max(1.0, (double)((float)getBurnTime(level, fuelItem)) * CookingForBlockheadsConfig.getActive().ovenFuelTimeMultiplier);
                         if (this.furnaceBurnTime != 0) {
-                            containerItem = Balm.getHooks().getCraftingRemainingItem(fuelItem);
+                            containerItem = Balm.hooks().getCraftingRemainingItem(fuelItem);
                             fuelItem.decrement(1);
                             if (fuelItem.isEmpty()) {
                                 this.fuelContainer.setStack(firstEmptySlot, containerItem);
@@ -242,7 +242,8 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
                                 if (!smeltingResult.isEmpty()) {
                                     ItemStack resultStack = smeltingResult.copy();
                                     this.processingContainer.setStack(i, resultStack);
-                                    Balm.getEvents().fireEvent(new OvenCookedEvent(level, this.pos, resultStack));
+                                    //TODO: Also fix this as soon as CFBH updates
+                                    //Balm.getEvents().fireEvent(new OvenCookedEvent(level, this.pos, resultStack));
                                     this.slotCookTime[i] = -1;
                                     if (firstTransferSlot == -1) {
                                         firstTransferSlot = i;
@@ -368,11 +369,6 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
         view.putNullable("CustomNameV2", TextCodecs.CODEC, this.customName);
     }
 
-    @Override
-    protected void writeUpdateTag(WriteView view) {
-        this.writeData(view);
-        super.writeUpdateTag(view);
-    }
 
     public boolean hasPowerUpgrade() {
         return this.hasPowerUpgrade;

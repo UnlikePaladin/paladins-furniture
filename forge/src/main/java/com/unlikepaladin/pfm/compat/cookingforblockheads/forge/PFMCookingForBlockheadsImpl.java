@@ -12,8 +12,8 @@ import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.data.SimpleFurnitureRecipeJsonFactory;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.capability.BalmCapabilities;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
@@ -72,7 +72,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
 
     @Override
     public void registerBlockEntityTypes() {
-        initCapabilities(Balm.getCapabilities());
+        initCapabilities(Balm.capabilities());
     }
 
     @Override
@@ -102,13 +102,13 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     public void initCapabilities(BalmCapabilities balmCapabilities) {
-        balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_provider"), ModCapabilities.KITCHEN_ITEM_PROVIDER, ((blockEntity, unused) -> {
+        balmCapabilities.registerProvider(Identifier.of("cookingforblockheads", "kitchen_item_provider"), ModCapabilities.KITCHEN_ITEM_PROVIDER, ((blockEntity, unused) -> {
             if (blockEntity instanceof KitchenItemProviderHolder provider) {
                 return provider.getKitchenItemProvider();
             }
             return null;
         }),  () -> Set.of(BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY, BlockEntities.DRAWER_BLOCK_ENTITY, BlockEntities.KITCHEN_DRAWER_SMALL_BLOCK_ENTITY, BlockEntities.FRIDGE_BLOCK_ENTITY, BlockEntities.FREEZER_BLOCK_ENTITY, BlockEntities.STOVE_BLOCK_ENTITY));
-        balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_processor"), ModCapabilities.KITCHEN_ITEM_PROCESSOR, (blockEntity, context) -> {
+        balmCapabilities.registerProvider(Identifier.of("cookingforblockheads","kitchen_item_processor"), ModCapabilities.KITCHEN_ITEM_PROCESSOR, (blockEntity, context) -> {
             if (blockEntity instanceof KitchenItemProcessorHolder holder) {
                 return holder.getKitchenItemProcessor();
             }

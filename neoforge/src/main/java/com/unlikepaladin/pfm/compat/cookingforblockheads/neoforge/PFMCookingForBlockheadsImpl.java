@@ -12,8 +12,8 @@ import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import com.unlikepaladin.pfm.runtime.data.SimpleFurnitureRecipeJsonFactory;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.capability.BalmCapabilities;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
@@ -87,7 +87,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
 
     @Override
     public void registerBlockEntityTypes() {
-        initCapabilities(Balm.getCapabilities());
+        initCapabilities(Balm.capabilities());
     }
 
     public static PFMCookingForBlockheads getInstance() {

@@ -76,9 +76,10 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     }
 
     @Override
-    public void resize(MinecraftClient client, int width, int height) {
+    public void resize(int width, int height) {
+        super.resize(width, height);
         String string = this.searchBox.getText();
-        this.init(client, width, height);
+        this.init(width, height);
         this.searchBox.setText(string);
         if (!this.searchBox.getText().isEmpty()) {
             this.search();

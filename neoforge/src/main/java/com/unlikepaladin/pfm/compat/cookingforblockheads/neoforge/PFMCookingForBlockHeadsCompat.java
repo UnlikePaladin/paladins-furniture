@@ -8,16 +8,9 @@ import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.container.CombinedContainer;
-import net.blay09.mods.balm.api.container.ContainerUtils;
-import net.blay09.mods.cookingforblockheads.api.CacheHint;
-import net.blay09.mods.cookingforblockheads.api.IngredientToken;
-import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
-import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.block.entity.FridgeBlockEntity;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.world.ContainerUtils;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
-import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
@@ -26,10 +19,8 @@ import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.RegistryByteBuf;
 import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.state.property.Properties;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
@@ -38,10 +29,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
-import java.util.function.Function;
 
 public class PFMCookingForBlockHeadsCompat {
     public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).registryKey(LateBlockRegistry.getBlockRegistryKey("cooking_table")));
@@ -60,7 +47,7 @@ public class PFMCookingForBlockHeadsCompat {
     public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
         StoveBlockEntityBalm stove = (StoveBlockEntityBalm)world.getBlockEntity(pos);
         if (!world.isClient()) {
-            Balm.getNetworking().openMenu(player, stove);
+            Balm.networking().openMenu(player, stove);
         }
     }
 
@@ -134,7 +121,7 @@ public class PFMCookingForBlockHeadsCompat {
                 }
             }
             if (!level.isClient()) {
-                Balm.getNetworking().openMenu(player, oven);
+                Balm.networking().openMenu(player, oven);
             }
             return ActionResult.SUCCESS;
         }

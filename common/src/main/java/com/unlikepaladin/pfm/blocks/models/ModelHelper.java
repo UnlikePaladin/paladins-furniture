@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.*;
 import com.unlikepaladin.pfm.mixin.PFMNativeImageAccessor;
+import com.unlikepaladin.pfm.mixin.PFMSpriteAtlasTextureAccessor;
 import com.unlikepaladin.pfm.mixin.PFMSpriteContentsAccessor;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
@@ -178,7 +179,8 @@ public class ModelHelper {
         int height = sprite.getContents().getHeight();
         // Upload the sprite to ensure underlying NativeImage data is present
         AbstractTexture spriteAtlasTexture = MinecraftClient.getInstance().getTextureManager().getTexture(sprite.getAtlasId());
-        sprite.upload(spriteAtlasTexture.getGlTexture());
+        int mipLevel = ((PFMSpriteAtlasTextureAccessor)MinecraftClient.getInstance().getAtlasManager().getAtlasTexture(sprite.getAtlasId())).pfm$getMipLevel();
+        sprite.upload(spriteAtlasTexture.getGlTexture(), mipLevel);
         NativeImage atlasImage = ((PFMSpriteContentsAccessor)sprite.getContents()).pfm$getImages()[0];
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (int j = 0; j < height; j++) {

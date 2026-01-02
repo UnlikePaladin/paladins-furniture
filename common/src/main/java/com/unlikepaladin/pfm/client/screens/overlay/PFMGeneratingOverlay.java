@@ -12,12 +12,8 @@ import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Overlay;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.resource.metadata.TextureResourceMetadata;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.ResourceTexture;
-import net.minecraft.client.texture.TextureContents;
-import net.minecraft.client.texture.TextureManager;
+import net.minecraft.client.texture.*;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.TriState;
@@ -196,7 +192,8 @@ public class PFMGeneratingOverlay extends Overlay {
                 nativeImage = convertToNativeImage(bufferedImage);
                 textureWidth = nativeImage.getWidth();
                 textureHeight = nativeImage.getHeight();
-                textureData = new TextureContents(nativeImage, new TextureResourceMetadata(true, true));
+                textureData = new TextureContents(nativeImage, new TextureResourceMetadata(true, true,
+                        MipmapStrategy.MEAN, 0.0F));
             } catch (Throwable throwable) {
                 if (nativeImage != null)
                     nativeImage.close();
@@ -214,14 +211,5 @@ public class PFMGeneratingOverlay extends Overlay {
                     .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
                     .withDepthWrite(false)
                     .build()
-    );
-
-    private static final RenderLayer.MultiPhase PFM_LOGO = RenderLayer.of(
-            "pfm_logo",
-            786432,
-            PFM_LOGO_PIPELINE,
-            RenderLayer.MultiPhaseParameters.builder()
-                    .texture(new RenderPhase.Texture(pfmLogo, false))
-                    .build(false)
     );
 }

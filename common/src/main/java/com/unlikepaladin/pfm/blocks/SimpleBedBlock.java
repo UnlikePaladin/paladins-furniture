@@ -27,6 +27,8 @@ import net.minecraft.util.math.random.Random;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.*;
+import net.minecraft.world.attribute.BedRule;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.event.GameEvent;
 import net.minecraft.world.explosion.Explosion;
 import net.minecraft.world.tick.ScheduledTickView;
@@ -77,7 +79,8 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
         if (state.get(PART) != BedPart.HEAD && !((state = world.getBlockState(pos = pos.offset(state.get(FACING)))).getBlock() instanceof SimpleBedBlock)) {
             return ActionResult.CONSUME;
         }
-        if (!BedBlock.isBedWorking(world)) {
+        BedRule bedRule = world.getEnvironmentAttributes().getAttributeValue(EnvironmentAttributes.BED_RULE_GAMEPLAY, pos);
+        if (bedRule.explodes()) {
             world.removeBlock(pos, false);
             BlockPos blockPos = pos.offset(state.get(FACING).getOpposite());
             if (world.getBlockState(blockPos).isOf(this)) {
@@ -93,8 +96,8 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
             return ActionResult.SUCCESS;
         }
         player.trySleep(pos).ifLeft(reason -> {
-            if (reason.getMessage() != null) {
-                player.sendMessage(reason.getMessage(), true);
+            if (reason.message() != null) {
+                player.sendMessage(reason.message(), true);
             }
         });
         return ActionResult.SUCCESS;

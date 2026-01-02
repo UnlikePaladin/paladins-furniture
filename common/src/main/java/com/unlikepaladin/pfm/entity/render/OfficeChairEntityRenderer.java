@@ -112,7 +112,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
     }
 
     private void submitBlockPart(OfficeChairEntityRenderState mobEntity, MatrixStack matrixStack, OrderedRenderCommandQueue orderedRenderCommandQueue, RenderLayer damagedLayer, BlockStateModel model, float red, float green, float blue) {
-        orderedRenderCommandQueue.submitBlockStateModel(matrixStack, RenderLayer.getCutoutMipped(), model, red, green, blue, mobEntity.light,
+        orderedRenderCommandQueue.submitBlockStateModel(matrixStack, RenderLayers.cutout(), model, red, green, blue, mobEntity.light,
                 OverlayTexture.DEFAULT_UV,
                 mobEntity.outlineColor);
         if (mobEntity.timeUntilRegen > 0) {
@@ -141,6 +141,5 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         livingEntityRenderState.world = livingEntity.getEntityWorld();
         livingEntityRenderState.pos = livingEntity.getEntityPos();
         livingEntityRenderState.random = livingEntity.getRandom();
-        livingEntityRenderState.isDarkenedDim = !livingEntity.getEntityWorld().getDimension().bedWorks();
     }
 }

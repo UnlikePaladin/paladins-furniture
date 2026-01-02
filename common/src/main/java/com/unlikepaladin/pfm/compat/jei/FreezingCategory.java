@@ -66,8 +66,13 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     }
 
     @Override
-    public IDrawable getBackground() {
-        return BACKGROUND;
+    public int getWidth() {
+        return BACKGROUND.getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return BACKGROUND.getHeight();
     }
 
     @Override
@@ -119,8 +124,9 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
 
     @Override
     public void draw(FreezingRecipe recipe, IRecipeSlotsView recipeSlotsView, DrawContext context, double mouseX, double mouseY) {
-        animatedFreezeIcon.draw(context, 1, 20);
+        BACKGROUND.draw(context);
 
+        animatedFreezeIcon.draw(context, 1, 20);
         IDrawableAnimated arrow = getArrow(recipe);
         arrow.draw(context, 24, 18);
 

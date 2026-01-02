@@ -111,7 +111,8 @@ public final class TextureReloadQueue {
         } catch (NullPointerException e) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to generate mipmaps for texture {}: {}", id, e.getMessage());
         }
-        original.upload(spriteAtlas.getGlTexture());
+        int mipLevel = ((PFMSpriteAtlasTextureAccessor)MinecraftClient.getInstance().getAtlasManager().getAtlasTexture(original.getAtlasId())).pfm$getMipLevel();
+        original.upload(spriteAtlas.getGlTexture(), mipLevel);
     }
 
     public static void reloadSpritesOnClientThread(List<Identifier> id) {

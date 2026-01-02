@@ -34,8 +34,10 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.World;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBlockEntity, BedBlockEntityRenderState> {
     private final SpriteHolder materials;
@@ -48,8 +50,8 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
     }
 
     public PFMBedBlockEntityRenderer(SpriteHolder materials, LoadedEntityModels models) {
-        this.bedHead = new Model.SinglePartModel(models.getModelPart(EntityRenderIDs.BED_HEAD_LAYER), RenderLayer::getEntitySolid);
-        this.bedFoot = new Model.SinglePartModel(models.getModelPart(EntityRenderIDs.BED_FOOT_LAYER), RenderLayer::getEntitySolid);
+        this.bedHead = new Model.SinglePartModel(models.getModelPart(EntityRenderIDs.BED_HEAD_LAYER), RenderLayers::entitySolid);
+        this.bedFoot = new Model.SinglePartModel(models.getModelPart(EntityRenderIDs.BED_FOOT_LAYER), RenderLayers::entitySolid);
         this.materials = materials;
     }
 
@@ -108,7 +110,7 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
             case NORTH: matrix.translate(0, 0, 0.5); break;
             case SOUTH: matrix.translate(0, 0, -0.5); break;
         }
-        queue.submitModel(part, Unit.INSTANCE, matrix, sprite.getRenderLayer(RenderLayer::getEntitySolid), light, overlay, -1, materials.getSprite(sprite), i, crumblingOverlay);
+        queue.submitModel(part, Unit.INSTANCE, matrix, sprite.getRenderLayer(RenderLayers::entitySolid), light, overlay, -1, materials.getSprite(sprite), i, crumblingOverlay);
         matrix.pop();
     }
 
@@ -122,7 +124,7 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
         matrices.pop();
     }
 
-    public void collectVertices(Set<Vector3f> vertices) {
+    public void collectVertices(Consumer<Vector3fc> vertices) {
         MatrixStack matrixStack = new MatrixStack();
         setTransforms(matrixStack, false);
         this.bedHead.getRootPart().collectVertices(matrixStack, vertices);

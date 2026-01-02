@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot;
 
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
-import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.cookingforblockheads.api.event.OvenItemSmeltedEvent;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.Inventory;
@@ -53,7 +53,8 @@ public class StoveResultSlot extends Slot {
         stack.onCraftByPlayer(this.player, this.removeCount);
         this.removeCount = 0;
         if (this.tileEntity.getWorld() != null && !stack.isEmpty()) {
-            Balm.getEvents().fireEvent(new OvenItemSmeltedEvent(this.player, this.tileEntity.getWorld(), this.tileEntity.getPos(), stack));
+            //TODO: FIX THIS AS SOON AS CFBH is updated
+            //Balm.getEvents().fireEvent(new OvenItemSmeltedEvent(this.player, this.tileEntity.getWorld(), this.tileEntity.getPos(), stack));
         }
 
     }

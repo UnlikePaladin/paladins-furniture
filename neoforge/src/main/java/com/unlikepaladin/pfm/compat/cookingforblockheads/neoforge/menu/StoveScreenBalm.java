@@ -1,16 +1,11 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.menu;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.StoveBlockEntityBalm;
-import net.blay09.mods.balm.api.energy.EnergyStorage;
-import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
-import net.blay09.mods.cookingforblockheads.menu.OvenMenu;
+import net.blay09.mods.balm.platform.energy.EnergyStorage;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;

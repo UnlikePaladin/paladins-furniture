@@ -17,8 +17,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.item.ItemModelManager;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderLayers;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.item.ItemRenderState;
 import net.minecraft.client.render.item.model.ItemModel;
 import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
@@ -44,6 +43,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class PFMItemModel<T> implements ItemModel {
@@ -51,6 +51,18 @@ public class PFMItemModel<T> implements ItemModel {
     protected final Supplier<BlockStateModel> model;
     private final List<TintSource> tints;
     private final List<TintSource> pfm$parentTints = new ArrayList<>();
+
+    private static final Function<ItemStack, RenderLayer> ITEMS_ATLAS_RENDER_LAYER_GETTER = stack -> TexturedRenderLayers.getItemTranslucentCull();
+    private static final Function<ItemStack, RenderLayer> BLOCKS_ATLAS_RENDER_LAYER_GETTER = stack -> {
+        if (stack.getItem() instanceof BlockItem blockItem) {
+            BlockRenderLayer blockRenderLayer = BlockRenderLayers.getBlockLayer(blockItem.getBlock().getDefaultState());
+            if (blockRenderLayer != BlockRenderLayer.TRANSLUCENT) {
+                return TexturedRenderLayers.getEntityCutout();
+            }
+        }
+
+        return TexturedRenderLayers.getBlockTranslucentCull();
+    };
 
     public PFMItemModel(Supplier<BlockStateModel> model, SpecialModelRenderer<T> specialModelType, List<TintSource> tints) {
         this.model = model;
@@ -81,7 +93,7 @@ public class PFMItemModel<T> implements ItemModel {
             layerRenderState.setGlint(ItemRenderState.Glint.STANDARD);
         }
 
-        RenderLayer renderLayer = RenderLayers.getItemLayer(stack);
+        RenderLayer renderLayer = BLOCKS_ATLAS_RENDER_LAYER_GETTER.apply(stack);
         layerRenderState.setRenderLayer(renderLayer);
 
         if (ColorRegistry.itemColorProviders.containsKey(stack.getItem()) && pfm$parentTints.isEmpty()) {

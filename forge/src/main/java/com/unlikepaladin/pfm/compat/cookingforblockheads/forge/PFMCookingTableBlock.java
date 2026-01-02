@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
 import com.mojang.serialization.MapCodec;
-import net.blay09.mods.balm.api.Balm;
+import net.blay09.mods.balm.Balm;
 import net.blay09.mods.cookingforblockheads.block.entity.CookingTableBlockEntity;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.util.ItemUtils;
@@ -12,6 +12,8 @@ import net.minecraft.block.ShapeContext;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.hit.BlockHitResult;
@@ -27,7 +29,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
         super(arg);
     }
 
-    MapCodec<PFMCookingTableBlock> CODEC = createCodec(PFMCookingTableBlock::new);
+    public static final MapCodec<PFMCookingTableBlock> CODEC = createCodec(PFMCookingTableBlock::new);
     @Override
     protected MapCodec<? extends BlockWithEntity> getCodec() {
         return CODEC;
@@ -35,7 +37,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult blockHitResult) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
+        Object blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof CookingTableBlockEntity cookingTable) {
             if (player.isSneaking()) {
                 ItemStack noFilterBook = cookingTable.getNoFilterBook();
@@ -50,7 +52,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
             }
 
             if (!world.isClient()) {
-                Balm.getNetworking().openMenu(player, cookingTable);
+                Balm.networking().openMenu(player, (NamedScreenHandlerFactory) cookingTable);
             }
         }
 
@@ -60,7 +62,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
     @Override
     protected ActionResult onUseWithItem(ItemStack itemStack, BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
         if (!itemStack.isEmpty()) {
-            BlockEntity blockEntity = level.getBlockEntity(pos);
+            Object blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof CookingTableBlockEntity cookingTable) {
                 if (!cookingTable.hasNoFilterBook() && itemStack.getItem() == ModItems.noFilterBook) {
                     cookingTable.setNoFilterBook(itemStack.split(1));
@@ -72,10 +74,16 @@ public class PFMCookingTableBlock extends BlockWithEntity {
         return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
     }
 
+    public void onStateReplaced(BlockState state, ServerWorld level, BlockPos pos, boolean isMoving) {
+        CookingTableBlockEntity tileEntity = (CookingTableBlockEntity) (Object) level.getBlockEntity(pos);
+        ItemUtils.spawnItemStack(level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, tileEntity.getNoFilterBook());
+        super.onStateReplaced(state, level, pos, isMoving);
+    }
+
     @Nullable
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
-        return new CookingTableBlockEntity(pos, state);
+        return (BlockEntity) (Object) new CookingTableBlockEntity(pos, state);
     }
 
     private static final VoxelShape SHAPE = VoxelShapes.union(createCuboidShape(3, 0, 3, 13,1,13));

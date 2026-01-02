@@ -10,8 +10,8 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import net.blay09.mods.balm.api.Balm;
-import net.blay09.mods.balm.api.container.ContainerUtils;
+import net.blay09.mods.balm.Balm;
+import net.blay09.mods.balm.world.ContainerUtils;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
 import net.minecraft.block.AbstractBlock;
@@ -54,7 +54,7 @@ public class PFMCookingForBlockHeadsCompat {
     public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
         StoveBlockEntityBalm stove = (StoveBlockEntityBalm)world.getBlockEntity(pos);
         if (!world.isClient()) {
-            Balm.getNetworking().openMenu(player, stove);
+            Balm.networking().openMenu(player, stove);
         }
     }
 
@@ -128,7 +128,7 @@ public class PFMCookingForBlockHeadsCompat {
                 }
             }
             if (!level.isClient()) {
-                Balm.getNetworking().openMenu(player, oven);
+                Balm.networking().openMenu(player, oven);
             }
             return ActionResult.SUCCESS;
         }
