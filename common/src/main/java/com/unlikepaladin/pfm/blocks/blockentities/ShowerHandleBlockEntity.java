@@ -36,6 +36,10 @@ public class ShowerHandleBlockEntity extends BlockEntity {
                 aLong -> this.showerOffset = BlockPos.fromLong(aLong));
     }
 
+    public void setShowerOffset(BlockPos showerOffset) {
+        this.showerOffset = showerOffset;
+    }
+
     public void setState(boolean open)
     {
         if (this.showerOffset != null) {

@@ -82,7 +82,8 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (itemStack.get(PFMComponents.ACTIVATOR_COMPONENT) != null && blockEntity instanceof LightSwitchBlockEntity) {
+        if (itemStack.get(PFMComponents.ACTIVATOR_COMPONENT) != null && blockEntity instanceof LightSwitchBlockEntity lightSwitchBlockEntity) {
+            lightSwitchBlockEntity.setLights(itemStack.get(PFMComponents.ACTIVATOR_COMPONENT));
             itemStack.remove(PFMComponents.ACTIVATOR_COMPONENT);
         }
     }

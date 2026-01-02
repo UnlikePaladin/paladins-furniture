@@ -79,13 +79,13 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
 
     @Override
     public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (itemStack.get(PFMComponents.ACTIVATOR_COMPONENT) != null && blockEntity instanceof ShowerHandleBlockEntity) {
-                itemStack.remove(PFMComponents.ACTIVATOR_COMPONENT);
-            }
-        }
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (itemStack.get(PFMComponents.ACTIVATOR_COMPONENT) != null && blockEntity instanceof ShowerHandleBlockEntity block) {
+            if (!itemStack.get(PFMComponents.ACTIVATOR_COMPONENT).isEmpty())
+                block.setShowerOffset(itemStack.get(PFMComponents.ACTIVATOR_COMPONENT).getFirst());
 
+            itemStack.remove(PFMComponents.ACTIVATOR_COMPONENT);
+        }
     }
 
     @Override

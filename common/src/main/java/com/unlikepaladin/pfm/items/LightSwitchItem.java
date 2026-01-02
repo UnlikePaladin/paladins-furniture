@@ -44,7 +44,7 @@ public class LightSwitchItem extends BlockItem {
             return ActionResult.FAIL;
         }
         if (player.isSneaking()) {
-            stack.remove(DataComponentTypes.BLOCK_ENTITY_DATA);
+            stack.remove(PFMComponents.ACTIVATOR_COMPONENT);
             createComponents(stack);
             return ActionResult.SUCCESS.withNewHandStack(stack);
         }
@@ -140,7 +140,7 @@ public class LightSwitchItem extends BlockItem {
 
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
-        if (stack.get(PFMComponents.ACTIVATOR_COMPONENT) != null) {
+        if (stack.get(PFMComponents.ACTIVATOR_COMPONENT) != null && !stack.get(PFMComponents.ACTIVATOR_COMPONENT).isEmpty()) {
             int lightNum = stack.get(PFMComponents.ACTIVATOR_COMPONENT).size();
             textConsumer.accept(Text.translatable("tooltip.pfm.light_switch_connected", lightNum));
         }

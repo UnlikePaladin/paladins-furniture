@@ -104,7 +104,7 @@ public class ShowerHandleItem extends BlockItem {
 
     @Override
     public void appendTooltip(ItemStack stack, TooltipContext context, TooltipDisplayComponent displayComponent, Consumer<Text> textConsumer, TooltipType type) {
-        if (stack.get(DataComponentTypes.BLOCK_ENTITY_DATA) != null && getShowerHead(stack) != null) {
+        if (stack.get(PFMComponents.ACTIVATOR_COMPONENT) != null && getShowerHead(stack) != null) {
             textConsumer.accept(Text.translatable("tooltip.pfm.shower_handle_connected", 1));
         }
         super.appendTooltip(stack, context, displayComponent, textConsumer, type);

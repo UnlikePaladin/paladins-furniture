@@ -89,7 +89,7 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
         state.facing = blockEntity.getFacing();
         state.isActive = blockEntity.isActive;
         state.itemStack = itemStack;
-        state.rotationFactor = blockEntity.getWorld().getTime() + tickProgress * 4;
+        state.rotationFactor = blockEntity.getWorld().getTime() * 4f;
     }
 
     public static class MicrowaveBlockEntityRenderState extends BlockEntityRenderState {
