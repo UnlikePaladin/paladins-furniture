@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks.models.fabric;
 
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.client.fabric.PFMBakedModelParticleExtension;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelSetPropertiesExtension;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
@@ -33,15 +34,13 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
         super(settings, itemBakeSettings, bakedModels);
     }
 
-
-
     public void pushTextureTransform(QuadEmitter context, Sprite sprite) {
         context.pushTransform(quad -> {
-            Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getAtlasManager().getAtlasTexture(Atlases.BLOCKS)).find(quad, 0);
+            Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getAtlasManager().getAtlasTexture(Atlases.BLOCKS)).find(quad);
             if (originalSprite.getContents().getId() != sprite.getContents().getId()) {
                 for (int index = 0; index < 4; index++) {
-                    float frameU = originalSprite.getFrameFromU(quad.u(index));
-                    float frameV = originalSprite.getFrameFromV(quad.v(index));
+                    float frameU = ModelHelper.getFrameFromU(originalSprite, quad.u(index));
+                    float frameV = ModelHelper.getFrameFromV(originalSprite, quad.v(index));
                     quad.uv(index, sprite.getFrameU(frameU), sprite.getFrameV(frameV));
                 }
             }
@@ -64,8 +63,8 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
                 if (textureIndex != -1 && !toReplace.equals(replacement)) {
                     Sprite sprite = replacement.get(textureIndex);
                     for (int index = 0; index < 4; index++) {
-                        float frameU = originalSprite.getFrameFromU(quad.u(index));
-                        float frameV = originalSprite.getFrameFromV(quad.v(index));
+                        float frameU = ModelHelper.getFrameFromU(originalSprite, quad.u(index));
+                        float frameV = ModelHelper.getFrameFromV(originalSprite, quad.v(index));
                         quad.uv(index, sprite.getFrameU(frameU), sprite.getFrameV(frameV));
                     }
                 }

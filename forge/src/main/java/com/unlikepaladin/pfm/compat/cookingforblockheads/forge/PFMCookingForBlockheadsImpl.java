@@ -15,9 +15,9 @@ import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import net.blay09.mods.balm.Balm;
 import net.blay09.mods.balm.platform.capabilities.BalmCapabilities;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
-import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
+/*import net.blay09.mods.cookingforblockheads.capability.KitchenItemProcessorHolder;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
-import net.blay09.mods.cookingforblockheads.capability.ModCapabilities;
+import net.blay09.mods.cookingforblockheads.capability.ModCapabilities;*/
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModBlockTags;
 import net.minecraft.block.Block;
@@ -102,7 +102,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     public void initCapabilities(BalmCapabilities balmCapabilities) {
-        balmCapabilities.registerProvider(Identifier.of("cookingforblockheads", "kitchen_item_provider"), ModCapabilities.KITCHEN_ITEM_PROVIDER, ((blockEntity, unused) -> {
+        /*balmCapabilities.registerProvider(Identifier.of("cookingforblockheads", "kitchen_item_provider"), ModCapabilities.KITCHEN_ITEM_PROVIDER, ((blockEntity, unused) -> {
             if (blockEntity instanceof KitchenItemProviderHolder provider) {
                 return provider.getKitchenItemProvider();
             }
@@ -113,6 +113,6 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
                 return holder.getKitchenItemProcessor();
             }
             return null;
-        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY));
+        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY));*/
     }
 }

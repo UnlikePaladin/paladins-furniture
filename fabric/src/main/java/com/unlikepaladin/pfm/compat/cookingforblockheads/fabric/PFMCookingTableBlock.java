@@ -2,9 +2,9 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric;
 
 import com.mojang.serialization.MapCodec;
 import net.blay09.mods.balm.Balm;
-import net.blay09.mods.cookingforblockheads.block.entity.CookingTableBlockEntity;
+/*import net.blay09.mods.cookingforblockheads.block.entity.CookingTableBlockEntity;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
-import net.blay09.mods.cookingforblockheads.util.ItemUtils;
+import net.blay09.mods.cookingforblockheads.util.ItemUtils;*/
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.BlockWithEntity;
@@ -22,7 +22,7 @@ import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.util.shape.VoxelShapes;
 import net.minecraft.world.BlockView;
 import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 public class PFMCookingTableBlock extends BlockWithEntity {
     protected PFMCookingTableBlock(Settings arg) {
@@ -35,7 +35,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
         return CODEC;
     }
 
-    @Override
+   /* @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult blockHitResult) {
         Object blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof CookingTableBlockEntity cookingTable) {
@@ -84,7 +84,7 @@ public class PFMCookingTableBlock extends BlockWithEntity {
     @Override
     public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
         return (BlockEntity) (Object) new CookingTableBlockEntity(pos, state);
-    }
+    }*/
 
     private static final VoxelShape SHAPE = VoxelShapes.union(createCuboidShape(3, 0, 3, 13,1,13));
     @Override
@@ -95,5 +95,10 @@ public class PFMCookingTableBlock extends BlockWithEntity {
     @Override
     public BlockRenderType getRenderType(BlockState state) {
         return BlockRenderType.MODEL;
+    }
+
+    @Override
+    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return null;
     }
 }

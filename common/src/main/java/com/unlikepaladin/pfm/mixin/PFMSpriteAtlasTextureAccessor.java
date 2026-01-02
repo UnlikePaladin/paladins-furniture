@@ -17,4 +17,7 @@ public interface PFMSpriteAtlasTextureAccessor {
 
     @Accessor("mipLevel")
     int pfm$getMipLevel();
+
+    @Invoker("upload")
+    void pfm$upload();
 }

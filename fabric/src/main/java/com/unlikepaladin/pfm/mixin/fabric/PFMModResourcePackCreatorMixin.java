@@ -7,7 +7,7 @@ import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.utilities.Version;
-import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
+import net.fabricmc.fabric.impl.resource.pack.ModResourcePackCreator;
 import net.minecraft.SharedConstants;
 import net.minecraft.registry.VersionedIdentifier;
 import net.minecraft.resource.*;

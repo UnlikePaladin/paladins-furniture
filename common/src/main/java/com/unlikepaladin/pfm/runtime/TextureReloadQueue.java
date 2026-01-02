@@ -111,8 +111,9 @@ public final class TextureReloadQueue {
         } catch (NullPointerException e) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to generate mipmaps for texture {}: {}", id, e.getMessage());
         }
-        int mipLevel = ((PFMSpriteAtlasTextureAccessor)MinecraftClient.getInstance().getAtlasManager().getAtlasTexture(original.getAtlasId())).pfm$getMipLevel();
-        original.upload(spriteAtlas.getGlTexture(), mipLevel);
+        for (int i = 0; i <= MinecraftClient.getInstance().options.getMipmapLevels().getValue(); i++) {
+            original.upload(spriteAtlas.getGlTexture(), i);
+        }
     }
 
     public static void reloadSpritesOnClientThread(List<Identifier> id) {
@@ -123,6 +124,8 @@ public final class TextureReloadQueue {
             for (Identifier spriteId : id) {
                 reloadSingleSprite(resourceManager, spriteAtlas, spriteId);
             }
+            if (!id.isEmpty())
+                ((PFMSpriteAtlasTextureAccessor) spriteAtlas).pfm$upload();
         } catch (IOException e) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to reload texture at {}", id, e);
         }

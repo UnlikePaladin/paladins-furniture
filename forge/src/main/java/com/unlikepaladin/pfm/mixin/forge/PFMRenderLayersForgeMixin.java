@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BlockRenderLayer;
+import net.minecraft.client.render.BlockRenderLayers;
 import net.minecraft.client.render.RenderLayers;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -18,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.*;
 
-@Mixin(RenderLayers.class)
+@Mixin(BlockRenderLayers.class)
 public abstract class PFMRenderLayersForgeMixin {
 
     @Shadow
@@ -51,7 +52,7 @@ public abstract class PFMRenderLayersForgeMixin {
                     combinedRenderTypes.addAll(currentRenderTypes);
 
                     // Prioritize cutout and translucent over solid
-                    if (combinedRenderTypes.contains(BlockRenderLayer.CUTOUT) || combinedRenderTypes.contains(BlockRenderLayer.TRANSLUCENT) || combinedRenderTypes.contains(BlockRenderLayer.CUTOUT_MIPPED)) {
+                    if (combinedRenderTypes.contains(BlockRenderLayer.CUTOUT) || combinedRenderTypes.contains(BlockRenderLayer.TRANSLUCENT)) {
                         // Remove solid if higher-priority layers are present
                         combinedRenderTypes.remove(BlockRenderLayer.SOLID);
                     }

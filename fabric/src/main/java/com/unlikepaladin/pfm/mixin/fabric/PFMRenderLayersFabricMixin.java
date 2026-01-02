@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.BlockRenderLayer;
+import net.minecraft.client.render.BlockRenderLayers;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.render.RenderLayers;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.HashMap;
 import java.util.Map;
 
-@Mixin(RenderLayers.class)
+@Mixin(BlockRenderLayers.class)
 public abstract class PFMRenderLayersFabricMixin {
     @Shadow
     public static BlockRenderLayer getBlockLayer(BlockState state) {

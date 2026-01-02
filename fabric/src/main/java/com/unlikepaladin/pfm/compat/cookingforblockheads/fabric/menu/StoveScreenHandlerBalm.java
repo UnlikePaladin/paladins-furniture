@@ -6,12 +6,12 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.menu.slot.StoveR
 import com.unlikepaladin.pfm.menus.AbstractMicrowaveScreenHandler;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
-import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
+/*import net.blay09.mods.cookingforblockheads.block.entity.OvenBlockEntity;
 import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
 import net.blay09.mods.cookingforblockheads.menu.OvenMenu;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOven;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenFuel;
-import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenTool;
+import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenTool;*/
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -23,7 +23,7 @@ import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.util.math.BlockPos;
 
-public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerWithDoor {
+public class StoveScreenHandlerBalm extends ScreenHandler {//implements IContainerWithDoor {
     private final StoveBlockEntityBalm tileEntity;
 
     public StoveScreenHandlerBalm(int windowId, PlayerInventory playerInventory, StoveBlockEntityBalm oven) {
@@ -34,17 +34,17 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
         int offsetX = oven.hasPowerUpgrade() ? -5 : 0;
 
         int i;
+        int j;
         for(i = 0; i < 3; ++i) {
             this.addSlot(new Slot(container, i, 84 + i * 18 + offsetX, 19));
         }
 
-        this.addSlot(new SlotOvenFuel(this, container, 3, 61 + offsetX, 59));
-
+        //this.addSlot(new SlotOvenFuel(this, container, 3, 61 + offsetX, 59));
+/*
         for(i = 0; i < 3; ++i) {
             this.addSlot(new StoveResultSlot(playerInventory.player, oven, container, i + 4, 142 + offsetX, 41 + i * 18));
         }
 
-        int j;
         for(i = 0; i < 3; ++i) {
             for(j = 0; j < 3; ++j) {
                 this.addSlot(new SlotOven(container, 7 + j + i * 3, 84 + j * 18 + offsetX, 41 + i * 18));
@@ -54,7 +54,7 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
         for(i = 0; i < 4; ++i) {
             this.addSlot(new SlotOvenTool(container, 16 + i, 8, 19 + i * 18, i));
         }
-
+*/
         for(i = 0; i < 3; ++i) {
             for(j = 0; j < 9; ++j) {
                 this.addSlot(new Slot(playerInventory, j + i * 9 + 9, 30 + j * 18, 111 + i * 18));
@@ -140,7 +140,7 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
         return this.tileEntity == blockEntity;
     }
 
-    public boolean isFuel(ItemStack itemStack) {
+    /*public boolean isFuel(ItemStack itemStack) {
         return OvenBlockEntity.isItemFuel(this.tileEntity.getWorld(), itemStack);
     }
 
@@ -155,5 +155,5 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
         public boolean canInsert(ItemStack itemStack) {
             return this.menu.isFuel(itemStack);
         }
-    }
+    }*/
 }

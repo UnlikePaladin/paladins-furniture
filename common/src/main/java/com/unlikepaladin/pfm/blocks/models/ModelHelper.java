@@ -179,7 +179,7 @@ public class ModelHelper {
         int height = sprite.getContents().getHeight();
         // Upload the sprite to ensure underlying NativeImage data is present
         AbstractTexture spriteAtlasTexture = MinecraftClient.getInstance().getTextureManager().getTexture(sprite.getAtlasId());
-        int mipLevel = ((PFMSpriteAtlasTextureAccessor)MinecraftClient.getInstance().getAtlasManager().getAtlasTexture(sprite.getAtlasId())).pfm$getMipLevel();
+        int mipLevel = ((PFMSpriteContentsAccessor)sprite.getContents()).pfm$getImages().length-1;
         sprite.upload(spriteAtlasTexture.getGlTexture(), mipLevel);
         NativeImage atlasImage = ((PFMSpriteContentsAccessor)sprite.getContents()).pfm$getImages()[0];
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -245,6 +245,16 @@ public class ModelHelper {
                     return 1.0F;
             }
         }
+    }
+
+    public static float getFrameFromU(Sprite sprite, float u) {
+        float f = sprite.getMaxU() - sprite.getMinU();
+        return (u - sprite.getMinU()) / f;
+    }
+
+    public static float getFrameFromV(Sprite sprite, float v) {
+        float f = sprite.getMaxV() - sprite.getMinV();
+        return (v - sprite.getMinV()) / f;
     }
 
 

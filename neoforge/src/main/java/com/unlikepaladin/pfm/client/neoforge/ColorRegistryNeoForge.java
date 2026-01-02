@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.client.neoforge;
 
 import com.unlikepaladin.pfm.client.ColorRegistry;
+import net.minecraft.client.render.BlockRenderLayers;
 import net.minecraft.client.render.RenderLayers;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.fml.common.Mod;
@@ -15,6 +16,6 @@ public class ColorRegistryNeoForge {
 
     public static void registerBlockRenderLayers() {
         ColorRegistry.registerBlockRenderLayers();
-        ColorRegistryImpl.BLOCK_RENDER_LAYER_MAP.forEach(RenderLayers::setRenderLayer);
+        ColorRegistryImpl.BLOCK_RENDER_LAYER_MAP.forEach(BlockRenderLayers::setRenderLayer);
     }
 }

@@ -98,7 +98,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     public void initCapabilities(BalmCapabilities balmCapabilities) {
-        balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_provider"), ModCapabilities.KITCHEN_ITEM_PROVIDER, ((blockEntity, unused) -> {
+        /*balmCapabilities.registerProvider(CookingForBlockheads.id("kitchen_item_provider"), ModCapabilities.KITCHEN_ITEM_PROVIDER, ((blockEntity, unused) -> {
             if (blockEntity instanceof KitchenItemProviderHolder provider) {
                 return provider.getKitchenItemProvider();
             }
@@ -109,7 +109,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
                 return holder.getKitchenItemProcessor();
             }
             return null;
-        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY));
+        }, () -> Set.of(BlockEntities.STOVE_BLOCK_ENTITY));*/
     }
 
     public static PFMCookingForBlockheads getInstance() {
