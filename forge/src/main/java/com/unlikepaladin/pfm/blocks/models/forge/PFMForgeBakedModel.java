@@ -120,7 +120,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                     .findFirst()
                     .orElse(-1);
 
-            if (index != -1) {
+            if (index != -1  && index < toReplace.size()) {
                 SpriteData replacement = new SpriteData(replacements.get(index));
                 transformedQuads.addAll(getQuadsWithTexture(entry.getValue().stream().filter(quads::contains).toList(), replacement));
             } else {

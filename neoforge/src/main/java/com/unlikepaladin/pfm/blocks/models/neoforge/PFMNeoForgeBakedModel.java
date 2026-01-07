@@ -116,7 +116,7 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
                     .findFirst()
                     .orElse(-1);
 
-            if (index != -1) {
+            if (index != -1 && index < toReplace.size()) {
                 SpriteData replacement = new SpriteData(replacements.get(index));
                 transformedQuads.addAll(getQuadsWithTexture(entry.getValue().stream().filter(quads::contains).toList(), replacement));
             } else {
