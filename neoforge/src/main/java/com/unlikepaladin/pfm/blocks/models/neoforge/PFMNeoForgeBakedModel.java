@@ -60,7 +60,13 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         return tileData.derive().with(STATE, state).build();
     }
 
-    Map<Pair<Identifier, SpriteData>, List<BakedQuad>> separatedQuads = new ConcurrentHashMap<>();
+    final Map<Pair<Identifier, SpriteData>, List<BakedQuad>> separatedQuads =  Collections.synchronizedMap(new LinkedHashMap<>(1024, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<Pair<Identifier, SpriteData>, List<BakedQuad>> eldest) {
+            return size() > 250; // Adjust based on your mod's needs
+        }
+    });
+
     public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, List<Sprite> toReplace, List<Sprite> replacements) {
         if (quads == null)
             return Collections.emptyList();
@@ -74,37 +80,36 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
             PaladinFurnitureMod.GENERAL_LOGGER.debug(replacements);
             return quads;
         }
-
         if (toReplace.equals(replacements))
             return quads;
 
         for (BakedQuad quad : quads) {
             SpriteData sprite = new SpriteData(quad.getSprite());
             Pair<Identifier, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
-            if (separatedQuads.containsKey(pair)) {
-                if (!separatedQuads.get(pair).contains(quad)) {
-                    List<BakedQuad> newQuadList = new ArrayList<>(separatedQuads.get(pair));
-                    newQuadList.add(quad);
-                    separatedQuads.put(pair, newQuadList);
+
+            separatedQuads.compute(pair, (key, existingList) -> {
+                if (existingList == null) {
+                    List<BakedQuad> newList = new ArrayList<>();
+                    newList.add(quad);
+                    return newList;
+                } else if (!existingList.contains(quad)) {
+                    List<BakedQuad> newList = new ArrayList<>(existingList);
+                    newList.add(quad);
+                    return newList;
                 }
-                continue;
-            } else if (!separatedQuads.isEmpty()) {
-                AtomicReference<Pair<Identifier, SpriteData>> del = new AtomicReference<>(null);
-                separatedQuads.keySet().forEach(identifierSpriteDataPair ->  {
-                    if (identifierSpriteDataPair != null && sprite.getId().equals(identifierSpriteDataPair.getFirst())){
-                        del.set(identifierSpriteDataPair);
-                    }
-                });
-                if (del.get() != null)
-                    separatedQuads.remove(del.get());
-            }
-            List<BakedQuad> list = new ArrayList<>();
-            list.add(quad);
-            separatedQuads.put(pair, list);
+                return existingList;
+            });
         }
 
         List<BakedQuad> transformedQuads = new ArrayList<>(quads.size());
-        for (Map.Entry<Pair<Identifier, SpriteData>, List<BakedQuad>> entry : separatedQuads.entrySet()) {
+
+        // Synchronize the snapshot creation, otherwise embeddium explodes
+        Map<Pair<Identifier, SpriteData>, List<BakedQuad>> snapshot;
+        synchronized (separatedQuads) {
+            snapshot = new HashMap<>(separatedQuads);
+        }
+
+        for (Map.Entry<Pair<Identifier, SpriteData>, List<BakedQuad>> entry : snapshot.entrySet()) {
             Identifier keyId = entry.getKey().getFirst();
             int index = IntStream.range(0, toReplace.size())
                     .filter(i -> keyId.equals(toReplace.get(i).getContents().getId()))
@@ -121,7 +126,13 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         return transformedQuads;
     }
 
-    Map<Pair<SpriteData, BakedQuad>, BakedQuad> quadToTransformedQuad = new ConcurrentHashMap<>();
+    Map<Pair<SpriteData, BakedQuad>, BakedQuad> quadToTransformedQuad = Collections.synchronizedMap(new LinkedHashMap<Pair<SpriteData, BakedQuad>, BakedQuad>(1024, 0.75f, true) {
+        @Override
+        protected boolean removeEldestEntry(Map.Entry<Pair<SpriteData, BakedQuad>, BakedQuad> eldest) {
+            return size() > 10_000; // Adjust based on your mod's needs
+        }
+    });
+
     public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, SpriteData spriteData) {
         List<BakedQuad> transformedQuads = new ArrayList<>(quads.size());
 
@@ -129,32 +140,32 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         quads.forEach(quad -> {
             Pair<SpriteData, BakedQuad> quadKey = new Pair<>(spriteData, quad);
 
-            if (quad.getSprite().getContents().getId() == spriteData.getId() && !quadToTransformedQuad.containsKey(quadKey)) {
-                quadToTransformedQuad.put(quadKey, quad);
-                transformedQuads.add(quad);
-            }
-            else if (quadToTransformedQuad.containsKey(quadKey)) {
-                transformedQuads.add(quadToTransformedQuad.get(quadKey));
-            }
-            else {
-                Sprite sprite = spriteData.getSprite();
+            // Use computeIfAbsent for atomic check-and-put operation
+            BakedQuad resultQuad = quadToTransformedQuad.computeIfAbsent(quadKey, key -> {
+                if (quad.getSprite().getContents().getId().equals(spriteData.getId())) {
+                    // Same sprite, return original quad
+                    return quad;
+                } else {
+                    // Transform the quad
+                    Sprite sprite = spriteData.getSprite();
 
-                int[] vertexData = new int[quad.getVertexData().length];
-                System.arraycopy(quad.getVertexData(), 0, vertexData, 0, vertexData.length);
-                float[][] uv = new float[4][2];
-                for (int vertexIndx = 0; vertexIndx < 4; vertexIndx++) {
-                    unpackUV(vertexData, uv[vertexIndx], vertexIndx);
-                    Sprite originalSprite = quad.getSprite();
-                    float frameU = originalSprite.getFrameFromU(uv[vertexIndx][0]);
-                    float frameV = originalSprite.getFrameFromV(uv[vertexIndx][1]);
-                    uv[vertexIndx][0] = sprite.getFrameU(frameU);
-                    uv[vertexIndx][1] = sprite.getFrameV(frameV);
-                    packUV(uv[vertexIndx], vertexData, vertexIndx);
+                    int[] vertexData = new int[quad.getVertexData().length];
+                    System.arraycopy(quad.getVertexData(), 0, vertexData, 0, vertexData.length);
+                    float[][] uv = new float[4][2];
+                    for (int vertexIndx = 0; vertexIndx < 4; vertexIndx++) {
+                        unpackUV(vertexData, uv[vertexIndx], vertexIndx);
+                        Sprite originalSprite = quad.getSprite();
+                        float frameU = originalSprite.getFrameFromU(uv[vertexIndx][0]);
+                        float frameV = originalSprite.getFrameFromV(uv[vertexIndx][1]);
+                        uv[vertexIndx][0] = sprite.getFrameU(frameU);
+                        uv[vertexIndx][1] = sprite.getFrameV(frameV);
+                        packUV(uv[vertexIndx], vertexData, vertexIndx);
+                    }
+                    return new BakedQuad(vertexData, quad.getColorIndex(), quad.getFace(), sprite, quad.hasShade());
                 }
-                BakedQuad transformedQuad = new BakedQuad(vertexData, quad.getColorIndex(), quad.getFace(), quad.getSprite(), quad.hasShade());
-                quadToTransformedQuad.put(quadKey, transformedQuad);
-                transformedQuads.add(transformedQuad);
-            }
+            });
+
+            transformedQuads.add(resultQuad);
         });
         return transformedQuads;
     }
