@@ -11,14 +11,18 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class PFMSpriteRegistry {
     public static Identifier HERRINGBONE_PLANKS = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/template_herringbone_planks");
-    public static Map<Identifier, Function<SpriteContents, List<Pair<Identifier, SpriteContents>>>> DYNAMIC_SPRITE_GENERATORS = new HashMap<>();
+    public static Map<Identifier, Function<SpriteContents, List<Pair<Identifier, SpriteContents>>>> DYNAMIC_SPRITE_GENERATORS = new ConcurrentHashMap<>();
 
     public static void registerAdditionalSprites() {
+        if (!DYNAMIC_SPRITE_GENERATORS.isEmpty())
+            return;
+
         List<VariantBase<?>> variantBaseList = new ArrayList<>(WoodVariantRegistry.getVariants());
 
         // herringbone

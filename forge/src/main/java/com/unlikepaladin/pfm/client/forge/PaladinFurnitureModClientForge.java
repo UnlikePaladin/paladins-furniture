@@ -55,6 +55,7 @@ import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.Consumer;
@@ -67,11 +68,16 @@ public class PaladinFurnitureModClientForge {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        PFMSpriteRegistry.registerAdditionalSprites();
         ColorRegistryForge.registerBlockRenderLayers();
         event.enqueueWork(PaladinFurnitureModClientForge::registerScreens);
         ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
                 () -> new ConfigScreenHandler.ConfigScreenFactory(PFMConfigScreen::new));
+    }
+
+
+    @SubscribeEvent
+    public static void registerSprites(FMLCommonSetupEvent event) {
+        PFMSpriteRegistry.registerAdditionalSprites();
     }
 
     private static void registerScreens() {

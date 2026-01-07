@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.client.neoforge;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.UnbakedCoffeeBasicTableModel;
 import com.unlikepaladin.pfm.blocks.models.basicDesk.UnbakedBasicDeskModel;
 import com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.UnbakedBasicDeskCabinetModel;
@@ -39,11 +38,9 @@ import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.render.model.BlockStateModel;
-import net.minecraft.client.render.model.SimpleModel;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.util.Identifier;
 import net.neoforged.api.distmarker.Dist;
@@ -51,6 +48,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -71,11 +69,15 @@ public class PaladinFurnitureModClientNeoForge {
 
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        PFMSpriteRegistry.registerAdditionalSprites();
         ColorRegistryNeoForge.registerBlockRenderLayers();
         event.enqueueWork(PaladinFurnitureModClientNeoForge::registerScreens);
         ModLoadingContext.get().registerExtensionPoint(IConfigScreenFactory.class,
                 () -> ((modContainer, arg) -> new PFMConfigScreen(arg.getMinecraft(), arg)));
+    }
+
+    @SubscribeEvent
+    public static void registerSprites(FMLCommonSetupEvent event) {
+        PFMSpriteRegistry.registerAdditionalSprites();
     }
 
     private static void registerScreens() {

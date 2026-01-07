@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelGetQuadsExtension;
 import com.unlikepaladin.pfm.client.model.PFMBakedModelSetPropertiesExtension;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
@@ -14,6 +15,7 @@ import net.minecraft.client.render.model.BlockModelPart;
 import net.minecraft.client.render.model.ModelBakeSettings;
 import net.minecraft.client.render.model.ModelSettings;
 import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.util.math.Vector2f;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
@@ -296,19 +298,21 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                     // Transform the quad
                     Sprite sprite = spriteData.getSprite();
 
-                    int[] vertexData = new int[quad.vertexData().length];
-                    System.arraycopy(quad.vertexData(), 0, vertexData, 0, vertexData.length);
-                    float[][] uv = new float[4][2];
-                    for (int vertexIndx = 0; vertexIndx < 4; vertexIndx++) {
-                        unpackUV(vertexData, uv[vertexIndx], vertexIndx);
-                        Sprite originalSprite = quad.sprite();
-                        float frameU = originalSprite.getFrameFromU(uv[vertexIndx][0]);
-                        float frameV = originalSprite.getFrameFromV(uv[vertexIndx][1]);
-                        uv[vertexIndx][0] = sprite.getFrameU(frameU);
-                        uv[vertexIndx][1] = sprite.getFrameV(frameV);
-                        packUV(uv[vertexIndx], vertexData, vertexIndx);
+                    long[] newUVs = new long[4];
+                    long[] ogUVs = {quad.packedUV0(), quad.packedUV1(), quad.packedUV2(), quad.packedUV3()};
+                    Sprite originalSprite = quad.sprite();
+                    for (int i = 0; i < 4; i++) {
+                        Vector2f unpacked = unpackUV(ogUVs[i]);
+
+                        float frameU = ModelHelper.getFrameFromU(originalSprite, unpacked.x());
+                        float frameV = ModelHelper.getFrameFromV(originalSprite, unpacked.y());
+                        float newU = sprite.getFrameU(frameU);
+                        float newV = sprite.getFrameV(frameV);
+                        newUVs[i] = Vector2f.toLong(newU, newV);
                     }
-                    return new BakedQuad(vertexData, quad.tintIndex(), quad.face(), sprite, quad.shade(), quad.lightEmission());
+
+                    return new BakedQuad(quad.position0(), quad.position1(), quad.position2(), quad.position3(),
+                            newUVs[0], newUVs[1], newUVs[2], newUVs[3], quad.tintIndex(), quad.face(), quad.sprite(), quad.shade(), quad.lightEmission());
                 }
             });
 
@@ -317,20 +321,11 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return transformedQuads;
     }
 
-    public static void unpackUV(int[] vertexData, float[] uv, int vertexIndx)
-    {
-        int offset = vertexIndx * IQuadTransformer.STRIDE + IQuadTransformer.UV0;
-        uv[0] = Float.intBitsToFloat(vertexData[offset]);
-        uv[1] = Float.intBitsToFloat(vertexData[offset + 1]);
+    public static Vector2f unpackUV(long packed) {
+        int ix = (int)(packed >>> 32);
+        int iy = (int) packed;
+        return new Vector2f(Float.intBitsToFloat(ix), Float.intBitsToFloat(iy));
     }
-
-    public static void packUV(float[] uv, int[] vertexData, int vertexIndx)
-    {
-        int offset = vertexIndx * IQuadTransformer.STRIDE + IQuadTransformer.UV0;
-        vertexData[offset] = Float.floatToRawIntBits(uv[0]);
-        vertexData[offset+1] = Float.floatToRawIntBits(uv[1]);
-    }
-
 
     private static final Map<Pair<VertexFormatElement.Type, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
     public static int findVertexElement(VertexFormatElement.Type type, int index) {

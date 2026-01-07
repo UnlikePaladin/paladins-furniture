@@ -30,7 +30,7 @@ public class PFMExtraModelsForge {
         }
 
         public static SimpleUnbakedExtraModel blockStateModel(Identifier model) {
-            return blockStateModel(model, ModelRotation.X0_Y0);
+            return blockStateModel(model, ModelRotation.IDENTITY);
         }
 
         public static SimpleUnbakedExtraModel blockStateModel(Identifier model, ModelBakeSettings settings) {

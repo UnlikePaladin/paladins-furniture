@@ -1,9 +1,7 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu;
 
-import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
-import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveFuelSlot;
-import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveResultSlot;
+//import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.slot.StoveFuelSlot;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 /*import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOven;
@@ -14,11 +12,8 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
-import net.minecraft.util.math.BlockPos;
 
 public class StoveScreenHandlerBalm extends ScreenHandler {// implements IContainerWithDoor {
     private final StoveBlockEntityBalm tileEntity;

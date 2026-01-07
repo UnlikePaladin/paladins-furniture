@@ -15,6 +15,8 @@ public class StoveFuelSlot extends Slot {
     }
 
     public boolean canInsert(ItemStack itemStack) {
-        return OvenBlockEntity.isItemFuel(menu.getTileEntity().getWorld(), itemStack);
+     return true;
+     //TODO FIX AS SOON AS CFBH is updated
+        //   return OvenBlockEntity.isItemFuel(menu.getTileEntity().getWorld(), itemStack);
     }
 }

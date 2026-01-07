@@ -233,7 +233,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             final Text tooltipText = sideText.append(Text.literal("\n")).append(styledTooltip);
             this.supplier = Tooltip.of(tooltipText);
 
-            this.button = ButtonWidget.builder(buttonText, (buttonWidget) -> {} )
+            this.button = ButtonWidget.builder(buttonText, pressAction)
                     .dimensions(0,0, 135, 20)
                     .narrationSupplier((a) -> optionName.copy()).build();
             button.setTooltip(supplier);
