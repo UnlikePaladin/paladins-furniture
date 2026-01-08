@@ -214,6 +214,14 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         return getTemplateBakedModels().get(0).getParticleSprite();
     }
 
+    public ModelData.Builder getPropertiesForItem(ItemStack stack, ModelData data)  {
+        BlockState state = stack.getItem() instanceof BlockItem ? ((BlockItem) stack.getItem()).getBlock().getDefaultState() : null;
+        if (state != null) {
+            return data.derive().with(STATE,  state);
+        }
+        return data.derive();
+    }
+
     @Override
     public @NotNull List<BakedModel> getRenderPasses(ItemStack itemStack) {
         BlockState state = itemStack.getItem() instanceof BlockItem ? ((BlockItem) itemStack.getItem()).getBlock().getDefaultState() : null;
@@ -223,7 +231,15 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
             map.put(direction, getQuadsCached(itemStack, state, direction, random));
         }
         map.put(null, getQuadsCached(itemStack, state, null, random));
-        PFMCachingBakedModel cachingBakedModel = new PFMCachingBakedModel(map, getParticleSprite());
+        Sprite particle;
+        if (itemStack.getItem() instanceof BlockItem) {
+            ModelData data = ModelData.builder().build();
+            data = getPropertiesForItem(itemStack, data).build();
+            particle = getParticleIcon(data);
+        } else {
+            particle = getParticleSprite();
+        }
+        PFMCachingBakedModel cachingBakedModel = new PFMCachingBakedModel(map, particle);
         return List.of(cachingBakedModel);
     }
 

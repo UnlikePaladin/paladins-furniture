@@ -75,7 +75,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             float blue = 1.0f;
 
 
-            if (itemStack.contains(PFMComponents.COLOR_COMPONENT) && quad.hasColor()) {
+            if (itemStack.get(PFMComponents.COLOR_COMPONENT) != null && quad.hasColor()) {
                 int colorInt = itemStack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getFireworkColor();
                 red = ((colorInt >> 16) & 0xFF) / 255.0f;
                 green = ((colorInt >> 8) & 0xFF) / 255.0f;
@@ -96,12 +96,9 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
 
     @Override
     public void render(OfficeChairEntityRenderState mobEntity, MatrixStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
-        int damageStage = (int) (mobEntity.maxHealth - mobEntity.health);
+        int damageStage = (int) Math.min(9, Math.max(mobEntity.maxHealth - mobEntity.health, 0));
         VertexConsumer damageConsumer = MinecraftClient.getInstance().getBufferBuilders().getEffectVertexConsumers()
                 .getBuffer(ModelBaker.BLOCK_DESTRUCTION_RENDER_LAYERS.get(damageStage));
-
-        BitSet bitSet = new BitSet(3);
-        float[] fs = new float[Direction.values().length * 2];
 
         VertexConsumer solid =
                 vertexConsumerProvider.getBuffer(RenderLayer.getCutoutMipped());

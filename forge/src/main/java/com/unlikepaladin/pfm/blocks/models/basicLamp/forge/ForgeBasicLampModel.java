@@ -132,7 +132,7 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
         List<BakedQuad> quads = new ArrayList<>();
         WoodVariant variant = WoodVariantRegistry.OAK;
-        if (stack.contains(PFMComponents.VARIANT_COMPONENT)) {
+        if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
             variant = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
         }
         quads.addAll(getTemplateBakedModels().get(4).getQuads(state, face, random));
