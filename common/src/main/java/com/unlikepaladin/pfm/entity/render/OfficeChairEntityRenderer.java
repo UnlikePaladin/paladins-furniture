@@ -95,7 +95,7 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
             return;
         }
 
-        int damageStage = (int) (mobEntity.getMaxHealth() - mobEntity.getHealth());
+        int damageStage = (int) Math.min(9, Math.max(mobEntity.getMaxHealth() - mobEntity.getHealth(), 0));
         VertexConsumer damageConsumer = MinecraftClient.getInstance().getBufferBuilders().getEffectVertexConsumers()
                 .getBuffer(ModelLoader.BLOCK_DESTRUCTION_RENDER_LAYERS.get(damageStage));
 
