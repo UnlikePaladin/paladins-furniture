@@ -20,7 +20,7 @@ public class PFMSpriteRegistry {
     public static Map<Identifier, Function<SpriteContents, List<Pair<Identifier, SpriteContents>>>> DYNAMIC_SPRITE_GENERATORS = new HashMap<>();
 
     public static void registerAdditionalSprites() {
-        if (!PFM_SPRITES.isEmpty() || !DYNAMIC_SPRITE_GENERATORS.isEmpty())
+        if (!DYNAMIC_SPRITE_GENERATORS.isEmpty())
             return;
 
         List<VariantBase<?>> variantBaseList = new ArrayList<>(WoodVariantRegistry.getVariants());
