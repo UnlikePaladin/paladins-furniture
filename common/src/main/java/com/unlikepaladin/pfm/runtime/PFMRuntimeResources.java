@@ -111,6 +111,7 @@ public class PFMRuntimeResources {
     }
 
     public static void prepareAndRunAssetGen(boolean logOrDebug) {
+        PFMSpriteRegistry.registerAdditionalSprites();
         isAnyGeneratorRunning = true;
         PFMAssetGenerator dataGen = new PFMAssetGenerator(PFMRuntimeResources.getAssetPackDirectory(), logOrDebug);
         try {
