@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.runtime;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.minecraft.resource.DirectoryResourcePack;
 import net.minecraft.resource.ResourcePack;
@@ -96,6 +97,7 @@ public class PFMRuntimeResources {
     }
 
     public static void prepareAndRunAssetGen(boolean logOrDebug) {
+        PFMSpriteRegistry.registerAdditionalSprites();
         isAnyGeneratorRunning = true;
         PFMAssetGenerator dataGen = new PFMAssetGenerator(PFMRuntimeResources.getAssetPackDirectory(), logOrDebug);
         try {
