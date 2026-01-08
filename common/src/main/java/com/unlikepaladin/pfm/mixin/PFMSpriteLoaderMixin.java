@@ -38,6 +38,7 @@ public class PFMSpriteLoaderMixin {
     private static void pfm$InjectAdditionalSprites(List<SpriteContents> sprites, CallbackInfoReturnable<List<SpriteContents>> cir,
                                                     @Local(argsOnly = true) LocalRef<List<SpriteContents>> spriteList) {
 
+        PFMSpriteRegistry.registerAdditionalSprites();
         List<SpriteContents> spritesCopy = new ArrayList<>(sprites);
 
         Set<Identifier> ids = sprites.stream().map(SpriteContents::getId).collect(Collectors.toSet());
