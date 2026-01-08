@@ -39,6 +39,16 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     public static ModelProperty<WoodVariant> VARIANT = new ModelProperty<>();
 
+    @Override
+    public ModelData.Builder getPropertiesForItem(ItemStack stack, ModelData data) {
+        data = super.getPropertiesForItem(stack, data).build();
+        if (stack.hasNbt() && stack.getNbt().contains("BlockEntityTag") && stack.getSubNbt("BlockEntityTag").contains("variant")) {
+            WoodVariant variant = WoodVariantRegistry.getVariant(Identifier.tryParse(stack.getSubNbt("BlockEntityTag").getString("variant")));
+            return data.derive().with(VARIANT, variant);
+        }
+        return data.derive();
+    }
+
     @NotNull
     @Override
     public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
