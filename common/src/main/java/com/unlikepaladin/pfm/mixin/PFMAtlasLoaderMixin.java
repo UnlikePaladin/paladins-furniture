@@ -76,6 +76,7 @@ public class PFMAtlasLoaderMixin {
 
     @Inject(method = "of", at = @At("RETURN"))
     private static void pfm$storeAtlasId(ResourceManager resourceManager, Identifier id, CallbackInfoReturnable<AtlasLoader> cir) {
+        PFMSpriteRegistry.registerAdditionalSprites();
         ((PFMAtlasLoaderMixin)(Object)cir.getReturnValue()).pfm$atlasId = id;
     }
 }
