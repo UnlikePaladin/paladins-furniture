@@ -60,7 +60,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
 
             if (!componentChanges.isEmpty() && componentChanges.entrySet().stream().anyMatch(dataComponentTypeOptionalEntry -> dataComponentTypeOptionalEntry.getKey() == PFMComponents.COLOR_COMPONENT)) {
                 optionalOutput = PaladinFurnitureMod.furnitureEntryMap.get(getOutputBlockClass()).getEntryFromVariantAndColor(variant, componentChanges.get(PFMComponents.COLOR_COMPONENT).get());
-                if (!optionalOutput.get().asItem().getComponents().contains(PFMComponents.COLOR_COMPONENT)) {
+                if (optionalOutput.get().asItem().getComponents().get(PFMComponents.COLOR_COMPONENT) == null) {
                     componentChanges = componentChanges.withRemovedIf(dataComponentType -> dataComponentType == PFMComponents.COLOR_COMPONENT);
                     ComponentMapImpl.create(optionalOutput.get().asItem().getComponents(), componentChanges);
                 }
@@ -72,7 +72,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
             }
             if (optionalOutput.isEmpty()) continue;
 
-            if (optionalOutput.get().asItem().getComponents().contains(PFMComponents.VARIANT_COMPONENT)) {
+            if (optionalOutput.get().asItem().getComponents().get(PFMComponents.VARIANT_COMPONENT) != null) {
                 builder.add(PFMComponents.VARIANT_COMPONENT, variant.identifier);
             }
 

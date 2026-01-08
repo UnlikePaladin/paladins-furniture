@@ -36,9 +36,18 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
         super(settings, modelParts);
     }
 
-
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     public static ModelProperty<WoodVariant> VARIANT = new ModelProperty<>();
+
+    @Override
+    public ModelData.Builder getPropertiesForItem(ItemStack stack, ModelData data) {
+        data = super.getPropertiesForItem(stack, data).build();
+        if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
+            WoodVariant variant = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
+            return data.derive().with(VARIANT, variant);
+        }
+        return data.derive();
+    }
 
     @NotNull
     @Override
@@ -130,7 +139,7 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
         List<BakedQuad> quads = new ArrayList<>();
         WoodVariant variant = WoodVariantRegistry.OAK;
-        if (stack.contains(PFMComponents.VARIANT_COMPONENT)) {
+        if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
             variant = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
         }
         quads.addAll(getTemplateBakedModels().get(4).getQuads(state, face, random));

@@ -5,10 +5,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.forge.PFMBakedModelGetQuadsExtension;
 import net.minecraft.block.BlockState;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.VertexFormatElement;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.render.*;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.render.model.ModelBakeSettings;
@@ -218,6 +215,14 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return getTemplateBakedModels().get(0).getParticleSprite();
     }
 
+    public ModelData.Builder getPropertiesForItem(ItemStack stack, ModelData data)  {
+        BlockState state = stack.getItem() instanceof BlockItem ? ((BlockItem) stack.getItem()).getBlock().getDefaultState() : null;
+        if (state != null) {
+            return data.derive().with(STATE,  state);
+        }
+        return data.derive();
+    }
+
     @Override
     public List<BakedModel> getRenderPasses(ItemStack itemStack, boolean fabulous) {
         BlockState state = itemStack.getItem() instanceof BlockItem ? ((BlockItem) itemStack.getItem()).getBlock().getDefaultState() : null;
@@ -227,7 +232,15 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             map.put(direction, getQuadsCached(itemStack, state, direction, random));
         }
         map.put(null, getQuadsCached(itemStack, state, null, random));
-        PFMCachingBakedModel cachingBakedModel = new PFMCachingBakedModel(map, getParticleSprite());
+        Sprite particle;
+        if (itemStack.getItem() instanceof BlockItem) {
+            ModelData data = ModelData.builder().build();
+            data = getPropertiesForItem(itemStack, data).build();
+            particle = getParticleIcon(data);
+        } else {
+            particle = getParticleSprite();
+        }
+        PFMCachingBakedModel cachingBakedModel = new PFMCachingBakedModel(map, particle);
         return List.of(cachingBakedModel);
     }
 
