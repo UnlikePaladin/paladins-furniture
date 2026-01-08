@@ -99,7 +99,6 @@ public class PFMRuntimeResources {
 
     public static boolean ready = false;
     public static void prepareAndRunDataGen(boolean logOrDebug) {
-        PFMSpriteRegistry.registerAdditionalSprites();
         isAnyGeneratorRunning = true;
         PFMDataGenerator dataGen = new PFMDataGenerator(PFMRuntimeResources.getDataPackDirectory(), logOrDebug);
         try {

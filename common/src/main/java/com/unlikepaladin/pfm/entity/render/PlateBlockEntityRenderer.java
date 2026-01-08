@@ -38,7 +38,8 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
 
     @Override
     public void render(PlateBlockEntityRenderState state, MatrixStack matrices, OrderedRenderCommandQueue queue, CameraRenderState cameraState) {
-        if (state == null) {
+        // literally lol
+        if (state != null) {
             Direction direction = state.blockState.get(PlateBlock.FACING);
             matrices.push();
             Direction direction2 = Direction.fromHorizontalQuarterTurns((direction.getHorizontalQuarterTurns()) % 4);
