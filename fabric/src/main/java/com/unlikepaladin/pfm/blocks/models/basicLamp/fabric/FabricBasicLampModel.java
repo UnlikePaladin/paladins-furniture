@@ -72,7 +72,7 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
         WoodVariant variant = WoodVariantRegistry.OAK;
-        if (stack.contains(PFMComponents.VARIANT_COMPONENT)) {
+        if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
             variant = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
         }
         pushTextureTransform(context, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));

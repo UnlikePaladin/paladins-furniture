@@ -27,10 +27,10 @@ public class LampItem extends BlockItem {
         DyeColor color = DyeColor.WHITE;
         WoodVariant variant = WoodVariantRegistry.OAK;
 
-        if (stack.contains(PFMComponents.COLOR_COMPONENT)) {
+        if (stack.get(PFMComponents.COLOR_COMPONENT) != null) {
             color = stack.get(PFMComponents.COLOR_COMPONENT);
         }
-        if (stack.contains(PFMComponents.VARIANT_COMPONENT)) {
+        if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
             variant = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
         }
         return String.format("block.pfm.basic_%s_%s_lamp", color.asString(), variant.asString());

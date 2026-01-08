@@ -103,9 +103,9 @@ public class ColorRegistry {
         registerItemColor(PaladinFurnitureModBlocksItems.BASIC_BATHTUB.asItem(), (stack, index) -> index == 1 ?  0x3c44a9 : 0xFFFFFF);
         registerItemColor(PaladinFurnitureModBlocksItems.BASIC_SINK.asItem(), (stack, index) -> index == 1 ?  0x3c44a9 : 0xFFFFFF);
         registerItemColor(PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM, (stack, tintIndex) -> {
-            if (stack.contains(PFMComponents.COLOR_COMPONENT) && tintIndex == 1) {
+            if (stack.get(PFMComponents.COLOR_COMPONENT) != null && tintIndex == 1) {
                 return stack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getMapColor().color;
-            } else if (stack.contains(PFMComponents.VARIANT_COMPONENT) && tintIndex == 0) {
+            } else if (stack.get(PFMComponents.VARIANT_COMPONENT) != null && tintIndex == 0) {
                 WoodVariant variantBase = WoodVariantRegistry.getVariant(stack.getOrDefault(PFMComponents.VARIANT_COMPONENT, WoodVariantRegistry.OAK.identifier));
                 if (getItemColor(variantBase.getLogBlock().asItem()) != null) {
                     return getItemColor(variantBase.getLogBlock().asItem()).getColor(stack, tintIndex);
