@@ -35,7 +35,6 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
         super(settings, modelParts);
     }
 
-
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     public static ModelProperty<WoodVariant> VARIANT = new ModelProperty<>();
 
