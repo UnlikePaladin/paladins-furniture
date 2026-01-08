@@ -22,6 +22,9 @@ public class PFMSpriteRegistry {
     public static Map<Identifier, Identifier> PFM_SPRITES = new HashMap<>();
 
     public static void registerAdditionalSprites() {
+        if (!PFM_SPRITES.isEmpty() || !DYNAMIC_SPRITE_GENERATORS.isEmpty())
+            return;
+
         List<VariantBase<?>> variantBaseList = new ArrayList<>(WoodVariantRegistry.getVariants());
 
         // herringbone
