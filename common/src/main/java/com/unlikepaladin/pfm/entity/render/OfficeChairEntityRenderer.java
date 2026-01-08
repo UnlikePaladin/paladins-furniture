@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.entity.model.OfficeChairModelEmpty;
 import com.unlikepaladin.pfm.entity.render.state.OfficeChairEntityRenderState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
+import net.minecraft.client.render.block.BlockModelRenderer;
 import net.minecraft.client.render.command.OrderedRenderCommandQueue;
 import net.minecraft.client.render.entity.EntityRendererFactory;
 import net.minecraft.client.render.entity.MobEntityRenderer;
@@ -116,9 +117,18 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
                 OverlayTexture.DEFAULT_UV,
                 mobEntity.outlineColor);
         if (mobEntity.timeUntilRegen > 0) {
-            orderedRenderCommandQueue.submitBlockStateModel(matrixStack, damagedLayer, model, 1.0f, 1.0f, 1.0f, mobEntity.light,
-                    OverlayTexture.DEFAULT_UV,
-                    mobEntity.outlineColor);
+            orderedRenderCommandQueue.submitCustom(matrixStack, damagedLayer, (matricesEntry, vertexConsumer) -> {
+                BlockModelRenderer.render(
+                        matricesEntry,
+                        new OverlayVertexConsumer(vertexConsumer, matricesEntry, 1.0f),
+                        model,
+                        red,
+                        green,
+                        blue,
+                        mobEntity.light,
+                        OverlayTexture.DEFAULT_UV
+                );
+            });
         }
 
         matrixStack.pop();
