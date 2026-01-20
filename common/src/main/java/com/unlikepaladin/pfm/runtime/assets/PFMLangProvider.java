@@ -27,6 +27,7 @@ import net.minecraft.resource.*;
 import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
+import net.minecraft.util.Pair;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
@@ -193,16 +194,21 @@ public class PFMLangProvider extends PFMProvider {
         return translate(furnitureKey, translatedVariantName, color);
     }
 
-    private Map<String, LanguageDefinition> loadAvailableLanguages(Stream<ResourcePack> packs) {
-        HashMap<String, LanguageDefinition> map = Maps.newHashMap();
+    private Map<String, Pair<LanguageDefinition, Boolean>> loadAvailableLanguages(Stream<ResourcePack> packs) {
+        HashMap<String, Pair<LanguageDefinition, Boolean>> map = Maps.newHashMap();
         packs.forEach(pack -> {
             try {
                 List<ResourcePack> subPacks = PFMFileUtil.getSubPacks(pack);
                 for (ResourcePack subPack : subPacks) {
                     LanguageResourceMetadata languageResourceMetadata = subPack.parseMetadata(LanguageResourceMetadata.READER);
                     if (languageResourceMetadata != null) {
+                        boolean hasPFM = subPack.getNamespaces(ResourceType.CLIENT_RESOURCES).contains("pfm");
                         for (LanguageDefinition languageDefinition : languageResourceMetadata.getLanguageDefinitions()) {
-                            map.putIfAbsent(languageDefinition.getCode(), languageDefinition);
+                            if (map.containsKey(languageDefinition.getCode())) {
+                                map.compute(languageDefinition.getCode(), (k, existingPair) -> new Pair<>(existingPair.getLeft(), existingPair.getRight() || hasPFM));
+                                continue;
+                            }
+                            map.putIfAbsent(languageDefinition.getCode(), new Pair<>(languageDefinition, hasPFM));
                         }
                     }
                 }
@@ -213,13 +219,20 @@ public class PFMLangProvider extends PFMProvider {
         });
         return ImmutableMap.copyOf(map);
     }
-    private Map<String, LanguageDefinition> languageDefs = ImmutableMap.of("en_us", PFMLanguageManagerAccessor.getEnglish_Us());
     private static volatile Language language = Language.getInstance();
 
     public void loadLanguages(ResourceManager manager) {
-        this.languageDefs = loadAvailableLanguages(PFMRuntimeResources.RESOURCE_PACK_LIST.stream());
-        LanguageDefinition enUSDefinition = this.languageDefs.getOrDefault(LanguageManager.DEFAULT_LANGUAGE_CODE, PFMLanguageManagerAccessor.getEnglish_Us());
-        LanguageDefinition selectedLangDefinition = this.languageDefs.getOrDefault(((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode(), enUSDefinition);
+        Map<String, Pair<LanguageDefinition, Boolean>> defs = loadAvailableLanguages(PFMRuntimeResources.RESOURCE_PACK_LIST.stream());
+        LanguageDefinition enUSDefinition = defs.getOrDefault(LanguageManager.DEFAULT_LANGUAGE_CODE, new Pair<>(PFMLanguageManagerAccessor.getEnglish_Us(), true)).getLeft();
+
+        LanguageDefinition selectedLangDefinition;
+        // Only generate translations if PFM contains a file for it
+        if (defs.containsKey(((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode()) && defs.get(((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode()).getRight()) {
+            selectedLangDefinition = defs.get(((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode()).getLeft();
+        } else {
+            selectedLangDefinition = enUSDefinition;
+        }
+
         ArrayList<LanguageDefinition> list = Lists.newArrayList(enUSDefinition);
         if (selectedLangDefinition != enUSDefinition) {
             list.add(selectedLangDefinition);
