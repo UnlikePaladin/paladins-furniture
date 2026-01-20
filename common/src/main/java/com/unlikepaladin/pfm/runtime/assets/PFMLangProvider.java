@@ -57,7 +57,7 @@ public class PFMLangProvider extends PFMProvider {
         catch (Exception e) {
             getParent().getLogger().info(e);
         };
-        try(BufferedWriter writer = IOUtils.buffer(new FileWriter(new File(PFMRuntimeResources.createDirIfNeeded(getParent().getOrCreateSubDirectory("assets/pfm").resolve("lang")).toFile(), "en_us.json"))))
+        try(BufferedWriter writer = IOUtils.buffer(new FileWriter(new File(PFMRuntimeResources.createDirIfNeeded(getParent().getOrCreateSubDirectory("assets/pfm").resolve("lang")).toFile(), languageCode+".json"))))
         {
             writer.write("{\n");
             generateTranslationForVariantBlockMap(PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap(), writer, "block.pfm.basic_chair", this::simpleStrippedFurnitureTranslation);
@@ -194,21 +194,29 @@ public class PFMLangProvider extends PFMProvider {
         return translate(furnitureKey, translatedVariantName, color);
     }
 
-    private Map<String, Pair<LanguageDefinition, Boolean>> loadAvailableLanguages(Stream<ResourcePack> packs) {
-        HashMap<String, Pair<LanguageDefinition, Boolean>> map = Maps.newHashMap();
+    private boolean isLanguageSupported(String languageCode) {
+        boolean supported = false;
+        for (ResourcePack pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
+            try {
+                pack.open(ResourceType.CLIENT_RESOURCES, new Identifier(PaladinFurnitureMod.MOD_ID, "lang/" + languageCode + ".json")).close();
+                supported = true;
+                break;
+            } catch (IOException ignored) {
+            }
+        }
+        return supported;
+    }
+
+    private Map<String, LanguageDefinition> loadAvailableLanguages(Stream<ResourcePack> packs) {
+        HashMap<String, LanguageDefinition> map = Maps.newHashMap();
         packs.forEach(pack -> {
             try {
                 List<ResourcePack> subPacks = PFMFileUtil.getSubPacks(pack);
                 for (ResourcePack subPack : subPacks) {
                     LanguageResourceMetadata languageResourceMetadata = subPack.parseMetadata(LanguageResourceMetadata.READER);
                     if (languageResourceMetadata != null) {
-                        boolean hasPFM = subPack.getNamespaces(ResourceType.CLIENT_RESOURCES).contains("pfm");
                         for (LanguageDefinition languageDefinition : languageResourceMetadata.getLanguageDefinitions()) {
-                            if (map.containsKey(languageDefinition.getCode())) {
-                                map.compute(languageDefinition.getCode(), (k, existingPair) -> new Pair<>(existingPair.getLeft(), existingPair.getRight() || hasPFM));
-                                continue;
-                            }
-                            map.putIfAbsent(languageDefinition.getCode(), new Pair<>(languageDefinition, hasPFM));
+                            map.putIfAbsent(languageDefinition.getCode(), languageDefinition);
                         }
                     }
                 }
@@ -220,15 +228,17 @@ public class PFMLangProvider extends PFMProvider {
         return ImmutableMap.copyOf(map);
     }
     private static volatile Language language = Language.getInstance();
+    private static String languageCode = LanguageManager.DEFAULT_LANGUAGE_CODE;
 
     public void loadLanguages(ResourceManager manager) {
-        Map<String, Pair<LanguageDefinition, Boolean>> defs = loadAvailableLanguages(PFMRuntimeResources.RESOURCE_PACK_LIST.stream());
-        LanguageDefinition enUSDefinition = defs.getOrDefault(LanguageManager.DEFAULT_LANGUAGE_CODE, new Pair<>(PFMLanguageManagerAccessor.getEnglish_Us(), true)).getLeft();
+        Map<String, LanguageDefinition> defs = loadAvailableLanguages(PFMRuntimeResources.RESOURCE_PACK_LIST.stream());
+        LanguageDefinition enUSDefinition = defs.getOrDefault(LanguageManager.DEFAULT_LANGUAGE_CODE, PFMLanguageManagerAccessor.getEnglish_Us());
 
         LanguageDefinition selectedLangDefinition;
+        String currentCode = ((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode();
         // Only generate translations if PFM contains a file for it
-        if (defs.containsKey(((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode()) && defs.get(((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode()).getRight()) {
-            selectedLangDefinition = defs.get(((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode()).getLeft();
+        if (defs.containsKey(currentCode) && isLanguageSupported(currentCode)) {
+            selectedLangDefinition = defs.get(currentCode);
         } else {
             selectedLangDefinition = enUSDefinition;
         }
@@ -237,6 +247,7 @@ public class PFMLangProvider extends PFMProvider {
         if (selectedLangDefinition != enUSDefinition) {
             list.add(selectedLangDefinition);
         }
+        languageCode = selectedLangDefinition.getCode();
         TranslationStorage translationStorage = TranslationStorage.load(manager, list);
         language = translationStorage;
         Language.setInstance(translationStorage);
@@ -300,7 +311,7 @@ public class PFMLangProvider extends PFMProvider {
 
         String key = "block.pfm.variant."+variant.getIdentifier().getPath();
         if (!key.equals(translate(key))) {
-            translationMap.put(variant, translate(key));
+            translationMap.put(variant, translate(key).toLowerCase(Locale.ROOT));
             return translationMap.get(variant);
         }
 
@@ -309,8 +320,8 @@ public class PFMLangProvider extends PFMProvider {
         List<String> common = findCommonWords(variantName.get(), baseBlockName);
         variantName.set("");
         variantName.set(String.join(" ", common));
-        translationMap.put(variant, variantName.get());
-        return variantName.get();
+        translationMap.put(variant, variantName.get().toLowerCase(Locale.ROOT));
+        return variantName.get().toLowerCase(Locale.ROOT);
     }
 
     public void generateTranslationForBedMap(HashMap<VariantBase<?>, ? extends Set<?>> variantBaseHashMap, BufferedWriter writer, String furnitureKey, QuadFunc<Block, String, String, String, String> blockStringStringStringStringQuadFunc) {
