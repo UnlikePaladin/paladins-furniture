@@ -27,8 +27,13 @@ public class PFMSpriteAtlasTexturesMixin implements PFMSpriteAtlasTexturesExtens
     @Unique
     TextureStitcher pfm$stitcher;
 
-    @Inject(method = "stitch", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void beforeStitching(ResourceManager resourceManager, Stream<Identifier> idStream, Profiler profiler, int mipmapLevel, CallbackInfoReturnable<SpriteAtlasTexture.Data> cir, Set<Identifier> set, int i, TextureStitcher stitcher, int j, int k) {
+    @Inject(method = "stitch", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, require = 0)
+    public void beforeStitching(ResourceManager resourceManager, Stream<Identifier> idStream, Profiler profiler, int mipmapLevel, CallbackInfoReturnable<SpriteAtlasTexture.Data> cir, Set<Identifier> set, int i, TextureStitcher stitcher) {
+        this.pfm$stitcher = stitcher;
+    }
+
+    @Inject(method = "stitch", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, require = 0)
+    public void beforeStitchingOF(ResourceManager resourceManager, Stream<Identifier> idStream, Profiler profiler, int mipmapLevel, CallbackInfoReturnable<SpriteAtlasTexture.Data> cir, int mipMapLevels, Set<Identifier> set, Set<Identifier> emissive, int i, TextureStitcher stitcher) {
         this.pfm$stitcher = stitcher;
     }
 
