@@ -11,7 +11,6 @@ import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
-import net.minecraft.client.render.entity.model.EntityModelLoader;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.client.render.model.json.ModelTransformation;
@@ -24,15 +23,13 @@ import net.minecraft.util.math.BlockPos;
 import java.util.*;
 
 public class PFMItemRendererFabric extends BuiltinModelItemRenderer {
-    public static PFMItemRendererFabric INSTANCE = new PFMItemRendererFabric(MinecraftClient.getInstance().getBlockEntityRenderDispatcher(), MinecraftClient.getInstance().getEntityModelLoader());
+    public static PFMItemRendererFabric INSTANCE = new PFMItemRendererFabric();
 
     private final PFMBedBlockEntity renderBed;
-    private final BlockEntityRenderDispatcher blockEntityRenderDispatcher;
-    public PFMItemRendererFabric(BlockEntityRenderDispatcher blockEntityRenderDispatcher, EntityModelLoader loader) {
-        super(blockEntityRenderDispatcher, loader);
-        this.blockEntityRenderDispatcher = blockEntityRenderDispatcher;
+    public PFMItemRendererFabric() {
+        super();
         if (PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleBedBlock.class) != null ) {
-            renderBed = new PFMBedBlockEntity(BlockPos.ORIGIN, PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList().get(WoodVariantRegistry.OAK).iterator().next().getDefaultState());
+            renderBed = new PFMBedBlockEntity();
         } else {
             renderBed = null;
         }
@@ -60,7 +57,7 @@ public class PFMItemRendererFabric extends BuiltinModelItemRenderer {
             matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
             this.renderBed.setColor(((SimpleBedBlock)block).getColor());
-            this.blockEntityRenderDispatcher.renderEntity(renderBed, matrices, vertexConsumers, light, overlay);
+            BlockEntityRenderDispatcher.INSTANCE.renderEntity(renderBed, matrices, vertexConsumers, light, overlay);
             matrices.pop();
         } else if (stack.getItem() == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
             matrices.push();

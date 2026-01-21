@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PFMItemRendererForge extends BuiltinModelItemRenderer {
-    public static PFMItemRendererForge INSTANCE = new PFMItemRendererForge(MinecraftClient.getInstance().getBlockEntityRenderDispatcher(), MinecraftClient.getInstance().getEntityModelLoader());
 
     private final PFMBedBlockEntity renderBed = new PFMBedBlockEntity();
     public PFMItemRendererForge() {

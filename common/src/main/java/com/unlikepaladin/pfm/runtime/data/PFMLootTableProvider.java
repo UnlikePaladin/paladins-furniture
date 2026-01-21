@@ -18,17 +18,12 @@ import net.minecraft.block.enums.BedPart;
 import net.minecraft.data.DataCache;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.server.BlockLootTableGenerator;
-import net.minecraft.loot.LootManager;
-import net.minecraft.loot.LootPool;
-import net.minecraft.loot.LootTable;
-import net.minecraft.loot.LootTables;
+import net.minecraft.loot.*;
 import net.minecraft.loot.context.LootContextType;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.entry.ItemEntry;
 import net.minecraft.loot.function.CopyNbtLootFunction;
 import net.minecraft.loot.function.CopyStateFunction;
-import net.minecraft.loot.provider.nbt.ContextLootNbtProvider;
-import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.registry.Registry;
 
@@ -81,10 +76,10 @@ public class PFMLootTableProvider extends PFMProvider {
         return LootTable.builder()
                 .pool(
                         LootPool.builder()
-                                .rolls(ConstantLootNumberProvider.create(1.0F))
+                                .rolls(ConstantLootTableRange.create(1))
                                 .with(
                                         ItemEntry.builder(drop)
-                                                .apply(CopyNbtLootFunction.builder(ContextLootNbtProvider.BLOCK_ENTITY).withOperation("variant", "BlockEntityTag.variant").withOperation("color", "BlockEntityTag.color"))
+                                                .apply(CopyNbtLootFunction.builder(CopyNbtLootFunction.Source.BLOCK_ENTITY).withOperation("variant", "BlockEntityTag.variant").withOperation("color", "BlockEntityTag.color"))
                                 )
                 );
     }
