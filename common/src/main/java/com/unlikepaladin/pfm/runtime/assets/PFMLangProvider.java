@@ -244,7 +244,7 @@ public class PFMLangProvider extends PFMProvider {
             selectedLangDefinition = enUSDefinition;
         }
         HashMap<LanguageDefinition, String> list = new HashMap<>();
-        list.put(enUSDefinition, LanguageManager.DEFAULT_LANGUAGE_CODE);
+        list.put(enUSDefinition, "en_us");
         if (selectedLangDefinition != enUSDefinition) {
             list.put(selectedLangDefinition, currentCode);
         }
