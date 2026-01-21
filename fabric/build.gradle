@@ -213,6 +213,7 @@ dependencies {
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "supported_minecraft_version", rootProject.supported_minecraft_version  // i hate gradle
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,

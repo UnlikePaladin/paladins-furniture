@@ -28,6 +28,7 @@ import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Language;
 import net.minecraft.util.Unit;
+import net.minecraft.util.Pair;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -56,13 +57,24 @@ public class PFMLangProvider extends PFMProvider {
         startProviderRun();
         try (PFMResourceManager resourceManager = new PFMResourceManager(ResourceType.CLIENT_RESOURCES, PFMRuntimeResources.RESOURCE_PACK_LIST)) {
             loadLanguages(resourceManager);
+            for (LanguageDefinition languageDefinition : languagesToGenerate) {
+                language = TranslationStorage.load(resourceManager, Collections.singletonList(languageDefinition));
+                currentLanguageCode = languageDefinition.getCode();
+                generate(languageDefinition);
+            }
             resourceManager.close();
         }
-        catch (Exception e) {
-            getParent().getLogger().info(e);
-        };
-        try(BufferedWriter writer = IOUtils.buffer(new FileWriter(new File(PFMRuntimeResources.createDirIfNeeded(getParent().getOrCreateSubDirectory("assets/pfm").resolve("lang")).toFile(), "en_us.json"))))
+        catch(IOException e)
         {
+            getParent().getLogger().error("Exception while generating: " + e);
+            e.printStackTrace();
+        }
+        endProviderRun();
+    }
+
+    public void generate(LanguageDefinition languageDefinition) throws IOException {
+        translationMap.clear();
+        try(BufferedWriter writer = IOUtils.buffer(new FileWriter(new File(PFMRuntimeResources.createDirIfNeeded(getParent().getOrCreateSubDirectory("assets/pfm").resolve("lang")).toFile(), languageDefinition.getCode()+".json"))))  {
             writer.write("{\n");
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap(), writer, "block.pfm.basic_chair", this::simpleStrippedFurnitureTranslation);
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.basic_chair", this::simpleStrippedFurnitureTranslation);
@@ -110,9 +122,6 @@ public class PFMLangProvider extends PFMProvider {
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicNightstandBlock.class).getVariantToBlockMapNonBase(), writer, "block.pfm.classic_nightstand", this::simpleStrippedFurnitureTranslation);
 
             generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.simple_bed", this::bedFurnitureTranslation);
-            generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.simple_bed", this::bedFurnitureTranslation);
-
-            generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.classic_bed", this::bedFurnitureTranslation);
             generateTranslationForBedMap(PaladinFurnitureMod.furnitureEntryMap.get(ClassicBedBlock.class).getVariantToBlockMapList(), writer, "block.pfm.classic_bed", this::bedFurnitureTranslation);
 
             generateTranslationForVariantBlockMap(PaladinFurnitureMod.furnitureEntryMap.get(SimpleBunkLadderBlock.class).getVariantToBlockMap(), writer, "block.pfm.simple_bunk_ladder", this::simpleFurnitureTranslation);
@@ -171,31 +180,37 @@ public class PFMLangProvider extends PFMProvider {
             writer.write("    \"pfm.dummy.entry\": \"dummy entry\"\n");
             writer.write("}");
         }
-        catch(IOException e)
-        {
-            getParent().getLogger().error("Writer exception: " + e);
-            e.printStackTrace();
-        }
-        endProviderRun();
     }
-
     public String simpleStrippedFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
-        return translate(furnitureKey, strippedKey, translatedVariantName);
+        return capitalizeTranslation(translate(furnitureKey, strippedKey, translatedVariantName));
     }
 
     public String logTableFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
         String rawFix = block.getTranslationKey().contains("raw") ? translate("block.type.raw") : "";
         String extraLogKey = block.getTranslationKey().contains("stem") ? translate("block.type.stem") : block.getTranslationKey().contains("natural") ? translate("block.type.natural") : translate("block.type.log");
-        return translate(furnitureKey, rawFix + (rawFix.isBlank() ? "" : " ") + strippedKey, translatedVariantName, extraLogKey);
+        return capitalizeTranslation(translate(furnitureKey, rawFix + (rawFix.isBlank() ? "" : " ") + strippedKey, translatedVariantName, extraLogKey));
     }
 
     public String simpleFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
-        return translate(furnitureKey, translatedVariantName);
+        return capitalizeTranslation(translate(furnitureKey, translatedVariantName));
     }
 
     public String bedFurnitureTranslation(Block block, String furnitureKey, String strippedKey, String translatedVariantName) {
         String color = block instanceof SimpleBedBlock ? translate("color.minecraft."+((SimpleBedBlock) block).getPFMColor().asString()) : "";
-        return translate(furnitureKey, translatedVariantName, color);
+        return capitalizeTranslation(translate(furnitureKey, translatedVariantName, color));
+    }
+
+    private boolean isLanguageSupported(String languageCode) {
+        boolean supported = false;
+        for (ResourcePack pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
+            try {
+                pack.open(ResourceType.CLIENT_RESOURCES, new Identifier(PaladinFurnitureMod.MOD_ID, "lang/" + languageCode + ".json")).close();
+                supported = true;
+                break;
+            } catch (IOException ignored) {
+            }
+        }
+        return supported;
     }
 
     private Map<String, LanguageDefinition> loadAvailableLanguages(Stream<ResourcePack> packs) {
@@ -218,20 +233,27 @@ public class PFMLangProvider extends PFMProvider {
         });
         return ImmutableMap.copyOf(map);
     }
-    private Map<String, LanguageDefinition> languageDefs = ImmutableMap.of("en_us", PFMLanguageManagerAccessor.getEnglish_Us());
-    private static volatile Language language = Language.getInstance();
 
+    private volatile Language language = Language.getInstance();
+    private String currentLanguageCode = ((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode();
+    private List<LanguageDefinition> languagesToGenerate = new ArrayList<>();
     public void loadLanguages(ResourceManager manager) {
-        this.languageDefs = loadAvailableLanguages(manager.streamResourcePacks());
-        LanguageDefinition enUSDefinition = this.languageDefs.getOrDefault(LanguageManager.DEFAULT_LANGUAGE_CODE, PFMLanguageManagerAccessor.getEnglish_Us());
-        LanguageDefinition selectedLangDefinition = this.languageDefs.getOrDefault(((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode(), enUSDefinition);
+        Map<String, LanguageDefinition> defs = loadAvailableLanguages(manager.streamResourcePacks());
+        LanguageDefinition enUSDefinition = defs.getOrDefault(LanguageManager.DEFAULT_LANGUAGE_CODE, PFMLanguageManagerAccessor.getEnglish_Us());
+
+        LanguageDefinition selectedLangDefinition;
+        String currentCode = ((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode();
+        // Only generate translations if PFM contains a file for it
+        if (defs.containsKey(currentCode) && isLanguageSupported(currentCode)) {
+            selectedLangDefinition = defs.get(currentCode);
+        } else {
+            selectedLangDefinition = enUSDefinition;
+        }
         ArrayList<LanguageDefinition> list = Lists.newArrayList(enUSDefinition);
         if (selectedLangDefinition != enUSDefinition) {
             list.add(selectedLangDefinition);
         }
-        TranslationStorage translationStorage = TranslationStorage.load(manager, list);
-        language = translationStorage;
-        Language.setInstance(translationStorage);
+        languagesToGenerate = list;
     }
 
 
@@ -255,7 +277,10 @@ public class PFMLangProvider extends PFMProvider {
                 try {
                     String translatedVariantName = getTranslatedVariantName(variant);
                     String translatedColor = translate("color.minecraft."+color.getName());
-                    String translatedFurnitureName = StringUtils.normalizeSpace(translate("block.pfm.basic_lamp", translatedColor, translatedVariantName));
+                    String translatedFurnitureName = capitalizeTranslation(StringUtils.normalizeSpace(translate("block.pfm.basic_lamp", translatedColor, translatedVariantName)));
+                    if (translatedFurnitureName.equalsIgnoreCase("block.pfm.basic_lamp"))
+                        continue;
+
                     writer.write(String.format("    \"%1$s\": \"%2$s\",", String.format("block.pfm.basic_%s_%s_lamp", color.asString(), variant.asString()), translatedFurnitureName));
                     writer.write("\n");
                 } catch (IOException e) {
@@ -274,7 +299,10 @@ public class PFMLangProvider extends PFMProvider {
                 break;
             try {
                 String translatedColor = translate("color.minecraft."+color.getName());
-                String translatedFurnitureName = StringUtils.normalizeSpace(translate("block.pfm.office_chair", translatedColor));
+                String translatedFurnitureName = capitalizeTranslation(StringUtils.normalizeSpace(translate("block.pfm.office_chair", translatedColor)));
+                if (translatedFurnitureName.equalsIgnoreCase("block.pfm.office_chair"))
+                    continue;
+
                 writer.write(String.format("    \"%1$s\": \"%2$s\",", String.format("block.pfm.%s_office_chair", color.asString()), translatedFurnitureName));
                 writer.write("\n");
             } catch (IOException e) {
@@ -292,7 +320,7 @@ public class PFMLangProvider extends PFMProvider {
 
         String key = "block.pfm.variant."+variant.getIdentifier().getPath();
         if (!key.equals(translate(key))) {
-            translationMap.put(variant, translate(key));
+            translationMap.put(variant, translate(key).toLowerCase(Locale.ROOT));
             return translationMap.get(variant);
         }
 
@@ -301,8 +329,8 @@ public class PFMLangProvider extends PFMProvider {
         List<String> common = findCommonWords(variantName.get(), baseBlockName);
         variantName.set("");
         variantName.set(String.join(" ", common));
-        translationMap.put(variant, variantName.get());
-        return variantName.get();
+        translationMap.put(variant, variantName.get().toLowerCase(Locale.ROOT));
+        return variantName.get().toLowerCase(Locale.ROOT);
     }
 
     public void generateTranslationForBedMap(HashMap<VariantBase<?>, ? extends Set<?>> variantBaseHashMap, BufferedWriter writer, String furnitureKey, QuadFunc<Block, String, String, String, String> blockStringStringStringStringQuadFunc) {
@@ -313,6 +341,9 @@ public class PFMLangProvider extends PFMProvider {
                     String translatedVariantName = getTranslatedVariantName(variant);
                     String strippedKey = block.getTranslationKey().contains("stripped") ? translate("block.type.stripped") : "";
                     String translatedFurnitureName = StringUtils.normalizeSpace(blockStringStringStringStringQuadFunc.apply(block, furnitureKey, strippedKey, translatedVariantName));
+                    if (translatedFurnitureName.equalsIgnoreCase(furnitureKey))
+                        return;
+
                     try {
                         writer.write(String.format("    \"%1$s\": \"%2$s\",", block.getTranslationKey(), translatedFurnitureName));
                         writer.write("\n");
@@ -332,6 +363,9 @@ public class PFMLangProvider extends PFMProvider {
                 String translatedVariantName = getTranslatedVariantName(variant);
                 String strippedKey = block.getTranslationKey().contains("stripped") ? translate("block.type.stripped") : "";
                 String translatedFurnitureName = StringUtils.normalizeSpace(blockStringStringStringStringQuadFunc.apply(block, furnitureKey, strippedKey, translatedVariantName));
+                if (translatedFurnitureName.equalsIgnoreCase(furnitureKey))
+                    return;
+
                 try {
                     writer.write(String.format("    \"%1$s\": \"%2$s\",", block.getTranslationKey(), translatedFurnitureName));
                     writer.write("\n");
@@ -342,6 +376,9 @@ public class PFMLangProvider extends PFMProvider {
             } else {
                 String translatedVariantName = getTranslatedVariantName(variant);
                 String translatedFurnitureName = StringUtils.normalizeSpace(blockStringStringStringStringQuadFunc.apply(block, furnitureKey, "", translatedVariantName));
+                if (translatedFurnitureName.equalsIgnoreCase(furnitureKey))
+                    return;
+
                 try {
                     writer.write(String.format("    \"%1$s\": \"%2$s\",", block.getTranslationKey(), translatedFurnitureName));
                     writer.write("\n");
@@ -361,6 +398,31 @@ public class PFMLangProvider extends PFMProvider {
         List<String>list2 = Arrays.asList(words2);
         list1.retainAll(list2);
         return list1;
+    }
+
+    public String capitalizeTranslation(String input) {
+        if (input == null || input.isEmpty()) {
+            return input;
+        }
+        // capitalize first letter of the first word for Romance languages
+        if (currentLanguageCode.contains("es") || currentLanguageCode.contains("fr") ||
+                currentLanguageCode.contains("it") || currentLanguageCode.contains("pt")) {
+            return input.substring(0, 1).toUpperCase() + input.substring(1);
+        } else {
+            // capitalize first letter of each word for other languages such as English and German
+
+            String[] words = input.split("\\s+"); // Split by whitespace
+            StringBuilder result = new StringBuilder();
+
+            for (String word : words) {
+                if (!word.isEmpty()) {
+                    result.append(Character.toUpperCase(word.charAt(0)))
+                            .append(word.substring(1).toLowerCase())
+                            .append(" ");
+                }
+            }
+            return result.toString().trim();
+        }
     }
 
     private static final class PFMResourceManager implements ResourceManager,

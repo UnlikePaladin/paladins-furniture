@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.mixin.fabric;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
+import com.unlikepaladin.pfm.ducks.PFMSpriteAtlasTexturesExtensions;
 import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
 import net.minecraft.client.texture.*;
 import net.minecraft.resource.ResourceManager;
@@ -16,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.*;
 
 @Mixin(SpriteAtlasTexture.class)
-public class PFMSpriteAtlasTexturesMixin {
+public class PFMSpriteAtlasTexturesMixin implements PFMSpriteAtlasTexturesExtensions {
 
     @ModifyArg(method = "stitch", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/texture/TextureStitcher;add(Lnet/minecraft/client/texture/Sprite$Info;)V"))
     public Sprite.Info stitch(Sprite.Info info, @Local TextureStitcher stitcher) {
@@ -43,5 +44,18 @@ public class PFMSpriteAtlasTexturesMixin {
         if (PFMSpriteRegistry.PFM_SPRITE_COORDINATES.containsKey(info.getId())) {
             cir.setReturnValue(null);
         }
+    }
+
+    @Inject(method = "loadSprites(Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/client/texture/TextureStitcher;I)Ljava/util/List;", at = @At(value = "HEAD"), cancellable = true)
+    public void cancelErrorForPFMTextures(ResourceManager arg, TextureStitcher arg2, int maxLevel, CallbackInfoReturnable<List<Sprite>> cir) {
+        pfm$maxLevel = maxLevel;
+    }
+
+    @Unique
+    Integer pfm$maxLevel = null;
+
+    @Override
+    public Integer pfm$getMaxLevel() {
+        return pfm$maxLevel;
     }
 }
