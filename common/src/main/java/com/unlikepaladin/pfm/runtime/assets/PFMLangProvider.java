@@ -273,7 +273,7 @@ public class PFMLangProvider extends PFMProvider {
                 try {
                     String translatedVariantName = getTranslatedVariantName(variant);
                     String translatedColor = translate("color.minecraft."+color.getName());
-                    String translatedFurnitureName = StringUtils.normalizeSpace(translate("block.pfm.basic_lamp", translatedColor, translatedVariantName));
+                    String translatedFurnitureName = capitalizeTranslation(StringUtils.normalizeSpace(translate("block.pfm.basic_lamp", translatedColor, translatedVariantName)));
                     if (translatedFurnitureName.equalsIgnoreCase("block.pfm.basic_lamp"))
                         continue;
 
@@ -295,7 +295,7 @@ public class PFMLangProvider extends PFMProvider {
                 break;
             try {
                 String translatedColor = translate("color.minecraft."+color.getName());
-                String translatedFurnitureName = StringUtils.normalizeSpace(translate("block.pfm.office_chair", translatedColor));
+                String translatedFurnitureName = capitalizeTranslation(StringUtils.normalizeSpace(translate("block.pfm.office_chair", translatedColor)));
                 if (translatedFurnitureName.equalsIgnoreCase("block.pfm.office_chair"))
                     continue;
 
