@@ -1,8 +1,7 @@
-package com.unlikepaladin.pfm.mixin;
+package com.unlikepaladin.pfm.mixin.fabric;
 
 import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
-import com.unlikepaladin.pfm.client.PFMItemRenderer;
-import net.minecraft.client.MinecraftClient;
+import com.unlikepaladin.pfm.client.fabric.PFMItemRendererFabric;
 import net.minecraft.client.render.VertexConsumerProvider;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
@@ -18,13 +17,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = ItemRenderer.class, priority = 999)
 public class PFMItemRendererMixin {
-    @Unique
-    private final PFMItemRenderer pfm$itemRenderer = new PFMItemRenderer(MinecraftClient.getInstance().getBlockEntityRenderDispatcher(), MinecraftClient.getInstance().getEntityModelLoader());
 
     @Inject(at = @At("HEAD"), method = "renderItem(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/render/model/json/ModelTransformation$Mode;ZLnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;IILnet/minecraft/client/render/model/BakedModel;)V", cancellable = true)
     private void renderWithItemRenderer(ItemStack stack, ModelTransformation.Mode renderMode, boolean leftHanded, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
+        matrices.push();
         if (stack.getItem() instanceof PFMBuiltinItemRendererExtension || stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof PFMBuiltinItemRendererExtension) {
-            pfm$itemRenderer.render(stack, renderMode, matrices, vertexConsumers, light, overlay);
+            PFMItemRendererFabric.INSTANCE.render(stack, renderMode, matrices, vertexConsumers, light, overlay);
         }
+        matrices.pop();
     }
 }
