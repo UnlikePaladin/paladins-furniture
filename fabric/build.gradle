@@ -193,6 +193,8 @@ dependencies {
     }
 
     include(implementation("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}"))
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")))
+
 }
 
 dependencies {
@@ -206,6 +208,7 @@ dependencies {
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "supported_minecraft_version", rootProject.supported_minecraft_version  // i hate gradle
 
     filesMatching("fabric.mod.json") {
         expand "version": project.version,
