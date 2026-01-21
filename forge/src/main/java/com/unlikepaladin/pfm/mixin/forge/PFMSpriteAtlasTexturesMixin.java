@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.mixin.forge;
 
 import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
+import com.unlikepaladin.pfm.ducks.PFMSpriteAtlasTexturesExtensions;
 import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
 import net.minecraft.client.texture.Sprite;
 import net.minecraft.client.texture.SpriteAtlasTexture;
@@ -21,13 +22,18 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 @Mixin(SpriteAtlasTexture.class)
-public class PFMSpriteAtlasTexturesMixin {
+public class PFMSpriteAtlasTexturesMixin implements PFMSpriteAtlasTexturesExtensions {
 
     @Unique
     TextureStitcher pfm$stitcher;
 
-    @Inject(method = "stitch", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
-    public void beforeStitching(ResourceManager resourceManager, Stream<Identifier> idStream, Profiler profiler, int mipmapLevel, CallbackInfoReturnable<SpriteAtlasTexture.Data> cir, Set<Identifier> set, int i, TextureStitcher stitcher, int j, int k) {
+    @Inject(method = "stitch", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, require = 0)
+    public void beforeStitching(ResourceManager resourceManager, Stream<Identifier> idStream, Profiler profiler, int mipmapLevel, CallbackInfoReturnable<SpriteAtlasTexture.Data> cir, Set<Identifier> set, int i, TextureStitcher stitcher) {
+        this.pfm$stitcher = stitcher;
+    }
+
+    @Inject(method = "stitch", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiler/Profiler;swap(Ljava/lang/String;)V", ordinal = 0), locals = LocalCapture.CAPTURE_FAILSOFT, require = 0)
+    public void beforeStitchingOF(ResourceManager resourceManager, Stream<Identifier> idStream, Profiler profiler, int mipmapLevel, CallbackInfoReturnable<SpriteAtlasTexture.Data> cir, int mipMapLevels, Set<Identifier> set, Set<Identifier> emissive, int i, TextureStitcher stitcher) {
         this.pfm$stitcher = stitcher;
     }
 
@@ -56,5 +62,18 @@ public class PFMSpriteAtlasTexturesMixin {
         if (PFMSpriteRegistry.PFM_SPRITE_COORDINATES.containsKey(info.getId())) {
             cir.setReturnValue(null);
         }
+    }
+
+    @Inject(method = "loadSprites(Lnet/minecraft/resource/ResourceManager;Lnet/minecraft/client/texture/TextureStitcher;I)Ljava/util/List;", at = @At(value = "HEAD"), cancellable = true)
+    public void cancelErrorForPFMTextures(ResourceManager arg, TextureStitcher arg2, int maxLevel, CallbackInfoReturnable<List<Sprite>> cir) {
+        pfm$maxLevel = maxLevel;
+    }
+
+    @Unique
+    Integer pfm$maxLevel = null;
+
+    @Override
+    public Integer pfm$getMaxLevel() {
+        return pfm$maxLevel;
     }
 }
