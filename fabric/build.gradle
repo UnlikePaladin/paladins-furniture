@@ -170,6 +170,8 @@ dependencies {
     }
 
     include(implementation("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}"))
+    include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")))
+
 }
 
 dependencies {
