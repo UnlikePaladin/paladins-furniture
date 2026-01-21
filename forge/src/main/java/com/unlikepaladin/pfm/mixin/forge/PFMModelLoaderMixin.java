@@ -65,10 +65,8 @@ public abstract class PFMModelLoaderMixin {
         Identifier modifiedId = resourceId;
          if (resourceId instanceof ModelIdentifier && Objects.requireNonNull(((ModelIdentifier) resourceId).getVariant()).startsWith("inventory")) {
             modifiedId = new Identifier(resourceId.getNamespace(), "item/" + resourceId.getPath());
-        } else if (resourceId instanceof ModelIdentifier) {
-            modifiedId = new Identifier(resourceId.getNamespace(), "block/" + resourceId.getPath());
         }
-
+         
         if (ModelHelper.containsIdentifier(UnbakedMirrorModel.MIRROR_MODEL_IDS, modifiedId)){
             UnbakedModel model =  new UnbakedMirrorModel(UnbakedMirrorModel.DEFAULT_TEXTURES[2], ModelHelper.getVanillaConcreteColor(resourceId), UnbakedMirrorModel.DEFAULT_TEXTURES[1], new ArrayList<>(), ModelHelper.getColor(resourceId));
             this.unbakedModels.put(resourceId, model);
