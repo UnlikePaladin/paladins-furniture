@@ -1,4 +1,4 @@
-package com.unlikepaladin.pfm.mixin.forge;
+package com.unlikepaladin.pfm.mixin;
 
 import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.ducks.PFMSpriteAtlasTexturesExtensions;

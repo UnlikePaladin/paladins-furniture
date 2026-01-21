@@ -8,7 +8,6 @@
     "PFMCrackParticleMixin",
     "PFMItemRendererMixin",
     "PFMRenderLayersFabricMixin",
-    "PFMSpriteAtlasTexturesMixin",
     "PFMEntryWidgetAccessor"
   ],
   "mixins": [
