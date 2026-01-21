@@ -134,6 +134,7 @@ if (rootProject.cookingfor_blockheads_compatibility_forge == "true") {
 
 processResources {
     inputs.property "version", project.version
+    inputs.property "supported_minecraft_version", rootProject.supported_minecraft_version  // i hate gradle
 
     filesMatching("META-INF/mods.toml") {
         expand "version": project.version,

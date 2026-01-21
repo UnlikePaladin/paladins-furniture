@@ -49,11 +49,6 @@ public class OfficeChairEntityRenderer extends MobEntityRenderer<OfficeChairEnti
         BakedModel chairModel = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager())
                 .pfm$getModelFromNormalID(OfficeChairEntityRenderer.MODEL_IDS[0]);
 
-        chairModel.getTransformation().getTransformation(mode).apply(
-                mode == ModelTransformation.Mode.FIRST_PERSON_LEFT_HAND ||
-                        mode == ModelTransformation.Mode.THIRD_PERSON_LEFT_HAND, stack);
-
-        stack.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
         Random random = new LocalRandom(42L);
         List<BakedQuad> quads = new ArrayList<>(Arrays.stream(Direction.values()).map(direction -> chairModel.getQuads(null, direction, random))
