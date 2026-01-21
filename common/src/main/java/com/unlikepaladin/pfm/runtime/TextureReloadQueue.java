@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.ducks.PFMSpriteAtlasTexturesExtensions;
 import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
 import com.unlikepaladin.pfm.mixin.PFMSpriteAccessor;
 import com.unlikepaladin.pfm.mixin.PFMSpriteAtlasTextureAccessor;
@@ -114,7 +115,9 @@ public final class TextureReloadQueue {
             atlasWidth = Math.round(x / original.getMinU());
             atlasHeight = Math.round(y / original.getMinV());
         }
-        int mipMapSize = ((PFMSpriteExtensions)original).pfm$getMipmapLevel();
+        int mipMapSizeConfig = MinecraftClient.getInstance().options.mipmapLevels;
+        Integer maxLevelWhenStiching = ((PFMSpriteAtlasTexturesExtensions)spriteAtlas).pfm$getMaxLevel();
+        int mipMapSize = maxLevelWhenStiching != null ? Math.min(Math.min(mipMapSizeConfig, ((PFMSpriteExtensions)original).pfm$getMipmapLevel()), maxLevelWhenStiching) : Math.min(mipMapSizeConfig, ((PFMSpriteExtensions)original).pfm$getMipmapLevel());
 
         Sprite newSprite = ((PFMSpriteAtlasTextureAccessor)spriteAtlas).invoke$loadSprite(resourceManager, info, atlasWidth, atlasHeight, mipMapSize, x, y);
 

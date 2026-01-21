@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.client;
 
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
+import net.minecraft.resource.ResourceNotFoundException;
 import net.minecraft.resource.ResourcePack;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.resource.metadata.PackResourceMetadata;
@@ -33,7 +34,7 @@ public class PathPackRPWrapper implements ResourcePack {
         if (PFMRuntimeResources.ready && fileName.equals("pack.png")) {
             return delegate.get().openRoot(fileName);
         }
-        return new ByteArrayInputStream(new byte[0]);
+        return null;
     }
 
     @Override

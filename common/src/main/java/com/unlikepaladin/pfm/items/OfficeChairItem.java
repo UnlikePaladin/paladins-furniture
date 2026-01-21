@@ -3,8 +3,11 @@ package com.unlikepaladin.pfm.items;
 import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
+import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
@@ -117,6 +120,11 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
                 return TypedActionResult.pass(itemStack);
             }
         }
+    }
+
+    @ExpectPlatform
+    public static Item getItemFactory(Settings settings) {
+        throw new AssertionError();
     }
 
 }

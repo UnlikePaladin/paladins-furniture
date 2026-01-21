@@ -113,4 +113,9 @@ public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
         }
         return tileData;
     }
+
+    @Override
+    public boolean isBuiltin() {
+        return true;
+    }
 }
