@@ -39,7 +39,7 @@ public class PFMItemRendererFabric extends BuiltinModelItemRenderer {
     }
 
     static Map<Boolean, BakedModel> bedModel = new HashMap<>();
-    public BakedModel getBedModel(boolean classic) {
+    public BakedModel getBedModelForTransform(boolean classic) {
         if (bedModel.containsKey(classic) && bedModel.get(classic) != null) {
             return bedModel.get(classic);
         }
@@ -55,7 +55,7 @@ public class PFMItemRendererFabric extends BuiltinModelItemRenderer {
             matrices.push();
 
             Block block = ((BlockItem) stack.getItem()).getBlock();
-            BakedModel bedModel = getBedModel(stack.getItem().getTranslationKey().contains("classic"));
+            BakedModel bedModel = getBedModelForTransform(stack.getItem().getTranslationKey().contains("classic"));
             bedModel.getTransformation().getTransformation(mode).apply(leftHanded, matrices);
             matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
