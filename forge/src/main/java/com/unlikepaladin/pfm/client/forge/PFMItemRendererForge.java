@@ -16,10 +16,10 @@ import net.minecraft.client.render.entity.model.EntityModelLoader;
 import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RotationAxis;
@@ -52,7 +52,7 @@ public class PFMItemRendererForge extends BuiltinModelItemRenderer {
         boolean leftHanded = MinecraftClient.getInstance().player != null && MinecraftClient.getInstance().player.getMainArm() == Arm.LEFT && mode.isFirstPerson();
 
         boolean glint = stack.hasGlint();
-        VertexConsumer consumer = ItemRenderer.getItemGlintConsumer(vertexConsumers, RenderLayers.getItemLayer(stack, true), true, glint);
+        VertexConsumer consumer = ItemRenderer.getItemGlintConsumer(vertexConsumers, RenderLayers.getItemLayer(stack), true, glint);
         if (stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof SimpleBedBlock) {
             matrices.push();
 
@@ -63,11 +63,7 @@ public class PFMItemRendererForge extends BuiltinModelItemRenderer {
 
             // annoyingly, forge is applying some weird wrong transform to the bed model when rendering as an item
             // so i have to manually rotate and translate it to be correct, also happens only here on 1.21.1, how peculiar
-            matrices.push();
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(270.0f));
-            matrices.translate(0.0,0,-1.0);
             MinecraftClient.getInstance().getItemRenderer().renderBakedItemModel(bedModel, stack, light, overlay, matrices, consumer);
-            matrices.pop();
 
             this.renderBed.setColor(((SimpleBedBlock)block).getColor());
             this.blockEntityRenderDispatcher.renderEntity(renderBed, matrices, vertexConsumers, light, overlay);

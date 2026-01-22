@@ -39,6 +39,7 @@ import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import net.minecraft.block.Block;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
@@ -91,6 +92,24 @@ public class PaladinFurnitureModClientNeoForge {
                 keyCode, // The keycode of the key
                 category // The translation key of the keybinding's category.
         );
+    }
+
+    @SubscribeEvent
+    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
+            event.registerItem(new IClientItemExtensions() {
+                @Override
+                public BuiltinModelItemRenderer getCustomRenderer() {
+                    return PFMItemRendererNeoForge.INSTANCE;
+                }
+            }, block.asItem());
+        }
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public BuiltinModelItemRenderer getCustomRenderer() {
+                return PFMItemRendererNeoForge.INSTANCE;
+            }
+        }, PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM);
     }
 
     @SubscribeEvent

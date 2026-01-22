@@ -399,7 +399,7 @@ public class LateBlockRegistry {
                         break;
                     String blockName = variant.asString() + "_" + color.getName() +  "_simple_bed";
                     SimpleBedBlock block = LateBlockRegistry.registerLateBlock(blockName, () -> new SimpleBedBlock(color, AbstractBlock.Settings.create().mapColor(state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMapColor() : MapColor.WHITE_GRAY).sounds(variant.getBaseBlock().getDefaultState().getSoundGroup()).requires(variant.getFeatureList().toArray(new FeatureFlag[0])).strength(0.2f).nonOpaque().registryKey(getBlockRegistryKey(blockName))), false, PaladinFurnitureMod.FURNITURE_GROUP);
-                    LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Settings().maxCount(1).registryKey(getItemRegistryKey(blockName))), PaladinFurnitureMod.FURNITURE_GROUP);
+                    LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Settings().maxCount(1).registryKey(getItemRegistryKey(blockName)).useBlockPrefixedTranslationKey()), PaladinFurnitureMod.FURNITURE_GROUP);
                     this.addBlock(variant, block, true);
                     PaladinFurnitureModBlocksItems.beds.add(block);
                     i++;
@@ -413,7 +413,7 @@ public class LateBlockRegistry {
                         break;
                     String blockName = variant.asString() + "_" + color.getName() +  "_classic_bed";
                     ClassicBedBlock block = LateBlockRegistry.registerLateBlock(blockName, () -> new ClassicBedBlock(color, AbstractBlock.Settings.create().mapColor(state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMapColor() : MapColor.WHITE_GRAY).sounds(variant.getBaseBlock().getDefaultState().getSoundGroup()).strength(0.2f).nonOpaque().requires(variant.getFeatureList().toArray(new FeatureFlag[0])).registryKey(getBlockRegistryKey(blockName))), false, PaladinFurnitureMod.FURNITURE_GROUP);
-                    LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Settings().maxCount(1).registryKey(getItemRegistryKey(blockName))), PaladinFurnitureMod.FURNITURE_GROUP);
+                    LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Settings().maxCount(1).registryKey(getItemRegistryKey(blockName)).useBlockPrefixedTranslationKey()), PaladinFurnitureMod.FURNITURE_GROUP);
                     this.addBlock(variant, block, true);
                     PaladinFurnitureModBlocksItems.beds.add(block);
                     i++;

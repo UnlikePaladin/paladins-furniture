@@ -16,14 +16,4 @@ public class OfficeChairItemImpl extends OfficeChairItem {
     public static Item getItemFactory(Settings settings) {
         return new OfficeChairItemImpl(settings);
     }
-
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        consumer.accept(new IClientItemExtensions() {
-            @Override
-            public BuiltinModelItemRenderer getCustomRenderer() {
-                return PFMItemRendererNeoForge.INSTANCE;
-            }
-        });
-    }
 }
