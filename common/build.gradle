@@ -18,6 +18,9 @@ repositories {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
     }
+    flatDir {
+        dirs "$rootProject.projectDir/libs"
+    }
 }
 
 dependencies {
@@ -45,6 +48,8 @@ dependencies {
         transitive(false)
     }
     modCompileOnly "dev.emi:emi-xplat-intermediary:${emi_version}:api"
+    testCompileOnly fileTree(dir: "$rootProject.projectDir/libs", include: '*.jar')
+
 }
 
 publishing {

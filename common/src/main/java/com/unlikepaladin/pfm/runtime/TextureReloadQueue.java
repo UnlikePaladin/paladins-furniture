@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.ducks.PFMSpriteAtlasTexturesExtensions;
 import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
 import com.unlikepaladin.pfm.mixin.PFMSpriteAtlasTextureAccessor;
 import com.unlikepaladin.pfm.mixin.PFMSpriteContentsAccessor;
@@ -106,8 +107,12 @@ public final class TextureReloadQueue {
 
         SpriteContents newContents = SpriteOpener.create(set).loadSprite(id, resource);
         ((PFMSpriteExtensions) original).pfm$setContents(newContents);
+        int mipMapSizeConfig = MinecraftClient.getInstance().options.getMipmapLevels().getValue();
+        Integer maxLevelWhenStiching = ((PFMSpriteAtlasTexturesExtensions)spriteAtlas).pfm$getMaxLevel();
+        int mipMapSize = maxLevelWhenStiching != null ? Math.min(mipMapSizeConfig, maxLevelWhenStiching): mipMapSizeConfig;
+
         try {
-            newContents.generateMipmaps(MinecraftClient.getInstance().options.getMipmapLevels().getValue());
+            newContents.generateMipmaps(mipMapSize);
         } catch (NullPointerException e) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to generate mipmaps for texture {}: {}", id, e.getMessage());
         }
