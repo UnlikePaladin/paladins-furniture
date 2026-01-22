@@ -105,4 +105,9 @@ public class NeoForgeBedModel extends PFMNeoForgeBakedModel implements BedInterf
         }
         return tileData;
     }
+
+    @Override
+    public boolean isBuiltin() {
+        return true;
+    }
 }

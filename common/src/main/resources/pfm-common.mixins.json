@@ -19,7 +19,6 @@
   "client": [
     "PFMBakedModelManagerMixin",
     "PFMBlockModelRendererAccessor",
-    "PFMItemRendererMixin",
     "PFMLanguageManagerAccessor",
     "PFMMinecraftClientAcccessor",
     "PFMMissingSpriteAccessor",
@@ -28,6 +27,7 @@
     "PFMReloadableResourceManagerImplMixin",
     "PFMSplashOverlayMixin",
     "PFMSpriteAtlasTextureAccessor",
+    "PFMSpriteAtlasTextureMixin",
     "PFMSpriteContentsAccessor",
     "PFMSpriteContentsMixin",
     "PFMSpriteLoaderMixin",
