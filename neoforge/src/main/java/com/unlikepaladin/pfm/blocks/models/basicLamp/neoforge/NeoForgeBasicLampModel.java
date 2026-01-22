@@ -1,10 +1,12 @@
 package com.unlikepaladin.pfm.blocks.models.basicLamp.neoforge;
 
+import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.BasicLampBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
 import com.unlikepaladin.pfm.data.materials.BlockType;
+import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import net.minecraft.block.BlockState;
@@ -114,5 +116,17 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
         quads.addAll(getTemplateBakedModels().get(2).getQuads(face));
         quads.addAll(getTemplateBakedModels().get(5).getQuads(face));
         return getQuadsWithTextureInner(quads, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
+    }
+
+    protected Map<Pair<VariantBase<?>, Direction>, List<BakedQuad>> cache = new HashMap<>();
+    @Override
+    public List<BakedQuad> getQuadsCached(@Nullable Direction face, Random random) {
+        Pair<VariantBase<?>, Direction> directionPair = new Pair<>(variant, face);
+        if (cache.containsKey(directionPair))
+            return cache.get(directionPair);
+
+        List<BakedQuad> quads = getQuads(face, random);
+        cache.put(directionPair, quads);
+        return quads;
     }
 }

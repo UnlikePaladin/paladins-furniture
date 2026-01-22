@@ -35,6 +35,7 @@
     "PFMReloadableResourceManagerImplMixin",
     "PFMSplashOverlayMixin",
     "PFMSpriteAtlasTextureAccessor",
+    "PFMSpriteAtlasTextureMixin",
     "PFMSpriteContentsAccessor",
     "PFMSpriteContentsMixin",
     "PFMSpriteLoaderMixin",
