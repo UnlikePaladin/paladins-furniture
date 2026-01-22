@@ -19,7 +19,7 @@ public class PaladinFurnitureModImpl {
     }
 
     public static PaladinFurnitureMod.Loader getLoader() {
-        return PaladinFurnitureMod.Loader.FORGE;
+        return PaladinFurnitureMod.Loader.NEOFORGE;
     }
 
     public static Map<String, String> getVersionMap() {

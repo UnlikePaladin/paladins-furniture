@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonWriter;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
+import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
@@ -21,26 +22,17 @@ import net.minecraft.loot.condition.BlockStatePropertyLootCondition;
 import net.minecraft.loot.condition.LootConditionConsumingBuilder;
 import net.minecraft.loot.context.LootContextTypes;
 import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.function.CopyComponentsLootFunction;
 import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
 import net.minecraft.predicate.StatePredicate;
 import net.minecraft.registry.Registries;
 import net.minecraft.state.property.Property;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
 import net.minecraft.util.StringIdentifiable;
 import net.minecraft.util.context.ContextType;
 
-import java.io.ByteArrayOutputStream;
-import java.io.OutputStreamWriter;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -86,6 +78,18 @@ public class PFMLootTableProvider extends PFMProvider {
         return rootOutput.resolve("data/" + lootTableId.getNamespace() + "/loot_table/" + lootTableId.getPath() + ".json");
     }
 
+    private static LootTable.Builder lampDrop(Block drop) {
+        return LootTable.builder()
+                .pool(
+                        LootPool.builder()
+                                .rolls(ConstantLootNumberProvider.create(1.0F))
+                                .with(
+                                        ItemEntry.builder(drop)
+                                                .apply(CopyComponentsLootFunction.builder(CopyComponentsLootFunction.Source.BLOCK_ENTITY).include(PFMComponents.VARIANT_COMPONENT).include(PFMComponents.COLOR_COMPONENT))
+                                )
+                );
+    }
+
     static class PFMLootTableGenerator implements Consumer<BiConsumer<Identifier, LootTable.Builder>> {
         private final Map<Identifier, LootTable.Builder> lootTables = Maps.newHashMap();
         private final List<Block> pfmBlocks = new ArrayList<>();
@@ -95,6 +99,7 @@ public class PFMLootTableProvider extends PFMProvider {
             Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
             Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
             BasicBathtubBlock.basicBathtubBlockStream().forEach(basicBathtubBlock -> this.addDrop(basicBathtubBlock, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
+            this.addDrop(PaladinFurnitureModBlocksItems.BASIC_LAMP, PFMLootTableProvider::lampDrop);
 
             HashSet<Identifier> set = Sets.newHashSet();
             for (Block block : pfmBlocks) {
