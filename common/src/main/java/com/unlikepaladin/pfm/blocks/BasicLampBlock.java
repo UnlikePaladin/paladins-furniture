@@ -101,22 +101,6 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
         return super.getDefaultMapColor();
     }
 
-    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof LampBlockEntity lampBlockEntity) {
-            if (!world.isClient && !player.isCreative()) {
-                ItemStack itemStack = new ItemStack(PaladinFurnitureModBlocksItems.BASIC_LAMP);
-                itemStack.set(PFMComponents.VARIANT_COMPONENT, lampBlockEntity.getVariant().identifier);
-                itemStack.set(PFMComponents.COLOR_COMPONENT, lampBlockEntity.getPFMColor());
-                ItemEntity itemEntity = new ItemEntity(world, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, itemStack);
-                itemEntity.setToDefaultPickupDelay();
-                world.spawnEntity(itemEntity);
-            }
-        }
-
-        return super.onBreak(world, pos, state, player);
-    }
-
     private static final VoxelShape SINGLE = VoxelShapes.union(createCuboidShape(7, 1.5, 7, 9, 6, 9), createCuboidShape(3, 0, 3,13, 1.5, 13),createCuboidShape(1.5, 5, 1.5,14.5, 16, 14.5));
     private static final VoxelShape TOP = VoxelShapes.union(createCuboidShape(7, 0, 7,9, 6, 9),createCuboidShape(1.5, 5, 1.5,14.5, 16, 14.5));
     private static final VoxelShape MIDDLE = VoxelShapes.union(createCuboidShape(7, 0, 7,9, 16, 9));
