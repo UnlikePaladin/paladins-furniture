@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.client.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
+import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.client.PFMBakedModelManagerAccessor;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
@@ -69,8 +70,7 @@ public class PFMItemRendererNeoForge extends BuiltinModelItemRenderer {
             matrices.pop();
         } else if (stack.getItem() == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
             matrices.push();
-            BakedModel chairModel = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager())
-                    .pfm$getModelFromNormalID(OfficeChairEntityRenderer.MODEL_IDS[0]);
+            BakedModel chairModel = ModelHelper.getModelFromIdentifier(OfficeChairEntityRenderer.MODEL_IDS[0]);
 
             ClientHooks.handleCameraTransforms(matrices, chairModel, mode, leftHanded);
             matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
