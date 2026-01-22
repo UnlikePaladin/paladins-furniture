@@ -191,5 +191,6 @@ public class PaladinFurnitureModClientForge {
         for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
             event.accept(id);
         }
+        event.accept(new ModelIdentifier(UnbakedBedModel.BED_MODEL_ID, "block"));
     }
 }

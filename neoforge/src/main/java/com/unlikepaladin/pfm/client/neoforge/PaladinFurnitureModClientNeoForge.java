@@ -90,6 +90,24 @@ public class PaladinFurnitureModClientNeoForge {
     }
 
     @SubscribeEvent
+    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
+            event.registerItem(new IClientItemExtensions() {
+                @Override
+                public BuiltinModelItemRenderer getCustomRenderer() {
+                    return PFMItemRendererNeoForge.INSTANCE;
+                }
+            }, block.asItem());
+        }
+        event.registerItem(new IClientItemExtensions() {
+            @Override
+            public BuiltinModelItemRenderer getCustomRenderer() {
+                return PFMItemRendererNeoForge.INSTANCE;
+            }
+        }, PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM);
+    }
+
+    @SubscribeEvent
     public static void registerExtraModels(ModelEvent.RegisterAdditional event) {
         for (Identifier id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
             event.register(id);
