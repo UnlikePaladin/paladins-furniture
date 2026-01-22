@@ -194,7 +194,7 @@ public class PFMLangProvider extends PFMProvider {
         boolean supported = false;
         for (ResourcePack pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
             try {
-                InputSupplier<InputStream> sup = pack.open(ResourceType.CLIENT_RESOURCES, new Identifier(PaladinFurnitureMod.MOD_ID, "lang/" + languageCode + ".json"));
+                InputSupplier<InputStream> sup = pack.open(ResourceType.CLIENT_RESOURCES, Identifier.of(PaladinFurnitureMod.MOD_ID, "lang/" + languageCode + ".json"));
                 if (sup == null)
                     continue;
                 InputStream stream = sup.get();

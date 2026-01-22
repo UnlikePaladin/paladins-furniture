@@ -40,13 +40,8 @@ public class PFMItemRendererFabric extends BuiltinModelItemRenderer {
         }
     }
 
-    static Map<Boolean, BakedModel> bedModel = new HashMap<>();
     public BakedModel getBedModel(boolean classic) {
-        if (bedModel.containsKey(classic) && bedModel.get(classic) != null) {
-            return bedModel.get(classic);
-        }
-        bedModel.put(classic, classic ? UnbakedBedModel.inventoryModels.getRight() : UnbakedBedModel.inventoryModels.getLeft());
-        return bedModel.get(classic);
+        return classic ? UnbakedBedModel.inventoryModels.getRight() : UnbakedBedModel.inventoryModels.getLeft();
     }
 
     @Override
