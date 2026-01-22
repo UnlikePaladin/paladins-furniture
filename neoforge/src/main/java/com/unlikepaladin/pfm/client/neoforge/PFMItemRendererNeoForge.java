@@ -19,6 +19,7 @@ import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.client.render.item.ItemRenderer;
 import net.minecraft.client.render.model.BakedModel;
 import net.minecraft.item.ModelTransformationMode;
+import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemStack;
@@ -41,7 +42,7 @@ public class PFMItemRendererNeoForge extends BuiltinModelItemRenderer {
         }
     }
 
-    public BakedModel getBedModel(boolean classic) {
+    public BakedModel getTransformBedModel(boolean classic) {
         return classic ? UnbakedBedModel.inventoryModels.getRight() : UnbakedBedModel.inventoryModels.getLeft();
     }
 
@@ -56,11 +57,14 @@ public class PFMItemRendererNeoForge extends BuiltinModelItemRenderer {
             matrices.push();
 
             Block block = ((BlockItem) stack.getItem()).getBlock();
-            BakedModel bedModel = getBedModel(stack.getItem().getTranslationKey().contains("classic"));
+            BakedModel bedModel = getTransformBedModel(stack.getItem().getTranslationKey().contains("classic"));
             ClientHooks.handleCameraTransforms(matrices, bedModel, mode, leftHanded);
             matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
-            MinecraftClient.getInstance().getItemRenderer().renderBakedItemModel(bedModel, stack, light, overlay, matrices, consumer);
 
+            BakedModel actualModel = MinecraftClient.getInstance().getItemRenderer().getModel(stack, MinecraftClient.getInstance().world, MinecraftClient.getInstance().player, 0);
+            for(BakedModel model : actualModel.getRenderPasses(stack, false)) {
+                MinecraftClient.getInstance().getItemRenderer().renderBakedItemModel(model, stack, light, overlay, matrices, consumer);
+            }
             this.renderBed.setColor(((SimpleBedBlock)block).getColor());
             this.blockEntityRenderDispatcher.renderEntity(renderBed, matrices, vertexConsumers, light, overlay);
             matrices.pop();
