@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
+import com.unlikepaladin.pfm.client.PFMBakedModelManagerAccessor;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -41,7 +42,7 @@ public class PFMItemRendererForge extends BuiltinModelItemRenderer {
         }
     }
 
-    public BakedModel getBedModel(boolean classic) {
+    public BakedModel getBedModelForTransform(boolean classic) {
         return classic ? UnbakedBedModel.inventoryModels.getRight() : UnbakedBedModel.inventoryModels.getLeft();
 
     }
@@ -57,17 +58,17 @@ public class PFMItemRendererForge extends BuiltinModelItemRenderer {
             matrices.push();
 
             Block block = ((BlockItem) stack.getItem()).getBlock();
-            BakedModel bedModel = getBedModel(stack.getItem().getTranslationKey().contains("classic"));
+            BakedModel bedModel = getBedModelForTransform(stack.getItem().getTranslationKey().contains("classic"));
             bedModel.applyTransform(mode, matrices, leftHanded);
             matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
             // annoyingly, forge is applying some weird wrong transform to the bed model when rendering as an item
             // so i have to manually rotate and translate it to be correct, also happens only here on 1.21.1, how peculiar
-            matrices.push();
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(270.0f));
-            matrices.translate(0.0,0,-1.0);
-            MinecraftClient.getInstance().getItemRenderer().renderBakedItemModel(bedModel, stack, light, overlay, matrices, consumer);
-            matrices.pop();
+
+            BakedModel actualModel = MinecraftClient.getInstance().getItemRenderer().getModel(stack, MinecraftClient.getInstance().world, MinecraftClient.getInstance().player, 0);
+            for(BakedModel model : actualModel.getRenderPasses(stack, false)) {
+                MinecraftClient.getInstance().getItemRenderer().renderBakedItemModel(model, stack, light, overlay, matrices, consumer);
+            }
 
             this.renderBed.setColor(((SimpleBedBlock)block).getColor());
             this.blockEntityRenderDispatcher.renderEntity(renderBed, matrices, vertexConsumers, light, overlay);
