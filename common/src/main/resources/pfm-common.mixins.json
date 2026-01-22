@@ -38,6 +38,7 @@
     "SelectItemModelAccessor",
     "PFMSplashOverlayMixin",
     "PFMSpriteAtlasTextureAccessor",
+    "PFMSpriteAtlasTextureMixin",
     "PFMSpriteContentsAccessor",
     "PFMSpriteContentsMixin",
     "PFMSpriteLoaderMixin",

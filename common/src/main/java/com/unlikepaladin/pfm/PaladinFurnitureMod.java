@@ -122,6 +122,7 @@ public class PaladinFurnitureMod {
 
 	public enum Loader implements StringIdentifiable {
 		FORGE("forge"),
+        NEOFORGE("neoforge"),
 		FABRIC_LIKE("fabric_like");
 		final String name;
 		Loader(String name) {

@@ -5,11 +5,7 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.materials.*;
-import com.unlikepaladin.pfm.items.LampItem;
-import com.unlikepaladin.pfm.items.LightSwitchItem;
-import com.unlikepaladin.pfm.items.PFMComponents;
-import com.unlikepaladin.pfm.items.OfficeChairItem;
-import com.unlikepaladin.pfm.items.ShowerHandleItem;
+import com.unlikepaladin.pfm.items.*;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
@@ -379,7 +375,7 @@ public class LateBlockRegistry {
                 RegistryKey<Block> blockRegistryKey = getBlockRegistryKey(variant.asString()+"_desk_cabinet_classic");
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).mapColor(color).nonOpaque().registryKey(blockRegistryKey)), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
-        PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = new OfficeChairItem(new Item.Settings().component(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).registryKey(getItemRegistryKey("office_chair")));
+        PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = OfficeChairItem.getItemFactory(new Item.Settings().component(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).registryKey(getItemRegistryKey("office_chair")));
         LateBlockRegistry.registerLateItem("office_chair", () -> PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, PaladinFurnitureMod.FURNITURE_GROUP);
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicNightstandBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
@@ -401,7 +397,9 @@ public class LateBlockRegistry {
                 int i = 0;for (DyeColor color : DyeColor.values()) {
                 if (i > 15)
                         break;
-                    SimpleBedBlock block = LateBlockRegistry.registerLateBlock(variant.asString() + "_" + color.getId() +  "_simple_bed", () -> new SimpleBedBlock(color, AbstractBlock.Settings.create().mapColor(state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMapColor() : MapColor.WHITE_GRAY).sounds(variant.getBaseBlock().getDefaultState().getSoundGroup()).requires(variant.getFeatureList().toArray(new FeatureFlag[0])).strength(0.2f).nonOpaque().registryKey(getBlockRegistryKey(variant.asString() + "_" + color.getId() +  "_simple_bed"))), 1, PaladinFurnitureMod.FURNITURE_GROUP);
+                    String blockName = variant.asString() + "_" + color.getId() +  "_simple_bed";
+                    SimpleBedBlock block = LateBlockRegistry.registerLateBlock(blockName, () -> new SimpleBedBlock(color, AbstractBlock.Settings.create().mapColor(state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMapColor() : MapColor.WHITE_GRAY).sounds(variant.getBaseBlock().getDefaultState().getSoundGroup()).requires(variant.getFeatureList().toArray(new FeatureFlag[0])).strength(0.2f).nonOpaque().registryKey(getBlockRegistryKey(blockName))), false, PaladinFurnitureMod.FURNITURE_GROUP);
+                    LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Settings().maxCount(1).registryKey(getItemRegistryKey(blockName)).useBlockPrefixedTranslationKey()), PaladinFurnitureMod.FURNITURE_GROUP);
                     this.addBlock(variant, block, true);
                     PaladinFurnitureModBlocksItems.beds.add(block);
                     i++;
@@ -413,7 +411,9 @@ public class LateBlockRegistry {
                 int i = 0;for (DyeColor color : DyeColor.values()) {
                 if (i > 15)
                         break;
-                    ClassicBedBlock block = LateBlockRegistry.registerLateBlock(variant.asString() + "_" + color.getId() +  "_classic_bed", () -> new ClassicBedBlock(color, AbstractBlock.Settings.create().mapColor(state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMapColor() : MapColor.WHITE_GRAY).sounds(variant.getBaseBlock().getDefaultState().getSoundGroup()).strength(0.2f).nonOpaque().requires(variant.getFeatureList().toArray(new FeatureFlag[0])).registryKey(getBlockRegistryKey(variant.asString() + "_" + color.getId() +  "_classic_bed"))), 1, PaladinFurnitureMod.FURNITURE_GROUP);
+                    String blockName = variant.asString() + "_" + color.getId() +  "_classic_bed";
+                    ClassicBedBlock block = LateBlockRegistry.registerLateBlock(blockName, () -> new ClassicBedBlock(color, AbstractBlock.Settings.create().mapColor(state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMapColor() : MapColor.WHITE_GRAY).sounds(variant.getBaseBlock().getDefaultState().getSoundGroup()).strength(0.2f).nonOpaque().requires(variant.getFeatureList().toArray(new FeatureFlag[0])).registryKey(getBlockRegistryKey(blockName))), false, PaladinFurnitureMod.FURNITURE_GROUP);
+                    LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Settings().maxCount(1).registryKey(getItemRegistryKey(blockName)).useBlockPrefixedTranslationKey()), PaladinFurnitureMod.FURNITURE_GROUP);
                     this.addBlock(variant, block, true);
                     PaladinFurnitureModBlocksItems.beds.add(block);
                     i++;
