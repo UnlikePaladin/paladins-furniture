@@ -45,7 +45,7 @@ public class PFMItemRendererNeoForge extends BuiltinModelItemRenderer {
     }
 
     static Map<Boolean, BakedModel> bedModel = new HashMap<>();
-    public BakedModel getBedModel(boolean classic) {
+    public BakedModel getTransformBedModel(boolean classic) {
         if (bedModel.containsKey(classic) && bedModel.get(classic) != null) {
             return bedModel.get(classic);
         }
@@ -64,11 +64,14 @@ public class PFMItemRendererNeoForge extends BuiltinModelItemRenderer {
             matrices.push();
 
             Block block = ((BlockItem) stack.getItem()).getBlock();
-            BakedModel bedModel = getBedModel(stack.getItem().getTranslationKey().contains("classic"));
+            BakedModel bedModel = getTransformBedModel(stack.getItem().getTranslationKey().contains("classic"));
             ClientHooks.handleCameraTransforms(matrices, bedModel, mode, leftHanded);
             matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
-            MinecraftClient.getInstance().getItemRenderer().renderBakedItemModel(bedModel, stack, light, overlay, matrices, consumer);
 
+            BakedModel actualModel = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(UnbakedBedModel.BED_MODEL_ID);
+            for(BakedModel model : actualModel.getRenderPasses(stack, false)) {
+                MinecraftClient.getInstance().getItemRenderer().renderBakedItemModel(model, stack, light, overlay, matrices, consumer);
+            }
             this.renderBed.setColor(((SimpleBedBlock)block).getColor());
             this.blockEntityRenderDispatcher.renderEntity(renderBed, matrices, vertexConsumers, light, overlay);
             matrices.pop();
