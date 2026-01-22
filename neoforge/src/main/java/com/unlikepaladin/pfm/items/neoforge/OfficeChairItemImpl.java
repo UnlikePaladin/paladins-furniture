@@ -1,10 +1,7 @@
 package com.unlikepaladin.pfm.items.neoforge;
 
-import com.unlikepaladin.pfm.client.neoforge.PFMItemRendererNeoForge;
 import com.unlikepaladin.pfm.items.OfficeChairItem;
-import net.minecraft.client.render.item.BuiltinModelItemRenderer;
 import net.minecraft.item.Item;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 import java.util.function.Consumer;
 

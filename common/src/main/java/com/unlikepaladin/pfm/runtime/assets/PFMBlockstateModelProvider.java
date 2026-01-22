@@ -421,8 +421,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                     ids.add(id);
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
                     generatedStates.add(Registries.BLOCK.getId(block));
-                    Identifier itemModelId = PaladinFurnitureMod.getLoader() == PaladinFurnitureMod.Loader.FORGE ? Identifier.of("minecraft:builtin/entity") : replaceable;
-                    PFMBlockstateModelProvider.modelPathMap.put(block, itemModelId);
+                    PFMBlockstateModelProvider.modelPathMap.put(block, replaceable);
                 }});
             });
 

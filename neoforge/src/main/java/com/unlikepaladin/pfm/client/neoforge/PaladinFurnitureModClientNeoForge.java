@@ -51,8 +51,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.lwjgl.glfw.GLFW;
 
@@ -87,24 +85,6 @@ public class PaladinFurnitureModClientNeoForge {
                 keyCode, // The keycode of the key
                 category // The translation key of the keybinding's category.
         );
-    }
-
-    @SubscribeEvent
-    public static void registerClientExtensions(RegisterClientExtensionsEvent event) {
-        for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
-            event.registerItem(new IClientItemExtensions() {
-                @Override
-                public BuiltinModelItemRenderer getCustomRenderer() {
-                    return PFMItemRendererNeoForge.INSTANCE;
-                }
-            }, block.asItem());
-        }
-        event.registerItem(new IClientItemExtensions() {
-            @Override
-            public BuiltinModelItemRenderer getCustomRenderer() {
-                return PFMItemRendererNeoForge.INSTANCE;
-            }
-        }, PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM);
     }
 
     @SubscribeEvent

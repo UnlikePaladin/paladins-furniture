@@ -7,7 +7,6 @@
     "PFMBlockDustParticleMixin",
     "PFMBlockModelsMixin",
     "PFMSpriteBillBoardParticleMixin",
-    "PFMItemRendererMixin",
     "PFMRenderLayersFabricMixin"
   ],
   "mixins": [

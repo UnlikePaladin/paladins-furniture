@@ -45,7 +45,7 @@ public abstract class PFMItemRendererMixinForge {
 
     @Inject(method = "renderItem(Lnet/minecraft/item/ModelTransformationMode;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;II[ILnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/client/render/RenderLayer;Lnet/minecraft/client/render/item/ItemRenderState$Glint;)V", at = @At(value = "HEAD"), cancellable = true)
     private static void renderPFMItem(ModelTransformationMode transformationMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, int[] tints, BakedModel model, RenderLayer layer, ItemRenderState.Glint glint, CallbackInfo ci) {
-        if (model instanceof com.unlikepaladin.pfm.client.model.PFMBakedModelGetQuadsExtension) {
+        if (model instanceof PFMBakedModelGetQuadsExtension) {
             VertexConsumer vertexconsumer;
             if (glint == ItemRenderState.Glint.SPECIAL) {
                 MatrixStack.Entry posestack$pose = matrices.peek().copy();
