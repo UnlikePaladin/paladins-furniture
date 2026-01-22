@@ -10,6 +10,7 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.render.*;
 import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
@@ -23,7 +24,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.util.Arm;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.RotationAxis;
+import net.minecraft.util.math.random.Random;
 
 import java.util.*;
 
@@ -65,10 +68,19 @@ public class PFMItemRendererForge extends BuiltinModelItemRenderer {
             // annoyingly, forge is applying some weird wrong transform to the bed model when rendering as an item
             // so i have to manually rotate and translate it to be correct, also happens only here on 1.21.1, how peculiar
 
-            BakedModel actualModel = MinecraftClient.getInstance().getItemRenderer().getModel(stack, MinecraftClient.getInstance().world, MinecraftClient.getInstance().player, 0);
-            for(BakedModel model : actualModel.getRenderPasses(stack, false)) {
-                MinecraftClient.getInstance().getItemRenderer().renderBakedItemModel(model, stack, light, overlay, matrices, consumer);
+            BakedModel actualModel = ModelHelper.getModelFromIdentifier(UnbakedBedModel.BED_MODEL_ID);
+
+            ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
+            BlockState state = stack.getItem() instanceof BlockItem ? ((BlockItem) stack.getItem()).getBlock().getDefaultState() : null;
+
+            Random random = Random.create();
+            long randomSeed = 42L;
+            for (Direction direction : Direction.values()) {
+                random.setSeed(randomSeed);
+                itemRenderer.renderBakedItemQuads(matrices, consumer, ((PFMBakedModelGetQuadsExtension) actualModel).getQuadsCached(stack, state, direction, random), stack, light, overlay);
             }
+            random.setSeed(randomSeed);
+            itemRenderer.renderBakedItemQuads(matrices, consumer, ((PFMBakedModelGetQuadsExtension)actualModel).getQuadsCached(stack, state, null, random), stack, light, overlay);
 
             this.renderBed.setColor(((SimpleBedBlock)block).getColor());
             this.blockEntityRenderDispatcher.renderEntity(renderBed, matrices, vertexConsumers, light, overlay);

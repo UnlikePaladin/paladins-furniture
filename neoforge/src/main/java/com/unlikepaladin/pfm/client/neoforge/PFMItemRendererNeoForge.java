@@ -62,7 +62,7 @@ public class PFMItemRendererNeoForge extends BuiltinModelItemRenderer {
             matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
             BakedModel actualModel = MinecraftClient.getInstance().getItemRenderer().getModel(stack, MinecraftClient.getInstance().world, MinecraftClient.getInstance().player, 0);
-            for(BakedModel model : actualModel.getRenderPasses(stack, false)) {
+            for(BakedModel model : actualModel.getRenderPasses(stack)) {
                 MinecraftClient.getInstance().getItemRenderer().renderBakedItemModel(model, stack, light, overlay, matrices, consumer);
             }
             this.renderBed.setColor(((SimpleBedBlock)block).getColor());
