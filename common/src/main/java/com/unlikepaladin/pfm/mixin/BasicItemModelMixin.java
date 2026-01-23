@@ -103,8 +103,9 @@ public class BasicItemModelMixin {
         return List.of();
     }
 
-    @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Ljava/util/List;get(I)Ljava/lang/Object;"))
-    private <E> E swapTintIndx(List instance, int i, Operation<TintSource> original, @Share("currentColorIndex")LocalIntRef currentColorIndex) {
+    //optional because optifine no likey this
+    @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Ljava/util/List;get(I)Ljava/lang/Object;"), require = 0)
+    private <E> E swapTintIndx(List<E> instance, int i, Operation<TintSource> original, @Share("currentColorIndex")LocalIntRef currentColorIndex) {
         currentColorIndex.set(i);
         if (pfm$parentTints != null) {
             return (E) pfm$parentTints.get(i);
@@ -112,12 +113,12 @@ public class BasicItemModelMixin {
         return (E) original.call(instance, i);
     }
 
-    @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/tint/TintSource;getTint(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/world/ClientWorld;Lnet/minecraft/entity/LivingEntity;)I"))
+    @WrapOperation(method = "update", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/item/tint/TintSource;getTint(Lnet/minecraft/item/ItemStack;Lnet/minecraft/client/world/ClientWorld;Lnet/minecraft/entity/LivingEntity;)I"), require = 0)
     private int swapTintColor(TintSource instance, ItemStack itemStack, ClientWorld clientWorld, LivingEntity livingEntity, Operation<Integer> original, @Share("currentColorIndex")LocalIntRef currentColorIndex) {
-        if (currentColorIndex.get() == 1 && itemStack.get(PFMComponents.COLOR_COMPONENT) != null) {
+        if (currentColorIndex != null && currentColorIndex.get() == 1 && itemStack.get(PFMComponents.COLOR_COMPONENT) != null) {
             return itemStack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE).getMapColor().color;
         }
-        if (pfm$parentTints != null) {
+        if (currentColorIndex != null && pfm$parentTints != null) {
             return pfm$parentTints.get(currentColorIndex.get()).getTint(pfm$parentStack, clientWorld, livingEntity);
         }
         return original.call(instance, itemStack, clientWorld, livingEntity);
