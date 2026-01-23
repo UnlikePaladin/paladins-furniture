@@ -86,8 +86,8 @@ dependencies {
 
     include(forgeRuntimeLibrary("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}"))
 
-    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.4.1"))
-    implementation(include("io.github.llamalad7:mixinextras-forge:0.4.1"))
+    compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.3"))
+    implementation(include("io.github.llamalad7:mixinextras-forge:0.5.3"))
 }
 
 if(rootProject.jei_compatibility == "true") {

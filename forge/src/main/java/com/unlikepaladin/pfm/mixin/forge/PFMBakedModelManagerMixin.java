@@ -50,7 +50,7 @@ public abstract class PFMBakedModelManagerMixin implements PFMBakedModelManagerE
         PFMExtraModelsForge.registerExtraModels(ids);
     }
 
-    @Inject(method = "upload", at = @At(value = "INVOKE", target = "Lnet/minecraftforge/client/ForgeHooksClient;onModelBake(Lnet/minecraft/client/render/model/BakedModelManager;Lnet/minecraft/client/render/model/ModelBaker;)V", ordinal = 0))
+    @Inject(method = "upload", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/block/BlockModels;setModels(Ljava/util/Map;)V", ordinal = 0))
     private void onUpload(CallbackInfo ci, @Local ModelBaker.BakedModels bakedModels) {
         pfm$extraModels = ((PFModelBakerBakedExtensions) (Object) bakedModels).pfm_getExtraModels();
     }
