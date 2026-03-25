@@ -1,12 +1,12 @@
 package com.unlikepaladin.pfm.client.fabric;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public interface PFMBakedModelParticleExtension {
-    Sprite pfm$getParticle(BlockState state);
+    TextureAtlasSprite pfm$getParticle(BlockState state);
 
-    Sprite pfm$getParticle(World world, BlockPos pos, BlockState state);
+    TextureAtlasSprite pfm$getParticle(Level world, BlockPos pos, BlockState state);
 }

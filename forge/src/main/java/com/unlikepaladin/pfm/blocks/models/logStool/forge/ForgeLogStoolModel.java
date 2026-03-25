@@ -3,15 +3,15 @@ package com.unlikepaladin.pfm.blocks.models.logStool.forge;
 import com.unlikepaladin.pfm.blocks.LogStoolBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -23,27 +23,27 @@ import java.util.List;
 import java.util.Random;
 
 public class ForgeLogStoolModel extends PFMForgeBakedModel {
-    public ForgeLogStoolModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
+    public ForgeLogStoolModel(ModelState settings, List<BakedModel> templateBakedModels) {
         super(settings, templateBakedModels);
     }
 
     public static ModelProperty<Boolean> TUCKED = new ModelProperty<>();
     @Override
-    public void appendProperties(ModelDataMap.Builder builder) {
-        super.appendProperties(builder);
+    public void createBlockStateDefinition(ModelDataMap.Builder builder) {
+        super.createBlockStateDefinition(builder);
         builder.withProperty(TUCKED);
     }
 
 
     @Override
-    public @NotNull IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
+    public @NotNull IModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
         if (state.getBlock() instanceof LogStoolBlock) {
             ModelDataMap.Builder builder = new ModelDataMap.Builder();
-            appendProperties(builder);
+            createBlockStateDefinition(builder);
 
             IModelData data = builder.build();
             super.getModelData(world, pos, state, data);
-            data.setData(TUCKED, state.get(LogStoolBlock.TUCKED));
+            data.setData(TUCKED, state.getValue(LogStoolBlock.TUCKED));
             return data;
         }
         return tileData;
@@ -54,7 +54,7 @@ public class ForgeLogStoolModel extends PFMForgeBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
         if (state != null && extraData != null && extraData.getData(TUCKED) != null) {
             int tucked = Boolean.TRUE.equals(extraData.getData(TUCKED)) ? 1 : 0;
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             List<BakedQuad> quads = getTemplateBakedModels().get(tucked).getQuads(state, side, rand, extraData);
             return getQuadsWithTexture(quads, ModelHelper.getOakLogLogTopSprites(), spriteList);
         }
@@ -63,7 +63,7 @@ public class ForgeLogStoolModel extends PFMForgeBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
-        List<Sprite> spriteList = getSpriteList(state);
+        List<TextureAtlasSprite> spriteList = getSpriteList(state);
         List<BakedQuad> quads = getTemplateBakedModels().get(0).getQuads(state, face, random);
         return getQuadsWithTexture(quads, ModelHelper.getOakLogLogTopSprites(), spriteList);
     }

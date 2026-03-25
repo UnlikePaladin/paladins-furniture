@@ -1,16 +1,16 @@
 package com.unlikepaladin.pfm.data;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
 
 public class PFMTags {
-    public static Tag.Identified<Block> TUCKABLE_BLOCKS = createTag(new Identifier("pfm", "tuckable_blocks"));
-    public static Tag.Identified<Block> FURNITURE = createTag(new Identifier("pfm", "furniture"));
+    public static Tag.Named<Block> TUCKABLE_BLOCKS = createTag(new ResourceLocation("pfm", "tuckable_blocks"));
+    public static Tag.Named<Block> FURNITURE = createTag(new ResourceLocation("pfm", "furniture"));
 
     @ExpectPlatform
-    public static Tag.Identified<Block> createTag(Identifier identifier) {
+    public static Tag.Named<Block> createTag(ResourceLocation identifier) {
         throw new AssertionError();
     }
 }

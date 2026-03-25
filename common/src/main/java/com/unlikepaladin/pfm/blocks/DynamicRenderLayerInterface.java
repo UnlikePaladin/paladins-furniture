@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.renderer.RenderType;
 
 /**
  * This interface is used to change the RenderLayer blocks are on.
@@ -10,5 +10,5 @@ import net.minecraft.client.render.RenderLayer;
  **/
 public interface DynamicRenderLayerInterface {
     @Environment(EnvType.CLIENT)
-    RenderLayer getCustomRenderLayer();
+    RenderType getCustomRenderLayer();
 }

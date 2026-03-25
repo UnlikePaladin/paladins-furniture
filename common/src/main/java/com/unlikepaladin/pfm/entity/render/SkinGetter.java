@@ -3,7 +3,7 @@ package com.unlikepaladin.pfm.entity.render;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,9 +39,9 @@ public class SkinGetter {
     }
 
 
-    public static final Identifier TEXTURE = new Identifier("minecraft", "textures/entity/steve.png");
+    public static final ResourceLocation TEXTURE = new ResourceLocation("minecraft", "textures/entity/steve.png");
 
-    public Identifier getjson() {
+    public ResourceLocation getjson() {
         this.getFromName(playerName);
         System.out.println("Getting the Json");
         System.out.println("DEBUG:" + basejson);
@@ -76,10 +76,10 @@ public class SkinGetter {
             }
             System.out.println(texturepath);
 
-            return new Identifier(texturepath.toString());
+            return new ResourceLocation(texturepath.toString());
         } else {
-            System.out.println("Identifier is null, defaulting to Steve");
-            return new Identifier(TEXTURE.toString());
+            System.out.println("ResourceLocation is null, defaulting to Steve");
+            return new ResourceLocation(TEXTURE.toString());
 
 
         }

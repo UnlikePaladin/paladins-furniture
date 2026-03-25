@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.data.materials;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum BlockType implements StringIdentifiable {
+public enum BlockType implements StringRepresentable {
     PLANKS( "planks"),
     LOG( "log"),
     LOG_TOP( "log_top"),
@@ -33,7 +33,7 @@ public enum BlockType implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return getPrefix() + "_" + getPostfix();
     }
 }

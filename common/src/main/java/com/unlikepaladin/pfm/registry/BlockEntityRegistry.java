@@ -6,9 +6,9 @@ import com.unlikepaladin.pfm.blocks.blockentities.*;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +50,7 @@ public class BlockEntityRegistry {
     }
 
     @ExpectPlatform
-    public static <T extends BlockEntity>BlockEntityType<T> registerBlockEntity(String id, Block[] block, BlockEntityType.BlockEntityFactory<T> factory) {
+    public static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String id, Block[] block, BlockEntityType.BlockEntitySupplier<T> factory) {
         throw new RuntimeException();
     }
 }

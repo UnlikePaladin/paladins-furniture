@@ -11,10 +11,10 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -27,13 +27,13 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        ClientWorld world = Objects.requireNonNull(mc.world);
+        Minecraft mc = Minecraft.getInstance();
+        ClientLevel world = Objects.requireNonNull(mc.level);
 
-        Collection<FreezingRecipe> freezingRecipes = world.getRecipeManager().listAllOfType(RecipeTypes.FREEZING_RECIPE);
+        Collection<FreezingRecipe> freezingRecipes = world.getRecipeManager().getAllRecipesFor(RecipeTypes.FREEZING_RECIPE);
         registration.addRecipes(freezingRecipes, FreezingCategory.IDENTIFIER);
 
-        Collection<FurnitureRecipe> simpleFurnitureRecipes = world.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE);
+        Collection<FurnitureRecipe> simpleFurnitureRecipes = world.getRecipeManager().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE);
         registration.addRecipes(simpleFurnitureRecipes, FurnitureCategory.IDENTIFIER);
     }
 
@@ -58,7 +58,7 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public Identifier getPluginUid() {
-        return new Identifier(PaladinFurnitureMod.MOD_ID, "jei_plugin");
+    public ResourceLocation getPluginUid() {
+        return new ResourceLocation(PaladinFurnitureMod.MOD_ID, "jei_plugin");
     }
 }

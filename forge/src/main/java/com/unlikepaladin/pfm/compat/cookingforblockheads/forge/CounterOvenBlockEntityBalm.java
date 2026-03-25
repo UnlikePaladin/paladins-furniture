@@ -18,12 +18,12 @@ import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.Container;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -44,7 +44,7 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implement
     }
 
     @Override
-    public Inventory getContainer() {
+    public Container getContainer() {
         return this;
     }
 
@@ -93,8 +93,8 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implement
         Capability<?> capability = forgeProviders.getCapability(provider.getProviderClass());
         Objects.requireNonNull(provider);
         capabilities.put(capability, LazyOptional.of(provider::getInstance));
-        if (provider.getProviderClass() == Inventory.class) {
-            capabilities.put(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, LazyOptional.of(() -> new InvWrapper((Inventory)provider.getInstance())));
+        if (provider.getProviderClass() == Container.class) {
+            capabilities.put(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, LazyOptional.of(() -> new InvWrapper((Container)provider.getInstance())));
         } else if (provider.getProviderClass() == FluidTank.class) {
             capabilities.put(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY, LazyOptional.of(() -> new ForgeFluidTank((FluidTank)provider.getInstance())));
         } else if (provider.getProviderClass() == EnergyStorage.class) {
@@ -103,7 +103,7 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implement
     }
 
     @Override
-    public Box balmGetRenderBoundingBox() {
+    public AABB balmGetRenderBoundingBox() {
         return super.getRenderBoundingBox();
     }
 
@@ -113,12 +113,12 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implement
     }
 
     @Override
-    public void balmFromClientTag(NbtCompound nbtCompound) {
+    public void balmFromClientTag(CompoundTag nbtCompound) {
         return;
     }
 
     @Override
-    public NbtCompound balmToClientTag(NbtCompound nbtCompound) {
+    public CompoundTag balmToClientTag(CompoundTag nbtCompound) {
         return nbtCompound;
     }
 

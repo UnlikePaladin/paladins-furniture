@@ -3,49 +3,53 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.Containers;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class TrashcanBlock extends BlockWithEntity {
-    public TrashcanBlock(Settings settings) {
+public class TrashcanBlock extends BaseEntityBlock {
+    public TrashcanBlock(Properties settings) {
         super(settings);
-        setDefaultState(this.getDefaultState().with(OPEN, false));
+        registerDefaultState(this.defaultBlockState().setValue(OPEN, false));
     }
-    protected static final BooleanProperty OPEN = Properties.OPEN;
-    protected static final BooleanProperty POWERED = Properties.POWERED;
+    protected static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    protected static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(OPEN, POWERED);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
-    public static final VoxelShape TRASHCAN = VoxelShapes.union(createCuboidShape(2, 0, 2, 13, 13, 13), createCuboidShape(1, 12, 1, 14, 15, 14), createCuboidShape(3.5, 14.9, 6.5,11.5, 16, 8.5));
-    public static final VoxelShape TRASHCAN_OPEN = VoxelShapes.union(createCuboidShape(2, 0, 2, 13, 13, 13), createCuboidShape(10.5, 0, 0, 19.5, 13, 14));
+    public static final VoxelShape TRASHCAN = Shapes.or(box(2, 0, 2, 13, 13, 13), box(1, 12, 1, 14, 15, 14), box(3.5, 14.9, 6.5,11.5, 16, 8.5));
+    public static final VoxelShape TRASHCAN_OPEN = Shapes.or(box(2, 0, 2, 13, 13, 13), box(10.5, 0, 0, 19.5, 13, 14));
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        boolean open = state.get(OPEN);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        boolean open = state.getValue(OPEN);
         if(open) {
             return TRASHCAN_OPEN;
         }
@@ -54,7 +58,7 @@ public class TrashcanBlock extends BlockWithEntity {
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return getBlockEntity(pos, state);
     }
     @ExpectPlatform
@@ -63,52 +67,52 @@ public class TrashcanBlock extends BlockWithEntity {
     }
 
     @ExpectPlatform
-    public static void openScreen(PlayerEntity player, BlockState state, World world, BlockPos pos) {
+    public static void openScreen(Player player, BlockState state, Level world, BlockPos pos) {
         return;
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (world.isClientSide) {
+            return InteractionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof TrashcanBlockEntity) {
             openScreen(player, state, world, pos);
-            player.incrementStat(Statistics.TRASHCAN_OPENED);
+            player.awardStat(Statistics.TRASHCAN_OPENED);
         }
-        return ActionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
 
     @Override
-    public void neighborUpdate(BlockState state, World world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
-        boolean bl = world.isReceivingRedstonePower(pos);
-        if (bl != state.get(POWERED)) {
+    public void neighborChanged(BlockState state, Level world, BlockPos pos, Block block, BlockPos fromPos, boolean notify) {
+        boolean bl = world.hasNeighborSignal(pos);
+        if (bl != state.getValue(POWERED)) {
             if (bl) {
                 if (world.getBlockEntity(pos) instanceof TrashcanBlockEntity){
                     TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(pos);
-                    trashcanBlockEntity.clear();
+                    trashcanBlockEntity.clearContent();
                 }
             }
-            world.setBlockState(pos, state.with(POWERED, bl), 3);
+            world.setBlock(pos, state.setValue(POWERED, bl), 3);
         }
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter world, BlockPos pos, PathComputationType type) {
         return false;
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.isOf(newState.getBlock())) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.is(newState.getBlock())) {
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof Inventory) {
-            ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
-            world.updateComparators(pos, this);
+        if (blockEntity instanceof Container) {
+            Containers.dropContents(world, pos, (Container) blockEntity);
+            world.updateNeighbourForOutputSignal(pos, this);
         }
-        super.onStateReplaced(state, world, pos, newState, moved);
+        super.onRemove(state, world, pos, newState, moved);
     }
 }

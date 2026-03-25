@@ -16,12 +16,12 @@ import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -30,7 +30,7 @@ import java.util.Collection;
 
 public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer, DedicatedServerModInitializer {
 
-    public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
+    public static final ResourceLocation FURNITURE_DYED_ID = new ResourceLocation("pfm:furniture_dyed");
     public static SoundEvent FURNITURE_DYED_EVENT = new SoundEvent(FURNITURE_DYED_ID);
     public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 
@@ -51,7 +51,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         this.commonInit();
 
         PaladinFurnitureMod.DYE_KITS = FabricItemGroupBuilder.create(
-                        new Identifier(MOD_ID, "dye_kits"))
+                        new ResourceLocation(MOD_ID, "dye_kits"))
                 .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
                 .appendItems(stacks -> {
                     stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED));
@@ -89,14 +89,14 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
     }
 
 
-    public static void onServerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
+    public static void onServerJoin(ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) {
         // Give book
         if (getPFMConfig().shouldGiveGuideBook()) {
             PFMCriteria.GUIDE_BOOK_CRITERION.trigger(handler.getPlayer());
         }
 
         // Sync Config
-        PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
         Collection<AbstractConfigOption> configOptions = PaladinFurnitureMod.getPFMConfig().options.values();
         buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
         sender.sendPacket(NetworkIDs.CONFIG_SYNC_ID, buffer);
@@ -104,13 +104,13 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
 
     public static void initializeItemGroup() {
         PaladinFurnitureMod.FURNITURE_GROUP = FabricItemGroupBuilder.build(
-                new Identifier(MOD_ID, "furniture"),
-                () -> PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultStack());
+                new ResourceLocation(MOD_ID, "furniture"),
+                () -> PaladinFurnitureModBlocksItems.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultInstance());
     }
 
     @Override
     public void onInitializeServer() {
-        PaladinFurnitureMod.isClient = false;
+        PaladinFurnitureMod.isClientSide = false;
         registerLateEntries();
         replaceHomePOIStates();
     }

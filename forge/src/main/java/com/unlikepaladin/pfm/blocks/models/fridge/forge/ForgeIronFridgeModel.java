@@ -5,14 +5,14 @@ import com.unlikepaladin.pfm.blocks.IronFreezerBlock;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -24,7 +24,7 @@ import java.util.*;
 public class ForgeIronFridgeModel extends PFMForgeBakedModel {
     private final List<String> modelParts;
 
-    public ForgeIronFridgeModel(Sprite frame, ModelBakeSettings settings, Map<String, BakedModel> bakedModels, List<String> modelParts) {
+    public ForgeIronFridgeModel(TextureAtlasSprite frame, ModelState settings, Map<String, BakedModel> bakedModels, List<String> modelParts) {
         super(settings, bakedModels.values().stream().toList());
         this.modelParts = modelParts;
     }
@@ -38,7 +38,7 @@ public class ForgeIronFridgeModel extends PFMForgeBakedModel {
             boolean bottom = data.get(0);
             boolean top = data.get(1);
             boolean hasFreezer = data.get(2);
-            int openOffset = state.get(FridgeBlock.OPEN) ? 5 : 0;
+            int openOffset = state.getValue(FridgeBlock.OPEN) ? 5 : 0;
             if (top && bottom) {
                 quads.addAll(getTemplateBakedModels().get(2+openOffset).getQuads(state, side, rand, extraData));
             } else if (bottom) {
@@ -58,12 +58,12 @@ public class ForgeIronFridgeModel extends PFMForgeBakedModel {
 
     @NotNull
     @Override
-    public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
+    public IModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
         ModelDataMap.Builder builder = new ModelDataMap.Builder();
         BitSet set = new BitSet();
-        set.set(0, state.isOf(world.getBlockState(pos.up()).getBlock()));
-        set.set(1, state.isOf(world.getBlockState(pos.down()).getBlock()));
-        set.set(2, world.getBlockState(pos.down()).getBlock() instanceof IronFreezerBlock);
+        set.set(0, state.is(world.getBlockState(pos.above()).getBlock()));
+        set.set(1, state.is(world.getBlockState(pos.below()).getBlock()));
+        set.set(2, world.getBlockState(pos.below()).getBlock() instanceof IronFreezerBlock);
         builder.withInitial(CONNECTIONS, new ModelBitSetProperty(set));
         return builder.build();
     }

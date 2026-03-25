@@ -2,33 +2,38 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.LightSwitchBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.Containers;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -36,13 +41,13 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
-    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
-    public static final BooleanProperty POWERED = Properties.POWERED;
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     private static final List<LightSwitchBlock> LIGHT_SWITCHES = new ArrayList<>();
-    public LightSwitchBlock(Settings settings) {
+    public LightSwitchBlock(Properties settings) {
         super(settings);
-        this.setDefaultState(stateManager.getDefaultState().with(FACING, Direction.NORTH).with(POWERED, false));
+        this.registerDefaultState(getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
         LIGHT_SWITCHES.add(this);
     }
 
@@ -52,51 +57,51 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
 
     @Nullable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite()).with(POWERED, false);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite()).setValue(POWERED, false);
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (world.isClientSide) {
+            return InteractionResult.SUCCESS;
         }
         BlockState blockState = this.togglePower(state, world, pos, false, false);
-        float f = blockState.get(POWERED) ? 0.9f : 0.8f;
-        world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3f, f);
-        world.emitGameEvent(player, blockState.get(POWERED) ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
-        return ActionResult.CONSUME;
+        float f = blockState.getValue(POWERED) ? 0.9f : 0.8f;
+        world.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3f, f);
+        world.gameEvent(player, blockState.getValue(POWERED) ? GameEvent.BLOCK_SWITCH : GameEvent.BLOCK_UNSWITCH, pos);
+        return InteractionResult.CONSUME;
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        if (itemStack.hasNbt()) {
-            NbtCompound nbtCompound = itemStack.getSubNbt("BlockEntityTag");
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+        if (itemStack.hasTag()) {
+            CompoundTag nbtCompound = itemStack.getTagElement("BlockEntityTag");
             if (nbtCompound.contains("lights")) {
-                world.getBlockEntity(pos).writeNbt(nbtCompound);
-                itemStack.setNbt(null);
+                world.getBlockEntity(pos).save(nbtCompound);
+                itemStack.setTag(null);
             }
         }
 
     }
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos)) {
-            return Blocks.AIR.getDefaultState();
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        if (direction.getOpposite() == state.getValue(FACING) && !state.canSurvive(world, pos)) {
+            return Blocks.AIR.defaultBlockState();
         }
         return state;
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        Direction direction = state.get(FACING);
-        BlockPos blockPos = pos.offset(direction.getOpposite());
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        Direction direction = state.getValue(FACING);
+        BlockPos blockPos = pos.relative(direction.getOpposite());
         BlockState blockState = world.getBlockState(blockPos);
-        return blockState.isSideSolidFullSquare(world, blockPos, direction);
+        return blockState.isFaceSturdy(world, blockPos, direction);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
         builder.add(POWERED);
     }
@@ -106,25 +111,25 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
         return super.getFluidState(state);
     }
 
-    public BlockState togglePower(BlockState state, World world, BlockPos pos, boolean listenTo, boolean toggleTo) {
+    public BlockState togglePower(BlockState state, Level world, BlockPos pos, boolean listenTo, boolean toggleTo) {
         if(listenTo) {
-            state = state.with(POWERED, toggleTo);
+            state = state.setValue(POWERED, toggleTo);
         }
         else {
         state = state.cycle(POWERED);}
-        world.setBlockState(pos, state, Block.NOTIFY_ALL);
+        world.setBlock(pos, state, Block.UPDATE_ALL);
         this.updateNeighbors(state, world, pos);
         if (world.getBlockEntity(pos) instanceof LightSwitchBlockEntity)
-            ((LightSwitchBlockEntity)world.getBlockEntity(pos)).setState(state.get(POWERED));
+            ((LightSwitchBlockEntity)world.getBlockEntity(pos)).setState(state.getValue(POWERED));
         return state;
     }
 
-    private static final VoxelShape lightSwitch = VoxelShapes.union(createCuboidShape(5, 3, 15,11, 11, 16));
+    private static final VoxelShape lightSwitch = Shapes.or(box(5, 3, 15,11, 11, 16));
     private static final VoxelShape lightSwitchSouth = BasicTableBlock.rotateShape(Direction.NORTH, Direction.SOUTH, lightSwitch);
     private static final VoxelShape lightSwitchEast = BasicTableBlock.rotateShape(Direction.NORTH, Direction.EAST, lightSwitch);
     private static final VoxelShape lightSwitchWest = BasicTableBlock.rotateShape(Direction.NORTH, Direction.WEST, lightSwitch);
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         Direction facing = getDirection(state);
         switch (facing) {
             case SOUTH -> {
@@ -143,64 +148,64 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public boolean emitsRedstonePower(BlockState state) {
+    public boolean isSignalSource(BlockState state) {
         return true;
     }
     @Override
-    public int getStrongRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        if (state.get(POWERED) && getDirection(state) == direction) {
+    public int getDirectSignal(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {
+        if (state.getValue(POWERED) && getDirection(state) == direction) {
             return 15;
         }
         return 0;
     }
 
     @Override
-    public int getWeakRedstonePower(BlockState state, BlockView world, BlockPos pos, Direction direction) {
-        return state.get(POWERED) ? 15 : 0;
+    public int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction direction) {
+        return state.getValue(POWERED) ? 15 : 0;
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.get(POWERED)) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.getValue(POWERED)) {
             this.updateNeighbors(state, world, pos);
         }
 
-        if (state.isOf(newState.getBlock())) {
+        if (state.is(newState.getBlock())) {
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof LightSwitchBlockEntity lightSwitchBlockEntity) {
-            lightSwitchBlockEntity.markRemoved();
+            lightSwitchBlockEntity.setRemoved();
         }
     }
 
-    private void updateNeighbors(BlockState state, World world, BlockPos pos) {
-        world.updateNeighborsAlways(pos, this);
-        world.updateNeighborsAlways(pos.offset(getDirection(state).getOpposite()), this);
+    private void updateNeighbors(BlockState state, Level world, BlockPos pos) {
+        world.updateNeighborsAt(pos, this);
+        world.updateNeighborsAt(pos.relative(getDirection(state).getOpposite()), this);
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
         if (world.getBlockEntity(pos) != null) {
             this.togglePower(state, world, pos, true, false);
         }
-       super.onBreak(world, pos, state, player);
+       super.playerWillDestroy(world, pos, state, player);
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new LightSwitchBlockEntity(pos, state);
     }
 
 
     protected static Direction getDirection(BlockState state) {
-        return state.get(FACING);
+        return state.getValue(FACING);
     }
 
 }

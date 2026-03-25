@@ -5,13 +5,13 @@ import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.ShowerHandleItem;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.MapColor;
-import net.minecraft.block.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
 
 public class BlockItemRegistry {
     public static void registerCommonBlocks() {
@@ -41,19 +41,19 @@ public class BlockItemRegistry {
     public static void registerFurniture(String blockName, Block block, int count) {
         PaladinFurnitureModBlocksItems.BLOCKS.add(block);
         registerBlockPlatformSpecific(blockName, block, false);
-        registerItemPlatformSpecific(blockName, new BlockItem(block, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).maxCount(count)));
+        registerItemPlatformSpecific(blockName, new BlockItem(block, new Item.Properties().tab(PaladinFurnitureMod.FURNITURE_GROUP).stacksTo(count)));
     }
 
     public static void registerBlock(String blockName, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerBlockItemPlatformSpecific(blockName, block, ItemGroup.BUILDING_BLOCKS);
+            registerBlockItemPlatformSpecific(blockName, block, CreativeModeTab.TAB_BUILDING_BLOCKS);
         }
         registerBlockPlatformSpecific(blockName, block, false);
     }
 
     @ExpectPlatform
-    public static void registerBlockItemPlatformSpecific(String itemName, Block block, ItemGroup group) {
+    public static void registerBlockItemPlatformSpecific(String itemName, Block block, CreativeModeTab group) {
         throw new UnsupportedOperationException();
     }
 

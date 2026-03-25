@@ -5,9 +5,9 @@ import com.unlikepaladin.pfm.recipes.DynamicFurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.SimpleFurnitureRecipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 
 public class RecipeTypes {
     public static RecipeType<FreezingRecipe> FREEZING_RECIPE;
@@ -18,9 +18,9 @@ public class RecipeTypes {
     public static RecipeSerializer<SimpleFurnitureRecipe> SIMPLE_FURNITURE_SERIALIZER;
     public static RecipeSerializer<DynamicFurnitureRecipe> DYNAMIC_FURNITURE_SERIALIZER;
 
-    public static final Identifier FURNITURE_ID = new Identifier(PaladinFurnitureMod.MOD_ID,"furniture");
-    public static final Identifier SIMPLE_FURNITURE_ID = new Identifier(PaladinFurnitureMod.MOD_ID,"simple_furniture");
-    public static final Identifier DYNAMIC_FURNITURE_ID = new Identifier(PaladinFurnitureMod.MOD_ID,"dynamic_furniture");
-    public static final Identifier FREEZING_ID = new Identifier(PaladinFurnitureMod.MOD_ID,"freezing");
+    public static final ResourceLocation FURNITURE_ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID,"furniture");
+    public static final ResourceLocation SIMPLE_FURNITURE_ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID,"simple_furniture");
+    public static final ResourceLocation DYNAMIC_FURNITURE_ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID,"dynamic_furniture");
+    public static final ResourceLocation FREEZING_ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID,"freezing");
 
 }

@@ -3,13 +3,13 @@ package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 
 public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedScreenHandlerFactory, BlockEntityClientSerializable {
 
@@ -21,21 +21,21 @@ public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedSc
         super(entity, pos, state);
     }
 
-    public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
+    public void fromClientTag(CompoundTag tag) {
+        load(tag);
     }
 
     @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return writeNbt(tag);
+    public CompoundTag toClientTag(CompoundTag tag) {
+        return save(tag);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends BlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends BlockEntity> getFactory() {
         return StoveBlockEntityImpl::new;
     }
 
     @Override
-    public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
-        packetByteBuf.writeBlockPos(this.pos);
+    public void writeScreenOpeningData(ServerPlayer serverPlayerEntity, FriendlyByteBuf packetByteBuf) {
+        packetByteBuf.writeBlockPos(this.worldPosition);
     }
 }

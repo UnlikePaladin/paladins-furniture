@@ -6,8 +6,8 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,9 +17,9 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class PFMSpriteRegistry {
-    public static Identifier HERRINGBONE_PLANKS = new Identifier(PaladinFurnitureMod.MOD_ID, "block/template_herringbone_planks");
-    public static Map<Identifier, Function<Sprite.Info, List<Sprite.Info>>> DYNAMIC_SPRITE_GENERATORS = new HashMap<>();
-    public static Map<Identifier, TextureReloadQueue.SpriteCoordinates> PFM_SPRITE_COORDINATES = new HashMap<>();
+    public static ResourceLocation HERRINGBONE_PLANKS = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/template_herringbone_planks");
+    public static Map<ResourceLocation, Function<TextureAtlasSprite.Info, List<TextureAtlasSprite.Info>>> DYNAMIC_SPRITE_GENERATORS = new HashMap<>();
+    public static Map<ResourceLocation, TextureReloadQueue.SpriteCoordinates> PFM_SPRITE_COORDINATES = new HashMap<>();
 
     public static void registerAdditionalSprites() {
         List<VariantBase<?>> variantBaseList = new ArrayList<>(WoodVariantRegistry.getVariants());
@@ -30,12 +30,12 @@ public class PFMSpriteRegistry {
     }
 
     @ExpectPlatform
-    public static void registerSprite(Identifier spriteId) {
+    public static void registerSprite(ResourceLocation spriteId) {
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static void registerDynamicSprite(Identifier spriteId, List<VariantBase<?>> variantBaseList) {
+    public static void registerDynamicSprite(ResourceLocation spriteId, List<VariantBase<?>> variantBaseList) {
         throw new AssertionError();
     }
 }

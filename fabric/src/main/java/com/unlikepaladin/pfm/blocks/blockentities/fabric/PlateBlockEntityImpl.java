@@ -2,10 +2,10 @@ package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
 
 public class PlateBlockEntityImpl extends PlateBlockEntity implements BlockEntityClientSerializable {
     public PlateBlockEntityImpl(BlockPos blockPos, BlockState blockState) {
@@ -13,16 +13,16 @@ public class PlateBlockEntityImpl extends PlateBlockEntity implements BlockEntit
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        readNbt(tag);
+    public void fromClientTag(CompoundTag tag) {
+        load(tag);
     }
 
     @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return writeNbt(tag);
+    public CompoundTag toClientTag(CompoundTag tag) {
+        return save(tag);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends PlateBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends PlateBlockEntity> getFactory() {
         return PlateBlockEntityImpl::new;
     }
 }

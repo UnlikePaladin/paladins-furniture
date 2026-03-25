@@ -7,17 +7,17 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.PFMTags;
-import com.unlikepaladin.pfm.mixin.PFMAbstractTagProvider$ObjectBuilderMixin;
+import com.unlikepaladin.pfm.mixin.PFMTagsProvider$TagAppenderMixin;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
-import net.minecraft.block.Block;
-import net.minecraft.data.server.AbstractTagProvider;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -85,7 +85,7 @@ public class PFMTagProvider extends PFMProvider {
         BasicSinkBlock[] sinkBlocks = BasicSinkBlock.streamSinks().toList().toArray(new BasicSinkBlock[0]);
         ShowerTowelBlock[] showerTowels = ShowerTowelBlock.streamShowerTowels().map(FurnitureBlock::getBlock).toArray(ShowerTowelBlock[]::new);
 
-        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(showerTowels)
                 .add(stoneCounters)
                 .add(stoneCabinets)
@@ -181,7 +181,7 @@ public class PFMTagProvider extends PFMProvider {
         ClassicDeskBlock[] woodClassicDesks= ClassicDeskBlock.streamWoodClassicDesks().map(FurnitureBlock::getBlock).toArray(ClassicDeskBlock[]::new);
         ClassicDeskCabinetBlock[] woodClassicDeskCabinets = ClassicDeskCabinetBlock.streamWoodClassicDeskCabinets().map(FurnitureBlock::getBlock).toArray(ClassicDeskCabinetBlock[]::new);
 
-        getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)
                 .add(showerTowels)
                 .add(woodCounters)
                 .add(woodCabinets)
@@ -224,7 +224,7 @@ public class PFMTagProvider extends PFMProvider {
                 .add(woodClassicDesks)
                 .add(woodClassicDeskCabinets);
 
-        getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_SHOVEL)
                 .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
 
         getOrCreateTagBuilder(BlockTags.BEDS)
@@ -257,14 +257,14 @@ public class PFMTagProvider extends PFMProvider {
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::generateTags);
     }
 
-    public static AbstractTagProvider.ObjectBuilder<Block> getOrCreateTagBuilder(Tag.Identified<Block> tag) {
+    public static TagsProvider.TagAppender<Block> getOrCreateTagBuilder(Tag.Named<Block> tag) {
         Tag.Builder builder = getTagBuilder(tag);
-        return PFMAbstractTagProvider$ObjectBuilderMixin.newTagProvider(builder, Registry.BLOCK, "pfm");
+        return PFMTagsProvider$TagAppenderMixin.newTagProvider(builder, Registry.BLOCK, "pfm");
     }
-    private static final Map<Identifier, Tag.Builder> tagBuilders = Maps.newLinkedHashMap();
+    private static final Map<ResourceLocation, Tag.Builder> tagBuilders = Maps.newLinkedHashMap();
 
-    public static <T> Tag.Builder getTagBuilder(Tag.Identified<T> tag) {
-        return tagBuilders.computeIfAbsent(tag.getId(), (id) -> new Tag.Builder());
+    public static <T> Tag.Builder getTagBuilder(Tag.Named<T> tag) {
+        return tagBuilders.computeIfAbsent(tag.getName(), (id) -> new Tag.Builder());
     }
 
     @Override
@@ -274,19 +274,19 @@ public class PFMTagProvider extends PFMProvider {
         tagBuilders.clear();
         this.generateTags();
         tagBuilders.forEach((id, builder) -> {
-            List<Tag.TrackedEntry> list = builder.streamEntries().filter(trackedEntry -> !trackedEntry.getEntry().canAdd(Registry.BLOCK::containsId, tagBuilders::containsKey)).toList();
+            List<Tag.BuilderEntry> list = builder.getEntries().filter(trackedEntry -> !trackedEntry.getEntry().verifyIfPresent(Registry.BLOCK::containsKey, tagBuilders::containsKey)).toList();
             if (!list.isEmpty()) {
                 throw new IllegalArgumentException(String.format("Couldn't define tag %s as it is missing following references: %s", id, list.stream().map(Objects::toString).collect(Collectors.joining(","))));
             }
-            JsonObject jsonObject = builder.toJson();
-            Path path = this.getOutput(id);
+            JsonObject jsonObject = builder.serializeToJson();
+            Path path = this.getResultItem(id);
             enqueueJsonWrite(getWriteQueue(), path, jsonObject);
         });
 
         endProviderRun();
     }
 
-    protected Path getOutput(Identifier id) {
-        return getParent().getOutput().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
+    protected Path getResultItem(ResourceLocation id) {
+        return getParent().getResultItem().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
     }
 }

@@ -7,37 +7,37 @@ import com.unlikepaladin.pfm.client.PFMBakedModelManagerAccessor;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import net.minecraft.block.Block;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayers;
-import net.minecraft.client.render.VertexConsumer;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
-import net.minecraft.client.render.entity.model.EntityModelLoader;
-import net.minecraft.client.render.item.BuiltinModelItemRenderer;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Arm;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.core.BlockPos;
 import net.minecraftforge.client.ForgeHooksClient;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class PFMItemRendererForge extends BuiltinModelItemRenderer {
-    public static PFMItemRendererForge INSTANCE = new PFMItemRendererForge(MinecraftClient.getInstance().getBlockEntityRenderDispatcher(), MinecraftClient.getInstance().getEntityModelLoader());
+public class PFMItemRendererForge extends BlockEntityWithoutLevelRenderer {
+    public static PFMItemRendererForge INSTANCE = new PFMItemRendererForge(Minecraft.getInstance().getBlockEntityRenderDispatcher(), Minecraft.getInstance().getEntityModels());
 
     private final PFMBedBlockEntity renderBed;
     private final BlockEntityRenderDispatcher blockEntityRenderDispatcher;
-    public PFMItemRendererForge(BlockEntityRenderDispatcher blockEntityRenderDispatcher, EntityModelLoader loader) {
+    public PFMItemRendererForge(BlockEntityRenderDispatcher blockEntityRenderDispatcher, EntityModelSet loader) {
         super(blockEntityRenderDispatcher, loader);
         this.blockEntityRenderDispatcher = blockEntityRenderDispatcher;
         if (PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleBedBlock.class) != null ) {
-            renderBed = new PFMBedBlockEntity(BlockPos.ORIGIN, PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList().get(WoodVariantRegistry.OAK).iterator().next().getDefaultState());
+            renderBed = new PFMBedBlockEntity(BlockPos.ZERO, PaladinFurnitureModBlocksItems.furnitureEntryMap.get(SimpleBedBlock.class).getVariantToBlockMapList().get(WoodVariantRegistry.OAK).iterator().next().defaultBlockState());
         } else {
             renderBed = null;
         }
@@ -48,42 +48,42 @@ public class PFMItemRendererForge extends BuiltinModelItemRenderer {
         if (bedModel.containsKey(classic) && bedModel.get(classic) != null) {
             return bedModel.get(classic);
         }
-        bedModel.put(classic, ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(UnbakedBedModel.BED_MODEL_PARTS_BASE[classic ? 23 : 11]));
-        return ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(UnbakedBedModel.BED_MODEL_ID);
+        bedModel.put(classic, ((PFMBakedModelManagerAccessor) Minecraft.getInstance().getModelManager()).pfm$getModelFromNormalID(UnbakedBedModel.BED_MODEL_PARTS_BASE[classic ? 23 : 11]));
+        return ((PFMBakedModelManagerAccessor) Minecraft.getInstance().getModelManager()).pfm$getModelFromNormalID(UnbakedBedModel.BED_MODEL_ID);
     }
 
     @Override
-    public void render(ItemStack stack, ModelTransformation.Mode mode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
-        matrices.pop();
-        boolean leftHanded = MinecraftClient.getInstance().player != null && MinecraftClient.getInstance().player.getMainArm() == Arm.LEFT && mode.isFirstPerson();
+    public void renderByItem(ItemStack stack, ItemTransforms.TransformType mode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+        matrices.popPose();
+        boolean leftHanded = Minecraft.getInstance().player != null && Minecraft.getInstance().player.getMainArm() == HumanoidArm.LEFT && mode.firstPerson();
 
-        boolean glint = stack.hasGlint();
-        VertexConsumer consumer = ItemRenderer.getItemGlintConsumer(vertexConsumers, RenderLayers.getItemLayer(stack, true), true, glint);
+        boolean glint = stack.hasFoil();
+        VertexConsumer consumer = ItemRenderer.getFoilBuffer(vertexConsumers, ItemBlockRenderTypes.getRenderType(stack, true), true, glint);
         if (stack.getItem() instanceof BlockItem && ((BlockItem) stack.getItem()).getBlock() instanceof SimpleBedBlock) {
-            matrices.push();
+            matrices.pushPose();
 
             Block block = ((BlockItem) stack.getItem()).getBlock();
-            BakedModel modelForTransform = getBedModelForTransform(stack.getItem().getTranslationKey().contains("classic"));
+            BakedModel modelForTransform = getBedModelForTransform(stack.getItem().getDescriptionId().contains("classic"));
             ForgeHooksClient.handleCameraTransforms(matrices, modelForTransform, mode, leftHanded);
             matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
-            BakedModel actualModel = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(UnbakedBedModel.BED_MODEL_ID);
-            ForgeHooksClient.drawItemLayered(MinecraftClient.getInstance().getItemRenderer(), actualModel, stack, matrices, vertexConsumers, light, overlay, false);
+            BakedModel actualModel = ((PFMBakedModelManagerAccessor) Minecraft.getInstance().getModelManager()).pfm$getModelFromNormalID(UnbakedBedModel.BED_MODEL_ID);
+            ForgeHooksClient.drawItemLayered(Minecraft.getInstance().getItemRenderer(), actualModel, stack, matrices, vertexConsumers, light, overlay, false);
 
             this.renderBed.setColor(((SimpleBedBlock)block).getColor());
-            this.blockEntityRenderDispatcher.renderEntity(renderBed, matrices, vertexConsumers, light, overlay);
-            matrices.pop();
+            this.blockEntityRenderDispatcher.renderItem(renderBed, matrices, vertexConsumers, light, overlay);
+            matrices.popPose();
         } else if (stack.getItem() == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
-            matrices.push();
-            BakedModel chairModel = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager())
+            matrices.pushPose();
+            BakedModel chairModel = ((PFMBakedModelManagerAccessor) Minecraft.getInstance().getModelManager())
                     .pfm$getModelFromNormalID(OfficeChairEntityRenderer.MODEL_IDS[0]);
 
             ForgeHooksClient.handleCameraTransforms(matrices, chairModel, mode, leftHanded);
             matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
             OfficeChairEntityRenderer.renderItem(stack, matrices, mode, vertexConsumers, leftHanded, light, overlay);
-            matrices.pop();
+            matrices.popPose();
         }
-        matrices.push();
+        matrices.pushPose();
     }
 }

@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.client.screens.overlay;
 
-import net.minecraft.util.math.Vector4f;
+import com.mojang.math.Vector4f;
 
 import java.io.Closeable;
 import java.nio.ByteBuffer;

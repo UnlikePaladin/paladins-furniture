@@ -8,20 +8,20 @@ import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.MissingSprite;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import org.jetbrains.annotations.NotNull;
@@ -32,12 +32,12 @@ import java.util.List;
 import java.util.Random;
 
 public class ForgeHerringboneModel extends PFMForgeBakedModel {
-    public ForgeHerringboneModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
+    public ForgeHerringboneModel(ModelState settings, List<BakedModel> templateBakedModels) {
         super(settings, templateBakedModels);
     }
 
     @Override
-    public Sprite getParticleIcon(@NotNull IModelData data) {
+    public TextureAtlasSprite getParticleIcon(@NotNull IModelData data) {
         if (!data.hasProperty(STATE) || data.getData(STATE) == null) {
             return super.getParticleIcon(data);
         }
@@ -50,10 +50,10 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public @NotNull IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
+    public @NotNull IModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
         if (state != null) {
             ModelDataMap.Builder builder = new ModelDataMap.Builder();
-            appendProperties(builder);
+            createBlockStateDefinition(builder);
             IModelData data = builder.build();
             super.getModelData(world, pos, state, data);
             return data;
@@ -61,14 +61,14 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
         return super.getModelData(world, pos, state, tileData);
     }
 
-    static SpriteIdentifier herringboneTextureId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, PFMSpriteRegistry.HERRINGBONE_PLANKS);
+    static Material herringboneTextureId = new Material(InventoryMenu.BLOCK_ATLAS, PFMSpriteRegistry.HERRINGBONE_PLANKS);
 
     @Override
     public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
         if (state != null) {
             VariantBase<?> variant = getVariant(state);
             if (variant instanceof WoodVariant) {
-                Sprite replacement = generateTextureIfNeeded(variant);
+                TextureAtlasSprite replacement = generateTextureIfNeeded(variant);
                 List<BakedQuad> quads = new ArrayList<>();
                 for (BakedModel model : getTemplateBakedModels()) {
                     quads.addAll(model.getQuads(state, side, rand, extraData));
@@ -79,20 +79,20 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
         return super.getQuads(state, side, rand, extraData);
     }
 
-    private Sprite generateTextureIfNeeded(VariantBase<?> variant) {
-        Identifier finalId = new Identifier(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
-        SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, finalId);
-        if (mainTexture.getSprite().getId() == MissingSprite.getMissingSpriteId()) {
-            SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
-            ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
+    private TextureAtlasSprite generateTextureIfNeeded(VariantBase<?> variant) {
+        ResourceLocation finalId = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
+        Material mainTexture = new Material(InventoryMenu.BLOCK_ATLAS, finalId);
+        if (mainTexture.sprite().getName() == MissingTextureAtlasSprite.getLocation()) {
+            Material baseTextureSpriteId = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.PRIMARY));
+            ModelHelper.generateTexture(herringboneTextureId.sprite(), baseTextureSpriteId.sprite(), 7, finalId);
         }
-        return mainTexture.getSprite();
+        return mainTexture.sprite();
     }
 
     @Override
     public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
         Pair<ItemStack, Direction> directionPair = new Pair<>(stack, face);
-        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && cache.get(directionPair).get(0).getSprite().getId() == MissingSprite.getMissingSpriteId()) {
+        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && cache.get(directionPair).get(0).getSprite().getName() == MissingTextureAtlasSprite.getLocation()) {
             cache.remove(directionPair);
         }
         return super.getQuadsCached(stack, state, face, random);
@@ -100,9 +100,9 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
-        VariantBase<?> variant = getVariant(((BlockItem) stack.getItem()).getBlock().getDefaultState());
+        VariantBase<?> variant = getVariant(((BlockItem) stack.getItem()).getBlock().defaultBlockState());
         if (variant instanceof WoodVariant) {
-            Sprite replacement = generateTextureIfNeeded(variant);
+            TextureAtlasSprite replacement = generateTextureIfNeeded(variant);
             List<BakedQuad> quads = new ArrayList<>();
             for (BakedModel model : getTemplateBakedModels()) {
                 quads.addAll(model.getQuads(state, face, random));
