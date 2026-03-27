@@ -77,7 +77,7 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
             CompoundTag nbtCompound = itemStack.getTagElement("BlockEntityTag");
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (nbtCompound.contains("showerHead") && blockEntity instanceof ShowerHandleBlockEntity) {
-                ((ShowerHandleBlockEntity)blockEntity).save(nbtCompound);
+                ((ShowerHandleBlockEntity)blockEntity).saveAdditional(nbtCompound);
                 itemStack.setTag(null);
             }
         }

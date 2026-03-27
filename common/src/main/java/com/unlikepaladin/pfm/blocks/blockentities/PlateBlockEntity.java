@@ -31,7 +31,7 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
     }
 
     @Override
-    public void save(CompoundTag nbt) {
+    public void saveAdditional(CompoundTag nbt) {
         this.saveInitialChunkData(nbt);
     }
 
@@ -56,7 +56,7 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
     }
 
     protected CompoundTag saveInitialChunkData(CompoundTag nbt) {
-        super.save(nbt);
+        super.saveAdditional(nbt);
         ContainerHelper.saveAllItems(nbt, this.itemInPlate, true);
         return nbt;
     }

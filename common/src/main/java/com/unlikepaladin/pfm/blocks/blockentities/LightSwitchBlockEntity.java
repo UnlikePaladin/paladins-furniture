@@ -22,8 +22,8 @@ public class LightSwitchBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void save(CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         ListTag tagList = new ListTag();
         lights.forEach(blockPos -> tagList.add(LongTag.valueOf(blockPos.asLong())));
         nbt.put("lights", tagList);

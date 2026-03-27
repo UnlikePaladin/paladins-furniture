@@ -28,7 +28,7 @@ public class LampBlockEntityImpl extends LampBlockEntity {
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, ClientboundBlockEntityDataPacket.TYPE_CAMPFIRE, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override

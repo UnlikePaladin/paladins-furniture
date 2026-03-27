@@ -4,13 +4,9 @@ import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.network.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 

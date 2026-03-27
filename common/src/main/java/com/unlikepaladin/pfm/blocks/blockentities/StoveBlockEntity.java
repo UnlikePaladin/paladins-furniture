@@ -131,15 +131,15 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     @Override
-    public void save(CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         this.saveInitialChunkData(nbt);
         nbt.putIntArray("CookingTimes", this.cookingTimes);
         nbt.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
     }
 
     protected CompoundTag saveInitialChunkData(CompoundTag nbt) {
-        super.save(nbt);
+        super.saveAdditional(nbt);
         save(nbt, this.itemsBeingCooked, true);
         return nbt;
     }

@@ -113,8 +113,8 @@ public class GenericStorageBlockEntity9x3 extends RandomizableContainerBlockEnti
     }
 
     @Override
-    public void save(CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         if (!this.trySaveLootTable(nbt)) {
             ContainerHelper.saveAllItems(nbt, this.inventory);
         }

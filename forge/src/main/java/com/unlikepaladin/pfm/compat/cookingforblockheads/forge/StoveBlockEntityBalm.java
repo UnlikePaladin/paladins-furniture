@@ -338,8 +338,8 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
     }
 
     @Override
-    public void save(CompoundTag tagCompound) {
-        super.save(tagCompound);
+    public void saveAdditional(CompoundTag tagCompound) {
+        super.saveAdditional(tagCompound);
         tagCompound.put("ItemHandler", this.container.serialize());
         tagCompound.putShort("BurnTime", (short)this.furnaceBurnTime);
         tagCompound.putShort("CurrentItemBurnTime", (short)this.currentItemBurnTime);
@@ -352,8 +352,8 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
     }
 
     @Override
-    public void writeUpdateTag(NbtCompound tag) {
-        this.writeNbt(tag);
+    public void writeUpdateTag(CompoundTag tag) {
+        this.saveAdditional(tag);
     }
 
     public boolean hasPowerUpgrade() {
@@ -469,7 +469,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 

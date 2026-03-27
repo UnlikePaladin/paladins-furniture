@@ -176,8 +176,8 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     }
 
     @Override
-    public void save(CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putShort("CookTime", (short)this.cookTime);
         nbt.putShort("CookTimeTotal", (short)this.cookTimeTotal);
         ContainerHelper.saveAllItems(nbt, this.container);
@@ -394,7 +394,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
         this.isActive = active;
         CompoundTag nbtCompound = new CompoundTag();
         nbtCompound.putBoolean("isActive", active);
-        this.save(nbtCompound);
+        this.saveAdditional(nbtCompound);
         this.setChanged();
         level.setBlock(getBlockPos(), this.getBlockState().setValue(MicrowaveBlock.POWERED, true), Block.UPDATE_CLIENTS);
     }

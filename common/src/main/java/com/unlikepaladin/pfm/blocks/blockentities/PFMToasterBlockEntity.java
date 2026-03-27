@@ -4,6 +4,9 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.PFMToasterBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -15,9 +18,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -68,7 +68,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
     }
 
     @Override
-    public void save(CompoundTag nbt) {
+    public void saveAdditional(CompoundTag nbt) {
         nbt.putInt("toastProgress", toastProgress);
         nbt.putBoolean("toasting", toasting);
         nbt.putInt("smokeProgress", smokeProgress);
@@ -77,18 +77,17 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
             nbt.remove("lastUser");
         } else nbt.putUUID("lastUser", this.lastUser);
         ContainerHelper.saveAllItems(nbt, items);
-        super.save(nbt);
-    }
-
-    @Nullable
-    @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+        super.saveAdditional(nbt);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
     }
 
     private void explode() {

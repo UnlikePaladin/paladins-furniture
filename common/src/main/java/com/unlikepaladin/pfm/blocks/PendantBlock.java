@@ -136,8 +136,7 @@ public class PendantBlock extends PowerableBlock implements DynamicRenderLayerIn
         boolean bl = (state.getValue(LIT));
         if (bl != world.hasNeighborSignal(pos)) {
             if (bl) {
-                world.getBlockTicks().scheduleTick(pos, this, 4);
-                world.createAndScheduleBlockTick(pos, this, 4);
+                world.scheduleTick(pos, this, 4);
             } else {
                 world.setBlock(pos, state.cycle(LIT), Block.UPDATE_CLIENTS);
             }

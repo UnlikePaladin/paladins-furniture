@@ -36,11 +36,11 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, ClientboundBlockEntityDataPacket.TYPE_CAMPFIRE, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     protected CompoundTag saveInitialChunkData(CompoundTag nbt) {
-        super.save(nbt);
+        super.saveAdditional(nbt);
         ContainerHelper.saveAllItems(nbt, items, true);
         return nbt;
     }

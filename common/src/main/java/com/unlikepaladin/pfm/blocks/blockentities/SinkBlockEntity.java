@@ -25,8 +25,8 @@ public class SinkBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void save(CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putInt("sinkTimer", sinkTimer);
         nbt.putBoolean("isFilling", isFilling);
     }

@@ -17,8 +17,8 @@ public class ShowerHandleBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void save(CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         if (this.showerOffset != null) {
             LongTag showerHeadPos = LongTag.valueOf(this.showerOffset.asLong());
             nbt.put("showerHead", showerHeadPos);

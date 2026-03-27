@@ -124,14 +124,14 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
     }
 
     @Override
-    public void save(CompoundTag nbt) {
+    public void saveAdditional(CompoundTag nbt) {
         this.saveInitialChunkData(nbt);
         nbt.putIntArray("CookingTimes", this.cookingTimes);
         nbt.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
     }
 
     protected CompoundTag saveInitialChunkData(CompoundTag nbt) {
-        super.save(nbt);
+        super.saveAdditional(nbt);
         ContainerHelper.saveAllItems(nbt, this.itemsBeingCooked, true);
         return nbt;
     }

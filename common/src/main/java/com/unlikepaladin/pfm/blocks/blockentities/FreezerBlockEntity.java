@@ -331,8 +331,8 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
     }
 
     @Override
-    public void save(CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         ContainerHelper.saveAllItems(nbt, this.inventory);
         nbt.putShort("FuelTimeLeft", (short)this.fuelTime);
         nbt.putShort("FreezeTime", (short)this.freezeTime);

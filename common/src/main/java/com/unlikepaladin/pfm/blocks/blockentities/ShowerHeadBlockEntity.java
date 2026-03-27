@@ -27,8 +27,8 @@ public class ShowerHeadBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void save(CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putBoolean("isOpen", isOpen);
     }
 
@@ -99,7 +99,7 @@ public class ShowerHeadBlockEntity extends BlockEntity {
     }
 
     protected CompoundTag saveInitialChunkData(CompoundTag nbt) {
-        super.save(nbt);
+        super.saveAdditional(nbt);
         nbt.putBoolean("isOpen", isOpen);
         return nbt;
     }

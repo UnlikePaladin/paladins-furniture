@@ -79,7 +79,7 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
             CompoundTag nbtCompound = itemStack.getTagElement("BlockEntityTag");
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (nbtCompound.contains("lights") && blockEntity instanceof LightSwitchBlockEntity) {
-                ((LightSwitchBlockEntity)blockEntity).save(nbtCompound);
+                ((LightSwitchBlockEntity)blockEntity).saveAdditional(nbtCompound);
                 itemStack.setTag(null);
             }
         }

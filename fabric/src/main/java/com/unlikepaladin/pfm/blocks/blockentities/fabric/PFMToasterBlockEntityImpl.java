@@ -7,9 +7,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.core.BlockPos;
 
 import org.jetbrains.annotations.Nullable;;
@@ -34,8 +31,8 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity {
     }
 
     @Override
-    public CompoundTag toInitialChunkDataNbt() {
-        return createNbt();
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
     }
 
     public static BlockEntityType.BlockEntitySupplier<? extends PFMToasterBlockEntity> getFactory() {

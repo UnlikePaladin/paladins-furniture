@@ -42,8 +42,8 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
     }
 
     @Override
-    public void save(CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putString("color", color.getSerializedName());
         nbt.putString("variant", variant.getIdentifier().toString());
     }

@@ -56,8 +56,8 @@ public class BathtubBlockEntity extends BedBlockEntity {
     }
 
     @Override
-    public void save(CompoundTag nbt) {
-        super.save(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putInt("tubTimer", fillTimer);
         nbt.putBoolean("isTubFilling", isFilling);
     }
