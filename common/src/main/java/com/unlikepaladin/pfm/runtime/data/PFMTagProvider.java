@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.tag.TagKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
 
@@ -266,7 +266,7 @@ public class PFMTagProvider extends PFMProvider {
     private static final Map<ResourceLocation, Tag.Builder> tagBuilders = Maps.newLinkedHashMap();
 
     public static <T> Tag.Builder getTagBuilder(TagKey<T> tag) {
-        return tagBuilders.computeIfAbsent(tag.getName(), (id) -> new Tag.Builder());
+        return tagBuilders.computeIfAbsent(tag.location(), (id) -> new Tag.Builder());
     }
 
     @Override

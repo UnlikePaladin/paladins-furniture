@@ -75,7 +75,7 @@ public class ShowerHandleItem extends BlockItem {
             BlockPos headPos = BlockPos.of(showerHeadLong.getAsLong());
             BlockPos placedPos = pos.relative(playerFacing);
 
-            double distance = Math.sqrt(headPos.distSqr(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5));
+            double distance = Math.sqrt(headPos.distToLowCornerSqr(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5));
             if (distance > 16 && world.isClientSide()){
                 context.getPlayer().displayClientMessage(new TranslatableComponent("message.pfm.shower_handle_far", headPos.toString()), false);
             }

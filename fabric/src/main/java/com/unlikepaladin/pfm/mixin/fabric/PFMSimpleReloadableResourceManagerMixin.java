@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.mixin.fabric;
 
 import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
+import net.minecraft.server.packs.resources.ReloadableResourceManager;
 import net.minecraft.server.packs.PackResources;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -11,7 +11,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Mixin(value = SimpleReloadableResourceManager.class)
+@Mixin(value = ReloadableResourceManager.class)
 public class PFMSimpleReloadableResourceManagerMixin {
 
     @ModifyVariable(at = @At(value = "HEAD"), method = "createReload", argsOnly = true)

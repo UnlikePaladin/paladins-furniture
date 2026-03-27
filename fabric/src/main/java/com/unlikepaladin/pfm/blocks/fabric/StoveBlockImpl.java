@@ -24,7 +24,7 @@ public class StoveBlockImpl {
         return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? PFMCookingForBlockHeadsCompat.getStoveBlockEntity(pos , state) : new StoveBlockEntityImpl(BlockEntities.STOVE_BLOCK_ENTITY, pos, state);
     }
 
-    public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
+    public static void openMenuScreen(Level world, BlockPos pos, Player player) {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             PFMCookingForBlockHeadsCompat.openMenuScreen(world, pos, player);
         } else {
@@ -54,7 +54,7 @@ public class StoveBlockImpl {
         return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
     }
 
-    public static InteractionResult onUseCookingForBlockheads(BlockState blockState, World world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+    public static InteractionResult onUseCookingForBlockheads(BlockState blockState, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         return PFMCookingForBlockHeadsCompat.onUseStove(blockState, world, pos, player, hand, blockHitResult);
     }
 }

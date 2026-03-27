@@ -5,8 +5,8 @@ import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import dev.emi.emi.api.EmiFillAction;
 import dev.emi.emi.api.EmiRecipeHandler;
 import dev.emi.emi.api.recipe.EmiRecipe;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -39,7 +39,7 @@ public class FurnitureRecipeHandler implements EmiRecipeHandler<WorkbenchScreenH
     }
 
     @Override
-    public boolean performFill(EmiRecipe recipe, HandledScreen<WorkbenchScreenHandler> screen, EmiFillAction action, int amount) {
+    public boolean performFill(EmiRecipe recipe, AbstractContainerScreen<WorkbenchScreenHandler> screen, EmiFillAction action, int amount) {
         return EmiRecipeHandler.super.performFill(recipe, screen, action, amount);
     }
 }

@@ -29,7 +29,7 @@ public class PFMSandwichableCompat {
                 changed = true;
             } else {
                 if(items.get(i).isEdible()) {
-                    Item item = items.get(i).isIn(Sandwichable.SMALL_FOODS) ? ItemsRegistry.BURNT_MORSEL : ItemsRegistry.BURNT_FOOD;
+                    Item item = items.get(i).is(Sandwichable.SMALL_FOODS) ? ItemsRegistry.BURNT_MORSEL : ItemsRegistry.BURNT_FOOD;
                     items.set(i, new ItemStack(item, 1));
                     changed = true;
                 }
@@ -47,7 +47,7 @@ public class PFMSandwichableCompat {
     }
 
     public static boolean isMetal(ItemStack stack) {
-        return stack.isIn(Sandwichable.METAL_ITEMS);
+        return stack.is(Sandwichable.METAL_ITEMS);
     }
 
     public static boolean isSandwich(ItemStack stack) {

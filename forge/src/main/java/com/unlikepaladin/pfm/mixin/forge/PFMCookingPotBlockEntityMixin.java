@@ -23,12 +23,12 @@ public abstract class PFMCookingPotBlockEntityMixin implements HeatableBlockEnti
             return true;
 
         BlockState stateBelow = world.getBlockState(pos.below());
-        if (stateBelow.isIn(ModTags.HEAT_SOURCES)) {
+        if (stateBelow.is(ModTags.HEAT_SOURCES)) {
             return stateBelow.hasProperty(BlockStateProperties.LIT) ? stateBelow.getValue(BlockStateProperties.LIT) : true;
         } else {
-            if (!this.requiresDirectHeat() && stateBelow.isIn(ModTags.HEAT_CONDUCTORS)) {
+            if (!this.requiresDirectHeat() && stateBelow.is(ModTags.HEAT_CONDUCTORS)) {
                 BlockState stateFurtherBelow = world.getBlockState(pos.below(2));
-                if (stateFurtherBelow.isIn(ModTags.HEAT_SOURCES)) {
+                if (stateFurtherBelow.is(ModTags.HEAT_SOURCES)) {
                     if (stateFurtherBelow.hasProperty(BlockStateProperties.LIT)) {
                         return stateFurtherBelow.getValue(BlockStateProperties.LIT);
                     }

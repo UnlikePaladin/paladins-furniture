@@ -18,8 +18,10 @@ import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.CloseableResourceManager;
+import net.minecraft.server.packs.resources.MultiPackResourceManager;
+import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.LanguageInfo;
@@ -241,7 +243,7 @@ public class PFMLangProvider extends PFMProvider {
     private String currentLanguageCode = ((PFMLanguageManagerAccessor) Minecraft.getInstance().getLanguageManager()).getCurrentCode();
     private List<LanguageInfo> languagesToGenerate = new ArrayList<>();
     public void loadLanguages(ResourceManager manager) {
-        Map<String, LanguageInfo> defs = loadAvailableLanguages(manager.streamResourcePacks());
+        Map<String, LanguageInfo> defs = loadAvailableLanguages(manager.listPacks());
         LanguageInfo enUSDefinition = defs.getOrDefault(LanguageManager.DEFAULT_LANGUAGE_CODE, PFMLanguageManagerAccessor.getEnglish_Us());
 
         LanguageInfo selectedLangDefinition;
@@ -430,12 +432,12 @@ public class PFMLangProvider extends PFMProvider {
 
     private static final class PFMResourceManager implements ResourceManager,
             AutoCloseable {
-        private LifecycledResourceManager activeManager;
-        private final ResourceType type;
+        private CloseableResourceManager activeManager;
+        private final PackType type;
 
-        public PFMResourceManager(ResourceType type, List<ResourcePack> packs) {
+        public PFMResourceManager(PackType type, List<PackResources> packs) {
             this.type = type;
-            this.activeManager = new LifecycledResourceManagerImpl(type, packs);
+            this.activeManager = new MultiPackResourceManager(type, packs);
         }
 
         @Override
@@ -444,33 +446,33 @@ public class PFMLangProvider extends PFMProvider {
         }
 
         @Override
-        public Resource getResource(Identifier identifier) throws IOException {
+        public Resource getResource(ResourceLocation identifier) throws IOException {
             return this.activeManager.getResource(identifier);
         }
 
         @Override
-        public Set<String> getAllNamespaces() {
-            return this.activeManager.getAllNamespaces();
+        public Set<String> getNamespaces() {
+            return this.activeManager.getNamespaces();
         }
 
         @Override
-        public boolean containsResource(Identifier id) {
-            return this.activeManager.containsResource(id);
+        public boolean hasResource(ResourceLocation id) {
+            return this.activeManager.hasResource(id);
         }
 
         @Override
-        public List<Resource> getAllResources(Identifier id) throws IOException {
-            return this.activeManager.getAllResources(id);
+        public List<Resource> getResources(ResourceLocation id) throws IOException {
+            return this.activeManager.getResources(id);
         }
 
         @Override
-        public Collection<Identifier> findResources(String startingPath, Predicate<String> pathPredicate) {
-            return this.activeManager.findResources(startingPath, pathPredicate);
+        public Collection<ResourceLocation> listResources(String startingPath, Predicate<String> pathPredicate) {
+            return this.activeManager.listResources(startingPath, pathPredicate);
         }
 
         @Override
-        public Stream<ResourcePack> streamResourcePacks() {
-            return this.activeManager.streamResourcePacks();
+        public Stream<PackResources> listPacks() {
+            return this.activeManager.listPacks();
         }
     }
 

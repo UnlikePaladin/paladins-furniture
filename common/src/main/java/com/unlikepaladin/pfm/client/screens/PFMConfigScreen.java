@@ -57,7 +57,7 @@ public class PFMConfigScreen extends Screen {
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         this.optionListWidget.save();
         Minecraft.getInstance().setScreen(parent);
         try {

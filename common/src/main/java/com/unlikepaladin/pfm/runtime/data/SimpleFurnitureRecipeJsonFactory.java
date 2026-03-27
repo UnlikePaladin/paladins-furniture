@@ -14,6 +14,7 @@ import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.nbt.Tag;
@@ -63,7 +64,7 @@ public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
     public static SimpleFurnitureRecipeJsonFactory create(ItemLike output, int count) {
         return new SimpleFurnitureRecipeJsonFactory(output, count);
     }
-    public SimpleFurnitureRecipeJsonFactory input(net.minecraft.tags.Tag tag) {
+    public SimpleFurnitureRecipeJsonFactory input(TagKey<Item> tag) {
         return this.input(Ingredient.of(tag));
     }
 

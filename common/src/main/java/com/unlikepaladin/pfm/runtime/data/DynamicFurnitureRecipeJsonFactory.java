@@ -12,6 +12,8 @@ import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.level.ItemLike;
@@ -128,7 +130,7 @@ public class DynamicFurnitureRecipeJsonFactory {
         return outputClass;
     }
 
-    public DynamicFurnitureRecipeJsonFactory vanillaInput(net.minecraft.tags.Tag tag) {
+    public DynamicFurnitureRecipeJsonFactory vanillaInput(TagKey<Item> tag) {
         return this.vanillaInput(Ingredient.of(tag));
     }
 

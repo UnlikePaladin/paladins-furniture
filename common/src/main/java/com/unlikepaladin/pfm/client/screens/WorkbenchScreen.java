@@ -14,6 +14,8 @@ import net.minecraft.client.searchtree.MutableSearchTree;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.core.Registry;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +24,6 @@ import net.minecraft.world.inventory.StonecutterMenu;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagCollection;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Component;
@@ -138,7 +139,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
 
     private void searchForTags(String id) {
         int i = id.indexOf(58);
-        Predicate<Identifier> predicate;
+        Predicate<ResourceLocation> predicate;
         if (i == -1) {
             predicate = (idx) -> idx.getPath().contains(id);
         } else {
@@ -147,7 +148,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             predicate = (idx) -> idx.getNamespace().contains(string) && idx.getPath().contains(string2);
         }
 
-        Stream<TagKey<Item>> keyStream = Registry.ITEM.streamTags().filter((tagKey) -> predicate.test(tagKey.id()));
+        Stream<TagKey<Item>> keyStream = Registry.ITEM.getTagNames().filter((tagKey) -> predicate.test(tagKey.location()));
         keyStream.forEach(this.searchResultTags::add);
     }
 

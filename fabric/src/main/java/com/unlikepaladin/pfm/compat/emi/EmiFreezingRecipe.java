@@ -7,8 +7,9 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import dev.emi.emi.recipe.EmiCookingRecipe;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.recipe.AbstractCookingRecipe;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class EmiFreezingRecipe extends EmiCookingRecipe {
     public EmiFreezingRecipe(FreezingRecipe recipe) {
         super(recipe, PaladinFurnitureModEMIPlugin.FREEZER, 2, false);
         input = EmiIngredient.of(recipe.getIngredients().get(0));
-        output = EmiStack.of(recipe.getOutput());
+        output = EmiStack.of(recipe.getResultItem());
         this.recipe = recipe;
     }
 
@@ -32,8 +33,8 @@ public class EmiFreezingRecipe extends EmiCookingRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        widgets.addFillingArrow(24, 5, 50 * recipe.getCookTime()).tooltip((mx, my) -> {
-            return List.of(TooltipComponent.of(EmiPort.translatable("emi.cooking.time", recipe.getCookTime() / 20f).asOrderedText()));
+        widgets.addFillingArrow(24, 5, 50 * recipe.getCookingTime()).tooltip((mx, my) -> {
+            return List.of(ClientTooltipComponent.create(EmiPort.translatable("emi.cooking.time", recipe.getCookingTime() / 20f).getVisualOrderText()));
         });
         if (infiniBurn) {
             widgets.addTexture(FreezingWidget.FULL_FREEZER, 1, 24);

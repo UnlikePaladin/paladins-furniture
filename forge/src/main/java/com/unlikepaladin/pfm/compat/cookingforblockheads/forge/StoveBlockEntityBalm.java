@@ -293,7 +293,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
 
     public static boolean isItemFuel(ItemStack itemStack) {
         if (CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil) {
-            return itemStack.isIn(Compat.getCookingOilTag());
+            return itemStack.is(Compat.getCookingOilTag());
         } else {
             return getBurnTime(itemStack) > 0;
         }
@@ -303,7 +303,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
         if (itemStack.isEmpty()) {
             return 0;
         } else {
-            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.isIn(Compat.getCookingOilTag()) ? 800 : Balm.getHooks().getBurnTime(itemStack);
+            return CookingForBlockheadsConfig.getActive().ovenRequiresCookingOil && itemStack.is(Compat.getCookingOilTag()) ? 800 : Balm.getHooks().getBurnTime(itemStack);
         }
     }
 

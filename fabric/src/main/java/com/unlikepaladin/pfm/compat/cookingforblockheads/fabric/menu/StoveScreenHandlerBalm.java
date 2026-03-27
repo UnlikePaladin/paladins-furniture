@@ -7,22 +7,22 @@ import net.blay09.mods.cookingforblockheads.menu.IContainerWithDoor;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOven;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenFuel;
 import net.blay09.mods.cookingforblockheads.menu.slot.SlotOvenTool;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerWithDoor {
+public class StoveScreenHandlerBalm extends AbstractContainerMenu implements IContainerWithDoor {
     private final StoveBlockEntityBalm tileEntity;
 
-    public StoveScreenHandlerBalm(int windowId, PlayerInventory playerInventory, StoveBlockEntityBalm oven) {
+    public StoveScreenHandlerBalm(int windowId, Inventory playerInventory, StoveBlockEntityBalm oven) {
         super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, windowId);
         this.tileEntity = oven;
         oven.onOpen(playerInventory.player);
-        Inventory container = oven.getContainer();
+        Container container = oven.getContainer();
         int offsetX = oven.hasPowerUpgrade() ? -5 : 0;
 
         int i;
@@ -57,7 +57,7 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
             this.addSlot(new Slot(playerInventory, i, 30 + i * 18, 169));
         }
 
-        this.addProperties(oven.getContainerData());
+        this.addDataSlots(oven.getContainerData());
     }
 
     public StoveBlockEntityBalm getTileEntity() {
@@ -65,65 +65,67 @@ public class StoveScreenHandlerBalm extends ScreenHandler implements IContainerW
     }
 
     @Override
-    public void close(PlayerEntity player) {
-        super.close(player);
+    public void removed(Player player) {
+        super.removed(player);
         tileEntity.onClose(player);
     }
 
-    public ItemStack transferSlot(PlayerEntity player, int slotIndex) {
+    @Override
+    public ItemStack quickMoveStack(Player player, int slotIndex) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(slotIndex);
-        if (slot.hasStack()) {
-            ItemStack slotStack = slot.getStack();
+        if (slot.hasItem()) {
+            ItemStack slotStack = slot.getItem();
             itemStack = slotStack.copy();
             if (slotIndex >= 7 && slotIndex < 20) {
-                if (!this.insertItem(slotStack, 20, 56, true)) {
+                if (!this.moveItemStackTo(slotStack, 20, 56, true)) {
                     return ItemStack.EMPTY;
                 }
             } else if (slotIndex >= 4 && slotIndex <= 6) {
-                if (!this.insertItem(slotStack, 20, 56, false)) {
+                if (!this.moveItemStackTo(slotStack, 20, 56, false)) {
                     return ItemStack.EMPTY;
                 }
 
-                slot.onQuickTransfer(slotStack, itemStack);
+                slot.onQuickCraft(slotStack, itemStack);
             } else if (slotIndex >= 20) {
                 ItemStack smeltingResult = this.tileEntity.getSmeltingResult(slotStack);
                 if (StoveBlockEntityBalm.isItemFuel(slotStack)) {
-                    if (!this.insertItem(slotStack, 3, 4, false)) {
+                    if (!this.moveItemStackTo(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (!smeltingResult.isEmpty()) {
-                    if (!this.insertItem(slotStack, 0, 3, false)) {
+                    if (!this.moveItemStackTo(slotStack, 0, 3, false)) {
                         return ItemStack.EMPTY;
                     }
                 } else if (slotIndex >= 20 && slotIndex < 47) {
-                    if (!this.insertItem(slotStack, 47, 56, false)) {
+                    if (!this.moveItemStackTo(slotStack, 47, 56, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (slotIndex >= 47 && slotIndex < 56 && !this.insertItem(slotStack, 20, 47, false)) {
+                } else if (slotIndex >= 47 && slotIndex < 56 && !this.moveItemStackTo(slotStack, 20, 47, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(slotStack, 20, 47, false)) {
+            } else if (!this.moveItemStackTo(slotStack, 20, 47, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (slotStack.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot.markDirty();
+                slot.setChanged();
             }
 
             if (slotStack.getCount() == itemStack.getCount()) {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTakeItem(player, slotStack);
+            slot.onTake(player, slotStack);
         }
 
         return itemStack;
     }
 
-    public boolean canUse(PlayerEntity player) {
+    @Override
+    public boolean stillValid(Player player) {
         return true;
     }
 

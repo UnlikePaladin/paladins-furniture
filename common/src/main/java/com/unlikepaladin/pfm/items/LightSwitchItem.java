@@ -94,7 +94,7 @@ public class LightSwitchItem extends BlockItem {
             for (Iterator<Tag> iterator = lights.iterator(); iterator.hasNext();) {
                 Tag nbtElement = iterator.next();
                 BlockPos lightPos = BlockPos.of(((LongTag) nbtElement).getAsLong());
-                double distance = Math.sqrt(lightPos.distSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+                double distance = Math.sqrt(lightPos.distToLowCornerSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
                 if (distance > 16) {
                     removedLights.add(BlockPos.of(((LongTag) nbtElement).getAsLong()));
                     iterator.remove();

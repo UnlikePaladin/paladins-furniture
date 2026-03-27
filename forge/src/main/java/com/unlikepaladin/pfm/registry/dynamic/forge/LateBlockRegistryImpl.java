@@ -1,23 +1,16 @@
 package com.unlikepaladin.pfm.registry.dynamic.forge;
 
-import com.google.common.collect.ImmutableSet;
-import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.forge.PaladinFurnitureModForge;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import com.unlikepaladin.pfm.registry.forge.BlockItemRegistryImpl;
-import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.block.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.block.enums.BedPart;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.registries.ForgeRegistries;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
