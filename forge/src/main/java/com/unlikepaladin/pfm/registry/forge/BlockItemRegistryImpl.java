@@ -1,12 +1,14 @@
 package com.unlikepaladin.pfm.registry.forge;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.Material;
-import net.minecraft.item.*;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,22 +29,22 @@ public class BlockItemRegistryImpl {
     public static void registerBlockPlatformSpecific(String blockId, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerBlockItemPlatformSpecific(blockId, block, ItemGroup.BUILDING_BLOCKS);
+            registerBlockItemPlatformSpecific(blockId, block, CreativeModeTab.TAB_BUILDING_BLOCKS);
         }
         block.setRegistryName(blockId);
         blocks.add(block);
     }
 
-    public static void registerBlockItemPlatformSpecific(String itemName, Block block, ItemGroup group) {
-        if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
-            registerItemPlatformSpecific(itemName, new BlockItem(block, new Item.Settings().group(group)) {
+    public static void registerBlockItemPlatformSpecific(String itemName, Block block, CreativeModeTab group) {
+        if (block.defaultBlockState().getMaterial() == Material.WOOD || block.defaultBlockState().getMaterial() == Material.WOOL) {
+            registerItemPlatformSpecific(itemName, new BlockItem(block, new Item.Properties().tab(group)) {
                 @Override
                 public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
                     return 300;
                 }
             });
         }
-        registerItemPlatformSpecific(itemName, new BlockItem(block, new Item.Settings().group(group)));
+        registerItemPlatformSpecific(itemName, new BlockItem(block, new Item.Properties().tab(group)));
     }
 
     public static boolean isModLoaded(String modId) {

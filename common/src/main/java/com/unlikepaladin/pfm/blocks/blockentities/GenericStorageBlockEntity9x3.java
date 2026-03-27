@@ -6,65 +6,65 @@ import com.unlikepaladin.pfm.blocks.KitchenDrawerBlock;
 import com.unlikepaladin.pfm.blocks.KitchenWallDrawerBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.LootableContainerBlockEntity;
-import net.minecraft.block.entity.ViewerCountManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.screen.GenericContainerScreenHandler;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.Level;
 
 
-public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
+public class GenericStorageBlockEntity9x3 extends RandomizableContainerBlockEntity {
     public GenericStorageBlockEntity9x3(BlockPos pos, BlockState state) {
         super(BlockEntities.DRAWER_BLOCK_ENTITY, pos, state);
     }
 
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(27, ItemStack.EMPTY);
-    private final ViewerCountManager stateManager = new ViewerCountManager() {
+    private NonNullList<ItemStack> inventory = NonNullList.withSize(27, ItemStack.EMPTY);
+    private final ContainerOpenersCounter stateManager = new ContainerOpenersCounter() {
 
         @Override
-        protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
+        protected void onOpen(Level world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock){
-                GenericStorageBlockEntity9x3.this.playSound(state, SoundEvents.BLOCK_BARREL_OPEN);
+                GenericStorageBlockEntity9x3.this.playSound(state, SoundEvents.BARREL_OPEN);
                 GenericStorageBlockEntity9x3.this.setOpen(state, true);
             }
         }
 
         @Override
-        protected void onContainerClose(World world, BlockPos pos, BlockState state) {
+        protected void onClose(Level world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock) {
-                GenericStorageBlockEntity9x3.this.playSound(state, SoundEvents.BLOCK_BARREL_CLOSE);
+                GenericStorageBlockEntity9x3.this.playSound(state, SoundEvents.BARREL_CLOSE);
                 GenericStorageBlockEntity9x3.this.setOpen(state, false);
             }
         }
 
         @Override
-        protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
+        protected void openerCountChanged(Level world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
 
         }
 
         @Override
-        protected boolean isPlayerViewing(PlayerEntity player) {
-            if (player.currentScreenHandler instanceof GenericContainerScreenHandler) {
-                Inventory inventory = ((GenericContainerScreenHandler)player.currentScreenHandler).getInventory();
+        protected boolean isOwnContainer(Player player) {
+            if (player.containerMenu instanceof ChestMenu) {
+                Container inventory = ((ChestMenu)player.containerMenu).getContainer();
                 return inventory == GenericStorageBlockEntity9x3.this;
             }
             return false;
@@ -72,85 +72,85 @@ public class GenericStorageBlockEntity9x3 extends LootableContainerBlockEntity {
     };
 
     @Override
-    public int size() {
+    public int getContainerSize() {
         return 27;
     }
 
 
     @Override
-    protected DefaultedList<ItemStack> getInvStackList() {
+    protected NonNullList<ItemStack> getItems() {
         return this.inventory;
     }
 
     @Override
-    protected void setInvStackList(DefaultedList<ItemStack> list) {
+    protected void setItems(NonNullList<ItemStack> list) {
         this.inventory = list;
     }
 
 
     @Override
-        public void onOpen(PlayerEntity player) {
-            if (!this.removed && !player.isSpectator()) {
-                this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+        public void startOpen(Player player) {
+            if (!this.remove && !player.isSpectator()) {
+                this.stateManager.incrementOpeners(player, this.getLevel(), this.getBlockPos(), this.getBlockState());
             }
         }
 
     @Override
-    public void onClose(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
-            this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+    public void stopOpen(Player player) {
+        if (!this.remove && !player.isSpectator()) {
+            this.stateManager.decrementOpeners(player, this.getLevel(), this.getBlockPos(), this.getBlockState());
         }
     }
 
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        if (!this.deserializeLootTable(nbt)) {
-            Inventories.readNbt(nbt, this.inventory);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
+        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        if (!this.tryLoadLootTable(nbt)) {
+            ContainerHelper.loadAllItems(nbt, this.inventory);
         }
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        if (!this.serializeLootTable(nbt)) {
-            Inventories.writeNbt(nbt, this.inventory);
+    public void save(CompoundTag nbt) {
+        super.save(nbt);
+        if (!this.trySaveLootTable(nbt)) {
+            ContainerHelper.saveAllItems(nbt, this.inventory);
         }
     }
 
-    String blockname = this.getCachedState().getBlock().getTranslationKey();
-    protected Text getContainerName() {
-        if (this.getCachedState().getBlock() instanceof KitchenWallDrawerBlock)
-            return new TranslatableText("container.pfm.kitchen_cabinet");
-        else if (this.getCachedState().getBlock() instanceof KitchenDrawerBlock)
-            return new TranslatableText("container.pfm.drawer");
-        else if (this.getCachedState().getBlock() instanceof ClassicNightstandBlock)
-            return new TranslatableText("container.pfm.nightstand");
+    String blockname = this.getBlockState().getBlock().getDescriptionId();
+    protected Component getDefaultName() {
+        if (this.getBlockState().getBlock() instanceof KitchenWallDrawerBlock)
+            return new TranslatableComponent("container.pfm.kitchen_cabinet");
+        else if (this.getBlockState().getBlock() instanceof KitchenDrawerBlock)
+            return new TranslatableComponent("container.pfm.drawer");
+        else if (this.getBlockState().getBlock() instanceof ClassicNightstandBlock)
+            return new TranslatableComponent("container.pfm.nightstand");
         else
-            return new TranslatableText("container.pfm.cabinet");
+            return new TranslatableComponent("container.pfm.cabinet");
     }
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), Block.NOTIFY_ALL);
+        this.level.setBlock(this.getBlockPos(), state.setValue(BlockStateProperties.OPEN, open), Block.UPDATE_ALL);
     }
 
     @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return GenericContainerScreenHandler.createGeneric9x3(syncId, playerInventory, this);
+    protected ChestMenu createMenu(int containerId, Inventory playerInventory) {
+        return ChestMenu.threeRows(containerId, playerInventory, this);
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.get(Properties.HORIZONTAL_FACING).getVector();
-        double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
-        double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
-        double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
-        this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
+        Vec3i vec3i = state.getValue(BlockStateProperties.HORIZONTAL_FACING).getNormal();
+        double d = (double)this.worldPosition.getX() + 0.5 + (double)vec3i.getX() / 2.0;
+        double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
+        double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
+        this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
     }
 
     @ExpectPlatform
-    public static BlockEntityType.BlockEntityFactory<? extends GenericStorageBlockEntity9x3> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends GenericStorageBlockEntity9x3> getFactory() {
         throw new AssertionError();
     }
 }

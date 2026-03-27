@@ -7,17 +7,17 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.bed.BedInterface;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -27,14 +27,14 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
-    public ForgeBedModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public ForgeBedModel(ModelState settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
 
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     @Override
-    public void appendProperties(ModelDataMap.Builder builder) {
-        super.appendProperties(builder);
+    public void createBlockStateDefinition(ModelDataMap.Builder builder) {
+        super.createBlockStateDefinition(builder);
         builder.withProperty(CONNECTIONS);
     }
 
@@ -43,12 +43,12 @@ public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
         List<BakedQuad> quads = new ArrayList<>();
         if (state != null && extraData.getData(CONNECTIONS) != null && extraData.getData(CONNECTIONS).connections != null) {
-            BedPart part = state.get(BedBlock.PART);
+            BedPart part = state.getValue(BedBlock.PART);
             BitSet data = extraData.getData(CONNECTIONS).connections;
             boolean left = data.get(0);
             boolean right = data.get(1);
             boolean bunk = data.get(2);
-            boolean isClassic = state.getBlock().getTranslationKey().contains("classic");
+            boolean isClassic = state.getBlock().getDescriptionId().contains("classic");
             int classicOffset = isClassic ? 12 : 0;
             if (part == BedPart.HEAD) {
                 quads.addAll(getTemplateBakedModels().get(classicOffset+3).getQuads(state, side, rand, extraData));
@@ -76,7 +76,7 @@ public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
                     quads.addAll(getTemplateBakedModels().get(classicOffset+9).getQuads(state, side, rand, extraData));
                 }
             }
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             return getQuadsWithTexture(quads, ModelHelper.getOakBedSprites(), spriteList);
         }
         return Collections.emptyList();
@@ -84,25 +84,25 @@ public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
 
     @Override
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
-        int classicOffset = stack.getTranslationKey().contains("classic") ? 12 : 0;
-        List<Sprite> spriteList = getSpriteList(stack);
+        int classicOffset = stack.getDescriptionId().contains("classic") ? 12 : 0;
+        List<TextureAtlasSprite> spriteList = getSpriteList(stack);
         return getQuadsWithTexture((getTemplateBakedModels().get((classicOffset+11))).getQuads(state, face, random), ModelHelper.getOakBedSprites(), spriteList);
     }
 
     @NotNull
     @Override
-    public IModelData getModelData(@NotNull BlockRenderView blockView, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
+    public IModelData getModelData(@NotNull BlockAndTintGetter blockView, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
         if (state.getBlock() instanceof SimpleBedBlock) {
             ModelDataMap.Builder builder = new ModelDataMap.Builder();
-            appendProperties(builder);
+            createBlockStateDefinition(builder);
 
             IModelData data = builder.build();
             super.getModelData(blockView, pos, state, data);
 
-            Direction dir = state.get(BedBlock.FACING);
-            boolean isClassic = state.getBlock().getTranslationKey().contains("classic");
-            boolean left = isBed(blockView, pos, dir.rotateYCounterclockwise(), dir, state, isClassic);
-            boolean right = isBed(blockView, pos, dir.rotateYClockwise(), dir, state, isClassic);
+            Direction dir = state.getValue(BedBlock.FACING);
+            boolean isClassic = state.getBlock().getDescriptionId().contains("classic");
+            boolean left = isBed(blockView, pos, dir.getCounterClockWise(), dir, state, isClassic);
+            boolean right = isBed(blockView, pos, dir.getClockWise(), dir, state, isClassic);
             boolean bunk = isBed(blockView, pos, Direction.DOWN, dir, state, isClassic);
             BitSet set = new BitSet();
             set.set(0, left);
@@ -115,7 +115,7 @@ public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
     }
 
     @Override
-    public boolean isBuiltin() {
+    public boolean isCustomRenderer() {
         return true;
     }
 }

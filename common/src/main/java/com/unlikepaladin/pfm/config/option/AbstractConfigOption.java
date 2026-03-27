@@ -4,11 +4,11 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import io.netty.buffer.ByteBufInputStream;
 import io.netty.buffer.ByteBufOutputStream;
 import io.netty.handler.codec.EncoderException;
-import net.minecraft.nbt.NbtByte;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.nbt.ByteTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutput;
@@ -19,7 +19,7 @@ public abstract class AbstractConfigOption<T> implements Comparable<String> {
     public static final byte NULL_TYPE = 0;
     public static final byte BOOL_TYPE = 1;
 
-    public abstract Text getTitle();
+    public abstract Component getTitle();
 
     public abstract String getCategory();
 
@@ -27,7 +27,7 @@ public abstract class AbstractConfigOption<T> implements Comparable<String> {
 
     public abstract T getDefaultValue();
 
-    public abstract Text getToolTip();
+    public abstract Component getToolTip();
 
     public abstract void setValue(T value);
 
@@ -40,21 +40,21 @@ public abstract class AbstractConfigOption<T> implements Comparable<String> {
     public abstract byte getConfigType();
 
     public static Side getSide(String string) {
-        if (Objects.equals(string, Side.CLIENT.asString())) {
+        if (Objects.equals(string, Side.CLIENT.getSerializedName())) {
             return Side.CLIENT;
-        } else if(Objects.equals(string, Side.SERVER.asString())) {
+        } else if(Objects.equals(string, Side.SERVER.getSerializedName())) {
             return Side.SERVER;
         }
         return null;
     }
     @Override
     public String toString() {
-        return "{Type: " + getType() + ", Title: " + ((TranslatableText)getTitle()).getKey() + ", Category: " + getCategory() +  ", Value: " + getValue() + ", Side:" + getSide() + "}";
+        return "{Type: " + getType() + ", Title: " + ((TranslatableComponent)getTitle()).getKey() + ", Category: " + getCategory() +  ", Value: " + getValue() + ", Side:" + getSide() + "}";
     }
 
     public abstract void write(DataOutput output) throws IOException;
 
-    public static void writeConfigOption(PacketByteBuf packetByteBuf, AbstractConfigOption abstractConfigOption) {
+    public static void writeConfigOption(FriendlyByteBuf packetByteBuf, AbstractConfigOption abstractConfigOption) {
         if (abstractConfigOption == null) {
             packetByteBuf.writeByte(0);
         } else {
@@ -67,11 +67,11 @@ public abstract class AbstractConfigOption<T> implements Comparable<String> {
         }
     }
 
-    public static AbstractConfigOption readConfigOption(PacketByteBuf packetByteBuf) {
+    public static AbstractConfigOption readConfigOption(FriendlyByteBuf packetByteBuf) {
         return readConfigOption(packetByteBuf, new ConfigSizeTracker(2097152L));
     }
 
-    public static AbstractConfigOption readConfigOption(PacketByteBuf packetByteBuf, ConfigSizeTracker sizeTracker) {
+    public static AbstractConfigOption readConfigOption(FriendlyByteBuf packetByteBuf, ConfigSizeTracker sizeTracker) {
         int i = packetByteBuf.readerIndex();
         byte b0 = packetByteBuf.readByte();
         if (b0 == 0) {

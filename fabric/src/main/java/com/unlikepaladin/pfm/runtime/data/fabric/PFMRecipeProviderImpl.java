@@ -1,16 +1,16 @@
 package com.unlikepaladin.pfm.runtime.data.fabric;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 
 public class PFMRecipeProviderImpl {
-    public static Identifier getId(Block block) {
-        return Registry.BLOCK.getId(block);
+    public static ResourceLocation getId(Block block) {
+        return Registry.BLOCK.getKey(block);
     }
 
-    public static Identifier getId(Item item) {
-        return Registry.ITEM.getId(item);
+    public static ResourceLocation getId(Item item) {
+        return Registry.ITEM.getKey(item);
     }
 }

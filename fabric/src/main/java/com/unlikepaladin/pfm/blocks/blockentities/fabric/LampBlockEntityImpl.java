@@ -1,13 +1,12 @@
 package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.math.BlockPos;
+import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
+import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
 
 import org.jetbrains.annotations.Nullable;;
 
@@ -19,16 +18,16 @@ public class LampBlockEntityImpl extends LampBlockEntity {
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public Packet<ClientPlayPacketListener> toUpdatePacket(CompoundTag tag) {
+        load(tag);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return createNbt();
+    public CompoundTag toInitialChunkDataNbt(CompoundTag tag) {
+        return save(tag);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends LampBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends LampBlockEntity> getFactory() {
         return LampBlockEntityImpl::new;
     }
 }

@@ -3,15 +3,15 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 public class SinkBlockEntity extends BlockEntity {
     public SinkBlockEntity(BlockPos pos, BlockState state) {
@@ -20,22 +20,22 @@ public class SinkBlockEntity extends BlockEntity {
     private int sinkTimer = 0;
     private boolean isFilling = false;
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return super.toInitialChunkDataNbt();
+    public CompoundTag getUpdateTag() {
+        return super.getUpdateTag();
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public void save(CompoundTag nbt) {
+        super.save(nbt);
         nbt.putInt("sinkTimer", sinkTimer);
         nbt.putBoolean("isFilling", isFilling);
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void load(CompoundTag nbt) {
         sinkTimer = nbt.getInt("sinkTimer");
         isFilling = nbt.getBoolean("isFilling");
-        super.readNbt(nbt);
+        super.load(nbt);
     }
 
     public void setSinkTimer(int sinkTimer) {
@@ -44,19 +44,19 @@ public class SinkBlockEntity extends BlockEntity {
 
     public void setFilling(boolean isFilling) {
         if (isFilling){
-            world.playSound(null, pos, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.BLOCKS, 0.7f, 1.0f);
+            level.playSound(null, getBlockPos(), SoundEvents.WATER_AMBIENT, SoundSource.BLOCKS, 0.7f, 1.0f);
         }
         this.isFilling = isFilling;
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, SinkBlockEntity blockEntity) {
+    public static void tick(Level world, BlockPos pos, BlockState state, SinkBlockEntity blockEntity) {
         if (blockEntity.isFilling) {
             if (blockEntity.sinkTimer >= 30) {
                 blockEntity.setSinkTimer(0);
                 blockEntity.setFilling(false);
             } else {
-                if (world.isClient) {
-                    KitchenSinkBlock.spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
+                if (world.isClientSide) {
+                    KitchenSinkBlock.spawnParticles(blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), blockEntity.getLevel(), blockEntity.getBlockPos());
                 }
                 blockEntity.sinkTimer++;
             }
@@ -64,7 +64,7 @@ public class SinkBlockEntity extends BlockEntity {
     }
 
     @ExpectPlatform
-    public static BlockEntityType.BlockEntityFactory<? extends SinkBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends SinkBlockEntity> getFactory() {
         throw new AssertionError();
     }
 }

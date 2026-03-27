@@ -37,102 +37,102 @@ import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import net.fabricmc.fabric.api.client.model.ExtraModelProvider;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;
 
 public class PFMExtraModelProvider implements ExtraModelProvider {
     @Override
-    public void provideExtraModels(ResourceManager manager, Consumer<Identifier> out) {
-        for (Identifier id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
+    public void provideExtraModels(ResourceManager manager, Consumer<ResourceLocation> out) {
+        for (ResourceLocation id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedBasicTableModel.BASIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedBasicTableModel.BASIC_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedClassicTableModel.CLASSIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedClassicTableModel.CLASSIC_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedLogTableModel.LOG_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedLogTableModel.LOG_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedDinnerTableModel.DINNER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedDinnerTableModel.DINNER_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedModernDinnerTableModel.MODERN_DINNER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedModernDinnerTableModel.MODERN_DINNER_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedChairModel.CHAIR_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedChairModel.CHAIR_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedChairDinnerModel.CHAIR_DINNER_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedChairDinnerModel.CHAIR_DINNER_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedChairModernModel.CHAIR_MODERN_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedChairModernModel.CHAIR_MODERN_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedChairClassicModel.CHAIR_CLASSIC_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedChairClassicModel.CHAIR_CLASSIC_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedSimpleStoolModel.SIMPLE_STOOL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedSimpleStoolModel.SIMPLE_STOOL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedClassicStoolModel.CLASSIC_STOOL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedClassicStoolModel.CLASSIC_STOOL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedModernStoolModel.MODERN_STOOL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedModernStoolModel.MODERN_STOOL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedLogStoolModel.LOG_STOOL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedLogStoolModel.LOG_STOOL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedKitchenCounterModel.COUNTER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenCounterModel.COUNTER_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedKitchenDrawerModel.COUNTER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenDrawerModel.COUNTER_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedKitchenCabinetModel.CABINET_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenCabinetModel.CABINET_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedKitchenWallDrawerModel.COUNTER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenWallDrawerModel.COUNTER_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedKitchenWallCounterModel.COUNTER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenWallCounterModel.COUNTER_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedKitchenCounterOvenModel.OVEN_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenCounterOvenModel.OVEN_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedKitchenSinkModel.SINK_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenSinkModel.SINK_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedLadderModel.LADDER_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedLadderModel.LADDER_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedCoffeeBasicTableModel.BASIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedCoffeeBasicTableModel.BASIC_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedModernCoffeeTableModel.MODERN_COFFEE_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedModernCoffeeTableModel.MODERN_COFFEE_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedClassicCoffeeTableModel.CLASSIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedClassicCoffeeTableModel.CLASSIC_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedBasicDeskModel.BASIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedBasicDeskModel.BASIC_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
             out.accept(id);
         }
-        for (Identifier id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
             out.accept(id);
         }
         UnbakedMirrorModel.ALL_MODEL_IDS.forEach(out::accept);
@@ -140,8 +140,8 @@ public class PFMExtraModelProvider implements ExtraModelProvider {
         UnbakedFridgeModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedFreezerModel.ALL_MODEL_IDS.forEach(out::accept);
         UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(out::accept);
-        out.accept(new Identifier("minecraft:block/cube_all"));
-        for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
+        out.accept(new ResourceLocation("minecraft:block/cube_all"));
+        for (ResourceLocation id : OfficeChairEntityRenderer.MODEL_IDS) {
             out.accept(id);
         }
     }

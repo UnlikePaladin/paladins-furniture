@@ -1,15 +1,15 @@
 package com.unlikepaladin.pfm.data;
 
-import net.minecraft.block.Block;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Objects;
 
-public abstract class Material {
+public abstract class PFMMaterial {
 
-    Identifier materialID;
+    ResourceLocation materialID;
     Block block;
-    Material(Block block){
+    PFMMaterial(Block block){
         this.block = block;
     }
 

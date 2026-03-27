@@ -4,15 +4,15 @@ import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.blocks.KitchenWallDrawerSmallBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Random;
 
 public class ForgeKitchenWallDrawerSmallModel extends PFMForgeBakedModel {
-    public ForgeKitchenWallDrawerSmallModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public ForgeKitchenWallDrawerSmallModel(ModelState settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
 
@@ -35,7 +35,7 @@ public class ForgeKitchenWallDrawerSmallModel extends PFMForgeBakedModel {
         if (state != null && extraData.getData(OPEN) != null) {
             int openOffset = extraData.getData(OPEN) ? 1 : 0;
             List<BakedQuad> originalQuads = getTemplateBakedModels().get(openOffset).getQuads(state, side, rand, extraData);
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             return getQuadsWithTexture(originalQuads, ModelHelper.getOakPlankLogSprites(), spriteList);
         }
         return Collections.emptyList();
@@ -43,20 +43,20 @@ public class ForgeKitchenWallDrawerSmallModel extends PFMForgeBakedModel {
 
     public static ModelProperty<Boolean> OPEN = new ModelProperty<>();
     @Override
-    public void appendProperties(ModelDataMap.Builder builder) {
-        super.appendProperties(builder);
+    public void createBlockStateDefinition(ModelDataMap.Builder builder) {
+        super.createBlockStateDefinition(builder);
         builder.withProperty(OPEN);
     }
 
     @NotNull
     @Override
-    public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
+    public IModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
         if (state.getBlock() instanceof KitchenWallDrawerSmallBlock) {
             ModelDataMap.Builder builder = new ModelDataMap.Builder();
-            appendProperties(builder);
+            createBlockStateDefinition(builder);
             IModelData data = builder.build();
             super.getModelData(world, pos, state, data);
-            data.setData(OPEN, state.get(KitchenWallDrawerSmallBlock.OPEN));
+            data.setData(OPEN, state.getValue(KitchenWallDrawerSmallBlock.OPEN));
             return data;
         }
         return tileData;
@@ -64,7 +64,7 @@ public class ForgeKitchenWallDrawerSmallModel extends PFMForgeBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
-        List<Sprite> spriteList = getSpriteList(stack);
+        List<TextureAtlasSprite> spriteList = getSpriteList(stack);
         List<BakedQuad> originalQuads = getTemplateBakedModels().get(0).getQuads(state, face, random);
         return getQuadsWithTexture(originalQuads, ModelHelper.getOakPlankLogSprites(), spriteList);
     }

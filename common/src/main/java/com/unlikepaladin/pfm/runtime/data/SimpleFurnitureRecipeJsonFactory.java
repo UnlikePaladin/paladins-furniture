@@ -7,74 +7,73 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementRewards;
-import net.minecraft.advancement.CriterionMerger;
-import net.minecraft.advancement.criterion.CriterionConditions;
-import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
-import net.minecraft.data.server.recipe.CraftingRecipeJsonFactory;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
 
-public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonFactory {
+public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
     private final Item output;
     private final int outputCount;
     private final List<Ingredient> inputs = Lists.newArrayList();
-    private final Advancement.Task builder = Advancement.Task.create();
+    private final Advancement.Builder builder = Advancement.Builder.advancement();
 
     @Nullable
-    private NbtElement nbtElement;
+    private Tag nbtElement;
     @Nullable
     private String group;
 
-    public SimpleFurnitureRecipeJsonFactory(ItemConvertible output, int outputCount) {
+    public SimpleFurnitureRecipeJsonFactory(ItemLike output, int outputCount) {
         this.output = output.asItem();
         this.outputCount = outputCount;
     }
 
-    public SimpleFurnitureRecipeJsonFactory(ItemConvertible output, int outputCount, @Nullable NbtElement nbtElement) {
+    public SimpleFurnitureRecipeJsonFactory(ItemLike output, int outputCount, @Nullable Tag nbtElement) {
         this.output = output.asItem();
         this.outputCount = outputCount;
         this.nbtElement = nbtElement;
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, int count, NbtElement nbtElement) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output, int count, Tag nbtElement) {
         return new SimpleFurnitureRecipeJsonFactory(output, count, nbtElement);
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, NbtElement nbtElement) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output, Tag nbtElement) {
         return new SimpleFurnitureRecipeJsonFactory(output, 1, nbtElement);
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output) {
         return new SimpleFurnitureRecipeJsonFactory(output, 1);
     }
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, int count) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output, int count) {
         return new SimpleFurnitureRecipeJsonFactory(output, count);
     }
-    public SimpleFurnitureRecipeJsonFactory input(Tag<Item> tag) {
-        return this.input(Ingredient.fromTag(tag));
+    public SimpleFurnitureRecipeJsonFactory input(net.minecraft.tags.Tag tag) {
+        return this.input(Ingredient.of(tag));
     }
 
-    public SimpleFurnitureRecipeJsonFactory input(ItemConvertible itemProvider) {
+    public SimpleFurnitureRecipeJsonFactory input(ItemLike itemProvider) {
         return this.input(itemProvider, 1);
     }
 
-    public SimpleFurnitureRecipeJsonFactory input(ItemConvertible itemProvider, int size) {
+    public SimpleFurnitureRecipeJsonFactory input(ItemLike itemProvider, int size) {
         for (int i = 0; i < size; ++i) {
-            this.input(Ingredient.ofItems(itemProvider));
+            this.input(Ingredient.of(itemProvider));
         }
         return this;
     }
@@ -91,8 +90,8 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonFacto
     }
 
     @Override
-    public SimpleFurnitureRecipeJsonFactory criterion(String string, CriterionConditions criterionConditions) {
-        this.builder.criterion(string, criterionConditions);
+    public SimpleFurnitureRecipeJsonFactory unlockedBy(String string, CriterionTriggerInstance criterionConditions) {
+        this.builder.addCriterion(string, criterionConditions);
         return this;
     }
 
@@ -103,35 +102,35 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonFacto
     }
 
     @Override
-    public Item getOutputItem() {
+    public Item getResult() {
         return this.output;
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, Identifier recipeId) {
-        this.builder.parent(new Identifier("recipes/root")).criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).criteriaMerger(CriterionMerger.OR);
-        exporter.accept(new SimpleFurnitureRecipeJsonProvider(recipeId, this.output, this.nbtElement, this.outputCount, this.group == null ? "" : this.group, this.inputs, this.builder, new Identifier(recipeId.getNamespace(), "recipes/" + this.output.getGroup().getName() + "/" + recipeId.getPath())));
+    public void save(Consumer<FinishedRecipe> exporter, ResourceLocation recipeId) {
+        this.builder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).requirements(RequirementsStrategy.OR);
+        exporter.accept(new SimpleFurnitureRecipeJsonProvider(recipeId, this.output, this.nbtElement, this.outputCount, this.group == null ? "" : this.group, this.inputs, this.builder, new ResourceLocation(recipeId.getNamespace(), "recipes/" + this.output.getItemCategory().getRecipeFolderName() + "/" + recipeId.getPath())));
     }
 
-    private void validate(Identifier recipeId) {
+    private void validate(ResourceLocation recipeId) {
         if (this.builder.getCriteria().isEmpty()) {
             throw new IllegalStateException("No way of obtaining recipe " + recipeId);
         }
     }
 
     public static class SimpleFurnitureRecipeJsonProvider
-            implements RecipeJsonProvider {
-        private final Identifier recipeId;
+            implements FinishedRecipe {
+        private final ResourceLocation recipeId;
         private final Item output;
         private final int count;
         private final String group;
         private final List<Ingredient> inputs;
-        private final Advancement.Task builder;
-        private final Identifier advancementId;
+        private final Advancement.Builder builder;
+        private final ResourceLocation advancementId;
         @Nullable
-        private final NbtElement nbtElement;
+        private final Tag nbtElement;
 
-        public SimpleFurnitureRecipeJsonProvider(Identifier recipeId, Item output, @Nullable NbtElement nbtElement, int outputCount, String group, List<Ingredient> inputs, Advancement.Task builder, Identifier advancementId) {
+        public SimpleFurnitureRecipeJsonProvider(ResourceLocation recipeId, Item output, @Nullable Tag nbtElement, int outputCount, String group, List<Ingredient> inputs, Advancement.Builder builder, ResourceLocation advancementId) {
             this.recipeId = recipeId;
             this.output = output;
             this.count = outputCount;
@@ -143,7 +142,7 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonFacto
         } 
 
         @Override
-        public void serialize(JsonObject json) {
+        public void serializeRecipeData(JsonObject json) {
             if (!this.group.isEmpty()) {
                 json.addProperty("group", this.group);
             }
@@ -153,7 +152,7 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonFacto
             }
             json.add("ingredients", jsonArray);
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("item", Registry.ITEM.getId(this.output).toString());
+            jsonObject.addProperty("item", Registry.ITEM.getKey(this.output).toString());
             if (this.count > 1) {
                 jsonObject.addProperty("count", this.count);
             }
@@ -165,24 +164,24 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonFacto
         }
 
         @Override
-        public RecipeSerializer<?> getSerializer() {
+        public RecipeSerializer<?> getType() {
             return RecipeTypes.SIMPLE_FURNITURE_SERIALIZER;
         }
 
         @Override
-        public Identifier getRecipeId() {
+        public ResourceLocation getId() {
             return this.recipeId;
         }
 
         @Override
         @Nullable
-        public JsonObject toAdvancementJson() {
-            return this.builder.toJson();
+        public JsonObject serializeAdvancement() {
+            return this.builder.serializeToJson();
         }
 
         @Override
         @Nullable
-        public Identifier getAdvancementId() {
+        public ResourceLocation getAdvancementId() {
             return this.advancementId;
         }
     }

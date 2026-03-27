@@ -1,32 +1,32 @@
 package com.unlikepaladin.pfm.menus;
 
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.screen.AbstractFurnaceScreenHandler;
-import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.inventory.AbstractFurnaceMenu;
+import net.minecraft.world.inventory.ContainerData;
 
-public class IronStoveScreenHandler extends AbstractFurnaceScreenHandler {
-    private final Inventory inventory;
-    public IronStoveScreenHandler(int i, PlayerInventory playerInventory) {
-        super(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipeBookCategory.SMOKER, i, playerInventory);
-        this.inventory = new SimpleInventory(3);
+public class IronStoveScreenHandler extends AbstractFurnaceMenu {
+    private final Container inventory;
+    public IronStoveScreenHandler(int i, Inventory playerInventory) {
+        super(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipeBookType.SMOKER, i, playerInventory);
+        this.inventory = new SimpleContainer(3);
     }
 
-    public IronStoveScreenHandler(int i, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
-        super(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipeBookCategory.SMOKER, i, playerInventory, inventory, propertyDelegate);
+    public IronStoveScreenHandler(int i, Inventory playerInventory, Container inventory, ContainerData dataAccess) {
+        super(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipeBookType.SMOKER, i, playerInventory, inventory, dataAccess);
         this.inventory = inventory;
-        inventory.onOpen(playerInventory.player);
+        inventory.startOpen(playerInventory.player);
     }
 
     @Override
-    public void close(PlayerEntity player) {
-        super.close(player);
-        this.inventory.onClose(player);
+    public void removed(Player player) {
+        super.removed(player);
+        this.inventory.stopOpen(player);
     }
 }
