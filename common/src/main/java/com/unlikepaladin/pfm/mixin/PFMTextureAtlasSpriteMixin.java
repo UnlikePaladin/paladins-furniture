@@ -1,27 +1,27 @@
 package com.unlikepaladin.pfm.mixin;
 
 import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.Sprite;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 
-@Mixin(Sprite.class)
-public abstract class PFMSpriteMixin implements PFMSpriteExtensions {
+@Mixin(TextureAtlasSprite.class)
+public abstract class PFMTextureAtlasSpriteMixin implements PFMSpriteExtensions {
     @Mutable
     @Shadow
     @Final
-    public NativeImage[] images;
+    public NativeImage[] mainImage;
 
     @Override
     public int pfm$getMipmapLevel() {
-        return (images.length-1);
+        return (mainImage.length-1);
     }
 
     @Override
     public void pfm$setImages(NativeImage[] images) {
-        this.images = images;
+        this.mainImage = images;
     }
 }

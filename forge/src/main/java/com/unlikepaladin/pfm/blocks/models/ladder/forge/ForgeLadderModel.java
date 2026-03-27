@@ -2,15 +2,15 @@ package com.unlikepaladin.pfm.blocks.models.ladder.forge;
 
 import com.unlikepaladin.pfm.blocks.SimpleBunkLadderBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ import java.util.Random;
 
 public class ForgeLadderModel extends PFMForgeBakedModel {
 
-    public ForgeLadderModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
+    public ForgeLadderModel(ModelState settings, List<BakedModel> templateBakedModels) {
         super(settings, templateBakedModels);
     }
 
@@ -31,21 +31,21 @@ public class ForgeLadderModel extends PFMForgeBakedModel {
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull IModelData extraData) {
         if (state != null && state.getBlock() instanceof SimpleBunkLadderBlock) {
-            int offset = state.get(SimpleBunkLadderBlock.UP) ? 1 : 0;
-            Sprite sprite = getSpriteList(state).get(0);
+            int offset = state.getValue(SimpleBunkLadderBlock.UP) ? 1 : 0;
+            TextureAtlasSprite sprite = getSpriteList(state).get(0);
             return getQuadsWithTexture(getTemplateBakedModels().get(offset).getQuads(state, side, rand, extraData), new SpriteData(sprite));
         }
         return Collections.emptyList();
     }
 
     @Override
-    public @NotNull IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
+    public @NotNull IModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
         return super.getModelData(world, pos, state, new ModelDataMap.Builder().build());
     }
 
     @Override
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
-        Sprite sprite = getSpriteList(stack).get(0);
+        TextureAtlasSprite sprite = getSpriteList(stack).get(0);
         return getQuadsWithTexture(getTemplateBakedModels().get(0).getQuads(state, face, random), new SpriteData(sprite));
     }
 }

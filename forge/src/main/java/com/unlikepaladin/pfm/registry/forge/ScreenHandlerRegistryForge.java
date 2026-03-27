@@ -5,11 +5,11 @@ import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.menus.*;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import com.unlikepaladin.pfm.registry.ScreenHandlerRegistry;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.stat.StatType;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.stats.StatType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.extensions.IForgeMenuType;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -20,10 +20,10 @@ import org.lwjgl.glfw.GLFW;
 public class ScreenHandlerRegistryForge {
 
     @SubscribeEvent
-    public static void registerScreenHandlers(RegistryEvent.Register<ScreenHandlerType<?>> event) {
+    public static void registerScreenHandlers(RegistryEvent.Register<MenuType<?>> event) {
         ScreenHandlerRegistry.registerScreenHandlers();
         event.getRegistry().registerAll(
-            ScreenHandlerRegistryImpl.screenHandlerTypeList.toArray(new ScreenHandlerType[0])
+            ScreenHandlerRegistryImpl.screenHandlerTypeList.toArray(new MenuType[0])
         );
     }
 }

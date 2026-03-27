@@ -5,15 +5,15 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.items.forge.FurnitureGuideBookImpl;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import net.minecraft.block.Block;
-import net.minecraft.entity.effect.StatusEffect;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.Material;
 import net.minecraft.block.enums.BedPart;
 import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.util.Rarity;
-import net.minecraft.world.dimension.DimensionType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.util.registry.Registry;
 import net.minecraft.world.poi.PointOfInterestType;
 import net.minecraftforge.event.RegistryEvent;
@@ -38,7 +38,7 @@ public class BlockItemRegistryForge {
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).maxCount(1));
+        PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Properties().tab(PaladinFurnitureMod.FURNITURE_GROUP).rarity(Rarity.RARE).stacksTo(1));
         BlockItemRegistry.registerCommonItems();
         BlockItemRegistryImpl.items.forEach((itemId, itemSupplier) -> {
             Item item = itemSupplier.get();

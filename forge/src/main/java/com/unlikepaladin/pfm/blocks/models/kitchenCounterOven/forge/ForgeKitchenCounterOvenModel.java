@@ -5,15 +5,15 @@ import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -23,12 +23,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class ForgeKitchenCounterOvenModel extends PFMForgeBakedModel {
-    public ForgeKitchenCounterOvenModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public ForgeKitchenCounterOvenModel(ModelState settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
     @Override
-    public void appendProperties(ModelDataMap.Builder builder) {
-        super.appendProperties(builder);
+    public void createBlockStateDefinition(ModelDataMap.Builder builder) {
+        super.createBlockStateDefinition(builder);
         builder.withProperty(CONNECTIONS);
     }
 
@@ -38,8 +38,8 @@ public class ForgeKitchenCounterOvenModel extends PFMForgeBakedModel {
         if (state != null && state.getBlock() instanceof KitchenCounterOvenBlock && extraData.getData(CONNECTIONS) != null && extraData.getData(CONNECTIONS).connections != null) {
             List<BakedQuad> quads = new ArrayList<>();
             BitSet data = extraData.getData(CONNECTIONS).connections;
-            int openOffset = state.get(KitchenCounterOvenBlock.OPEN) ? 2 : 0;
-            List<Sprite> spriteList = getSpriteList(state);
+            int openOffset = state.getValue(KitchenCounterOvenBlock.OPEN) ? 2 : 0;
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             if (data.get(0) || data.get(1)) {
                 quads.addAll(getTemplateBakedModels().get(1 + openOffset).getQuads(state, side, rand, extraData));
             } else {
@@ -53,17 +53,17 @@ public class ForgeKitchenCounterOvenModel extends PFMForgeBakedModel {
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     @NotNull
     @Override
-    public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
+    public IModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
         if (state.getBlock() instanceof KitchenCounterOvenBlock) {
             ModelDataMap.Builder builder = new ModelDataMap.Builder();
-            appendProperties(builder);
+            createBlockStateDefinition(builder);
 
             IModelData data = builder.build();
             super.getModelData(world, pos, state, data);
 
             BitSet set = new BitSet();
-            set.set(0, KitchenCounterOvenBlock.connectsVertical(world.getBlockState(pos.up()).getBlock()));
-            set.set(1, KitchenCounterOvenBlock.connectsVertical(world.getBlockState(pos.down()).getBlock()));
+            set.set(0, KitchenCounterOvenBlock.connectsVertical(world.getBlockState(pos.above()).getBlock()));
+            set.set(1, KitchenCounterOvenBlock.connectsVertical(world.getBlockState(pos.below()).getBlock()));
             data.setData(CONNECTIONS, new ModelBitSetProperty(set));
             return data;
         }
@@ -72,7 +72,7 @@ public class ForgeKitchenCounterOvenModel extends PFMForgeBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
-        List<Sprite> spriteList = getSpriteList(state);
+        List<TextureAtlasSprite> spriteList = getSpriteList(state);
         return getQuadsWithTexture(getTemplateBakedModels().get(0).getQuads(state, face, random), ModelHelper.getOakPlankLogSprites(), spriteList);
     }
 }

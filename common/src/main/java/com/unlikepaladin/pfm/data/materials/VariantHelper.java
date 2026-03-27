@@ -1,9 +1,9 @@
 package com.unlikepaladin.pfm.data.materials;
 
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class VariantHelper {
-    public static VariantBase<?> getVariant(Identifier variant) {
+    public static VariantBase<?> getVariant(ResourceLocation variant) {
         if (WoodVariantRegistry.getOptionalVariant(variant).isPresent()) {
             return WoodVariantRegistry.getOptionalVariant(variant).get();
         } else if (StoneVariantRegistry.getOptionalVariant(variant).isPresent()) {

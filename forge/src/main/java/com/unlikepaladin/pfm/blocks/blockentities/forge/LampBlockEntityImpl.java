@@ -3,17 +3,17 @@ package com.unlikepaladin.pfm.blocks.blockentities.forge;
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 public class LampBlockEntityImpl extends LampBlockEntity {
@@ -21,34 +21,34 @@ public class LampBlockEntityImpl extends LampBlockEntity {
         super(pos, state);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends LampBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends LampBlockEntity> getFactory() {
         return LampBlockEntityImpl::new;
     }
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt = super.toInitialChunkDataNbt();
-        nbt.putString("color", this.color.asString());
+    public CompoundTag getUpdateTag() {
+        CompoundTag nbt = super.getUpdateTag();
+        nbt.putString("color", this.color.getSerializedName());
         nbt.putString("variant", this.variant.getIdentifier().toString());
         return nbt;
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag) {
-        this.readNbt(tag);
+    public void handleUpdateTag(CompoundTag tag) {
+        this.load(tag);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        this.color = DyeColor.byName(pkt.getNbt().getString("color"), DyeColor.WHITE);
-        this.variant = WoodVariantRegistry.getVariant(Identifier.tryParse(pkt.getNbt().getString("variant")));
+        this.color = DyeColor.byName(pkt.getTag().getString("color"), DyeColor.WHITE);
+        this.variant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(pkt.getTag().getString("variant")));
     }
 
 }

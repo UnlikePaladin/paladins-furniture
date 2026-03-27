@@ -2,18 +2,18 @@ package com.unlikepaladin.pfm.items.forge;
 
 import com.unlikepaladin.pfm.client.forge.PFMItemRendererForge;
 import com.unlikepaladin.pfm.items.OfficeChairItem;
-import net.minecraft.client.render.item.BuiltinModelItemRenderer;
-import net.minecraft.item.Item;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.client.IItemRenderProperties;
 
 import java.util.function.Consumer;
 
 public class OfficeChairItemImpl extends OfficeChairItem {
-    public OfficeChairItemImpl(Settings settings) {
+    public OfficeChairItemImpl(Properties settings) {
         super(settings);
     }
 
-    public static Item getItemFactory(Item.Settings settings) {
+    public static Item getItemFactory(Item.Properties settings) {
         return new OfficeChairItemImpl(settings);
     }
 
@@ -21,7 +21,7 @@ public class OfficeChairItemImpl extends OfficeChairItem {
     public void initializeClient(Consumer<IItemRenderProperties> consumer) {
         consumer.accept(new IItemRenderProperties() {
             @Override
-            public BuiltinModelItemRenderer getItemStackRenderer() {
+            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
                 return PFMItemRendererForge.INSTANCE;
             }
         });

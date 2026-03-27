@@ -6,8 +6,8 @@
   "client": [
     "BlockColorsAccessor",
     "ItemColorsAccessor",
-    "PFMModelLoaderMixin",
-    "PFMRenderLayersForgeMixin",
+    "PFMModelBakeryMixin",
+    "PFMItemBlockRenderTypesForgeMixin",
     "PFMSpriteAtlasTexturesMixin"
   ],
   "mixins": [
@@ -16,7 +16,7 @@
     "PFMSaveLoaderMixin",
     "PFMItemEntryAccessor",
     "PFMLootPool$BuilderMixin",
-    "PFMReloadableResourceManagerImplMixin"
+    "PFMSimpleReloadableResourceManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1
