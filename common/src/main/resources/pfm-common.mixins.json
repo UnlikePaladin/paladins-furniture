@@ -6,8 +6,7 @@
   "mixins": [
     "PFMTagsProvider$TagAppenderMixin",
     "PFMInventoryMixin",
-    "PFMPoiTypeAccessor",
-    "PFMTextureSlotFactory"
+    "PFMPoiTypeAccessor"
   ],
   "server": [
     "PFMMixinDedicatedServer"
@@ -21,7 +20,8 @@
     "PFMTextureAtlasAccessor",
     "PFMSpriteInfoAccesor",
     "PFMTextureAtlasSpriteMixin",
-    "PFMTitleScreenMixin"
+    "PFMTitleScreenMixin",
+    "PFMTextureSlotFactory"
   ],
   "injectors": {
     "defaultRequire": 1
