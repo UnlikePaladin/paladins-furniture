@@ -3,18 +3,17 @@ package com.unlikepaladin.pfm.blocks.models.basicDesk.forge;
 import com.unlikepaladin.pfm.blocks.BasicDeskBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
-import net.minecraftforge.client.model.data.ModelData;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraftforge.client.model.data.IModelData;
+import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,7 +24,7 @@ import java.util.Collections;
 import java.util.List;
 
 public class ForgeBasicDeskModel extends PFMForgeBakedModel {
-    public ForgeBasicDeskModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public ForgeBasicDeskModel(ModelState settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
 
@@ -33,7 +32,7 @@ public class ForgeBasicDeskModel extends PFMForgeBakedModel {
 
     @NotNull
     @Override
-    public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
+    public ModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
         if (state.getBlock() instanceof BasicDeskBlock) {
             ModelData.Builder builder = ModelData.builder();
 
@@ -82,7 +81,7 @@ public class ForgeBasicDeskModel extends PFMForgeBakedModel {
             if (!south && !east) {
                 secondaryQuads.addAll((getTemplateBakedModels().get(4)).getQuads(state, side, rand, extraData, renderType));
             }
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
             quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
             return quads;
@@ -105,7 +104,7 @@ public class ForgeBasicDeskModel extends PFMForgeBakedModel {
         // in between pieces
 
 
-        List<Sprite> spriteList = getSpriteList(stack);
+        List<TextureAtlasSprite> spriteList = getSpriteList(stack);
         List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
         quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
         return quads;

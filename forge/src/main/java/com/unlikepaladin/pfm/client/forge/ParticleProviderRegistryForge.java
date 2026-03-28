@@ -1,7 +1,8 @@
 package com.unlikepaladin.pfm.client.forge;
 
 import com.unlikepaladin.pfm.registry.ParticleIDs;
-import net.minecraft.client.particle.BlockLeakParticle;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.particle.DripParticle;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

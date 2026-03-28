@@ -1,12 +1,12 @@
 package com.unlikepaladin.pfm.client;
 
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import net.minecraft.resource.ResourceNotFoundException;
-import net.minecraft.resource.ResourcePack;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.resource.metadata.PackResourceMetadata;
-import net.minecraft.resource.metadata.ResourceMetadataReader;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.packs.ResourcePackFileNotFoundException;
+import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -18,47 +18,47 @@ import java.util.Set;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class PathPackRPWrapper implements ResourcePack {
-    private final Supplier<ResourcePack> delegate;
-    private final PackResourceMetadata packResourceMetadata;
+public class PathPackRPWrapper implements PackResources {
+    private final Supplier<PackResources> delegate;
+    private final PackMetadataSection packResourceMetadata;
 
-    public PathPackRPWrapper(Supplier<ResourcePack> delegate, PackResourceMetadata packResourceMetadata) {
+    public PathPackRPWrapper(Supplier<PackResources> delegate, PackMetadataSection packResourceMetadata) {
         this.delegate = delegate;
         this.packResourceMetadata = packResourceMetadata;
     }
 
     @Nullable
     @Override
-    public InputStream openRoot(String fileName) throws IOException {
+    public InputStream getRootResource(String fileName) throws IOException {
         if (PFMRuntimeResources.ready && fileName.equals("pack.png")) {
-            return delegate.get().openRoot(fileName);
+            return delegate.get().getRootResource(fileName);
         }
         return null;
     }
 
     @Override
-    public InputStream open(ResourceType type, Identifier id) throws IOException {
+    public InputStream getResource(PackType type, ResourceLocation id) throws IOException {
         if (PFMRuntimeResources.ready)
-            return delegate.get().open(type, id);
+            return delegate.get().getResource(type, id);
         return null;
     }
 
     @Override
-    public Collection<Identifier> findResources(ResourceType type, String namespace, String prefix, Predicate<Identifier> allowedPathPredicate) {
+    public Collection<ResourceLocation> getResources(PackType type, String namespace, String prefix, Predicate<Identifier> allowedPathPredicate) {
         if (PFMRuntimeResources.ready)
-            return delegate.get().findResources(type, namespace, prefix, allowedPathPredicate);
+            return delegate.get().getResources(type, namespace, prefix, allowedPathPredicate);
         return new ArrayList<>();
     }
 
     @Override
-    public boolean contains(ResourceType type, Identifier id) {
+    public boolean hasResource(PackType type, ResourceLocation id) {
         if (PFMRuntimeResources.ready)
-            return delegate.get().contains(type, id);
+            return delegate.get().hasResource(type, id);
         return false;
     }
 
     @Override
-    public Set<String> getNamespaces(ResourceType type) {
+    public Set<String> getNamespaces(PackType type) {
         if (PFMRuntimeResources.ready)
             return delegate.get().getNamespaces(type);
         return Set.of("pfm");
@@ -66,12 +66,12 @@ public class PathPackRPWrapper implements ResourcePack {
 
     @Nullable
     @Override
-    public <T> T parseMetadata(ResourceMetadataReader<T> metaReader) throws IOException {
-        if (metaReader.getKey().equals("pack")) {
+    public <T> T getMetadataSection(MetadataSectionSerializer<T> metaReader) throws IOException {
+        if (metaReader.getMetadataSectionName().equals("pack")) {
             return (T) packResourceMetadata;
         }
         if (PFMRuntimeResources.ready)
-            return delegate.get().parseMetadata(metaReader);
+            return delegate.get().getMetadataSection(metaReader);
         return null;
     }
 

@@ -9,27 +9,27 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
 
 import java.util.*;
 import java.util.function.Supplier;
 import net.minecraft.util.math.random.Random;
 
 public class FabricBasicLampModel extends PFMFabricBakedModel {
-    public FabricBasicLampModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public FabricBasicLampModel(ModelState settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
 
@@ -39,15 +39,15 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         WoodVariant variant = WoodVariantRegistry.OAK;
         BlockEntity entity = blockView.getBlockEntity(pos);
-        int onOffset = state.get(Properties.LIT) ? 1 : 0;
+        int onOffset = state.getValue(BlockStateProperties.LIT) ? 1 : 0;
         if (entity instanceof LampBlockEntity) {
             variant = ((LampBlockEntity) entity).getVariant();
         }
-        boolean up = blockView.getBlockState(pos.up()).getBlock() instanceof BasicLampBlock;
-        boolean down = blockView.getBlockState(pos.down()).getBlock() instanceof BasicLampBlock;
+        boolean up = blockView.getBlockState(pos.above()).getBlock() instanceof BasicLampBlock;
+        boolean down = blockView.getBlockState(pos.below()).getBlock() instanceof BasicLampBlock;
         pushTextureTransform(context, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
         if (up && down) {
             ((FabricBakedModel)getTemplateBakedModels().get(1)).emitBlockQuads(blockView, state, pos, randomSupplier, context);
@@ -70,8 +70,8 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
         WoodVariant variant = WoodVariantRegistry.OAK;
-        if (stack.hasNbt()) {
-            variant = WoodVariantRegistry.getVariant(Identifier.tryParse(stack.getSubNbt("BlockEntityTag").getString("variant")));
+        if (stack.hasTag()) {
+            variant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(stack.getTagElement("BlockEntityTag").getString("variant")));
         }
         pushTextureTransform(context, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant));
         ((FabricBakedModel)getTemplateBakedModels().get(4)).emitItemQuads(stack, randomSupplier, context);
@@ -81,38 +81,38 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public ModelTransformation getTransformation() {
-        return getTemplateBakedModels().get(2).getTransformation();
+    public ItemTransforms getTransforms() {
+        return getTemplateBakedModels().get(2).getTransforms();
     }
 
-    static List<Sprite> oakSprite = new ArrayList<>();
-    static List<Sprite> getOakStrippedLogSprite() {
+    static List<TextureAtlasSprite> oakSprite = new ArrayList<>();
+    static List<TextureAtlasSprite> getOakStrippedLogSprite() {
         if (!oakSprite.isEmpty())
             return oakSprite;
-        Sprite wood = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE,  new Identifier("minecraft:block/stripped_oak_log")).getSprite();
+        TextureAtlasSprite wood = new Material(InventoryMenu.BLOCK_ATLAS,  new ResourceLocation("minecraft:block/stripped_oak_log")).sprite();
         oakSprite.add(wood);
         return oakSprite;
     }
 
-    Map<WoodVariant, List<Sprite>> sprites = new HashMap<>();
-    List<Sprite> getVariantStrippedLogSprite(WoodVariant variant) {
+    Map<WoodVariant, List<TextureAtlasSprite>> sprites = new HashMap<>();
+    List<TextureAtlasSprite> getVariantStrippedLogSprite(WoodVariant variant) {
         if (sprites.containsKey(variant))
             return sprites.get(variant);
 
-        Sprite wood = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)).getSprite();
-        List<Sprite> spriteList = new ArrayList<>();
+        TextureAtlasSprite wood = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.STRIPPED_LOG)).sprite();
+        List<TextureAtlasSprite> spriteList = new ArrayList<>();
         spriteList.add(wood);
         sprites.put(variant, spriteList);
         return spriteList;
     }
 
     @Override
-    public Sprite pfm$getParticle(BlockState state) {
-        return getTemplateBakedModels().get(4).getParticleSprite();
+    public TextureAtlasSprite pfm$getParticle(BlockState state) {
+        return getTemplateBakedModels().get(4).getParticleIcon();
     }
 
     @Override
-    public Sprite pfm$getParticle(World world, BlockPos pos, BlockState state) {
+    public TextureAtlasSprite pfm$getParticle(Level world, BlockPos pos, BlockState state) {
         BlockEntity entity = world.getBlockEntity(pos);
         WoodVariant variant = WoodVariantRegistry.OAK;
         if (world.getBlockEntity(pos) instanceof LampBlockEntity) {

@@ -8,19 +8,22 @@ import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.ducks.PFMSpriteAtlasTexturesExtensions;
 import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
-import com.unlikepaladin.pfm.mixin.PFMSpriteAtlasTextureAccessor;
+import com.unlikepaladin.pfm.mixin.PFMTextureAtlasAccessor;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import com.unlikepaladin.pfm.utilities.Version;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.SharedConstants;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.resource.metadata.AnimationResourceMetadata;
-import net.minecraft.client.texture.*;
-import net.minecraft.client.util.PngFile;
-import net.minecraft.resource.Resource;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureManager;
+import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
+import com.mojang.blaze3d.platform.PngInfo;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.resources.ResourceLocation;
 
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -32,7 +35,7 @@ import java.util.*;
 
 public final class TextureReloadQueue {
 
-    public static void recolorAndWriteImage(Identifier identifier, BufferedImage base, Map<Integer, Integer> palette) {
+    public static void recolorAndWriteImage(ResourceLocation identifier, BufferedImage base, Map<Integer, Integer> palette) {
         try {
             BufferedImage recolored = new BufferedImage(base.getWidth(), base.getHeight(), BufferedImage.TYPE_INT_ARGB);
             for(int y = 0; y < base.getHeight(); y++) {
@@ -76,9 +79,9 @@ public final class TextureReloadQueue {
         requestReload(identifier);
     }
 
-    public static final List<Identifier> list = Collections.synchronizedList(new ArrayList<>());
+    public static final List<ResourceLocation> list = Collections.synchronizedList(new ArrayList<>());
 
-    public static void requestReload(Identifier id) {
+    public static void requestReload(ResourceLocation id) {
         if (id != null) list.add(id);
     }
 
@@ -88,8 +91,8 @@ public final class TextureReloadQueue {
     }
 
 
-    static void reloadSingleSprite(ResourceManager resourceManager, SpriteAtlasTexture spriteAtlas, Identifier id) throws IOException {
-        Identifier path = ModelHelper.getTextureSpritePath(id);
+    static void reloadSingleSprite(ResourceManager resourceManager, TextureAtlas spriteAtlas, ResourceLocation id) throws IOException {
+        ResourceLocation path = ModelHelper.getTextureSpritePath(id);
         Optional<Resource> optionalResource = resourceManager.getResource(path);
 
         if (optionalResource.isEmpty()) {
@@ -100,11 +103,11 @@ public final class TextureReloadQueue {
         Resource resource = optionalResource.get();
         Sprite original = spriteAtlas.getSprite(id);
 
-        AnimationResourceMetadata animationResourceMetadata = resource.getMetadata().decode(AnimationResourceMetadata.READER)
-                .orElse(AnimationResourceMetadata.EMPTY);
+        AnimationMetadataSection animationResourceMetadata = resource.getMetadata().decode(AnimationResourceMetadata.READER)
+                .orElse(AnimationMetadataSection.EMPTY);
 
-        PngFile pngFile = new PngFile(path::toString, resource.getInputStream());
-        Sprite.Info info = new Sprite.Info(id, pngFile.width, pngFile.height, animationResourceMetadata);
+        PngInfo pngFile = new PngInfo(path::toString, resource.getInputStream());
+        TextureAtlasSprite.Info info = new TextureAtlasSprite.Info(id, pngFile.width, pngFile.height, animationResourceMetadata);
 
         SpriteCoordinates coords = PFMSpriteRegistry.PFM_SPRITE_COORDINATES.get(id);
         int x, y;
@@ -118,30 +121,30 @@ public final class TextureReloadQueue {
         } else {
             x = original.getX();
             y = original.getY();
-            atlasWidth = Math.round(original.getX() / original.getMinU());
-            atlasHeight = Math.round(original.getY() / original.getMinV());
+            atlasWidth = Math.round(original.getX() / original.getU0());
+            atlasHeight = Math.round(original.getY() / original.getV0());
         }
-        int mipMapSizeConfig = MinecraftClient.getInstance().options.getMipmapLevels().getValue();
+        int mipMapSizeConfig = Minecraft.getInstance().options.getMipmapLevels().getValue();
         Integer maxLevelWhenStiching = ((PFMSpriteAtlasTexturesExtensions)spriteAtlas).pfm$getMaxLevel();
         int mipMapSize = maxLevelWhenStiching != null ? Math.min(Math.min(mipMapSizeConfig, ((PFMSpriteExtensions)original).pfm$getMipmapLevel()), maxLevelWhenStiching) : Math.min(mipMapSizeConfig, ((PFMSpriteExtensions)original).pfm$getMipmapLevel());
 
-        Sprite newSprite = ((PFMSpriteAtlasTextureAccessor)spriteAtlas).invoke$loadSprite(resourceManager, info, atlasWidth, atlasHeight, mipMapSize, x, y);
+        TextureAtlasSprite newSprite = ((PFMTextureAtlasAccessor)spriteAtlas).invoke$loadSprite(resourceManager, info, atlasWidth, atlasHeight, mipMapSize, x, y);
 
-        ((PFMSpriteAtlasTextureAccessor)spriteAtlas).pfm$getSprites().put(id, newSprite);
+        ((PFMTextureAtlasAccessor)spriteAtlas).pfm$getTexturesByName().put(id, newSprite);
 
-        newSprite.upload();
+        newSprite.uploadFirstFrame();
         original.close();
     }
 
-    public static void reloadSpritesOnClientThread(List<Identifier> id) {
-        TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
-        ResourceManager resourceManager = MinecraftClient.getInstance().getResourceManager();
-        AbstractTexture abstractTexture = textureManager.getTexture(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE);
+    public static void reloadSpritesOnClientThread(List<ResourceLocation> id) {
+        TextureManager textureManager = Minecraft.getInstance().getTextureManager();
+        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
+        AbstractTexture abstractTexture = textureManager.getTexture(InventoryMenu.BLOCK_ATLAS);
         try {
-            if (abstractTexture instanceof SpriteAtlasTexture spriteAtlas) {
-                spriteAtlas.bindTexture();
+            if (abstractTexture instanceof TextureAtlas spriteAtlas) {
+                spriteAtlas.bind();
 
-                for (Identifier spriteId : id) {
+                for (ResourceLocation spriteId : id) {
                     reloadSingleSprite(resourceManager, spriteAtlas, spriteId);
                 }
             }
@@ -149,10 +152,10 @@ public final class TextureReloadQueue {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to reload texture at {}", id, e);
         }
 
-        MinecraftClient.getInstance().execute(
+        Minecraft.getInstance().execute(
                 () -> {
-                    MinecraftClient.getInstance().worldRenderer.reload();
-                    List<Identifier> variants = new ArrayList<>();
+                    Minecraft.getInstance().levelRenderer.allChanged();
+                    List<ResourceLocation> variants = new ArrayList<>();
 
                     WoodVariantRegistry.getVariants().stream().sorted().forEach(woodVariant -> variants.add(woodVariant.identifier));
                     StoneVariantRegistry.getVariants().stream().sorted().forEach(stoneVariant -> variants.add(stoneVariant.identifier));

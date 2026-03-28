@@ -1,12 +1,13 @@
 package com.unlikepaladin.pfm.data.forge;
 
-import net.minecraft.block.Block;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
+import net.minecraft.resources.ResourceLocation;
 
 public class PFMTagsImpl {
-    public static TagKey<Block> createTag(Identifier identifier) {
-        return BlockTags.create(new Identifier("pfm", "tuckable_blocks"));
+    public static TagKey<Block> createTag(ResourceLocation identifier) {
+        return BlockTags.create(identifier);
     }
 }

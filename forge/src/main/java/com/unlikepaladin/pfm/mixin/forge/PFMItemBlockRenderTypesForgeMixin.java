@@ -6,10 +6,10 @@ import com.unlikepaladin.pfm.blocks.DynamicRenderLayerInterface;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderLayers;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraftforge.client.ChunkRenderTypeSet;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -21,8 +21,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.HashMap;
 import java.util.Map;
 
-@Mixin(RenderLayers.class)
-public abstract class PFMRenderLayersForgeMixin {
+@Mixin(ItemBlockRenderTypes.class)
+public abstract class PFMItemBlockRenderTypesForgeMixin {
+
 
     @Shadow
     @Deprecated(
@@ -43,10 +44,10 @@ public abstract class PFMRenderLayersForgeMixin {
                 return;
             }
 
-            if (MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(state) instanceof AbstractBakedModel abstractBakedModel) {
+            if (Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state) instanceof AbstractBakedModel abstractBakedModel) {
                 VariantBase<?> variant = abstractBakedModel.getVariant(state);
                 if (variant != null) {
-                    ChunkRenderTypeSet baseRenderTypes = getRenderLayers(variant.getBaseBlock().getDefaultState());
+                    ChunkRenderTypeSet baseRenderTypes = getRenderLayers(variant.getBaseBlock().defaultBlockState());
                     ChunkRenderTypeSet currentRenderTypes = cir.getReturnValue();
 
                     // Combine the render types using union
@@ -67,7 +68,7 @@ public abstract class PFMRenderLayersForgeMixin {
                 }
             }
             if (state.getBlock() instanceof DynamicRenderLayerInterface) {
-                RenderLayer renderLayer = ((DynamicRenderLayerInterface) state.getBlock()).getCustomRenderLayer();
+                RenderType renderLayer = ((DynamicRenderLayerInterface) state.getBlock()).getCustomRenderLayer();
                 if (PaladinFurnitureMod.getPFMConfig().isShaderSolidFixOn())
                     cir.setReturnValue(PaladinFurnitureModClient.areShadersOn() ? ChunkRenderTypeSet.of(RenderLayer.getSolid()) : ChunkRenderTypeSet.of(renderLayer));
                 else

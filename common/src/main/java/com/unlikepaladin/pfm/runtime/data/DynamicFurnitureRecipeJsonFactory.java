@@ -7,21 +7,21 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.advancement.Advancement;
-import net.minecraft.advancement.AdvancementRewards;
-import net.minecraft.advancement.CriterionMerger;
-import net.minecraft.advancement.criterion.CriterionConditions;
-import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
-import net.minecraft.block.Block;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -31,18 +31,18 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class DynamicFurnitureRecipeJsonFactory {
-    private final Advancement.Builder builder = Advancement.Builder.create();
+    private final Advancement.Builder builder = Advancement.Builder.advancement();
     private List<Ingredient> vanillaIngredients = Lists.newArrayList();
 
     private final String outputClass;
     private final int outputCount;
     private String group;
     private Map<String, Integer> variantChildren = new HashMap<>();
-    private final List<Identifier> supportedVariants;
+    private final List<ResourceLocation> supportedVariants;
     @Nullable
-    private final NbtElement nbtElement;
+    private final Tag nbtElement;
 
-    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, Map<String, Integer> variantChildren) {
+    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants, Map<String, Integer> variantChildren) {
         this.outputClass = output.getSimpleName();
         this.outputCount = outputCount;
         this.nbtElement = null;
@@ -50,7 +50,7 @@ public class DynamicFurnitureRecipeJsonFactory {
         this.variantChildren = variantChildren;
     }
 
-    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, Map<String, Integer> variantChildren, @Nullable NbtElement nbtElement) {
+    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants, Map<String, Integer> variantChildren, @Nullable Tag nbtElement) {
         this.outputClass = output.getSimpleName();
         this.outputCount = outputCount;
         this.supportedVariants = supportedVariants;
@@ -58,7 +58,7 @@ public class DynamicFurnitureRecipeJsonFactory {
         this.nbtElement = nbtElement;
     }
 
-    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, Map<String, Integer> variantChildren, List<Ingredient> inputs) {
+    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants, Map<String, Integer> variantChildren, List<Ingredient> inputs) {
         this.outputClass = output.getSimpleName();
         this.outputCount = outputCount;
         this.nbtElement = null;
@@ -67,7 +67,7 @@ public class DynamicFurnitureRecipeJsonFactory {
         this.variantChildren = variantChildren;
     }
 
-    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, Map<String, Integer> variantChildren, List<Ingredient> inputs, @Nullable NbtElement nbtElement) {
+    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants, Map<String, Integer> variantChildren, List<Ingredient> inputs, @Nullable Tag nbtElement) {
         this.outputClass = output.getSimpleName();
         this.outputCount = outputCount;
         this.supportedVariants = supportedVariants;
@@ -76,14 +76,14 @@ public class DynamicFurnitureRecipeJsonFactory {
         this.nbtElement = nbtElement;
     }
 
-    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants) {
+    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants) {
         this.outputClass = output.getSimpleName();
         this.outputCount = outputCount;
         this.supportedVariants = supportedVariants;
         this.nbtElement = null;
     }
 
-    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, @Nullable NbtElement nbtElement) {
+    public DynamicFurnitureRecipeJsonFactory(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants, @Nullable Tag nbtElement) {
         this.outputClass = output.getSimpleName();
         this.outputCount = outputCount;
         this.supportedVariants = supportedVariants;
@@ -92,31 +92,31 @@ public class DynamicFurnitureRecipeJsonFactory {
 
 
 
-    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, Map<String, Integer> variantChildren, List<Ingredient> inputs, @Nullable NbtElement nbtElement) {
+    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants, Map<String, Integer> variantChildren, List<Ingredient> inputs, @Nullable Tag nbtElement) {
         return new DynamicFurnitureRecipeJsonFactory(output, outputCount, supportedVariants, variantChildren, inputs, nbtElement);
     }
 
-    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, Map<String, Integer> variantChildren, List<Ingredient> inputs) {
+    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants, Map<String, Integer> variantChildren, List<Ingredient> inputs) {
         return new DynamicFurnitureRecipeJsonFactory(output, outputCount, supportedVariants, variantChildren, inputs);
     }
 
-    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, Map<String, Integer> variantChildren) {
+    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants, Map<String, Integer> variantChildren) {
         return new DynamicFurnitureRecipeJsonFactory(output, outputCount, supportedVariants, variantChildren);
     }
 
-    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, Map<String, Integer> variantChildren, @Nullable NbtElement nbtElement) {
+    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants, Map<String, Integer> variantChildren, @Nullable Tag nbtElement) {
         return new DynamicFurnitureRecipeJsonFactory(output, outputCount, supportedVariants, variantChildren, nbtElement);
     }
-    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants) {
+    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants) {
         return new DynamicFurnitureRecipeJsonFactory(output, outputCount, supportedVariants);
     }
 
-    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<Identifier> supportedVariants, @Nullable  NbtElement nbtElement) {
+    public static DynamicFurnitureRecipeJsonFactory create(Class<? extends Block> output, int outputCount, List<ResourceLocation> supportedVariants, @Nullable Tag nbtElement) {
         return new DynamicFurnitureRecipeJsonFactory(output, outputCount, supportedVariants, nbtElement);
     }
 
-    public DynamicFurnitureRecipeJsonFactory criterion(String string, CriterionConditions criterionConditions) {
-        this.builder.criterion(string, criterionConditions);
+    public DynamicFurnitureRecipeJsonFactory unlockedBy(String string, CriterionTriggerInstance criterionConditions) {
+        this.builder.addCriterion(string, criterionConditions);
         return this;
     }
 
@@ -131,20 +131,20 @@ public class DynamicFurnitureRecipeJsonFactory {
     }
 
     public DynamicFurnitureRecipeJsonFactory vanillaInput(TagKey<Item> tag) {
-        return this.vanillaInput(Ingredient.fromTag(tag));
+        return this.vanillaInput(Ingredient.of(tag));
     }
 
     public DynamicFurnitureRecipeJsonFactory vanillaInput(Ingredient ingredient) {
         return this.vanillaInput(ingredient, 1);
     }
 
-    public DynamicFurnitureRecipeJsonFactory vanillaInput(ItemConvertible itemProvider) {
+    public DynamicFurnitureRecipeJsonFactory vanillaInput(ItemLike itemProvider) {
         return this.vanillaInput(itemProvider, 1);
     }
 
-    public DynamicFurnitureRecipeJsonFactory vanillaInput(ItemConvertible itemProvider, int size) {
+    public DynamicFurnitureRecipeJsonFactory vanillaInput(ItemLike itemProvider, int size) {
         for (int i = 0; i < size; ++i) {
-            this.vanillaInput(Ingredient.ofItems(itemProvider));
+            this.vanillaInput(Ingredient.of(itemProvider));
         }
         return this;
     }
@@ -164,41 +164,41 @@ public class DynamicFurnitureRecipeJsonFactory {
         return childInput(ingredient, 1);
     }
 
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, Identifier recipeId) {
-        this.builder.parent(new Identifier("recipes/root")).criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).criteriaMerger(CriterionMerger.OR);
-        exporter.accept(new DynamicFurnitureRecipeJsonProvider(recipeId, outputClass, nbtElement, outputCount, group, vanillaIngredients, supportedVariants, variantChildren, builder, new Identifier(recipeId.getNamespace(), "recipes/furniture/" + recipeId.getPath())));
+    public void save(Consumer<FinishedRecipe> exporter, ResourceLocation recipeId) {
+        this.builder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).requirements(RequirementsStrategy.OR);
+        exporter.accept(new DynamicFurnitureRecipeJsonProvider(recipeId, outputClass, nbtElement, outputCount, group, vanillaIngredients, supportedVariants, variantChildren, builder, new ResourceLocation(recipeId.getNamespace(), "recipes/furniture/" + recipeId.getPath())));
     }
 
 
-    public void offerTo(Consumer<RecipeJsonProvider> exporter) {
-        this.offerTo(exporter, new Identifier(PaladinFurnitureMod.MOD_ID, this.getOutputClass().toLowerCase(Locale.US)));
+    public void save(Consumer<FinishedRecipe> exporter) {
+        this.save(exporter, new ResourceLocation(PaladinFurnitureMod.MOD_ID, this.getOutputClass().toLowerCase(Locale.US)));
     }
 
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, String recipePath) {
-        Identifier identifier2 = new Identifier(recipePath);
-        Identifier identifier = new Identifier(PaladinFurnitureMod.MOD_ID, this.getOutputClass().toLowerCase(Locale.US));
+    public void save(Consumer<FinishedRecipe> exporter, String recipePath) {
+        ResourceLocation identifier2 = new ResourceLocation(recipePath);
+        ResourceLocation identifier = new ResourceLocation(PaladinFurnitureMod.MOD_ID, this.getOutputClass().toLowerCase(Locale.US));
         if (identifier2.equals(identifier)) {
             throw new IllegalStateException("Recipe " + recipePath + " should remove its 'save' argument as it is equal to default one");
         }
-        this.offerTo(exporter, identifier2);
+        this.save(exporter, identifier2);
     }
 
 
     public static class DynamicFurnitureRecipeJsonProvider
-            implements RecipeJsonProvider {
-        private final Identifier recipeId;
+            implements FinishedRecipe {
+        private final ResourceLocation recipeId;
         private final String outputClass;
         private final int count;
         private final String group;
         private final List<Ingredient> vanillaIngredients;
         private final Map<String, Integer> variantChildren;
-        private final List<Identifier> supportedVariants;
+        private final List<ResourceLocation> supportedVariants;
         private final Advancement.Builder builder;
-        private final Identifier advancementId;
+        private final ResourceLocation advancementId;
         @Nullable
-        private final NbtElement nbtElement;
+        private final Tag nbtElement;
 
-        public DynamicFurnitureRecipeJsonProvider(Identifier recipeId, String outputClass, @Nullable NbtElement nbtElement, int outputCount, String group, List<Ingredient> vanillaIngredients, List<Identifier> supportedVariants, Map<String, Integer> variantChildren, Advancement.Builder builder, Identifier advancementId) {
+        public DynamicFurnitureRecipeJsonProvider(ResourceLocation recipeId, String outputClass, @Nullable Tag nbtElement, int outputCount, String group, List<Ingredient> vanillaIngredients, List<ResourceLocation> supportedVariants, Map<String, Integer> variantChildren, Advancement.Builder builder, ResourceLocation advancementId) {
             this.recipeId = recipeId;
             this.outputClass = outputClass;
             this.count = outputCount;
@@ -212,12 +212,12 @@ public class DynamicFurnitureRecipeJsonFactory {
         }
 
         @Override
-        public void serialize(JsonObject json) {
+        public void serializeRecipeData(JsonObject json) {
             if (this.group != null && !this.group.isEmpty()) {
                 json.addProperty("group", this.group);
             }
             JsonArray identifierArray = new JsonArray();
-            for (Identifier identifier : this.supportedVariants) {
+            for (ResourceLocation identifier : this.supportedVariants) {
                 identifierArray.add(identifier.toString());
             }
             json.add("supportedVariants", identifierArray);
@@ -252,24 +252,24 @@ public class DynamicFurnitureRecipeJsonFactory {
         }
 
         @Override
-        public RecipeSerializer<?> getSerializer() {
+        public RecipeSerializer<?> getType() {
             return RecipeTypes.DYNAMIC_FURNITURE_SERIALIZER;
         }
 
         @Override
-        public Identifier getRecipeId() {
+        public ResourceLocation getId() {
             return this.recipeId;
         }
 
         @Override
         @Nullable
-        public JsonObject toAdvancementJson() {
-            return this.builder.toJson();
+        public JsonObject serializeAdvancement() {
+            return this.builder.serializeToJson();
         }
 
         @Override
         @Nullable
-        public Identifier getAdvancementId() {
+        public ResourceLocation getAdvancementId() {
             return this.advancementId;
         }
     }

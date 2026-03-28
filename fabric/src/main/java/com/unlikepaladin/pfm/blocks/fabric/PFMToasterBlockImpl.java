@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.blocks.fabric;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.sandwichable.PFMSandwichableCompat;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 
 public class PFMToasterBlockImpl {
     public static boolean isSandwich(ItemStack stack) {

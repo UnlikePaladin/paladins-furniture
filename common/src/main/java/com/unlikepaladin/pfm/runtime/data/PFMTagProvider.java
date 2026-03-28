@@ -10,17 +10,18 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.PFMTags;
+import com.unlikepaladin.pfm.mixin.PFMTagsProvider$TagAppenderMixin;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
-import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.data.server.AbstractTagProvider;
-import net.minecraft.tag.*;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.Tag;
+import net.minecraft.tags.TagKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -88,7 +89,7 @@ public class PFMTagProvider extends PFMProvider {
         BasicSinkBlock[] sinkBlocks = BasicSinkBlock.streamSinks().toList().toArray(new BasicSinkBlock[0]);
         ShowerTowelBlock[] showerTowels = ShowerTowelBlock.streamShowerTowels().map(FurnitureBlock::getBlock).toArray(ShowerTowelBlock[]::new);
 
-        getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(showerTowels)
                 .add(stoneCounters)
                 .add(stoneCabinets)
@@ -184,7 +185,7 @@ public class PFMTagProvider extends PFMProvider {
         ClassicDeskBlock[] woodClassicDesks= ClassicDeskBlock.streamWoodClassicDesks().map(FurnitureBlock::getBlock).toArray(ClassicDeskBlock[]::new);
         ClassicDeskCabinetBlock[] woodClassicDeskCabinets = ClassicDeskCabinetBlock.streamWoodClassicDeskCabinets().map(FurnitureBlock::getBlock).toArray(ClassicDeskCabinetBlock[]::new);
 
-        getOrCreateTagBuilder(BlockTags.AXE_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_AXE)
                 .add(showerTowels)
                 .add(woodCounters)
                 .add(woodCabinets)
@@ -227,7 +228,7 @@ public class PFMTagProvider extends PFMProvider {
                 .add(woodClassicDesks)
                 .add(woodClassicDeskCabinets);
 
-        getOrCreateTagBuilder(BlockTags.SHOVEL_MINEABLE)
+        getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_SHOVEL)
                 .add(PaladinFurnitureModBlocksItems.RAW_CONCRETE_POWDER);
 
         getOrCreateTagBuilder(BlockTags.BEDS)
@@ -270,10 +271,10 @@ public class PFMTagProvider extends PFMProvider {
         throw new AssertionError();
     }
 
-    private static final Map<Identifier, TagBuilder> tagBuilders = Maps.newLinkedHashMap();
+    private static final Map<ResourceLocation, TagBuilder> tagBuilders = Maps.newLinkedHashMap();
 
     public static <T> TagBuilder getTagBuilder(TagKey<T> tag) {
-        return tagBuilders.computeIfAbsent(tag.id(), (id) -> new TagBuilder());
+        return tagBuilders.computeIfAbsent(tag.location(), (id) -> new TagBuilder());
     }
 
     @Override
@@ -297,7 +298,7 @@ public class PFMTagProvider extends PFMProvider {
         endProviderRun();
     }
 
-    protected Path getOutput(Identifier id) {
-        return getParent().getOutput().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
+    protected Path getResultItem(ResourceLocation id) {
+        return getParent().getResultItem().resolve("data/" + id.getNamespace() + "/tags/blocks/" + id.getPath() + ".json");
     }
 }

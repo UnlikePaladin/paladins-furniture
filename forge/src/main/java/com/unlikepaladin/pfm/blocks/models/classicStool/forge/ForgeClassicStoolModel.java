@@ -3,16 +3,16 @@ package com.unlikepaladin.pfm.blocks.models.classicStool.forge;
 import com.unlikepaladin.pfm.blocks.ClassicStoolBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ import java.util.List;
 import net.minecraft.util.math.random.Random;
 
 public class ForgeClassicStoolModel extends PFMForgeBakedModel {
-    public ForgeClassicStoolModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
+    public ForgeClassicStoolModel(ModelState settings, List<BakedModel> templateBakedModels) {
         super(settings, templateBakedModels);
     }
 
@@ -36,7 +36,7 @@ public class ForgeClassicStoolModel extends PFMForgeBakedModel {
 
             ModelData data = builder.build();
             data = super.getModelData(world, pos, state, data);
-            data = data.derive().with(TUCKED, state.get(ClassicStoolBlock.TUCKED)).build();
+            data = data.derive().with(TUCKED, state.getValue(ClassicStoolBlock.TUCKED)).build();
             return data;
         }
         return tileData;
@@ -47,7 +47,7 @@ public class ForgeClassicStoolModel extends PFMForgeBakedModel {
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer layer) {
         if (state != null && extraData != null && extraData.get(TUCKED) != null) {
             int tucked = Boolean.TRUE.equals(extraData.get(TUCKED)) ? 1 : 0;
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             List<BakedQuad> quads = getTemplateBakedModels().get(tucked).getQuads(state, side, rand, extraData, layer);
             return getQuadsWithTexture(quads, ModelHelper.getOakPlankLogSprites(), spriteList);
         }
@@ -56,7 +56,7 @@ public class ForgeClassicStoolModel extends PFMForgeBakedModel {
 
     @Override
     public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
-        List<Sprite> spriteList = getSpriteList(state);
+        List<TextureAtlasSprite> spriteList = getSpriteList(state);
         List<BakedQuad> quads = getTemplateBakedModels().get(0).getQuads(state, face, random);
         return getQuadsWithTexture(quads, ModelHelper.getOakPlankLogSprites(), spriteList);
     }

@@ -5,15 +5,15 @@ import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
 import java.util.Map;
@@ -21,7 +21,7 @@ import net.minecraft.util.math.random.Random;
 import java.util.function.Supplier;
 
 public class FabricDinnerTableModel extends PFMFabricBakedModel {
-    public FabricDinnerTableModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public FabricDinnerTableModel(ModelState settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
     @Override
@@ -30,13 +30,13 @@ public class FabricDinnerTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof DinnerTableBlock) {
             DinnerTableBlock block = (DinnerTableBlock) state.getBlock();
-            Direction dir = state.get(DinnerTableBlock.FACING);
-            boolean left = block.isTable(world, pos, dir.rotateYCounterclockwise(), dir);
-            boolean right = block.isTable(world, pos, dir.rotateYClockwise(), dir);
-            List<Sprite> spriteList = getSpriteList(state);
+            Direction dir = state.getValue(DinnerTableBlock.FACING);
+            boolean left = block.isTable(world, pos, dir.getCounterClockWise(), dir);
+            boolean right = block.isTable(world, pos, dir.getClockWise(), dir);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             pushTextureTransform(context, spriteList.get(0));
             ((FabricBakedModel) getTemplateBakedModels().get((0))).emitBlockQuads(world, state, pos, randomSupplier, context);
             context.popTransform();
@@ -73,7 +73,7 @@ public class FabricDinnerTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public Sprite pfm$getParticle(BlockState state) {
+    public TextureAtlasSprite pfm$getParticle(BlockState state) {
         return getSpriteList(state).get(0);
     }
 }

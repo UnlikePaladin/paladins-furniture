@@ -1,12 +1,12 @@
 package com.unlikepaladin.pfm.data.fabric;
 
-import net.minecraft.block.Block;
-import net.minecraft.tag.TagKey;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.tags.TagKey;
+import net.minecraft.resources.ResourceLocation;
 
 public class PFMTagsImpl {
-    public static TagKey<Block> createTag(Identifier identifier) {
-        return TagKey.of(Registry.BLOCK_KEY, identifier);
+    public static TagKey<Block> createTag(ResourceLocation identifier) {
+        return TagKey.create(Registry.BLOCK_REGISTRY, identifier);
     }
 }

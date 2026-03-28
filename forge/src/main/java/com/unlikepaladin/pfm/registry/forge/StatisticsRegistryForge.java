@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.registry.forge;
 
 import com.unlikepaladin.pfm.registry.StatisticsRegistry;
-import net.minecraft.stat.StatType;
+import net.minecraft.stats.StatType;
 import net.minecraft.stat.Stats;
 import net.minecraft.util.registry.Registry;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

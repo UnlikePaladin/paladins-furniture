@@ -3,33 +3,38 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
 import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.mob.PiglinBrain;
-import net.minecraft.entity.passive.VillagerEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.tag.BlockTags;
-import net.minecraft.text.Text;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldEvents;
-import net.minecraft.world.event.GameEvent;
-import net.minecraft.world.explosion.Explosion;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.Explosion;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +45,9 @@ import static com.unlikepaladin.pfm.blocks.LogTableBlock.rotateShape;
 public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, PFMBuiltinItemRendererExtension {
     private static final List<FurnitureBlock> SIMPLE_BEDS = new ArrayList<>();
     private final DyeColor color;
-    public SimpleBedBlock(DyeColor color, Settings settings) {
-        super(color, settings.luminance((state) -> 0).emissiveLighting((blockstate, b, c) -> false));
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(PART, BedPart.FOOT).with(OCCUPIED, false));
+    public SimpleBedBlock(DyeColor color, Properties settings) {
+        super(color, settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(PART, BedPart.FOOT).setValue(OCCUPIED, false));
         if(this.getClass().isAssignableFrom(SimpleBedBlock.class)){
             String bedColor = color.getName();
             SIMPLE_BEDS.add(new FurnitureBlock(this, bedColor+"_simple_bed"));
@@ -54,12 +59,12 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
         return SIMPLE_BEDS.stream();
     }
 
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        Direction direction = ctx.getPlayerFacing();
-        BlockPos blockPos = ctx.getBlockPos();
-        BlockPos blockPos2 = blockPos.offset(direction);
-        if (ctx.getWorld().getBlockState(blockPos2).canReplace(ctx)) {
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        BlockState blockState = this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection());
+        Direction direction = ctx.getHorizontalDirection();
+        BlockPos blockPos = ctx.getClickedPos();
+        BlockPos blockPos2 = blockPos.relative(direction);
+        if (ctx.getLevel().getBlockState(blockPos2).canBeReplaced(ctx)) {
             return blockState;
         }
         return null;
@@ -70,83 +75,83 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) {
-            return ActionResult.CONSUME;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (world.isClientSide) {
+            return InteractionResult.CONSUME;
         }
-        if (state.get(PART) != BedPart.HEAD && !((state = world.getBlockState(pos = pos.offset(state.get(FACING)))).getBlock() instanceof SimpleBedBlock)) {
-            return ActionResult.CONSUME;
+        if (state.getValue(PART) != BedPart.HEAD && !((state = world.getBlockState(pos = pos.relative(state.getValue(FACING)))).getBlock() instanceof SimpleBedBlock)) {
+            return InteractionResult.CONSUME;
         }
-        if (!BedBlock.isBedWorking(world)) {
+        if (!BedBlock.canSetSpawn(world)) {
             world.removeBlock(pos, false);
-            BlockPos blockPos = pos.offset(state.get(FACING).getOpposite());
-            if (world.getBlockState(blockPos).isOf(this)) {
+            BlockPos blockPos = pos.relative(state.getValue(FACING).getOpposite());
+            if (world.getBlockState(blockPos).is(this)) {
                 world.removeBlock(blockPos, false);
             }
-            world.createExplosion(null, DamageSource.badRespawnPoint(), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0f, true, Explosion.DestructionType.DESTROY);
-            return ActionResult.SUCCESS;
+            world.explode(null, DamageSource.badRespawnPointExplosion(), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0f, true, Explosion.BlockInteraction.DESTROY);
+            return InteractionResult.SUCCESS;
         }
-        if (state.get(OCCUPIED)) {
+        if (state.getValue(OCCUPIED)) {
             if (!this.isFree(world, pos)) {
-                player.sendMessage(Text.translatable("block.minecraft.bed.occupied"), true);
+                player.displayClientMessage(new TranslatableComponent("block.minecraft.bed.occupied"), true);
             }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        player.trySleep(pos).ifLeft(reason -> {
+        player.startSleepInBed(pos).ifLeft(reason -> {
             if (reason.getMessage() != null) {
-                player.sendMessage(reason.getMessage(), true);
+                player.displayClientMessage(reason.getMessage(), true);
             }
         });
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
-    private boolean isFree(World world, BlockPos pos) {
-        List<VillagerEntity> list = world.getEntitiesByClass(VillagerEntity.class, new Box(pos), LivingEntity::isSleeping);
+    private boolean isFree(Level world, BlockPos pos) {
+        List<Villager> list = world.getEntitiesOfClass(Villager.class, new AABB(pos), LivingEntity::isSleeping);
         if (list.isEmpty()) {
             return false;
         }
-        list.get(0).wakeUp();
+        list.get(0).stopSleeping();
         return true;
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (direction == getDirectionTowardsOtherPart(state.get(PART), state.get(FACING))) {
-            if (neighborState.getBlock() instanceof SimpleBedBlock && neighborState.get(PART) != state.get(PART)) {
-                return state.with(OCCUPIED, neighborState.get(OCCUPIED));
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        if (direction == getDirectionTowardsOtherPart(state.getValue(PART), state.getValue(FACING))) {
+            if (neighborState.getBlock() instanceof SimpleBedBlock && neighborState.getValue(PART) != state.getValue(PART)) {
+                return state.setValue(OCCUPIED, neighborState.getValue(OCCUPIED));
             }
-            return Blocks.AIR.getDefaultState();
+            return Blocks.AIR.defaultBlockState();
         }
         return state;
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
         BlockPos blockPos;
         BlockState blockState;
         BedPart bedPart;
-        if (!world.isClient && player.isCreative() && (bedPart = state.get(PART)) == BedPart.FOOT && (blockState = world.getBlockState(blockPos = pos.offset(getDirectionTowardsOtherPart(bedPart, state.get(FACING))))).isOf(this) && blockState.get(PART) == BedPart.HEAD) {
-            world.setBlockState(blockPos, Blocks.AIR.getDefaultState(), Block.NOTIFY_ALL | Block.SKIP_DROPS);
-            world.syncWorldEvent(player, WorldEvents.BLOCK_BROKEN, blockPos, Block.getRawIdFromState(blockState));
+        if (!world.isClientSide && player.isCreative() && (bedPart = state.getValue(PART)) == BedPart.FOOT && (blockState = world.getBlockState(blockPos = pos.relative(getDirectionTowardsOtherPart(bedPart, state.getValue(FACING))))).is(this) && blockState.getValue(PART) == BedPart.HEAD) {
+            world.setBlock(blockPos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL | Block.UPDATE_SUPPRESS_DROPS);
+            world.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, blockPos, Block.getId(blockState));
         }
-        this.spawnBreakParticles(world, player, pos, state);
-        if (state.isIn(BlockTags.GUARDED_BY_PIGLINS)) {
-            PiglinBrain.onGuardedBlockInteracted(player, false);
+        this.spawnDestroyParticles(world, player, pos, state);
+        if (state.is(BlockTags.GUARDED_BY_PIGLINS)) {
+            PiglinAi.angerNearbyPiglins(player, false);
         }
-        world.emitGameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+        world.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        super.appendProperties(stateManager);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        super.createBlockStateDefinition(stateManager);
     }
 
-    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
             return 20;
         }
@@ -158,19 +163,19 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
         return super.getFluidState(state);
     }
 
-    static final VoxelShape HEAD = VoxelShapes.union(createCuboidShape(0, 9, 0,16, 14, 3),createCuboidShape(0, 0, 0,16, 9, 16));
+    static final VoxelShape HEAD = Shapes.or(box(0, 9, 0,16, 14, 3),box(0, 0, 0,16, 9, 16));
     static final VoxelShape HEAD_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, HEAD);
     static final VoxelShape HEAD_EAST = rotateShape(Direction.NORTH, Direction.EAST, HEAD);
     static final VoxelShape HEAD_WEST = rotateShape(Direction.NORTH, Direction.WEST, HEAD);
 
-    static final VoxelShape FOOT_EAST = VoxelShapes.union(createCuboidShape(0, 9, 0,3, 10, 16),createCuboidShape(0, 0, 0,16, 9, 16));
+    static final VoxelShape FOOT_EAST = Shapes.or(box(0, 9, 0,3, 10, 16),box(0, 0, 0,16, 9, 16));
     static final VoxelShape FOOT_SOUTH = rotateShape(Direction.EAST, Direction.SOUTH, FOOT_EAST);
     static final VoxelShape FOOT_WEST = rotateShape(Direction.EAST, Direction.WEST, FOOT_EAST);
     static final VoxelShape FOOT_NORTH = rotateShape(Direction.EAST, Direction.NORTH, FOOT_EAST);
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        return getBedShape(state.get(FACING), state.get(PART), HEAD, FOOT_NORTH, HEAD_EAST, FOOT_EAST, HEAD_WEST, FOOT_WEST, HEAD_SOUTH, FOOT_SOUTH);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return getBedShape(state.getValue(FACING), state.getValue(PART), HEAD, FOOT_NORTH, HEAD_EAST, FOOT_EAST, HEAD_WEST, FOOT_WEST, HEAD_SOUTH, FOOT_SOUTH);
     }
 
     static VoxelShape getBedShape(Direction direction, BedPart bedPart2, VoxelShape head, VoxelShape footNorth, VoxelShape headEast, VoxelShape footEast, VoxelShape headWest, VoxelShape footWest, VoxelShape headSouth, VoxelShape footSouth) {
@@ -203,7 +208,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter world, BlockPos pos, PathComputationType type) {
         return false;
     }
 
@@ -213,17 +218,17 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new PFMBedBlockEntity(pos, state, this.color);
     }
 
     @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(state.get(FACING)));
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 }

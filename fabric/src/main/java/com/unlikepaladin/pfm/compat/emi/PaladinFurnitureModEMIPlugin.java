@@ -13,17 +13,17 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.resources.ResourceLocation;
 
 public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
     protected static EmiRecipeCategory FURNITURE;
     protected static EmiRecipeCategory FREEZER;
 
     public static EmiIngredient WORKBENCH_ICON = EmiStack.of(PaladinFurnitureModBlocksItems.WORKING_TABLE);
-    public static Identifier WORKBENCH_ID = new Identifier("pfm:furniture");
+    public static ResourceLocation WORKBENCH_ID = new ResourceLocation("pfm:furniture");
     public static EmiIngredient FREEZER_ICON = EmiStack.of(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
-    public static Identifier FREEZER_ID = new Identifier("pfm:freezer");
+    public static ResourceLocation FREEZER_ID = new ResourceLocation("pfm:freezer");
     @Override
     public void register(EmiRegistry registry) {
         FURNITURE  = new EmiRecipeCategory(WORKBENCH_ID, WORKBENCH_ICON, simplifiedRenderer(240, 240));
@@ -37,10 +37,10 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
         registry.addRecipeHandler(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, new FurnitureRecipeHandler());
         registry.addRecipeHandler(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, new FreezerRecipeHandler(FREEZER));
 
-        for (FurnitureRecipe recipe : registry.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE)) {
+        for (FurnitureRecipe recipe : registry.getRecipeManager().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE)) {
             registry.addRecipe(new EmiFurnitureRecipe(recipe));
         }
-        for (FreezingRecipe recipe : registry.getRecipeManager().listAllOfType(RecipeTypes.FREEZING_RECIPE)) {
+        for (FreezingRecipe recipe : registry.getRecipeManager().getAllRecipesFor(RecipeTypes.FREEZING_RECIPE)) {
             registry.addRecipe(new EmiFreezingRecipe(recipe));
         }
     }
@@ -48,7 +48,7 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
     private static EmiRenderable simplifiedRenderer(int u, int v) {
         return (matrices, x, y, delta) -> {
             RenderSystem.setShaderTexture(0, EmiRenderHelper.WIDGETS);
-            DrawableHelper.drawTexture(matrices, x, y, u, v, 16, 16, 256, 256);
+            GuiComponent.blit(matrices, x, y, u, v, 16, 16, 256, 256);
         };
     }
 }

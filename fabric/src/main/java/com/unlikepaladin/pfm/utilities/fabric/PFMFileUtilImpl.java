@@ -4,7 +4,7 @@ import com.unlikepaladin.pfm.mixin.fabric.PFMGroupResourcePackAccessor;
 import net.fabricmc.fabric.impl.resource.loader.GroupResourcePack;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.resource.ResourcePack;
+import net.minecraft.server.packs.PackResources;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -16,8 +16,8 @@ public class PFMFileUtilImpl {
         return FabricLoader.getInstance().getGameDir();
     }
 
-    public static List<ResourcePack> getSubPacks(ResourcePack pack) {
-        List<ResourcePack> list = new ArrayList<>();
+    public static List<PackResources> getSubPacks(PackResources pack) {
+        List<PackResources> list = new ArrayList<>();
         if (pack instanceof GroupResourcePack groupResourcePack) {
             list.addAll(((PFMGroupResourcePackAccessor)groupResourcePack).getPacks());
         }

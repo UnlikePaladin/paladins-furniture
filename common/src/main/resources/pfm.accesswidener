@@ -1,13 +1,13 @@
 accessWidener v1 named
 
-accessible class net/minecraft/recipe/CookingRecipeSerializer$RecipeFactory
-accessible class net/minecraft/block/entity/BlockEntityType$BlockEntityFactory
-accessible method net/minecraft/data/server/BlockLootTableGenerator drops (Lnet/minecraft/item/ItemConvertible;)Lnet/minecraft/loot/LootTable$Builder;
-accessible method net/minecraft/data/server/BlockLootTableGenerator dropsWithProperty (Lnet/minecraft/block/Block;Lnet/minecraft/state/property/Property;Ljava/lang/Comparable;)Lnet/minecraft/loot/LootTable$Builder;
-accessible class net/minecraft/data/server/AbstractTagProvider$ObjectBuilder
-accessible method net/minecraft/client/render/item/ItemRenderer renderBakedItemModel (Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;)V
-accessible class net/minecraft/data/DataCache$CachedDataWriter
-accessible class net/minecraft/data/DataCache$CachedData
-accessible field net/minecraft/block/AbstractBlock$Settings material Lnet/minecraft/block/Material;
-accessible method net/minecraft/client/gui/screen/DialogScreen <init> (Lnet/minecraft/text/Text;Ljava/util/List;Lcom/google/common/collect/ImmutableList;)V
-accessible field net/minecraft/client/texture/Sprite images [Lnet/minecraft/client/texture/NativeImage;
+accessible class net/minecraft/world/item/crafting/SimpleCookingSerializer$CookieBaker
+accessible class net/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier
+accessible method net/minecraft/data/loot/BlockLoot createSingleItemTable (Lnet/minecraft/world/level/ItemLike;)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
+accessible method net/minecraft/data/loot/BlockLoot createSinglePropConditionTable (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/state/properties/Property;Ljava/lang/Comparable;)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
+accessible class net/minecraft/data/tags/TagsProvider$TagAppender
+accessible method net/minecraft/client/renderer/entity/ItemRenderer renderModelLists (Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V
+accessible class net/minecraft/data/HashCache$CachedDataWriter
+accessible class net/minecraft/data/HashCache$CachedData
+accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties material Lnet/minecraft/world/level/material/Material;
+accessible method net/minecraft/client/gui/screens/PopupScreen <init> (Lnet/minecraft/network/chat/Component;Ljava/util/List;Lcom/google/common/collect/ImmutableList;)V
+accessible field net/minecraft/client/renderer/texture/TextureAtlasSprite mainImage [Lcom/mojang/blaze3d/platform/NativeImage;

@@ -1,29 +1,17 @@
 package com.unlikepaladin.pfm.registry.dynamic.forge;
 
-import com.google.common.collect.ImmutableSet;
-import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.forge.PaladinFurnitureModForge;
 import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypesAccessor;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import com.unlikepaladin.pfm.registry.forge.BlockItemRegistryImpl;
-import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.world.poi.PointOfInterestType;
-import net.minecraft.world.poi.PointOfInterestTypes;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegisterEvent;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraftforge.event.RegistryEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
@@ -38,7 +26,7 @@ public class LateBlockRegistryImpl {
         items.put(itemName, itemSup);
     }
 
-    public static <T extends Block> T registerLateBlock(String blockId, Supplier<T> blockSup, boolean registerItem, ItemGroup group) {
+    public static <T extends Block> T registerLateBlock(String blockId, Supplier<T> blockSup, boolean registerItem, CreativeModeTab group) {
         T block = blockSup.get();
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
@@ -48,16 +36,16 @@ public class LateBlockRegistryImpl {
         return block;
     }
 
-    public static void registerBlockItemPlatformSpecific(String itemName, Block block, ItemGroup group) {
-        if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
-            registerLateItem(itemName, () -> new BlockItem(block, new Item.Settings().group(group)) {
+    public static void registerBlockItemPlatformSpecific(String itemName, Block block, CreativeModeTab group) {
+        if (block.defaultBlockState().getMaterial() == Material.WOOD || block.defaultBlockState().getMaterial() == Material.WOOL) {
+            registerLateItem(itemName, () -> new BlockItem(block, new BlockItem.Properties().tab(group)) {
                 @Override
                 public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
                     return 300;
                 }
             });
         }
-        registerLateItem(itemName, () -> new BlockItem(block, new Item.Settings().group(group)));
+        registerLateItem(itemName, () -> new BlockItem(block, new BlockItem.Properties().tab(group)));
     }
 
 
@@ -78,7 +66,7 @@ public class LateBlockRegistryImpl {
         });
     }
 
-    public static <T extends Block> T registerLateBlockClassic(String blockId, T block, boolean registerItem, ItemGroup group) {
+    public static <T extends Block> T registerLateBlockClassic(String blockId, T block, boolean registerItem, CreativeModeTab group) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerBlockItemPlatformSpecific(blockId, block, group);
