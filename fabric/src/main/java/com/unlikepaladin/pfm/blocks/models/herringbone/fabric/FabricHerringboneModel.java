@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
 
     static Material herringboneTextureId = new Material(InventoryMenu.BLOCK_ATLAS, PFMSpriteRegistry.HERRINGBONE_PLANKS);
     @Override
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         VariantBase<?> variant = getVariant(state);
         if (variant instanceof WoodVariant) {
             generateTextureIfNeeded(context, variant);
@@ -75,7 +75,7 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (!(stack.getItem() instanceof BlockItem)) return;
 
         VariantBase<?> variant = getVariant(((BlockItem) stack.getItem()).getBlock().defaultBlockState());

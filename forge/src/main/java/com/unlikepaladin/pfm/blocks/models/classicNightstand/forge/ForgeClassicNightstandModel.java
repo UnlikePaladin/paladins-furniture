@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class ForgeClassicNightstandModel extends PFMForgeBakedModel {
 
@@ -30,7 +30,7 @@ public class ForgeClassicNightstandModel extends PFMForgeBakedModel {
 
     @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType renderType) {
         if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             List<BakedQuad> originalQuads = new ArrayList<>();
             BitSet data = extraData.get(CONNECTIONS).connections;
@@ -77,7 +77,7 @@ public class ForgeClassicNightstandModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         List<TextureAtlasSprite> spriteList = getSpriteList(stack);
         List<BakedQuad> originalQuads = getTemplateBakedModels().get(3).getQuads(state, face, random);
         return getQuadsWithTexture(originalQuads, ModelHelper.getOakPlankLogSprites(), spriteList);

@@ -8,7 +8,8 @@ import net.minecraft.nbt.ByteTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.network.chat.contents.TranslatableContents;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.DataOutput;
@@ -49,7 +50,7 @@ public abstract class AbstractConfigOption<T> implements Comparable<String> {
     }
     @Override
     public String toString() {
-        return "{Type: " + getType() + ", Title: " + ((TranslatableComponent)getTitle()).getKey() + ", Category: " + getCategory() +  ", Value: " + getValue() + ", Side:" + getSide() + "}";
+        return "{Type: " + getType() + ", Title: " + ((TranslatableContents)getTitle().getContents()).getKey() + ", Category: " + getCategory() +  ", Value: " + getValue() + ", Side:" + getSide() + "}";
     }
 
     public abstract void write(DataOutput output) throws IOException;

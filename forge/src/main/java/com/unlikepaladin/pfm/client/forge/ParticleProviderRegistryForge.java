@@ -13,6 +13,6 @@ public class ParticleProviderRegistryForge {
 
     @SubscribeEvent
     public static void registerParticleFactory(RegisterParticleProvidersEvent event) {
-        event.register(ParticleIDs.WATER_DROP, BlockLeakParticle.FallingWaterFactory::new);
+        event.register(ParticleIDs.WATER_DROP, DripParticle.WaterFallProvider::new);
     }
 }

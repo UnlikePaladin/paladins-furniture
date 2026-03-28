@@ -36,13 +36,13 @@ public class ColorRegistryImpl {
         if (BLOCK_COLOR_PROVIDER_MAP.containsKey(block)) {
             return BLOCK_COLOR_PROVIDER_MAP.get(block);
         }
-        return ((BlockColorsExtension) blockColors).getColorMap().get(block.getRegistryEntry());
+        return ((BlockColorsExtension) blockColors).getColorMap().get(block.builtInRegistryHolder());
     }
 
     public static ItemColor getItemColor(Item item) {
         if (ITEM_COLOR_PROVIDER_MAP.containsKey(item)) {
             return ITEM_COLOR_PROVIDER_MAP.get(item);
         }
-        return ((ItemColorsExtension) itemColors).getColorMap().get(item.getRegistryEntry());
+        return ((ItemColorsExtension) itemColors).getColorMap().get(item.builtInRegistryHolder());
     }
 }

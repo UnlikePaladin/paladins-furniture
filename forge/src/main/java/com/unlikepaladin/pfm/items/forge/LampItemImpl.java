@@ -2,11 +2,7 @@ package com.unlikepaladin.pfm.items.forge;
 
 import com.unlikepaladin.pfm.items.LampItem;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.BlockItem;
-import net.minecraftforge.client.IItemRenderProperties;
-
-import java.util.function.Consumer;
 
 public class LampItemImpl extends LampItem {
     public LampItemImpl(Block block, Properties settings) {

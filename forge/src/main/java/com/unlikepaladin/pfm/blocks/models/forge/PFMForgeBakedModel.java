@@ -31,17 +31,17 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public abstract class PFMForgeBakedModel extends AbstractBakedModel implements PFMBakedModelGetQuadsExtension {
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         return getQuads(state, face, random);
     }
 
     protected Map<Pair<ItemStack, Direction>, List<BakedQuad>> cache = new HashMap<>();
     @Override
-    public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         Pair<ItemStack, Direction> directionPair = new Pair<>(stack, face);
         if (cache.containsKey(directionPair))
             return cache.get(directionPair);
@@ -158,11 +158,11 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
                     float[][] uv = new float[4][2];
                     for (int vertexIndx = 0; vertexIndx < 4; vertexIndx++) {
                         unpackUV(vertexData, uv[vertexIndx], vertexIndx);
-                        Sprite originalSprite = quad.getSprite();
-                        float frameU = originalSprite.method_35804(uv[vertexIndx][0]);
-                        float frameV = originalSprite.method_35805(uv[vertexIndx][1]);
-                        uv[vertexIndx][0] = sprite.getFrameU(frameU);
-                        uv[vertexIndx][1] = sprite.getFrameV(frameV);
+                        TextureAtlasSprite originalSprite = quad.getSprite();
+                        float frameU = originalSprite.getUOffset(uv[vertexIndx][0]);
+                        float frameV = originalSprite.getVOffset(uv[vertexIndx][1]);
+                        uv[vertexIndx][0] = sprite.getU(frameU);
+                        uv[vertexIndx][1] = sprite.getV(frameV);
                         packUV(uv[vertexIndx], vertexData, vertexIndx);
                     }
                     return new BakedQuad(vertexData, quad.getTintIndex(), quad.getDirection(), sprite, quad.isShade());
@@ -198,7 +198,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         int id = 0;
         for (VertexFormatElement element1 : DefaultVertexFormat.BLOCK.getElements())
         {
-            if (element1.getType() == type && element1.getUvIndex() == index)
+            if (element1.getUsage() == type && element1.getIndex() == index)
                 break;
             id++;
         }
@@ -219,7 +219,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     }
 
     public ModelData.Builder getPropertiesForItem(ItemStack stack, ModelData data)  {
-        BlockState state = stack.getItem() instanceof BlockItem ? ((BlockItem) stack.getItem()).getBlock().getDefaultState() : null;
+        BlockState state = stack.getItem() instanceof BlockItem ? ((BlockItem) stack.getItem()).getBlock().defaultBlockState() : null;
         if (state != null) {
             return data.derive().with(STATE,  state);
         }
@@ -228,9 +228,9 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
     @Override
     public List<BakedModel> getRenderPasses(ItemStack itemStack, boolean fabulous) {
-        BlockState state = itemStack.getItem() instanceof BlockItem ? ((BlockItem) itemStack.getItem()).getBlock().getDefaultState() : null;
+        BlockState state = itemStack.getItem() instanceof BlockItem ? ((BlockItem) itemStack.getItem()).getBlock().defaultBlockState() : null;
         Map<Direction, List<BakedQuad>> map = new HashMap<>();
-        Random random = Random.createLocal();
+        RandomSource random = RandomSource.createNewThreadLocalInstance();
         for (Direction direction : Direction.values()) {
             map.put(direction, getQuadsCached(itemStack, state, direction, random));
         }
@@ -293,7 +293,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         }
 
         @Override
-        public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
+        public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random) {
             return transformedQuads.get(face);
         }
 

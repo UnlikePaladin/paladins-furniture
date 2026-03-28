@@ -62,8 +62,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
 
     @Override
     public void travel(Vec3 movementInput) {
-        if (this.isVehicle() && this.canBeControlledByRider()) {
-            LivingEntity livingEntity = (LivingEntity)this.getControllingPassenger();
+        if (this.isVehicle() && this.getControllingPassenger() instanceof LivingEntity livingEntity) {
             this.yRotO = this.getYRot();
             this.setXRot(livingEntity.getXRot() * 0.5F);
             this.setRot(this.getYRot(), this.getXRot());

@@ -36,10 +36,7 @@ import net.minecraft.util.Tuple;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
@@ -451,23 +448,28 @@ public class PFMLangProvider extends PFMProvider {
         }
 
         @Override
-        public List<Resource> getAllResources(Identifier id) {
-            return this.activeManager.getAllResources(id);
+        public List<Resource> getResourceStack(ResourceLocation resourceLocation) {
+            return activeManager.getResourceStack(resourceLocation);
         }
 
         @Override
-        public Map<ResourceLocation, List<Resource>> findAllResources(String startingPath, Predicate<ResourceLocation> allowedPathPredicate) {
-            return this.activeManager.findAllResources(startingPath, allowedPathPredicate);
+        public Map<ResourceLocation, Resource> listResources(String string, Predicate<ResourceLocation> predicate) {
+            return activeManager.listResources(string, predicate);
         }
 
         @Override
-        public Map<ResourceLocation, Resource> findResources(String startingPath, Predicate<ResourceLocation> pathPredicate) {
-            return this.activeManager.findResources(startingPath, pathPredicate);
+        public Map<ResourceLocation, List<Resource>> listResourceStacks(String string, Predicate<ResourceLocation> predicate) {
+            return Map.of();
+        }
+
+        @Override
+        public Resource getResourceOrThrow(ResourceLocation resourceLocation) throws FileNotFoundException {
+            return activeManager.getResourceOrThrow(resourceLocation);
         }
 
         @Override
         public Stream<PackResources> listPacks() {
-            return this.activeManager.listPacks();
+            return activeManager.listPacks();
         }
     }
 

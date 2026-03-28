@@ -101,12 +101,12 @@ public final class TextureReloadQueue {
         }
 
         Resource resource = optionalResource.get();
-        Sprite original = spriteAtlas.getSprite(id);
+        TextureAtlasSprite original = spriteAtlas.getSprite(id);
 
-        AnimationMetadataSection animationResourceMetadata = resource.getMetadata().decode(AnimationResourceMetadata.READER)
+        AnimationMetadataSection animationResourceMetadata = resource.metadata().getSection(AnimationMetadataSection.SERIALIZER)
                 .orElse(AnimationMetadataSection.EMPTY);
 
-        PngInfo pngFile = new PngInfo(path::toString, resource.getInputStream());
+        PngInfo pngFile = new PngInfo(path::toString, resource.open());
         TextureAtlasSprite.Info info = new TextureAtlasSprite.Info(id, pngFile.width, pngFile.height, animationResourceMetadata);
 
         SpriteCoordinates coords = PFMSpriteRegistry.PFM_SPRITE_COORDINATES.get(id);
@@ -124,7 +124,7 @@ public final class TextureReloadQueue {
             atlasWidth = Math.round(original.getX() / original.getU0());
             atlasHeight = Math.round(original.getY() / original.getV0());
         }
-        int mipMapSizeConfig = Minecraft.getInstance().options.getMipmapLevels().getValue();
+        int mipMapSizeConfig = Minecraft.getInstance().options.mipmapLevels().get();
         Integer maxLevelWhenStiching = ((PFMSpriteAtlasTexturesExtensions)spriteAtlas).pfm$getMaxLevel();
         int mipMapSize = maxLevelWhenStiching != null ? Math.min(Math.min(mipMapSizeConfig, ((PFMSpriteExtensions)original).pfm$getMipmapLevel()), maxLevelWhenStiching) : Math.min(mipMapSizeConfig, ((PFMSpriteExtensions)original).pfm$getMipmapLevel());
 

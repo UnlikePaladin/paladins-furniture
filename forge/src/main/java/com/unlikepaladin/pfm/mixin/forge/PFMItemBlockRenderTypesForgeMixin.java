@@ -36,9 +36,9 @@ public abstract class PFMItemBlockRenderTypesForgeMixin {
 
     @Unique
     private static final Map<BlockState, ChunkRenderTypeSet> pfm$renderLayers = new HashMap<>();
-    @Inject(method = "getRenderLayers", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "getRenderLayers", at = @At("TAIL"), cancellable = true, remap = false)
     private static void modifyFurnitureRenderLayer(BlockState state, CallbackInfoReturnable<ChunkRenderTypeSet> cir) {
-        if (state.getBlock().getTranslationKey().contains("pfm")) {
+        if (state.getBlock().getDescriptionId().contains("pfm")) {
             if (pfm$renderLayers.containsKey(state)) {
                 cir.setReturnValue(pfm$renderLayers.get(state));
                 return;
@@ -54,10 +54,10 @@ public abstract class PFMItemBlockRenderTypesForgeMixin {
                     ChunkRenderTypeSet combinedRenderTypes = ChunkRenderTypeSet.union(baseRenderTypes, currentRenderTypes);
 
                     // Prioritize cutout and translucent over solid
-                    if (combinedRenderTypes.contains(RenderLayer.getCutout()) || combinedRenderTypes.contains(RenderLayer.getTranslucent()) || combinedRenderTypes.contains(RenderLayer.getCutoutMipped())) {
+                    if (combinedRenderTypes.contains(RenderType.cutout()) || combinedRenderTypes.contains(RenderType.translucent()) || combinedRenderTypes.contains(RenderType.cutoutMipped())) {
                         // Remove solid if higher-priority layers are present
                         combinedRenderTypes = ChunkRenderTypeSet.intersection(combinedRenderTypes,
-                                ChunkRenderTypeSet.of(RenderLayer.getCutout(), RenderLayer.getTranslucent(), RenderLayer.getCutoutMipped())
+                                ChunkRenderTypeSet.of(RenderType.cutout(), RenderType.translucent(), RenderType.cutoutMipped())
                         );
                     }
 
@@ -70,7 +70,7 @@ public abstract class PFMItemBlockRenderTypesForgeMixin {
             if (state.getBlock() instanceof DynamicRenderLayerInterface) {
                 RenderType renderLayer = ((DynamicRenderLayerInterface) state.getBlock()).getCustomRenderLayer();
                 if (PaladinFurnitureMod.getPFMConfig().isShaderSolidFixOn())
-                    cir.setReturnValue(PaladinFurnitureModClient.areShadersOn() ? ChunkRenderTypeSet.of(RenderLayer.getSolid()) : ChunkRenderTypeSet.of(renderLayer));
+                    cir.setReturnValue(PaladinFurnitureModClient.areShadersOn() ? ChunkRenderTypeSet.of(RenderType.solid()) : ChunkRenderTypeSet.of(renderLayer));
                 else
                     cir.setReturnValue(ChunkRenderTypeSet.of(renderLayer));
             }

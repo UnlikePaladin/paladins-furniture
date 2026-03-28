@@ -23,7 +23,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 
 import java.util.Optional;
@@ -78,7 +78,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
 
     public static void clientTick(Level world, BlockPos pos, BlockState state, StovetopBlockEntity stovetopBlockEntity) {
         int i;
-        Random random = world.random;
+        RandomSource random = world.random;
         i = state.getValue(KitchenStovetopBlock.FACING).getClockWise().get2DDataValue();
         for (int j = 0; j < stovetopBlockEntity.itemsBeingCooked.size(); ++j) {
             ItemStack stack = stovetopBlockEntity.itemsBeingCooked.get(j);

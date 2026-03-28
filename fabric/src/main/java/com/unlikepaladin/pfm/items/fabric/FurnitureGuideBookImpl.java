@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResultHolder;
@@ -28,7 +28,7 @@ public class FurnitureGuideBookImpl extends FurnitureGuideBook {
         }
         else if (world.isClientSide && !FabricLoader.getInstance().isModLoaded("patchouli"))
         {
-            Component text = new TranslatableComponent("message.pfm.patchouli_not_installed").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/UnlikePaladin/paladins-furniture/wiki")));
+            Component text = Component.translatable("message.pfm.patchouli_not_installed").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/UnlikePaladin/paladins-furniture/wiki")));
             user.displayClientMessage(text,false);
         }
         return InteractionResultHolder.pass(user.getItemInHand(hand));

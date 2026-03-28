@@ -44,7 +44,7 @@ public class PathPackRPWrapper implements PackResources {
     }
 
     @Override
-    public Collection<ResourceLocation> getResources(PackType type, String namespace, String prefix, Predicate<Identifier> allowedPathPredicate) {
+    public Collection<ResourceLocation> getResources(PackType type, String namespace, String prefix, Predicate<ResourceLocation> allowedPathPredicate) {
         if (PFMRuntimeResources.ready)
             return delegate.get().getResources(type, namespace, prefix, allowedPathPredicate);
         return new ArrayList<>();

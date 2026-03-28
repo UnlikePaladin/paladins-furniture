@@ -21,14 +21,14 @@ import net.minecraft.client.gui.Font;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceLocation;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
-    public static final TranslatableComponent TITLE = new TranslatableComponent("rei.pfm.freezer");
+    public static final Component TITLE = Component.translatable("rei.pfm.freezer");
     public final IDrawable ICON;
     public static final ResourceLocation IDENTIFIER = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "freezing");
     private final IDrawable BACKGROUND;

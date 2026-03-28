@@ -10,10 +10,7 @@ import net.minecraft.world.item.ItemStack;
 import com.mojang.math.Quaternion;
 import net.minecraft.world.level.Level;
 
-import java.util.Random;
-
 public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBlockEntityBalm> {
-    private static final Random random = new Random();
 
     public StoveBlockEntityRendererBalm(BlockEntityRendererProvider.Context context) {
     }

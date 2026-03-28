@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceLocation;
 
 public class TrashcanScreen extends AbstractContainerScreen<TrashcanScreenHandler> {
@@ -21,7 +21,7 @@ public class TrashcanScreen extends AbstractContainerScreen<TrashcanScreenHandle
     public TrashcanScreen(TrashcanScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
     }
-    private static final TranslatableComponent startButtonText = new TranslatableComponent("gui.pfm.trashcan.clear_button");
+    private static final Component startButtonText = Component.translatable("gui.pfm.trashcan.clear_button");
 
     @Override
     public void init() {

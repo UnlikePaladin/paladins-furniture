@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.blocks.ClassicDeskBlock;
 import com.unlikepaladin.pfm.blocks.ClassicDeskCabinetBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 
@@ -146,7 +146,7 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
 
 
     @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
+    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType renderLayer) {
         DeskModelData deskData = extraData.get(DESK_DATA);
         if (deskData != null && (state.getBlock() instanceof ClassicDeskBlock || state.getBlock() instanceof ClassicDeskCabinetBlock)) {
 
@@ -466,7 +466,7 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
         return Collections.emptyList();
     }
 
-    private List<BakedQuad> middleDesk(BlockState state, Direction side, Random rand, RenderLayer renderLayer, ModelData extraData, boolean left, boolean right, int openOffset) {
+    private List<BakedQuad> middleDesk(BlockState state, Direction side, RandomSource rand, RenderType renderLayer, ModelData extraData, boolean left, boolean right, int openOffset) {
         if (left && right) {
             return getTemplateBakedModels().get((22 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
         }  else if (left) {
@@ -479,7 +479,7 @@ public class ForgeClassicDeskModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         if (stack.getItem() instanceof BlockItem) {
             int offset = ((BlockItem) stack.getItem()).getBlock() instanceof ClassicDeskCabinetBlock ? 1 : 0;
             // base

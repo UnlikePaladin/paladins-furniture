@@ -9,6 +9,7 @@ import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.registry.dynamic.forge.LateBlockRegistryForge;
 import com.unlikepaladin.pfm.registry.forge.*;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
@@ -16,7 +17,6 @@ import net.minecraft.SharedConstants;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddPackFindersEvent;
@@ -64,17 +64,17 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
 
     @SubscribeEvent
     public static void generateResources(AddPackFindersEvent event) {
-        if (event.getPackType() == ResourceType.CLIENT_RESOURCES) {
-            PackMetadataSection packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getPackVersion(PackType.RESOURCE));
-            event.addRepositorySource((profileAdder, factory) -> profileAdder.accept(factory.create("pfm-asset-resources", Text.literal("PFM Assets"), true,
+        if (event.getPackType() == net.minecraft.server.packs.PackType.CLIENT_RESOURCES) {
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Assets for PFM"), SharedConstants.getCurrentVersion().getPackVersion(PackType.RESOURCE));
+            event.addRepositorySource((profileAdder, factory) -> profileAdder.accept(factory.create("pfm-asset-resources", Component.literal("PFM Assets"), true,
                     () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.areAssetsRunning())
                             PFMRuntimeResources.prepareAndRunAssetGen(false);
                         return PFMRuntimeResources.ASSETS_PACK;}), packResourceMetadata)
-                    , packResourceMetadata, ResourcePackProfile.InsertionPosition.BOTTOM, ResourcePackSource.PACK_SOURCE_NONE, false)));
-        } else if (event.getPackType() == ResourceType.SERVER_DATA) {
-            PackMetadataSection packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().getPackVersion(PackType.DATA));
-            event.addRepositorySource((profileAdder, factory) -> profileAdder.accept(factory.create("pfm-data-resources", Text.literal("PFM Data"), true,
+                    , packResourceMetadata, Pack.Position.BOTTOM, PackSource.DEFAULT, false)));
+        } else if (event.getPackType() == net.minecraft.server.packs.PackType.SERVER_DATA) {
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Data for PFM"), SharedConstants.getCurrentVersion().getPackVersion(PackType.DATA));
+            event.addRepositorySource((profileAdder, factory) -> profileAdder.accept(factory.create("pfm-data-resources", Component.literal("PFM Data"), true,
                     () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.isDataRunning())
                             PFMRuntimeResources.prepareAndRunDataGen(false);

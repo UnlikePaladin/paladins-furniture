@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
 import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.DyeColor;
@@ -21,7 +22,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.*;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
@@ -93,7 +93,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
         }
         if (state.getValue(OCCUPIED)) {
             if (!this.isFree(world, pos)) {
-                player.displayClientMessage(new TranslatableComponent("block.minecraft.bed.occupied"), true);
+                player.displayClientMessage(Component.translatable("block.minecraft.bed.occupied"), true);
             }
             return InteractionResult.SUCCESS;
         }

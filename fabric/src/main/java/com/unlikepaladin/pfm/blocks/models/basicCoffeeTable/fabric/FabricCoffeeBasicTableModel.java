@@ -12,7 +12,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class FabricCoffeeBasicTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof BasicCoffeeTableBlock) {
             Direction.Axis dir = state.getValue(BasicCoffeeTableBlock.AXIS);
             BasicCoffeeTableBlock block = (BasicCoffeeTableBlock) state.getBlock();
@@ -168,7 +168,7 @@ public class FabricCoffeeBasicTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (stack.getItem() instanceof BlockItem) {
             pushTextureTransform(context, getSpriteList(stack).get(0));
             // base

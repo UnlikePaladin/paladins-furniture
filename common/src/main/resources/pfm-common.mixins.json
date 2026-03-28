@@ -5,24 +5,24 @@
   "compatibilityLevel": "JAVA_8",
   "mixins": [
     "PFMDataCache$CachedDataMixin",
-    "PFMPlayerInventoryMixin",
     "PFMPointOfInterestTypeAccessor",
-    "PFMTextureKeyFactory"
+    "PFMPointOfInterestTypesAccessor",
+    "PFMInventoryMixin"
   ],
   "server": [
     "PFMMixinDedicatedServer"
   ],
   "client": [
-    "PFMModelManagerMixin",
     "PFMLanguageManagerAccessor",
-    "PFMMixinClientPacketListener",
-    "PFMSimpleReloadableResourceManagerMixin",
     "PFMLoadingOverlayMixin",
-    "PFMTextureAtlasAccessor",
+    "PFMMixinClientPacketListener",
+    "PFMModelManagerMixin",
+    "PFMSimpleReloadableResourceManagerMixin",
     "PFMSpriteInfoAccesor",
+    "PFMTextureAtlasAccessor",
     "PFMTextureAtlasSpriteMixin",
-    "PFMTitleScreenMixin",
-    "PFMTextureSlotFactory"
+    "PFMTextureSlotFactory",
+    "PFMTitleScreenMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -2,6 +2,8 @@ package com.unlikepaladin.pfm.blocks.models.ladder.forge;
 
 import com.unlikepaladin.pfm.blocks.SimpleBunkLadderBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -11,8 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,7 +28,7 @@ public class ForgeLadderModel extends PFMForgeBakedModel {
 
     @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer layer) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType layer) {
         if (state != null && state.getBlock() instanceof SimpleBunkLadderBlock) {
             int offset = state.getValue(SimpleBunkLadderBlock.UP) ? 1 : 0;
             TextureAtlasSprite sprite = getSpriteList(state).get(0);
@@ -42,7 +43,7 @@ public class ForgeLadderModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         TextureAtlasSprite sprite = getSpriteList(stack).get(0);
         return getQuadsWithTexture(getTemplateBakedModels().get(0).getQuads(state, face, random), new SpriteData(sprite));
     }

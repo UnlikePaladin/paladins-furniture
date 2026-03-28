@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.level.Level;
@@ -26,7 +26,7 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
     public boolean isActive;
     private MicrowaveBlockEntity microwaveBlockEntity;
 
-    private final Component startButtonText = new TranslatableComponent("gui.pfm.microwave.start_button");
+    private final Component startButtonText = Component.translatable("gui.pfm.microwave.start_button");
     public MicrowaveScreen(MicrowaveScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
     }

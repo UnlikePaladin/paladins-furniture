@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.unlikepaladin.pfm.client.PathPackRPWrapper;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.packs.PackResources;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

@@ -4,7 +4,7 @@ import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class ForgeKitchenSinkModel extends PFMForgeBakedModel {
     public ForgeKitchenSinkModel(ModelState settings, List<BakedModel> modelParts) {
@@ -28,7 +28,7 @@ public class ForgeKitchenSinkModel extends PFMForgeBakedModel {
 
     @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer layer) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType layer) {
         if (state != null && extraData.get(LEVEL) != null) {
             int level = extraData.get(LEVEL);
             List<BakedQuad> originalQuads = getTemplateBakedModels().get(level).getQuads(state, side, rand, extraData, layer);
@@ -48,14 +48,14 @@ public class ForgeKitchenSinkModel extends PFMForgeBakedModel {
 
             ModelData data = builder.build();
             data = super.getModelData(world, pos, state, data);
-            data = data.derive().with(LEVEL, state.get(KitchenSinkBlock.LEVEL_4)).build();
+            data = data.derive().with(LEVEL, state.getValue(KitchenSinkBlock.LEVEL_4)).build();
             return data;
         }
         return tileData;
     }
 
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         List<TextureAtlasSprite> spriteList = getSpriteList(stack);
         List<BakedQuad> originalQuads = getTemplateBakedModels().get(0).getQuads(state, face, random);
         return getQuadsWithTexture(originalQuads, ModelHelper.getOakPlankLogSprites(), spriteList);

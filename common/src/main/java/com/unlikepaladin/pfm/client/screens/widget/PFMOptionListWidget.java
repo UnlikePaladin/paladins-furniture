@@ -45,7 +45,7 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
             String configOptionCategory = configOptionEntry.getValue().getCategory();
             if (!configOptionCategory.equals(string)) {
                 string = configOptionCategory;
-                this.addEntry(new CategoryEntry(new TranslatableComponent(configOptionCategory)));
+                this.addEntry(new CategoryEntry(Component.translatable(configOptionCategory)));
             }
             if ((i = client.font.width(text = configOptionEntry.getValue().getTitle())) > this.maxKeyNameLength) {
                 this.maxKeyNameLength = i;
@@ -59,14 +59,14 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
             configOptionToIndexForHasChanges.put(configOptionEntry.getValue(), index);
             index++;
         }
-        this.addEntry(new CategoryEntry(new TextComponent("")));
-        this.addEntry(new ButtonEntry(Side.CLIENT, new TranslatableComponent("pfm.option.regenAssets"), new TranslatableComponent("pfm.config.regen"), new TranslatableComponent("pfm.option.regenAssets.tooltip"), button -> {
+        this.addEntry(new CategoryEntry(Component.literal("")));
+        this.addEntry(new ButtonEntry(Side.CLIENT, Component.translatable("pfm.option.regenAssets"), Component.translatable("pfm.config.regen"), Component.translatable("pfm.option.regenAssets.tooltip"), button -> {
             PFMFileUtil.deleteDir(PFMRuntimeResources.getAssetPackDirectory().toFile());
             PFMAssetGenerator.FROZEN = false;
             PFMRuntimeResources.prepareAndRunAssetGen(true);
             Minecraft.getInstance().delayTextureReload();
         }));
-        ButtonEntry entry = new ButtonEntry(Side.SERVER, new TranslatableComponent("pfm.option.regenData"), new TranslatableComponent("pfm.config.regen"), new TranslatableComponent("pfm.option.regenData.tooltip"), button -> {
+        ButtonEntry entry = new ButtonEntry(Side.SERVER, Component.translatable("pfm.option.regenData"), Component.translatable("pfm.config.regen"), Component.translatable("pfm.option.regenData.tooltip"), button -> {
             PFMFileUtil.deleteDir(PFMRuntimeResources.getDataPackDirectory().toFile());
             PFMDataGenerator.FROZEN = false;
             PFMRuntimeResources.prepareAndRunDataGen(true);
@@ -151,9 +151,9 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
             this.optionName = optionName;
             this.index = index;
             this.supplier = new Button.OnTooltip() {
-                final MutableComponent sideText = configOption.getSide() == Side.CLIENT ? new TranslatableComponent("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : new TranslatableComponent("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+                final MutableComponent sideText = configOption.getSide() == Side.CLIENT ? Component.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Component.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
                 final MutableComponent styledTooltip = ((MutableComponent)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true));
-                final MutableComponent combinedText = new TextComponent("").append(sideText).append(new TextComponent("\n")).append(styledTooltip);
+                final MutableComponent combinedText = Component.literal("").append(sideText).append(Component.literal("\n")).append(styledTooltip);
                 @Override
                 public void onTooltip(Button button, PoseStack matrices, int mouseX, int mouseY) {
                     PFMOptionListWidget.this.parent.renderTooltip(matrices, PFMOptionListWidget.this.minecraft.font.split(combinedText, Math.max(PFMOptionListWidget.this.width / 2 - 43, 170)), mouseX, mouseY);
@@ -172,7 +172,7 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
                 PFMOptionListWidget.this.hasChanges.set(index, hasChanges);
             }, this.supplier);
 
-            this.resetButton = new Button(0, 0, 50, 20, new TranslatableComponent("controls.reset"), button -> {
+            this.resetButton = new Button(0, 0, 50, 20, Component.translatable("controls.reset"), button -> {
                 PFMOptionListWidget.this.newConfigValues.put(configOption, configOption.getDefaultValue());
                 hasChanges = true;
                 PFMOptionListWidget.this.hasChanges.set(index, true);
@@ -180,7 +180,7 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
 
                 @Override
                 protected MutableComponent createNarrationMessage() {
-                    return new TranslatableComponent("narrator.controls.reset", optionName);
+                    return Component.translatable("narrator.controls.reset", optionName);
                 }
             };
         }
@@ -235,9 +235,9 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
             this.optionName = optionName;
             this.side = side;
             this.supplier = new Button.OnTooltip() {
-                final MutableComponent sideText = side == Side.CLIENT ? new TranslatableComponent("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : new TranslatableComponent("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+                final MutableComponent sideText = side == Side.CLIENT ? Component.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Component.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
                 final MutableComponent styledTooltip = ((MutableComponent)tooltip).setStyle(Style.EMPTY.withItalic(true));
-                final MutableComponent combinedText = new TextComponent("").append(sideText).append(new TextComponent("\n")).append(styledTooltip);
+                final MutableComponent combinedText = Component.literal("").append(sideText).append(Component.literal("\n")).append(styledTooltip);
                 @Override
                 public void onTooltip(Button button, PoseStack matrices, int mouseX, int mouseY) {
                     PFMOptionListWidget.this.parent.renderTooltip(matrices, PFMOptionListWidget.this.minecraft.font.split(combinedText, Math.max(PFMOptionListWidget.this.width / 2 - 43, 170)), mouseX, mouseY);

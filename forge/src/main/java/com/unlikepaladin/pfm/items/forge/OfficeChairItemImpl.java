@@ -21,7 +21,7 @@ public class OfficeChairItemImpl extends OfficeChairItem {
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(new IClientItemExtensions() {
             @Override
-            public BlockEntityWithoutLevelRenderer getItemStackRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return PFMItemRendererForge.INSTANCE;
             }
         });

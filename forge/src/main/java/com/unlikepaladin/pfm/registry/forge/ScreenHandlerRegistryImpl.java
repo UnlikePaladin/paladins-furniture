@@ -16,9 +16,9 @@ import java.util.Map;
 import java.util.function.BiFunction;
 
 public class ScreenHandlerRegistryImpl {
-    public static final Map<Identifier, ScreenHandlerType<?>> screenHandlerMap = new LinkedHashMap<>();
-    public static <T extends ScreenHandler> ScreenHandlerType<T> registerScreenHandlerExtended(Identifier id, TriFunc<Integer, PlayerInventory, PacketByteBuf, T> factory) {
-        ScreenHandlerType<T> type = IForgeMenuType.create(factory::apply);
+    public static final Map<ResourceLocation, MenuType<?>> screenHandlerMap = new LinkedHashMap<>();
+    public static <T extends AbstractContainerMenu> MenuType<T> registerScreenHandlerExtended(ResourceLocation id, TriFunc<Integer, Inventory, FriendlyByteBuf, T> factory) {
+        MenuType<T> type = IForgeMenuType.create(factory::apply);
         screenHandlerMap.put(id, type);
         return type;
     }

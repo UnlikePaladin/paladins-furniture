@@ -15,7 +15,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.LongTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -66,7 +66,7 @@ public class LightSwitchItem extends BlockItem {
                }
                else {
                     if (context.getLevel().isClientSide)
-                        context.getPlayer().displayClientMessage(new TranslatableComponent("message.pfm.light_switch_not_canopy"), false);
+                        context.getPlayer().displayClientMessage(Component.translatable("message.pfm.light_switch_not_canopy"), false);
                }
            }
            else {
@@ -108,7 +108,7 @@ public class LightSwitchItem extends BlockItem {
             }
 
             if (!removedLights.isEmpty() && context.getLevel().isClientSide){
-                context.getPlayer().displayClientMessage(new TranslatableComponent("message.pfm.light_switch_far", removedLights.toString()), false);
+                context.getPlayer().displayClientMessage(Component.translatable("message.pfm.light_switch_far", removedLights.toString()), false);
             }
         }
         return true;
@@ -178,7 +178,7 @@ public class LightSwitchItem extends BlockItem {
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         if (stack.hasTag() && getLights(stack) != null) {
             int lightNum = getLights(stack).size();
-            tooltip.add(new TranslatableComponent("tooltip.pfm.light_switch_connected", lightNum));
+            tooltip.add(Component.translatable("tooltip.pfm.light_switch_connected", lightNum));
         }
         super.appendHoverText(stack, world, tooltip, context);
     }

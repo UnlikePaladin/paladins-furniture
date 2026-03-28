@@ -17,7 +17,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
 import java.util.Map;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Supplier;
 
 public class FabricDinnerTableModel extends PFMFabricBakedModel {
@@ -30,7 +30,7 @@ public class FabricDinnerTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof DinnerTableBlock) {
             DinnerTableBlock block = (DinnerTableBlock) state.getBlock();
             Direction dir = state.getValue(DinnerTableBlock.FACING);
@@ -58,7 +58,7 @@ public class FabricDinnerTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (stack.getItem() instanceof BlockItem) {
             pushTextureTransform(context, getSpriteList(stack).get(0));
             // base

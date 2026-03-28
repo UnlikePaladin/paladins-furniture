@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.client.screens;
 
-import com.google.common.collect.Maps;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
@@ -9,8 +8,6 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.client.searchtree.SearchRegistry;
-import net.minecraft.client.searchtree.MutableSearchTree;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -20,23 +17,17 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.inventory.StonecutterMenu;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.locale.Language;
 import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHandler> {
@@ -65,7 +56,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
     @Override
     protected void init() {
         super.init();
-        this.searchBox = new EditBox(this.font, this.leftPos + 20, this.topPos + 18, 110, this.font.lineHeight, new TranslatableComponent("itemGroup.search"));
+        this.searchBox = new EditBox(this.font, this.leftPos + 20, this.topPos + 18, 110, this.font.lineHeight, Component.translatable("itemGroup.search"));
         this.searchBox.setMaxLength(50);
         this.searchBox.setBordered(false);
         this.searchBox.setVisible(true);
@@ -201,7 +192,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
                 iCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(iCopy));
             }
             tooltip.add(getTooltipFromItem(this.menu.getSortedRecipes().get(iCopy).getResultItem()).get(0));
-            tooltip.add(new TranslatableComponent("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
+            tooltip.add(Component.translatable("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
             HashMap<Item, Integer> itemStackCountMap = new HashMap<>();
             for (Ingredient ingredient : this.menu.getSortedRecipes().get(iCopy).getIngredients()) {
                 for (ItemStack stack : ingredient.getItems()) {
@@ -218,7 +209,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
                 if (itemCount < integer) {
                     style = style.withColor(ChatFormatting.RED);
                 }
-                tooltip.add(new TextComponent(integer + " ").append(new TextComponent(getTooltipFromItem(item.getDefaultInstance()).get(0).getString())).setStyle(style));
+                tooltip.add(Component.literal(integer + " ").append(Component.literal(getTooltipFromItem(item.getDefaultInstance()).get(0).getString())).setStyle(style));
             });
             this.renderComponentTooltip(matrices, tooltip, x, y);
         }

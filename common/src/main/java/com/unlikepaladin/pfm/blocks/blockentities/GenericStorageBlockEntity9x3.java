@@ -25,7 +25,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -123,13 +123,13 @@ public class GenericStorageBlockEntity9x3 extends RandomizableContainerBlockEnti
     String blockname = this.getBlockState().getBlock().getDescriptionId();
     protected Component getDefaultName() {
         if (this.getBlockState().getBlock() instanceof KitchenWallDrawerBlock)
-            return new TranslatableComponent("container.pfm.kitchen_cabinet");
+            return Component.translatable("container.pfm.kitchen_cabinet");
         else if (this.getBlockState().getBlock() instanceof KitchenDrawerBlock)
-            return new TranslatableComponent("container.pfm.drawer");
+            return Component.translatable("container.pfm.drawer");
         else if (this.getBlockState().getBlock() instanceof ClassicNightstandBlock)
-            return new TranslatableComponent("container.pfm.nightstand");
+            return Component.translatable("container.pfm.nightstand");
         else
-            return new TranslatableComponent("container.pfm.cabinet");
+            return Component.translatable("container.pfm.cabinet");
     }
 
     void setOpen(BlockState state, boolean open) {

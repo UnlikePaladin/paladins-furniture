@@ -19,7 +19,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
 import java.util.Map;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Supplier;
 
 public class FabricMirrorModel extends PFMFabricBakedModel {
@@ -37,7 +37,7 @@ public class FabricMirrorModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof MirrorBlock) {
             MirrorBlock block = (MirrorBlock) state.getBlock();
             Direction facing = state.getValue(MirrorBlock.FACING);
@@ -81,7 +81,7 @@ public class FabricMirrorModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         context.fallbackConsumer().accept(getTemplateBakedModels().get(0));
     }
 

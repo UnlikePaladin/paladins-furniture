@@ -9,7 +9,7 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.NonNullList;
@@ -46,7 +46,7 @@ public class LampItem extends BlockItem {
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
-        if (this.allowdedIn(group)) {
+        if (this.allowedIn(group)) {
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 for (DyeColor color : DyeColor.values()) {
                     ItemStack stack = new ItemStack(this);

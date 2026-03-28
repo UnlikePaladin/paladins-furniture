@@ -22,7 +22,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
 import java.util.Map;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Supplier;
 
 public class FabricBedModel extends PFMFabricBakedModel implements BedInterface {
@@ -36,7 +36,7 @@ public class FabricBedModel extends PFMFabricBakedModel implements BedInterface 
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof SimpleBedBlock) {
             Direction dir = state.getValue(BedBlock.FACING);
             boolean isClassic = state.getBlock().getDescriptionId().contains("classic");
@@ -79,7 +79,7 @@ public class FabricBedModel extends PFMFabricBakedModel implements BedInterface 
 
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         List<TextureAtlasSprite> spriteList = getSpriteList(stack);
         pushTextureTransform(context, ModelHelper.getOakBedSprites(), spriteList);
         int classicOffset = stack.getDescriptionId().contains("classic") ? 12 : 0;

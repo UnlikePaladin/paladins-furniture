@@ -10,7 +10,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
@@ -26,7 +26,7 @@ public class FabricClassicCoffeeTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof ClassicCoffeeTableBlock) {
             ClassicCoffeeTableBlock block = (ClassicCoffeeTableBlock) state.getBlock();
             boolean north = block.canConnect(world.getBlockState(pos.north()));
@@ -55,7 +55,7 @@ public class FabricClassicCoffeeTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         pushTextureTransform(context, getSpriteList(stack).get(0));
         ((FabricBakedModel) getTemplateBakedModels().get(0)).emitItemQuads(stack, randomSupplier, context);
         context.popTransform();

@@ -26,7 +26,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.*;
 import java.util.function.Supplier;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class FabricBasicLampModel extends PFMFabricBakedModel {
     public FabricBasicLampModel(ModelState settings, List<BakedModel> modelParts) {
@@ -39,7 +39,7 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         WoodVariant variant = WoodVariantRegistry.OAK;
         BlockEntity entity = blockView.getBlockEntity(pos);
         int onOffset = state.getValue(BlockStateProperties.LIT) ? 1 : 0;
@@ -68,7 +68,7 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         WoodVariant variant = WoodVariantRegistry.OAK;
         if (stack.hasTag()) {
             variant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(stack.getTagElement("BlockEntityTag").getString("variant")));

@@ -8,6 +8,8 @@ import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -22,8 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,7 +64,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     static Material herringboneTextureId = new Material(InventoryMenu.BLOCK_ATLAS, PFMSpriteRegistry.HERRINGBONE_PLANKS);
 
     @Override
-    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderLayer) {
+    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType renderLayer) {
         if (state != null) {
             VariantBase<?> variant = getVariant(state);
             if (variant instanceof WoodVariant) {
@@ -89,7 +90,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         Pair<ItemStack, Direction> directionPair = new Pair<>(stack, face);
         if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && cache.get(directionPair).get(0).getSprite().getName() == MissingTextureAtlasSprite.getLocation()) {
             cache.remove(directionPair);
@@ -98,7 +99,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         VariantBase<?> variant = getVariant(((BlockItem) stack.getItem()).getBlock().defaultBlockState());
         if (variant instanceof WoodVariant) {
             TextureAtlasSprite replacement = generateTextureIfNeeded(variant);

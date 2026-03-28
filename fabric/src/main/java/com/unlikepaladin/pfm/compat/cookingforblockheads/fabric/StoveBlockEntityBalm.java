@@ -24,7 +24,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -453,7 +453,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
     }
 
     public Component getDefaultName() {
-        return new TranslatableComponent("container.cookingforblockheads.oven");
+        return Component.translatable("container.cookingforblockheads.oven");
     }
 
     public Container getContainer() {

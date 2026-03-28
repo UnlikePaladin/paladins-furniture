@@ -68,9 +68,9 @@ public class PFMItemRendererForge extends BlockEntityWithoutLevelRenderer {
             ForgeHooksClient.handleCameraTransforms(matrices, modelForTransform, mode, leftHanded);
             matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
-            BakedModel actualModel = ((PFMBakedModelManagerAccessor)MinecraftClient.getInstance().getBakedModelManager()).pfm$getModelFromNormalID(UnbakedBedModel.BED_MODEL_ID);
+            BakedModel actualModel = ((PFMBakedModelManagerAccessor)Minecraft.getInstance().getModelManager()).pfm$getModelFromNormalID(UnbakedBedModel.BED_MODEL_ID);
             for(BakedModel model : actualModel.getRenderPasses(stack, false)) {
-                MinecraftClient.getInstance().getItemRenderer().renderBakedItemModel(model, stack, light, overlay, matrices, consumer);
+                Minecraft.getInstance().getItemRenderer().renderModelLists(model, stack, light, overlay, matrices, consumer);
             }
 
             this.renderBed.setColor(((SimpleBedBlock)block).getColor());

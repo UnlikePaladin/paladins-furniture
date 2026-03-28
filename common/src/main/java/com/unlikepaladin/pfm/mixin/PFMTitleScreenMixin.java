@@ -11,7 +11,7 @@ import net.minecraft.client.gui.screens.PopupScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
 import org.spongepowered.asm.mixin.Mixin;
@@ -62,10 +62,10 @@ public abstract class PFMTitleScreenMixin extends Screen {
                             Minecraft.getInstance().stop();
                         }
                     },
-                    new TranslatableComponent("pfm.compat.failure.title").withStyle(ChatFormatting.RED),
-                    new TranslatableComponent(reason),
-                    new TranslatableComponent("pfm.compat.failure.indiumDownload"),
-                    new TranslatableComponent("menu.quit")));
+                    Component.translatable("pfm.compat.failure.title").withStyle(ChatFormatting.RED),
+                    Component.translatable(reason),
+                    Component.translatable("pfm.compat.failure.indiumDownload"),
+                    Component.translatable("menu.quit")));
             }
         } else if (PFMFileUtil.isModLoaded("connectormod")&& !PaladinFurnitureMod.getPFMConfig().disableSinytraWarning()) {
             reason = "pfm.compat.issue.reason.connectorMod";
@@ -82,10 +82,10 @@ public abstract class PFMTitleScreenMixin extends Screen {
                             Minecraft.getInstance().setScreen(this);
                         }
                     },
-                    new TranslatableComponent("pfm.compat.issue.title").withStyle(ChatFormatting.YELLOW),
-                    new TranslatableComponent(reason),
-                    new TranslatableComponent("pfm.compat.issue.connectorReport"),
-                    new TranslatableComponent("options.graphics.warning.accept")));
+                    Component.translatable("pfm.compat.issue.title").withStyle(ChatFormatting.YELLOW),
+                    Component.translatable(reason),
+                    Component.translatable("pfm.compat.issue.connectorReport"),
+                    Component.translatable("options.graphics.warning.accept")));
 
         }
     }

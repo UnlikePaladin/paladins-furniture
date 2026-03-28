@@ -2,25 +2,25 @@ package com.unlikepaladin.pfm.items;
 
 import com.unlikepaladin.pfm.blocks.BasicShowerHandleBlock;
 import com.unlikepaladin.pfm.blocks.BasicShowerHeadBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtLong;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.LongTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -46,6 +46,7 @@ public class ShowerHandleItem extends BlockItem {
         }
         return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
+
     @Override
     public InteractionResult useOn(UseOnContext context) {
         super.useOn(context);
@@ -76,7 +77,7 @@ public class ShowerHandleItem extends BlockItem {
 
             double distance = Math.sqrt(headPos.distToLowCornerSqr(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5));
             if (distance > 16 && world.isClientSide()){
-                context.getPlayer().displayClientMessage(new TranslatableComponent("message.pfm.shower_handle_far", headPos.toString()), false);
+                context.getPlayer().displayClientMessage(Component.translatable("message.pfm.shower_handle_far", headPos.toString()), false);
             }
             if (distance > 16) {
                 context.getItemInHand().setTag(null);
@@ -137,7 +138,7 @@ public class ShowerHandleItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         if (stack.hasTag() && getShowerHead(stack) != null) {
-            tooltip.add(new TranslatableComponent("tooltip.pfm.shower_handle_connected", 1));
+            tooltip.add(Component.translatable("tooltip.pfm.shower_handle_connected", 1));
         }
         super.appendHoverText(stack, world, tooltip, context);
     }

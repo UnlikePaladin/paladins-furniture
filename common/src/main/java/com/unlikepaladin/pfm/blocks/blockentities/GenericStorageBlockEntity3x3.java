@@ -22,7 +22,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -114,9 +114,9 @@ public class GenericStorageBlockEntity3x3 extends RandomizableContainerBlockEnti
 
     protected Component getDefaultName() {
         if (this.getBlockState().getBlock() instanceof KitchenWallDrawerSmallBlock)
-            return new TranslatableComponent("container.pfm.drawer_small");
+            return Component.translatable("container.pfm.drawer_small");
         else
-            return new TranslatableComponent("container.pfm.small_storage");
+            return Component.translatable("container.pfm.small_storage");
     }
 
     void setOpen(BlockState state, boolean open) {

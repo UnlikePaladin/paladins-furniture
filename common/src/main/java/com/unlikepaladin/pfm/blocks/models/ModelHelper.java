@@ -35,7 +35,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class ModelHelper {
     public static List<TextureAtlasSprite> OAK_SPRITES_PLANKS_TO_REPLACE = null;
@@ -318,7 +318,7 @@ public class ModelHelper {
         if (postfix.isEmpty() && !PFMDataGenerator.areAssetsRunning()) {
             BakedModel model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(block.defaultBlockState());
             if (model != null) {
-                List<BakedQuad> quadList = model.getQuads(block.defaultBlockState(), Direction.NORTH, Random.create(42L));
+                List<BakedQuad> quadList = model.getQuads(block.defaultBlockState(), Direction.NORTH, RandomSource.create(42L));
                 if (!quadList.isEmpty()) {
                     id = quadList.get(0).getSprite().getName();
                     if (id != null && id != MissingTextureAtlasSprite.getLocation()) {
@@ -330,7 +330,7 @@ public class ModelHelper {
         } else if (postfix.equals("_top") && !PFMDataGenerator.areAssetsRunning()) {
             BakedModel model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(block.defaultBlockState());
             if (model != null) {
-                List<BakedQuad> quadList = model.getQuads(block.defaultBlockState(), Direction.UP, Random.create(42L));
+                List<BakedQuad> quadList = model.getQuads(block.defaultBlockState(), Direction.UP, RandomSource.create(42L));
                 if (!quadList.isEmpty()) {
                     id = quadList.get(0).getSprite().getName();
                     if (id != null && id != MissingTextureAtlasSprite.getLocation()) {
@@ -338,7 +338,7 @@ public class ModelHelper {
                         return id;
                     }
                 }
-                quadList = model.getQuads(block.defaultBlockState(), Direction.DOWN, Random.create(42L));
+                quadList = model.getQuads(block.defaultBlockState(), Direction.DOWN, RandomSource.create(42L));
                 if (!quadList.isEmpty()) {
                     id = quadList.get(0).getSprite().getName();
                     if (id != null && id != MissingTextureAtlasSprite.getLocation()) {

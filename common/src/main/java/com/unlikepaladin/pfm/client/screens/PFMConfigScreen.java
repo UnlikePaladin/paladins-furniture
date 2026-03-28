@@ -10,9 +10,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.client.gui.components.Button;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TranslatableComponent;
+
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,10 +30,10 @@ public class PFMConfigScreen extends Screen {
     public static boolean isOnServer = false;
     private final MutableComponent TITLE;
     public PFMConfigScreen(Minecraft client, Screen parent) {
-        super( new TranslatableComponent("pfm.config.title"));
+        super(Component.translatable("pfm.config.title"));
         this.parent = parent;
         this.minecraft = client;
-        TITLE = new TranslatableComponent("pfm.config.title");
+        TITLE = Component.translatable("pfm.config.title");
         this.options = PaladinFurnitureMod.getPFMConfig().options;
     }
 
@@ -50,7 +51,7 @@ public class PFMConfigScreen extends Screen {
                     }
                 }
                 Minecraft.getInstance().setScreen(parent);
-            }, new TranslatableComponent("gui.pfm.changesMightNotBeSaved").setStyle(Style.EMPTY.withColor(0xf77f34).withBold(true)), new TranslatableComponent("gui.pfm.saveChanges")));
+            }, Component.translatable("gui.pfm.changesMightNotBeSaved").setStyle(Style.EMPTY.withColor(0xf77f34).withBold(true)), Component.translatable("gui.pfm.saveChanges")));
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -73,7 +74,7 @@ public class PFMConfigScreen extends Screen {
         super.init();
         this.optionListWidget = new PFMOptionListWidget(this, this.minecraft);
         this.addWidget(this.optionListWidget);
-        this.resetButton = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 150, 20, new TranslatableComponent("pfm.option.resetAll"), button -> {
+        this.resetButton = this.addRenderableWidget(new Button(this.width / 2 - 155, this.height - 29, 150, 20, Component.translatable("pfm.option.resetAll"), button -> {
             options.forEach((title, option) -> {
                 if (option.getSide() == Side.CLIENT){
                     if (option.getType() == Boolean.class) {

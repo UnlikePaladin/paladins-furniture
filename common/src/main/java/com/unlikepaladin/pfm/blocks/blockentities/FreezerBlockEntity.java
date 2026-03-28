@@ -7,6 +7,8 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.core.*;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.RecipeHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
@@ -34,15 +36,10 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.Tag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
-import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
@@ -181,10 +178,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
     }
 
     private static void addFuel(Map<Item, Integer> fuelTimes, TagKey<Item> tag, int fuelTime) {
-        Iterator var3 = Registry.ITEM.iterateEntries(tag).iterator();
-
-        while(var3.hasNext()) {
-            RegistryEntry<Item> registryEntry = (RegistryEntry)var3.next();
+        for (Holder<Item> registryEntry : Registry.ITEM.getTagOrEmpty(tag)) {
             fuelTimes.put(registryEntry.value(), fuelTime);
         }
     }
@@ -361,7 +355,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
 
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent("container.pfm.freezer");
+        return Component.translatable("container.pfm.freezer");
     }
 
     @Override

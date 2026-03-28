@@ -3,7 +3,6 @@ package com.unlikepaladin.pfm.data;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.tags.Tag;
 import net.minecraft.resources.ResourceLocation;
 
 public class PFMTags {

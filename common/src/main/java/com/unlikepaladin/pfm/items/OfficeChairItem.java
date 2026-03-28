@@ -55,7 +55,7 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
 
     @Override
     public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
-        if (this.allowdedIn(group)) {
+        if (this.allowedIn(group)) {
             for (DyeColor color : DyeColor.values()) {
                 ItemStack stack = new ItemStack(this);
                 stack.getOrCreateTag().putString("Color", color.getSerializedName());

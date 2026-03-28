@@ -14,7 +14,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.Level;
@@ -27,7 +27,7 @@ public class CounterOvenBlockEntity extends AbstractFurnaceBlockEntity {
      String blockname = this.getBlockState().getBlock().getDescriptionId();
     @Override
     protected Component getDefaultName() {
-        return new TranslatableComponent("container.pfm.kitchen_counter_oven");
+        return Component.translatable("container.pfm.kitchen_counter_oven");
     }
 
     @Override

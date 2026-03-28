@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
@@ -25,7 +26,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.Containers;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
@@ -89,9 +90,9 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     protected Component getDefaultName() {
         blockname = blockname.replace("block.pfm", "");
         if (this.getBlockState().getBlock() instanceof KitchenCounterOvenBlock) {
-            return new TranslatableComponent("container.pfm.kitchen_counter_oven");
+            return Component.translatable("container.pfm.kitchen_counter_oven");
         }
-        return new TranslatableComponent("container.pfm" + blockname);
+        return Component.translatable("container.pfm" + blockname);
     }
 
     @Override
@@ -235,7 +236,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         if (blockEntity instanceof StoveBlockEntity) {
             StoveBlockEntity stoveBlockEntity = (StoveBlockEntity) blockEntity;
             int i;
-            Random random = level.random;
+            RandomSource random = level.random;
             i = state.getValue(StoveBlock.FACING).getClockWise().get2DDataValue();
             for (int j = 0; j < stoveBlockEntity.itemsBeingCooked.size(); ++j) {
                 ItemStack stack = stoveBlockEntity.itemsBeingCooked.get(j);

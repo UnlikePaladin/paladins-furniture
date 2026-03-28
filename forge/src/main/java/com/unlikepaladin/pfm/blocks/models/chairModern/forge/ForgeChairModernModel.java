@@ -4,7 +4,7 @@ import com.unlikepaladin.pfm.blocks.ModernChairBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class ForgeChairModernModel extends PFMForgeBakedModel {
     public ForgeChairModernModel(ModelState settings, List<BakedModel> templateBakedModels) {
@@ -30,7 +30,7 @@ public class ForgeChairModernModel extends PFMForgeBakedModel {
     public static ModelProperty<Boolean> TUCKED = new ModelProperty<>();
 
     @Override
-    public @NotNull ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
+    public @NotNull ModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
         if (state.getBlock() instanceof ModernChairBlock) {
             ModelData.Builder builder = ModelData.builder();
 
@@ -44,7 +44,7 @@ public class ForgeChairModernModel extends PFMForgeBakedModel {
 
     @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer layer) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType layer) {
         if (state != null && extraData != null && extraData.get(TUCKED) != null) {
             int tucked = Boolean.TRUE.equals(extraData.get(TUCKED)) ? 1 : 0;
             List<TextureAtlasSprite> spriteList = getSpriteList(state);
@@ -55,7 +55,7 @@ public class ForgeChairModernModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         List<TextureAtlasSprite> spriteList = getSpriteList(state);
         List<BakedQuad> quads = getTemplateBakedModels().get(0).getQuads(state, face, random);
         return getQuadsWithTexture(quads, ModelHelper.getOakPlankLogSprites(), spriteList);

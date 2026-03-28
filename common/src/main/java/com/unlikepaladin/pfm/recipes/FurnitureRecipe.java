@@ -59,7 +59,7 @@ public interface FurnitureRecipe extends Recipe<Inventory> {
     }
 
     default String getName() {
-        return getResultItem().getHoverName().getContents();
+        return getResultItem().getHoverName().getString();
     }
 
     interface CraftableFurnitureRecipe extends Comparable<CraftableFurnitureRecipe> {

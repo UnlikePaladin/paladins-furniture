@@ -32,7 +32,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
@@ -154,7 +154,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
 
     @Override
     public Component getDisplayName() {
-        return new TranslatableComponent("container.pfm.microwave");
+        return Component.translatable("container.pfm.microwave");
     }
 
     private static int getCookingTime(Level level, RecipeType<? extends AbstractCookingRecipe> recipeType, Container inventory) {

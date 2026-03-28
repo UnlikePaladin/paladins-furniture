@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.runtime.data;
 
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
@@ -10,21 +9,16 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.PFMTags;
-import com.unlikepaladin.pfm.mixin.PFMTagsProvider$TagAppenderMixin;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
-import net.minecraft.world.level.block.Block;
+import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.data.tags.TagsProvider;
-import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.Tag;
-import net.minecraft.tags.TagKey;
+import net.minecraft.tags.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -261,13 +255,13 @@ public class PFMTagProvider extends PFMProvider {
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::generateTags);
     }
 
-    public static AbstractTagProvider.ObjectBuilder<Block> getOrCreateTagBuilder(TagKey<Block> tag) {
+    public static TagsProvider.TagAppender<Block> getOrCreateTagBuilder(TagKey<Block> tag) {
         TagBuilder builder = getTagBuilder(tag);
         return getProviderPlatform(builder, Registry.BLOCK, "pfm");
     }
 
     @ExpectPlatform
-    private static <T> AbstractTagProvider.ObjectBuilder<T> getProviderPlatform(TagBuilder builder, Registry<T> registry, String modID) {
+    private static <T> TagsProvider.TagAppender<T> getProviderPlatform(TagBuilder builder, Registry<T> registry, String modID) {
         throw new AssertionError();
     }
 
@@ -285,12 +279,12 @@ public class PFMTagProvider extends PFMProvider {
         this.generateTags();
         tagBuilders.forEach((id, builder) -> {
             List<TagEntry> list = builder.build();
-            List<TagEntry> list2 = list.stream().filter((tag) -> !tag.canAdd(Registry.BLOCK::containsId, tagBuilders::containsKey)).toList();
+            List<TagEntry> list2 = list.stream().filter((tag) -> !tag.verifyIfPresent(Registry.BLOCK::containsKey, tagBuilders::containsKey)).toList();
             if (!list2.isEmpty()) {
                 throw new IllegalArgumentException(String.format("Couldn't define tag %s as it is missing following references: %s", id, list.stream().map(Objects::toString).collect(Collectors.joining(","))));
             }
             DataResult<JsonElement> jsonObject = TagFile.CODEC.encodeStart(JsonOps.INSTANCE, new TagFile(builder.build(), false));
-            Path path = this.getOutput(id);
+            Path path = this.getResultItem(id);
             if (jsonObject.error().isEmpty())
                 enqueueJsonWrite(getWriteQueue(), path, jsonObject.get().orThrow());
         });

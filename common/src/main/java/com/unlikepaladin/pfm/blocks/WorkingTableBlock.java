@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
@@ -51,7 +51,7 @@ public class WorkingTableBlock extends HorizontalDirectionalBlock implements Sim
         return WORKING_TABLES.stream();
     }
 
-    private static final Component TITLE = new TranslatableComponent("container.pfm.working_table");
+    private static final Component TITLE = Component.translatable("container.pfm.working_table");
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (world.isClientSide) {

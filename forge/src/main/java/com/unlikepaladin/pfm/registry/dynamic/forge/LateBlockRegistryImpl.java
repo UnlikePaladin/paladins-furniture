@@ -1,22 +1,32 @@
 package com.unlikepaladin.pfm.registry.dynamic.forge;
 
-import com.unlikepaladin.pfm.forge.PaladinFurnitureModForge;
+import com.google.common.collect.ImmutableSet;
+import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypesAccessor;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.IForgeRegistry;
+import net.minecraftforge.registries.RegisterEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Supplier;
+
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class LateBlockRegistryImpl {
 
@@ -78,14 +88,14 @@ public class LateBlockRegistryImpl {
     @SubscribeEvent
     public static void registerPOI(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.POI_TYPES, pointOfInterestTypeRegisterHelper -> {
-            Set<BlockState> originalBedStates = ForgeRegistries.POI_TYPES.getValue(PointOfInterestTypes.HOME.getValue()).blockStates();
-            Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+            Set<BlockState> originalBedStates = ForgeRegistries.POI_TYPES.getValue(PoiTypes.HOME.location()).matchingStates();
+            Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateDefinition().getPossibleStates().stream().filter(state -> state.getValue(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
             Set<BlockState> newBedStates = new HashSet<>();
             newBedStates.addAll(originalBedStates);
             newBedStates.addAll(addedBedStates);
-            PointOfInterestType pointOfInterestType = new PointOfInterestType(newBedStates, 1, 1);
+            PoiType pointOfInterestType = new PoiType(newBedStates, 1, 1);
             ForgeRegistries.POI_TYPES.register("minecraft:home", pointOfInterestType);
-            PFMPointOfInterestTypesAccessor.setHome(ForgeRegistries.POI_TYPES.getHolder(pointOfInterestType).get().getKey().get());
+            PFMPointOfInterestTypesAccessor.setHome(ForgeRegistries.POI_TYPES.getHolder(pointOfInterestType).get().unwrapKey().get());
            // PaladinFurnitureModForge.replaceHomePOIStates();
         });
     }

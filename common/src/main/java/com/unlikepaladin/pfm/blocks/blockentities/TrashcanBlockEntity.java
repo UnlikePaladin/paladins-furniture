@@ -18,7 +18,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 
@@ -67,7 +67,7 @@ public class TrashcanBlockEntity extends RandomizableContainerBlockEntity {
 
     @Override
     protected Component getDefaultName() {
-        return new TranslatableComponent( "container.pfm.trashcan");
+        return Component.translatable( "container.pfm.trashcan");
     }
 
     @Override

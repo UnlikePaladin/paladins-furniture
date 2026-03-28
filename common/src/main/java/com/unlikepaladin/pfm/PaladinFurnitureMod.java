@@ -13,14 +13,14 @@ import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
 import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
+import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypeAccessor;
 import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypesAccessor;
 import com.unlikepaladin.pfm.registry.dynamic.FurnitureEntry;
-import com.unlikepaladin.pfm.mixin.PFMPoiTypeAccessor;
-import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.core.Registry;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
 import net.minecraft.world.level.block.Block;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,14 +29,11 @@ import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.util.registry.Registry;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
-import net.minecraft.world.poi.PointOfInterestTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.util.*;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
 public class PaladinFurnitureMod {
@@ -75,14 +72,14 @@ public class PaladinFurnitureMod {
 		}
 
 	public static void replaceHomePOIStates() {
-		PointOfInterestType homePOI = Registry.POINT_OF_INTEREST_TYPE.get(PointOfInterestTypes.HOME);
+		PoiType homePOI = Registry.POINT_OF_INTEREST_TYPE.get(PoiTypes.HOME);
 		Set<BlockState> originalBedStates = ((PFMPointOfInterestTypeAccessor)(Object)homePOI).getBlockStates();
-		Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+		Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateDefinition().getPossibleStates().stream().filter(state -> state.getValue(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
 		Set<BlockState> newBedStates = new HashSet<>();
 		newBedStates.addAll(originalBedStates);
 		newBedStates.addAll(addedBedStates);
 		((PFMPointOfInterestTypeAccessor) (Object)homePOI).setBlockStates(ImmutableSet.copyOf(newBedStates));
-		addedBedStates.forEach(state -> PFMPointOfInterestTypesAccessor.getBlockStateToPointOfInterestType().put(state, Registry.POINT_OF_INTEREST_TYPE.entryOf(PointOfInterestTypes.HOME)));
+		addedBedStates.forEach(state -> PFMPointOfInterestTypesAccessor.getBlockStateToPointOfInterestType().put(state, Registry.POINT_OF_INTEREST_TYPE.getHolderOrThrow(PoiTypes.HOME)));
 		PFMPointOfInterestTypesAccessor.setRegisteredStates(new ObjectOpenHashSet<>(PFMPointOfInterestTypesAccessor.getBlockStateToPointOfInterestType().keySet()));
 	}
 

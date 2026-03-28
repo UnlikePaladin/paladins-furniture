@@ -15,9 +15,10 @@ import com.unlikepaladin.pfm.registry.NetworkIDs;
 import com.unlikepaladin.pfm.registry.SoundIDs;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 
@@ -96,7 +97,7 @@ public class NetworkRegistryFabric {
                     ArrayList<AbstractConfigOption> configOptions = buf.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
                     Map<String, AbstractConfigOption> map = new HashMap<>();
                     configOptions.forEach(abstractConfigOption -> {
-                        map.put(((TranslatableComponent)abstractConfigOption.getTitle()).getKey(), abstractConfigOption);
+                        map.put(((TranslatableContents)abstractConfigOption.getTitle().getContents()).getKey(), abstractConfigOption);
                     });
 
                     client.execute(() -> {

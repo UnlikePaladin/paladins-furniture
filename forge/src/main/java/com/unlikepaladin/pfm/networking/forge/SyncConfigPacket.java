@@ -3,7 +3,8 @@ package com.unlikepaladin.pfm.networking.forge;
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.TranslatableComponent;
+
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.network.NetworkEvent;
@@ -33,7 +34,7 @@ public class SyncConfigPacket {
         Collection<AbstractConfigOption> configOptions = buffer.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
         Map<String, AbstractConfigOption> map = new HashMap<>();
         configOptions.forEach(abstractConfigOption -> {
-            map.put(((TranslatableComponent)abstractConfigOption.getTitle()).getKey(), abstractConfigOption);
+            map.put(((TranslatableContents)abstractConfigOption.getTitle().getContents()).getKey(), abstractConfigOption);
         });
         return new SyncConfigPacket(map);
     }

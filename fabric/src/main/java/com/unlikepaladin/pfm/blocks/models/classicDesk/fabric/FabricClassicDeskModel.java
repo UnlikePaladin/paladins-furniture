@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 
@@ -37,7 +37,7 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof ClassicDeskBlock || state.getBlock() instanceof ClassicDeskCabinetBlock) {
             Direction dir = state.getValue(HorizontalDirectionalBlock.FACING);
             boolean isCabinet = state.getBlock() instanceof ClassicDeskCabinetBlock;
@@ -382,7 +382,7 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
         }
     }
 
-    private void middleDesk(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, boolean left, boolean right, int openOffset) {
+    private void middleDesk(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context, boolean left, boolean right, int openOffset) {
         if (left && right) {
             ((FabricBakedModel) getTemplateBakedModels().get((22 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         }  else if (left) {
@@ -395,7 +395,7 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (stack.getItem() instanceof BlockItem) {
             int offset = ((BlockItem) stack.getItem()).getBlock() instanceof ClassicDeskCabinetBlock ? 1 : 0;
             pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), getSpriteList(stack));

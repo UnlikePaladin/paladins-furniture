@@ -13,7 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
@@ -29,7 +29,7 @@ public class FabricBasicDeskCabinetModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof BasicDeskCabinetBlock) {
             BasicDeskCabinetBlock block = (BasicDeskCabinetBlock) state.getBlock();
             Direction isFacing = state.getValue(BasicDeskCabinetBlock.FACING);
@@ -99,7 +99,7 @@ public class FabricBasicDeskCabinetModel extends PFMFabricBakedModel {
         }
     }
 
-    private void legsDesk(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
+    private void legsDesk(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context, boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
         if (!north && !east) {
             ((FabricBakedModel) getTemplateBakedModels().get(northLeg)).emitBlockQuads(world, state, pos, randomSupplier, context);
         }
@@ -115,7 +115,7 @@ public class FabricBasicDeskCabinetModel extends PFMFabricBakedModel {
     }
 
 
-    private void middleDesk(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, boolean left, boolean right, int openOffset) {
+    private void middleDesk(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context, boolean left, boolean right, int openOffset) {
         if (left && right) {
             ((FabricBakedModel) getTemplateBakedModels().get((3 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         }  else if (left) {
@@ -128,7 +128,7 @@ public class FabricBasicDeskCabinetModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), getSpriteList(stack));
         ((FabricBakedModel) getTemplateBakedModels().get(0)).emitItemQuads(stack, randomSupplier, context);
         // legs

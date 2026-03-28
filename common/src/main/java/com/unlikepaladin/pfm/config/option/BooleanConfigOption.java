@@ -5,7 +5,8 @@ import net.minecraft.nbt.EndTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.TagType;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.contents.TranslatableContents;
+
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -24,7 +25,7 @@ public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
             nbtTagSizeTracker.add(224L + 16L * tooltip.length());
             nbtTagSizeTracker.add(224L + 16L * category.length());
             nbtTagSizeTracker.add(64L);
-            BooleanConfigOption booleanConfigOption = new BooleanConfigOption(new TranslatableComponent(title), new TranslatableComponent(tooltip), category, value, side);
+            BooleanConfigOption booleanConfigOption = new BooleanConfigOption(Component.translatable(title), Component.translatable(tooltip), category, value, side);
             return booleanConfigOption;
         }
 
@@ -104,8 +105,8 @@ public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
 
     @Override
     public void write(DataOutput output) throws IOException {
-        output.writeUTF(((TranslatableComponent)title).getKey());
-        output.writeUTF(((TranslatableComponent)tooltip).getKey());
+        output.writeUTF(((TranslatableContents)title.getContents()).getKey());
+        output.writeUTF(((TranslatableContents)tooltip.getContents()).getKey());
         output.writeUTF(category);
         output.writeBoolean(value);
         output.writeUTF(side.getSerializedName());

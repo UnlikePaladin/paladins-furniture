@@ -20,7 +20,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
@@ -116,7 +116,7 @@ public class FridgeBlockEntity extends RandomizableContainerBlockEntity {
 
     protected Component getDefaultName() {
         blockname = blockname.replace("block.pfm", "");
-        return new TranslatableComponent("container.pfm" + blockname);
+        return Component.translatable("container.pfm" + blockname);
     }
 
     void setOpen(BlockState state, boolean open) {

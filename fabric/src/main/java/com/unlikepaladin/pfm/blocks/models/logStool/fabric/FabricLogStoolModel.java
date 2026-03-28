@@ -15,7 +15,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Supplier;
 
 public class FabricLogStoolModel extends PFMFabricBakedModel {
@@ -34,7 +34,7 @@ public class FabricLogStoolModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof LogStoolBlock) {
             List<TextureAtlasSprite> spriteList = getSpriteList(state);
             pushTextureTransform(context, ModelHelper.getOakLogLogTopSprites(), spriteList);
@@ -45,7 +45,7 @@ public class FabricLogStoolModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         List<TextureAtlasSprite> spriteList = getSpriteList(stack);
         pushTextureTransform(context, ModelHelper.getOakLogLogTopSprites(), spriteList);
         ((FabricBakedModel) getTemplateBakedModels().get(0)).emitItemQuads(stack, randomSupplier, context);

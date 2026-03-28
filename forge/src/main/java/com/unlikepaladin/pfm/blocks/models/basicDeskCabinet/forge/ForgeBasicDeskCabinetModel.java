@@ -4,6 +4,8 @@ import com.unlikepaladin.pfm.blocks.BasicDeskCabinetBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.AbstractFurnaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
@@ -15,8 +17,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraftforge.client.model.data.IModelData;
-import net.minecraftforge.client.model.data.ModelDataMap;
+import net.minecraftforge.client.model.data.ModelData;
+
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -92,7 +94,7 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType renderType) {
         if (state != null && state.getBlock() instanceof BasicDeskCabinetBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             List<BakedQuad> secondaryQuads = new ArrayList<>();
             BasicDeskCabinetBlock block = (BasicDeskCabinetBlock) state.getBlock();
@@ -164,7 +166,7 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
        return Collections.emptyList();
     }
 
-    private List<BakedQuad> legsDesk(BlockState state, Direction side, Random rand, ModelData extraData, RenderLayer renderType, boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
+    private List<BakedQuad> legsDesk(BlockState state, Direction side, RandomSource rand, ModelData extraData, RenderType renderType, boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
         List<BakedQuad> quads = new ArrayList<>();
         if (!north && !east) {
             quads.addAll(getTemplateBakedModels().get(northLeg).getQuads(state, side, rand, extraData, renderType));
@@ -182,7 +184,7 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
     }
 
 
-    private List<BakedQuad> middleDesk(BlockState state, Direction side, Random rand, ModelData extraData, RenderLayer layer, boolean left, boolean right, int openOffset) {
+    private List<BakedQuad> middleDesk(BlockState state, Direction side, RandomSource rand, ModelData extraData, RenderType layer, boolean left, boolean right, int openOffset) {
         if (left && right) {
             return getTemplateBakedModels().get((3 + openOffset)).getQuads(state, side, rand, extraData, layer);
         }  else if (left) {
@@ -195,7 +197,7 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         // base
         List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(state, face, random));
 

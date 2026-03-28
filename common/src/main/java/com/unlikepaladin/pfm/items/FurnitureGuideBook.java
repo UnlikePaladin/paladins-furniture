@@ -8,7 +8,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.InteractionHand;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResultHolder;
@@ -31,7 +31,7 @@ public class FurnitureGuideBook extends Item {
     }
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
-        tooltip.add(new TranslatableComponent("pfm.patchouli.guide_book.subtitle"));
+        tooltip.add(Component.translatable("pfm.patchouli.guide_book.subtitle"));
         super.appendHoverText(stack, world, tooltip, context);
     }
 }

@@ -6,6 +6,8 @@ import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.SoundIDs;
 import com.unlikepaladin.pfm.registry.Statistics;
 import com.unlikepaladin.pfm.registry.BlockEntities;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -26,7 +28,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
@@ -99,7 +101,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements EntityBlo
                 world.setBlockAndUpdate(pos, state.setValue(TOILET_STATE, ToiletState.CLEAN));
                 return InteractionResult.SUCCESS;
             } else if (world.getEntitiesOfClass(ChairEntity.class, new AABB(pos), Entity::isVehicle).isEmpty()) {
-                player.displayClientMessage(new TranslatableComponent("message.pfm.toilet_use"), false);
+                player.displayClientMessage(Component.translatable("message.pfm.toilet_use"), false);
             }
         }
         else if (!world.isClientSide && (state.getValue(TOILET_STATE) == ToiletState.DIRTY)) {
@@ -118,7 +120,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements EntityBlo
     }
 
     @Override
-    public void animateTick(BlockState state, Level world, BlockPos pos, Random random) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
         super.animateTick(state, world, pos, random);
         if(state.getValue(TOILET_STATE) != ToiletState.DIRTY) {
             return;

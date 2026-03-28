@@ -9,7 +9,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceLocation;
 
 public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerBalm> {
@@ -31,7 +31,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
         StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();
         if (tileEntity.hasPowerUpgrade() && mouseX >= this.leftPos + this.imageWidth - 25 && mouseY >= this.topPos + 22 && mouseX < this.leftPos + this.imageWidth - 25 + 35 + 18 && mouseY < this.topPos + 22 + 72) {
             EnergyStorage energyStorage = tileEntity.getEnergyStorage();
-            this.renderTooltip(poseStack, new TranslatableComponent("tooltip.cookingforblockheads:energy_stored", new Object[]{energyStorage.getEnergy(), energyStorage.getCapacity()}), mouseX, mouseY);
+            this.renderTooltip(poseStack, Component.translatable("tooltip.cookingforblockheads:energy_stored", new Object[]{energyStorage.getEnergy(), energyStorage.getCapacity()}), mouseX, mouseY);
         }
 
     }

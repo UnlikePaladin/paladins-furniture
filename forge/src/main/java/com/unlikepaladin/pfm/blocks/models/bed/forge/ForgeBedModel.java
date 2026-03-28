@@ -10,7 +10,7 @@ import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
-import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
     public ForgeBedModel(ModelState settings, List<BakedModel> modelParts) {
@@ -35,7 +35,7 @@ public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     @NotNull
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType renderType) {
         List<BakedQuad> quads = new ArrayList<>();
         if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             BedPart part = state.getValue(BedBlock.PART);
@@ -78,7 +78,7 @@ public class ForgeBedModel extends PFMForgeBakedModel implements BedInterface {
     }
 
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         int classicOffset = stack.getDescriptionId().contains("classic") ? 12 : 0;
         List<TextureAtlasSprite> spriteList = getSpriteList(stack);
         return getQuadsWithTexture((getTemplateBakedModels().get((classicOffset+11))).getQuads(state, face, random), ModelHelper.getOakBedSprites(), spriteList);

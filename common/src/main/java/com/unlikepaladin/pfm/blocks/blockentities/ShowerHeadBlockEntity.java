@@ -12,7 +12,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 
 public class ShowerHeadBlockEntity extends BlockEntity {
@@ -74,7 +74,7 @@ public class ShowerHeadBlockEntity extends BlockEntity {
 
     public static void addShowerParticles(Level world, BlockPos pos, float[] offset, float[] difference) {
         int x = pos.getX(), y = pos.getY(), z = pos.getZ();
-        Random rand = world.random;
+        RandomSource rand = world.random;
         if (rand.nextBoolean()) {
             world.addParticle(ParticleIDs.WATER_DROP, true, x + (offset[0] - difference[0]), y + (offset[1] - difference[1]), z + (offset[2]), 0.0, 0.0, 0.0);
         } else {

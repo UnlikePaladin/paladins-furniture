@@ -17,7 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +27,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private final IDrawable BACKGROUND;
     public static final ResourceLocation TEXTURE_GUI_VANILLA = new ResourceLocation("pfm:textures/gui/gui_jei.png");
     public final IDrawable ICON;
-    public static final TranslatableComponent TITLE = new TranslatableComponent("rei.pfm.furniture");
+    public static final Component TITLE = Component.translatable("rei.pfm.furniture");
     private final ICraftingGridHelper craftingGridHelper;
     private static final int craftOutputSlot = 9;
     private static final int craftInputSlot1 = 0;
