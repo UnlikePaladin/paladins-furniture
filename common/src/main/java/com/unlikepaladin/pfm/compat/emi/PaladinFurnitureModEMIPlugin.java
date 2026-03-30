@@ -48,7 +48,7 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
 
     private static EmiRenderable simplifiedRenderer(int u, int v) {
         return (matrices, x, y, delta) -> {
-            RenderSystem.setShaderTexture(0, new Identifier("emi", "textures/gui/widgets.png"));
+            RenderSystem.setShaderTexture(0, new ResourceLocation("emi", "textures/gui/widgets.png"));
             GuiComponent.blit(matrices, x, y, u, v, 16, 16, 256, 256);
         };
     }

@@ -40,9 +40,9 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
         isActive = menu.getActive();
         this.narrow = this.width < 379;
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
-        this.startButton = this.addDrawableChild(new ButtonWidget.Builder(startButtonText, button -> {
+        this.startButton = this.addRenderableWidget(new Button.Builder(startButtonText, button -> {
             AbstractMicrowaveScreenHandler.setActive(microwaveBlockEntity,true);
-        }).position(this.leftPos + 8, this.topPos + 40).size( 40, 20).build());
+        }).pos(this.leftPos + 8, this.topPos + 40).size( 40, 20).build());
     }
 
     @Override
@@ -64,7 +64,7 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
     @Override
     protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         int k;
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, this.background);
         int i = this.leftPos;

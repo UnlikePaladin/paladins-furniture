@@ -3,24 +3,13 @@ package com.unlikepaladin.pfm.runtime;
 // Java
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
-import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.ducks.PFMSpriteAtlasTexturesExtensions;
 import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
-import com.unlikepaladin.pfm.mixin.PFMTextureAtlasAccessor;
-import com.unlikepaladin.pfm.mixin.PFMSpriteContentsAccessor;
-import com.unlikepaladin.pfm.utilities.PFMFileUtil;
-import com.unlikepaladin.pfm.utilities.Version;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.SharedConstants;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.AbstractTexture;
-import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureManager;
-import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
-import com.mojang.blaze3d.platform.PngInfo;
+import net.minecraft.client.renderer.texture.*;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -31,7 +20,6 @@ import java.io.IOException;
 import java.nio.file.FileAlreadyExistsException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.*;
 
 public final class TextureReloadQueue {
@@ -104,18 +92,18 @@ public final class TextureReloadQueue {
         Resource resource = optionalResource.get();
         TextureAtlasSprite original = spriteAtlas.getSprite(id);
 
-        SpriteContents newContents = SpriteLoader.load(id, resource);
+        SpriteContents newContents = SpriteLoader.loadSprite(id, resource);
         ((PFMSpriteExtensions) original).pfm$setContents(newContents);
-        int mipMapSizeConfig = MinecraftClient.getInstance().options.getMipmapLevels().getValue();
+        int mipMapSizeConfig = Minecraft.getInstance().options.mipmapLevels().get();
         Integer maxLevelWhenStiching = ((PFMSpriteAtlasTexturesExtensions)spriteAtlas).pfm$getMaxLevel();
         int mipMapSize = maxLevelWhenStiching != null ? Math.min(mipMapSizeConfig, maxLevelWhenStiching): mipMapSizeConfig;
 
         try {
-            newContents.generateMipmaps(mipMapSize);
+            newContents.increaseMipLevel(mipMapSize);
         } catch (NullPointerException e) {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Failed to generate mipmaps for texture {}: {}", id, e.getMessage());
         }
-        original.upload();
+        original.uploadFirstFrame();
     }
 
     public static void reloadSpritesOnClientThread(List<ResourceLocation> id) {

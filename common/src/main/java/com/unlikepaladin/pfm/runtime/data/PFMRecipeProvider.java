@@ -17,6 +17,8 @@ import com.unlikepaladin.pfm.runtime.PFMProvider;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
@@ -254,9 +256,9 @@ public class PFMRecipeProvider extends PFMProvider {
                 generatedRecipes.add(getId(block));
             }
         });
-        if (!generatedRecipes.contains(Registries.ITEM.getKey(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM))) {
+        if (!generatedRecipes.contains(BuiltInRegistries.ITEM.getKey(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM))) {
             SimpleFurnitureRecipeJsonFactory.create(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM, 6).input(Blocks.WHITE_CONCRETE, 6).input(Blocks.LIGHT_GRAY_CONCRETE, 2).input(Items.REDSTONE).save(exporter, new ResourceLocation("pfm", PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM.getDescriptionId().replace("block.pfm.", "")));
-            generatedRecipes.add(Registries.ITEM.getKey(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM));
+            generatedRecipes.add(BuiltInRegistries.ITEM.getKey(PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM));
         }
 
         FurnitureBlock[] basicToilets = BasicToiletBlock.streamBasicToilet().toList().toArray(new FurnitureBlock[0]);
@@ -286,7 +288,7 @@ public class PFMRecipeProvider extends PFMProvider {
             offerShowerHeadRecipe(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD, Ingredient.of(Items.WATER_BUCKET), exporter);
             offerShowerHandleRecipe(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM, Ingredient.of(Blocks.LEVER), exporter);
             generatedRecipes.add(getId(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD));
-            generatedRecipes.add(Registries.ITEM.getKey(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM));
+            generatedRecipes.add(BuiltInRegistries.ITEM.getKey(PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM));
         }
 
         if (!generatedRecipes.contains(getId(PaladinFurnitureModBlocksItems.MESH_TRASHCAN))) {
@@ -365,15 +367,15 @@ public class PFMRecipeProvider extends PFMProvider {
     public Block getVanillaBed(Block block) {
         if (block instanceof SimpleBedBlock){
             String color = ((SimpleBedBlock) block).getPFMColor().getName();
-            return Registries.BLOCK.get(new ResourceLocation("minecraft:" + color + "_bed"));
+            return BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft:" + color + "_bed"));
         }
         return null;
     }
 
     public List<Block> getVanillaBeds() {
         List<Block> beds = new ArrayList<>();
-        Registries.BLOCK.stream().forEach(block -> {
-            if (block instanceof BedBlock && Registries.BLOCK.getKey(block).getNamespace().equals("minecraft"))
+        BuiltInRegistries.BLOCK.stream().forEach(block -> {
+            if (block instanceof BedBlock && BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals("minecraft"))
                 beds.add(block);
         });
         return beds;
@@ -646,12 +648,12 @@ public class PFMRecipeProvider extends PFMProvider {
     private static String getItemPath(Ingredient item) {
         ItemStack[] n = item.getItems();
         if (n.length > 0) {
-            return Registries.ITEM.getKey(n[0].getItem()).getPath();
+            return BuiltInRegistries.ITEM.getKey(n[0].getItem()).getPath();
         } else {
             return item.toString();
         }
     }
     private static String getItemPath(ItemLike item) {
-        return Registries.ITEM.getKey(item.asItem()).getPath();
+        return BuiltInRegistries.ITEM.getKey(item.asItem()).getPath();
     }
 }

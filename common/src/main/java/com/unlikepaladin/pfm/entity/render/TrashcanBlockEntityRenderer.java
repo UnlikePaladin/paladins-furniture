@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.entity.render;
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.InnerTrashcanBlock;
 import com.unlikepaladin.pfm.blocks.TrashcanBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
@@ -10,11 +11,10 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
-import net.minecraft.core.Registry;
 
 public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
@@ -71,7 +71,7 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implemen
                 }
                 if (!(itemStack.getItem() instanceof BlockItem)) {
                     matrices.translate(0.0, 0.0, 0.1);
-                } else if (Registries.ITEM.getKey(itemStack.getItem()).getNamespace().equals("pfm")) {
+                } else if (BuiltInRegistries.ITEM.getKey(itemStack.getItem()).getNamespace().equals("pfm")) {
                     matrices.translate(0.0, 0.0, 0.15);
                 }
                 int rot = 90;

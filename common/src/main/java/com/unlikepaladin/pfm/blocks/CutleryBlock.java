@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
@@ -87,7 +88,7 @@ public class CutleryBlock extends HorizontalDirectionalBlock {
     @Override
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getItemInHand(hand);
-        Block block = (Registries.BLOCK.get(Registries.ITEM.getKey(itemStack.getItem())));
+        Block block = (BuiltInRegistries.BLOCK.get(BuiltInRegistries.ITEM.getKey(itemStack.getItem())));
         if(block instanceof PlateBlock) {
             BlockState newState = block.defaultBlockState();
             world.setBlockAndUpdate(pos, newState.setValue(PlateBlock.CUTLERY, true).setValue(FACING, state.getValue(FACING)));

@@ -7,15 +7,16 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+
 
 import java.util.List;
 
 
 public class EmiFreezingRecipe implements EmiRecipe {
-    private final Identifier id;
+    private final ResourceLocation id;
     private final EmiIngredient input;
     private final EmiStack output;
     private final AbstractCookingRecipe recipe;
@@ -24,7 +25,7 @@ public class EmiFreezingRecipe implements EmiRecipe {
 
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return id;
     }
 
@@ -65,7 +66,7 @@ public class EmiFreezingRecipe implements EmiRecipe {
     @Override
     public void addWidgets(WidgetHolder widgets) {
         widgets.addFillingArrow(24, 5, 50 * recipe.getCookingTime()).tooltip((mx, my) -> {
-            return List.of(ClientTooltipComponent.create(Text.translatable("emi.cooking.time", recipe.getCookingTime() / 20f).getVisualOrderText()));
+            return List.of(ClientTooltipComponent.create(Component.translatable("emi.cooking.time", recipe.getCookingTime() / 20f).getVisualOrderText()));
         });
         if (infiniBurn) {
             widgets.addTexture(FreezingWidget.FULL_FREEZER, 1, 24);

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.data.materials;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.BasePressurePlateBlock;
@@ -42,7 +43,7 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
         String path = blockId.getPath();
         if (blockId.getNamespace().equals("tfc")) {
             if (path.contains("rock/polished/")) {
-                Optional<Block> cobble = Registries.BLOCK.getOptional(
+                Optional<Block> cobble = BuiltInRegistries.BLOCK.getOptional(
                         new ResourceLocation(blockId.getNamespace(), path.replace("polished", "raw")));
                 if (cobble.isPresent()) {
                     ResourceLocation id = new ResourceLocation(blockId.getNamespace(), path.replace("rock/polished/", ""));
@@ -123,8 +124,8 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
         };
         Block temp = null;
         for (ResourceLocation r : test) {
-            if (Registries.BLOCK.containsKey(r)) {
-                temp = Registries.BLOCK.get(r);
+            if (BuiltInRegistries.BLOCK.containsKey(r)) {
+                temp = BuiltInRegistries.BLOCK.get(r);
                 break;
             }
         }

@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.entity.render;
 
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -11,7 +12,6 @@ import net.minecraft.client.renderer.block.model.ItemTransforms;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
 
 public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
@@ -50,9 +50,9 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
                 default -> throw new IllegalStateException("Unexpected value: " + facing);
             }
             matrices.translate(x, y ,z);
-            matrices.multiply(Axis.POSITIVE_Y.rotationDegrees(-facing.toYRot()));
+            matrices.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
             if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getRecipe(), blockEntity.container, blockEntity.getMaxStackSize())) {
-                matrices.multiply(Axis.POSITIVE_Y.rotationDegrees((blockEntity.getWorld().getTime() + tickDelta) * 4));}
+                matrices.mulPose(Axis.YP.rotationDegrees((blockEntity.getLevel().getDayTime() + tickDelta) * 4));}
             matrices.scale(0.5f, 0.5f, 0.5f);
             Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemTransforms.TransformType.GROUND, lightAbove, overlay, matrices, vertexConsumers, 0);
             matrices.popPose();

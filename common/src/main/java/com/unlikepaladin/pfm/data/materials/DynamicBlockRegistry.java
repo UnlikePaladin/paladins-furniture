@@ -127,7 +127,7 @@ public class DynamicBlockRegistry {
 
         WoodVariant.Finder vanillaBamboo = WoodVariant.Finder.simple(
                 "minecraft", "bamboo", "bamboo_planks", "bamboo_block");
-        vanillaBamboo.addChild("stripped_log", new Identifier("minecraft:stripped_bamboo_block"));
+        vanillaBamboo.addChild("stripped_log", new ResourceLocation("minecraft:stripped_bamboo_block"));
 
         addBlockTypeFinder(WoodVariant.class, vanillaBamboo);
 

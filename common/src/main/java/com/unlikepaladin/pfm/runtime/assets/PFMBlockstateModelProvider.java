@@ -1,25 +1,19 @@
 package com.unlikepaladin.pfm.runtime.assets;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
-import com.google.common.hash.Hashing;
-import com.google.common.hash.HashingOutputStream;
 import com.google.gson.JsonElement;
-import com.google.gson.stream.JsonWriter;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.basicLamp.UnbakedBasicLampModel;
 import com.unlikepaladin.pfm.data.materials.StoneVariant;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
-import com.unlikepaladin.pfm.data.materials.WoodVariant;
-import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.mixin.PFMTextureSlotFactory;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.models.blockstates.*;
 import net.minecraft.data.models.model.*;
 import net.minecraft.world.level.block.Block;
@@ -27,14 +21,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.Item;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.nio.file.StandardOpenOption;
-import java.nio.file.attribute.FileAttribute;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.BiConsumer;
@@ -89,7 +78,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
     }
 
     private static Path getBlockStateJsonPath(Path root, Block block) {
-        ResourceLocation identifier = Registries.BLOCK.getKey(block);
+        ResourceLocation identifier = BuiltInRegistries.BLOCK.getKey(block);
         return root.resolve("assets/" + identifier.getNamespace() + "/blockstates/" + identifier.getPath() + ".json");
     }
 
@@ -336,13 +325,13 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
         public void generateBlockStateForBlock(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, BiFunction<Block, List<ResourceLocation>, BlockStateGenerator> stateSupplierBiFunction) {
             variantBaseHashMap.forEach((variantBase, block) -> {
-                if (!generatedStates.contains(Registries.BLOCK.getKey(block))) {
+                if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
                     ResourceLocation modelID = ModelLocationUtils.getModelLocation(block);
                     ResourceLocation id = new ResourceLocation(modelID.getNamespace(), "block/" + blockName);
                     List<ResourceLocation> ids = new ArrayList<>(1);
                     ids.add(id);
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
-                    generatedStates.add(Registries.BLOCK.getKey(block));
+                    generatedStates.add(BuiltInRegistries.BLOCK.getKey(block));
                 }
             });
         }
@@ -351,13 +340,13 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             variantBaseHashMap.forEach((variantBase, blockList) -> {
                 blockList.forEach(block1 -> {
                 Block block = (Block) block1;
-                if (!generatedStates.contains(Registries.BLOCK.getKey(block))) {
+                if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
                     ResourceLocation modelID = ModelLocationUtils.getModelLocation(block);
                     ResourceLocation id = new ResourceLocation(modelID.getNamespace(), "block/" + blockName);
                     List<ResourceLocation> ids = new ArrayList<>(1);
                     ids.add(id);
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
-                    generatedStates.add(Registries.BLOCK.getKey(block));
+                    generatedStates.add(BuiltInRegistries.BLOCK.getKey(block));
                 }});
             });
 
@@ -365,7 +354,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
 
         public void generateModelAndBlockStateForVariants(Map<VariantBase<?>, ? extends Block> variantBaseHashMap, String blockName, ModelTemplate[] models, BiFunction<Block, List<ResourceLocation>, BlockStateGenerator> stateSupplierBiFunction, BiFunction<Boolean, VariantBase<?>, TextureMapping> textureBiFunction) {
             variantBaseHashMap.forEach((variantBase, block) -> {
-                if (!generatedStates.contains(Registries.BLOCK.getKey(block))) {
+                if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
                     String blockName2 = blockName;
 
                     boolean stripped = block.getDescriptionId().contains("stripped");
@@ -388,7 +377,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                     }
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
                     PFMBlockstateModelProvider.modelPathMap.put(block, ids.get(0));
-                    generatedStates.add(Registries.BLOCK.getKey(block));
+                    generatedStates.add(BuiltInRegistries.BLOCK.getKey(block));
                 }
             });
         }
@@ -398,7 +387,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                 List<ResourceLocation> allids = new ArrayList<>();
                 blockList.forEach(block1 -> {
                     Block block = (Block) block1;
-                    if (!generatedStates.contains(Registries.BLOCK.getKey(block))) {
+                    if (!generatedStates.contains(BuiltInRegistries.BLOCK.getKey(block))) {
                         boolean stripped = block.getDescriptionId().contains("stripped");
                         TextureMapping blockTexture = textureBiFunction.apply(stripped, variantBase);
                         ResourceLocation modelID = ModelLocationUtils.getModelLocation(block);
@@ -419,7 +408,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                         allids.addAll(ids);
                         this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids, color));
                         PFMBlockstateModelProvider.modelPathMap.put(block, ids.get(0));
-                        generatedStates.add(Registries.BLOCK.getKey(block));
+                        generatedStates.add(BuiltInRegistries.BLOCK.getKey(block));
                     }
                 });
             });

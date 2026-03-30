@@ -5,16 +5,11 @@ import com.unlikepaladin.pfm.mixin.PFMFeatureFlagFactory;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.client.renderer.block.BlockModelShaper;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.resource.featuretoggle.FeatureFlag;
-import net.minecraft.resource.featuretoggle.FeatureSet;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -115,8 +110,8 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
 
     @Override
     public List<FeatureFlag> getFeatureList() {
-        FeatureFlag flag = PFMFeatureFlagFactory.newFlag(getBaseBlock().getRequiredFeatures().universe, 0);
-        flag.mask = getBaseBlock().getRequiredFeatures().featuresMask;
+        FeatureFlag flag = PFMFeatureFlagFactory.newFlag(getBaseBlock().requiredFeatures().universe, 0);
+        flag.mask = getBaseBlock().requiredFeatures().mask;
         return List.of(flag);
     }
 

@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
@@ -70,7 +71,7 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
             }
             return InteractionResult.CONSUME;
         }
-        if(Registries.BLOCK.get(Registries.ITEM.getKey(itemStack.getItem())) instanceof CutleryBlock) {
+        if(BuiltInRegistries.BLOCK.get(BuiltInRegistries.ITEM.getKey(itemStack.getItem())) instanceof CutleryBlock) {
             world.setBlockAndUpdate(pos, state.setValue(CUTLERY, true));
             itemStack.shrink(1);
             return InteractionResult.SUCCESS;
@@ -92,7 +93,7 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
                 if (!plateBlockEntity.getItemInPlate().isEmpty()) {
                     ItemStack stack = plateBlockEntity.getItemInPlate();
                     spawnItemParticles(player, stack, 16);
-                    if (Registries.ITEM.getKey(stack.getItem()).toString().equals("sandwichable:sandwich")) {
+                    if (BuiltInRegistries.ITEM.getKey(stack.getItem()).toString().equals("sandwichable:sandwich")) {
                        eatSandwich(stack, world, player);
                     }
                     else {

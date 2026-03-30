@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.ToiletBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.fabricmc.fabric.api.object.builder.v1.block.entity.FabricBlockEntityTypeBuilder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -14,6 +15,6 @@ import net.minecraft.core.Registry;
 public class BlockEntityRegistryImpl {
 
     public static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String id, Block[] block, BlockEntityType.BlockEntitySupplier<T> factory) {
-        return Registry.register(Registries.BLOCK_ENTITY_TYPE, new ResourceLocation(PaladinFurnitureMod.MOD_ID, id), BlockEntityType.Builder.of(factory, block).build(null));
+        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, new ResourceLocation(PaladinFurnitureMod.MOD_ID, id), BlockEntityType.Builder.of(factory, block).build(null));
     }
 }

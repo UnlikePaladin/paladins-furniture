@@ -38,9 +38,9 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
         if (variant instanceof WoodVariant) {
             ResourceLocation finalId = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
             Material mainTexture = new Material(InventoryMenu.BLOCK_ATLAS, finalId);
-            if (!((PFMSpriteContentExtensions)mainTexture.getSprite().getContents()).pfm$isInitialized()) {
-                Material baseTextureSpriteId = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTexture(BlockType.PRIMARY));
-                ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
+            if (!((PFMSpriteContentExtensions)mainTexture.sprite().contents()).pfm$isInitialized()) {
+                Material baseTextureSpriteId = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.PRIMARY));
+                ModelHelper.generateTexture(herringboneTextureId.sprite(), baseTextureSpriteId.sprite(), 7, finalId);
             }
             return mainTexture.sprite();
         }
@@ -68,9 +68,9 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
     private void generateTextureIfNeeded(RenderContext context, VariantBase<?> variant) {
         ResourceLocation finalId = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
         Material mainTexture = new Material(InventoryMenu.BLOCK_ATLAS, finalId);
-        if (!((PFMSpriteContentExtensions)mainTexture.getSprite().getContents()).pfm$isInitialized()) {
-            Material baseTextureSpriteId = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTexture(BlockType.PRIMARY));
-            ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
+        if (!((PFMSpriteContentExtensions)mainTexture.sprite().contents()).pfm$isInitialized()) {
+            Material baseTextureSpriteId = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.PRIMARY));
+            ModelHelper.generateTexture(herringboneTextureId.sprite(), baseTextureSpriteId.sprite(), 7, finalId);
         }
         pushTextureTransform(context, mainTexture.sprite());
     }

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.entity.render;
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.PFMToasterBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
 import net.minecraft.client.Minecraft;
@@ -11,7 +12,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
 
 import java.util.Objects;
 

@@ -56,7 +56,7 @@ public class UnbakedMirrorModel implements UnbakedModel {
     }
 
     @Override
-    public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelLoader) {
 
     }
 
@@ -70,7 +70,7 @@ public class UnbakedMirrorModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(ModelBakery loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer, ResourceLocation modelId) {
+    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer, ResourceLocation modelId) {
         Map<String,BakedModel> bakedModels = new LinkedHashMap<>();
         for (String modelPartName: MODEL_PARTS) {
             bakedModels.put(modelPartName, loader.bake(new ResourceLocation(PaladinFurnitureMod.MOD_ID, modelPartName), rotationContainer));

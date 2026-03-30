@@ -27,7 +27,7 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
     public void pushTextureTransform(RenderContext context, TextureAtlasSprite sprite) {
         context.pushTransform(quad -> {
             TextureAtlasSprite originalSprite = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(InventoryMenu.BLOCK_ATLAS)).find(quad, 0);
-            if (originalSprite.getContents().getName() != sprite.getName()) {
+            if (originalSprite.contents().name() != sprite.contents().name()) {
                 for (int index = 0; index < 4; index++) {
                     float frameU = originalSprite.getUOffset(quad.spriteU(index, 0));
                     float frameV = originalSprite.getVOffset(quad.spriteV(index, 0));
@@ -44,9 +44,9 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
         context.pushTransform(quad -> {
             if (replacement != null && toReplace != null ){
                 TextureAtlasSprite originalSprite = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(atlasId)).find(quad, 0);
-                ResourceLocation keyId = originalSprite.getContents().getName();
+                ResourceLocation keyId = originalSprite.contents().name();
                 int textureIndex = IntStream.range(0, toReplace.size())
-                        .filter(i -> keyId.equals(toReplace.get(i).getContents().getName()))
+                        .filter(i -> keyId.equals(toReplace.get(i).contents().name()))
                         .findFirst()
                         .orElse(-1);
 

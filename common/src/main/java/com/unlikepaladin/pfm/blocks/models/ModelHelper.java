@@ -13,6 +13,7 @@ import de.androidpit.colorthief.ColorThief;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
@@ -125,13 +126,13 @@ public class ModelHelper {
     public static int[][] generatePalette(TextureAtlasSprite texture, int colorCount) {
         if (texture == null)
             return null;
-        else if (paletteCache.containsKey(Pair.of(texture.getContents().getName(), colorCount)))
-            return paletteCache.get(Pair.of(texture.getContents().getName(), colorCount));
+        else if (paletteCache.containsKey(Pair.of(texture.contents().name(), colorCount)))
+            return paletteCache.get(Pair.of(texture.contents().name(), colorCount));
 
         BufferedImage image = getSpriteBufferedImage(texture);
         int[][] palette = ColorThief.getPalette(image, colorCount, 5, false);
-        paletteCache.put(new Pair<>(texture.getContents().getName(), colorCount), palette);
-        String filename = texture.getContents().getName().getNamespace().replace("/", "") + "_" + texture.getContents().getId().getPath().replace("/", "") + "_original.png";
+        paletteCache.put(new Pair<>(texture.contents().name(), colorCount), palette);
+        String filename = texture.contents().name().getNamespace().replace("/", "") + "_" + texture.contents().name().getPath().replace("/", "") + "_original.png";
         //writeBufferedImageToFile(image, filename);
 
         //writePaletteToImage(palette, texture.getId().getNamespace().replace("/", "") + "_" + texture.getId().getPath().replace("/", "") + "_palette.png");
@@ -162,11 +163,11 @@ public class ModelHelper {
     }
 
     public static BufferedImage getSpriteBufferedImage(TextureAtlasSprite sprite) {
-        int width = sprite.getContents().getWidth();
-        int height = sprite.getContents().getHeight();
+        int width = sprite.contents().width();
+        int height = sprite.contents().height();
         // Upload the sprite to ensure underlying NativeImage data is present
         sprite.uploadFirstFrame();
-        NativeImage atlasImage = ((PFMSpriteContentsAccessor)sprite.getContents()).pfm$getImages()[0];
+        NativeImage atlasImage = ((PFMSpriteContentsAccessor)sprite.contents()).pfm$getImages()[0];
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
@@ -266,7 +267,7 @@ public class ModelHelper {
     }
 
     public static DyeColor getColor(ResourceLocation identifier) {
-        if (Registries.BLOCK.get(identifier) instanceof DyeableFurnitureBlock block) {
+        if (BuiltInRegistries.BLOCK.get(identifier) instanceof DyeableFurnitureBlock block) {
             return block.getPFMColor();
         }
         for (DyeColor color : DyeColor.values()) {
@@ -290,7 +291,7 @@ public class ModelHelper {
     }
 
     public static Block getWoolColor(String string) {
-        Block block = Registries.BLOCK.get(new ResourceLocation("minecraft", string+"_wool"));
+        Block block = BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft", string+"_wool"));
         if (block != Blocks.AIR) {
             return block;
         }
@@ -321,7 +322,7 @@ public class ModelHelper {
             if (model != null) {
                 List<BakedQuad> quadList = model.getQuads(block.defaultBlockState(), Direction.NORTH, RandomSource.create(42L));
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).getSprite().getContents().getName();
+                    id = quadList.get(0).getSprite().contents().name();
                     if (id != null && id != MissingTextureAtlasSprite.getLocation()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;
@@ -333,7 +334,7 @@ public class ModelHelper {
             if (model != null) {
                 List<BakedQuad> quadList = model.getQuads(block.defaultBlockState(), Direction.UP, RandomSource.create(42L));
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).getSprite().getContents().getName();
+                    id = quadList.get(0).getSprite().contents().name();
                     if (id != null && id != MissingTextureAtlasSprite.getLocation()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;
@@ -341,7 +342,7 @@ public class ModelHelper {
                 }
                 quadList = model.getQuads(block.defaultBlockState(), Direction.DOWN, RandomSource.create(42L));
                 if (!quadList.isEmpty()) {
-                    id = quadList.get(0).getSprite().getContents().getName();
+                    id = quadList.get(0).getSprite().contents().name();
                     if (id != null && id != MissingTextureAtlasSprite.getLocation()) {
                         blockToTextureMap.put(pair, new Pair<>(id, attemptNum));
                         return id;
@@ -392,7 +393,7 @@ public class ModelHelper {
         else if(idExists(getLogId(block, "_bottom"), PackType.CLIENT_RESOURCES, IdLocation.TEXTURES)) {
             id = getLogId(block, "_bottom");
         }
-        else if (Registries.BLOCK.getKey(block).getNamespace().equals("quark")) {
+        else if (BuiltInRegistries.BLOCK.getKey(block).getNamespace().equals("quark")) {
             id = TextureMapping.getBlockTexture(block, postfix);
         } else {
             PaladinFurnitureMod.GENERAL_LOGGER.warn("Couldn't find texture for, {}, this is attempt {} at finding it", block, attemptNum);
@@ -404,7 +405,7 @@ public class ModelHelper {
 
     // For compatibility with Twilight Forest's Planks
     public static ResourceLocation getPlankId(Block block) {
-        ResourceLocation identifier = Registries.BLOCK.getKey(block);
+        ResourceLocation identifier = BuiltInRegistries.BLOCK.getKey(block);
         String namespace = identifier.getNamespace();
         String path = identifier.getPath().replace("luphie_", "");
         if (path.contains("planks")) {
@@ -455,7 +456,7 @@ public class ModelHelper {
     }
 
     public static ResourceLocation getLogId(Block block, String postFix) {
-        ResourceLocation identifier = Registries.BLOCK.getKey(block);
+        ResourceLocation identifier = BuiltInRegistries.BLOCK.getKey(block);
         String namespace = identifier.getNamespace();
         String path = identifier.getPath().replace("luphie_", "");
         if (namespace.contains("luphieclutteredmod") && path.contains("flowering_log")) {
@@ -600,11 +601,11 @@ public class ModelHelper {
         }
         ResourceLocation id2 = new ResourceLocation(id.getNamespace(), idLocation.getSerializedName() + "/" + id.getPath() + idLocation.getFileType());
         AtomicBoolean exists = new AtomicBoolean(false);
-        for (ResourcePack rp : PFMRuntimeResources.RESOURCE_PACK_LIST) {
+        for (PackResources rp : PFMRuntimeResources.RESOURCE_PACK_LIST) {
             if (exists.get())
                 break;
 
-            rp.findResources(resourceType, id2.getNamespace(), id2.getPath(), (identifier, supplier) -> {
+            rp.listResources(resourceType, id2.getNamespace(), id2.getPath(), (identifier, supplier) -> {
                 try {
                     supplier.get().read();
                     supplier.get().close();

@@ -101,11 +101,11 @@ public abstract class AbstractFreezerScreenHandler extends RecipeBookMenu<Contai
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot2 = (Slot)this.slots.get(slot);
-        if (slot2 != null && slot2.hasItem()) {
-            ItemStack itemStack2 = slot2.getItem();
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemStack2 = slot.getItem();
             itemStack = itemStack2.copy();
-            if (slot == 2) {
+            if (index == 2) {
                 if (!this.moveItemStackTo(itemStack2, 3, 39, true)) {
                     return ItemStack.EMPTY;
                 }
@@ -113,20 +113,16 @@ public abstract class AbstractFreezerScreenHandler extends RecipeBookMenu<Contai
             } else if (index == 1 || index == 0 ? !this.moveItemStackTo(itemStack2, 3, 39, false) : (this.isFreezeable(itemStack2) ? !this.moveItemStackTo(itemStack2, 0, 1, false) : (this.isFuel(itemStack2) ? !this.moveItemStackTo(itemStack2, 1, 2, false) : (index >= 3 && index < 30 ? !this.moveItemStackTo(itemStack2, 30, 39, false) : index >= 30 && index < 39 && !this.moveItemStackTo(itemStack2, 3, 30, false))))) {
                 return ItemStack.EMPTY;
             }
-
             if (itemStack2.isEmpty()) {
-                slot2.set(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             } else {
-                slot2.setChanged();
+                slot.setChanged();
             }
-
             if (itemStack2.getCount() == itemStack.getCount()) {
                 return ItemStack.EMPTY;
             }
-
-            slot2.onTake(player, itemStack2);
+            slot.onTake(player, itemStack2);
         }
-
         return itemStack;
     }
 

@@ -13,6 +13,8 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.*;
 import net.minecraft.world.level.block.Block;
@@ -259,7 +261,7 @@ public class PFMTagProvider extends PFMProvider {
 
     public static IntrinsicHolderTagsProvider.IntrinsicTagAppender<Block> getOrCreateTagBuilder(TagKey<Block> tag) {
         TagBuilder builder = getTagBuilder(tag);
-        return getProviderPlatform(builder, Registries.BLOCK, "pfm");
+        return getProviderPlatform(builder, BuiltInRegistries.BLOCK, "pfm");
     }
 
     @ExpectPlatform
@@ -281,7 +283,7 @@ public class PFMTagProvider extends PFMProvider {
         this.generateTags();
         tagBuilders.forEach((id, builder) -> {
             List<TagEntry> list = builder.build();
-            List<TagEntry> list2 = list.stream().filter((tag) -> !tag.verifyIfPresent(Registries.BLOCK::containsKey, tagBuilders::containsKey)).toList();
+            List<TagEntry> list2 = list.stream().filter((tag) -> !tag.verifyIfPresent(BuiltInRegistries.BLOCK::containsKey, tagBuilders::containsKey)).toList();
             if (!list2.isEmpty()) {
                 throw new IllegalArgumentException(String.format("Couldn't define tag %s as it is missing following references: %s", id, list.stream().map(Objects::toString).collect(Collectors.joining(","))));
             }

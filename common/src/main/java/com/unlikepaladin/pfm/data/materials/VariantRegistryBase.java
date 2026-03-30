@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.data.materials;
 import com.google.common.collect.ImmutableMap;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
@@ -54,8 +55,8 @@ public abstract class VariantRegistryBase<T extends VariantBase<T>> {
         this.registerBlockType(this.getDefaultType());
         // adds finders
         finders.stream().map(VariantBase.SetFinder::get).forEach(f -> f.ifPresent(this::registerBlockType));
-        for (Block block : Registries.BLOCK) {
-            this.getVariantFromBlock(block, Registries.BLOCK.getKey(block)).ifPresent(this::registerBlockType);
+        for (Block block : BuiltInRegistries.BLOCK) {
+            this.getVariantFromBlock(block, BuiltInRegistries.BLOCK.getKey(block)).ifPresent(this::registerBlockType);
         }
         this.finalizeAndFreeze();
     }

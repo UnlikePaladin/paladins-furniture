@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.entity.render;
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
 import com.unlikepaladin.pfm.client.EntityRenderIDs;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
@@ -18,7 +19,6 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BedRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BrightnessCombiner;
@@ -26,7 +26,6 @@ import net.minecraft.client.resources.model.Material;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
 import net.minecraft.world.level.Level;
 
 public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBlockEntity> {

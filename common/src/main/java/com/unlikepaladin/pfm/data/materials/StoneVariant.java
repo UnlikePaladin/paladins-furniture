@@ -6,6 +6,8 @@ import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.mixin.PFMFeatureFlagFactory;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.ItemLike;
@@ -83,8 +85,8 @@ public class StoneVariant extends VariantBase<StoneVariant> {
 
     @Override
     public List<FeatureFlag> getFeatureList() {
-        FeatureFlag flag = PFMFeatureFlagFactory.newFlag(getBaseBlock().getRequiredFeatures().universe, 0);
-        flag.mask = getBaseBlock().getRequiredFeatures().featuresMask;
+        FeatureFlag flag = PFMFeatureFlagFactory.newFlag(getBaseBlock().requiredFeatures().universe, 0);
+        flag.mask = getBaseBlock().requiredFeatures().mask;
         return List.of(flag);
     }
 
@@ -95,9 +97,9 @@ public class StoneVariant extends VariantBase<StoneVariant> {
 
     @Override
     public void initializeChildrenBlocks() {
-        this.addChild("slab", this.findRelatedEntry("slab", Registries.BLOCK));
-        this.addChild("stairs", this.findRelatedEntry("stairs", Registries.BLOCK));
-        this.addChild("wall", this.findRelatedEntry("fence", Registries.BLOCK));
+        this.addChild("slab", this.findRelatedEntry("slab", BuiltInRegistries.BLOCK));
+        this.addChild("stairs", this.findRelatedEntry("stairs", BuiltInRegistries.BLOCK));
+        this.addChild("wall", this.findRelatedEntry("fence", BuiltInRegistries.BLOCK));
     }
 
     @Override
@@ -144,8 +146,8 @@ public class StoneVariant extends VariantBase<StoneVariant> {
 
         public static Finder simple(ResourceLocation stoneTypeName, ResourceLocation polishedName, ResourceLocation rawName) {
             return new Finder(stoneTypeName,
-                    () -> Registries.BLOCK.get(polishedName),
-                    () -> Registries.BLOCK.get(rawName));
+                    () -> BuiltInRegistries.BLOCK.get(polishedName),
+                    () -> BuiltInRegistries.BLOCK.get(rawName));
         }
 
         public void addChild(String childType, String childName) {
@@ -161,11 +163,11 @@ public class StoneVariant extends VariantBase<StoneVariant> {
                 try {
                     Block plank = polishedFinder.get();
                     Block log = rawFinder.get();
-                    Block d = Registries.BLOCK.get(new ResourceLocation("minecraft","air"));
+                    Block d = BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft","air"));
                     if (plank != d && log != d && plank != null && log != null) {
                         StoneVariant w = new StoneVariant(id, plank, log);
                         for (Map.Entry<String, ResourceLocation> entry : childNames.entrySet()){
-                            Object child = Registries.BLOCK.getOptional(entry.getValue()).isPresent() ? Registries.BLOCK.get(entry.getValue()) : Registries.ITEM.get(entry.getValue());
+                            Object child = BuiltInRegistries.BLOCK.getOptional(entry.getValue()).isPresent() ? BuiltInRegistries.BLOCK.get(entry.getValue()) : BuiltInRegistries.ITEM.get(entry.getValue());
                             w.addChild(entry.getKey(), child);
                         }
                         return Optional.of(w);

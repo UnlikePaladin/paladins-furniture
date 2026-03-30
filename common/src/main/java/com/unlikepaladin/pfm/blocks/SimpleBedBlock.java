@@ -88,7 +88,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
             if (world.getBlockState(blockPos).is(this)) {
                 world.removeBlock(blockPos, false);
             }
-            world.explode(null, DamageSource.badRespawnPointExplosion(), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0f, true, Explosion.BlockInteraction.DESTROY);
+            world.explode(null, DamageSource.badRespawnPointExplosion(blockPos.getCenter()), null, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, 5.0f, true, Level.ExplosionInteraction.BLOCK);
             return InteractionResult.SUCCESS;
         }
         if (state.getValue(OCCUPIED)) {

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.menu;
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.StoveBlockEntityBalm;
 import net.blay09.mods.cookingforblockheads.client.render.RenderUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -7,7 +8,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.ItemStack;
-import com.mojang.math.Quaternion;
 import net.minecraft.world.level.Level;
 
 public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBlockEntityBalm> {
@@ -31,7 +31,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
             if (!itemStack.isEmpty()) {
                 poseStack.pushPose();
                 poseStack.translate(-0.55F, 0.0F, 0.5F);
-                poseStack.mulPose(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
                 RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer);
                 poseStack.popPose();
             }
@@ -40,7 +40,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
             if (!itemStack.isEmpty()) {
                 poseStack.pushPose();
                 poseStack.translate(0.55F, 0.0F, 0.5F);
-                poseStack.mulPose(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
                 RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer);
                 poseStack.popPose();
             }
@@ -49,7 +49,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
             if (!itemStack.isEmpty()) {
                 poseStack.pushPose();
                 poseStack.translate(-0.55F, 0.0F, -0.5F);
-                poseStack.mulPose(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
                 RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer);
                 poseStack.popPose();
             }
@@ -58,7 +58,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
             if (!itemStack.isEmpty()) {
                 poseStack.pushPose();
                 poseStack.translate(0.55F, 0.0F, -0.5F);
-                poseStack.mulPose(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
+                poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
                 RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer);
                 poseStack.popPose();
             }

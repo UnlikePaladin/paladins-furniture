@@ -1,12 +1,12 @@
 package com.unlikepaladin.pfm.client;
 
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import net.minecraft.server.packs.ResourcePackFileNotFoundException;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.server.packs.metadata.MetadataSectionSerializer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.IoSupplier;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -30,24 +30,24 @@ public class PathPackRPWrapper implements PackResources {
 
     @Nullable
     @Override
-    public InputSupplier<InputStream> openRoot(String... segments) {
+    public IoSupplier<InputStream> getRootResource(String... segments) {
         if (PFMRuntimeResources.ready && Arrays.asList(segments).contains("pack.png")) {
-            return delegate.get().openRoot(segments);
+            return delegate.get().getRootResource(segments);
         }
         return null;
     }
 
     @Override
-    public InputSupplier<InputStream> open(ResourceType type, Identifier id) {
+    public IoSupplier<InputStream> getResource(PackType type, ResourceLocation id) {
         if (PFMRuntimeResources.ready)
             return delegate.get().getResource(type, id);
         return () -> null;
     }
 
     @Override
-    public void findResources(ResourceType type, String namespace, String prefix, ResultConsumer consumer) {
+    public void listResources(PackType type, String namespace, String prefix, ResourceOutput consumer) {
         if (PFMRuntimeResources.ready)
-            delegate.get().findResources(type, namespace, prefix, consumer);
+            delegate.get().listResources(type, namespace, prefix, consumer);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class PathPackRPWrapper implements PackResources {
     }
 
     @Override
-    public String getName() {
+    public String packId() {
         return "PFM-Runtime-RP";
     }
 

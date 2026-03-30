@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.data.materials;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
@@ -49,7 +50,7 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
         String path = blockId.getPath();
         if (blockId.getNamespace().equals("tfc")) {
             if (path.contains("wood/planks/")) {
-                Optional<Block> log = Registries.BLOCK.getOptional(
+                Optional<Block> log = BuiltInRegistries.BLOCK.getOptional(
                         new ResourceLocation(blockId.getNamespace(), path.replace("planks", "log")));
                 if (log.isPresent()) {
                     ResourceLocation id = new ResourceLocation(blockId.getNamespace(), path.replace("wood/planks/", ""));
@@ -127,8 +128,8 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
         };
         Block temp = null;
         for (ResourceLocation r : test) {
-            if (Registries.BLOCK.containsKey(r)) {
-                temp = Registries.BLOCK.get(r);
+            if (BuiltInRegistries.BLOCK.containsKey(r)) {
+                temp = BuiltInRegistries.BLOCK.get(r);
                 break;
             }
         }

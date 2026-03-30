@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.*;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.RecipeHolder;
@@ -178,7 +179,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
     }
 
     private static void addFuel(Map<Item, Integer> fuelTimes, TagKey<Item> tag, int fuelTime) {
-        for (Holder<Item> registryEntry : BuiltinRegistries.ITEM.getTagOrEmpty(tag)) {
+        for (Holder<Item> registryEntry : BuiltInRegistries.ITEM.getTagOrEmpty(tag)) {
             fuelTimes.put(registryEntry.value(), fuelTime);
         }
     }

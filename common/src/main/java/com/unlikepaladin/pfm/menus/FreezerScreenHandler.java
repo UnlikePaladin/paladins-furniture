@@ -1,13 +1,9 @@
 package com.unlikepaladin.pfm.menus;
 
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
-import com.unlikepaladin.pfm.menus.AbstractFreezerScreenHandler;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.Container;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.inventory.ContainerData;
 

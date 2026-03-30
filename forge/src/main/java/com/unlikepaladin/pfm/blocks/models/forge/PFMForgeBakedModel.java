@@ -116,7 +116,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         for (Map.Entry<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> entry : snapshot.entrySet()) {
             ResourceLocation keyId = entry.getKey().getFirst();
             int index = IntStream.range(0, toReplace.size())
-                    .filter(i -> keyId.equals(toReplace.get(i).getContents().getName()))
+                    .filter(i -> keyId.equals(toReplace.get(i).contents().name()))
                     .findFirst()
                     .orElse(-1);
 
@@ -146,7 +146,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
             // Use computeIfAbsent for atomic check-and-put operation
             BakedQuad resultQuad = quadToTransformedQuad.computeIfAbsent(quadKey, key -> {
-                if (quad.getSprite().getContents().getName().equals(spriteData.getId())) {
+                if (quad.getSprite().contents().name().equals(spriteData.getId())) {
                     // Same sprite, return original quad
                     return quad;
                 } else {
@@ -261,7 +261,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             this.maxV = sprite.getV1();
             this.x = sprite.getX();
             this.y = sprite.getY();
-            this.id = sprite.getContents().getName();
+            this.id = sprite.contents().name();
         }
 
         @Override

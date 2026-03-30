@@ -7,9 +7,9 @@ import com.unlikepaladin.pfm.config.option.Side;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.client.gui.components.Button;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -26,13 +26,13 @@ public class PFMConfigScreen extends Screen {
     public AbstractConfigOption<?> focusedConfigOption;
     private Button resetButton;
     private final HashMap<String, AbstractConfigOption> options;
-    private final Minecraft minecraft;
+    private final Minecraft client;
     public static boolean isOnServer = false;
     private final MutableComponent TITLE;
     public PFMConfigScreen(Minecraft client, Screen parent) {
         super(Component.translatable("pfm.config.title"));
         this.parent = parent;
-        this.minecraft = client;
+        this.client = client;
         TITLE = Component.translatable("pfm.config.title");
         this.options = PaladinFurnitureMod.getPFMConfig().options;
     }
@@ -40,7 +40,7 @@ public class PFMConfigScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == 256 && !optionListWidget.hasChanges.isEmpty()) {
-            minecraft.setScreen(new ConfirmScreen(t -> {
+            client.setScreen(new ConfirmScreen(t -> {
                 if (t){
                     this.optionListWidget.save();
                     try {
@@ -74,7 +74,7 @@ public class PFMConfigScreen extends Screen {
         super.init();
         this.optionListWidget = new PFMOptionListWidget(this, this.client);
         this.addWidget(this.optionListWidget);
-        this.resetButton = this.addRenderableWidget(ButtonWidget.builder(Component.translatable("pfm.option.resetAll"), button -> {
+        this.resetButton = this.addRenderableWidget(Button.builder(Component.translatable("pfm.option.resetAll"), button -> {
             options.forEach((title, option) -> {
                 if (option.getSide() == Side.CLIENT){
                     if (option.getType() == Boolean.class) {
@@ -92,16 +92,16 @@ public class PFMConfigScreen extends Screen {
                     }
                 }
             });
-        }).dimensions(this.width/2 - 155, this.height -29, 150, 20).build());
-        this.addRenderableWidget(ButtonWidget.builder(ScreenTexts.DONE, button -> {
+        }).bounds(this.width/2 - 155, this.height -29, 150, 20).build());
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> {
             this.optionListWidget.save();
-            this.minecraft.setScreen(this.parent);
+            this.client.setScreen(this.parent);
             try {
                 PaladinFurnitureMod.getPFMConfig().save();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }).dimensions(this.width / 2 - 155 + 160, this.height - 29, 150, 20).build());
+        }).bounds(this.width / 2 - 155 + 160, this.height - 29, 150, 20).build());
     }
 
     @Override

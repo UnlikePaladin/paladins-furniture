@@ -12,6 +12,7 @@ import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.RequirementsStrategy;
 import net.minecraft.advancements.CriterionTriggerInstance;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.TagKey;
@@ -108,9 +109,9 @@ public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
     }
 
     @Override
-    public void offerTo(Consumer<RecipeJsonProvider> exporter, Identifier recipeId) {
-        this.builder.parent(new Identifier("recipes/root")).criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).criteriaMerger(CriterionMerger.OR);
-        exporter.accept(new SimpleFurnitureRecipeJsonProvider(recipeId, this.output, this.nbtElement, this.outputCount, this.group == null ? "" : this.group, this.inputs, this.builder, new Identifier(recipeId.getNamespace(), "recipes/furniture/" + recipeId.getPath())));
+    public void save(Consumer<FinishedRecipe> exporter, ResourceLocation recipeId) {
+        this.builder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).requirements(RequirementsStrategy.OR);
+        exporter.accept(new SimpleFurnitureRecipeJsonProvider(recipeId, this.output, this.nbtElement, this.outputCount, this.group == null ? "" : this.group, this.inputs, this.builder, new ResourceLocation(recipeId.getNamespace(), "recipes/furniture/" + recipeId.getPath())));
     }
 
     private void validate(ResourceLocation recipeId) {
@@ -153,7 +154,7 @@ public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
             }
             json.add("ingredients", jsonArray);
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("item", Registries.ITEM.getKey(this.output).toString());
+            jsonObject.addProperty("item", BuiltInRegistries.ITEM.getKey(this.output).toString());
             if (this.count > 1) {
                 jsonObject.addProperty("count", this.count);
             }

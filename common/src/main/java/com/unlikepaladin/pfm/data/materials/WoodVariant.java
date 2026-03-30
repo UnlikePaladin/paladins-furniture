@@ -6,6 +6,8 @@ import com.unlikepaladin.pfm.mixin.PFMFeatureFlagFactory;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.entity.vehicle.Boat;
@@ -74,7 +76,7 @@ public class WoodVariant extends VariantBase<WoodVariant> {
     protected Block findLogRelatedBlock(String append, String postpend) {
         String post = postpend.isEmpty() ? "" : "_" + postpend;
         ResourceLocation id = this.getIdentifier();
-        String logN = Registries.BLOCK.getKey(this.logBlock).getPath();
+        String logN = BuiltInRegistries.BLOCK.getKey(this.logBlock).getPath();
         ResourceLocation[] targets = {
                 new ResourceLocation(id.getNamespace(), logN + "_" + append + post),
                 new ResourceLocation(id.getNamespace(), logN + "_" + append + post.replace("_", "")),
@@ -104,15 +106,15 @@ public class WoodVariant extends VariantBase<WoodVariant> {
                     new ResourceLocation(id.getNamespace(), append + "_" + id.getPath() + postNether.replace("_", ""))
             };
             for (ResourceLocation r : nether_targets) {
-                if (Registries.BLOCK.containsKey(r)) {
-                    found = Registries.BLOCK.get(r);
+                if (BuiltInRegistries.BLOCK.containsKey(r)) {
+                    found = BuiltInRegistries.BLOCK.get(r);
                     break;
                 }
             }
         }
         for (ResourceLocation r : targets) {
-            if (Registries.BLOCK.containsKey(r)) {
-                found = Registries.BLOCK.get(r);
+            if (BuiltInRegistries.BLOCK.containsKey(r)) {
+                found = BuiltInRegistries.BLOCK.get(r);
                 break;
             }
         }
@@ -157,8 +159,8 @@ public class WoodVariant extends VariantBase<WoodVariant> {
 
     @Override
     public List<FeatureFlag> getFeatureList() {
-        FeatureFlag flag = PFMFeatureFlagFactory.newFlag(getBaseBlock().getRequiredFeatures().universe, 0);
-        flag.mask = getBaseBlock().getRequiredFeatures().featuresMask;
+        FeatureFlag flag = PFMFeatureFlagFactory.newFlag(getBaseBlock().requiredFeatures().universe, 0);
+        flag.mask = getBaseBlock().requiredFeatures().mask;
         return List.of(flag);
     }
 
@@ -166,24 +168,24 @@ public class WoodVariant extends VariantBase<WoodVariant> {
     public void initializeChildrenBlocks() {
         this.addChild("planks", this.plankBlock);
         this.addChild("log", this.logBlock);
-        this.addChild("leaves", this.findRelatedEntry("leaves", Registries.BLOCK));
+        this.addChild("leaves", this.findRelatedEntry("leaves", BuiltInRegistries.BLOCK));
         this.addChild("stripped_log", this.findLogRelatedBlock("stripped", "log"));
         this.addChild("stripped_wood", this.findLogRelatedBlock("stripped", "wood"));
-        this.addChild("wood", this.findRelatedEntry("wood", Registries.BLOCK));
-        this.addChild("slab", this.findRelatedEntry("slab", Registries.BLOCK));
-        this.addChild("stairs", this.findRelatedEntry("stairs", Registries.BLOCK));
-        this.addChild("fence", this.findRelatedEntry("fence", Registries.BLOCK));
-        this.addChild("fence_gate", this.findRelatedEntry("fence_gate", Registries.BLOCK));
-        this.addChild("door", this.findRelatedEntry("door", Registries.BLOCK));
-        this.addChild("trapdoor", this.findRelatedEntry("trapdoor", Registries.BLOCK));
-        this.addChild("button", this.findRelatedEntry("button", Registries.BLOCK));
-        this.addChild("pressure_plate", this.findRelatedEntry("pressure_plate", Registries.BLOCK));
+        this.addChild("wood", this.findRelatedEntry("wood", BuiltInRegistries.BLOCK));
+        this.addChild("slab", this.findRelatedEntry("slab", BuiltInRegistries.BLOCK));
+        this.addChild("stairs", this.findRelatedEntry("stairs", BuiltInRegistries.BLOCK));
+        this.addChild("fence", this.findRelatedEntry("fence", BuiltInRegistries.BLOCK));
+        this.addChild("fence_gate", this.findRelatedEntry("fence_gate", BuiltInRegistries.BLOCK));
+        this.addChild("door", this.findRelatedEntry("door", BuiltInRegistries.BLOCK));
+        this.addChild("trapdoor", this.findRelatedEntry("trapdoor", BuiltInRegistries.BLOCK));
+        this.addChild("button", this.findRelatedEntry("button", BuiltInRegistries.BLOCK));
+        this.addChild("pressure_plate", this.findRelatedEntry("pressure_plate", BuiltInRegistries.BLOCK));
     }
 
     @Override
     public void initializeChildrenItems() {
-        this.addChild("boat", this.findRelatedEntry("boat", Registries.ITEM));
-        this.addChild("sign", this.findRelatedEntry("sign", Registries.ITEM));
+        this.addChild("boat", this.findRelatedEntry("boat", BuiltInRegistries.ITEM));
+        this.addChild("sign", this.findRelatedEntry("sign", BuiltInRegistries.ITEM));
     }
 
     public boolean hasStripped() {
@@ -225,8 +227,8 @@ public class WoodVariant extends VariantBase<WoodVariant> {
 
         public static Finder simple(ResourceLocation woodTypeName, ResourceLocation planksName, ResourceLocation logName) {
             return new Finder(woodTypeName,
-                    () -> Registries.BLOCK.get(planksName),
-                    () -> Registries.BLOCK.get(logName));
+                    () -> BuiltInRegistries.BLOCK.get(planksName),
+                    () -> BuiltInRegistries.BLOCK.get(logName));
         }
 
         public void addChild(String childType, String childName) {
@@ -242,11 +244,11 @@ public class WoodVariant extends VariantBase<WoodVariant> {
                 try {
                     Block plank = planksFinder.get();
                     Block log = logFinder.get();
-                    Block d = Registries.BLOCK.get(new ResourceLocation("minecraft","air"));
+                    Block d = BuiltInRegistries.BLOCK.get(new ResourceLocation("minecraft","air"));
                     if (plank != d && log != d && plank != null && log != null) {
                         WoodVariant w = new WoodVariant(id, plank, log);
                         for (Map.Entry<String, ResourceLocation> entry : childNames.entrySet()){
-                            Object child = Registries.BLOCK.getOptional(entry.getValue()).isPresent() ? Registries.BLOCK.get(entry.getValue()) : Registries.ITEM.get(entry.getValue());
+                            Object child = BuiltInRegistries.BLOCK.getOptional(entry.getValue()).isPresent() ? BuiltInRegistries.BLOCK.get(entry.getValue()) : BuiltInRegistries.ITEM.get(entry.getValue());
                             w.addChild(entry.getKey(), child);
                         }
                         return Optional.of(w);

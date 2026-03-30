@@ -83,9 +83,9 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     private TextureAtlasSprite generateTextureIfNeeded(VariantBase<?> variant) {
         ResourceLocation finalId = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
         Material mainTexture = new Material(InventoryMenu.BLOCK_ATLAS, finalId);
-        if (!((PFMSpriteContentExtensions)mainTexture.getSprite().getContents()).pfm$isInitialized()) {
-            Material baseTextureSpriteId = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTexture(BlockType.PRIMARY));
-            ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
+        if (!((PFMSpriteContentExtensions)mainTexture.sprite().contents()).pfm$isInitialized()) {
+            Material baseTextureSpriteId = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.PRIMARY));
+            ModelHelper.generateTexture(herringboneTextureId.sprite(), baseTextureSpriteId.sprite(), 7, finalId);
         }
         return mainTexture.sprite();
     }
@@ -93,7 +93,7 @@ public class ForgeHerringboneModel extends PFMForgeBakedModel {
     @Override
     public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         Pair<ItemStack, Direction> directionPair = new Pair<>(stack, face);
-        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && !((PFMSpriteContentExtensions)cache.get(directionPair).get(0).getSprite().getContents()).pfm$isInitialized()) {
+        if (cache.containsKey(directionPair) && !cache.get(directionPair).isEmpty() && !((PFMSpriteContentExtensions)cache.get(directionPair).get(0).getSprite().contents()).pfm$isInitialized()) {
             cache.remove(directionPair);
         }
         return super.getQuadsCached(stack, state, face, random);

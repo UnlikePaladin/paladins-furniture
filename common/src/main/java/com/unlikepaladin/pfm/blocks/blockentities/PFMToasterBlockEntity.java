@@ -7,10 +7,10 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
@@ -92,10 +92,10 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
     }
 
     private void explode() {
-        if(!world.isClient) {
-            world.removeBlock(pos, true);
-            PlayerEntity player = world.getClosestPlayer(pos.getX(), pos.getZ(), 8, 10, false);
-            world.createExplosion(player, DamageSource.player(player), null, pos.getX(), pos.getY(), pos.getZ(), 2.2f, true, World.ExplosionSourceType.BLOCK);
+        if(!level.isClientSide) {
+            level.removeBlock(getBlockPos(), true);
+            Player player = level.getNearestPlayer(getBlockPos().getX(), getBlockPos().getZ(), 8, 10, false);
+            level.explode(player, DamageSource.playerAttack(player), null, getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ(), 2.2f, true, Level.ExplosionInteraction.BLOCK);
         }
     }
 
@@ -200,7 +200,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
         if(this.level.getBlockState(this.worldPosition).getBlock() instanceof PFMToasterBlock) {
             this.level.setBlockAndUpdate(getBlockPos(), this.level.getBlockState(this.worldPosition).setValue(PFMToasterBlock.ON, false));
         }
-        world.playSound(null, pos, SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), SoundSource.BLOCKS, 0.8F, 4);
+        level.playSound(null, getBlockPos(), SoundEvents.NOTE_BLOCK_BELL.value(), SoundSource.BLOCKS, 0.8F, 4);
         toastProgress = 0;
         toasting = false;
         updateNeighbors = true;

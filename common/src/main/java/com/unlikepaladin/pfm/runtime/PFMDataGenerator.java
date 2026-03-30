@@ -40,7 +40,7 @@ public class PFMDataGenerator extends PFMGenerator {
             setDataRunning(true);
             log("Packs:");
             for (PackResources pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
-                log("\tPack {}", pack.getName());
+                log("\tPack {}", pack.packId());
                 for (String namespace : pack.getNamespaces(PackType.SERVER_DATA)) {
                     log("\t\tNamespace {}", namespace);
                 }

@@ -12,6 +12,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
@@ -139,7 +140,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             predicate = (idx) -> idx.getNamespace().contains(string) && idx.getPath().contains(string2);
         }
 
-        Stream<TagKey<Item>> keyStream = Registries.ITEM.getTagNames().filter((tagKey) -> predicate.test(tagKey.location()));
+        Stream<TagKey<Item>> keyStream = BuiltInRegistries.ITEM.getTagNames().filter((tagKey) -> predicate.test(tagKey.location()));
         keyStream.forEach(this.searchResultTags::add);
     }
 
@@ -159,7 +160,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
     @Override
     protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
         int x = this.leftPos;

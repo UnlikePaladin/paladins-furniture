@@ -5,6 +5,8 @@ import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.ShowerHandleItem;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.MaterialColor;
@@ -12,8 +14,6 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.item.ItemGroups;
-import net.minecraft.util.Pair;
 
 import java.util.function.Supplier;
 
@@ -27,7 +27,7 @@ public class BlockItemRegistry {
         registerBlock("leather_block", PaladinFurnitureModBlocksItems.LEATHER_BLOCK, true);
     }
 
-    public static void registerBlock(String blockName, Block block, BlockItem item, Pair<String, ItemGroup> group) {
+    public static void registerBlock(String blockName, Block block, BlockItem item, Tuple<String, CreativeModeTab> group) {
         PaladinFurnitureModBlocksItems.BLOCKS.add(block);
         registerBlockPlatformSpecific(blockName, block, false);
         registerItemPlatformSpecific(blockName, ()-> item, group);
@@ -44,19 +44,19 @@ public class BlockItemRegistry {
     public static void registerFurniture(String blockName, Block block, int count) {
         PaladinFurnitureModBlocksItems.BLOCKS.add(block);
         registerBlockPlatformSpecific(blockName, block, false);
-        registerItemPlatformSpecific(blockName, () -> new BlockItem(block, new Item.Properties().maxCount(count)), PaladinFurnitureMod.FURNITURE_GROUP);
+        registerItemPlatformSpecific(blockName, () -> new BlockItem(block, new Item.Properties().stacksTo(count)), PaladinFurnitureMod.FURNITURE_GROUP);
     }
 
     public static void registerBlock(String blockName, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerBlockItemPlatformSpecific(blockName, block, new Pair<>("building_blocks", ItemGroups.BUILDING_BLOCKS));
+            registerBlockItemPlatformSpecific(blockName, block, new Tuple<>("building_blocks", CreativeModeTabs.BUILDING_BLOCKS));
         }
         registerBlockPlatformSpecific(blockName, block, false);
     }
 
     @ExpectPlatform
-    public static void registerBlockItemPlatformSpecific(String itemName, Block block, Pair<String, ItemGroup> group) {
+    public static void registerBlockItemPlatformSpecific(String itemName, Block block, Tuple<String, CreativeModeTab> group) {
         throw new UnsupportedOperationException();
     }
 
@@ -66,7 +66,7 @@ public class BlockItemRegistry {
     }
 
     @ExpectPlatform
-    public static void registerItemPlatformSpecific(String itemName, Supplier<Item> itemSupplier, Pair<String, ItemGroup> group) {
+    public static void registerItemPlatformSpecific(String itemName, Supplier<Item> itemSupplier, Tuple<String, CreativeModeTab> group) {
         throw new UnsupportedOperationException();
     }
 

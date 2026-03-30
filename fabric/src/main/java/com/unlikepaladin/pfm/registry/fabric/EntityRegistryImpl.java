@@ -4,6 +4,7 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
 import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRegistry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -16,6 +17,6 @@ public class EntityRegistryImpl {
     }
 
     public static void registerEntityType(String id, EntityType<?> entityType) {
-        Registry.register(Registries.ENTITY_TYPE, new ResourceLocation(PaladinFurnitureMod.MOD_ID, id), entityType);
+        Registry.register(BuiltInRegistries.ENTITY_TYPE, new ResourceLocation(PaladinFurnitureMod.MOD_ID, id), entityType);
     }
 }

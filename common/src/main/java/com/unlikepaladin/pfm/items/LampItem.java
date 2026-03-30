@@ -5,17 +5,11 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.NonNullList;
-
-import java.util.Map;
 
 public class LampItem extends BlockItem {
     public LampItem(Block block, Properties settings) {
@@ -45,9 +39,6 @@ public class LampItem extends BlockItem {
         tag.putString("variant", WoodVariantRegistry.OAK.getSerializedName());
         stack.addTagElement("BlockEntityTag", tag);
         return stack;
-    }
-
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
     }
 
     @ExpectPlatform

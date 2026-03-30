@@ -6,10 +6,10 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.texture.SpriteContents;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Pair;
+import net.minecraft.util.Tuple;
 
 import java.util.*;
 import java.util.function.BiFunction;
@@ -17,7 +17,7 @@ import java.util.function.Function;
 
 public class PFMSpriteRegistry {
     public static ResourceLocation HERRINGBONE_PLANKS = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/template_herringbone_planks");
-    public static Map<ResourceLocation, Function<SpriteContents, List<Pair<ResourceLocation, SpriteContents>>>> DYNAMIC_SPRITE_GENERATORS = new HashMap<>();
+    public static Map<ResourceLocation, Function<SpriteContents, List<Tuple<ResourceLocation, SpriteContents>>>> DYNAMIC_SPRITE_GENERATORS = new HashMap<>();
     public static Map<ResourceLocation, TextureReloadQueue.SpriteCoordinates> PFM_SPRITE_COORDINATES = new HashMap<>();
     public static Map<ResourceLocation, ResourceLocation> PFM_SPRITES = new HashMap<>();
 

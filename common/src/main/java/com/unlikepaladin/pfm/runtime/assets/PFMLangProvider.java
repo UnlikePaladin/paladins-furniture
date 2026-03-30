@@ -17,10 +17,8 @@ import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.CloseableResourceManager;
-import net.minecraft.server.packs.resources.MultiPackResourceManager;
-import net.minecraft.server.packs.resources.Resource;
-import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.*;
+import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.language.LanguageInfo;
@@ -202,7 +200,7 @@ public class PFMLangProvider extends PFMProvider {
         boolean supported = false;
         for (PackResources pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
             try {
-                InputSupplier<InputStream> sup = pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation(PaladinFurnitureMod.MOD_ID, "lang/" + languageCode + ".json"));
+                IoSupplier<InputStream> sup = pack.getResource(PackType.CLIENT_RESOURCES, new ResourceLocation(PaladinFurnitureMod.MOD_ID, "lang/" + languageCode + ".json"));
                 if (sup == null)
                     continue;
                 InputStream stream = sup.get();
@@ -232,7 +230,7 @@ public class PFMLangProvider extends PFMProvider {
                 }
             }
             catch (IOException | RuntimeException exception) {
-                getParent().getLogger().warn("Unable to parse language metadata section of resourcepack: {}", pack.getName(), exception);
+                getParent().getLogger().warn("Unable to parse language metadata section of resourcepack: {}", pack.packId(), exception);
             }
         });
         return ImmutableMap.copyOf(map);
@@ -332,7 +330,7 @@ public class PFMLangProvider extends PFMProvider {
         String baseBlockName = translate(variant.getBaseBlock().getDescriptionId());
         List<String> common = findCommonWords(variantName.get(), baseBlockName);
         variantName.set("");
-        if (variant == WoodVariantRegistry.getVariantFromVanillaWoodType(BoatEntity.Type.BAMBOO)) {
+        if (variant == WoodVariantRegistry.getVariantFromVanillaWoodType(Boat.Type.BAMBOO)) {
             variantName.set(variantName.get().replace("Block of", ""));
         }
         variantName.set(String.join(" ", common));

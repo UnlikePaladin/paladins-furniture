@@ -34,7 +34,7 @@ public class PFMAssetGenerator extends PFMGenerator {
             setAssetsRunning(true);
             log("Packs:");
             for (PackResources pack : PFMRuntimeResources.RESOURCE_PACK_LIST) {
-                log("\tPack {}", pack.getName());
+                log("\tPack {}", pack.packId());
                 for (String namespace : pack.getNamespaces(PackType.CLIENT_RESOURCES)) {
                     log("\t\tNamespace {}", namespace);
                 }

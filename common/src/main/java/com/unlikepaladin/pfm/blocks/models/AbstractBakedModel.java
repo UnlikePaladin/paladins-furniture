@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.Sheets;
@@ -158,7 +159,7 @@ public abstract class AbstractBakedModel implements BakedModel {
         boolean stripped = state.getBlock().getDescriptionId().contains("stripped");
         List<TextureAtlasSprite> list = new ArrayList<>(3);
         if (state.getBlock() instanceof SimpleBedBlock) {
-            DyeColor color = ModelHelper.getColor(Registries.BLOCK.getKey(state.getBlock()));
+            DyeColor color = ModelHelper.getColor(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
             Material mainTexture = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.PLANKS));
             Material spriteIdentifier = Sheets.BED_TEXTURES[color.getId()];
             list.add(mainTexture.sprite());

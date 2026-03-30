@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.entity.render;
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.PlateBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
 import net.minecraft.client.Minecraft;
@@ -10,10 +11,9 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
-import com.mojang.math.Vector3f;
-import net.minecraft.core.Registry;
 
 public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
@@ -36,10 +36,10 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
                 case EAST -> matrices.translate(0.35, 0.08, 0.5);
             }
             int rot = 90;
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(g));
-            matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(rot));
-            if (Registries.ITEM.getId(itemStack.getItem()).toString().equals("sandwichable:sandwich")) {
-                matrices.multiply(RotationAxis.POSITIVE_X.rotationDegrees(270.0f));
+            matrices.mulPose(Axis.YP.rotationDegrees(g));
+            matrices.mulPose(Axis.XP.rotationDegrees(rot));
+            if (BuiltInRegistries.ITEM.getKey(itemStack.getItem()).toString().equals("sandwichable:sandwich")) {
+                matrices.mulPose(Axis.XP.rotationDegrees(270.0f));
                 matrices.translate(0.0, 0.11, 0.05);
             }
             int lightAbove = LevelRenderer.getLightColor(plateBlockEntity.getLevel(), plateBlockEntity.getBlockPos().above());

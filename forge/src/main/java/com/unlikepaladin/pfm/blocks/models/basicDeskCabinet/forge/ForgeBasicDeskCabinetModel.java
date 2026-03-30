@@ -94,7 +94,7 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType renderType) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType renderLayer) {
         if (state != null && state.getBlock() instanceof BasicDeskCabinetBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             List<BakedQuad> secondaryQuads = new ArrayList<>();
             BasicDeskCabinetBlock block = (BasicDeskCabinetBlock) state.getBlock();
@@ -166,7 +166,7 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
        return Collections.emptyList();
     }
 
-    private List<BakedQuad> legsDesk(BlockState state, Direction side, RandomSource rand, ModelData extraData, RenderType renderType, boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
+    private List<BakedQuad> legsDesk(BlockState state, Direction side, RandomSource rand, ModelData extraData, RenderType renderLayer, boolean north, boolean south, boolean west, boolean east, int northLeg, int southLeg, int westLeg, int eastLeg) {
         List<BakedQuad> quads = new ArrayList<>();
         if (!north && !east) {
             quads.addAll(getTemplateBakedModels().get(northLeg).getQuads(state, side, rand, extraData, renderLayer));
@@ -184,7 +184,7 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
     }
 
 
-    private List<BakedQuad> middleDesk(BlockState state, Direction side, RandomSource rand, ModelData extraData, RenderType layer, boolean left, boolean right, int openOffset) {
+    private List<BakedQuad> middleDesk(BlockState state, Direction side, RandomSource rand, ModelData extraData, RenderType renderLayer, boolean left, boolean right, int openOffset) {
         if (left && right) {
             return getTemplateBakedModels().get((3 + openOffset)).getQuads(state, side, rand, extraData, renderLayer);
         }  else if (left) {

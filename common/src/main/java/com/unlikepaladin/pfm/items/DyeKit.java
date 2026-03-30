@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.items;
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.DyeableFurnitureBlockEntity;
 import com.unlikepaladin.pfm.entity.DyeableFurnitureEntity;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.entity.LivingEntity;
@@ -47,7 +48,7 @@ public class DyeKit extends Item {
                 level.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 String newBlock= blockState.getBlock().toString();
                 newBlock = newBlock.replace(((DyeableFurnitureBlock) blockState.getBlock()).getPFMColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
-                BlockState blockState1 = Registries.BLOCK.get(new ResourceLocation(newBlock)).withPropertiesOf(blockState);
+                BlockState blockState1 = BuiltInRegistries.BLOCK.get(new ResourceLocation(newBlock)).withPropertiesOf(blockState);
                 level.setBlock(blockPos, blockState1, 3);
                 stack.shrink(1);
                 dyed = true;

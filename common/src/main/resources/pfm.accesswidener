@@ -5,6 +5,7 @@ accessible class net/minecraft/world/level/block/entity/BlockEntityType$BlockEnt
 accessible method net/minecraft/data/loot/BlockLoot createSingleItemTable (Lnet/minecraft/world/level/ItemLike;)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
 accessible method net/minecraft/data/loot/BlockLoot createSinglePropConditionTable (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/state/properties/Property;Ljava/lang/Comparable;)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
 accessible class net/minecraft/data/tags/TagsProvider$TagAppender
+accessible class net/minecraft/data/tags/IntrinsicHolderTagsProvider$IntrinsicTagAppender
 accessible method net/minecraft/client/renderer/entity/ItemRenderer renderModelLists (Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V
 accessible class net/minecraft/data/HashCache$CacheUpdater
 accessible class net/minecraft/data/HashCache$ProviderCache
@@ -12,6 +13,6 @@ accessible field net/minecraft/world/item/CreativeModeTabs BUILDING_BLOCKS Lnet/
 accessible field net/minecraft/world/flag/FeatureFlagSet universe Lnet/minecraft/world/flag/FeatureFlagUniverse;
 accessible field net/minecraft/world/flag/FeatureFlagSet mask J
 accessible field net/minecraft/world/flag/FeatureFlag mask J
-accessible field net/minecraft/world/flag/FeatureFlag mask J
+mutable field net/minecraft/world/flag/FeatureFlag mask J
 accessible field net/minecraft/world/level/block/state/BlockBehaviour$Properties material Lnet/minecraft/world/level/material/Material;
-accessible class net/minecraft/client/gui/screens/PopupScreen <init> (Lnet/minecraft/network/chat/Component;Ljava/util/List;Lcom/google/common/collect/ImmutableList;)V
+accessible method net/minecraft/client/gui/screens/PopupScreen <init> (Lnet/minecraft/network/chat/Component;Ljava/util/List;Lcom/google/common/collect/ImmutableList;)V

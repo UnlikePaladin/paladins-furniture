@@ -41,7 +41,7 @@ public class FreezerScreen extends AbstractContainerScreen<AbstractFreezerScreen
     @Override
     protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         int k;
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, this.background);
         int i = this.leftPos;

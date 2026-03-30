@@ -9,6 +9,8 @@ import com.unlikepaladin.pfm.items.*;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
@@ -28,26 +30,26 @@ import java.util.function.Supplier;
 public class LateBlockRegistry {
 
     @ExpectPlatform
-    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> block, boolean registerItem, Pair<String, CreativeModeTab> group)
+    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> block, boolean registerItem, Tuple<String, CreativeModeTab> group)
     {
         return block.get();
     }
 
     @ExpectPlatform
-    public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, Pair<String, CreativeModeTab> group)
+    public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, Tuple<String, CreativeModeTab> group)
     {
         return block;
     }
 
     @ExpectPlatform
-    public static void registerLateItem(String itemName, Supplier<Item> item, Pair<String, ItemGroup> group) {
+    public static void registerLateItem(String itemName, Supplier<Item> item, Tuple<String, CreativeModeTab> group) {
         return;
     }
 
-    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> blockSupplier, int count, Pair<String, CreativeModeTab> group) {
+    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> blockSupplier, int count, Tuple<String, CreativeModeTab> group) {
         T block = registerLateBlock(blockName, blockSupplier, false, group);
         PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-        registerLateItem(blockName, () -> new BlockItem(block, new Item.Settings().maxCount(count)), group);
+        registerLateItem(blockName, () -> new BlockItem(block, new Item.Properties().stacksTo(count)), group);
         return block;
     }
 
@@ -56,7 +58,7 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.furnitureEntryMap.put(HerringbonePlankBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_herringbone_planks", () -> new HerringbonePlankBlock(AbstractBlock.Settings.copy(variant.getBaseBlock()).sounds(BlockSoundGroup.WOOD).mapColor(color).nonOpaque()), true, PaladinFurnitureMod.BUILDING_BLOCKS), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_herringbone_planks", () -> new HerringbonePlankBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).sound(SoundType.WOOD).color(color).noOcclusion()), true, PaladinFurnitureMod.BUILDING_BLOCKS), true);
             }
         }});
         PaladinFurnitureMod.furnitureEntryMap.put(BasicChairBlock.class, new FurnitureEntry<>() {{
@@ -305,9 +307,9 @@ public class LateBlockRegistry {
                 int i = 0;for (DyeColor color : DyeColor.values()) {
                 if (i > 15)
                         break;
-                    String blockName = variant.asString() + "_" + color.getName() +  "_simple_bed";
-                    SimpleBedBlock block = LateBlockRegistry.registerLateBlock(blockName, () -> new SimpleBedBlock(color, AbstractBlock.Settings.of(variant.getVanillaMaterial(), state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMaterialColor() : MapColor.WHITE_GRAY).sounds(variant.getBaseBlock().getSoundGroup(variant.getBaseBlock().getDefaultState())).requires(variant.getFeatureList().toArray(new FeatureFlag[0])).strength(0.2f).nonOpaque()), false, PaladinFurnitureMod.FURNITURE_GROUP);
-                    LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Settings().maxCount(1)), PaladinFurnitureMod.FURNITURE_GROUP);
+                    String blockName = variant.getSerializedName() + "_" + color.getName() +  "_simple_bed";
+                    SimpleBedBlock block = LateBlockRegistry.registerLateBlock(blockName, () -> new SimpleBedBlock(color, BlockBehaviour.Properties.of(variant.getVanillaMaterial(), state -> state.getValue(BedBlock.PART) == BedPart.FOOT ? color.getMaterialColor() : MaterialColor.WOOL).sound(variant.getBaseBlock().getSoundType(variant.getBaseBlock().defaultBlockState())).requiredFeatures(variant.getFeatureList().toArray(new FeatureFlag[0])).strength(0.2f).noOcclusion()), false, PaladinFurnitureMod.FURNITURE_GROUP);
+                    LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Properties().stacksTo(1)), PaladinFurnitureMod.FURNITURE_GROUP);
                     this.addBlock(variant, block, true);
                     PaladinFurnitureModBlocksItems.beds.add(block);
                     i++;
@@ -319,9 +321,9 @@ public class LateBlockRegistry {
                 int i = 0;for (DyeColor color : DyeColor.values()) {
                 if (i > 15)
                         break;
-                    String blockName = variant.asString() + "_" + color.getName() +  "_classic_bed";
-                    ClassicBedBlock block = LateBlockRegistry.registerLateBlock(blockName, () -> new ClassicBedBlock(color, AbstractBlock.Settings.of(variant.getVanillaMaterial(), state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMaterialColor() : MapColor.WHITE_GRAY).sounds(variant.getBaseBlock().getSoundGroup(variant.getBaseBlock().getDefaultState())).strength(0.2f).nonOpaque().requires(variant.getFeatureList().toArray(new FeatureFlag[0]))), false, PaladinFurnitureMod.FURNITURE_GROUP);
-                    LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Settings().maxCount(1)), PaladinFurnitureMod.FURNITURE_GROUP);
+                    String blockName = variant.getSerializedName() + "_" + color.getName() +  "_classic_bed";
+                    ClassicBedBlock block = LateBlockRegistry.registerLateBlock(blockName, () -> new ClassicBedBlock(color, BlockBehaviour.Properties.of(variant.getVanillaMaterial(), state -> state.getValue(BedBlock.PART) == BedPart.FOOT ? color.getMaterialColor() : MaterialColor.WOOL).sound(variant.getBaseBlock().getSoundType(variant.getBaseBlock().defaultBlockState())).strength(0.2f).noOcclusion().requiredFeatures(variant.getFeatureList().toArray(new FeatureFlag[0]))), false, PaladinFurnitureMod.FURNITURE_GROUP);
+                    LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Properties().stacksTo(1)), PaladinFurnitureMod.FURNITURE_GROUP);
                     this.addBlock(variant, block, true);
                     PaladinFurnitureModBlocksItems.beds.add(block);
                     i++;

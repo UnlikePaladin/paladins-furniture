@@ -12,20 +12,19 @@ import com.unlikepaladin.pfm.runtime.PFMAssetGenerator;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.*;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.util.Formatting;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionListWidget.Entry> {
@@ -153,23 +152,23 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
             this.configOption = configOption;
             this.optionName = optionName;
             this.index = index;
-            final MutableText sideText = configOption.getSide() == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
-            final MutableText styledTooltip = ((MutableText)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(Formatting.WHITE));
-            final Text tooltipText = sideText.append(Text.literal("\n")).append(styledTooltip);
-            this.supplier = Tooltip.of(tooltipText);
+            final MutableComponent sideText = configOption.getSide() == Side.CLIENT ? Component.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Component.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+            final MutableComponent styledTooltip = ((MutableComponent)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(ChatFormatting.WHITE));
+            final Component tooltipText = sideText.append(Component.literal("\n")).append(styledTooltip);
+            this.supplier = Tooltip.create(tooltipText);
 
-            this.valueButton = ButtonWidget.builder(optionName, button -> {
+            this.valueButton = Button.builder(optionName, button -> {
                 PFMOptionListWidget.this.parent.focusedConfigOption = configOption;
                 PFMOptionListWidget.this.newConfigValues.put(configOption, !PFMOptionListWidget.this.newConfigValues.get(configOption));
                 hasChanges = !hasChanges;
                 PFMOptionListWidget.this.hasChanges.set(index, hasChanges);
-            }).tooltip(supplier).dimensions(0,0,75,20).narrationSupplier(Supplier::get).build();
+            }).tooltip(supplier).bounds(0,0,75,20).createNarration(Supplier::get).build();
 
-            this.resetButton = ButtonWidget.builder(Text.translatable("controls.reset"), button -> {
+            this.resetButton = Button.builder(Component.translatable("controls.reset"), button -> {
                 PFMOptionListWidget.this.newConfigValues.put(configOption, configOption.getDefaultValue());
                 hasChanges = true;
                 PFMOptionListWidget.this.hasChanges.set(index, true);
-            }).dimensions(0,0,50,20).narrationSupplier(textSupplier -> Text.translatable("narrator.controls.reset", optionName)).build();
+            }).bounds(0,0,50,20).createNarration(textSupplier -> Component.translatable("narrator.controls.reset", optionName)).build();
         }
 
         @Override
@@ -221,12 +220,12 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
         ButtonEntry(Side side, final Component optionName, Component buttonText, Component tooltip, Button.OnPress pressAction) {
             this.optionName = optionName;
             this.side = side;
-            final MutableText sideText = side == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
-            final MutableText styledTooltip = ((MutableText)tooltip).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(Formatting.WHITE));
-            final Text tooltipText = sideText.append(Text.literal("\n")).append(styledTooltip);
-            this.supplier = Tooltip.of(tooltipText);
+            final MutableComponent sideText = side == Side.CLIENT ? Component.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Component.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+            final MutableComponent styledTooltip = ((MutableComponent)tooltip).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(ChatFormatting.WHITE));
+            final Component tooltipText = sideText.append(Component.literal("\n")).append(styledTooltip);
+            this.supplier = Tooltip.create(tooltipText);
 
-            this.button = new ButtonWidget(0, 0, 135, 20, buttonText, pressAction, Supplier::get){
+            this.button = new Button(0, 0, 135, 20, buttonText, pressAction, Supplier::get){
                 @Override
                 protected MutableComponent createNarrationMessage() {
                     return (MutableComponent) optionName;

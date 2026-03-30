@@ -20,7 +20,10 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.entity.ai.village.poi.PoiTypes;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Block;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import net.minecraft.world.level.block.state.BlockState;
@@ -41,12 +44,12 @@ public class PaladinFurnitureMod {
 	public static final String MOD_ID = "pfm";
 	public static final ResourceLocation FURNITURE_DYED_ID = new ResourceLocation("pfm:furniture_dyed");
 	public static final HashMap<Class<? extends Block>, FurnitureEntry<?>> furnitureEntryMap = new LinkedHashMap<>();
-	public static SoundEvent FURNITURE_DYED_EVENT = SoundEvent.of(FURNITURE_DYED_ID);
+	public static SoundEvent FURNITURE_DYED_EVENT = SoundEvent.createVariableRangeEvent(FURNITURE_DYED_ID);
 
 	public static final Logger GENERAL_LOGGER = LogManager.getLogger();
-	public static Pair<String, CreativeModeTab> FURNITURE_GROUP = new Pair<>("furniture", null);
-    public static Pair<String, CreativeModeTab> BUILDING_BLOCKS = new Pair<>("building_blocks", CreativeModeTab.BUILDING_BLOCKS);
-    public static Pair<String, CreativeModeTab> DYE_KITS = new Pair<>("dye_kits", null);;
+	public static Tuple<String, CreativeModeTab> FURNITURE_GROUP = new Tuple<>("furniture", null);
+    public static Tuple<String, CreativeModeTab> BUILDING_BLOCKS = new Tuple<>("building_blocks", CreativeModeTabs.BUILDING_BLOCKS);
+    public static Tuple<String, CreativeModeTab> DYE_KITS = new Tuple<>("dye_kits", null);;
 	private static PaladinFurnitureModUpdateChecker updateChecker;
 	public static boolean isClientSide = false;
 	public static List<PFMModCompatibility> pfmModCompatibilities = new ArrayList<>();
@@ -73,14 +76,14 @@ public class PaladinFurnitureMod {
 		}
 
 	public static void replaceHomePOIStates() {
-		PoiType homePOI = Registries.POINT_OF_INTEREST_TYPE.get(PoiTypes.HOME);
+		PoiType homePOI = BuiltInRegistries.POINT_OF_INTEREST_TYPE.get(PoiTypes.HOME);
 		Set<BlockState> originalBedStates = ((PFMPointOfInterestTypeAccessor)(Object)homePOI).getBlockStates();
 		Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateDefinition().getPossibleStates().stream().filter(state -> state.getValue(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
 		Set<BlockState> newBedStates = new HashSet<>();
 		newBedStates.addAll(originalBedStates);
 		newBedStates.addAll(addedBedStates);
 		((PFMPointOfInterestTypeAccessor) (Object)homePOI).setBlockStates(ImmutableSet.copyOf(newBedStates));
-		addedBedStates.forEach(state -> PFMPointOfInterestTypesAccessor.getBlockStateToPointOfInterestType().put(state, Registries.POINT_OF_INTEREST_TYPE.getHolderOrThrow(PoiTypes.HOME)));
+		addedBedStates.forEach(state -> PFMPointOfInterestTypesAccessor.getBlockStateToPointOfInterestType().put(state, BuiltInRegistries.POINT_OF_INTEREST_TYPE.getHolderOrThrow(PoiTypes.HOME)));
 	}
 
 	@ExpectPlatform

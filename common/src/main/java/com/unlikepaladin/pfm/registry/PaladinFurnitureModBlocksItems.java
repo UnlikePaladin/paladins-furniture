@@ -7,7 +7,9 @@ import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.items.DyeKit;
 import com.unlikepaladin.pfm.registry.dynamic.FurnitureEntry;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -25,7 +27,7 @@ import java.util.stream.Stream;
 
 public class PaladinFurnitureModBlocksItems {
     public static final List<Block> BLOCKS = new ArrayList<>();
-    public static final Map<Pair<String, ItemGroup>, List<Item>> ITEM_GROUP_LIST_MAP = new LinkedHashMap<>();
+    public static final Map<Tuple<String, CreativeModeTab>, List<Item>> ITEM_GROUP_LIST_MAP = new LinkedHashMap<>();
     public static Set<BlockState> originalHomePOIBedStates = new HashSet<>();
     public static final FreezerBlock WHITE_FREEZER = new FreezerBlock(BlockBehaviour.Properties.of(Material.METAL).explosionResistance(3.5f).strength(5.0f).sound(SoundType.STONE).color(MaterialColor.SNOW), () -> PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
     public static final FridgeBlock WHITE_FRIDGE = new FridgeBlock(BlockBehaviour.Properties.copy(WHITE_FREEZER).noOcclusion(), () -> PaladinFurnitureModBlocksItems.WHITE_FREEZER);
