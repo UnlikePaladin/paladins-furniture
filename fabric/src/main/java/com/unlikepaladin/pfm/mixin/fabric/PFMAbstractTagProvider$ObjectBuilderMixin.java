@@ -11,10 +11,10 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 import java.util.function.Function;
 
-@Mixin(ValueLookupTagProvider.ObjectBuilder.class)
+@Mixin(IntrinsicHolderTagsProvider.IntrinsicTagAppender.class)
 public interface PFMAbstractTagProvider$ObjectBuilderMixin {
     @Invoker("<init>")
-    static <T> ValueLookupTagProvider.ObjectBuilder<T> newTagProvider(TagBuilder builder, Function<T, RegistryKey<T>> valueToKey) {
+    static <T> IntrinsicHolderTagsProvider.IntrinsicTagAppender<T> newTagProvider(TagBuilder builder, Function<T, RegistryKey<T>> valueToKey) {
         throw new AssertionError();
     }
 }

@@ -2,73 +2,79 @@ package com.unlikepaladin.pfm.entity;
 
 import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.entity.data.DataTracker;
-import net.minecraft.entity.data.TrackedData;
-import net.minecraft.entity.data.TrackedDataHandlerRegistry;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.*;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.vehicle.DismountHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEntity<OfficeChairEntity> {
+public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<OfficeChairEntity> {
     private float yawVelocity = 0.0F;
     private int rotationInputTicks = 0;  // Track how long player has been pressing same direction
     private float lastRotationDirection = 0.0F;  // Track last rotation direction
     private float wheelSpinAngle = 0.0F;  // Accumulated wheel spin angle
-    private static final TrackedData<Byte> COLOR = DataTracker.registerData(OfficeChairEntity.class, TrackedDataHandlerRegistry.BYTE);
+    private static final EntityDataAccessor<Byte> COLOR = SynchedEntityData.defineId(OfficeChairEntity.class, EntityDataSerializers.BYTE);
 
-    public OfficeChairEntity(EntityType<? extends OfficeChairEntity> type, World world) {
+    public OfficeChairEntity(EntityType<? extends OfficeChairEntity> type, Level world) {
         super(type, world);
     }
 
-    public OfficeChairEntity(World world, double x, double y, double z) {
+    public OfficeChairEntity(Level world, double x, double y, double z) {
         super(Entities.OFFICE_CHAIR, world);
         this.setPos(x, y, z);
-        this.prevX = x;
-        this.prevY = y;
-        this.prevZ = z;
+        this.xo = x;
+        this.yo = y;
+        this.zo = z;
     }
 
     @Override
-    protected void initDataTracker() {
-        super.initDataTracker();
-        this.dataTracker.startTracking(COLOR, (byte)0);
+    protected void defineSynchedData() {
+        super.defineSynchedData();
+        this.entityData.define(COLOR, (byte)0);
     }
 
     @Override
     public void tick() {
         super.tick();
-        if (isAlive() && timeUntilRegen == 0) {
+        if (isAlive() && invulnerableTime == 0) {
             heal(0.1f);
         }
     }
 
     @Override
-    public void travel(Vec3d movementInput) {
-        if (this.hasPassengers() && this.getPrimaryPassenger() instanceof LivingEntity livingEntity) {
-            this.prevYaw = this.getYaw();
-            this.setPitch(livingEntity.getPitch() * 0.5F);
-            this.setRotation(this.getYaw(), this.getPitch());
-            this.bodyYaw = this.getYaw();
-            this.headYaw = this.bodyYaw;
+    public void travel(Vec3 movementInput) {
+        if (this.isVehicle() && this.getControllingPassenger() instanceof LivingEntity livingEntity) {
+            this.yRotO = this.getYRot();
+            this.setXRot(livingEntity.getXRot() * 0.5F);
+            this.setRot(this.getYRot(), this.getXRot());
+            this.yBodyRot = this.getYRot();
+            this.yHeadRot = this.yBodyRot;
 
-            float forwardsSpeed = livingEntity.forwardSpeed;
-            float rotationInput = livingEntity.sidewaysSpeed;
+            float forwardsSpeed = livingEntity.zza;
+            float rotationInput = livingEntity.xxa;
 
-            if (this.isLogicalSideForUpdatingMovement()) {
-                this.setMovementSpeed((float)this.getAttributeValue(EntityAttributes.GENERIC_MOVEMENT_SPEED));
+            this.flyingSpeed = this.getSpeed() * 0.1F;
+            if (this.isControlledByLocalInstance()) {
+                this.setSpeed((float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
                 final float baseRotationSensitivity = 0.5F;
                 final float maxRotationSensitivity = 2.0F;
 
@@ -98,23 +104,23 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
                 }
 
                 yawVelocity *= decay;
-                this.setYaw(this.getYaw() + yawVelocity);
+                this.setYRot(this.getYRot() + yawVelocity);
 
-                this.setRotation(this.getYaw(), this.getPitch());
-                this.bodyYaw = this.getYaw();
-                this.headYaw = this.bodyYaw;
+                this.setRot(this.getYRot(), this.getXRot());
+                this.yBodyRot = this.getYRot();
+                this.yHeadRot = this.yBodyRot;
 
-                super.travel(new Vec3d(0, movementInput.y, forwardsSpeed));
+                super.travel(new Vec3(0, movementInput.y, forwardsSpeed));
 
-            } else if (livingEntity instanceof PlayerEntity) {
-                this.setVelocity(Vec3d.ZERO);
+            } else if (livingEntity instanceof Player) {
+                this.setDeltaMovement(Vec3.ZERO);
             }
 
             // Accumulate wheel spin based on distance traveled this tick
-            double speed = this.getVelocity().horizontalLength();
+            double speed = this.getDeltaMovement().horizontalDistance();
             wheelSpinAngle += (float)(speed * 200);  // Adjust multiplier to control spin speed
 
-            this.tryCheckBlockCollision();
+            this.tryCheckInsideBlocks();
         } else {
             super.travel(movementInput);
         }
@@ -125,89 +131,89 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     }
 
     @Override
-    public void writeCustomDataToNbt(NbtCompound nbt) {
-        super.writeCustomDataToNbt(nbt);
+    public void addAdditionalSaveData(CompoundTag nbt) {
+        super.addAdditionalSaveData(nbt);
         nbt.putByte("Color", (byte)this.getPFMColor().getId());
     }
 
     @Override
-    public void readCustomDataFromNbt(NbtCompound nbt) {
-        super.readCustomDataFromNbt(nbt);
+    public void readAdditionalSaveData(CompoundTag nbt) {
+        super.readAdditionalSaveData(nbt);
         this.setPFMColor(DyeColor.byId(nbt.getByte("Color")));
     }
 
     @Override
-    public void updatePassengerPosition(Entity passenger) {
+    public void positionRider(Entity passenger) {
         if (this.hasPassenger(passenger)) {
-            float g = (float)((this.isRemoved() ? 0.01F : this.getMountedHeightOffset()) + passenger.getHeightOffset());
+            float g = (float)((this.isRemoved() ? 0.01F : this.getPassengersRidingOffset()) + passenger.getMyRidingOffset());
 
-            Vec3d offset = new Vec3d(0.0, 0.0, 0.0).rotateY(-this.getYaw() * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
-            passenger.setPosition(this.getX() + offset.x, this.getY() + (double)g, this.getZ() + offset.z);
-            passenger.setYaw(passenger.getYaw() + this.yawVelocity);
-            passenger.setHeadYaw(passenger.getHeadYaw() + this.yawVelocity);
+            Vec3 offset = new Vec3(0.0, 0.0, 0.0).yRot(-this.getYRot() * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
+            passenger.setPos(this.getX() + offset.x, this.getY() + (double)g, this.getZ() + offset.z);
+            passenger.setYRot(passenger.getYRot() + this.yawVelocity);
+            passenger.setYHeadRot(passenger.getYHeadRot() + this.yawVelocity);
             this.copyEntityData(passenger);
         }
     }
 
     protected void copyEntityData(Entity entity) {
-        entity.setBodyYaw(this.getYaw());
-        float f = MathHelper.wrapDegrees(entity.getYaw() - this.getYaw());
-        float g = MathHelper.clamp(f, -105.0F, 105.0F);
-        entity.prevYaw += g - f;
-        entity.setYaw(entity.getYaw() + g - f);
-        entity.setHeadYaw(entity.getYaw());
+        entity.setYBodyRot(this.getYRot());
+        float f = Mth.wrapDegrees(entity.getYRot() - this.getYRot());
+        float g = Mth.clamp(f, -105.0F, 105.0F);
+        entity.yRotO += g - f;
+        entity.setYRot(entity.getYRot() + g - f);
+        entity.setYHeadRot(entity.getYRot());
     }
 
     @Override
-    public void onPassengerLookAround(Entity passenger) {
+    public void onPassengerTurned(Entity passenger) {
         this.copyEntityData(passenger);
     }
 
     @Override
-    public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
-        if (player.isSpectator() || player.isSneaking()) {
-            return ActionResult.PASS;
+    public InteractionResult interactAt(Player player, Vec3 hitPos, InteractionHand hand) {
+        if (player.isSpectator() || player.isShiftKeyDown()) {
+            return InteractionResult.PASS;
         }
 
-        if (world.isClient) {
-            return ActionResult.CONSUME;
+        if (level.isClientSide) {
+            return InteractionResult.CONSUME;
         }
 
 
-        if (!this.hasPassengers() && !player.isSneaking() && hand == Hand.MAIN_HAND) {
+        if (!this.isVehicle() && !player.isShiftKeyDown() && hand == InteractionHand.MAIN_HAND) {
             player.startRiding(this, true);
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         return super.interactAt(player, hitPos, hand);
     }
 
     @Override
-    public @Nullable Entity getPrimaryPassenger() {
+    public @Nullable Entity getControllingPassenger() {
         return getFirstPassenger();
     }
 
     @Override
-    public boolean canBeRiddenInWater() {
+    public boolean rideableUnderWater() {
         return true;
     }
 
     @Override
-    public Vec3d updatePassengerForDismount(LivingEntity passenger) {
-        Direction direction = this.getMovementDirection();
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        Direction direction = this.getMotionDirection();
 
         if (direction.getAxis() != Direction.Axis.Y) {
-            int[][] dismountingOffsets = Dismounting.getDismountOffsets(direction);
-            BlockPos chairPos = this.getBlockPos();
-            BlockPos.Mutable dismountPos = new BlockPos.Mutable();
+            int[][] dismountingOffsets = DismountHelper.offsetsForDirection(direction);
+            BlockPos chairPos = this.getOnPos();
+            BlockPos.MutableBlockPos dismountPos = new BlockPos.MutableBlockPos();
 
-            for (EntityPose entityPose : passenger.getPoses()) {
-                Box box = passenger.getBoundingBox(entityPose);
+            for (Pose entityPose : passenger.getDismountPoses()) {
+                AABB box = passenger.getLocalBoundsForPose(entityPose);
                 for (int[] dismountingOffset : dismountingOffsets) {
                     dismountPos.set(chairPos.getX() + dismountingOffset[0], chairPos.getY() + 0.3, chairPos.getZ() + dismountingOffset[1]);
-                    double dismountHeight = this.world.getDismountHeight(dismountPos);
-                    if (Dismounting.canDismountInBlock(dismountHeight)) {
-                        Vec3d vec3d = Vec3d.ofCenter(dismountPos, dismountHeight);
-                        if (Dismounting.canPlaceEntityAt(this.world, passenger, box.offset(vec3d))) {
+                    double dismountHeight = this.level.getBlockFloorHeight(dismountPos);
+                    if (DismountHelper.isBlockFloorValid(dismountHeight)) {
+                        Vec3 vec3d = Vec3.upFromBottomCenterOf(dismountPos, dismountHeight);
+                        if (DismountHelper.canDismountTo(this.level, passenger, box.move(vec3d))) {
                             passenger.setPose(entityPose);
                             return vec3d;
                         }
@@ -215,33 +221,33 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
                 }
             }
         }
-        return super.updatePassengerForDismount(passenger);
+        return super.getDismountLocationForPassenger(passenger);
     }
 
 
-    public static DefaultAttributeContainer.Builder createMobAttributes(){
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 10.0D)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.1f);
+    public static AttributeSupplier.Builder createMobAttributes(){
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 10.0D)
+                .add(Attributes.MOVEMENT_SPEED, 0.1f);
     }
 
     @Override
-    public double getMountedHeightOffset() {
+    public double getPassengersRidingOffset() {
         return 0.55;
     }
 
     @Override
     public void setPFMColor(DyeColor color) {
-        byte b = this.dataTracker.get(COLOR);
-        this.dataTracker.set(COLOR, (byte)(b & 240 | color.getId() & 15));
+        byte b = this.entityData.get(COLOR);
+        this.entityData.set(COLOR, (byte)(b & 240 | color.getId() & 15));
     }
 
     @Override
     public DyeColor getPFMColor() {
-        return DyeColor.byId(this.dataTracker.get(COLOR) & 15);
+        return DyeColor.byId(this.entityData.get(COLOR) & 15);
     }
 
     @Override
-    public NbtCompound writeColor(NbtCompound nbt) {
+    public CompoundTag writeColor(CompoundTag nbt) {
         nbt.putByte("Color", (byte)this.getPFMColor().getId());
         return nbt;
     }
@@ -252,34 +258,34 @@ public class OfficeChairEntity extends MobEntity implements DyeableFurnitureEnti
     }
 
     @Override
-    public void onDeath(DamageSource source) {
-        super.onDeath(source);
+    public void die(DamageSource source) {
+        super.die(source);
     }
 
     @Override
-    protected void drop(DamageSource source) {
-        super.drop(source);
-        if (!source.isSourceCreativePlayer()) {
-            ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultStack();
-            stack.getOrCreateNbt().putString("Color", this.getPFMColor().asString());
+    protected void dropAllDeathLoot(DamageSource source) {
+        super.dropAllDeathLoot(source);
+        if (!source.isCreativePlayer()) {
+            ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultInstance();
+            stack.getOrCreateTag().putString("Color", this.getPFMColor().getSerializedName());
 
-            ItemEntity itemEntity = new ItemEntity(world, this.getX(), this.getY(), this.getZ(), stack);
-            this.world.spawnEntity(itemEntity);
+            ItemEntity itemEntity = new ItemEntity(level, this.getX(), this.getY(), this.getZ(), stack);
+            this.level.addFreshEntity(itemEntity);
         }
     }
 
     @Override
-    public void takeKnockback(double strength, double x, double z) {
+    public void knockback(double strength, double x, double z) {
 
     }
 
     @Override
     protected @Nullable SoundEvent getDeathSound() {
-        return SoundEvents.BLOCK_STONE_BREAK;
+        return SoundEvents.STONE_BREAK;
     }
 
     @Override
     protected @Nullable SoundEvent getHurtSound(DamageSource source) {
-        return SoundEvents.BLOCK_STONE_HIT;
+        return SoundEvents.STONE_HIT;
     }
 }

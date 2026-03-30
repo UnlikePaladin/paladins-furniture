@@ -5,31 +5,31 @@ import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.*;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.JsonHelper;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.registry.Registry;
-import net.minecraft.world.World;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.Registry;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.Level;
 
 import java.util.*;
 
 public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.CraftableFurnitureRecipe {
-    private final Identifier id;
+    private final ResourceLocation id;
     final String group;
     final ItemStack output;
-    final DefaultedList<Ingredient> input;
+    final NonNullList<Ingredient> input;
 
-    public SimpleFurnitureRecipe(Identifier id, String group, ItemStack output, DefaultedList<Ingredient> input) {
+    public SimpleFurnitureRecipe(ResourceLocation id, String group, ItemStack output, NonNullList<Ingredient> input) {
         this.id = id;
         this.group = group;
         this.output = output;
@@ -37,19 +37,19 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     }
 
     @Override
-    public DefaultedList<Ingredient> getIngredients() {
+    public NonNullList<Ingredient> getIngredients() {
         return this.input;
     }
 
     @Override
-    public boolean matches(PlayerInventory playerInventory, World world) {
+    public boolean matches(Inventory playerInventory, Level world) {
         List<Ingredient> ingredients = this.getIngredients();
         BitSet hasIngredients = new BitSet(ingredients.size());
 
         for (int i = 0; i < ingredients.size(); i++) {
             Ingredient ingredient = ingredients.get(i);
-            for (ItemStack stack : ingredient.getMatchingStacks()) {
-                if (playerInventory.count(stack.getItem()) >= stack.getCount()) {
+            for (ItemStack stack : ingredient.getItems()) {
+                if (playerInventory.countItem(stack.getItem()) >= stack.getCount()) {
                     hasIngredients.set(i);
                     break;
                 }
@@ -65,17 +65,17 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
 
 
     @Override
-    public ItemStack craft(PlayerInventory playerInventory) {
-        if (this.output.getNbt() != null && this.output.getNbt().isEmpty()) {
+    public ItemStack assemble(Inventory playerInventory) {
+        if (this.output.getTag() != null && this.output.getTag().isEmpty()) {
             ItemStack stack = this.output.copy();
-            stack.setNbt(null);
+            stack.setTag(null);
             return stack;
         }
         return this.output.copy();
     }
 
     @Override
-    public boolean fits(int width, int height) {
+    public boolean canCraftInDimensions(int width, int height) {
         return true;
     }
 
@@ -85,18 +85,13 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     }
 
     @Override
-    public ItemStack getOutput() {
+    public ItemStack getResultItem() {
         return this.output;
     }
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return this.id;
-    }
-
-    @Override
-    public ItemStack createIcon() {
-        return PaladinFurnitureModBlocksItems.WORKING_TABLE.asItem().getDefaultStack();
     }
 
     @Override
@@ -110,7 +105,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     }
 
     @Override
-    public boolean isIgnoredInRecipeBook() {
+    public boolean isSpecial() {
         return true;
     }
 
@@ -122,18 +117,18 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     public static class Serializer
             implements RecipeSerializer<SimpleFurnitureRecipe> {
         @Override
-        public SimpleFurnitureRecipe read(Identifier identifier, JsonObject jsonObject) {
-            String string = JsonHelper.getString(jsonObject, "group", "");
-            DefaultedList<Ingredient> defaultedList = getIngredients(JsonHelper.getArray(jsonObject, "ingredients"));
+        public SimpleFurnitureRecipe fromJson(ResourceLocation identifier, JsonObject jsonObject) {
+            String string = GsonHelper.getAsString(jsonObject, "group", "");
+            NonNullList<Ingredient> defaultedList = getIngredients(GsonHelper.getAsJsonArray(jsonObject, "ingredients"));
             if (defaultedList.isEmpty()) {
                 throw new JsonParseException("No ingredients for furniture recipe");
             }
-            ItemStack itemStack = outputFromJson(JsonHelper.getObject(jsonObject, "result"));
+            ItemStack itemStack = outputFromJson(GsonHelper.getAsJsonObject(jsonObject, "result"));
             return new SimpleFurnitureRecipe(identifier, string, itemStack, defaultedList);
         }
 
-        private static DefaultedList<Ingredient> getIngredients(JsonArray json) {
-            DefaultedList<Ingredient> defaultedList = DefaultedList.of();
+        private static NonNullList<Ingredient> getIngredients(JsonArray json) {
+            NonNullList<Ingredient> defaultedList = NonNullList.create();
             for (int i = 0; i < json.size(); ++i) {
                 Ingredient ingredient = Ingredient.fromJson(json.get(i));
                 if (ingredient.isEmpty()) continue;
@@ -144,32 +139,32 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
 
         public static ItemStack outputFromJson(JsonObject json) {
             Item item = getItem(json);
-            Map<String, NbtElement> elementList = null;
+            Map<String, Tag> elementList = null;
             if (json.has("tag")) {
                 elementList = new HashMap<>();
                 for(Map.Entry<String, JsonElement> jsonObject : json.get("tag").getAsJsonObject().entrySet()) {
                     elementList.put(jsonObject.getKey(), JsonOps.INSTANCE.convertTo(NbtOps.INSTANCE, jsonObject.getValue()));
                 }
             }
-            int i = JsonHelper.getInt(json, "count", 1);
+            int i = GsonHelper.getAsInt(json, "count", 1);
             if (i < 1) {
                 throw new JsonSyntaxException("Invalid output count: " + i);
             }
             ItemStack stack = new ItemStack(item, i);
-            NbtCompound compound = new NbtCompound();
+            CompoundTag compound = new CompoundTag();
             if (elementList != null) {
-                for(Map.Entry<String, NbtElement> nbtElementEntry : elementList.entrySet()) {
+                for(Map.Entry<String, Tag> nbtElementEntry : elementList.entrySet()) {
                     compound.put(nbtElementEntry.getKey(), nbtElementEntry.getValue());
                 }
             }
             if (!compound.isEmpty())
-                stack.setNbt(compound);
+                stack.setTag(compound);
             return stack;
         }
 
         public static Item getItem(JsonObject json) {
-            String string = JsonHelper.getString(json, "item");
-            Item item = Registries.ITEM.getOrEmpty(new Identifier(string)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + string + "'"));
+            String string = GsonHelper.getAsString(json, "item");
+            Item item = Registries.ITEM.getOptional(new ResourceLocation(string)).orElseThrow(() -> new JsonSyntaxException("Unknown item '" + string + "'"));
             if (item == Items.AIR) {
                 throw new JsonSyntaxException("Invalid item: " + string);
             }
@@ -177,25 +172,25 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
         }
 
         @Override
-        public SimpleFurnitureRecipe read(Identifier identifier, PacketByteBuf packetByteBuf) {
-            String string = packetByteBuf.readString();
+        public SimpleFurnitureRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf packetByteBuf) {
+            String string = packetByteBuf.readUtf();
             int i = packetByteBuf.readVarInt();
-            DefaultedList<Ingredient> defaultedList = DefaultedList.ofSize(i, Ingredient.EMPTY);
+            NonNullList<Ingredient> defaultedList = NonNullList.withSize(i, Ingredient.EMPTY);
             for (int j = 0; j < defaultedList.size(); ++j) {
-                defaultedList.set(j, Ingredient.fromPacket(packetByteBuf));
+                defaultedList.set(j, Ingredient.fromNetwork(packetByteBuf));
             }
-            ItemStack itemStack = packetByteBuf.readItemStack();
+            ItemStack itemStack = packetByteBuf.readItem();
             return new SimpleFurnitureRecipe(identifier, string, itemStack, defaultedList);
         }
 
         @Override
-        public void write(PacketByteBuf packetByteBuf, SimpleFurnitureRecipe simpleFurnitureRecipe) {
-            packetByteBuf.writeString(simpleFurnitureRecipe.group);
+        public void toNetwork(FriendlyByteBuf packetByteBuf, SimpleFurnitureRecipe simpleFurnitureRecipe) {
+            packetByteBuf.writeUtf(simpleFurnitureRecipe.group);
             packetByteBuf.writeVarInt(simpleFurnitureRecipe.input.size());
             for (Ingredient ingredient : simpleFurnitureRecipe.input) {
-                ingredient.write(packetByteBuf);
+                ingredient.toNetwork(packetByteBuf);
             }
-            packetByteBuf.writeItemStack(simpleFurnitureRecipe.output);
+            packetByteBuf.writeItem(simpleFurnitureRecipe.output);
         }
     }
 }

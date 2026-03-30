@@ -6,10 +6,13 @@ import com.unlikepaladin.pfm.data.materials.*;
 import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -17,30 +20,30 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public class UnbakedSimpleStoolModel implements UnbakedModel {
-    public static final Identifier[] SIMPLE_STOOL_PARTS_BASE = new Identifier[] {
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/simple_stool/simple_stool"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/simple_stool/simple_stool_tucked")
+    public static final ResourceLocation[] SIMPLE_STOOL_PARTS_BASE = new ResourceLocation[] {
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/simple_stool/simple_stool"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/simple_stool/simple_stool_tucked")
     };
 
-    public static final Identifier STOOL_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/simple_stool");
-    public static final List<Identifier> SIMPLE_STOOL_MODEL_IDS = new ArrayList<>() {
+    public static final ResourceLocation STOOL_MODEL_ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/simple_stool");
+    public static final List<ResourceLocation> SIMPLE_STOOL_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
 
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_simple_stool"));
+                add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_simple_stool"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_simple_stool"));
+                    add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_simple_stool"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
 
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_simple_stool"));
+                add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_simple_stool"));
             }
             add(STOOL_MODEL_ID);
         }
     };
 
-    private static final Identifier PARENT = new Identifier("block/block");
-    public Collection<Identifier> getModelDependencies() {
+    private static final ResourceLocation PARENT = new ResourceLocation("block/block");
+    public Collection<ResourceLocation> getDependencies() {
         return List.of(PARENT);
     }
 
@@ -49,13 +52,13 @@ public class UnbakedSimpleStoolModel implements UnbakedModel {
 
     }
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         return Collections.emptyList();
     }
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(ModelBakery loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer, ResourceLocation modelId) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(STOOL_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(STOOL_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(STOOL_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(STOOL_MODEL_ID).getCachedModelParts().get(rotationContainer));
 
@@ -63,7 +66,7 @@ public class UnbakedSimpleStoolModel implements UnbakedModel {
             PFMRuntimeResources.modelCacheMap.put(STOOL_MODEL_ID, new PFMBakedModelContainer());
 
         List<BakedModel> bakedModelList = new ArrayList<>();
-        for (Identifier modelPart : SIMPLE_STOOL_PARTS_BASE) {
+        for (ResourceLocation modelPart : SIMPLE_STOOL_PARTS_BASE) {
             bakedModelList.add(loader.bake(modelPart, rotationContainer));
         }
 
@@ -72,7 +75,7 @@ public class UnbakedSimpleStoolModel implements UnbakedModel {
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Identifier modelId, ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public static BakedModel getBakedModel(ResourceLocation modelId, ModelState settings, List<BakedModel> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 }

@@ -7,7 +7,7 @@ import net.minecraft.registry.tag.TagBuilder;
 import net.minecraft.registry.Registry;
 
 public class PFMTagProviderImpl {
-    public static <T> ValueLookupTagProvider.ObjectBuilder<T> getProviderPlatform(TagBuilder builder, Registry<T> registry, String modID) {
+    public static <T> IntrinsicHolderTagsProvider.IntrinsicTagAppender<T> getProviderPlatform(TagBuilder builder, Registry<T> registry, String modID) {
         return PFMAbstractTagProvider$ObjectBuilderMixin.newTagProvider(builder, t -> registry.getKey(t).get(), modID);
     }
 }

@@ -1,47 +1,41 @@
 package com.unlikepaladin.pfm.blocks.models;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.BasicChairBlock;
 import com.unlikepaladin.pfm.blocks.LogStoolBlock;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BedBlockEntity;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.TexturedRenderLayers;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.json.ModelOverrideList;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.Registries;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Pair;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.util.Tuple;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.core.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 public abstract class AbstractBakedModel implements BakedModel {
-    protected final ModelBakeSettings settings;
+    protected final ModelState settings;
     private final List<BakedModel> templateBakedModels;
 
     public static boolean reloading = false;
-    public AbstractBakedModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
+    public AbstractBakedModel(ModelState settings, List<BakedModel> templateBakedModels) {
         this.settings = settings;
         this.templateBakedModels = templateBakedModels;
     }
@@ -51,7 +45,7 @@ public abstract class AbstractBakedModel implements BakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         return Collections.emptyList();
     }
 
@@ -61,28 +55,28 @@ public abstract class AbstractBakedModel implements BakedModel {
     }
 
     @Override
-    public boolean hasDepth() {
+    public boolean isGui3d() {
         return true;
     }
 
     @Override
-    public boolean isSideLit() {
+    public boolean usesBlockLight() {
         return true;
     }
 
     @Override
-    public boolean isBuiltin() {
+    public boolean isCustomRenderer() {
         return false;
     }
 
     @Override
-    public ModelTransformation getTransformation() {
-        return templateBakedModels.get(0).getTransformation();
+    public ItemTransforms getTransforms() {
+        return templateBakedModels.get(0).getTransforms();
     }
 
     @Override
-    public ModelOverrideList getOverrides() {
-        return ModelOverrideList.EMPTY;
+    public ItemOverrides getOverrides() {
+        return ItemOverrides.EMPTY;
     }
 
     Map<Block, VariantBase<?>> blockVariantMap = new HashMap<>();
@@ -100,13 +94,13 @@ public abstract class AbstractBakedModel implements BakedModel {
     }
 
 
-    public <T> List<Sprite> getSpriteList(T element) {
-        List<Sprite> spriteList = getSpriteListWrapped(element);
+    public <T> List<TextureAtlasSprite> getSpriteList(T element) {
+        List<TextureAtlasSprite> spriteList = getSpriteListWrapped(element);
         if (spriteList == null || spriteList.isEmpty() || spriteList.size() < 2) {
             VariantBase<?> variant = WoodVariantRegistry.OAK;
-            SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(variant.getBaseBlock()));
-            SpriteIdentifier secondTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(variant.getSecondaryBlock()));
-            return List.of(mainTexture.getSprite(), secondTexture.getSprite());
+            Material mainTexture = new Material(InventoryMenu.BLOCK_ATLAS, ModelHelper.getTextureId(variant.getBaseBlock()));
+            Material secondTexture = new Material(InventoryMenu.BLOCK_ATLAS, ModelHelper.getTextureId(variant.getSecondaryBlock()));
+            return List.of(mainTexture.sprite(), secondTexture.sprite());
         }
         return spriteList;
     }
@@ -114,7 +108,7 @@ public abstract class AbstractBakedModel implements BakedModel {
     /**
         Accepts an ItemStack, a BlockState, a Block or a BlockItem
      */
-    public <T> List<Sprite> getSpriteListWrapped(T element) {
+    public <T> List<TextureAtlasSprite> getSpriteListWrapped(T element) {
         if (element instanceof BlockState) {
             BlockState state = (BlockState) element;
             return getSpriteFromState(state);
@@ -124,7 +118,7 @@ public abstract class AbstractBakedModel implements BakedModel {
             if (blockItemBlockStateMap.containsKey(blockItem))
                 return getSpriteFromState(blockItemBlockStateMap.get(blockItem));
 
-            BlockState state = blockItem.getBlock().getDefaultState();
+            BlockState state = blockItem.getBlock().defaultBlockState();
             blockItemBlockStateMap.put(blockItem, state);
             return getSpriteFromState(state);
         } else if (element instanceof Block) {
@@ -132,65 +126,65 @@ public abstract class AbstractBakedModel implements BakedModel {
             if (spriteList.containsKey(block))
                 return spriteList.get(block);
 
-            BlockState state = block.getDefaultState();
+            BlockState state = block.defaultBlockState();
             return getSpriteFromState(state);
         } else if (element instanceof ItemStack && ((ItemStack) element).getItem() instanceof BlockItem) {
             BlockItem blockItem = (BlockItem)((ItemStack) element).getItem();
             if (blockItemBlockStateMap.containsKey(blockItem))
                 return getSpriteFromState(blockItemBlockStateMap.get(blockItem));
 
-            BlockState state = blockItem.getBlock().getDefaultState();
+            BlockState state = blockItem.getBlock().defaultBlockState();
             blockItemBlockStateMap.put(blockItem, state);
             return getSpriteFromState(state);
         } else if (element == null) {
-            return Collections.singletonList(getTemplateBakedModels().get(0).getParticleSprite());
+            return Collections.singletonList(getTemplateBakedModels().get(0).getParticleIcon());
         } else {
             PaladinFurnitureMod.GENERAL_LOGGER.error("Invalid element for sprite list method");
         }
-        return Collections.singletonList(getTemplateBakedModels().get(0).getParticleSprite());
+        return Collections.singletonList(getTemplateBakedModels().get(0).getParticleIcon());
     }
-    protected List<Sprite> getBedSprites(DyeColor color, BlockState state) {
-        List<Sprite> list = new ArrayList<>(3);
+    protected List<TextureAtlasSprite> getBedSprites(DyeColor color, BlockState state) {
+        List<TextureAtlasSprite> list = new ArrayList<>(3);
         VariantBase<?> variant = getVariant(state);
 
         return list;
     }
-    private final Map<Block, List<Sprite>> spriteList = new HashMap<>();
-    private List<Sprite> getSpriteFromState(BlockState state) {
+    private final Map<Block, List<TextureAtlasSprite>> spriteList = new HashMap<>();
+    private List<TextureAtlasSprite> getSpriteFromState(BlockState state) {
         if (spriteList.containsKey(state.getBlock()))
             return spriteList.get(state.getBlock());
 
         VariantBase<?> variant = getVariant(state);
-        boolean stripped = state.getBlock().getTranslationKey().contains("stripped");
-        List<Sprite> list = new ArrayList<>(3);
+        boolean stripped = state.getBlock().getDescriptionId().contains("stripped");
+        List<TextureAtlasSprite> list = new ArrayList<>(3);
         if (state.getBlock() instanceof SimpleBedBlock) {
-            DyeColor color = ModelHelper.getColor(Registries.BLOCK.getId(state.getBlock()));
-            SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PLANKS));
-            SpriteIdentifier spriteIdentifier = TexturedRenderLayers.BED_TEXTURES[color.getId()];
-            list.add(mainTexture.getSprite());
-            list.add(spriteIdentifier.getSprite());
+            DyeColor color = ModelHelper.getColor(Registries.BLOCK.getKey(state.getBlock()));
+            Material mainTexture = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.PLANKS));
+            Material spriteIdentifier = Sheets.BED_TEXTURES[color.getId()];
+            list.add(mainTexture.sprite());
+            list.add(spriteIdentifier.sprite());
         }  else if (state.getBlock() instanceof LogStoolBlock) {
-            SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.LOG));
-            SpriteIdentifier secondTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG_TOP)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.LOG_TOP));
-            list.add(mainTexture.getSprite());
-            list.add(secondTexture.getSprite());
-        } else if (!state.getBlock().getTranslationKey().contains("_raw_")) {
-            SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
-            SpriteIdentifier secondTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.SECONDARY));
-            list.add(mainTexture.getSprite());
-            list.add(secondTexture.getSprite());
+            Material mainTexture = stripped ? new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.STRIPPED_LOG)) : new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.LOG));
+            Material secondTexture = stripped ? new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.STRIPPED_LOG_TOP)) : new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.LOG_TOP));
+            list.add(mainTexture.sprite());
+            list.add(secondTexture.sprite());
+        } else if (!state.getBlock().getDescriptionId().contains("_raw_")) {
+            Material mainTexture = stripped ? new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.STRIPPED_LOG)) : new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.PRIMARY));
+            Material secondTexture = stripped ? new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.PRIMARY)) : new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.SECONDARY));
+            list.add(mainTexture.sprite());
+            list.add(secondTexture.sprite());
         } else {
-            SpriteIdentifier mainTexture = stripped ? new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)) : new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.SECONDARY));
-            list.add(mainTexture.getSprite());
-            list.add(mainTexture.getSprite());
+            Material mainTexture = stripped ? new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.STRIPPED_LOG)) : new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.SECONDARY));
+            list.add(mainTexture.sprite());
+            list.add(mainTexture.sprite());
         }
-        boolean isKitchen = state.getBlock().getTranslationKey().contains("kitchen_");
+        boolean isKitchen = state.getBlock().getDescriptionId().contains("kitchen_");
         if (isKitchen && !(variant instanceof WoodVariant)) {
-            Pair<Block, Block> counterMaterials = PFMRecipeProvider.getCounterMaterials(variant);
-            SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(counterMaterials.getLeft()));
-            SpriteIdentifier secondTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, ModelHelper.getTextureId(counterMaterials.getRight()));
-            list.set(0, mainTexture.getSprite());
-            list.set(1, secondTexture.getSprite());
+            Tuple<Block, Block> counterMaterials = PFMRecipeProvider.getCounterMaterials(variant);
+            Material mainTexture = new Material(InventoryMenu.BLOCK_ATLAS, ModelHelper.getTextureId(counterMaterials.getA()));
+            Material secondTexture = new Material(InventoryMenu.BLOCK_ATLAS, ModelHelper.getTextureId(counterMaterials.getB()));
+            list.set(0, mainTexture.sprite());
+            list.set(1, secondTexture.sprite());
         }
         spriteList.put(state.getBlock(), list);
         return list;

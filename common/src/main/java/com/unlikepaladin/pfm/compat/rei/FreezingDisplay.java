@@ -6,13 +6,13 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Collections;
 import java.util.List;
 
 public class FreezingDisplay implements Display {
-    public static final CategoryIdentifier<FreezingDisplay> IDENTIFIER = CategoryIdentifier.of(new Identifier(PaladinFurnitureMod.MOD_ID, "freezing"));
+    public static final CategoryIdentifier<FreezingDisplay> IDENTIFIER = CategoryIdentifier.of(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "freezing"));
 
     public List<EntryIngredient> input;
     public List<EntryIngredient> output;
@@ -21,8 +21,8 @@ public class FreezingDisplay implements Display {
 
     public FreezingDisplay(FreezingRecipe recipe) {
         input = EntryIngredients.ofIngredients(recipe.getIngredients());
-        output = Collections.singletonList(EntryIngredients.of(recipe.getOutput()));
-        cookTime = recipe.getCookTime();
+        output = Collections.singletonList(EntryIngredients.of(recipe.getResultItem()));
+        cookTime = recipe.getCookingTime();
         xp = recipe.getExperience();
     }
     @Override

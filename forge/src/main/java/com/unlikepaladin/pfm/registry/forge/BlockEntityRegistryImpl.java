@@ -1,19 +1,19 @@
 package com.unlikepaladin.pfm.registry.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 
 public class BlockEntityRegistryImpl {
-    public static Map<Identifier, BlockEntityType<?>> blockEntityTypes = new LinkedHashMap<>();
+    public static Map<ResourceLocation, BlockEntityType<?>> blockEntityTypes = new LinkedHashMap<>();
 
-    public static <T extends BlockEntity>BlockEntityType<T> registerBlockEntity(String blockEntityId, Block[] block, BlockEntityType.BlockEntityFactory<T> factory) {
-        BlockEntityType<T> blockEntityType = BlockEntityType.Builder.create(factory, block).build(null);
-        blockEntityTypes.put(new Identifier(PaladinFurnitureMod.MOD_ID, blockEntityId), blockEntityType);
+    public static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String blockEntityId, Block[] block, BlockEntityType.BlockEntitySupplier<T> factory) {
+        BlockEntityType<T> blockEntityType = BlockEntityType.Builder.of(factory, block).build(null);
+        blockEntityTypes.put(new ResourceLocation(PaladinFurnitureMod.MOD_ID, blockEntityId), blockEntityType);
         return blockEntityType;
     }
 }

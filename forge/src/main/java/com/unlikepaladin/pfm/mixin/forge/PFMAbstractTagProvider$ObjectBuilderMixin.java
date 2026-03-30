@@ -1,19 +1,15 @@
 package com.unlikepaladin.pfm.mixin.forge;
 
-import net.minecraft.data.server.tag.AbstractTagProvider;
-import net.minecraft.data.server.tag.ValueLookupTagProvider;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.TagBuilder;
-import net.minecraft.registry.Registry;
+import net.minecraft.core.Registry;
+import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.tags.TagBuilder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-import java.util.function.Function;
-
-@Mixin(ValueLookupTagProvider.ObjectBuilder.class)
+@Mixin(IntrinsicHolderTagsProvider.IntrinsicTagAppender.class)
 public interface PFMAbstractTagProvider$ObjectBuilderMixin {
     @Invoker("<init>")
-    static <T> ValueLookupTagProvider.ObjectBuilder<T> newTagProvider(TagBuilder arg, Function<T, RegistryKey<T>> function, String modId) {
+    static <T> IntrinsicHolderTagsProvider.IntrinsicTagAppender<T> newTagProvider(TagBuilder builder, Registry<T> registry, String id) {
         throw new AssertionError();
     }
 }

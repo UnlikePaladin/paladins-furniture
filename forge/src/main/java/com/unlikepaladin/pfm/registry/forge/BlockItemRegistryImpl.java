@@ -1,12 +1,14 @@
 package com.unlikepaladin.pfm.registry.forge;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import net.minecraft.block.Block;
-import net.minecraft.block.Material;
-import net.minecraft.item.*;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Pair;
 import net.minecraftforge.fml.ModList;
 import org.jetbrains.annotations.Nullable;
@@ -27,12 +29,12 @@ public class BlockItemRegistryImpl {
     public static void registerBlockPlatformSpecific(String blockId, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerBlockItemPlatformSpecific(blockId, block, new Pair<>("building_blocks", ItemGroups.BUILDING_BLOCKS));
+            registerBlockItemPlatformSpecific(blockId, block, new Pair<>("building_blocks", CreativeModeTab.TAB_BUILDING_BLOCKS));
         }
         blocks.put(blockId, block);
     }
 
-    public static void registerBlockItemPlatformSpecific(String itemName, Block block, Pair<String, ItemGroup> group) {
+    public static void registerBlockItemPlatformSpecific(String itemName, Block block, Pair<String, CreativeModeTab> group) {
         if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
             registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Settings()) {
                 @Override
@@ -41,7 +43,7 @@ public class BlockItemRegistryImpl {
                 }
             }, group);
         }
-        registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Settings()), group);
+        registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Properties()), group);
     }
 
     public static boolean isModLoaded(String modId) {

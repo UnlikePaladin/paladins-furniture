@@ -3,24 +3,20 @@ package com.unlikepaladin.pfm.registry.dynamic.forge;
 import com.google.common.collect.ImmutableSet;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
-import com.unlikepaladin.pfm.forge.PaladinFurnitureModForge;
 import com.unlikepaladin.pfm.mixin.PFMPointOfInterestTypesAccessor;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import com.unlikepaladin.pfm.registry.forge.BlockItemRegistryImpl;
-import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Pair;
-import net.minecraft.world.poi.PointOfInterestType;
-import net.minecraft.world.poi.PointOfInterestTypes;
+import net.minecraft.world.entity.ai.village.poi.PoiType;
+import net.minecraft.world.entity.ai.village.poi.PoiTypes;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -31,17 +27,18 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.function.Supplier;
+
 @Mod.EventBusSubscriber(modid = "pfm", bus = Mod.EventBusSubscriber.Bus.MOD)
 public class LateBlockRegistryImpl {
 
     public static Map<String, Block> blocks = new LinkedHashMap<>();
     public static Map<String, Supplier<Item>> items = new LinkedHashMap<>();
-    public static void registerLateItem(String itemName, Supplier<Item> itemSup, Pair<String, ItemGroup> group) {
+    public static void registerLateItem(String itemName, Supplier<Item> itemSup, Pair<String, CreativeModeTab> group) {
         items.put(itemName, itemSup);
         BlockItemRegistryImpl.itemNameToGroup.put(itemName, group);
     }
 
-    public static <T extends Block> T registerLateBlock(String blockId, Supplier<T> blockSup, boolean registerItem, Pair<String, ItemGroup> group) {
+    public static <T extends Block> T registerLateBlock(String blockId, Supplier<T> blockSup, boolean registerItem, Pair<String, CreativeModeTab> group) {
         T block = blockSup.get();
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
@@ -51,8 +48,8 @@ public class LateBlockRegistryImpl {
         return block;
     }
 
-    public static void registerBlockItemPlatformSpecific(String itemName, Block block, Pair<String, ItemGroup> group) {
-        if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
+    public static void registerBlockItemPlatformSpecific(String itemName, Block block, Pair<String, CreativeModeTab> group) {
+        if (block.defaultBlockState().getMaterial() == Material.WOOD || block.defaultBlockState().getMaterial() == Material.WOOL) {
             registerLateItem(itemName, () -> new BlockItem(block, new Item.Settings()) {
                 @Override
                 public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
@@ -85,7 +82,7 @@ public class LateBlockRegistryImpl {
         });
     }
 
-    public static <T extends Block> T registerLateBlockClassic(String blockId, T block, boolean registerItem, Pair<String, ItemGroup> group) {
+    public static <T extends Block> T registerLateBlockClassic(String blockId, T block, boolean registerItem, Pair<String, CreativeModeTab> group) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerBlockItemPlatformSpecific(blockId, block, group);
@@ -97,14 +94,14 @@ public class LateBlockRegistryImpl {
     @SubscribeEvent
     public static void registerPOI(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.POI_TYPES, pointOfInterestTypeRegisterHelper -> {
-            Set<BlockState> originalBedStates = ForgeRegistries.POI_TYPES.getValue(PointOfInterestTypes.HOME.getValue()).blockStates();
-            Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateManager().getStates().stream().filter(state -> state.get(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
+            Set<BlockState> originalBedStates = ForgeRegistries.POI_TYPES.getValue(PoiTypes.HOME.location()).matchingStates();
+            Set<BlockState> addedBedStates = Arrays.stream(PaladinFurnitureModBlocksItems.getBeds()).flatMap(block -> block.getStateDefinition().getPossibleStates().stream().filter(state -> state.getValue(SimpleBedBlock.PART) == BedPart.HEAD)).collect(ImmutableSet.toImmutableSet());
             Set<BlockState> newBedStates = new HashSet<>();
             newBedStates.addAll(originalBedStates);
             newBedStates.addAll(addedBedStates);
-            PointOfInterestType pointOfInterestType = new PointOfInterestType(newBedStates, 1, 1);
+            PoiType pointOfInterestType = new PoiType(newBedStates, 1, 1);
             ForgeRegistries.POI_TYPES.register("minecraft:home", pointOfInterestType);
-            PFMPointOfInterestTypesAccessor.setHome(ForgeRegistries.POI_TYPES.getHolder(pointOfInterestType).get().getKey().get());
+            PFMPointOfInterestTypesAccessor.setHome(ForgeRegistries.POI_TYPES.getHolder(pointOfInterestType).get().unwrapKey().get());
            // PaladinFurnitureModForge.replaceHomePOIStates();
         });
     }

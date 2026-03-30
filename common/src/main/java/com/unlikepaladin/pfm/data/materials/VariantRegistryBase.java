@@ -3,10 +3,9 @@ package com.unlikepaladin.pfm.data.materials;
 import com.google.common.collect.ImmutableMap;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.block.Block;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registry;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 
 import java.util.*;
 
@@ -14,7 +13,7 @@ import java.util.*;
 public abstract class VariantRegistryBase<T extends VariantBase<T>> {
     private final List<VariantBase.SetFinder<T>> finders = new ArrayList<>();
     protected final List<T> builder = new ArrayList<>();
-    protected Map<Identifier, T> variants = new LinkedHashMap<>();
+    protected Map<ResourceLocation, T> variants = new LinkedHashMap<>();
     private final Object2ObjectOpenHashMap<Object, T> childrenToType = new Object2ObjectOpenHashMap<>();
 
     public void addFinder(VariantBase.SetFinder<T> finder) {
@@ -22,7 +21,7 @@ public abstract class VariantRegistryBase<T extends VariantBase<T>> {
     }
 
     protected void finalizeAndFreeze() {
-        LinkedHashMap<Identifier, T> linkedHashMap = new LinkedHashMap<>();
+        LinkedHashMap<ResourceLocation, T> linkedHashMap = new LinkedHashMap<>();
         List<String> modOrder = new ArrayList<>();
         modOrder.add("minecraft");
         builder.forEach(e -> {
@@ -48,7 +47,7 @@ public abstract class VariantRegistryBase<T extends VariantBase<T>> {
         builder.add(newType);
     }
 
-    public abstract Optional<T> getVariantFromBlock(Block baseBlock, Identifier blockId);
+    public abstract Optional<T> getVariantFromBlock(Block baseBlock, ResourceLocation blockId);
 
     public void buildAll() {
         // adds default
@@ -56,7 +55,7 @@ public abstract class VariantRegistryBase<T extends VariantBase<T>> {
         // adds finders
         finders.stream().map(VariantBase.SetFinder::get).forEach(f -> f.ifPresent(this::registerBlockType));
         for (Block block : Registries.BLOCK) {
-            this.getVariantFromBlock(block, Registries.BLOCK.getId(block)).ifPresent(this::registerBlockType);
+            this.getVariantFromBlock(block, Registries.BLOCK.getKey(block)).ifPresent(this::registerBlockType);
         }
         this.finalizeAndFreeze();
     }

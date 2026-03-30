@@ -8,19 +8,13 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.block.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
-import net.minecraft.resource.featuretoggle.FeatureFlag;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Pair;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +22,7 @@ import java.util.function.Supplier;
 
 public class LateBlockRegistryImpl {
 
-    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> blockSupplier, boolean registerItem, Pair<String, ItemGroup> group) {
+    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> blockSupplier, boolean registerItem, Pair<String, CreativeModeTab> group) {
         T block = Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), blockSupplier.get());
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
@@ -36,16 +30,16 @@ public class LateBlockRegistryImpl {
         }
         return block;
     }
-    public static void registerLateBlockItem(String itemName, Block block, Pair<String, ItemGroup> group) {
+    public static void registerLateBlockItem(String itemName, Block block, Pair<String, CreativeModeTab> group) {
         registerLateItem(itemName, () -> new BlockItem(block, new FabricItemSettings()), group);
         if (block.getDefaultState().getMaterial() == Material.WOOD || block.getDefaultState().getMaterial() == Material.WOOL) {
             FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
             FuelRegistry.INSTANCE.add(block, 300);
         }
     }
-    public static void registerLateItem(String itemName, Supplier<Item> itemSup, Pair<String, ItemGroup> group) {
+    public static void registerLateItem(String itemName, Supplier<Item> itemSup, Pair<String, CreativeModeTab> group) {
         Item item = itemSup.get();
-        Registry.register(Registries.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
+        Registry.register(Registries.ITEM, new ResourceLocation(PaladinFurnitureMod.MOD_ID, itemName), item);
         if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(group)) {
             PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(group, new ArrayList<>());
         }
@@ -92,7 +86,7 @@ public class LateBlockRegistryImpl {
         }
     }
 
-    public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, Pair<String, ItemGroup> group) {
+    public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, Pair<String, CreativeModeTab> group) {
         Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), block);
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);

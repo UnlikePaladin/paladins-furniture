@@ -6,17 +6,17 @@
   "client": [
     "BlockColorsAccessor",
     "ItemColorsAccessor",
-    "PFMModelLoaderMixin",
-    "PFMRenderLayersForgeMixin"
+    "PFMItemBlockRenderTypesForgeMixin",
+    "PFMModelBakeryMixin"
   ],
   "mixins": [
     "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMCookingPotBlockEntityMixin",
+    "PFMLootItemAccessor",
+    "PFMLootPool$BuilderMixin",
     "PFMMinecraftServerMixin",
     "PFMSaveLoaderMixin",
-    "PFMItemEntryAccessor",
-    "PFMLootPool$BuilderMixin",
-    "PFMReloadableResourceManagerImplMixin"
+    "PFMSimpleReloadableResourceManagerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

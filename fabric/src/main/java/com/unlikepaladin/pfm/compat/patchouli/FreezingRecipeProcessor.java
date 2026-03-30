@@ -1,12 +1,12 @@
 package com.unlikepaladin.pfm.compat.patchouli;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.resources.ResourceLocation;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
@@ -16,8 +16,8 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
     @Override
     public void setup(IVariableProvider variables) {
         String recipeId = variables.get("recipe").asString();
-        RecipeManager manager = MinecraftClient.getInstance().world.getRecipeManager();
-        recipe = manager.get(new Identifier(recipeId)).orElse(null);
+        RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
+        recipe = manager.byKey(new ResourceLocation(recipeId)).orElse(null);
     }
 
     @Override
@@ -26,23 +26,23 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
          switch (key) {
              case "ingredient":
                  Ingredient ingredient = recipe.getIngredients().get(0);
-                 ItemStack[] stacks = ingredient.getMatchingStacks();
+                 ItemStack[] stacks = ingredient.getItems();
                  ItemStack stack = stacks.length == 0 ? ItemStack.EMPTY : stacks[0];
 
                  return IVariable.from(stack);
              case "output":
-                 ItemStack result = recipe.getOutput();
+                 ItemStack result = recipe.getResultItem();
                  return IVariable.from(result);
              case "icon":
-                 ItemStack icon = recipe.createIcon();
+                 ItemStack icon = recipe.getToastSymbol();
                  return IVariable.from(icon);
              case "text":
-                 ItemStack out = recipe.getOutput();
-                 return IVariable.wrap(out.getCount() + "x$(br)" + out.getName());
+                 ItemStack out = recipe.getResultItem();
+                 return IVariable.wrap(out.getCount() + "x$(br)" + out.getHoverName());
              case "icount":
-                 return IVariable.wrap(recipe.getOutput().getCount());
+                 return IVariable.wrap(recipe.getResultItem().getCount());
              case "iname":
-                 return IVariable.wrap(recipe.getOutput().getName().getString());
+                 return IVariable.wrap(recipe.getResultItem().getHoverName().getString());
          }
         }
      return null;

@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.ducks;
 
-import net.minecraft.client.texture.NativeImage;
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.texture.SpriteContents;
 
 public interface PFMSpriteExtensions {

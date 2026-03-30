@@ -1,13 +1,13 @@
 package com.unlikepaladin.pfm.mixin;
 
 import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.Sprite;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.texture.SpriteContents;
 import org.spongepowered.asm.mixin.*;
 
-@Mixin(Sprite.class)
-public abstract class PFMSpriteMixin implements PFMSpriteExtensions {
+@Mixin(TextureAtlasSprite.class)
+public abstract class PFMTextureAtlasSpriteMixin implements PFMSpriteExtensions {
     @Mutable
     @Shadow
     @Final

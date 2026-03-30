@@ -8,12 +8,11 @@ import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.minecraft.SharedConstants;
-import net.minecraft.resource.ResourcePackProfile;
-import net.minecraft.resource.ResourcePackSource;
-import net.minecraft.resource.ResourceType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.resource.metadata.PackResourceMetadata;
-import net.minecraft.text.Text;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,9 +24,10 @@ import java.util.function.Consumer;
 
 @Mixin(ModResourcePackCreator.class)
 public class PFMModResourcePackCreatorMixin {
-    @Final
+
     @Shadow
-    private ResourceType type;
+    @Final
+    private net.minecraft.server.packs.PackType type;
 
     @Inject(method = "register", at = @At("TAIL"))
     private void addPFMResources(Consumer<ResourcePackProfile> consumer, CallbackInfo ci) {

@@ -7,11 +7,15 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -36,22 +40,22 @@ public class UnbakedFridgeModel implements UnbakedModel {
         }
     };
 
-    public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
+    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : FRIDGE_MODEL_PARTS_BASE) {
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, part));
+                add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, part));
             }
             for (String part : FRIDGE_MODEL_PARTS_BASE) {
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, part.replaceAll("white", "gray")));
+                add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, part.replaceAll("white", "gray")));
             }
         }
     };
 
-    private static final Identifier PARENT = new Identifier("block/block");
-    private final SpriteIdentifier frameTex;
+    private static final ResourceLocation PARENT = new ResourceLocation("block/block");
+    private final Material frameTex;
 
     @Override
-    public Collection<Identifier> getModelDependencies() {
+    public Collection<ResourceLocation> getDependencies() {
         return List.of(PARENT);
     }
 
@@ -60,33 +64,33 @@ public class UnbakedFridgeModel implements UnbakedModel {
 
     }
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         return List.of(frameTex);
     }
 
-    public static final List<Identifier> FRIDGE_MODEL_IDS = new ArrayList<>() { {
-        add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/white_fridge"));
-        add(new Identifier(PaladinFurnitureMod.MOD_ID, "block/gray_fridge"));
+    public static final List<ResourceLocation> FRIDGE_MODEL_IDS = new ArrayList<>() { {
+        add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/white_fridge"));
+        add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/gray_fridge"));
     }};
-    private final Identifier id;
-    public UnbakedFridgeModel(Identifier id) {
+    private final ResourceLocation id;
+    public UnbakedFridgeModel(ResourceLocation id) {
         this.id = id;
-        this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, ModelHelper.getVanillaConcreteColor(this.id));
+        this.frameTex = new Material(InventoryMenu.BLOCK_ATLAS, ModelHelper.getVanillaConcreteColor(this.id));
     }
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
-        Map<String,BakedModel> bakedModels = new LinkedHashMap<>();
+    public BakedModel bake(ModelBakery loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer, ResourceLocation modelId) {
+        Map<String, BakedModel> bakedModels = new LinkedHashMap<>();
         for (String modelPart : FRIDGE_MODEL_PARTS_BASE) {
             if (modelId.getPath().contains("gray"))
                 modelPart = modelPart.replaceAll("white", "gray");
-            bakedModels.put(modelPart, loader.bake(new Identifier(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
+            bakedModels.put(modelPart, loader.bake(new ResourceLocation(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
         }
         return getBakedModel(textureGetter.apply(frameTex), rotationContainer, bakedModels, bakedModels.keySet().stream().toList());
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Sprite frame, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
+    public static BakedModel getBakedModel(TextureAtlasSprite frame, ModelState settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 }

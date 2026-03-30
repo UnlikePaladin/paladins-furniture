@@ -6,17 +6,12 @@ import com.unlikepaladin.pfm.mixin.PFMFeatureFlagFactory;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.Material;
-import net.minecraft.entity.vehicle.BoatEntity;
-import net.minecraft.registry.Registries;
-import net.minecraft.resource.featuretoggle.FeatureFlag;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.resource.featuretoggle.FeatureSet;
-import net.minecraft.resource.featuretoggle.FeatureUniverse;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registry;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -27,37 +22,37 @@ public class WoodVariant extends VariantBase<WoodVariant> {
     private final Block logBlock;
     private final Material vanillaMaterial;
     @Nullable
-    private final BoatEntity.Type vanillaWoodType;
+    private final Boat.Type vanillaWoodType;
 
-    WoodVariant(Identifier identifier, Block plankBlock, Block logBlock) {
+    WoodVariant(ResourceLocation identifier, Block plankBlock, Block logBlock) {
         super(identifier);
         this.plankBlock = plankBlock;
         this.logBlock = logBlock;
-        this.vanillaMaterial = plankBlock.getDefaultState().getMaterial();
-        this.vanillaWoodType = BoatEntity.Type.getType(identifier.getPath()) != BoatEntity.Type.OAK &&  BoatEntity.Type.getType(identifier.getPath()).getBaseBlock() == plankBlock ? BoatEntity.Type.getType(identifier.getPath()) : null;
+        this.vanillaMaterial = plankBlock.defaultBlockState().getMaterial();
+        this.vanillaWoodType = Boat.Type.byName(identifier.getPath()) != Boat.Type.OAK &&  Boat.Type.byName(identifier.getPath()).getPlanks() == plankBlock ? Boat.Type.byName(identifier.getPath()) : null;
     }
 
-    WoodVariant(Identifier identifier, Block plankBlock, Block logBlock, BoatEntity.@Nullable Type vanillaWoodType) {
+    WoodVariant(ResourceLocation identifier, Block plankBlock, Block logBlock, Boat.@Nullable Type vanillaWoodType) {
         super(identifier);
         this.plankBlock = plankBlock;
         this.logBlock = logBlock;
-        this.vanillaMaterial = plankBlock.getDefaultState().getMaterial();
+        this.vanillaMaterial = plankBlock.defaultBlockState().getMaterial();
         this.vanillaWoodType = vanillaWoodType;
     }
 
-    public BoatEntity.@Nullable Type getVanillaWoodType() {
+    public Boat.@Nullable Type getVanillaWoodType() {
         return vanillaWoodType;
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         String postfix = this.isVanilla() ? "" : "_"+this.getNamespace();
         return this.identifier.getPath()+postfix;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public Identifier getTexture(BlockType type) {
+    public ResourceLocation getTextureLocation(BlockType type) {
         if (type == BlockType.STRIPPED_LOG) {
             return ModelHelper.getTextureId((Block) this.getChild("stripped_log"));
         } else if (type == BlockType.LOG || type == BlockType.SECONDARY) {
@@ -78,17 +73,17 @@ public class WoodVariant extends VariantBase<WoodVariant> {
     @Nullable
     protected Block findLogRelatedBlock(String append, String postpend) {
         String post = postpend.isEmpty() ? "" : "_" + postpend;
-        Identifier id = this.getIdentifier();
-        String logN = Registries.BLOCK.getId(this.logBlock).getPath();
-        Identifier[] targets = {
-                new Identifier(id.getNamespace(), logN + "_" + append + post),
-                new Identifier(id.getNamespace(), logN + "_" + append + post.replace("_", "")),
-                new Identifier(id.getNamespace(), append + "_" + logN + post),
-                new Identifier(id.getNamespace(), append + "_" + logN + post.replace("_", "")),
-                new Identifier(id.getNamespace(), id.getPath() + "_" + append + post),
-                new Identifier(id.getNamespace(), id.getPath() + "_" + append + post.replace("_", "")),
-                new Identifier(id.getNamespace(), append + "_" + id.getPath() + post),
-                new Identifier(id.getNamespace(), append + "_" + id.getPath() + post.replace("_", ""))
+        ResourceLocation id = this.getIdentifier();
+        String logN = Registries.BLOCK.getKey(this.logBlock).getPath();
+        ResourceLocation[] targets = {
+                new ResourceLocation(id.getNamespace(), logN + "_" + append + post),
+                new ResourceLocation(id.getNamespace(), logN + "_" + append + post.replace("_", "")),
+                new ResourceLocation(id.getNamespace(), append + "_" + logN + post),
+                new ResourceLocation(id.getNamespace(), append + "_" + logN + post.replace("_", "")),
+                new ResourceLocation(id.getNamespace(), id.getPath() + "_" + append + post),
+                new ResourceLocation(id.getNamespace(), id.getPath() + "_" + append + post.replace("_", "")),
+                new ResourceLocation(id.getNamespace(), append + "_" + id.getPath() + post),
+                new ResourceLocation(id.getNamespace(), append + "_" + id.getPath() + post.replace("_", ""))
         };
         String postNether = "";
         switch (postpend) {
@@ -98,25 +93,25 @@ public class WoodVariant extends VariantBase<WoodVariant> {
         postNether = postpend.isEmpty() ? "" : "_" + postNether;
         Block found = null;
         if (!postNether.isEmpty()) {
-            Identifier[] nether_targets = {
-                    new Identifier(id.getNamespace(), logN + "_" + append + postNether),
-                    new Identifier(id.getNamespace(), logN + "_" + append + postNether.replace("_", "")),
-                    new Identifier(id.getNamespace(), append + "_" + logN + postNether),
-                    new Identifier(id.getNamespace(), append + "_" + logN + postNether.replace("_", "")),
-                    new Identifier(id.getNamespace(), id.getPath() + "_" + append + postNether),
-                    new Identifier(id.getNamespace(), id.getPath() + "_" + append + postNether.replace("_", "")),
-                    new Identifier(id.getNamespace(), append + "_" + id.getPath() + postNether),
-                    new Identifier(id.getNamespace(), append + "_" + id.getPath() + postNether.replace("_", ""))
+            ResourceLocation[] nether_targets = {
+                    new ResourceLocation(id.getNamespace(), logN + "_" + append + postNether),
+                    new ResourceLocation(id.getNamespace(), logN + "_" + append + postNether.replace("_", "")),
+                    new ResourceLocation(id.getNamespace(), append + "_" + logN + postNether),
+                    new ResourceLocation(id.getNamespace(), append + "_" + logN + postNether.replace("_", "")),
+                    new ResourceLocation(id.getNamespace(), id.getPath() + "_" + append + postNether),
+                    new ResourceLocation(id.getNamespace(), id.getPath() + "_" + append + postNether.replace("_", "")),
+                    new ResourceLocation(id.getNamespace(), append + "_" + id.getPath() + postNether),
+                    new ResourceLocation(id.getNamespace(), append + "_" + id.getPath() + postNether.replace("_", ""))
             };
-            for (Identifier r : nether_targets) {
-                if (Registries.BLOCK.containsId(r)) {
+            for (ResourceLocation r : nether_targets) {
+                if (Registries.BLOCK.containsKey(r)) {
                     found = Registries.BLOCK.get(r);
                     break;
                 }
             }
         }
-        for (Identifier r : targets) {
-            if (Registries.BLOCK.containsId(r)) {
+        for (ResourceLocation r : targets) {
+            if (Registries.BLOCK.containsKey(r)) {
                 found = Registries.BLOCK.get(r);
                 break;
             }
@@ -196,10 +191,10 @@ public class WoodVariant extends VariantBase<WoodVariant> {
         return child != null && child != this.getBaseBlock();
     }
 
-    public @Nullable ItemConvertible getItemForRecipe(String key, Class<? extends Block> blockClass, boolean stripped) {
+    public @Nullable ItemLike getItemForRecipe(String key, Class<? extends Block> blockClass, boolean stripped) {
         if (stripped) {
             if (key.equals("base")) {
-                return (ItemConvertible) getChild("stripped_log");
+                return (ItemLike) getChild("stripped_log");
             } else if (key.equals("secondary"))
                 return getBaseBlock();
         }
@@ -213,32 +208,32 @@ public class WoodVariant extends VariantBase<WoodVariant> {
 
     public static class Finder implements VariantBase.SetFinder<WoodVariant> {
 
-        private final Map<String, Identifier> childNames = new HashMap<>();
+        private final Map<String, ResourceLocation> childNames = new HashMap<>();
         private final Supplier<Block> planksFinder;
         private final Supplier<Block> logFinder;
-        private final Identifier id;
+        private final ResourceLocation id;
 
-        public Finder(Identifier id, Supplier<Block> planks, Supplier<Block> log) {
+        public Finder(ResourceLocation id, Supplier<Block> planks, Supplier<Block> log) {
             this.id = id;
             this.planksFinder = planks;
             this.logFinder = log;
         }
 
         public static Finder simple(String modId, String woodTypeName, String planksName, String logName) {
-            return simple(new Identifier(modId, woodTypeName), new Identifier(modId, planksName), new Identifier(modId, logName));
+            return simple(new ResourceLocation(modId, woodTypeName), new ResourceLocation(modId, planksName), new ResourceLocation(modId, logName));
         }
 
-        public static Finder simple(Identifier woodTypeName, Identifier planksName, Identifier logName) {
+        public static Finder simple(ResourceLocation woodTypeName, ResourceLocation planksName, ResourceLocation logName) {
             return new Finder(woodTypeName,
                     () -> Registries.BLOCK.get(planksName),
                     () -> Registries.BLOCK.get(logName));
         }
 
         public void addChild(String childType, String childName) {
-            addChild(childType, new Identifier(id.getNamespace(), childName));
+            addChild(childType, new ResourceLocation(id.getNamespace(), childName));
         }
 
-        public void addChild(String childType, Identifier childName) {
+        public void addChild(String childType, ResourceLocation childName) {
             this.childNames.put(childType, childName);
         }
 
@@ -247,11 +242,11 @@ public class WoodVariant extends VariantBase<WoodVariant> {
                 try {
                     Block plank = planksFinder.get();
                     Block log = logFinder.get();
-                    Block d = Registries.BLOCK.get(new Identifier("minecraft","air"));
+                    Block d = Registries.BLOCK.get(new ResourceLocation("minecraft","air"));
                     if (plank != d && log != d && plank != null && log != null) {
                         WoodVariant w = new WoodVariant(id, plank, log);
-                        for (Map.Entry<String, Identifier> entry : childNames.entrySet()){
-                            Object child = Registries.BLOCK.getOrEmpty(entry.getValue()).isPresent() ? Registries.BLOCK.get(entry.getValue()) : Registries.ITEM.get(entry.getValue());
+                        for (Map.Entry<String, ResourceLocation> entry : childNames.entrySet()){
+                            Object child = Registries.BLOCK.getOptional(entry.getValue()).isPresent() ? Registries.BLOCK.get(entry.getValue()) : Registries.ITEM.get(entry.getValue());
                             w.addChild(entry.getKey(), child);
                         }
                         return Optional.of(w);

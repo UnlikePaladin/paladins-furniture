@@ -5,13 +5,13 @@ import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.ShowerHandleItem;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.MapColor;
-import net.minecraft.block.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.item.ItemGroups;
 import net.minecraft.util.Pair;
 
@@ -44,7 +44,7 @@ public class BlockItemRegistry {
     public static void registerFurniture(String blockName, Block block, int count) {
         PaladinFurnitureModBlocksItems.BLOCKS.add(block);
         registerBlockPlatformSpecific(blockName, block, false);
-        registerItemPlatformSpecific(blockName, () -> new BlockItem(block, new Item.Settings().maxCount(count)), PaladinFurnitureMod.FURNITURE_GROUP);
+        registerItemPlatformSpecific(blockName, () -> new BlockItem(block, new Item.Properties().maxCount(count)), PaladinFurnitureMod.FURNITURE_GROUP);
     }
 
     public static void registerBlock(String blockName, Block block, boolean registerItem) {

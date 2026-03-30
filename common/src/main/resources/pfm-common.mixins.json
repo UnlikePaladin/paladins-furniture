@@ -9,7 +9,7 @@
     "PFMPlayerInventoryMixin",
     "PFMPointOfInterestTypeAccessor",
     "PFMPointOfInterestTypesAccessor",
-    "PFMTextureKeyFactory"
+    "PFMInventoryMixin"
   ],
   "server": [
     "PFMMixinDedicatedServer"

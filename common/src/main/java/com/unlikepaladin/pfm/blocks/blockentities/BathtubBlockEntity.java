@@ -3,22 +3,23 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
 import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BedBlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BedBlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+
 
 public class BathtubBlockEntity extends BedBlockEntity {
-    public BathtubBlockEntity(BlockPos pos, BlockState state) {
-        super(pos, state, DyeColor.WHITE);
+    public BathtubBlockEntity(BlockPos worldPosition, BlockState state) {
+        super(worldPosition, state, DyeColor.WHITE);
     }
 
     @Override
@@ -29,34 +30,34 @@ public class BathtubBlockEntity extends BedBlockEntity {
     private int fillTimer = 0;
     private boolean isFilling = false;
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return this.writeIdentifyingTubData(new NbtCompound());
+    public CompoundTag getUpdateTag() {
+        return this.writeIdentifyingTubData(new CompoundTag());
     }
 
-    private NbtCompound writeIdentifyingTubData(NbtCompound nbt) {
-        Identifier identifier = BlockEntityType.getId(this.getType());
+    private CompoundTag writeIdentifyingTubData(CompoundTag nbt) {
+        ResourceLocation identifier = BlockEntityType.getKey(this.getType());
         if (identifier == null) {
             throw new RuntimeException(this.getClass() + " is missing a mapping! This is a bug!");
         }
         nbt.putString("id", identifier.toString());
-        nbt.putInt("x", this.pos.getX());
-        nbt.putInt("y", this.pos.getY());
-        nbt.putInt("z", this.pos.getZ());
+        nbt.putInt("x", this.worldPosition.getX());
+        nbt.putInt("y", this.worldPosition.getY());
+        nbt.putInt("z", this.worldPosition.getZ());
         nbt.putInt("tubTimer", this.fillTimer);
         nbt.putBoolean("isTubFilling", this.isFilling);
         return nbt;
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
+    public void load(CompoundTag nbt) {
         fillTimer = nbt.getInt("tubTimer");
         isFilling = nbt.getBoolean("isTubFilling");
-        super.readNbt(nbt);
+        super.load(nbt);
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
         nbt.putInt("tubTimer", fillTimer);
         nbt.putBoolean("isTubFilling", isFilling);
     }
@@ -67,19 +68,19 @@ public class BathtubBlockEntity extends BedBlockEntity {
 
     public void setFilling(boolean isFilling) {
         if (isFilling){
-            world.playSound(null, pos, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.BLOCKS, 0.7f, 1.0f);
+            level.playSound(null, worldPosition, SoundEvents.WATER_AMBIENT, SoundSource.BLOCKS, 0.7f, 1.0f);
         }
         this.isFilling = isFilling;
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, BathtubBlockEntity blockEntity) {
+    public static void tick(Level level, BlockPos worldPosition, BlockState state, BathtubBlockEntity blockEntity) {
         if (blockEntity.isFilling) {
             if (blockEntity.fillTimer >= 30) {
                 blockEntity.setFillTimer(0);
                 blockEntity.setFilling(false);
             } else {
-                if (world.isClient) {
-                    BasicBathtubBlock.spawnParticles(blockEntity.getCachedState().get(Properties.HORIZONTAL_FACING), blockEntity.world, blockEntity.getPos());
+                if (level.isClientSide) {
+                    BasicBathtubBlock.spawnParticles(blockEntity.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), blockEntity.level, blockEntity.getBlockPos());
                 }
                 blockEntity.fillTimer++;
             }

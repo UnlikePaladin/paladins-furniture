@@ -3,46 +3,47 @@ package com.unlikepaladin.pfm.items;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.NonNullList;
 
 import java.util.Map;
 
 public class LampItem extends BlockItem {
-    public LampItem(Block block, Settings settings) {
+    public LampItem(Block block, Properties settings) {
         super(block, settings);
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack) {
+    public String getDescriptionId(ItemStack stack) {
         DyeColor color = DyeColor.WHITE;
         WoodVariant variant = WoodVariantRegistry.OAK;
-        if (stack.hasNbt()) {
-            if (stack.getSubNbt("BlockEntityTag").contains("color")) {
-                color = DyeColor.byName(stack.getSubNbt("BlockEntityTag").getString("color"), DyeColor.WHITE);
+        if (stack.hasTag()) {
+            if (stack.getTagElement("BlockEntityTag").contains("color")) {
+                color = DyeColor.byName(stack.getTagElement("BlockEntityTag").getString("color"), DyeColor.WHITE);
             }
-            if (stack.getSubNbt("BlockEntityTag").contains("variant")) {
-                variant = WoodVariantRegistry.getVariant(Identifier.tryParse(stack.getSubNbt("BlockEntityTag").getString("variant")));
+            if (stack.getTagElement("BlockEntityTag").contains("variant")) {
+                variant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(stack.getTagElement("BlockEntityTag").getString("variant")));
             }
         }
-        return String.format("block.pfm.basic_%s_%s_lamp", color.asString(), variant.asString());
+        return String.format("block.pfm.basic_%s_%s_lamp", color.getSerializedName(), variant.getSerializedName());
     }
 
     @Override
-    public ItemStack getDefaultStack() {
+    public ItemStack getDefaultInstance() {
         ItemStack stack = new ItemStack(this);
-        NbtCompound tag = new NbtCompound();
-        tag.putString("color", DyeColor.WHITE.asString());
-        tag.putString("variant", WoodVariantRegistry.OAK.asString());
-        stack.setSubNbt("BlockEntityTag", tag);
+        CompoundTag tag = new CompoundTag();
+        tag.putString("color", DyeColor.WHITE.getSerializedName());
+        tag.putString("variant", WoodVariantRegistry.OAK.getSerializedName());
+        stack.addTagElement("BlockEntityTag", tag);
         return stack;
     }
 
@@ -50,7 +51,7 @@ public class LampItem extends BlockItem {
     }
 
     @ExpectPlatform
-    public static BlockItem getItemFactory(Block block, Settings settings) {
+    public static BlockItem getItemFactory(Block block, Properties settings) {
         throw new UnsupportedOperationException();
     }
 }

@@ -5,15 +5,15 @@ import com.unlikepaladin.pfm.mixin.PFMFeatureFlagFactory;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.Material;
-import net.minecraft.client.render.block.BlockModels;
-import net.minecraft.item.ItemConvertible;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.client.renderer.block.BlockModelShaper;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.resource.featuretoggle.FeatureFlag;
 import net.minecraft.resource.featuretoggle.FeatureSet;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -50,18 +50,18 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
         return DEFAULT_VARIANTS;
     }
 
-    ExtraCounterVariant(Identifier identifier, Block baseBlock, Block secondaryBlock) {
+    ExtraCounterVariant(ResourceLocation identifier, Block baseBlock, Block secondaryBlock) {
         super(identifier);
         this.name = identifier.getPath();
         this.baseBlock = baseBlock;
         this.secondaryBlock = secondaryBlock;
     }
     ExtraCounterVariant(Block baseBlock, Block secondaryBlock, String name) {
-        this(new Identifier("minecraft", name), baseBlock, secondaryBlock);
+        this(new ResourceLocation("minecraft", name), baseBlock, secondaryBlock);
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return name;
     }
 
@@ -78,7 +78,7 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
         return secondaryBlock;
     }
 
-    public static Optional<ExtraCounterVariant> getOptionalVariant(Identifier name) {
+    public static Optional<ExtraCounterVariant> getOptionalVariant(ResourceLocation name) {
         return DEFAULT_VARIANTS.stream().filter(extraStoolVariant -> extraStoolVariant.identifier.equals(name)).findFirst();
     }
 
@@ -90,7 +90,7 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
 
     @Override
     public Material getVanillaMaterial() {
-        return baseBlock.getDefaultState().getMaterial();
+        return baseBlock.defaultBlockState().getMaterial();
     }
 
     @Override
@@ -127,7 +127,7 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public Identifier getTexture(BlockType type) {
+    public ResourceLocation getTextureLocation(BlockType type) {
         if (type == BlockType.SECONDARY)
             return ModelHelper.getTextureId(getSecondaryBlock());
         return ModelHelper.getTextureId(baseBlock);

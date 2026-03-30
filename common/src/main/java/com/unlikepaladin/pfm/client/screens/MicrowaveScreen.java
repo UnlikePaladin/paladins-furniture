@@ -5,92 +5,91 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.menus.AbstractMicrowaveScreenHandler;
 import com.unlikepaladin.pfm.menus.MicrowaveScreenHandler;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.world.World;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.GameRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.network.chat.Component;
 
-import java.util.Objects;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.level.Level;
 
-public class MicrowaveScreen extends HandledScreen<MicrowaveScreenHandler> {
-    private final Identifier background = new Identifier(PaladinFurnitureMod.MOD_ID,"textures/gui/container/microwave.png");
+public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHandler> {
+    private final ResourceLocation background = new ResourceLocation(PaladinFurnitureMod.MOD_ID,"textures/gui/container/microwave.png");
     private boolean narrow;
     public boolean isActive;
     private MicrowaveBlockEntity microwaveBlockEntity;
 
-    private final Text startButtonText = Text.translatable("gui.pfm.microwave.start_button");
-    public MicrowaveScreen(MicrowaveScreenHandler handler, PlayerInventory inventory, Text title) {
+    private final Component startButtonText = Component.translatable("gui.pfm.microwave.start_button");
+    public MicrowaveScreen(MicrowaveScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
     }
 
-    public ButtonWidget startButton;
+    public Button startButton;
 
     @Override
     public void init() {
         super.init();
-        this.microwaveBlockEntity = handler.microwaveBlockEntity;
-        isActive = handler.getActive();
+        this.microwaveBlockEntity = menu.microwaveBlockEntity;
+        isActive = menu.getActive();
         this.narrow = this.width < 379;
-        this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
+        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
         this.startButton = this.addDrawableChild(new ButtonWidget.Builder(startButtonText, button -> {
             AbstractMicrowaveScreenHandler.setActive(microwaveBlockEntity,true);
-        }).position(this.x + 8, this.y + 40).size( 40, 20).build());
+        }).position(this.leftPos + 8, this.topPos + 40).size( 40, 20).build());
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         // if (this.recipeBook.isOpen() && this.narrow) {
         if (this.narrow) {
-            this.drawBackground(matrices, delta, mouseX, mouseY);
+            this.renderBg(matrices, delta, mouseX, mouseY);
             //this.recipeBook.render(matrices, mouseX, mouseY, delta);
         } else {
             //this.recipeBook.render(matrices, mouseX, mouseY, delta);
             super.render(matrices, mouseX, mouseY, delta);
             //this.recipeBook.drawGhostSlots(matrices, this.x, this.y, true, delta);
         }
-        this.drawMouseoverTooltip(matrices, mouseX, mouseY);
+        this.renderTooltip(matrices, mouseX, mouseY);
         //this.recipeBook.drawTooltip(matrices, this.x, this.y, mouseX, mouseY);
     }
 
     @Override
-    protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
+    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         int k;
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, this.background);
-        int i = this.x;
-        int j = this.y;
-        this.drawTexture(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        k = this.handler.getCookProgress();
+        int i = this.leftPos;
+        int j = this.topPos;
+        this.blit(matrices, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        k = this.menu.getCookProgress();
         k = Math.round(k * 1.75f);
-        this.drawTexture(matrices, i + 147, j + 66 + -k, 176, 40 - k, 13, k +1);
+        this.blit(matrices, i + 147, j + 66 + -k, 176, 40 - k, 13, k +1);
     }
 
-    public Recipe<?> getRecipe(World world, Inventory inventory) {
-        return world.getRecipeManager().getFirstMatch(RecipeType.SMOKING, inventory, world).orElse(null);
+    public Recipe<?> getRecipe(Level world, Container inventory) {
+        return world.getRecipeManager().getRecipeFor(RecipeType.SMOKING, inventory, world).orElse(null);
     }
 
     @Override
-    protected void handledScreenTick() {
-        super.handledScreenTick();
-        this.isActive = handler.isActive;
-        DefaultedList<ItemStack> inventory = DefaultedList.ofSize(1,handler.getInventory().getStack(0));
-        Recipe<?> recipe = getRecipe(handler.microwaveBlockEntity.getWorld(), handler.getInventory());
-        if(!MicrowaveBlockEntity.canAcceptRecipeOutput(recipe, inventory ,microwaveBlockEntity.getMaxCountPerStack()) && !this.handler.isActive()) {
+    protected void containerTick() {
+        super.containerTick();
+        this.isActive = menu.isActive;
+        NonNullList<ItemStack> inventory = NonNullList.withSize(1,menu.getContainer().getItem(0));
+        Recipe<?> recipe = getRecipe(menu.microwaveBlockEntity.getLevel(), menu.getContainer());
+        if(!MicrowaveBlockEntity.canAcceptRecipeOutput(recipe, inventory ,microwaveBlockEntity.getMaxStackSize()) && !this.menu.isActive()) {
             this.startButton.active = false;
         }
         else {
-            this.startButton.active = !this.handler.isActive();
+            this.startButton.active = !this.menu.isActive();
         }
     }
 }
