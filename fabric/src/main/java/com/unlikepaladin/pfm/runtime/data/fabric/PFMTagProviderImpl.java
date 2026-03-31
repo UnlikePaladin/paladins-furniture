@@ -1,14 +1,10 @@
 package com.unlikepaladin.pfm.runtime.data.fabric;
 
-import com.unlikepaladin.pfm.data.PFMTag;
-import net.minecraft.data.server.tag.TagProvider;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.TagBuilder;
-import net.minecraft.registry.tag.TagKey;
-
-import java.util.function.Function;
-import java.util.stream.Stream;
+import com.unlikepaladin.pfm.mixin.fabric.PFMAbstractTagProvider$ObjectBuilderMixin;
+import net.minecraft.core.Registry;
+import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
+import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.tags.TagBuilder;
 
 public class PFMTagProviderImpl {
     public static <T> PFMTag<T> getProviderPlatform(TagBuilder builder, Registry<T> registry, String modID) {

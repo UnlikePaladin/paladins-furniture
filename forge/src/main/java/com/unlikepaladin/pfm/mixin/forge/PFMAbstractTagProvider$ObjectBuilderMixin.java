@@ -1,11 +1,9 @@
 package com.unlikepaladin.pfm.mixin.forge;
 
-import net.minecraft.data.server.tag.TagProvider;
-import net.minecraft.data.server.tag.ValueLookupTagProvider;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.TagBuilder;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraftforge.common.extensions.IForgeIntrinsicHolderTagAppender;
+import net.minecraft.core.Registry;
+import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagBuilder;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 

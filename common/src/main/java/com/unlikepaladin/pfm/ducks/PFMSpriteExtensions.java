@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.ducks;
 
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.SpriteContents;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.texture.SpriteContents;
 
 public interface PFMSpriteExtensions {
     int pfm$getMipmapLevel();

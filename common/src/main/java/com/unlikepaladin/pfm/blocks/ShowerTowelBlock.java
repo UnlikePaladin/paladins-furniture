@@ -1,18 +1,23 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.*;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -21,10 +26,10 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.DinnerTableBlock.rotateShape;
 
-public class ShowerTowelBlock extends HorizontalFacingBlock implements DyeableFurnitureBlock {
+public class ShowerTowelBlock extends HorizontalDirectionalBlock implements DyeableFurnitureBlock {
     private static final List<FurnitureBlock> SHOWER_TOWELS = new ArrayList<>();
     private final DyeColor color;
-    public ShowerTowelBlock(DyeColor color, Settings settings) {
+    public ShowerTowelBlock(DyeColor color, Properties settings) {
         super(settings);
         this.color = color;
         if (this.getClass().isAssignableFrom(ShowerTowelBlock.class)) {
@@ -38,14 +43,14 @@ public class ShowerTowelBlock extends HorizontalFacingBlock implements DyeableFu
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
     @Nullable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
     }
 
     @Override
@@ -53,27 +58,27 @@ public class ShowerTowelBlock extends HorizontalFacingBlock implements DyeableFu
         return this.color;
     }
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        Direction direction = state.get(FACING);
-        BlockPos blockPos = pos.offset(direction.getOpposite());
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        Direction direction = state.getValue(FACING);
+        BlockPos blockPos = pos.relative(direction.getOpposite());
         BlockState blockState = world.getBlockState(blockPos);
-        return blockState.isSideSolidFullSquare(world, blockPos, direction);
+        return blockState.isFaceSturdy(world, blockPos, direction);
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (direction.getOpposite() == state.get(FACING) && !state.canPlaceAt(world, pos)) {
-            return Blocks.AIR.getDefaultState();
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        if (direction.getOpposite() == state.getValue(FACING) && !state.canSurvive(world, pos)) {
+            return Blocks.AIR.defaultBlockState();
         }
         return state;
     }
-    private static final VoxelShape TOWEL_SOUTH = VoxelShapes.union(createCuboidShape(1, 1, 2,15, 13, 5), createCuboidShape(1, 0, 2,15, 1, 3), createCuboidShape(0, 11, 0,1, 12, 4), createCuboidShape(15, 11, 0,16, 12, 4));
+    private static final VoxelShape TOWEL_SOUTH = Shapes.or(box(1, 1, 2,15, 13, 5), box(1, 0, 2,15, 1, 3), box(0, 11, 0,1, 12, 4), box(15, 11, 0,16, 12, 4));
     private static final VoxelShape TOWEL_NORTH = rotateShape(Direction.SOUTH, Direction.NORTH, TOWEL_SOUTH);
     private static final VoxelShape TOWEL_EAST = rotateShape(Direction.SOUTH, Direction.EAST, TOWEL_SOUTH);
     private static final VoxelShape TOWEL_WEST = rotateShape(Direction.SOUTH, Direction.WEST, TOWEL_SOUTH);
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-       Direction direction = state.get(FACING);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+       Direction direction = state.getValue(FACING);
        switch (direction) {
            case NORTH: return TOWEL_NORTH;
            case SOUTH: return TOWEL_SOUTH;
@@ -83,11 +88,11 @@ public class ShowerTowelBlock extends HorizontalFacingBlock implements DyeableFu
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter world, BlockPos pos, PathComputationType type) {
         return false;
     }
 
-    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
             return 20;
         }

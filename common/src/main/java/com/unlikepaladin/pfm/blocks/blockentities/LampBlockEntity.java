@@ -5,14 +5,14 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
 
 public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBlockEntity {
     protected WoodVariant variant;
@@ -25,38 +25,38 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        if (nbt.contains("color", NbtElement.STRING_TYPE)) {
+    public void load(CompoundTag nbt) {
+        if (nbt.contains("color", Tag.TAG_STRING)) {
             this.color = DyeColor.byName(nbt.getString("color"), DyeColor.WHITE);
         }
-        if (nbt.contains("variant", NbtElement.STRING_TYPE)) {
+        if (nbt.contains("variant", Tag.TAG_STRING)) {
             String variantName = nbt.getString("variant");
-            if (WoodVariantRegistry.getVariant(Identifier.tryParse(variantName)) != null)
-                this.variant = WoodVariantRegistry.getVariant(Identifier.tryParse(variantName));
+            if (WoodVariantRegistry.getVariant(ResourceLocation.tryParse(variantName)) != null)
+                this.variant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(variantName));
             else {
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Couldn't find variant for lamp: {}", variantName);
                 this.variant = WoodVariantRegistry.OAK;
             }
         }
-        super.readNbt(nbt);
+        super.load(nbt);
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.putString("color", color.asString());
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
+        nbt.putString("color", color.getSerializedName());
         nbt.putString("variant", variant.getIdentifier().toString());
     }
 
 
-    public NbtCompound writeColorAndVariant(NbtCompound nbt) {
-        NbtCompound newNBT = writeColor(nbt);
+    public CompoundTag writeColorAndVariant(CompoundTag nbt) {
+        CompoundTag newNBT = writeColor(nbt);
         newNBT.putString("variant", variant.getIdentifier().toString());
         return newNBT;
     }
 
-    public NbtCompound writeColor(NbtCompound nbt) {
-        nbt.putString("color", color.asString());
+    public CompoundTag writeColor(CompoundTag nbt) {
+        nbt.putString("color", color.getSerializedName());
         return nbt;
     }
 
@@ -82,7 +82,7 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
     }
 
     @ExpectPlatform
-    public static BlockEntityType.BlockEntityFactory<? extends LampBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends LampBlockEntity> getFactory() {
         throw new UnsupportedOperationException();
     }
 }

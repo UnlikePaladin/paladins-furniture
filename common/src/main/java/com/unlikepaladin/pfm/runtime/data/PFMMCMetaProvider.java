@@ -29,11 +29,11 @@ public class PFMMCMetaProvider extends PFMProvider {
     @Override
     public void run() {
         startProviderRun();
-        try(BufferedWriter writer = IOUtils.buffer(new FileWriter(new File(PFMRuntimeResources.createDirIfNeeded(getParent().getOutput()).toFile(), "pack.mcmeta")))) {
+        try(BufferedWriter writer = IOUtils.buffer(new FileWriter(new File(PFMRuntimeResources.createDirIfNeeded(getParent().getResultItem()).toFile(), "pack.mcmeta")))) {
             writer.write("{\n");
             writer.write("  \"pack\":\n   {\n");
             writer.write("          \"pack_format\": ");
-            writer.write(String.valueOf(SharedConstants.getGameVersion().getResourceVersion(info.type)));
+            writer.write(String.valueOf(SharedConstants.getCurrentVersion().getResourceVersion(info.type)));
             writer.write(",\n           \"description\" : \"" + info.description + "\"\n  }\n");
             writer.write("}");
         } catch (IOException e) {

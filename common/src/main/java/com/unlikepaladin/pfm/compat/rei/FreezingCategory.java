@@ -12,15 +12,17 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+
+
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.List;
 
 public class FreezingCategory implements DisplayCategory<FreezingDisplay> {
     public static final EntryStack<ItemStack> ICON = EntryStacks.of(PaladinFurnitureModBlocksItems.WHITE_FREEZER);
-    public static final Text TITLE = Text.translatable("rei.pfm.freezer");
+    public static final Component TITLE = Component.translatable("rei.pfm.freezer");
     public static final EntryStack<ItemStack>[] WORKSTATIONS = new EntryStack[]{EntryStacks.of(PaladinFurnitureModBlocksItems.WHITE_FREEZER), EntryStacks.of(PaladinFurnitureModBlocksItems.GRAY_FREEZER), EntryStacks.of(PaladinFurnitureModBlocksItems.IRON_FREEZER)};
     @Override
     public Renderer getIcon() {
@@ -28,7 +30,7 @@ public class FreezingCategory implements DisplayCategory<FreezingDisplay> {
     }
 
     @Override
-    public Text getTitle() {
+    public Component getTitle() {
         return TITLE;
     }
 
@@ -54,7 +56,7 @@ public class FreezingCategory implements DisplayCategory<FreezingDisplay> {
         widgets.add(Widgets.createRecipeBase(bounds));
         widgets.add(Widgets.createResultSlotBackground(new Point(startPoint.x + 61, startPoint.y + 9)));
         widgets.add(createFreezing(new Point(startPoint.x + 1, startPoint.y + 20)).animationDurationMS(10000.0D));
-        widgets.add(Widgets.createLabel(new Point(bounds.x + bounds.width - 5, bounds.y + 5), Text.translatable("category.rei.cooking.time&xp", new Object[]{df.format((double)display.getXp()), df.format(cookingTime / 20.0D)})).noShadow().rightAligned().color(-12566464, -4473925));
+        widgets.add(Widgets.createLabel(new Point(bounds.x + bounds.width - 5, bounds.y + 5), Component.translatable("category.rei.cooking.time&xp", new Object[]{df.format((double)display.getXp()), df.format(cookingTime / 20.0D)})).noShadow().rightAligned().color(-12566464, -4473925));
         widgets.add(Widgets.createArrow(new Point(startPoint.x + 24, startPoint.y + 8)).animationDurationTicks(cookingTime));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + 61, startPoint.y + 9)).entries(display.getOutputEntries().get(0)).disableBackground().markOutput());
         widgets.add(Widgets.createSlot(new Point(startPoint.x + 1, startPoint.y + 1)).entries(display.getInputEntries().get(0)).markInput());

@@ -5,67 +5,65 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
-import net.minecraft.block.Blocks;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftingResultInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.*;
-import net.minecraft.screen.slot.Slot;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.Container;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.*;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.Level;
 import java.util.List;
 
-public class WorkbenchScreenHandler extends ScreenHandler {
-    private final ScreenHandlerContext context;
+public class WorkbenchScreenHandler extends AbstractContainerMenu {
+    private final ContainerLevelAccess context;
     private final List<FurnitureRecipe.CraftableFurnitureRecipe> availableRecipes = Lists.newArrayList();
     public static final List<FurnitureRecipe.CraftableFurnitureRecipe> ALL_RECIPES = Lists.newArrayList();
     private final List<FurnitureRecipe.CraftableFurnitureRecipe> sortedRecipes = Lists.newArrayList();
     private final List<FurnitureRecipe.CraftableFurnitureRecipe> searchableRecipes = Lists.newArrayList();
 
-    private final Property selectedRecipe = Property.create();
-    private final World world;
+    private final DataSlot selectedRecipe = DataSlot.standalone();
+    private final Level level;
     final Slot outputSlot;
-    final CraftingResultInventory output = new CraftingResultInventory();
+    final ResultContainer output = new ResultContainer();
     long lastTakeTime;
-    final PlayerInventory playerInventory;
+    final Inventory playerInventory;
     Runnable contentsChangedListener;
    public boolean searching = false;
 
-    public WorkbenchScreenHandler(int syncId, PlayerInventory playerInventory) {
-        this(syncId, playerInventory, ScreenHandlerContext.EMPTY);
+    public WorkbenchScreenHandler(int containerId, Inventory playerInventory) {
+        this(containerId, playerInventory, ContainerLevelAccess.NULL);
     }
-    public WorkbenchScreenHandler(int syncId, PlayerInventory playerInventory, final ScreenHandlerContext context) {
-        super(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, syncId);
+    public WorkbenchScreenHandler(int containerId, Inventory playerInventory, final ContainerLevelAccess context) {
+        super(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, containerId);
         this.context = context;
-        this.world = playerInventory.player.world;
+        this.level = playerInventory.player.level;
         this.playerInventory = playerInventory;
         this.contentsChangedListener = () -> {
         };
         this.outputSlot = this.addSlot(new Slot(this.output, 0, 143, 50) {
             @Override
-            public boolean canInsert(ItemStack stack) {
+            public boolean mayPlace(ItemStack stack) {
                 return false;
             }
             @Override
-            public void onTakeItem(PlayerEntity player, ItemStack stack) {
+            public void onTake(Player player, ItemStack stack) {
                 if (WorkbenchScreenHandler.this.craft()) {
-                    stack.onCraft(player.world, player, stack.getCount());
-                    WorkbenchScreenHandler.this.output.unlockLastRecipe(player);
+                    stack.onCraftedBy(player.level, player, stack.getCount());
+                    WorkbenchScreenHandler.this.output.awardUsedRecipes(player);
                     WorkbenchScreenHandler.this.populateResult(player);
-                    context.run((world, pos) -> {
-                        long l = world.getTime();
+                    context.execute((world, pos) -> {
+                        long l = world.getDayTime();
                         if (WorkbenchScreenHandler.this.lastTakeTime != l) {
-                            world.playSound(null, pos, SoundEvents.UI_STONECUTTER_TAKE_RESULT, SoundCategory.BLOCKS, 1.0f, 1.0f);
+                            world.playSound(null, pos, SoundEvents.UI_STONECUTTER_TAKE_RESULT, SoundSource.BLOCKS, 1.0f, 1.0f);
                             WorkbenchScreenHandler.this.lastTakeTime = l;
                         }
                     });
                     WorkbenchScreenHandler.this.contentsChangedListener.run();
                     WorkbenchScreenHandler.this.updateInput();
-                    super.onTakeItem(player, stack);
+                    super.onTake(player, stack);
                 }
             }
         });
@@ -78,9 +76,9 @@ public class WorkbenchScreenHandler extends ScreenHandler {
         for (i = 0; i < 9; ++i) {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 156));
         }
-        this.addProperty(this.selectedRecipe);
+        this.addDataSlot(this.selectedRecipe);
         if (ALL_RECIPES.isEmpty()) {
-           world.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE).forEach(recipe -> {
+           level.getRecipeManager().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE).forEach(recipe -> {
                ALL_RECIPES.addAll(recipe.getInnerRecipes());
            });
            ALL_RECIPES.sort(FurnitureRecipe.CraftableFurnitureRecipe::compareTo);
@@ -92,7 +90,7 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     boolean craft() {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe.CraftableFurnitureRecipe simpleFurnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
-            if (simpleFurnitureRecipe.matches(playerInventory, playerInventory.player.world)) {
+            if (simpleFurnitureRecipe.matches(playerInventory, playerInventory.player.level)) {
                simpleFurnitureRecipe.craftAndRemoveItems(playerInventory, playerInventory.player.world.getRegistryManager());
                 return true;
             }
@@ -100,14 +98,14 @@ public class WorkbenchScreenHandler extends ScreenHandler {
         return false;
     }
 
-    void populateResult(PlayerEntity player) {
+    void populateResult(Player player) {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe.CraftableFurnitureRecipe simpleFurnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
-            this.outputSlot.setStack(simpleFurnitureRecipe.craft(player.getInventory(), player.world.getRegistryManager()));
+            this.outputSlot.set(simpleFurnitureRecipe.assemble(player.getInventory(), player.world.getRegistryManager()));
         } else {
-            this.outputSlot.setStack(ItemStack.EMPTY);
+            this.outputSlot.set(ItemStack.EMPTY);
         }
-        this.sendContentUpdates();
+        this.broadcastChanges();
     }
 
     public boolean isInBounds(List<FurnitureRecipe.CraftableFurnitureRecipe> simpleFurnitureRecipes, int id) {
@@ -118,12 +116,12 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public void onContentChanged(Inventory inventory) {
+    public void slotsChanged(Container inventory) {
         this.updateInput();
-        super.onContentChanged(inventory);
+        super.slotsChanged(inventory);
     }
 
-    public PlayerInventory getPlayerInventory() {
+    public Inventory getPlayerInventory() {
         return playerInventory;
     }
 
@@ -158,14 +156,14 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     public void updateInput() {
         // Reset the selected recipe and clear the output slot
         if (!this.availableRecipes.isEmpty() && getSelectedRecipe() != -1) {
-            if (!this.sortedRecipes.get(getSelectedRecipe()).matches(playerInventory, world)){
+            if (!this.sortedRecipes.get(getSelectedRecipe()).matches(playerInventory, level)){
                 this.selectedRecipe.set(-1);
-                this.outputSlot.setStack(ItemStack.EMPTY);
+                this.outputSlot.set(ItemStack.EMPTY);
             }
         }
         // Reset the available recipes list and add all recipes that can be crafted
         this.availableRecipes.clear();
-        this.availableRecipes.addAll(ALL_RECIPES.stream().filter(newFurnitureRecipe -> newFurnitureRecipe.matches(playerInventory, world)).toList());
+        this.availableRecipes.addAll(ALL_RECIPES.stream().filter(newFurnitureRecipe -> newFurnitureRecipe.matches(playerInventory, level)).toList());
         // Clear the visible recipe list and add the craft-able recipes first, then add the rest, checking that it's not present already so that it's not overridden.
         this.sortedRecipes.clear();
         this.sortedRecipes.addAll(availableRecipes);
@@ -181,55 +179,55 @@ public class WorkbenchScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public boolean canUse(PlayerEntity player) {
-        return canUse(this.context, player, PaladinFurnitureModBlocksItems.WORKING_TABLE);
+    public boolean stillValid(Player player) {
+        return stillValid(this.context, player, PaladinFurnitureModBlocksItems.WORKING_TABLE);
     }
 
     @Override
-    public boolean canInsertIntoSlot(ItemStack stack, Slot slot) {
-        return slot.inventory != this.outputSlot && super.canInsertIntoSlot(stack, slot);
+    public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
+        return slot.container != this.outputSlot && super.canTakeItemForPickAll(stack, slot);
     }
 
     @Override
-    public ItemStack quickMove(PlayerEntity player, int index) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.hasStack()) {
-            ItemStack itemStack2 = slot.getStack();
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemStack2 = slot.getItem();
             Item item = itemStack2.getItem();
             itemStack = itemStack2.copy();
             if (index == 0) {
-                item.onCraft(itemStack2, player.world, player);
-                if (!this.insertItem(itemStack2, 1, 37, true)) {
+                item.onCraftedBy(itemStack2, player.level, player);
+                if (!this.moveItemStackTo(itemStack2, 1, 37, true)) {
                     return ItemStack.EMPTY;
                 }
-                slot.onQuickTransfer(itemStack2, itemStack);
+                slot.onQuickCraft(itemStack2, itemStack);
             } else if (index >= 1 && index < 28) {
-                if (!this.insertItem(itemStack2, 28, 37, false)) {
+                if (!this.moveItemStackTo(itemStack2, 28, 37, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index >= 28 && index < 37 && !this.insertItem(itemStack2, 1, 28, false)) {
+            } else if (index >= 28 && index < 37 && !this.moveItemStackTo(itemStack2, 1, 28, false)) {
                 return ItemStack.EMPTY;
             }
 
             if (itemStack2.isEmpty()) {
-                slot.setStack(ItemStack.EMPTY);
+                slot.set(ItemStack.EMPTY);
             }
 
-            slot.markDirty();
+            slot.setChanged();
             if (itemStack2.getCount() == itemStack.getCount()) {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTakeItem(player, itemStack2);
-            this.sendContentUpdates();
+            slot.onTake(player, itemStack2);
+            this.broadcastChanges();
         }
         return itemStack;
     }
 
 
     @Override
-    public boolean onButtonClick(PlayerEntity player, int id) {
+    public boolean clickMenuButton(Player player, int id) {
         this.updateInput();
         if (this.isInBounds(this.availableRecipes, id) && canCraft()) {
             this.selectedRecipe.set(id);

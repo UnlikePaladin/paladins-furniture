@@ -39,8 +39,8 @@ import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
 import net.fabricmc.fabric.api.client.model.ModelProviderContext;
 import net.fabricmc.fabric.api.client.model.ModelResourceProvider;
-import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -48,7 +48,7 @@ import java.util.List;
 
 public class PFMModelProvider implements ModelResourceProvider {
     @Override
-    public @Nullable UnbakedModel loadModelResource(Identifier resourceId, ModelProviderContext context) {
+    public @Nullable UnbakedModel loadModelResource(ResourceLocation resourceId, ModelProviderContext context) {
         if (ModelHelper.containsIdentifier(UnbakedMirrorModel.MIRROR_MODEL_IDS, resourceId)){
             return new UnbakedMirrorModel(UnbakedMirrorModel.DEFAULT_TEXTURES[2], ModelHelper.getVanillaConcreteColor(resourceId), UnbakedMirrorModel.DEFAULT_TEXTURES[1], new ArrayList<>(), ModelHelper.getColor(resourceId));
         } else if (UnbakedBedModel.BED_MODEL_IDS.contains(resourceId)){

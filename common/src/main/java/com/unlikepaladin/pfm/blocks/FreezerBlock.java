@@ -4,29 +4,35 @@ import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.mob.PiglinBrain;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.Containers;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -39,16 +45,16 @@ import java.util.stream.Stream;
 import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class FreezerBlock extends HorizontalFacingBlockWithEntity {
-    public static final BooleanProperty OPEN = Properties.OPEN;
+    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private Supplier<FridgeBlock> fridge;
     private static final List<FurnitureBlock> FREEZERS = new ArrayList<>();
 
-    public FreezerBlock(Settings settings, Supplier<FridgeBlock> fridge) {
+    public FreezerBlock(Properties settings, Supplier<FridgeBlock> fridge) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
-        this.baseBlockState = this.getDefaultState();
+        registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(OPEN, false));
+        this.baseBlockState = this.defaultBlockState();
         this.fridge = fridge;
         this.baseBlock = baseBlockState.getBlock();
         FREEZERS.add(new FurnitureBlock(this, "freezer"));
@@ -59,63 +65,63 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-         if (!world.isClient) {
-                NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(world, pos);
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+         if (!world.isClientSide) {
+                MenuProvider screenHandlerFactory = state.getMenuProvider(world, pos);
                 if (screenHandlerFactory != null) {
-                    player.incrementStat(Statistics.FREEZER_OPENED);
-                    player.openHandledScreen(screenHandlerFactory);
-                    PiglinBrain.onGuardedBlockInteracted(player, true);
+                    player.awardStat(Statistics.FREEZER_OPENED);
+                    player.openMenu(screenHandlerFactory);
+                    PiglinAi.angerNearbyPiglins(player, true);
                 }
             }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(Properties.HORIZONTAL_FACING);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        stateManager.add(BlockStateProperties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
     }
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public boolean hasSidedTransparency(BlockState state) {
+    public boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
 
     @Override
-    public ItemStack getPickStack(BlockView world, BlockPos pos, BlockState state) {
-        return super.getPickStack(world, pos, state);
+    public ItemStack getCloneItemStack(BlockGetter world, BlockPos pos, BlockState state) {
+        return super.getCloneItemStack(world, pos, state);
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
 
     }
 
-    protected void onBreakInCreative(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    protected void onBreakInCreative(Level world, BlockPos pos, BlockState state, Player player) {
     }
 
     @Override
     @Nullable
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection());
     }
 
-    protected static final Map<Direction, VoxelShape> FREEZER = new HashMap<>() {{put(Direction.NORTH, VoxelShapes.union(createCuboidShape(12, 5, -0.5,13, 15, 1),createCuboidShape(1, 5, 1,15, 16, 2),createCuboidShape(1, -16, 2,15, 16, 16)));}};
-    protected static final Map<Direction, VoxelShape> FREEZER_SINGLE = new HashMap<>() {{put(Direction.NORTH, VoxelShapes.union(createCuboidShape(12, 4, -0.5,13, 15, 1),createCuboidShape(1, 1, 1,15, 16, 2),createCuboidShape(1, 0, 2,15, 16, 16)));}};
-    protected static final Map<Direction, VoxelShape> FREEZER_OPEN = new HashMap<>() {{put(Direction.NORTH, VoxelShapes.union(createCuboidShape(-0.5, 5, -10,1, 15, -9),createCuboidShape(1, 5, -12,3, 16, 2),createCuboidShape(1, 5, 2,15, 16, 16),createCuboidShape(1, -16, 1,15, 5, 16)));}};
-    protected static final Map<Direction, VoxelShape> FREEZER_SINGLE_OPEN = new HashMap<>() {{put(Direction.NORTH, VoxelShapes.union(createCuboidShape(-0.5, 4, -10,1, 15, -9),createCuboidShape(1, 1, -12,3, 16, 2),createCuboidShape(1, 0, 2,15, 16, 16)));}};
+    protected static final Map<Direction, VoxelShape> FREEZER = new HashMap<>() {{put(Direction.NORTH, Shapes.or(box(12, 5, -0.5,13, 15, 1),box(1, 5, 1,15, 16, 2),box(1, -16, 2,15, 16, 16)));}};
+    protected static final Map<Direction, VoxelShape> FREEZER_SINGLE = new HashMap<>() {{put(Direction.NORTH, Shapes.or(box(12, 4, -0.5,13, 15, 1),box(1, 1, 1,15, 16, 2),box(1, 0, 2,15, 16, 16)));}};
+    protected static final Map<Direction, VoxelShape> FREEZER_OPEN = new HashMap<>() {{put(Direction.NORTH, Shapes.or(box(-0.5, 5, -10,1, 15, -9),box(1, 5, -12,3, 16, 2),box(1, 5, 2,15, 16, 16),box(1, -16, 1,15, 5, 16)));}};
+    protected static final Map<Direction, VoxelShape> FREEZER_SINGLE_OPEN = new HashMap<>() {{put(Direction.NORTH, Shapes.or(box(-0.5, 4, -10,1, 15, -9),box(1, 1, -12,3, 16, 2),box(1, 0, 2,15, 16, 16)));}};
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING).getOpposite();
-        Boolean open = state.get(OPEN);
-        boolean hasFridge = world.getBlockState(pos.down()).getBlock() instanceof FridgeBlock && !(world.getBlockState(pos.down()).getBlock() instanceof IronFridgeBlock);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction dir = state.getValue(FACING).getOpposite();
+        Boolean open = state.getValue(OPEN);
+        boolean hasFridge = world.getBlockState(pos.below()).getBlock() instanceof FridgeBlock && !(world.getBlockState(pos.below()).getBlock() instanceof IronFridgeBlock);
         if (hasFridge) {
             if (open) {
                 if (!FREEZER_OPEN.containsKey(dir))
@@ -138,54 +144,54 @@ public class FreezerBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (!world.isClient && player.isCreative()) {
+    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+        if (!world.isClientSide && player.isCreative()) {
             this.onBreakInCreative(world, pos,state, player);
         }
-        super.onBreak(world, pos, state, player);
+        super.playerWillDestroy(world, pos, state, player);
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        return super.canPlaceAt(state, world, pos);
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        return super.canSurvive(state, world, pos);
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.isOf(newState.getBlock())) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.is(newState.getBlock())) {
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof Inventory) {
-            ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
-            world.updateComparators(pos, this);
+        if (blockEntity instanceof Container) {
+            Containers.dropContents(world, pos, (Container) blockEntity);
+            world.updateNeighbourForOutputSignal(pos, this);
         }
-        super.onStateReplaced(state, world, pos, newState, moved);
+        super.onRemove(state, world, pos, newState, moved);
     }
 
    @Override
-    public void onBroken(WorldAccess world, BlockPos pos, BlockState state) {
-       super.onBroken(world, pos, state);
+    public void destroy(LevelAccessor world, BlockPos pos, BlockState state) {
+       super.destroy(world, pos, state);
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return FreezerBlockEntity.getFactory().create(pos,state);
     }
     @Override
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
-        return checkType(world, type, BlockEntities.FREEZER_BLOCK_ENTITY);
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(world, type, BlockEntities.FREEZER_BLOCK_ENTITY);
     }
 
     @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends FreezerBlockEntity> expectedType) {
-        return world.isClient ? null : FreezerBlock.checkType(givenType, expectedType, FreezerBlockEntity::tick);
+    protected static <T extends BlockEntity> BlockEntityTicker<T> createTickerHelper(Level world, BlockEntityType<T> givenType, BlockEntityType<? extends FreezerBlockEntity> expectedType) {
+        return world.isClientSide ? null : FreezerBlock.createTickerHelper(givenType, expectedType, FreezerBlockEntity::serverTick);
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter world, BlockPos pos, PathComputationType type) {
         return false;
     }
 }

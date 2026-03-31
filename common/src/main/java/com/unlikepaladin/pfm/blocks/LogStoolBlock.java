@@ -1,15 +1,15 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,9 +17,9 @@ import java.util.stream.Stream;
 
 public class LogStoolBlock extends BasicChairBlock {
     private static final List<FurnitureBlock> WOOD_LOG_STOOLS = new ArrayList<>();
-    public LogStoolBlock(Settings settings) {
+    public LogStoolBlock(Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));
+        registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(TUCKED, false));
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(LogStoolBlock.class)){
             WOOD_LOG_STOOLS.add(new FurnitureBlock(this, "_stool"));
         }
@@ -29,7 +29,7 @@ public class LogStoolBlock extends BasicChairBlock {
         return WOOD_LOG_STOOLS.stream();
     }
 
-    protected static final VoxelShape COLLISION = VoxelShapes.union(createCuboidShape(3, 0, 3, 13, 11, 13));
+    protected static final VoxelShape COLLISION = Shapes.or(box(3, 0, 3, 13, 11, 13));
 
     protected static final VoxelShape FACE_NORTH_TUCKED = tuckShape(Direction.NORTH, COLLISION);
     protected static final VoxelShape FACE_SOUTH_TUCKED = tuckShape(Direction.SOUTH, COLLISION);
@@ -42,9 +42,9 @@ public class LogStoolBlock extends BasicChairBlock {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
-        if (state.get(TUCKED)) {
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+        Direction dir = state.getValue(FACING);
+        if (state.getValue(TUCKED)) {
             return switch (dir) {
                 case WEST -> FACE_WEST_TUCKED;
                 case NORTH -> FACE_NORTH_TUCKED;

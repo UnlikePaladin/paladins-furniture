@@ -7,16 +7,16 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.tooltip.TooltipComponent;
-import net.minecraft.recipe.AbstractCookingRecipe;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 
 import java.util.List;
 
 
 public class EmiFreezingRecipe implements EmiRecipe {
-    private final Identifier id;
+    private final ResourceLocation id;
     private final EmiIngredient input;
     private final EmiStack output;
     private final AbstractCookingRecipe recipe;
@@ -25,7 +25,7 @@ public class EmiFreezingRecipe implements EmiRecipe {
 
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return id;
     }
 
@@ -51,7 +51,7 @@ public class EmiFreezingRecipe implements EmiRecipe {
 
     public EmiFreezingRecipe(FreezingRecipe recipe) {
         input = EmiIngredient.of(recipe.getIngredients().get(0));
-        output = EmiStack.of(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()));
+        output = EmiStack.of(recipe.getResultItem(MinecraftClient.getInstance().world.getRegistryManager()));
         this.recipe = recipe;
         this.id = recipe.getId();
         this.fuelMultiplier = 2;
@@ -65,8 +65,8 @@ public class EmiFreezingRecipe implements EmiRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        widgets.addFillingArrow(24, 5, 50 * recipe.getCookTime()).tooltip((mx, my) -> {
-            return List.of(TooltipComponent.of(Text.translatable("emi.cooking.time", recipe.getCookTime() / 20f).asOrderedText()));
+        widgets.addFillingArrow(24, 5, 50 * recipe.getCookingTime()).tooltip((mx, my) -> {
+            return List.of(ClientTooltipComponent.create(Component.translatable("emi.cooking.time", recipe.getCookingTime() / 20f).getVisualOrderText()));
         });
         if (infiniBurn) {
             widgets.addTexture(FreezingWidget.FULL_FREEZER, 1, 24);

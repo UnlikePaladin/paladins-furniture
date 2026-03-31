@@ -1,38 +1,37 @@
 package com.unlikepaladin.pfm.client.fabric;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.ducks.PFMSpriteContentExtensions;
 import com.unlikepaladin.pfm.mixin.PFMMissingSpriteAccessor;
-import net.minecraft.client.resource.metadata.AnimationResourceMetadata;
-import net.minecraft.client.texture.MissingSprite;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.SpriteContents;
-import net.minecraft.client.texture.SpriteDimensions;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
+import net.minecraft.client.renderer.texture.SpriteContents;
+import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
+import net.minecraft.client.resources.metadata.animation.FrameSize;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.inventory.InventoryMenu;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PFMSpriteRegistryImpl {
-    public static void registerSprite(Identifier spriteId) {
-        PFMSpriteRegistry.PFM_SPRITES.put(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, spriteId);
+    public static void registerSprite(ResourceLocation spriteId) {
+        PFMSpriteRegistry.PFM_SPRITES.put(InventoryMenu.BLOCK_ATLAS, spriteId);
     }
 
-    public static void registerDynamicSprite(Identifier spriteId, List<VariantBase<?>> variantBaseList) {
-        PFMSpriteRegistry.PFM_SPRITES.put(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, spriteId);
+    public static void registerDynamicSprite(ResourceLocation spriteId, List<VariantBase<?>> variantBaseList) {
+        PFMSpriteRegistry.PFM_SPRITES.put(InventoryMenu.BLOCK_ATLAS, spriteId);
         PFMSpriteRegistry.DYNAMIC_SPRITE_GENERATORS.put(spriteId, (info) -> {
-            List<Pair<Identifier, SpriteContents>> infos = new ArrayList<>();
-            NativeImage image = PFMMissingSpriteAccessor.pfm$invokeCreateImage(info.getWidth(), info.getHeight());
+            List<Tuple<ResourceLocation, SpriteContents>> infos = new ArrayList<>();
+            NativeImage image = PFMMissingSpriteAccessor.pfm$invokeCreateImage(info.width(), info.height());
             for (VariantBase<?> variantBase : variantBaseList) {
-                Identifier templateId = info.getId();
-                Identifier variantSpriteId = new Identifier(templateId.getNamespace(), templateId.getPath().replace("template", variantBase.getPath()));
-                SpriteContents variantInfo = new SpriteContents(variantSpriteId, new SpriteDimensions(info.getWidth(), info.getHeight()),
-                        image, AnimationResourceMetadata.EMPTY);
+                ResourceLocation templateId = info.name();
+                ResourceLocation variantSpriteId = new ResourceLocation(templateId.getNamespace(), templateId.getPath().replace("template", variantBase.getPath()));
+                SpriteContents variantInfo = new SpriteContents(variantSpriteId, new FrameSize(info.width(), info.height()),
+                        image, AnimationMetadataSection.EMPTY);
                 ((PFMSpriteContentExtensions)variantInfo).pfm$setInitialized(false);
-                infos.add(new Pair<>(variantSpriteId, variantInfo));
+                infos.add(new Tuple<>(variantSpriteId, variantInfo));
             }
             return infos;
         });

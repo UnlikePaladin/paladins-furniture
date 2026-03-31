@@ -2,6 +2,9 @@ package com.unlikepaladin.pfm.runtime.data.forge;
 
 import com.unlikepaladin.pfm.data.PFMTag;
 import com.unlikepaladin.pfm.mixin.forge.PFMAbstractTagProvider$ObjectBuilderMixin;
+import net.minecraft.core.Registry;
+import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
+import net.minecraft.tags.TagBuilder;
 import net.minecraft.data.server.tag.TagProvider;
 import net.minecraft.data.server.tag.ValueLookupTagProvider;
 import net.minecraft.registry.RegistryKey;

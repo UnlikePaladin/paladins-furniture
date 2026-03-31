@@ -19,13 +19,13 @@ import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,8 +35,8 @@ import java.util.Collection;
 
 public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements ModInitializer, DedicatedServerModInitializer {
 
-    public static final Identifier FURNITURE_DYED_ID = new Identifier("pfm:furniture_dyed");
-    public static SoundEvent FURNITURE_DYED_EVENT = SoundEvent.of(FURNITURE_DYED_ID);
+    public static final ResourceLocation FURNITURE_DYED_ID = new ResourceLocation("pfm:furniture_dyed");
+    public static SoundEvent FURNITURE_DYED_EVENT = SoundEvent.createVariableRangeEvent(FURNITURE_DYED_ID);
     public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 
 
@@ -71,47 +71,47 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
     }
 
 
-    public static void onServerJoin(ServerPlayNetworkHandler handler, PacketSender sender, MinecraftServer server) {
+    public static void onServerJoin(ServerGamePacketListenerImpl handler, PacketSender sender, MinecraftServer server) {
         // Give book
         if (getPFMConfig().shouldGiveGuideBook()) {
             PFMCriteria.GUIDE_BOOK_CRITERION.trigger(handler.getPlayer());
         }
 
         // Sync Config
-        PacketByteBuf buffer = new PacketByteBuf(Unpooled.buffer());
+        FriendlyByteBuf buffer = new FriendlyByteBuf(Unpooled.buffer());
         Collection<AbstractConfigOption> configOptions = PaladinFurnitureMod.getPFMConfig().options.values();
         buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
         sender.sendPacket(NetworkIDs.CONFIG_SYNC_ID, buffer);
     }
 
     public static void initializeItemGroup() {
-        PaladinFurnitureMod.DYE_KITS.setRight(FabricItemGroup.builder(new Identifier(MOD_ID, "dye_kits"))
-                .displayName(Text.translatable("itemGroup.pfm.dye_kits"))
+        PaladinFurnitureMod.DYE_KITS.setB(FabricItemGroup.builder(new ResourceLocation(MOD_ID, "dye_kits"))
+                .title(Component.translatable("itemGroup.pfm.dye_kits"))
                 .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
-                .entries((enabledFeatures, stacks) -> {
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_GREEN));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIME));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_CYAN));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLUE));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_BLUE));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_PURPLE));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_MAGENTA));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_PINK));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BROWN));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_WHITE));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_GRAY));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY));
-                    stacks.add(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLACK));
+                .displayItems((enabledFeatures, stacks) -> {
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_ORANGE));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_YELLOW));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_GREEN));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIME));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_CYAN));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLUE));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_BLUE));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_PURPLE));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_MAGENTA));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_PINK));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BROWN));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_WHITE));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_GRAY));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY));
+                    stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLACK));
                 })
                 .build());
 
-        PaladinFurnitureMod.FURNITURE_GROUP.setRight(FabricItemGroup.builder(new Identifier(MOD_ID, "furniture"))
-                .displayName(Text.translatable("itemGroup.pfm.furniture"))
-                .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultStack())
-                .entries((displayContext, stacks) -> {
+        PaladinFurnitureMod.FURNITURE_GROUP.setB(FabricItemGroup.builder(new ResourceLocation(MOD_ID, "furniture"))
+                .title(Component.translatable("itemGroup.pfm.furniture"))
+                .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultInstance())
+                .displayItems((displayContext, stacks) -> {
 
                         }
                 ).build());
@@ -119,7 +119,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
 
     @Override
     public void onInitializeServer() {
-        PaladinFurnitureMod.isClient = false;
+        PaladinFurnitureMod.isClientSide = false;
         registerLateEntries();
         replaceHomePOIStates();
     }

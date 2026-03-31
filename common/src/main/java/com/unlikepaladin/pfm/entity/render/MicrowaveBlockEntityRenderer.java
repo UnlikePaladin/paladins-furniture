@@ -1,36 +1,34 @@
 package com.unlikepaladin.pfm.entity.render;
 
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.render.item.ItemModels;
 import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
 
 public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
     private final ItemRenderer itemRenderer;
-    public MicrowaveBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+    public MicrowaveBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
         itemRenderer = ctx.getItemRenderer();
     }
 
     @Override
-    public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+    public void render(T blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         if (blockEntity instanceof MicrowaveBlockEntity) {
-            itemStack = blockEntity.getStack(0);
-            matrices.push();
-            int lightAbove = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up());
+            itemStack = blockEntity.getItem(0);
+            matrices.pushPose();
+            int lightAbove = LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().above());
             Direction facing = blockEntity.getFacing();
             float x,y,z;
             switch (facing) {
@@ -57,12 +55,12 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
                 default -> throw new IllegalStateException("Unexpected value: " + facing);
             }
             matrices.translate(x, y ,z);
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-facing.asRotation()));
-            if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getWorld().getRegistryManager(),blockEntity.getRecipe(), blockEntity.inventory, blockEntity.getMaxCountPerStack())) {
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((blockEntity.getWorld().getTime() + tickDelta) * 4));}
+            matrices.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
+            if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getWorld().getRegistryManager(),blockEntity.getRecipe(), blockEntity.container, blockEntity.getMaxStackSize())) {
+                matrices.mulPose(Axis.YP.rotationDegrees((blockEntity.getLevel().getDayTime() + tickDelta) * 4));}
             matrices.scale(0.5f, 0.5f, 0.5f);
             this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getWorld(), 0);
-            matrices.pop();
+            matrices.popPose();
         }
     }
 

@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.runtime.fabric;
 
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,8 +16,8 @@ public class TextureReloadQueueImpl {
             // quick check to avoid scheduling empty work
             if (list.isEmpty()) return;
 
-            MinecraftClient.getInstance().execute(() -> {
-                List<Identifier> spriteIdentifiers = new ArrayList<>(list);
+            Minecraft.getInstance().execute(() -> {
+                List<ResourceLocation> spriteIdentifiers = new ArrayList<>(list);
                 list.clear();
                 reloadSpritesOnClientThread(spriteIdentifiers);
             });

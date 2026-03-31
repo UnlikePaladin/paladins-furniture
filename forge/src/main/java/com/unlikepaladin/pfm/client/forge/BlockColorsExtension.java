@@ -1,11 +1,11 @@
 package com.unlikepaladin.pfm.client.forge;
 
-import net.minecraft.block.Block;
-import net.minecraft.client.color.block.BlockColorProvider;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.color.block.BlockColor;
 
 import java.util.Map;
 
 public interface BlockColorsExtension {
-    Map<RegistryEntry.Reference<Block>, BlockColorProvider> getColorMap();
+    Map<Holder.Reference<Block>, BlockColor> getColorMap();
 }
