@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Direction;
@@ -52,9 +53,9 @@ public class PFMToasterBlockEntityRenderer <T extends PFMToasterBlockEntity> imp
                 matrices.scale(0.8f,0.8f,0.8f);
                 matrices.translate(0.0D, 0.0D, -0.55D);
                 matrices.translate(0.0D, 0.0D, 0.41D);
-                Minecraft.getInstance().getItemRenderer().renderStatic(items.get(0), ItemDisplayContext.GROUND, light, overlay, matrices, vertexConsumers, 346746554);
+                Minecraft.getInstance().getItemRenderer().renderStatic(items.get(0), ItemDisplayContext.GROUND, light, overlay, matrices, vertexConsumers, blockEntity.getLevel(), 346746554);
                 matrices.translate(0.0D, 0.0D, 0.29D);
-                Minecraft.getInstance().getItemRenderer().renderStatic(items.get(1), ItemDisplayContext.GROUND, light, overlay, matrices, vertexConsumers, 834871346);
+                Minecraft.getInstance().getItemRenderer().renderStatic(items.get(1), ItemDisplayContext.GROUND, light, overlay, matrices, vertexConsumers, blockEntity.getLevel(),834871346);
                 matrices.popPose();
             }
         }

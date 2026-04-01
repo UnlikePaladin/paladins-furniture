@@ -85,7 +85,7 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
         this.isActive = menu.isActive;
         NonNullList<ItemStack> inventory = NonNullList.withSize(1,menu.getContainer().getItem(0));
         Recipe<?> recipe = getRecipe(menu.microwaveBlockEntity.getLevel(), menu.getContainer());
-        if(!MicrowaveBlockEntity.canAcceptRecipeOutput(microwaveBlockEntity.getWorld().getRegistryManager(), recipe, inventory ,microwaveBlockEntity.getMaxStackSize()) && !this.menu.isActive()) {
+        if(!MicrowaveBlockEntity.canAcceptRecipeOutput(microwaveBlockEntity.getLevel().registryAccess(), recipe, inventory ,microwaveBlockEntity.getMaxStackSize()) && !this.menu.isActive()) {
             this.startButton.active = false;
         }
         else {

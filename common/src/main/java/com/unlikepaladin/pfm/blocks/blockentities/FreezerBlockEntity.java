@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
 import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.WorldlyContainer;
@@ -366,7 +366,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
     }
 
 
-    private static boolean canAcceptRecipeOutput(DynamicRegistryManager registryManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
+    private static boolean canAcceptRecipeOutput(RegistryAccess registryManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
         if (slots.get(0).isEmpty() || recipe == null) {
             return false;
         }
@@ -387,7 +387,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         return itemStack2.getCount() < itemStack.getMaxStackSize();
     }
 
-    private static boolean craftRecipe(DynamicRegistryManager registryManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
+    private static boolean craftRecipe(RegistryAccess registryManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
         if (recipe == null || !FreezerBlockEntity.canAcceptRecipeOutput(registryManager,recipe, slots, count)) {
             return false;
         }
@@ -434,7 +434,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         if (blockEntity.isActive() || !itemStack.isEmpty() && !blockEntity.inventory.get(0).isEmpty()) {
             Recipe recipe = world.getRecipeManager().getRecipeFor(blockEntity.recipeType, blockEntity, world).orElse(null);
             int i = blockEntity.getMaxStackSize();
-            if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {
+            if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.registryAccess(), recipe, blockEntity.inventory, i)) {
                 blockEntity.fuelTimeTotal = blockEntity.fuelTime = blockEntity.getFuelTime(itemStack);
                 if (blockEntity.isActive()) {
                     bl2 = true;
@@ -448,12 +448,12 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
                     }
                 }
             }
-            if (blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {
+            if (blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.registryAccess(), recipe, blockEntity.inventory, i)) {
                 ++blockEntity.freezeTime;
                 if (blockEntity.freezeTime == blockEntity.freezeTimeTotal) {
                     blockEntity.freezeTime = 0;
                     blockEntity.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(world, blockEntity.recipeType, blockEntity);
-                    if (FreezerBlockEntity.craftRecipe(world.getRegistryManager(),recipe, blockEntity.inventory, i)) {
+                    if (FreezerBlockEntity.craftRecipe(world.registryAccess(),recipe, blockEntity.inventory, i)) {
                         blockEntity.setRecipeUsed(recipe);
                     }
                     bl2 = true;

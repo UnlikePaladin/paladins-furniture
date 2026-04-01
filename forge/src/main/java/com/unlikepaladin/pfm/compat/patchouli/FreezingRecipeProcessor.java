@@ -1,12 +1,13 @@
 package com.unlikepaladin.pfm.compat.patchouli;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
@@ -17,7 +18,7 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
     public void setup(Level level, IVariableProvider variables) {
         String recipeId = variables.get("recipe").asString();
         RecipeManager manager = level.getRecipeManager();
-        recipe = manager.get(new Identifier(recipeId)).orElse(null);
+        recipe = manager.byKey(new ResourceLocation(recipeId)).orElse(null);
     }
 
     @Override
@@ -31,18 +32,18 @@ public class FreezingRecipeProcessor implements IComponentProcessor {
 
                  return IVariable.from(stack);
              case "output":
-                 ItemStack result = recipe.getResultItem(level.getRegistryManager());
+                 ItemStack result = recipe.getResultItem(level.registryAccess());
                  return IVariable.from(result);
              case "icon":
                  ItemStack icon = recipe.getToastSymbol();
                  return IVariable.from(icon);
              case "text":
-                 ItemStack out = recipe.getResultItem(level.getRegistryManager());
+                 ItemStack out = recipe.getResultItem(level.registryAccess());
                  return IVariable.wrap(out.getCount() + "x$(br)" + out.getHoverName());
              case "icount":
-                 return IVariable.wrap(recipe.getResultItem(level.getRegistryManager()).getCount());
+                 return IVariable.wrap(recipe.getResultItem(level.registryAccess()).getCount());
              case "iname":
-                 return IVariable.wrap(recipe.getOutput(level.getRegistryManager()).getHoverName().getString());
+                 return IVariable.wrap(recipe.getResultItem(level.registryAccess()).getHoverName().getString());
          }
         }
      return IVariable.empty();

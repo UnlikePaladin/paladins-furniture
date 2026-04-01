@@ -4,17 +4,15 @@ import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.InnerTrashcanBlock;
 import com.unlikepaladin.pfm.blocks.TrashcanBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
 
@@ -82,7 +80,7 @@ public class TrashcanBlockEntityRenderer<T extends TrashcanBlockEntity> implemen
                 matrices.mulPose(Axis.XP.rotationDegrees(rot));
                 int lightAbove = LevelRenderer.getLightColor(trashcanBlockEntity.getLevel(), trashcanBlockEntity.getBlockPos().above());
                 matrices.scale(0.8f, 0.8f, 0.8f);
-                this.itemRenderer.renderItem(itemStack, ItemDisplayContext.GROUND, lightAbove, overlay, matrices, vertexConsumerProvider, trashcanBlockEntity.getWorld(), (int) (trashcanBlockEntity.getPos().asLong()+ i));
+                this.itemRenderer.renderStatic(itemStack, ItemDisplayContext.GROUND, lightAbove, overlay, matrices, vertexConsumerProvider, trashcanBlockEntity.getLevel(), (int) (trashcanBlockEntity.getBlockPos().asLong()+ i));
                 matrices.popPose();
             }
         }

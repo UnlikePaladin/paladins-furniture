@@ -120,7 +120,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
         } else {
             this.menu.updateInput();
             List<FurnitureRecipe.CraftableFurnitureRecipe> filteredRecipes = menu.getSortedRecipes().stream()
-                    .filter(recipe -> I18n.translate(recipe.getOutput(minecraft.level.registryAccess()).getTranslationKey())
+                    .filter(recipe -> I18n.get(recipe.getResultItem(minecraft.level.registryAccess()).getDescriptionId())
                     .toLowerCase().contains(string.trim().toLowerCase())).toList();
             this.menu.getSearchableRecipes().addAll(filteredRecipes);
             this.menu.searching = true;
@@ -192,7 +192,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             if (this.menu.searching) {
                 iCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(iCopy));
             }
-            tooltip.add(getTooltipFromItem(this.menu.getSortedRecipes().get(iCopy).getResultItem(client.world.getRegistryManager())).get(0));
+            tooltip.add(getTooltipFromItem(this.menu.getSortedRecipes().get(iCopy).getResultItem(minecraft.level.registryAccess())).get(0));
             tooltip.add(Component.translatable("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
             HashMap<Item, Integer> itemStackCountMap = new HashMap<>();
             for (Ingredient ingredient : this.menu.getSortedRecipes().get(iCopy).getIngredients()) {
@@ -239,7 +239,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
         }
     }
 
-    private void renderRecipeIcons(MatrixStack matrices, int x, int y, int scrollOffset) {
+    private void renderRecipeIcons(PoseStack matrices, int x, int y, int scrollOffset) {
         for (int i = this.scrollOffset; i < scrollOffset && i < this.menu.getVisibleRecipeCount(); ++i) {
             int iMinusScrollOffset = i - this.scrollOffset;
             int xOffset = x + iMinusScrollOffset % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
@@ -249,7 +249,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             if (this.menu.searching) {
                 iCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(iCopy));
             }
-            this.minecraft.getItemRenderer().renderAndDecorateItem(matrices,this.menu.getSortedRecipes().get(iCopy).getResultItem(client.world.getRegistryManager()), xOffset, yOffset);
+            this.minecraft.getItemRenderer().renderAndDecorateItem(matrices,this.menu.getSortedRecipes().get(iCopy).getResultItem(minecraft.level.registryAccess()), xOffset, yOffset);
         }
     }
 

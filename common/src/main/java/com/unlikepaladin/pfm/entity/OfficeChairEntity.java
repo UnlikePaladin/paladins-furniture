@@ -63,7 +63,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
     @Override
     public void travel(Vec3 movementInput) {
         if (this.isVehicle() && this.getControllingPassenger() instanceof LivingEntity) {
-            LivingEntity livingEntity = this.getControllingPassenger();
+            LivingEntity livingEntity = (LivingEntity) this.getControllingPassenger();
             this.yRotO = this.getYRot();
             this.setXRot(livingEntity.getXRot() * 0.5F);
             this.setRot(this.getYRot(), this.getXRot());
@@ -73,7 +73,6 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
             float forwardsSpeed = livingEntity.zza;
             float rotationInput = livingEntity.xxa;
 
-            this.flyingSpeed = this.getSpeed() * 0.1F;
             if (this.isControlledByLocalInstance()) {
                 this.setSpeed((float)this.getAttributeValue(Attributes.MOVEMENT_SPEED));
                 final float baseRotationSensitivity = 0.5F;
@@ -189,7 +188,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
     }
 
     @Override
-    public @Nullable Entity getControllingPassenger() {
+    public @Nullable LivingEntity getControllingPassenger() {
         if (this.isVehicle()) {
             Entity entity = this.getFirstPassenger();
             if (entity instanceof LivingEntity livingEntity) {

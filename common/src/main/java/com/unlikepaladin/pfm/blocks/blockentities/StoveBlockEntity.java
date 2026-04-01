@@ -202,7 +202,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
                 }
                 if (stoveBlockEntity.cookingTimes[i] < stoveBlockEntity.cookingTotalTimes[i]) continue;
                 SimpleContainer inventory = new SimpleContainer(itemStack);
-                ItemStack itemStack2 = level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, level).map(campfireCookingRecipe -> campfireCookingRecipe.assemble(inventory, world.getRegistryManager())).orElse(itemStack);
+                ItemStack itemStack2 = level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, level).map(campfireCookingRecipe -> campfireCookingRecipe.assemble(inventory, level.registryAccess())).orElse(itemStack);
                     if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
                         Containers.dropItemStack(level, pos.getX(), pos.above().getY(), pos.getZ(), itemStack2);
                         stoveBlockEntity.itemsBeingCooked.set(i, ItemStack.EMPTY);

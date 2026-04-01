@@ -51,10 +51,10 @@ public class PFMLangProvider extends PFMProvider {
         startProviderRun();
         try (PFMResourceManager resourceManager = new PFMResourceManager(PackType.CLIENT_RESOURCES, PFMRuntimeResources.RESOURCE_PACK_LIST)) {
             loadLanguages(resourceManager);
-            for (Map.Entry<LanguageDefinition, String> languageDefinitionEntry : languagesToGenerate.entrySet()) {
-                LanguageDefinition languageDefinition = languageDefinitionEntry.getKey();
+            for (Map.Entry<LanguageInfo, String> languageDefinitionEntry : languagesToGenerate.entrySet()) {
+                LanguageInfo languageDefinition = languageDefinitionEntry.getKey();
                 String code = languageDefinitionEntry.getValue();
-                language = TranslationStorage.load(resourceManager, Collections.singletonList(code), languageDefinition.rightToLeft());
+                language = ClientLanguage.loadFrom(resourceManager, Collections.singletonList(code), languageDefinition.bidirectional());
                 currentLanguageCode = code;
                 generate(code);
             }
@@ -219,11 +219,11 @@ public class PFMLangProvider extends PFMProvider {
         HashMap<String, LanguageInfo> map = Maps.newHashMap();
         packs.forEach(pack -> {
             try {
-                List<ResourcePack> subPacks = PFMFileUtil.getSubPacks(pack);
-                for (ResourcePack subPack : subPacks) {
-                    LanguageResourceMetadata languageResourceMetadata = subPack.parseMetadata(LanguageResourceMetadata.SERIALIZER);
+                List<PackResources> subPacks = PFMFileUtil.getSubPacks(pack);
+                for (PackResources subPack : subPacks) {
+                    LanguageMetadataSection languageResourceMetadata = subPack.getMetadataSection(LanguageMetadataSection.TYPE);
                     if (languageResourceMetadata != null) {
-                        languageResourceMetadata.definitions().forEach(map::putIfAbsent);
+                        languageResourceMetadata.languages().forEach(map::putIfAbsent);
                     }
                 }
             }
@@ -235,8 +235,8 @@ public class PFMLangProvider extends PFMProvider {
     }
 
     private volatile Language language = Language.getInstance();
-    private String currentLanguageCode = ((PFMLanguageManagerAccessor) MinecraftClient.getInstance().getLanguageManager()).getCurrentLanguageCode();
-    private Map<LanguageDefinition, String> languagesToGenerate = new HashMap<>();
+    private String currentLanguageCode = ((PFMLanguageManagerAccessor) Minecraft.getInstance().getLanguageManager()).getCurrentCode();
+    private Map<LanguageInfo, String> languagesToGenerate = new HashMap<>();
     public void loadLanguages(ResourceManager manager) {
         Map<String, LanguageInfo> defs = loadAvailableLanguages(manager.listPacks());
         LanguageInfo enUSDefinition = defs.getOrDefault(LanguageManager.DEFAULT_LANGUAGE_CODE, PFMLanguageManagerAccessor.getEnglish_Us());
@@ -249,7 +249,7 @@ public class PFMLangProvider extends PFMProvider {
         } else {
             selectedLangDefinition = enUSDefinition;
         }
-        HashMap<LanguageDefinition, String> list = new HashMap<>();
+        HashMap<LanguageInfo, String> list = new HashMap<>();
         list.put(enUSDefinition, LanguageManager.DEFAULT_LANGUAGE_CODE);
         if (selectedLangDefinition != enUSDefinition) {
             list.put(selectedLangDefinition, currentCode);

@@ -6,7 +6,7 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -51,7 +51,7 @@ public class EmiFreezingRecipe implements EmiRecipe {
 
     public EmiFreezingRecipe(FreezingRecipe recipe) {
         input = EmiIngredient.of(recipe.getIngredients().get(0));
-        output = EmiStack.of(recipe.getResultItem(MinecraftClient.getInstance().world.getRegistryManager()));
+        output = EmiStack.of(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
         this.recipe = recipe;
         this.id = recipe.getId();
         this.fuelMultiplier = 2;

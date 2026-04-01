@@ -87,7 +87,7 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
 
                 chair.setPersistenceRequired();chair.setPFMColor(color);
                 chair.setYRot(user.getYRot());
-                BlockPos pos = new BlockPos((int) hitResult.getLocation().x, (int) hitResult.getPos().y, (int) hitResult.getPos().z);
+                BlockPos pos = new BlockPos((int) hitResult.getLocation().x, (int) hitResult.getLocation().y, (int) hitResult.getLocation().z);
                 world.playSound(null, pos, SoundEvents.STONE_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                 if (!world.isClientSide) {

@@ -85,7 +85,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
                 .addIngredients(recipe.getIngredients().get(inputSlot));
 
         builder.addSlot(OUTPUT, 61, 19)
-                .addItemStack(recipe.getResultItem(MinecraftClient.getInstance().world.getRegistryManager()));
+                .addItemStack(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
     }
 
     protected IDrawableAnimated getArrow(FreezingRecipe recipe) {

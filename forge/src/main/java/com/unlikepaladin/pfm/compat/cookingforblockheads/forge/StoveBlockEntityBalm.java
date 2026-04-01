@@ -281,7 +281,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
             this.singleSlotRecipeWrapper.setItem(0, itemStack);
             Recipe<?> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level).orElse(null);
             if (recipe != null) {
-                result = recipe.getResultItem(world.getRegistryManager());
+                result = recipe.getResultItem(level.registryAccess());
                 if (!result.isEmpty() && result.getItem().isEdible()) {
                     return result;
                 }

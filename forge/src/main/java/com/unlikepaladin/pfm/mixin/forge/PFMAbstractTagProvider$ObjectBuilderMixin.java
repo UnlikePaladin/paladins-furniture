@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.mixin.forge;
 
 import net.minecraft.core.Registry;
 import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
+import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagBuilder;
 import org.spongepowered.asm.mixin.Mixin;
@@ -12,7 +13,7 @@ import java.util.stream.Stream;
 
 public class PFMAbstractTagProvider$ObjectBuilderMixin {
 
-    public static <T, V extends TagProvider.ProvidedTagBuilder<T>> V newTagProvider(TagBuilder arg, Function<T, RegistryKey<T>> function, String modId) {
+    public static <T, V extends TagsProvider.TagAppender<T>> V newTagProvider(TagBuilder arg, Function<T, ResourceKey<T>> function, String modId) {
         return null;
     }
 }

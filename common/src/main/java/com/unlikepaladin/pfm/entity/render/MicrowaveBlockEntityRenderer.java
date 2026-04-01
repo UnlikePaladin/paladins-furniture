@@ -3,16 +3,13 @@ package com.unlikepaladin.pfm.entity.render;
 
 import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.render.item.ItemModels;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
 
@@ -56,10 +53,10 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
             }
             matrices.translate(x, y ,z);
             matrices.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
-            if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getWorld().getRegistryManager(),blockEntity.getRecipe(), blockEntity.container, blockEntity.getMaxStackSize())) {
+            if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getLevel().registryAccess(),blockEntity.getRecipe(), blockEntity.container, blockEntity.getMaxStackSize())) {
                 matrices.mulPose(Axis.YP.rotationDegrees((blockEntity.getLevel().getDayTime() + tickDelta) * 4));}
             matrices.scale(0.5f, 0.5f, 0.5f);
-            this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getWorld(), 0);
+            this.itemRenderer.renderStatic(itemStack, ItemDisplayContext.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getLevel(), 0);
             matrices.popPose();
         }
     }

@@ -27,7 +27,7 @@ public abstract class PFMBreakingItemParticleMixin extends TextureSheetParticle 
             BlockState defaultState = ((BlockItem)stack.getItem()).getBlock().defaultBlockState();
             BakedModel model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(defaultState);
             if (model instanceof PFMBakedModelParticleExtension) {
-                this.setSprite(((PFMBakedModelParticleExtension) model).pfm$getParticle(world, new BlockPos(x, y, z), defaultState));
+                this.setSprite(((PFMBakedModelParticleExtension) model).pfm$getParticle(world, BlockPos.containing(x, y, z), defaultState));
             }
         }
     }

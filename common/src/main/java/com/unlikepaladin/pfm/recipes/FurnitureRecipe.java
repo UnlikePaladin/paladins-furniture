@@ -12,7 +12,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -30,7 +30,7 @@ public interface FurnitureRecipe extends Recipe<Inventory> {
 
     String outputClass();
 
-    default List<CraftableFurnitureRecipe> getAvailableOutputs(Inventory inventory, DynamicRegistryManager registryManager) {
+    default List<CraftableFurnitureRecipe> getAvailableOutputs(Inventory inventory, RegistryAccess registryManager) {
         return getInnerRecipes();
     }
 
@@ -55,7 +55,7 @@ public interface FurnitureRecipe extends Recipe<Inventory> {
         return getIngredients().size();
     }
 
-    default int getOutputCount(DynamicRegistryManager registryManager) {
+    default int getOutputCount(RegistryAccess registryManager) {
         return getResultItem(registryManager).getCount();
     }
 
@@ -63,24 +63,24 @@ public interface FurnitureRecipe extends Recipe<Inventory> {
         return Collections.singletonList(getInnerRecipes().get(0));
     }
 
-    default String getName(DynamicRegistryManager registryManager) {
-        return getResultItem(registryManager).getName().getString();
+    default String getName(RegistryAccess registryManager) {
+        return getResultItem(registryManager).getHoverName().getString();
     }
 
     interface CraftableFurnitureRecipe extends Comparable<CraftableFurnitureRecipe> {
         List<Ingredient> getIngredients();
-        ItemStack getResultItem(DynamicRegistryManager registryManager);
-        ItemStack assemble(Inventory inventory, DynamicRegistryManager registryManager);
+        ItemStack getResultItem(RegistryAccess registryManager);
+        ItemStack assemble(Inventory inventory, RegistryAccess registryManager);
         boolean matches(Inventory playerInventory, Level world);
         FurnitureRecipe parent();
         ItemStack getRecipeOuput();
 
         @Override
         default int compareTo(@NotNull FurnitureRecipe.CraftableFurnitureRecipe o) {
-            return getResultItem().toString().compareTo(o.getResultItem().toString());
+            return getRecipeOuput().toString().compareTo(o.getRecipeOuput().toString());
         }
 
-        default ItemStack craftAndRemoveItems(Inventory playerInventory, DynamicRegistryManager registryManager) {
+        default ItemStack craftAndRemoveItems(Inventory playerInventory, RegistryAccess registryManager) {
             ItemStack output = getResultItem(registryManager).copy();
             List<Ingredient> ingredients = getIngredients();
             for (Ingredient ingredient : ingredients) {

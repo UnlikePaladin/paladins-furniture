@@ -32,7 +32,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.pushPose();
                 poseStack.translate(-0.55F, 0.0F, 0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
                 poseStack.popPose();
             }
 
@@ -41,7 +41,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.pushPose();
                 poseStack.translate(0.55F, 0.0F, 0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
                 poseStack.popPose();
             }
 
@@ -50,7 +50,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.pushPose();
                 poseStack.translate(-0.55F, 0.0F, -0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
                 poseStack.popPose();
             }
 
@@ -59,7 +59,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.pushPose();
                 poseStack.translate(0.55F, 0.0F, -0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
                 poseStack.popPose();
             }
             poseStack.popPose();

@@ -1,20 +1,18 @@
 package com.unlikepaladin.pfm.compat.patchouli;
 
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FurnitureRecipeProcessor implements IComponentProcessor {
@@ -22,16 +20,16 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
     private ResourceLocation variant;
     private boolean isBase;
     @Override
-    public void setup(World level, IVariableProvider variables) {
+    public void setup(Level level, IVariableProvider variables) {
         String recipeId = variables.get("recipe").asString();
         RecipeManager manager = level.getRecipeManager();
-        Recipe<?> recipe = manager.get(new ResourceLocation(recipeId)).orElse(null);
+        Recipe<?> recipe = manager.byKey(new ResourceLocation(recipeId)).orElse(null);
         this.recipe = recipe instanceof FurnitureRecipe ? (FurnitureRecipe) recipe : null;
         this.variant = variables.has("variant") ? ResourceLocation.tryParse(variables.get("variant").asString()) : null;
     }
 
     @Override
-    public @NotNull IVariable process(World level, String key) {
+    public @NotNull IVariable process(Level level, String key) {
         if (recipe != null) {
             List<? extends FurnitureRecipe.CraftableFurnitureRecipe> innerRecipeList;
             if (variant != null) {
@@ -57,18 +55,18 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
                 ItemStack[] resultsArr = new ItemStack[innerRecipeList.size()];
                 for (int i = 0; i < innerRecipeList.size(); i++) {
                     FurnitureRecipe.CraftableFurnitureRecipe innerRecipe = innerRecipeList.get(i);
-                    resultsArr[i] = innerRecipe.getResultItem(level.getRegistryManager());
+                    resultsArr[i] = innerRecipe.getResultItem(level.registryAccess());
                 }
                 return IVariable.from(resultsArr);
             } else if (key.equals("icon")) {
                 ItemStack icon = recipe.getToastSymbol();
                 return IVariable.from(icon);
             } else if (key.equals("text")) {
-                return IVariable.wrap(recipe.getOutputCount(level.getRegistryManager()) + "x$(br)" + recipe.getName(level.getRegistryManager()));
+                return IVariable.wrap(recipe.getOutputCount(level.registryAccess()) + "x$(br)" + recipe.getName(level.registryAccess()));
             } else if (key.equals("icount")) {
-                return IVariable.wrap(recipe.getOutputCount(level.getRegistryManager()));
+                return IVariable.wrap(recipe.getOutputCount(level.registryAccess()));
             } else if (key.equals("iname")) {
-                return IVariable.wrap(recipe.getName(level.getRegistryManager()));
+                return IVariable.wrap(recipe.getName(level.registryAccess()));
             }
         }
         return IVariable.empty();

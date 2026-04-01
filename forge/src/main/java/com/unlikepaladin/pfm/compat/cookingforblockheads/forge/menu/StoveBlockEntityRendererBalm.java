@@ -15,6 +15,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
     public StoveBlockEntityRendererBalm(BlockEntityRendererProvider.Context context) {
     }
 
+    @Override
     public void render(StoveBlockEntityBalm blockEntity, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         Level level = blockEntity.getLevel();
         if (level != null) {
@@ -33,7 +34,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.pushPose();
                 poseStack.translate(-0.55F, 0.0F, 0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
                 poseStack.popPose();
             }
 
@@ -42,7 +43,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.pushPose();
                 poseStack.translate(0.55F, 0.0F, 0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
                 poseStack.popPose();
             }
 
@@ -51,7 +52,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.pushPose();
                 poseStack.translate(-0.55F, 0.0F, -0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
                 poseStack.popPose();
             }
 
@@ -60,7 +61,7 @@ public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBl
                 poseStack.pushPose();
                 poseStack.translate(0.55F, 0.0F, -0.5F);
                 poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
                 poseStack.popPose();
             }
             poseStack.popPose();

@@ -15,7 +15,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Registry;
@@ -72,7 +72,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
 
 
     @Override
-    public ItemStack assemble(Inventory playerInventory, DynamicRegistryManager registryManager) {
+    public ItemStack assemble(Inventory playerInventory, RegistryAccess registryManager) {
         if (this.output.getTag() != null && this.output.getTag().isEmpty()) {
             ItemStack stack = this.output.copy();
             stack.setTag(null);
@@ -92,7 +92,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     }
 
     @Override
-    public ItemStack getResultItem(DynamicRegistryManager registryManager) {
+    public ItemStack getResultItem(RegistryAccess registryManager) {
         return this.output;
     }
 

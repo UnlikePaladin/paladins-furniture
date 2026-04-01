@@ -25,7 +25,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
@@ -146,7 +146,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
     }
 
     @Override
-    public List<CraftableFurnitureRecipe> getAvailableOutputs(Inventory inventory, DynamicRegistryManager registryManager) {
+    public List<CraftableFurnitureRecipe> getAvailableOutputs(Inventory inventory, RegistryAccess registryManager) {
         constructInnerRecipes();
         List<CraftableFurnitureRecipe> stacks = Lists.newArrayList();
         for (ResourceLocation id : furnitureInnerRecipes.keySet()) {
@@ -174,7 +174,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
     }
 
     @Override
-    public ItemStack assemble(Inventory inventory, DynamicRegistryManager registryManager) {
+    public ItemStack assemble(Inventory inventory, RegistryAccess registryManager) {
         PaladinFurnitureMod.GENERAL_LOGGER.warn("Something has tried to craft a dynamic furniture recipe without context");
         return ItemStack.EMPTY;
     }
@@ -185,7 +185,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
     }
 
     @Override
-    public ItemStack getResultItem(DynamicRegistryManager registryManager) {
+    public ItemStack getResultItem(RegistryAccess registryManager) {
         PaladinFurnitureMod.GENERAL_LOGGER.warn("Something has tried to get the output of a dynamic furniture recipe without context");
         return ItemStack.EMPTY;
     }
@@ -213,7 +213,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
     }
 
     @Override
-    public int getOutputCount(DynamicRegistryManager registryManager) {
+    public int getOutputCount(RegistryAccess registryManager) {
         return furnitureOutput.getOutputCount();
     }
 
@@ -242,7 +242,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
 
 
     @Override
-    public String getName(DynamicRegistryManager registryManager) {
+    public String getName(RegistryAccess registryManager) {
         return outputClass().replaceAll("(?<=[a-z])(?=[A-Z])", " ");
     }
 
@@ -265,7 +265,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         }
 
         @Override
-        public ItemStack getResultItem(DynamicRegistryManager registryManager) {
+        public ItemStack getResultItem(RegistryAccess registryManager) {
             return output;
         }
 
@@ -299,7 +299,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         }
 
         @Override
-        public ItemStack assemble(Inventory inventory, DynamicRegistryManager registryManager) {
+        public ItemStack assemble(Inventory inventory, RegistryAccess registryManager) {
             return output.copy();
         }
 

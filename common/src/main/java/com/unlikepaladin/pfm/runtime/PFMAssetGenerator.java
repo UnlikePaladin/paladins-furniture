@@ -65,7 +65,7 @@ public class PFMAssetGenerator extends PFMGenerator {
 
 
                 PFMMCMetaProvider metaProvider = new PFMMCMetaProvider(this);
-                metaProvider.setInfo(new PFMMCMetaProvider.PackInfo(com.mojang.bridge.game.PackType.RESOURCE, "PFM-Assets"));
+                metaProvider.setInfo(new PFMMCMetaProvider.PackInfo(PackType.CLIENT_RESOURCES, "PFM-Assets"));
                 providers.add(metaProvider);
                 providers.add(new PFMBlockstateModelProvider(this));
                 providers.add(new PFMLangProvider(this));

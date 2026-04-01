@@ -3,17 +3,15 @@ package com.unlikepaladin.pfm.entity.render;
 import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.PlateBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
 
@@ -47,7 +45,7 @@ public class PlateBlockEntityRenderer<T extends PlateBlockEntity> implements Blo
                 matrices.translate(0.0, 0.11, 0.05);
             }
             int lightAbove = LevelRenderer.getLightColor(plateBlockEntity.getLevel(), plateBlockEntity.getBlockPos().above());
-            this.itemRenderer.renderItem(itemStack, ModelTransformationMode.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumerProvider, plateBlockEntity.getWorld(),0);
+            this.itemRenderer.renderStatic(itemStack, ItemDisplayContext.GROUND, lightAbove, OverlayTexture.NO_OVERLAY, matrices, vertexConsumerProvider, plateBlockEntity.getLevel(),0);
             matrices.popPose();
         }
     }

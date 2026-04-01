@@ -24,7 +24,7 @@ public abstract class PFMTerrainParticleMixin extends TextureSheetParticle {
         if (state != null) {
             BakedModel model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state);
             if (model instanceof PFMBakedModelParticleExtension) {
-                this.setSprite(((PFMBakedModelParticleExtension) model).pfm$getParticle(world, new BlockPos(x, y, z), state));
+                this.setSprite(((PFMBakedModelParticleExtension) model).pfm$getParticle(world, BlockPos.containing(x, y, z), state));
             }
         }
     }

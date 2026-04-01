@@ -6,7 +6,7 @@ import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +25,7 @@ public class ScreenHandlerRegistryImpl {
     }
 
     public static <T extends AbstractContainerMenu> MenuType<T> registerScreenHandlerSimple(ResourceLocation id, BiFunction<Integer, Inventory, T> factory) {
-        MenuType<T> type = new MenuType<>(factory::apply, FeatureFlags.DEFAULT_ENABLED_FEATURES);
+        MenuType<T> type = new MenuType<>(factory::apply, FeatureFlags.DEFAULT_FLAGS);
         screenHandlerMap.put(id, type);
         return type;
     }

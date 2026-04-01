@@ -4,14 +4,12 @@ import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.Direction;
@@ -58,7 +56,7 @@ public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
                 matrices.mulPose(Axis.XP.rotationDegrees(90.0f));
                 matrices.translate(-0.1625, -0.1625, 0.0);
                 matrices.scale(0.355f, 0.355f, 0.355f);
-                this.itemRenderer.renderItem(itemStack, ItemDisplayContext.FIXED, i, j, matrices, vertexConsumerProvider,stovetopBlockEntity.getWorld(), k + l);
+                this.itemRenderer.renderStatic(itemStack, ItemDisplayContext.FIXED, i, j, matrices, vertexConsumerProvider,stovetopBlockEntity.getLevel(), k + l);
                 matrices.popPose();
             }
         }

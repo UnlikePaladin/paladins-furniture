@@ -26,7 +26,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.registry.DynamicRegistryManager;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
@@ -300,7 +300,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     public Recipe<?> getRecipe() {
         return level.getRecipeManager().getRecipeFor(this.recipeType, this, level).orElse(null);
     }
-    public static boolean canAcceptRecipeOutput(DynamicRegistryManager registryManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
+    public static boolean canAcceptRecipeOutput(RegistryAccess registryManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
         if (slots.get(0).isEmpty() || recipe == null) {
             return false;
         }
@@ -329,7 +329,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
         }
     }
 
-    private static boolean craftRecipe(DynamicRegistryManager recipeManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
+    private static boolean craftRecipe(RegistryAccess recipeManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
         if (recipe == null || !MicrowaveBlockEntity.canAcceptRecipeOutput(recipeManager, recipe, slots, count)) {
             return false;
         }
@@ -351,12 +351,12 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
         if (blockEntity.isActive || !itemStack.isEmpty()) {
             Recipe recipe = level.getRecipeManager().getRecipeFor(blockEntity.recipeType, blockEntity, level).orElse(null);
             int i = blockEntity.getMaxStackSize();
-            if (blockEntity.isActive && canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.container, i)) {
+            if (blockEntity.isActive && canAcceptRecipeOutput(level.registryAccess(), recipe, blockEntity.container, i)) {
                 ++blockEntity.cookTime;
                 if (blockEntity.cookTime == blockEntity.cookTimeTotal) {
                     blockEntity.cookTime = 0;
                     blockEntity.cookTimeTotal = getCookingTime(level, blockEntity.recipeType, blockEntity);
-                    if (craftRecipe(world.getRegistryManager(),recipe, blockEntity.container, i)) {
+                    if (craftRecipe(level.registryAccess(),recipe, blockEntity.container, i)) {
                         blockEntity.setRecipeUsed(recipe);
                         blockEntity.level.setBlock(pos, state = state.setValue(MicrowaveBlock.POWERED, false), Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE);
                         blockEntity.playSound(state, SoundIDs.MICROWAVE_BEEP_EVENT, 1);
