@@ -3,10 +3,10 @@ package com.unlikepaladin.pfm.mixin;
 import com.unlikepaladin.pfm.client.screens.overlay.GLText;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.SplashOverlay;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.gui.screens.LoadingOverlay;
+import com.mojang.blaze3d.vertex.PoseStack;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,15 +20,15 @@ import java.io.Closeable;
 import static com.unlikepaladin.pfm.client.screens.overlay.GLText.GLT_BOTTOM;
 import static com.unlikepaladin.pfm.client.screens.overlay.GLText.GLT_CENTER;
 
-@Mixin(SplashOverlay.class)
-public class PFMSplashOverlayMixin {
-    @Shadow @Final private MinecraftClient client;
+@Mixin(LoadingOverlay.class)
+public class PFMLoadingOverlayMixin {
+    @Shadow @Final private Minecraft minecraft;
     @Unique
     private GLText pfm$glText;
     @Unique
     private GLText.GLTtext pfm$assemblingFurniture;
 
-    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/resource/ResourceReload;getProgress()F"))
+    @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
     private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (PFMRuntimeResources.isAnyGeneratorRunning()) {
             if (!BlockItemRegistry.isModLoaded("vulkanmod")) {
@@ -36,16 +36,16 @@ public class PFMSplashOverlayMixin {
                     this.pfm$glText = new GLText();
                     this.pfm$assemblingFurniture = GLText.gltCreateText();
                 }
-                pfm$glText.gltViewport(this.client.getWindow().getFramebufferWidth(), this.client.getWindow().getFramebufferHeight());
+                pfm$glText.gltViewport(this.minecraft.getWindow().getWidth(), this.minecraft.getWindow().getHeight());
 
                 try (Closeable ignored1 = pfm$glText.gltBeginDraw()) {
-                    float textScale = (float) (client.getWindow().getScaleFactor() / 2.0f) * 1.5f;
+                    float textScale = (float) (minecraft.getWindow().getGuiScale() / 2.0f) * 1.5f;
                     pfm$glText.gltColor(1.0f, 1.0f, 1.0f, 0.01f);
                     GLText.gltSetText(pfm$assemblingFurniture, "Assembling Paladin's Furniture!");
                     pfm$glText.gltDrawText2DAligned(
                             this.pfm$assemblingFurniture,
-                            this.client.getWindow().getFramebufferWidth() / 2.0f,
-                            this.client.getWindow().getFramebufferHeight() - (GLText.gltGetTextHeight(pfm$assemblingFurniture, textScale) + GLText.gltGetTextHeight(pfm$assemblingFurniture, textScale)) + 10f,
+                            this.minecraft.getWindow().getWidth() / 2.0f,
+                            this.minecraft.getWindow().getHeight() - (GLText.gltGetTextHeight(pfm$assemblingFurniture, textScale) + GLText.gltGetTextHeight(pfm$assemblingFurniture, textScale)) + 10f,
                             textScale,
                             GLT_CENTER, GLT_BOTTOM
                     );

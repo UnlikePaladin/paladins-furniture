@@ -4,16 +4,16 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.Items;
-import net.minecraft.resource.featuretoggle.FeatureFlag;
-import net.minecraft.resource.featuretoggle.FeatureSet;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.registry.Registry;
+import net.minecraft.world.flag.FeatureFlag;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,16 +24,16 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Supplier;
 
-public abstract class VariantBase<T> implements StringIdentifiable, Comparable<VariantBase<T>> {
+public abstract class VariantBase<T> implements StringRepresentable, Comparable<VariantBase<T>> {
     private final BiMap<String, Object> children = HashBiMap.create();
-    public final Identifier identifier;
+    public final ResourceLocation identifier;
 
-    protected VariantBase(Identifier id) {
+    protected VariantBase(ResourceLocation id) {
         this.identifier = id;
     }
 
     @Environment(EnvType.CLIENT)
-    public abstract Identifier getTexture(BlockType type);
+    public abstract ResourceLocation getTextureLocation(BlockType type);
 
     public abstract String getPath();
     public abstract Block getBaseBlock();
@@ -50,7 +50,7 @@ public abstract class VariantBase<T> implements StringIdentifiable, Comparable<V
         return this.identifier.getNamespace();
     }
 
-    public Identifier getIdentifier() {
+    public ResourceLocation getIdentifier() {
         return identifier;
     }
 
@@ -69,19 +69,19 @@ public abstract class VariantBase<T> implements StringIdentifiable, Comparable<V
     @Nullable
     protected <V> V findRelatedEntry(String append, String postPend, Registry<V> reg) {
         if (this.identifier.getNamespace().equals("tfc")) {
-            var o = reg.getOrEmpty(
-                    new Identifier(identifier.getNamespace(), "wood/" + postPend + "/" + identifier.getPath()));
+            var o = reg.getOptional(
+                    new ResourceLocation(identifier.getNamespace(), "wood/" + postPend + "/" + identifier.getPath()));
             if (o.isPresent()) return o.get();
         }
         String post = postPend.isEmpty() ? "" : "_" + postPend;
-        Identifier[] targets = {
-                new Identifier(identifier.getNamespace(), identifier.getPath() + "_" + append + post),
-                new Identifier(identifier.getNamespace(), append + "_" + identifier.getPath() + post),
-                new Identifier(identifier.getNamespace(), identifier.getPath() + "_planks_" + append + post),
+        ResourceLocation[] targets = {
+                new ResourceLocation(identifier.getNamespace(), identifier.getPath() + "_" + append + post),
+                new ResourceLocation(identifier.getNamespace(), append + "_" + identifier.getPath() + post),
+                new ResourceLocation(identifier.getNamespace(), identifier.getPath() + "_planks_" + append + post),
         };
         V found = null;
         for (var r : targets) {
-            if (reg.containsId(r)) {
+            if (reg.containsKey(r)) {
                 found = reg.get(r);
                 break;
             }
@@ -96,7 +96,7 @@ public abstract class VariantBase<T> implements StringIdentifiable, Comparable<V
     @Nullable
     public Item getItemOfThis(String key) {
         var v = this.getChild(key);
-        return v instanceof ItemConvertible i ? i.asItem() : null;
+        return v instanceof ItemLike i ? i.asItem() : null;
     }
 
     @Nullable
@@ -113,13 +113,13 @@ public abstract class VariantBase<T> implements StringIdentifiable, Comparable<V
     }
 
     @Nullable
-    public ItemConvertible getItemForRecipe(String key, Class<? extends Block> blockClass) {
+    public ItemLike getItemForRecipe(String key, Class<? extends Block> blockClass) {
         if (Objects.equals(key, "base"))
             return getBaseBlock();
         else if (Objects.equals(key, "secondary"))
             return getSecondaryBlock();
         else if (this.children.get(key) != null)
-            return (ItemConvertible) this.children.get(key);
+            return (ItemLike) this.children.get(key);
         return getBaseBlock();
     }
 

@@ -15,13 +15,12 @@ import com.unlikepaladin.pfm.registry.NetworkIDs;
 import com.unlikepaladin.pfm.registry.SoundIDs;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.io.IOException;
 import java.util.*;
@@ -31,14 +30,14 @@ public class NetworkRegistryFabric {
         ServerPlayNetworking.registerGlobalReceiver(NetworkIDs.MICROWAVE_ACTIVATE_PACKET_ID, (server, player, handler, attachedData, responseSender) -> {
             BlockPos pos = attachedData.readBlockPos();
             boolean active = attachedData.readBoolean();
-            server.submitAndJoin(() -> {
-                if(Objects.nonNull(player.getWorld().getBlockEntity(pos))){
-                    World world = player.getWorld();
-                    if (world.isChunkLoaded(pos)) {
-                        MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(pos);
+            server.executeBlocking(() -> {
+                if(Objects.nonNull(player.getLevel().getBlockEntity(pos))){
+                    Level level = player.getLevel();
+                    if (level.hasChunkAt(pos)) {
+                        MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) level.getBlockEntity(pos);
                         microwaveBlockEntity.setActive(active);
                     } else {
-                        player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+                        player.displayClientMessage(Component.nullToEmpty("Trying to access unloaded chunks, are you cheating?"), false);
                     }
                 }
             });
@@ -46,14 +45,14 @@ public class NetworkRegistryFabric {
 
         ServerPlayNetworking.registerGlobalReceiver(NetworkIDs.TRASHCAN_CLEAR, (server, player, handler, attachedData, responseSender) -> {
             BlockPos pos = attachedData.readBlockPos();
-            server.submitAndJoin(() -> {
-                if(Objects.nonNull(player.getWorld().getBlockEntity(pos))){
-                    World world = player.getWorld();
-                    if (world.isChunkLoaded(pos)) {
-                        TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(pos);
-                        trashcanBlockEntity.clear();
+            server.executeBlocking(() -> {
+                if(Objects.nonNull(player.getLevel().getBlockEntity(pos))){
+                    Level level = player.getLevel();
+                    if (level.hasChunkAt(pos)) {
+                        TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) level.getBlockEntity(pos);
+                        trashcanBlockEntity.clearContent();
                     } else {
-                        player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+                        player.displayClientMessage(Component.nullToEmpty("Trying to access unloaded chunks, are you cheating?"), false);
                     }
                 }
             });
@@ -63,14 +62,14 @@ public class NetworkRegistryFabric {
                 ((server, player, handler, attachedData, responseSender) -> {
                     // Get the BlockPos we put earlier, in the networking thread
                     BlockPos blockPos = attachedData.readBlockPos();
-                    server.submitAndJoin(() -> {
+                    server.executeBlocking(() -> {
                         // Use the pos in the main thread
-                        World world = player.getWorld();
-                        if (world.isChunkLoaded(blockPos)) {
-                            world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
-                            world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
+                        Level level = player.level;
+                        if (level.hasChunkAt(blockPos)) {
+                            level.setBlockAndUpdate(blockPos, level.getBlockState(blockPos).setValue(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
+                            level.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundSource.BLOCKS, 0.3f, level.random.nextFloat() * 0.1f + 0.9f);
                         } else {
-                            player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+                            player.displayClientMessage(Component.nullToEmpty("Trying to access unloaded chunks, are you cheating?"), false);
                         }
                     });
                 }));
@@ -81,15 +80,15 @@ public class NetworkRegistryFabric {
             (client, handler, buf, responseSender) -> {
                 boolean active = buf.readBoolean();
                 BlockPos blockPos = buf.readBlockPos();
-                if (handler.getWorld().isChunkLoaded(blockPos)) {
-                    MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) handler.getWorld().getBlockEntity(blockPos);
+                if (handler.getLevel().hasChunkAt(blockPos)) {
+                    MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) handler.getLevel().getBlockEntity(blockPos);
                     client.execute(() -> {
-                        if (Objects.nonNull(client.currentScreen) && client.currentScreen instanceof MicrowaveScreen currentScreen)  {
-                            currentScreen.getScreenHandler().setActive(blockEntity, active);}
+                        if (Objects.nonNull(client.screen) && client.screen instanceof MicrowaveScreen currentScreen)  {
+                            currentScreen.getMenu().setActive(blockEntity, active);}
                     });
                 }
                 else {
-                    client.player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+                    client.player.displayClientMessage(Component.nullToEmpty("Trying to access unloaded chunks, are you cheating?"), false);
                 }
             }
         );
@@ -98,7 +97,7 @@ public class NetworkRegistryFabric {
                     ArrayList<AbstractConfigOption> configOptions = buf.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
                     Map<String, AbstractConfigOption> map = new HashMap<>();
                     configOptions.forEach(abstractConfigOption -> {
-                        map.put(((TranslatableTextContent)abstractConfigOption.getTitle().getContent()).getKey(), abstractConfigOption);
+                        map.put(((TranslatableContents)abstractConfigOption.getTitle().getContents()).getKey(), abstractConfigOption);
                     });
 
                     client.execute(() -> {

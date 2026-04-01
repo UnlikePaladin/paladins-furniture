@@ -1,57 +1,56 @@
 package com.unlikepaladin.pfm.client.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
-import com.unlikepaladin.pfm.menus.AbstractMicrowaveScreenHandler;
 import com.unlikepaladin.pfm.menus.TrashcanScreenHandler;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.GameRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.network.chat.Component;
 
-public class TrashcanScreen extends HandledScreen<TrashcanScreenHandler> {
-    private static final Identifier background = new Identifier("textures/gui/container/dispenser.png");
+import net.minecraft.resources.ResourceLocation;
+
+public class TrashcanScreen extends AbstractContainerScreen<TrashcanScreenHandler> {
+    private static final ResourceLocation background = new ResourceLocation("textures/gui/container/dispenser.png");
     private TrashcanBlockEntity trashcanBlockEntity;
     private boolean narrow;
-    private ButtonWidget startButton;
+    private Button startButton;
 
-    public TrashcanScreen(TrashcanScreenHandler handler, PlayerInventory inventory, Text title) {
+    public TrashcanScreen(TrashcanScreenHandler handler, Inventory inventory, Component title) {
         super(handler, inventory, title);
     }
-    private static final Text startButtonText = Text.translatable("gui.pfm.trashcan.clear_button");
+    private static final Component startButtonText = Component.translatable("gui.pfm.trashcan.clear_button");
 
     @Override
     public void init() {
         super.init();
-        this.trashcanBlockEntity = handler.trashcanBlockEntity;
+        this.trashcanBlockEntity = menu.trashcanBlockEntity;
         this.narrow = this.width < 379;
-        this.titleX = (this.backgroundWidth - this.textRenderer.getWidth(this.title)) / 2;
-        this.startButton = this.addDrawableChild(new ButtonWidget.Builder( startButtonText, button -> {
+        this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
+        this.startButton = this.addRenderableWidget(new Button.Builder( startButtonText, button -> {
             TrashcanScreenHandler.clear(trashcanBlockEntity);
-        }).position(this.x + 8, this.y + 40).size(40, 20).build());
+        }).pos(this.leftPos + 8, this.topPos + 40).size(40, 20).build());
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context);
         if (this.narrow) {
-            this.drawBackground(context, delta, mouseX, mouseY);
+            this.renderBg(context, delta, mouseX, mouseY);
         } else {
             super.render(context, mouseX, mouseY, delta);
         }
-        this.drawMouseoverTooltip(context, mouseX, mouseY);
+        this.renderTooltip(context, mouseX, mouseY);
     }
 
     @Override
-    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        int i = this.x;
-        int j = this.y;
-        context.drawTexture(background, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
+    protected void renderBg(DrawContext context, float delta, int mouseX, int mouseY) {
+        int i = this.leftPos;
+        int j = this.topPos;
+        context.blit(background, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
 }

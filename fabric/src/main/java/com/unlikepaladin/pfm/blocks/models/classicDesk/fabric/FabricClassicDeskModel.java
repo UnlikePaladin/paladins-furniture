@@ -7,27 +7,27 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
 
 import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class FabricClassicDeskModel extends PFMFabricBakedModel {
-    public FabricClassicDeskModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public FabricClassicDeskModel(ModelState settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
 
@@ -37,11 +37,11 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof ClassicDeskBlock || state.getBlock() instanceof ClassicDeskCabinetBlock) {
-            Direction dir = state.get(HorizontalFacingBlock.FACING);
+            Direction dir = state.getValue(HorizontalDirectionalBlock.FACING);
             boolean isCabinet = state.getBlock() instanceof ClassicDeskCabinetBlock;
-            Function4<BlockView, BlockState, BlockPos, BlockPos, Boolean> canConnect = state.getBlock() instanceof ClassicDeskBlock desk ? desk::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
+            Function4<BlockGetter, BlockState, BlockPos, BlockPos, Boolean> canConnect = state.getBlock() instanceof ClassicDeskBlock desk ? desk::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
             Function<BlockState, Boolean> canConnectSimple = state.getBlock() instanceof ClassicDeskBlock desk ? desk::canConnect : ((ClassicDeskCabinetBlock) state.getBlock())::canConnect;
 
             boolean north = canConnect.apply(world, state, pos.north(), pos);
@@ -49,45 +49,45 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
             boolean west = canConnect.apply(world, state, pos.west(), pos);
             boolean south = canConnect.apply(world, state, pos.south(), pos);
             boolean cornerNorthWest = north && west && !canConnect.apply(world, state, pos.north().west(), pos)
-                    && (world.getBlockState(pos.north()).contains(HorizontalFacingBlock.FACING)
-                    && world.getBlockState(pos.north()).get(HorizontalFacingBlock.FACING) == dir)
-                    && (world.getBlockState(pos.west()).contains(HorizontalFacingBlock.FACING)
-                    && world.getBlockState(pos.west()).get(HorizontalFacingBlock.FACING) == dir);
+                    && (world.getBlockState(pos.north()).hasProperty(HorizontalDirectionalBlock.FACING)
+                    && world.getBlockState(pos.north()).getValue(HorizontalDirectionalBlock.FACING) == dir)
+                    && (world.getBlockState(pos.west()).hasProperty(HorizontalDirectionalBlock.FACING)
+                    && world.getBlockState(pos.west()).getValue(HorizontalDirectionalBlock.FACING) == dir);
             boolean cornerNorthEast = north && east && !canConnect.apply(world, state, pos.north().east(), pos)
-                    && (world.getBlockState(pos.north()).contains(HorizontalFacingBlock.FACING)
-                    && world.getBlockState(pos.north()).get(HorizontalFacingBlock.FACING) == dir)
-                    && (world.getBlockState(pos.east()).contains(HorizontalFacingBlock.FACING)
-                    && world.getBlockState(pos.east()).get(HorizontalFacingBlock.FACING) == dir);
+                    && (world.getBlockState(pos.north()).hasProperty(HorizontalDirectionalBlock.FACING)
+                    && world.getBlockState(pos.north()).getValue(HorizontalDirectionalBlock.FACING) == dir)
+                    && (world.getBlockState(pos.east()).hasProperty(HorizontalDirectionalBlock.FACING)
+                    && world.getBlockState(pos.east()).getValue(HorizontalDirectionalBlock.FACING) == dir);
             boolean cornerSouthEast = south && east && !canConnect.apply(world, state, pos.south().east(), pos)
-                    && (world.getBlockState(pos.south()).contains(HorizontalFacingBlock.FACING)
-                    && world.getBlockState(pos.south()).get(HorizontalFacingBlock.FACING) == dir)
-                    && (world.getBlockState(pos.east()).contains(HorizontalFacingBlock.FACING)
-                    && world.getBlockState(pos.east()).get(HorizontalFacingBlock.FACING) == dir);
+                    && (world.getBlockState(pos.south()).hasProperty(HorizontalDirectionalBlock.FACING)
+                    && world.getBlockState(pos.south()).getValue(HorizontalDirectionalBlock.FACING) == dir)
+                    && (world.getBlockState(pos.east()).hasProperty(HorizontalDirectionalBlock.FACING)
+                    && world.getBlockState(pos.east()).getValue(HorizontalDirectionalBlock.FACING) == dir);
             boolean cornerSouthWest = south && west && !canConnect.apply(world, state, pos.south().west(), pos)
-                    && (world.getBlockState(pos.south()).contains(HorizontalFacingBlock.FACING)
-                    && world.getBlockState(pos.south()).get(HorizontalFacingBlock.FACING) == dir)
-                    && (world.getBlockState(pos.west()).contains(HorizontalFacingBlock.FACING)
-                    && world.getBlockState(pos.west()).get(HorizontalFacingBlock.FACING) == dir);
+                    && (world.getBlockState(pos.south()).hasProperty(HorizontalDirectionalBlock.FACING)
+                    && world.getBlockState(pos.south()).getValue(HorizontalDirectionalBlock.FACING) == dir)
+                    && (world.getBlockState(pos.west()).hasProperty(HorizontalDirectionalBlock.FACING)
+                    && world.getBlockState(pos.west()).getValue(HorizontalDirectionalBlock.FACING) == dir);
 
             boolean hasCornerNorthWest = north && west && canConnect.apply(world, state, pos.north().west(), pos);
             boolean hasCornerNorthEast = north && east && canConnect.apply(world, state, pos.north().east(), pos);
             boolean hasCornerSouthEast = south && east && canConnect.apply(world, state, pos.south().east(), pos);
             boolean hasCornerSouthWest = south && west && canConnect.apply(world, state, pos.south().west(), pos);
-            int openOffset = isCabinet ? state.get(ClassicDeskCabinetBlock.OPEN) ? 1 : 0 : 0;
+            int openOffset = isCabinet ? state.getValue(ClassicDeskCabinetBlock.OPEN) ? 1 : 0 : 0;
 
 
-            BlockState rightState = world.getBlockState(pos.offset(dir.rotateYClockwise()));
+            BlockState rightState = world.getBlockState(pos.relative(dir.getClockWise()));
             boolean right = canConnectSimple.apply(rightState);
             boolean rightCabinet = right && rightState.getBlock() instanceof ClassicDeskCabinetBlock;
 
-            BlockState leftState = world.getBlockState(pos.offset(dir.rotateYCounterclockwise()));
+            BlockState leftState = world.getBlockState(pos.relative(dir.getCounterClockWise()));
             boolean left = canConnectSimple.apply(leftState);
             boolean leftCabinet = left && leftState.getBlock() instanceof ClassicDeskCabinetBlock;
 
-            BlockState neighborStateFacing = world.getBlockState(pos.offset(dir.getOpposite()));
-            BlockState neighborStateOpposite = world.getBlockState(pos.offset(dir));
+            BlockState neighborStateFacing = world.getBlockState(pos.relative(dir.getOpposite()));
+            BlockState neighborStateOpposite = world.getBlockState(pos.relative(dir));
 
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             pushTextureTransform(context, spriteList.get(0));
             ((FabricBakedModel) getTemplateBakedModels().get(0)).emitBlockQuads(world, state, pos, randomSupplier, context);
             context.popTransform();
@@ -97,11 +97,11 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
 
             boolean wasOuterCorner = false;
             if (isCabinet) {
-                if (canConnectSimple.apply(neighborStateFacing) && neighborStateFacing.contains(Properties.HORIZONTAL_FACING)) {
-                    Direction neighborFacing = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
+                if (canConnectSimple.apply(neighborStateFacing) && neighborStateFacing.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                    Direction neighborFacing = neighborStateFacing.getValue(BlockStateProperties.HORIZONTAL_FACING);
                     // inner corner
-                    if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && !canConnectSimple.apply(world.getBlockState(pos.offset(neighborFacing)))) {
-                        if (neighborFacing == dir.rotateYClockwise()) {
+                    if (neighborFacing.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && !canConnectSimple.apply(world.getBlockState(pos.relative(neighborFacing)))) {
+                        if (neighborFacing == dir.getClockWise()) {
                             ((FabricBakedModel) getTemplateBakedModels().get((34 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                         }
                         else {
@@ -111,11 +111,11 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
                         middleDesk(world, state, pos, randomSupplier, context, leftCabinet, rightCabinet, openOffset);
                     }
                 }
-                else if (canConnectSimple.apply(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
-                    Direction neighborFacing = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
+                else if (canConnectSimple.apply(neighborStateOpposite) && neighborStateOpposite.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                    Direction neighborFacing = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING);
                     // outer corner
-                    if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && !canConnectSimple.apply(world.getBlockState(pos.offset(neighborFacing.getOpposite())))) {
-                        if (neighborFacing == dir.rotateYClockwise()) {
+                    if (neighborFacing.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && !canConnectSimple.apply(world.getBlockState(pos.relative(neighborFacing.getOpposite())))) {
+                        if (neighborFacing == dir.getClockWise()) {
                             ((FabricBakedModel) getTemplateBakedModels().get((32 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
                         } else {
                             ((FabricBakedModel) getTemplateBakedModels().get((28 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
@@ -382,7 +382,7 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
         }
     }
 
-    private void middleDesk(BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context, boolean left, boolean right, int openOffset) {
+    private void middleDesk(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context, boolean left, boolean right, int openOffset) {
         if (left && right) {
             ((FabricBakedModel) getTemplateBakedModels().get((22 + openOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
         }  else if (left) {
@@ -395,7 +395,7 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (stack.getItem() instanceof BlockItem) {
             int offset = ((BlockItem) stack.getItem()).getBlock() instanceof ClassicDeskCabinetBlock ? 1 : 0;
             pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), getSpriteList(stack));
@@ -406,12 +406,12 @@ public class FabricClassicDeskModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public ModelTransformation getTransformation() {
-        return getTemplateBakedModels().get(19).getTransformation();
+    public ItemTransforms getTransforms() {
+        return getTemplateBakedModels().get(19).getTransforms();
     }
 
     @Override
-    public Sprite pfm$getParticle(BlockState state) {
+    public TextureAtlasSprite pfm$getParticle(BlockState state) {
         return getSpriteList(state).get(0);
     }
 }

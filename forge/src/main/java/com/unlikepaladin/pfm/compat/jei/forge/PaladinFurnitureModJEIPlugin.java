@@ -10,23 +10,20 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.item.ItemStack;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.minecraftforge.server.ServerLifecycleHooks;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.function.Supplier;
@@ -38,13 +35,13 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
     }
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        MinecraftClient mc = MinecraftClient.getInstance();
-        ClientWorld world = Objects.requireNonNull(mc.world);
+        Minecraft mc = Minecraft.getInstance();
+        ClientLevel world = Objects.requireNonNull(mc.level);
 
-        List<FreezingRecipe> freezingRecipes = world.getRecipeManager().listAllOfType(RecipeTypes.FREEZING_RECIPE);
+        List<FreezingRecipe> freezingRecipes = world.getRecipeManager().getAllRecipesFor(RecipeTypes.FREEZING_RECIPE);
         registration.addRecipes(PaladinFurnitureModJEI.FREEZING_RECIPE, freezingRecipes);
 
-        List<FurnitureRecipe> furnitureRecipes = world.getRecipeManager().listAllOfType(RecipeTypes.FURNITURE_RECIPE);
+        List<FurnitureRecipe> furnitureRecipes = world.getRecipeManager().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE);
         registration.addRecipes(PaladinFurnitureModJEI.FURNITURE_RECIPE, furnitureRecipes);
     }
 
@@ -69,7 +66,7 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
     }
 
     @Override
-    public Identifier getPluginUid() {
-        return new Identifier(PaladinFurnitureMod.MOD_ID, "jei_plugin");
+    public ResourceLocation getPluginUid() {
+        return new ResourceLocation(PaladinFurnitureMod.MOD_ID, "jei_plugin");
     }
 }

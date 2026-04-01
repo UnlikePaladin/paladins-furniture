@@ -5,13 +5,11 @@ import com.unlikepaladin.pfm.mixin.PFMFeatureFlagFactory;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.render.block.BlockModels;
-import net.minecraft.resource.featuretoggle.FeatureFlag;
-import net.minecraft.resource.featuretoggle.FeatureSet;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.flag.FeatureFlag;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,18 +36,18 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
         return DEFAULT_VARIANTS;
     }
 
-    ExtraStoolVariant(Identifier identifier, Block baseBlock, Block secondaryBlock) {
+    ExtraStoolVariant(ResourceLocation identifier, Block baseBlock, Block secondaryBlock) {
         super(identifier);
         this.name = identifier.getPath();
         this.baseBlock = baseBlock;
         this.secondaryBlock = secondaryBlock;
     }
     ExtraStoolVariant(Block baseBlock, Block secondaryBlock, String name) {
-        this(new Identifier("minecraft", name), baseBlock, secondaryBlock);
+        this(new ResourceLocation("minecraft", name), baseBlock, secondaryBlock);
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return name;
     }
 
@@ -66,7 +64,7 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
         return secondaryBlock;
     }
 
-    public static Optional<ExtraStoolVariant> getOptionalVariant(Identifier name) {
+    public static Optional<ExtraStoolVariant> getOptionalVariant(ResourceLocation name) {
         return DEFAULT_VARIANTS.stream().filter(extraStoolVariant -> extraStoolVariant.identifier.equals(name)).findFirst();
     }
 
@@ -83,8 +81,8 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
 
     @Override
     public List<FeatureFlag> getFeatureList() {
-        FeatureFlag flag = PFMFeatureFlagFactory.newFlag(getBaseBlock().getRequiredFeatures().universe, 0);
-        flag.mask = getBaseBlock().getRequiredFeatures().featuresMask;
+        FeatureFlag flag = PFMFeatureFlagFactory.newFlag(getBaseBlock().requiredFeatures().universe, 0);
+        flag.mask = getBaseBlock().requiredFeatures().mask;
         return List.of(flag);
     }
 
@@ -110,7 +108,7 @@ public class ExtraStoolVariant extends VariantBase<ExtraStoolVariant> {
 
     @Environment(EnvType.CLIENT)
     @Override
-    public Identifier getTexture(BlockType type) {
+    public ResourceLocation getTextureLocation(BlockType type) {
         if (type == BlockType.SECONDARY)
             return ModelHelper.getTextureId(getSecondaryBlock());
         return ModelHelper.getTextureId(getBaseBlock());

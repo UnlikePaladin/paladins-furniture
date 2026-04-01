@@ -2,22 +2,22 @@ package com.unlikepaladin.pfm.client.screens;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 public class PFMBookScreen extends Screen {
-    public PFMBookScreen(Text title) {
+    public PFMBookScreen(Component title) {
         super(title);
     }
 
-    public static final Identifier BOOK_TEXTURE = new Identifier("pfm", "textures/gui/book_orange.png");
+    public static final ResourceLocation BOOK_TEXTURE = new ResourceLocation("pfm", "textures/gui/book_orange.png");
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context);
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         RenderSystem.setShaderTexture(0, BOOK_TEXTURE);
 

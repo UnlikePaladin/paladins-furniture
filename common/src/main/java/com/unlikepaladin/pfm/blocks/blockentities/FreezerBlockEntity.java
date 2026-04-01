@@ -7,81 +7,82 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.LockableContainerBlockEntity;
-import net.minecraft.block.entity.ViewerCountManager;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SidedInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.recipe.*;
-import net.minecraft.registry.DynamicRegistryManager;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.Registries;
-import net.minecraft.world.World;
+import net.minecraft.core.*;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.inventory.RecipeHolder;
+import net.minecraft.world.inventory.StackedContentsCompatible;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
+import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class FreezerBlockEntity extends LockableContainerBlockEntity implements NamedScreenHandlerFactory, SidedInventory, RecipeUnlocker, RecipeInputProvider {
+public class FreezerBlockEntity extends BaseContainerBlockEntity implements MenuProvider, WorldlyContainer, RecipeHolder, StackedContentsCompatible {
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.FREEZER_BLOCK_ENTITY, pos, state);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
     }
-    private final ViewerCountManager stateManager = new ViewerCountManager() {
+    private final ContainerOpenersCounter stateManager = new ContainerOpenersCounter() {
 
 
         @Override
-        protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
+        protected void onOpen(Level world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof FreezerBlock) {
-                FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
+                FreezerBlockEntity.this.playSound(state, SoundEvents.IRON_TRAPDOOR_OPEN);
                 FreezerBlockEntity.this.setOpen(state, true);
             }
         }
 
         @Override
-        protected void onContainerClose(World world, BlockPos pos, BlockState state) {
+        protected void onClose(Level world, BlockPos pos, BlockState state) {
             if (state.getBlock() instanceof FreezerBlock) {
-                FreezerBlockEntity.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
+                FreezerBlockEntity.this.playSound(state, SoundEvents.IRON_TRAPDOOR_CLOSE);
                 FreezerBlockEntity.this.setOpen(state, false);
             }
         }
 
 
         @Override
-        protected void onViewerCountUpdate(World world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
+        protected void openerCountChanged(Level world, BlockPos pos, BlockState state, int oldViewerCount, int newViewerCount) {
 
         }
 
         @Override
-        protected boolean isPlayerViewing(PlayerEntity player) {
-            if (player.currentScreenHandler instanceof FreezerScreenHandler) {
-                Inventory inventory = ((FreezerScreenHandler)player.currentScreenHandler).getInventory();
+        protected boolean isOwnContainer(Player player) {
+            if (player.containerMenu instanceof FreezerScreenHandler) {
+                Container inventory = ((FreezerScreenHandler)player.containerMenu).getContainer();
                 return inventory == FreezerBlockEntity.this;
             }
             return false;
@@ -90,16 +91,16 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
 
     @Override
-    public void onOpen(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
-            this.stateManager.openContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+    public void startOpen(Player player) {
+        if (!this.remove && !player.isSpectator()) {
+            this.stateManager.incrementOpeners(player, this.getLevel(), this.getBlockPos(), this.getBlockState());
         }
     }
 
     @Override
-    public void onClose(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
-            this.stateManager.closeContainer(player, this.getWorld(), this.getPos(), this.getCachedState());
+    public void stopOpen(Player player) {
+        if (!this.remove && !player.isSpectator()) {
+            this.stateManager.decrementOpeners(player, this.getLevel(), this.getBlockPos(), this.getBlockState());
         }
     }
 
@@ -107,12 +108,12 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     private static final int[] TOP_SLOTS = new int[]{0};
     private static final int[] BOTTOM_SLOTS = new int[]{2, 1, 0};
     private static final int[] SIDE_SLOTS = new int[]{1};
-    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(size(), ItemStack.EMPTY);
+    private NonNullList<ItemStack> inventory = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
     int fuelTime;
     int fuelTimeTotal;
     int freezeTime;
     int freezeTimeTotal;
-    protected final PropertyDelegate propertyDelegate = new PropertyDelegate() {
+    protected final ContainerData dataAccess = new ContainerData() {
 
         @Override
         public int get(int index) {
@@ -157,11 +158,11 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
 
 
         @Override
-        public int size() {
+        public int getCount() {
             return 4;
         }
     };
-    private final Object2IntOpenHashMap<Identifier> recipesUsed = new Object2IntOpenHashMap();
+    private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap();
     private final RecipeType<? extends AbstractCookingRecipe> recipeType;
 
     public static Map<Item, Integer> createFuelTimeMap() {
@@ -179,20 +180,17 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
     private static void addFuel(Map<Item, Integer> fuelTimes, TagKey<Item> tag, int fuelTime) {
-        Iterator var3 = Registries.ITEM.iterateEntries(tag).iterator();
-
-        while(var3.hasNext()) {
-            RegistryEntry<Item> registryEntry = (RegistryEntry)var3.next();
+        for (Holder<Item> registryEntry : BuiltInRegistries.ITEM.getTagOrEmpty(tag)) {
             fuelTimes.put(registryEntry.value(), fuelTime);
         }
     }
 
-    private static void addFuel(Map<Item, Integer> fuelTimes, ItemConvertible item, int fuelTime) {
+    private static void addFuel(Map<Item, Integer> fuelTimes, ItemLike item, int fuelTime) {
         Item item2 = item.asItem();
         fuelTimes.put(item2, fuelTime);
     }
-    private static int getFreezeTime(World world, RecipeType<? extends AbstractCookingRecipe> recipeType, Inventory inventory) {
-        return world.getRecipeManager().getFirstMatch(recipeType, inventory, world).map(AbstractCookingRecipe::getCookTime).orElse(200);
+    private static int getFreezeTime(Level world, RecipeType<? extends AbstractCookingRecipe> recipeType, Container inventory) {
+        return world.getRecipeManager().getRecipeFor(recipeType, inventory, world).map(AbstractCookingRecipe::getCookingTime).orElse(200);
     }
 
     public static boolean canUseAsFuel(ItemStack stack) {
@@ -200,7 +198,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
     @Override
-    public int[] getAvailableSlots(Direction side) {
+    public int[] getSlotsForFace(Direction side) {
         if (side == Direction.DOWN) {
             return BOTTOM_SLOTS;
         }
@@ -211,7 +209,7 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
     @Override
-    public boolean isValid(int slot, ItemStack stack) {
+    public boolean canPlaceItem(int slot, ItemStack stack) {
         if (slot == 2) {
             return false;
         }
@@ -221,16 +219,16 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         }
         return true;
     }
-    public void provideRecipeInputs(RecipeMatcher finder) {
+    public void fillStackedContents(StackedContents finder) {
         for (ItemStack itemStack : this.inventory) {
-            finder.addInput(itemStack);
+            finder.accountStack(itemStack);
         }
     }
 
     @Override
-    public boolean canExtract(int slot, ItemStack stack, Direction dir) {
+    public boolean canTakeItemThroughFace(int slot, ItemStack stack, Direction dir) {
         if (dir == Direction.DOWN && slot != 2) {
-            return stack.isOf(Items.BUCKET) || stack.isOf(Items.GLASS_BOTTLE);
+            return stack.is(Items.BUCKET) || stack.is(Items.GLASS_BOTTLE);
         }
         return true;
     }
@@ -242,68 +240,70 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         }
         return true;
     }
-    public ItemStack getStack(int slot) {
+
+    @Override
+    public ItemStack getItem(int slot) {
         return this.inventory.get(slot);
     }
 
     @Override
-    public ItemStack removeStack(int slot, int amount) {
-        return Inventories.splitStack(this.inventory, slot, amount);
+    public ItemStack removeItem(int slot, int amount) {
+        return ContainerHelper.removeItem(this.inventory, slot, amount);
     }
 
     @Override
-    public ItemStack removeStack(int slot) {
-        return Inventories.removeStack(this.inventory, slot);
+    public ItemStack removeItemNoUpdate(int slot) {
+        return ContainerHelper.takeItem(this.inventory, slot);
     }
 
 
     @Override
-    public void setStack(int slot, ItemStack stack) {
+    public void setItem(int slot, ItemStack stack) {
         ItemStack itemStack = this.inventory.get(slot);
-        boolean bl = !stack.isEmpty() && stack.isOf(itemStack.getItem()) && ItemStack.canCombine(stack, itemStack);
+        boolean bl = !stack.isEmpty() && stack.is(itemStack.getItem()) && ItemStack.isSameItemSameTags(stack, itemStack);
         this.inventory.set(slot, stack);
-        if (stack.getCount() > this.getMaxCountPerStack()) {
-            stack.setCount(this.getMaxCountPerStack());
+        if (stack.getCount() > this.getMaxStackSize()) {
+            stack.setCount(this.getMaxStackSize());
         }
         if (slot == 0 && !bl) {
-            this.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(this.world, this.recipeType, this);
+            this.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(this.level, this.recipeType, this);
             this.freezeTime = 0;
-            this.markDirty();
+            this.setChanged();
         }
     }
 
     @Override
-    public boolean canPlayerUse(PlayerEntity player) {
-        if (this.world.getBlockEntity(this.pos) != this) {
+    public boolean stillValid(Player player) {
+        if (this.level.getBlockEntity(this.worldPosition) != this) {
             return false;
         }
-        return player.squaredDistanceTo((double)this.pos.getX() + 0.5, (double)this.pos.getY() + 0.5, (double)this.pos.getZ() + 0.5) <= 64.0;
+        return player.distanceToSqr((double)this.worldPosition.getX() + 0.5, (double)this.worldPosition.getY() + 0.5, (double)this.worldPosition.getZ() + 0.5) <= 64.0;
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
         this.inventory.clear();
     }
 
     @Override
-    public void setLastRecipe(@Nullable Recipe<?> recipe) {
+    public void setRecipeUsed(@Nullable Recipe<?> recipe) {
         if (recipe != null) {
-            Identifier identifier = recipe.getId();
+            ResourceLocation identifier = recipe.getId();
             this.recipesUsed.addTo(identifier, 1);
         }
     }
 
     @Override
     @Nullable
-    public Recipe<?> getLastRecipe() {
+    public Recipe<?> getRecipeUsed() {
         return null;
     }
 
 
     @Override
-        public int size() {
-            return 3;
-        }
+    public int getContainerSize() {
+        return 3;
+    }
 
 
     protected int getFuelTime(ItemStack fuel) {
@@ -315,62 +315,62 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
     }
 
     @Override
-    public void readNbt(NbtCompound nbt) {
-        super.readNbt(nbt);
-        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
-        Inventories.readNbt(nbt, this.inventory);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
+        this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        ContainerHelper.loadAllItems(nbt, this.inventory);
         this.fuelTime = nbt.getShort("FuelTimeLeft");
         this.freezeTime = nbt.getShort("FreezeTime");
         this.freezeTimeTotal = nbt.getShort("FreezeTimeTotal");
         this.fuelTimeTotal = this.getFuelTime(this.inventory.get(1));
-        NbtCompound nbtCompound = nbt.getCompound("RecipesUsed");
-        for (String string : nbtCompound.getKeys()) {
-            this.recipesUsed.put(new Identifier(string), nbtCompound.getInt(string));
+        CompoundTag nbtCompound = nbt.getCompound("RecipesUsed");
+        for (String string : nbtCompound.getAllKeys()) {
+            this.recipesUsed.put(new ResourceLocation(string), nbtCompound.getInt(string));
         }
     }
 
     @Override
-    public void writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, this.inventory);
+    public void saveAdditional(CompoundTag nbt) {
+        super.saveAdditional(nbt);
+        ContainerHelper.saveAllItems(nbt, this.inventory);
         nbt.putShort("FuelTimeLeft", (short)this.fuelTime);
         nbt.putShort("FreezeTime", (short)this.freezeTime);
         nbt.putShort("FreezeTimeTotal", (short)this.freezeTimeTotal);
-        NbtCompound nbtCompound = new NbtCompound();
+        CompoundTag nbtCompound = new CompoundTag();
         this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.toString(), integer));
         nbt.put("RecipesUsed", nbtCompound);
     }
 
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(FreezerBlock.OPEN, open), Block.NOTIFY_LISTENERS | Block.REDRAW_ON_MAIN_THREAD);
+        this.level.setBlock(this.getBlockPos(), state.setValue(FreezerBlock.OPEN, open), Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE);
     }
 
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.get(FreezerBlock.FACING).getVector();
-        double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
-        double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
-        double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
-        this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
+        Vec3i vec3i = state.getValue(FreezerBlock.FACING).getNormal();
+        double d = (double)this.worldPosition.getX() + 0.5 + (double)vec3i.getX() / 2.0;
+        double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
+        double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
+        this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
     }
 
     @Override
-    public Text getDisplayName() {
-        return Text.translatable("container.pfm.freezer");
+    public Component getDisplayName() {
+        return Component.translatable("container.pfm.freezer");
     }
 
     @Override
-    protected Text getContainerName() {
+    protected Component getDefaultName() {
         return getDisplayName();
     }
 
 
-    private static boolean canAcceptRecipeOutput(DynamicRegistryManager registryManager, @Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
+    private static boolean canAcceptRecipeOutput(RegistryAccess registryManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
         if (slots.get(0).isEmpty() || recipe == null) {
             return false;
         }
-        ItemStack itemStack = recipe.getOutput(registryManager);
+        ItemStack itemStack = recipe.getResultItem(registryManager);
         if (itemStack.isEmpty()) {
             return false;
         }
@@ -378,23 +378,23 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         if (itemStack2.isEmpty()) {
             return true;
         }
-        if (!itemStack2.isOf(itemStack.getItem())) {
+        if (!itemStack2.is(itemStack.getItem())) {
             return false;
         }
-        if (itemStack2.getCount() < count && itemStack2.getCount() < itemStack2.getMaxCount()) {
+        if (itemStack2.getCount() < count && itemStack2.getCount() < itemStack2.getMaxStackSize()) {
             return true;
         }
-        return itemStack2.getCount() < itemStack.getMaxCount();
+        return itemStack2.getCount() < itemStack.getMaxStackSize();
     }
 
-    private static boolean craftRecipe(DynamicRegistryManager registryManager, @Nullable Recipe<?> recipe, DefaultedList<ItemStack> slots, int count) {
+    private static boolean craftRecipe(RegistryAccess registryManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
         if (recipe == null || !FreezerBlockEntity.canAcceptRecipeOutput(registryManager,recipe, slots, count)) {
             return false;
         }
         ItemStack itemStack = slots.get(0);
-        ItemStack itemStack2 = recipe.getOutput(registryManager);
+        ItemStack itemStack2 = recipe.getResultItem(registryManager);
         ItemStack itemStack3 = slots.get(2);
-        if (itemStack2.isOf(Items.OBSIDIAN) || itemStack2.isOf(Items.ICE) || itemStack2.isOf(Items.BLUE_ICE)) {
+        if (itemStack2.is(Items.OBSIDIAN) || itemStack2.is(Items.ICE) || itemStack2.is(Items.BLUE_ICE)) {
             slots.set(0, new ItemStack(Items.BUCKET));
         }
         if (itemStack2.getItem() == (Items.SNOWBALL)) {
@@ -402,29 +402,29 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         }
         if (itemStack3.isEmpty()) {
             slots.set(2, itemStack2.copy());
-        } else if (itemStack3.isOf(itemStack2.getItem())) {
-            itemStack3.increment(1);
+        } else if (itemStack3.is(itemStack2.getItem())) {
+            itemStack3.grow(1);
         }
-        itemStack.decrement(1);
+        itemStack.shrink(1);
         return true;
     }
     @Override
-    public boolean canInsert(int slot, ItemStack stack, @Nullable Direction dir) {
-        return this.isValid(slot, stack);
+    public boolean canPlaceItemThroughFace(int slot, ItemStack stack, @Nullable Direction dir) {
+        return this.canPlaceItem(slot, stack);
     }
 
     @Nullable
     @Override
-    public ScreenHandler createMenu(int syncId, PlayerInventory inv, PlayerEntity player) {
-        return createScreenHandler(syncId, inv);
+    public AbstractContainerMenu createMenu(int containerId, Inventory inv, Player player) {
+        return createMenu(containerId, inv);
     }
 
     @Override
-    protected ScreenHandler createScreenHandler(int syncId, PlayerInventory playerInventory) {
-        return new FreezerScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
+    protected AbstractContainerMenu createMenu(int containerId, Inventory playerInventory) {
+        return new FreezerScreenHandler(containerId, playerInventory, this, this.dataAccess);
     }
 
-    public static void tick(World world, BlockPos pos, BlockState state, FreezerBlockEntity blockEntity) {
+    public static void serverTick(Level world, BlockPos pos, BlockState state, FreezerBlockEntity blockEntity) {
         boolean bl = blockEntity.isActive();
         boolean bl2 = false;
         if (blockEntity.isActive()) {
@@ -432,29 +432,29 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
         }
         ItemStack itemStack = blockEntity.inventory.get(1);
         if (blockEntity.isActive() || !itemStack.isEmpty() && !blockEntity.inventory.get(0).isEmpty()) {
-            Recipe recipe = world.getRecipeManager().getFirstMatch(blockEntity.recipeType, blockEntity, world).orElse(null);
-            int i = blockEntity.getMaxCountPerStack();
-            if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {
+            Recipe recipe = world.getRecipeManager().getRecipeFor(blockEntity.recipeType, blockEntity, world).orElse(null);
+            int i = blockEntity.getMaxStackSize();
+            if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.registryAccess(), recipe, blockEntity.inventory, i)) {
                 blockEntity.fuelTimeTotal = blockEntity.fuelTime = blockEntity.getFuelTime(itemStack);
                 if (blockEntity.isActive()) {
                     bl2 = true;
                     if (!itemStack.isEmpty()) {
                         Item item = itemStack.getItem();
-                        itemStack.decrement(1);
+                        itemStack.shrink(1);
                         if (itemStack.isEmpty()) {
-                            Item item2 = item.getRecipeRemainder();
+                            Item item2 = item.getCraftingRemainingItem();
                             blockEntity.inventory.set(1, item2 == null ? ItemStack.EMPTY : new ItemStack(item2));
                         }
                     }
                 }
             }
-            if (blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.getRegistryManager(), recipe, blockEntity.inventory, i)) {
+            if (blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.registryAccess(), recipe, blockEntity.inventory, i)) {
                 ++blockEntity.freezeTime;
                 if (blockEntity.freezeTime == blockEntity.freezeTimeTotal) {
                     blockEntity.freezeTime = 0;
                     blockEntity.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(world, blockEntity.recipeType, blockEntity);
-                    if (FreezerBlockEntity.craftRecipe(world.getRegistryManager(),recipe, blockEntity.inventory, i)) {
-                        blockEntity.setLastRecipe(recipe);
+                    if (FreezerBlockEntity.craftRecipe(world.registryAccess(),recipe, blockEntity.inventory, i)) {
+                        blockEntity.setRecipeUsed(recipe);
                     }
                     bl2 = true;
                 }
@@ -462,18 +462,18 @@ public class FreezerBlockEntity extends LockableContainerBlockEntity implements 
                 blockEntity.freezeTime = 0;
             }
         } else if (!blockEntity.isActive() && blockEntity.freezeTime > 0) {
-            blockEntity.freezeTime = MathHelper.clamp(blockEntity.freezeTime - 2, 0, blockEntity.freezeTimeTotal);
+            blockEntity.freezeTime = Mth.clamp(blockEntity.freezeTime - 2, 0, blockEntity.freezeTimeTotal);
         }
         if (bl != blockEntity.isActive()) {
             bl2 = true;
         }
         if (bl2) {
-            FreezerBlockEntity.markDirty(world, pos, state);
+            FreezerBlockEntity.setChanged(world, pos, state);
         }
     }
 
     @ExpectPlatform
-    public static BlockEntityType.BlockEntityFactory<? extends FreezerBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends FreezerBlockEntity> getFactory() {
         throw new AssertionError();
     }
 }

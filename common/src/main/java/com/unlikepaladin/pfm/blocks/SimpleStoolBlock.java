@@ -1,16 +1,15 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.block.enums.Instrument;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +19,9 @@ public class SimpleStoolBlock extends BasicChairBlock {
     public float height;
     private static final List<FurnitureBlock> WOOD_SIMPLE_STOOLS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_SIMPLE_STOOLS = new ArrayList<>();
-    public SimpleStoolBlock(Settings settings) {
+    public SimpleStoolBlock(Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));
+        registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(TUCKED, false));
         this.height = 0.5f;
         if(isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(SimpleStoolBlock.class)){
             WOOD_SIMPLE_STOOLS.add(new FurnitureBlock(this, "simple_stool"));
@@ -43,13 +42,13 @@ public class SimpleStoolBlock extends BasicChairBlock {
      * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/
      */
     public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+        VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
 
-        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
+        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
         for (int i = 0; i < times; i++) {
-            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
+            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
             buffer[0] = buffer[1];
-            buffer[1] = VoxelShapes.empty();
+            buffer[1] = Shapes.empty();
         }
 
         return buffer[0];
@@ -60,15 +59,15 @@ public class SimpleStoolBlock extends BasicChairBlock {
         return (super.canTuck(state) || state.getBlock() instanceof KitchenCounterBlock);
     }
 
-    protected static VoxelShape SIMPLE_STOOL = VoxelShapes.union(createCuboidShape(3.5, 0, 3.5,5.5, 10, 5.5),createCuboidShape(10.5, 0, 3.5,12.5, 10, 5.5),createCuboidShape(10.5, 0, 10.5,12.5, 10, 12.5),createCuboidShape(3.5, 10, 3.5,12.5, 12, 12.5),createCuboidShape(3.5, 0, 10.5,5.5, 10, 12.5));
+    protected static VoxelShape SIMPLE_STOOL = Shapes.or(box(3.5, 0, 3.5,5.5, 10, 5.5),box(10.5, 0, 3.5,12.5, 10, 5.5),box(10.5, 0, 10.5,12.5, 10, 12.5),box(3.5, 10, 3.5,12.5, 12, 12.5),box(3.5, 0, 10.5,5.5, 10, 12.5));
     protected static final VoxelShape FACE_NORTH_TUCKED = tuckShape(Direction.NORTH, SIMPLE_STOOL);
     protected static final VoxelShape FACE_SOUTH_TUCKED = tuckShape(Direction.SOUTH, SIMPLE_STOOL);
     protected static final VoxelShape FACE_EAST_TUCKED = tuckShape(Direction.EAST, SIMPLE_STOOL);
     protected static final VoxelShape FACE_WEST_TUCKED = tuckShape(Direction.WEST, SIMPLE_STOOL);
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
-        if (state.get(TUCKED)) {
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+        Direction dir = state.getValue(FACING);
+        if (state.getValue(TUCKED)) {
             return switch (dir) {
                 case WEST -> FACE_WEST_TUCKED;
                 case NORTH -> FACE_NORTH_TUCKED;

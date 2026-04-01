@@ -16,23 +16,23 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.resources.ResourceLocation;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
-    public static final Text TITLE = Text.translatable("rei.pfm.freezer");
+    public static final Component TITLE = Component.translatable("rei.pfm.freezer");
     public final IDrawable ICON;
-    public static final Identifier IDENTIFIER = new Identifier(PaladinFurnitureMod.MOD_ID, "freezing");
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "freezing");
     private final IDrawable BACKGROUND;
-    public static final Identifier FREEZE_GUI = new Identifier(PaladinFurnitureMod.MOD_ID, "textures/gui/container/freezer.png");
+    public static final ResourceLocation FREEZE_GUI = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "textures/gui/container/freezer.png");
     protected final IDrawableStatic staticFreezeIcon;
     protected final IDrawableAnimated animatedFreezeIcon;
     private final int regularFreezeTime;
@@ -61,7 +61,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     }
 
     @Override
-    public Text getTitle() {
+    public Component getTitle() {
         return TITLE;
     }
 
@@ -85,11 +85,11 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
                 .addIngredients(recipe.getIngredients().get(inputSlot));
 
         builder.addSlot(OUTPUT, 61, 19)
-                .addItemStack(recipe.getOutput(MinecraftClient.getInstance().world.getRegistryManager()));
+                .addItemStack(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
     }
 
     protected IDrawableAnimated getArrow(FreezingRecipe recipe) {
-        int freezeTime = recipe.getCookTime();
+        int freezeTime = recipe.getCookingTime();
         if (freezeTime <= 0) {
             freezeTime = regularFreezeTime;
         }
@@ -97,13 +97,13 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     }
 
     protected void drawFreezeTime(FreezingRecipe recipe, DrawContext context, int y) {
-        int freezeTime = recipe.getCookTime();
+        int freezeTime = recipe.getCookingTime();
         if (freezeTime > 0) {
             int freezeTimeSeconds = freezeTime / 20;
-            Text timeString = Text.of(freezeTimeSeconds + "s");
-            MinecraftClient minecraft = MinecraftClient.getInstance();
-            TextRenderer fontRenderer = minecraft.textRenderer;
-            int stringWidth = fontRenderer.getWidth(timeString);
+            Component timeString = Component.nullToEmpty(freezeTimeSeconds + "s");
+            Minecraft minecraft = Minecraft.getInstance();
+            Font fontRenderer = minecraft.font;
+            int stringWidth = fontRenderer.width(timeString);
             context.drawText(fontRenderer, timeString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
         }
     }
@@ -111,10 +111,10 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     protected void drawExperience(FreezingRecipe recipe, DrawContext context, int y) {
         float experience = recipe.getExperience();
         if (experience > 0) {
-            Text experienceString = Text.of(experience + " XP");
-            MinecraftClient minecraft = MinecraftClient.getInstance();
-            TextRenderer fontRenderer = minecraft.textRenderer;
-            int stringWidth = fontRenderer.getWidth(experienceString);
+            Component experienceString = Component.nullToEmpty(experience + " XP");
+            Minecraft minecraft = Minecraft.getInstance();
+            Font fontRenderer = minecraft.font;
+            int stringWidth = fontRenderer.width(experienceString);
             context.drawText(fontRenderer, experienceString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
         }
     }

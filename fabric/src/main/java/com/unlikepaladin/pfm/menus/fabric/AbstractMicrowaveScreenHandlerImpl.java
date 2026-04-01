@@ -4,15 +4,14 @@ import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.client.network.ClientPlayNetworkHandler;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 
 public class AbstractMicrowaveScreenHandlerImpl {
         public static void setActive(MicrowaveBlockEntity microwaveBlockEntity, boolean isActive) {
             microwaveBlockEntity.isActive = isActive;
-            PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-            BlockPos pos = microwaveBlockEntity.getPos();
+            FriendlyByteBuf passedData = new FriendlyByteBuf(Unpooled.buffer());
+            BlockPos pos = microwaveBlockEntity.getBlockPos();
             passedData.writeBlockPos(pos);
             passedData.writeBoolean(isActive);
             // Send packet to server to change the block for us
