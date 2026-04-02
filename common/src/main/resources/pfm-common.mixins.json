@@ -6,27 +6,25 @@
   "mixins": [
     "PFMDataCache$CachedDataMixin",
     "PFMFeatureFlagFactory",
-    "PFMPlayerInventoryMixin",
+    "PFMInventoryMixin",
     "PFMPointOfInterestTypeAccessor",
-    "PFMPointOfInterestTypesAccessor",
-    "PFMTextureKeyFactory"
+    "PFMPointOfInterestTypesAccessor"
   ],
   "server": [
     "PFMMixinDedicatedServer"
   ],
   "client": [
-    "PFMBakedModelManagerMixin",
+    "PFMModelManagerMixin",
     "PFMLanguageManagerAccessor",
     "PFMMissingSpriteAccessor",
     "PFMMixinClientPacketListener",
-    "PFMReloadableResourceManagerImplMixin",
-    "PFMSplashOverlayMixin",
-    "PFMSpriteAtlasTextureAccessor",
+    "PFMLoadingOverlayMixin",
+    "PFMSimpleReloadableResourceManagerMixin",
     "PFMSpriteAtlasTextureMixin",
     "PFMSpriteContentsAccessor",
     "PFMSpriteContentsMixin",
-    "PFMSpriteLoaderMixin",
-    "PFMSpriteMixin",
+    "PFMTextureAtlasSpriteMixin",
+    "PFMTextureSlotFactory",
     "PFMTitleScreenMixin"
   ],
   "injectors": {

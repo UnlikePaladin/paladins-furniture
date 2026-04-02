@@ -1,69 +1,68 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.menu;
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.StoveBlockEntityBalm;
 import net.blay09.mods.cookingforblockheads.client.render.RenderUtils;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.world.World;
-
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class StoveBlockEntityRendererBalm implements BlockEntityRenderer<StoveBlockEntityBalm> {
-    public StoveBlockEntityRendererBalm(BlockEntityRendererFactory.Context context) {
+    public StoveBlockEntityRendererBalm(BlockEntityRendererProvider.Context context) {
     }
 
-    public void render(StoveBlockEntityBalm blockEntity, float partialTicks, MatrixStack poseStack, VertexConsumerProvider buffer, int combinedLight, int combinedOverlay) {
-        World level = blockEntity.getWorld();
+    public void render(StoveBlockEntityBalm blockEntity, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+        Level level = blockEntity.getLevel();
         if (level != null) {
-            poseStack.push();
-            RenderUtils.applyBlockAngle(poseStack, blockEntity.getCachedState());
+            poseStack.pushPose();
+            RenderUtils.applyBlockAngle(poseStack, blockEntity.getBlockState());
             poseStack.translate(-0.5, 0.0, -0.5);
             poseStack.translate(0.0, 0.0, -1.0);
-            poseStack.pop();
-            poseStack.push();
+            poseStack.popPose();
+            poseStack.pushPose();
             poseStack.translate(0.0, 1.05, 0.0);
-            RenderUtils.applyBlockAngle(poseStack, blockEntity.getCachedState());
+            RenderUtils.applyBlockAngle(poseStack, blockEntity.getBlockState());
             poseStack.scale(0.4F, 0.4F, 0.4F);
 
             ItemStack itemStack = blockEntity.getToolItem(0);
             if (!itemStack.isEmpty()) {
-                poseStack.push();
+                poseStack.pushPose();
                 poseStack.translate(-0.55F, 0.0F, 0.5F);
-                poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
-                poseStack.pop();
+                poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
+                poseStack.popPose();
             }
 
             itemStack = blockEntity.getToolItem(1);
             if (!itemStack.isEmpty()) {
-                poseStack.push();
+                poseStack.pushPose();
                 poseStack.translate(0.55F, 0.0F, 0.5F);
-                poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
-                poseStack.pop();
+                poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
+                poseStack.popPose();
             }
 
             itemStack = blockEntity.getToolItem(2);
             if (!itemStack.isEmpty()) {
-                poseStack.push();
+                poseStack.pushPose();
                 poseStack.translate(-0.55F, 0.0F, -0.5F);
-                poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
-                poseStack.pop();
+                poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
+                poseStack.popPose();
             }
 
             itemStack = blockEntity.getToolItem(3);
             if (!itemStack.isEmpty()) {
-                poseStack.push();
+                poseStack.pushPose();
                 poseStack.translate(0.55F, 0.0F, -0.5F);
-                poseStack.multiply(RotationAxis.POSITIVE_X.rotationDegrees(45.0F));
-                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getWorld());
-                poseStack.pop();
+                poseStack.mulPose(Axis.XP.rotationDegrees(45.0F));
+                RenderUtils.renderItem(itemStack, combinedLight, poseStack, buffer, blockEntity.getLevel());
+                poseStack.popPose();
             }
-            poseStack.pop();
+            poseStack.popPose();
         }
     }
 }

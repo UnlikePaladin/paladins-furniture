@@ -7,73 +7,76 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.advancement.*;
-import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
-import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRewards;
+import net.minecraft.advancements.RequirementsStrategy;
+import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuilder {
+public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
     private final Item output;
     private final int outputCount;
     private final List<Ingredient> inputs = Lists.newArrayList();
-    private final Map<String, AdvancementCriterion<?>> criteria = new LinkedHashMap<>();
+    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
     private boolean showNotification = true;
     @Nullable
-    private NbtElement nbtElement;
+    private Tag nbtElement;
     @Nullable
     private String group;
 
-    public SimpleFurnitureRecipeJsonFactory(ItemConvertible output, int outputCount) {
+    public SimpleFurnitureRecipeJsonFactory(ItemLike output, int outputCount) {
         this.output = output.asItem();
         this.outputCount = outputCount;
     }
 
-    public SimpleFurnitureRecipeJsonFactory(ItemConvertible output, int outputCount, @Nullable NbtElement nbtElement) {
+    public SimpleFurnitureRecipeJsonFactory(ItemLike output, int outputCount, @Nullable Tag nbtElement) {
         this.output = output.asItem();
         this.outputCount = outputCount;
         this.nbtElement = nbtElement;
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, int count, NbtElement nbtElement) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output, int count, Tag nbtElement) {
         return new SimpleFurnitureRecipeJsonFactory(output, count, nbtElement);
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, NbtElement nbtElement) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output, Tag nbtElement) {
         return new SimpleFurnitureRecipeJsonFactory(output, 1, nbtElement);
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output) {
         return new SimpleFurnitureRecipeJsonFactory(output, 1);
     }
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, int count) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output, int count) {
         return new SimpleFurnitureRecipeJsonFactory(output, count);
     }
     public SimpleFurnitureRecipeJsonFactory input(TagKey<Item> tag) {
-        return this.input(Ingredient.fromTag(tag));
+        return this.input(Ingredient.of(tag));
     }
 
-    public SimpleFurnitureRecipeJsonFactory input(ItemConvertible itemProvider) {
+    public SimpleFurnitureRecipeJsonFactory input(ItemLike itemProvider) {
         return this.input(itemProvider, 1);
     }
 
-    public SimpleFurnitureRecipeJsonFactory input(ItemConvertible itemProvider, int size) {
+    public SimpleFurnitureRecipeJsonFactory input(ItemLike itemProvider, int size) {
         for (int i = 0; i < size; ++i) {
-            this.input(Ingredient.ofItems(itemProvider));
+            this.input(Ingredient.of(itemProvider));
         }
         return this;
     }
@@ -90,7 +93,7 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
     }
 
     @Override
-    public SimpleFurnitureRecipeJsonFactory criterion(String name, AdvancementCriterion<?> criterionConditions) {
+    public SimpleFurnitureRecipeJsonFactory criterion(String name, Criterion<?> criterionConditions) {
         this.criteria.put(name, criterionConditions);
         return this;
     }
@@ -107,36 +110,36 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
     }
 
     @Override
-    public Item getOutputItem() {
+    public Item getResult() {
         return this.output;
     }
 
     @Override
-    public void offerTo(RecipeExporter exporter, Identifier recipeId) {
+    public void offerTo(RecipeOutput exporter, Identifier recipeId) {
         Advancement.Builder advancement$builder = exporter.getAdvancementBuilder().criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).criteriaMerger(AdvancementRequirements.CriterionMerger.OR);
         this.criteria.forEach(advancement$builder::criterion);
         exporter.accept(new SimpleFurnitureRecipeJsonProvider(recipeId, this.output, this.nbtElement, this.outputCount, this.group == null ? "" : this.group, this.inputs, advancement$builder.build(recipeId.withPrefixedPath("recipes/furniture/")), this.showNotification));
     }
 
-    private void validate(Identifier recipeId) {
+    private void validate(ResourceLocation recipeId) {
         if (this.criteria.isEmpty()) {
             throw new IllegalStateException("No way of obtaining recipe " + recipeId);
         }
     }
 
     public static class SimpleFurnitureRecipeJsonProvider
-            implements RecipeJsonProvider {
-        private final Identifier recipeId;
+            implements FinishedRecipe {
+        private final ResourceLocation recipeId;
         private final Item output;
         private final int count;
         private final String group;
         private final List<Ingredient> inputs;
-        private final AdvancementEntry advancement;
+        private final AdvancementHolder advancement;
         private final boolean showNotification;
         @Nullable
-        private final NbtElement nbtElement;
+        private final Tag nbtElement;
 
-        public SimpleFurnitureRecipeJsonProvider(Identifier recipeId, Item output, @Nullable NbtElement nbtElement, int outputCount, String group, List<Ingredient> inputs, AdvancementEntry entry, boolean showNotification) {
+        public SimpleFurnitureRecipeJsonProvider(ResourceLocation recipeId, Item output, @Nullable Tag nbtElement, int outputCount, String group, List<Ingredient> inputs, AdvancementHolder entry, boolean showNotification) {
             this.recipeId = recipeId;
             this.output = output;
             this.count = outputCount;
@@ -148,7 +151,7 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
         }
 
         @Override
-        public void serialize(JsonObject json) {
+        public void serializeRecipeData(JsonObject json) {
             if (!this.group.isEmpty()) {
                 json.addProperty("group", this.group);
             }
@@ -158,7 +161,7 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
             }
             json.add("ingredients", jsonArray);
             JsonObject jsonObject = new JsonObject();
-            jsonObject.addProperty("item", Registries.ITEM.getId(this.output).toString());
+            jsonObject.addProperty("item", BuiltInRegistries.ITEM.getKey(this.output).toString());
             if (this.count > 1) {
                 jsonObject.addProperty("count", this.count);
             }
@@ -177,12 +180,12 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
         }
 
         @Override
-        public RecipeSerializer<?> serializer() {
+        public RecipeSerializer<?> getSerializer() {
             return RecipeTypes.SIMPLE_FURNITURE_SERIALIZER;
         }
 
         @Override
-        public Identifier id() {
+        public ResourceLocation id() {
             return this.recipeId;
         }
     }

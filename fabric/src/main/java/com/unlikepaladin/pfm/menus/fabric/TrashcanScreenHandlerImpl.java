@@ -4,13 +4,13 @@ import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 
 public class TrashcanScreenHandlerImpl {
     public static void clear(TrashcanBlockEntity trashcanBlockEntity) {
-        PacketByteBuf passedData = new PacketByteBuf(Unpooled.buffer());
-        BlockPos pos = trashcanBlockEntity.getPos();
+        FriendlyByteBuf passedData = new FriendlyByteBuf(Unpooled.buffer());
+        BlockPos pos = trashcanBlockEntity.getBlockPos();
         passedData.writeBlockPos(pos);
         ClientPlayNetworking.send(NetworkIDs.TRASHCAN_CLEAR, passedData);
     }

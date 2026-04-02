@@ -11,10 +11,13 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -22,62 +25,62 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class UnbakedBasicDeskCabinetModel implements UnbakedModel {
-    public static final Identifier[] BASIC_MODEL_PARTS_BASE = new Identifier[] {
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_closed"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_left_closed"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_right_closed"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_middle_closed"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_inside_corner_closed_left"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_inside_corner_closed_right"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_outer_corner_closed_left"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_outer_corner_closed_right"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_open"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_left_open"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_right_open"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_middle_open"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_inside_corner_open_left"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_inside_corner_open_right"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_outer_corner_open_left"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_outer_corner_open_right"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_leg_north_east"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_leg_north_west"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_leg_south_east"),
-            new Identifier(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_leg_south_west")
+    public static final ResourceLocation[] BASIC_MODEL_PARTS_BASE = new ResourceLocation[] {
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_closed"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_left_closed"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_right_closed"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_middle_closed"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_inside_corner_closed_left"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_inside_corner_closed_right"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_outer_corner_closed_left"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_outer_corner_closed_right"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_open"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_left_open"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_right_open"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_middle_open"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_inside_corner_open_left"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_inside_corner_open_right"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_outer_corner_open_left"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_outer_corner_open_right"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_leg_north_east"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_leg_north_west"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_leg_south_east"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_desk_cabinet/basic_desk_cabinet_leg_south_west")
     };
 
-    private static final Identifier PARENT = new Identifier("block/block");
-    public static final Identifier TABLE_MODEL_ID = new Identifier(PaladinFurnitureMod.MOD_ID, "block/desk_cabinet_basic");
-    public static final List<Identifier> MODEL_IDS = new ArrayList<>() {
+    private static final ResourceLocation PARENT = new ResourceLocation("block/block");
+    public static final ResourceLocation TABLE_MODEL_ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/desk_cabinet_basic");
+    public static final List<ResourceLocation> MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_desk_cabinet_basic"));
+                add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_desk_cabinet_basic"));
                 if (variant.hasStripped())
-                    add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_desk_cabinet_basic"));
+                    add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_desk_cabinet_basic"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(new Identifier(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_desk_cabinet_basic"));
+                add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_desk_cabinet_basic"));
             }
             add(TABLE_MODEL_ID);
         }
     };
 
     @Override
-    public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelLoader) {
 
     }
 
     @Override
-    public Collection<Identifier> getModelDependencies() {
+    public Collection<ResourceLocation> getDependencies() {
         return List.of(PARENT);
     }
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         return Collections.emptyList();
     }
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer, Identifier modelId) {
+    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer, ResourceLocation modelId) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(TABLE_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(TABLE_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().get(rotationContainer));
 
@@ -85,7 +88,7 @@ public class UnbakedBasicDeskCabinetModel implements UnbakedModel {
             PFMRuntimeResources.modelCacheMap.put(TABLE_MODEL_ID, new PFMBakedModelContainer());
 
         List<BakedModel> bakedModelList = new ArrayList<>();
-        for (Identifier modelPart : BASIC_MODEL_PARTS_BASE) {
+        for (ResourceLocation modelPart : BASIC_MODEL_PARTS_BASE) {
             bakedModelList.add(loader.bake(modelPart, rotationContainer));
         }
 
@@ -94,7 +97,7 @@ public class UnbakedBasicDeskCabinetModel implements UnbakedModel {
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Identifier modelId, ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public static BakedModel getBakedModel(ResourceLocation modelId, ModelState settings, List<BakedModel> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 }

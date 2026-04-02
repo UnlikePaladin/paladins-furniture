@@ -5,37 +5,32 @@ import com.nhoryzon.mc.farmersdelight.entity.block.HeatableBlockEntity;
 import com.nhoryzon.mc.farmersdelight.registry.TagsRegistry;
 import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Pseudo;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Pseudo
 @Mixin(CookingPotBlockEntity.class)
 public abstract class PFMCookingPotBlockEntityMixin implements HeatableBlockEntity {
     @Override
-    public boolean isHeated(World world, BlockPos pos) {
-        Block checkBlock = world.getBlockState(pos.down()).getBlock();
+    public boolean isHeated(Level world, BlockPos pos) {
+        Block checkBlock = world.getBlockState(pos.below()).getBlock();
         if (checkBlock instanceof StoveBlock || checkBlock instanceof KitchenStovetopBlock)
             return true;
 
-        BlockState stateBelow = world.getBlockState(pos.down());
-        if (stateBelow.isIn(TagsRegistry.HEAT_SOURCES)) {
-            return stateBelow.contains(Properties.LIT) ? stateBelow.get(Properties.LIT) : true;
+        BlockState stateBelow = world.getBlockState(pos.below());
+        if (stateBelow.is(TagsRegistry.HEAT_SOURCES)) {
+            return stateBelow.hasProperty(BlockStateProperties.LIT) ? stateBelow.getValue(BlockStateProperties.LIT) : true;
         } else {
-            if (!this.requiresDirectHeat() && stateBelow.isIn(TagsRegistry.HEAT_CONDUCTORS)) {
-                BlockState stateFurtherBelow = world.getBlockState(pos.down(2));
-                if (stateFurtherBelow.isIn(TagsRegistry.HEAT_SOURCES)) {
-                    if (stateFurtherBelow.contains(Properties.LIT)) {
-                        return stateFurtherBelow.get(Properties.LIT);
+            if (!this.requiresDirectHeat() && stateBelow.is(TagsRegistry.HEAT_CONDUCTORS)) {
+                BlockState stateFurtherBelow = world.getBlockState(pos.below(2));
+                if (stateFurtherBelow.is(TagsRegistry.HEAT_SOURCES)) {
+                    if (stateFurtherBelow.hasProperty(BlockStateProperties.LIT)) {
+                        return stateFurtherBelow.getValue(BlockStateProperties.LIT);
                     }
                     return true;
                 }

@@ -1,15 +1,16 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.AbstractFurnaceBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.level.block.AbstractFurnaceBlock;
+import net.minecraft.world.level.block.state.BlockState;
+
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +20,9 @@ public class KitchenWallDrawerBlock extends KitchenDrawerBlock {
 
     private static final List<FurnitureBlock> WOOD_DRAWERS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DRAWERS = new ArrayList<>();
-    public KitchenWallDrawerBlock(Settings settings) {
+    public KitchenWallDrawerBlock(Properties settings) {
         super(settings);
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenWallDrawerBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(KitchenWallDrawerBlock.class)){
             WOOD_DRAWERS.add(new FurnitureBlock(this, "kitchen_wall_drawer"));
         }
         else if (this.getClass().isAssignableFrom(KitchenWallDrawerBlock.class)){
@@ -37,15 +38,15 @@ public class KitchenWallDrawerBlock extends KitchenDrawerBlock {
     }
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction direction = state.get(KitchenCounterBlock.FACING);
-        BlockState neighborStateFacing = world.getBlockState(pos.offset(direction));
-        BlockState neighborStateOpposite = world.getBlockState(pos.offset(direction.getOpposite()));
-        boolean open = state.get(OPEN);
-        if (canConnectToCounter(neighborStateFacing) && neighborStateFacing.getProperties().contains(Properties.HORIZONTAL_FACING)) {
-            Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
-            if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
-                if (direction2 == direction.rotateYCounterclockwise()) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction direction = state.getValue(KitchenCounterBlock.FACING);
+        BlockState neighborStateFacing = world.getBlockState(pos.relative(direction));
+        BlockState neighborStateOpposite = world.getBlockState(pos.relative(direction.getOpposite()));
+        boolean open = state.getValue(OPEN);
+        if (canConnectToCounter(neighborStateFacing) && neighborStateFacing.getProperties().contains(BlockStateProperties.HORIZONTAL_FACING)) {
+            Direction direction2 = neighborStateFacing.getValue(BlockStateProperties.HORIZONTAL_FACING);
+            if (direction2.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
+                if (direction2 == direction.getCounterClockWise()) {
                     switch (direction) {
                         case NORTH: {
                             if (open) {
@@ -130,16 +131,16 @@ public class KitchenWallDrawerBlock extends KitchenDrawerBlock {
                 }
             }
         }
-        else if (canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.getProperties().contains(Properties.HORIZONTAL_FACING)) {
+        else if (canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.getProperties().contains(BlockStateProperties.HORIZONTAL_FACING)) {
             Direction direction3;
             if (neighborStateOpposite.getBlock() instanceof AbstractFurnaceBlock) {
-                direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING).getOpposite();
+                direction3 = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
             }
             else {
-                direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
+                direction3 = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING);
             }
-            if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3)) {
-                if (direction3 == direction.rotateYCounterclockwise()) {
+            if (direction3.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3)) {
+                if (direction3 == direction.getCounterClockWise()) {
                     switch (direction) {
                         case NORTH: return MIDDLE_INNER_CORNER_WEST;
                         case SOUTH: return MIDDLE_INNER_CORNER_EAST;

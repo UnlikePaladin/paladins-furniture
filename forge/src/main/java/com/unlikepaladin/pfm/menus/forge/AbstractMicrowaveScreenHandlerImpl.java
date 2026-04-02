@@ -4,13 +4,13 @@ import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.networking.forge.MicrowaveActivePacket;
 import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 
 public class AbstractMicrowaveScreenHandlerImpl {
     public static void setActive(MicrowaveBlockEntity microwaveBlockEntity, boolean isActive) {
         microwaveBlockEntity.isActive = isActive;
-        BlockPos pos = microwaveBlockEntity.getPos();
+        BlockPos pos = microwaveBlockEntity.getBlockPos();
         MicrowaveActivePacket activePacket = new MicrowaveActivePacket(pos, isActive);
-        NetworkRegistryForge.PFM_CHANNEL.send(activePacket, MinecraftClient.getInstance().getNetworkHandler().getConnection());
+        NetworkRegistryForge.PFM_CHANNEL.send(activePacket, Minecraft.getInstance().getConnection().getConnection());
     }
 }

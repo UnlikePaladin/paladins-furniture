@@ -2,30 +2,30 @@ package com.unlikepaladin.pfm.client.fabric;
 
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.client.color.block.BlockColorProvider;
-import net.minecraft.client.color.item.ItemColorProvider;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.item.Item;
 
 public class ColorRegistryImpl {
-    public static void registerBlockColor(Block block, BlockColorProvider blockColorProvider) {
+    public static void registerBlockColor(Block block, BlockColor blockColorProvider) {
         ColorProviderRegistry.BLOCK.register(blockColorProvider, block);
     }
 
-    public static void registerBlockToRenderLayer(Block block, RenderLayer renderLayer) {
+    public static void registerBlockToRenderLayer(Block block, RenderType renderLayer) {
         BlockRenderLayerMap.INSTANCE.putBlock(block, renderLayer);
     }
 
-    public static void registerItemColor(Item item, ItemColorProvider colorProvider) {
+    public static void registerItemColor(Item item, ItemColor colorProvider) {
         ColorProviderRegistry.ITEM.register(colorProvider, item);
     }
 
-    public static BlockColorProvider getBlockColor(Block block) {
+    public static BlockColor getBlockColor(Block block) {
         return ColorProviderRegistry.BLOCK.get(block);
     }
 
-    public static ItemColorProvider getItemColor(Item item) {
+    public static ItemColor getItemColor(Item item) {
         return ColorProviderRegistry.ITEM.get(item);
     }
 }

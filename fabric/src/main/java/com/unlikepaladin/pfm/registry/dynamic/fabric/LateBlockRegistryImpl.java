@@ -9,18 +9,15 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.registry.Registries;
-import net.minecraft.resource.featuretoggle.FeatureFlag;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.Pair;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.flag.FeatureFlag;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.block.Block;
+
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,30 +25,30 @@ import java.util.function.Supplier;
 
 public class LateBlockRegistryImpl {
 
-    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> blockSupplier, boolean registerItem, Pair<String, ItemGroup> group) {
-        T block = Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), blockSupplier.get());
+    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> blockSupplier, boolean registerItem, Tuple<String, CreativeModeTab> group) {
+        T block = Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(PaladinFurnitureMod.MOD_ID, blockName), blockSupplier.get());
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerLateBlockItem(blockName, block, group);
         }
         return block;
     }
-    public static void registerLateBlockItem(String itemName, Block block, Pair<String, ItemGroup> group) {
+    public static void registerLateBlockItem(String itemName, Block block, Tuple<String, CreativeModeTab> group) {
         registerLateItem(itemName, () -> new BlockItem(block, new FabricItemSettings()), group);
-        if (AbstractSittableBlock.isWoodBased(block.getDefaultState())) {
+        if (AbstractSittableBlock.isWoodBased(block.defaultBlockState())) {
             FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
             FuelRegistry.INSTANCE.add(block, 300);
         }
     }
-    public static void registerLateItem(String itemName, Supplier<Item> itemSup, Pair<String, ItemGroup> group) {
+    public static void registerLateItem(String itemName, Supplier<Item> itemSup, Tuple<String, CreativeModeTab> group) {
         Item item = itemSup.get();
-        Registry.register(Registries.ITEM, new Identifier(PaladinFurnitureMod.MOD_ID, itemName), item);
+        Registry.register(BuiltInRegistries.ITEM, new ResourceLocation(PaladinFurnitureMod.MOD_ID, itemName), item);
         if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(group)) {
             PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(group, new ArrayList<>());
         }
         PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.get(group).add(item);
         if (item == PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM) {
-            ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group.getRight()).get()).register(entries -> {
+            ItemGroupEvents.modifyEntriesEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> {
                 List<ItemStack> stacks = new ArrayList<>();
                 for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                     boolean variantEnabled = true;
@@ -66,34 +63,34 @@ public class LateBlockRegistryImpl {
                     }
                     for (DyeColor color : DyeColor.values()) {
                         ItemStack stack = new ItemStack(item);
-                        NbtCompound beTag = new NbtCompound();
-                        beTag.putString("color", color.asString());
+                        CompoundTag beTag = new CompoundTag();
+                        beTag.putString("color", color.getSerializedName());
                         beTag.putString("variant", variant.getIdentifier().toString());
-                        stack.setSubNbt("BlockEntityTag", beTag);
+                        stack.addTagElement("BlockEntityTag", beTag);
                         stacks.add(stack);
                     }
                 }
-                entries.addAll(stacks);
+                entries.acceptAll(stacks);
             } );
         } else if (item == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
-            ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group.getRight()).get()).register(entries -> {
+            ItemGroupEvents.modifyEntriesEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> {
                 List<ItemStack> stacks = new ArrayList<>();
                 for (DyeColor color : DyeColor.values()) {
                     ItemStack stack = new ItemStack(item);
-                    NbtCompound beTag = new NbtCompound();
-                    beTag.putString("Color", color.asString());
-                    stack.setNbt(beTag);
+                    CompoundTag beTag = new CompoundTag();
+                    beTag.putString("Color", color.getSerializedName());
+                    stack.setTag(beTag);
                     stacks.add(stack);
                 }
-                entries.addAll(stacks);
+                entries.acceptAll(stacks);
             } );
         } else {
-            ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group.getRight()).get()).register(entries -> entries.add(item));
+            ItemGroupEvents.modifyEntriesEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> entries.accept(item));
         }
     }
 
-    public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, Pair<String, ItemGroup> group) {
-        Registry.register(Registries.BLOCK, new Identifier(PaladinFurnitureMod.MOD_ID, blockName), block);
+    public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, Tuple<String, CreativeModeTab> group) {
+        Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(PaladinFurnitureMod.MOD_ID, blockName), block);
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
             registerLateBlockItem(blockName, block, group);

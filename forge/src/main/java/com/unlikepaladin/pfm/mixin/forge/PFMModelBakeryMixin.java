@@ -39,10 +39,10 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
-import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.client.render.model.UnbakedModel;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -52,234 +52,234 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
-@Mixin(ModelLoader.class)
-public abstract class PFMModelLoaderMixin {
+@Mixin(ModelBakery.class)
+public abstract class PFMModelBakeryMixin {
     @Shadow
-    @Final private Map<Identifier, UnbakedModel> unbakedModels;
+    @Final private Map<ResourceLocation, UnbakedModel> unbakedCache;
 
-    @Shadow @Final private Map<Identifier, UnbakedModel> modelsToBake;
+    @Shadow @Final private Map<ResourceLocation, UnbakedModel> topLevelModels;
 
 
     @Inject(method = "loadModel", at = @At("HEAD"), cancellable = true)
-    private void pfm$loadModels(Identifier resourceId, CallbackInfo ci) {
-        Identifier modifiedId = resourceId;
-         if (resourceId instanceof ModelIdentifier && Objects.requireNonNull(((ModelIdentifier) resourceId).getVariant()).startsWith("inventory")) {
-            modifiedId = new Identifier(resourceId.getNamespace(), "item/" + resourceId.getPath());
+    private void pfm$loadModels(ResourceLocation resourceId, CallbackInfo ci) {
+        ResourceLocation modifiedId = resourceId;
+         if (resourceId instanceof ModelResourceLocation && Objects.requireNonNull(((ModelResourceLocation) resourceId).getVariant()).startsWith("inventory")) {
+            modifiedId = new ResourceLocation(resourceId.getNamespace(), "item/" + resourceId.getPath());
         }
          
         if (ModelHelper.containsIdentifier(UnbakedMirrorModel.MIRROR_MODEL_IDS, modifiedId)){
             UnbakedModel model =  new UnbakedMirrorModel(UnbakedMirrorModel.DEFAULT_TEXTURES[2], ModelHelper.getVanillaConcreteColor(resourceId), UnbakedMirrorModel.DEFAULT_TEXTURES[1], new ArrayList<>(), ModelHelper.getColor(resourceId));
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         } else if (UnbakedBedModel.BED_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedBedModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedBasicTableModel.MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedBasicTableModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedClassicTableModel.MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedClassicTableModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedLogTableModel.TABLE_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedLogTableModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedDinnerTableModel.TABLE_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedDinnerTableModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedModernDinnerTableModel.TABLE_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedModernDinnerTableModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedKitchenCounterModel.COUNTER_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedKitchenCounterModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedKitchenDrawerModel.DRAWER_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedKitchenDrawerModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedKitchenWallCounterModel.COUNTER_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedKitchenWallCounterModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedKitchenWallDrawerModel.DRAWER_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedKitchenWallDrawerModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedKitchenCabinetModel.CABINET_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedKitchenCabinetModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedClassicNightstandModel.NIGHSTAND_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedClassicNightstandModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedKitchenCounterOvenModel.OVEN_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedKitchenCounterOvenModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedKitchenSinkModel.SINK_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedKitchenSinkModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedKitchenWallDrawerSmallModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedIronFridgeModel.IRON_FRIDGE_MODEL_IDS.toArray(new Identifier[0]), modifiedId)){
+        else if (ModelHelper.containsIdentifier(UnbakedIronFridgeModel.IRON_FRIDGE_MODEL_IDS.toArray(new ResourceLocation[0]), modifiedId)){
             UnbakedModel model = new UnbakedIronFridgeModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedFridgeModel.FRIDGE_MODEL_IDS.toArray(new Identifier[0]), modifiedId)){
+        else if (ModelHelper.containsIdentifier(UnbakedFridgeModel.FRIDGE_MODEL_IDS.toArray(new ResourceLocation[0]), modifiedId)){
             UnbakedModel model = new UnbakedFridgeModel(resourceId);
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
-        else if (ModelHelper.containsIdentifier(UnbakedFreezerModel.FREEZER_MODEL_IDS.toArray(new Identifier[0]), modifiedId)){
+        else if (ModelHelper.containsIdentifier(UnbakedFreezerModel.FREEZER_MODEL_IDS.toArray(new ResourceLocation[0]), modifiedId)){
             UnbakedModel model = new UnbakedFreezerModel(resourceId);
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedBasicLampModel.LAMP_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedBasicLampModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedChairModel.CHAIR_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedChairModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedChairDinnerModel.CHAIR_DINNER_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedChairDinnerModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedChairModernModel.CHAIR_MODERN_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedChairModernModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedChairClassicModel.CHAIR_CLASSIC_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedChairClassicModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedSimpleStoolModel.SIMPLE_STOOL_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedSimpleStoolModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedClassicStoolModel.CLASSIC_STOOL_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedClassicStoolModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedModernStoolModel.MODERN_STOOL_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedModernStoolModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedLogStoolModel.LOG_STOOL_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedLogStoolModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedLadderModel.LADDER_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedLadderModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedCoffeeBasicTableModel.MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedCoffeeBasicTableModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedModernCoffeeTableModel.TABLE_MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedModernCoffeeTableModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedClassicCoffeeTableModel.MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedClassicCoffeeTableModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedBasicDeskModel.MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedBasicDeskModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedBasicDeskCabinetModel.MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedBasicDeskCabinetModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedClassicDeskModel.MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedClassicDeskModel();
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
         else if (UnbakedHerringboneModel.MODEL_IDS.contains(modifiedId)){
             UnbakedModel model = new UnbakedHerringboneModel(resourceId);
-            this.unbakedModels.put(resourceId, model);
-            this.modelsToBake.put(resourceId, model);
+            this.unbakedCache.put(resourceId, model);
+            this.topLevelModels.put(resourceId, model);
             ci.cancel();
         }
     }

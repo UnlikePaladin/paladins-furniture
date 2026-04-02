@@ -2,20 +2,19 @@ package com.unlikepaladin.pfm.advancements;
 
 import com.google.gson.JsonObject;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import net.minecraft.advancement.criterion.AbstractCriterion;
-import net.minecraft.advancement.criterion.AbstractCriterionConditions;
-import net.minecraft.predicate.entity.AdvancementEntityPredicateDeserializer;
-import net.minecraft.predicate.entity.EntityPredicate;
-import net.minecraft.predicate.entity.LootContextPredicate;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
+import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
+import net.minecraft.advancements.critereon.DeserializationContext;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.Optional;
 
-public class GiveGuideBookCriterion extends AbstractCriterion<GiveGuideBookCriterion.Conditions> {
-    public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "give_book");
+public class GiveGuideBookCriterion extends SimpleCriterionTrigger<GiveGuideBookCriterion.Conditions> {
+    public static final ResourceLocation ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "give_book");
 
-    public void trigger(ServerPlayerEntity player) {
+    public void trigger(ServerPlayer player) {
         this.trigger(player, conditions -> true);
     }
 
@@ -25,8 +24,8 @@ public class GiveGuideBookCriterion extends AbstractCriterion<GiveGuideBookCrite
     }
 
     public static class Conditions
-            extends AbstractCriterionConditions {
-        public Conditions(Optional<LootContextPredicate> playerPredicate) {
+            extends AbstractCriterionTriggerInstance {
+        public Conditions(Optional<ContextAwarePredicate> playerPredicate) {
             super(playerPredicate);
         }
     }

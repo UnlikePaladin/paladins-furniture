@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.config.option;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.ObjectUtils;
 
 import java.io.DataInput;
@@ -33,7 +33,7 @@ public class NullConfigOption extends AbstractConfigOption<ObjectUtils.Null>{
     };
     public static final NullConfigOption INSTANCE = new NullConfigOption();
     @Override
-    public Text getTitle() {
+    public Component getTitle() {
         return null;
     }
 
@@ -53,7 +53,7 @@ public class NullConfigOption extends AbstractConfigOption<ObjectUtils.Null>{
     }
 
     @Override
-    public Text getToolTip() {
+    public Component getToolTip() {
         return null;
     }
 
