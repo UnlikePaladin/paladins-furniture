@@ -4,7 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.menus.AbstractFreezerScreenHandler;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -29,7 +29,7 @@ public class FreezerScreen extends AbstractContainerScreen<AbstractFreezerScreen
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context);
         if (this.narrow) {
             this.renderBg(context, delta, mouseX, mouseY);
@@ -40,7 +40,7 @@ public class FreezerScreen extends AbstractContainerScreen<AbstractFreezerScreen
     }
 
     @Override
-    protected void renderBg(DrawContext context, float delta, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
         int k;
         int i = this.leftPos;
         int j = this.topPos;

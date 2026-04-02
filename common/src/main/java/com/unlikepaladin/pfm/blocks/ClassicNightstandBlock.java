@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
@@ -46,7 +46,7 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
     public ClassicNightstandBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(OPEN, false));
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(ClassicNightstandBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(ClassicNightstandBlock.class)){
             WOOD_NIGHTSTAND.add(new FurnitureBlock(this, "classic_nightstand"));
         }
         else if (this.getClass().isAssignableFrom(ClassicNightstandBlock.class)){

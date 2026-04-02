@@ -6,7 +6,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -38,7 +37,7 @@ public class LogTableBlock extends HorizontalDirectionalBlock {
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(LogTableBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(LogTableBlock.class)){
             WOOD_LOG_TABLES.add(new FurnitureBlock(this, "table_"));
         }
         else if (this.getClass().isAssignableFrom(LogTableBlock.class)){

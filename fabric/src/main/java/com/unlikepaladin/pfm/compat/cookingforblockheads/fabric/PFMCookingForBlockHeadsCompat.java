@@ -58,7 +58,7 @@ public class PFMCookingForBlockHeadsCompat {
     public static <T extends AbstractContainerMenu> TriFunc<Integer, Inventory, FriendlyByteBuf, T> getStoveScreenHandler() {
         return (integer, playerInventory, packetByteBuf) -> {
             BlockPos pos = packetByteBuf.readBlockPos();
-            BlockEntity blockEntity = playerInventory.player.getLevel().getBlockEntity(pos);
+            BlockEntity blockEntity = playerInventory.player.level().getBlockEntity(pos);
             return (T) new StoveScreenHandlerBalm(integer, playerInventory, (StoveBlockEntityBalm)blockEntity);
         };
     }

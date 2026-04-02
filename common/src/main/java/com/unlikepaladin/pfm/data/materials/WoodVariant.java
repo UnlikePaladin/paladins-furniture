@@ -9,7 +9,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.resources.ResourceLocation;

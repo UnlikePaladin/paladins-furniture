@@ -15,7 +15,7 @@ import net.minecraft.util.Tuple;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
 
@@ -48,7 +48,7 @@ public class LateBlockRegistryImpl {
         }
         PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.get(group).add(item);
         if (item == PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM) {
-            ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group.getB()).get()).register(entries -> {
+            ItemGroupEvents.modifyEntriesEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> {
                 List<ItemStack> stacks = new ArrayList<>();
                 for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                     boolean variantEnabled = true;
@@ -73,7 +73,7 @@ public class LateBlockRegistryImpl {
                 entries.acceptAll(stacks);
             } );
         } else if (item == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
-            ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group.getB()).get()).register(entries -> {
+            ItemGroupEvents.modifyEntriesEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> {
                 List<ItemStack> stacks = new ArrayList<>();
                 for (DyeColor color : DyeColor.values()) {
                     ItemStack stack = new ItemStack(item);
@@ -85,7 +85,7 @@ public class LateBlockRegistryImpl {
                 entries.acceptAll(stacks);
             } );
         } else {
-            ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group.getB()).get()).register(entries -> entries.accept(item));
+            ItemGroupEvents.modifyEntriesEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> entries.accept(item));
         }
     }
 

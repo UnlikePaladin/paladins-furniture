@@ -39,7 +39,7 @@ public class WorkbenchScreenHandler extends AbstractContainerMenu {
     public WorkbenchScreenHandler(int containerId, Inventory playerInventory, final ContainerLevelAccess context) {
         super(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, containerId);
         this.context = context;
-        this.level = playerInventory.player.getLevel();
+        this.level = playerInventory.player.level();
         this.playerInventory = playerInventory;
         this.contentsChangedListener = () -> {
         };
@@ -51,8 +51,8 @@ public class WorkbenchScreenHandler extends AbstractContainerMenu {
             @Override
             public void onTake(Player player, ItemStack stack) {
                 if (WorkbenchScreenHandler.this.craft()) {
-                    stack.onCraftedBy(player.getLevel(), player, stack.getCount());
-                    WorkbenchScreenHandler.this.output.awardUsedRecipes(player);
+                    stack.onCraftedBy(player.level(), player, stack.getCount());
+                    WorkbenchScreenHandler.this.output.awardUsedRecipes(player, List.of());
                     WorkbenchScreenHandler.this.populateResult(player);
                     context.execute((world, pos) -> {
                         long l = world.getDayTime();
@@ -90,8 +90,8 @@ public class WorkbenchScreenHandler extends AbstractContainerMenu {
     boolean craft() {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe.CraftableFurnitureRecipe simpleFurnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
-            if (simpleFurnitureRecipe.matches(playerInventory, playerInventory.player.getLevel())) {
-               simpleFurnitureRecipe.craftAndRemoveItems(playerInventory, playerInventory.player.getLevel().registryAccess());
+            if (simpleFurnitureRecipe.matches(playerInventory, playerInventory.player.level())) {
+               simpleFurnitureRecipe.craftAndRemoveItems(playerInventory, playerInventory.player.level().registryAccess());
                 return true;
             }
         }
@@ -101,7 +101,7 @@ public class WorkbenchScreenHandler extends AbstractContainerMenu {
     void populateResult(Player player) {
         if (!this.availableRecipes.isEmpty() && this.isInBounds(this.availableRecipes, this.selectedRecipe.get())) {
             FurnitureRecipe.CraftableFurnitureRecipe simpleFurnitureRecipe = this.sortedRecipes.get(this.selectedRecipe.get());
-            this.outputSlot.set(simpleFurnitureRecipe.assemble(player.getInventory(), player.getLevel().registryAccess()));
+            this.outputSlot.set(simpleFurnitureRecipe.assemble(player.getInventory(), player.level().registryAccess()));
         } else {
             this.outputSlot.set(ItemStack.EMPTY);
         }
@@ -197,7 +197,7 @@ public class WorkbenchScreenHandler extends AbstractContainerMenu {
             Item item = itemStack2.getItem();
             itemStack = itemStack2.copy();
             if (index == 0) {
-                item.onCraftedBy(itemStack2, player.getLevel(), player);
+                item.onCraftedBy(itemStack2, player.level(), player);
                 if (!this.moveItemStackTo(itemStack2, 1, 37, true)) {
                     return ItemStack.EMPTY;
                 }

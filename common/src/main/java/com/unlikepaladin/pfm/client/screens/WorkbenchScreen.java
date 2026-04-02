@@ -1,19 +1,15 @@
 package com.unlikepaladin.pfm.client.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.EditBox;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.client.render.model.json.ModelTransformationMode;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
@@ -154,14 +150,14 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
         }
     }
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
         this.renderTooltip(context, mouseX, mouseY);
     }
 
     @Override
-    protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
-        this.renderBackground(matrices);
+    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
+        this.renderBackground(context);
         int x = this.leftPos;
         int y = this.topPos;
         context.blit(TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight);
@@ -176,7 +172,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
     }
 
     @Override
-    protected void renderTooltip(DrawContext context, int x, int y) {
+    protected void renderTooltip(GuiGraphics context, int x, int y) {
         super.renderTooltip(context, x, y);
         int xOffsetForTooltip = this.leftPos + RECIPE_LIST_OFFSET_X;
         int yOffsetForTooltip = this.topPos + RECIPE_LIST_OFFSET_Y;
@@ -191,7 +187,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             if (this.menu.searching) {
                 iCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(iCopy));
             }
-            tooltip.add(getTooltipFromItem(this.menu.getSortedRecipes().get(iCopy).getResultItem(minecraft.level.registryAccess())).get(0));
+            tooltip.add(getTooltipFromContainerItem(this.menu.getSortedRecipes().get(iCopy).getResultItem(minecraft.level.registryAccess())).get(0));
             tooltip.add(Component.translatable("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
             HashMap<Item, Integer> itemStackCountMap = new HashMap<>();
             for (Ingredient ingredient : this.menu.getSortedRecipes().get(iCopy).getIngredients()) {
@@ -209,14 +205,14 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
                 if (itemCount < integer) {
                     style = style.withColor(ChatFormatting.RED);
                 }
-                tooltip.add(Component.literal(integer + " ").append(Component.literal(getTooltipFromItem(item.getDefaultInstance()).get(0).getString())).setStyle(style));
+                tooltip.add(Component.literal(integer + " ").append(Component.literal(getTooltipFromContainerItem(item.getDefaultInstance()).get(0).getString())).setStyle(style));
             });
-            context.drawTooltip(this.font, tooltip, x, y);
+            context.renderComponentTooltip(this.font, tooltip, x, y);
         }
     }
 
-    private void renderRecipeBackground(DrawContext context, int mouseX, int mouseY, int x, int y, int scrollOffset) {
-        for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getVisibleRecipeCount(); ++i) {
+    private void renderRecipeBackground(GuiGraphics context, int mouseX, int mouseY, int x, int y, int scrollOffset) {
+        for (int i = this.scrollOffset; i < scrollOffset && i < this.menu.getVisibleRecipeCount(); ++i) {
             int j = i - this.scrollOffset;
             int k = x + j % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
             int l = j / RECIPE_LIST_COLUMNS;
@@ -238,7 +234,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
         }
     }
 
-    private void renderRecipeIcons(DrawContext context, int x, int y, int scrollOffset) {
+    private void renderRecipeIcons(GuiGraphics context, int x, int y, int scrollOffset) {
         for (int i = this.scrollOffset; i < scrollOffset && i < this.menu.getVisibleRecipeCount(); ++i) {
             int iMinusScrollOffset = i - this.scrollOffset;
             int xOffset = x + iMinusScrollOffset % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
@@ -248,7 +244,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             if (this.menu.searching) {
                 iCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(iCopy));
             }
-            context.drawItem(this.menu.getSortedRecipes().get(iCopy).getResultItem(client.level.registryAccess()), xOffset, yOffset);
+            context.renderItem(this.menu.getSortedRecipes().get(iCopy).getResultItem(minecraft.level.registryAccess()), xOffset, yOffset);
         }
     }
 

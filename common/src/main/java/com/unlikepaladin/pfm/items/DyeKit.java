@@ -76,21 +76,21 @@ public class DyeKit extends Item {
             Sheep sheepEntity = (Sheep)entity;
             if (sheepEntity.isAlive() && !sheepEntity.isSheared() && sheepEntity.getColor() != ((DyeKit) stack.getItem()).getColor()) {
                 sheepEntity.getCommandSenderWorld().playSound(user, sheepEntity, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
-                if (!user.getLevel().isClientSide) {
+                if (!user.level().isClientSide) {
                     sheepEntity.setColor(this.color);
                     stack.shrink(1);
                 }
 
-                return InteractionResult.sidedSuccess(user.getLevel().isClientSide);
+                return InteractionResult.sidedSuccess(user.level().isClientSide);
             }
         } else if (entity instanceof DyeableFurnitureEntity<?>) {
             if (((DyeableFurnitureEntity<?>) entity).getPFMColor() != getColor()){
                 entity.getCommandSenderWorld().playSound(user, entity, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
-                if (!user.getLevel().isClientSide) {
+                if (!user.level().isClientSide) {
                     ((DyeableFurnitureEntity<?>) entity).setPFMColor(getColor());
                     stack.shrink(1);
                 }
-                return InteractionResult.sidedSuccess(user.getLevel().isClientSide);
+                return InteractionResult.sidedSuccess(user.level().isClientSide);
             }
         }
         return InteractionResult.PASS;

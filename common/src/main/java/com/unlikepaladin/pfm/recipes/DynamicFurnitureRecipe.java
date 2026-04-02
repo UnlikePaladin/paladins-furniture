@@ -152,7 +152,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         for (ResourceLocation id : furnitureInnerRecipes.keySet()) {
             List<FurnitureInnerRecipe> recipes = furnitureInnerRecipes.get(id);
             for (FurnitureInnerRecipe recipe : recipes) {
-                if (recipe.matches(inventory, inventory.player.getLevel()))
+                if (recipe.matches(inventory, inventory.player.level()))
                     stacks.add(recipe);
             }
         }

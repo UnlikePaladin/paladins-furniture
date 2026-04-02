@@ -18,7 +18,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.Containers;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -50,7 +50,7 @@ public class KitchenDrawerBlock extends KitchenCounterBlock implements EntityBlo
             registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(OPEN, false));
         }
         counterFurnitureBlock = new FurnitureBlock(this, "kitchen_drawer");
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenDrawerBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(KitchenDrawerBlock.class)){
             WOOD_DRAWERS.add(counterFurnitureBlock);
         }
         else if (this.getClass().isAssignableFrom(KitchenDrawerBlock.class)){

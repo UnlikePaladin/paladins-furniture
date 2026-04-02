@@ -12,7 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
@@ -31,7 +31,7 @@ public class BlockItemRegistryImpl {
             PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(group, new ArrayList<>());
         }
         PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.get(group).add(item);
-        ItemGroupEvents.modifyEntriesEvent(Registries.ITEM_GROUP.getKey(group.getB()).get()).register(entries -> entries.accept(item));
+        ItemGroupEvents.modifyEntriesEvent(BuiltInRegistries.CREATIVE_MODE_TAB.getResourceKey(group.getB()).get()).register(entries -> entries.accept(item));
     }
 
     public static void registerBlockItemPlatformSpecific(String itemName, Block block, Tuple<String, CreativeModeTab> group) {
@@ -46,7 +46,7 @@ public class BlockItemRegistryImpl {
     public static void registerBlockPlatformSpecific(String blockName, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerBlockItemPlatformSpecific(blockName, block, new Pair<>("building_blocks", BuiltInRegistries.ITEM_GROUP.get(CreativeModeTabs.BUILDING_BLOCKS)));
+            registerBlockItemPlatformSpecific(blockName, block, new Tuple<>("building_blocks", BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS)));
         }
         Registry.register(BuiltInRegistries.BLOCK, new ResourceLocation(PaladinFurnitureMod.MOD_ID, blockName),  block);
     }

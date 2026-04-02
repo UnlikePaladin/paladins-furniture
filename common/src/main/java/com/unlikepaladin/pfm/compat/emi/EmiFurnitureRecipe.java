@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -39,7 +40,7 @@ public class EmiFurnitureRecipe extends EmiPatternCraftingRecipe {
             } else {
                 playerInventory = new Inventory(null);
             }
-            CraftingContainer inv = new CraftingContainer(new AbstractContainerMenu(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, -1) {
+            CraftingContainer inv = new TransientCraftingContainer(new AbstractContainerMenu(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, -1) {
 
                 @Override
                 public boolean stillValid(Player player) {

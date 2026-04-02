@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
@@ -32,7 +32,7 @@ public class KitchenSinkBlock extends AbstractSinkBlock {
 
     public KitchenSinkBlock(Properties settings, Predicate<Biome.Precipitation> precipitationPredicate, Map<Item, CauldronInteraction> map) {
         super(settings, precipitationPredicate, map);
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenSinkBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(KitchenSinkBlock.class)){
             WOOD_SINKS.add(new FurnitureBlock(this, "kitchen_sink"));
         }
         else if (this.getClass().isAssignableFrom(KitchenSinkBlock.class)){

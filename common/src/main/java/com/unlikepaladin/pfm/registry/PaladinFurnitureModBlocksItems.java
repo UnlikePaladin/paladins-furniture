@@ -16,8 +16,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.world.level.material.MaterialColor;
+
+import net.minecraft.world.level.material.MapColor;
 
 import java.util.*;
 import java.util.ArrayList;
@@ -29,13 +29,13 @@ public class PaladinFurnitureModBlocksItems {
     public static final List<Block> BLOCKS = new ArrayList<>();
     public static final Map<Tuple<String, CreativeModeTab>, List<Item>> ITEM_GROUP_LIST_MAP = new LinkedHashMap<>();
     public static Set<BlockState> originalHomePOIBedStates = new HashSet<>();
-    public static final FreezerBlock WHITE_FREEZER = new FreezerBlock(BlockBehaviour.Properties.create().explosionResistance(3.5f).strength(5.0f).sound(SoundType.STONE).color(MaterialColor.SNOW), () -> PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+    public static final FreezerBlock WHITE_FREEZER = new FreezerBlock(BlockBehaviour.Properties.of().explosionResistance(3.5f).strength(5.0f).sound(SoundType.STONE).mapColor(MapColor.SNOW), () -> PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
     public static final FridgeBlock WHITE_FRIDGE = new FridgeBlock(BlockBehaviour.Properties.copy(WHITE_FREEZER).noOcclusion(), () -> PaladinFurnitureModBlocksItems.WHITE_FREEZER);
-    public static final FreezerBlock GRAY_FREEZER = new FreezerBlock(BlockBehaviour.Properties.create().explosionResistance(3.5f).strength(5.0f).sound(SoundType.STONE).color(MaterialColor.COLOR_GRAY), () -> PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
+    public static final FreezerBlock GRAY_FREEZER = new FreezerBlock(BlockBehaviour.Properties.of().explosionResistance(3.5f).strength(5.0f).sound(SoundType.STONE).mapColor(MapColor.COLOR_GRAY), () -> PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
     public static final FridgeBlock GRAY_FRIDGE = new FridgeBlock(BlockBehaviour.Properties.copy(GRAY_FREEZER).noOcclusion(), () -> PaladinFurnitureModBlocksItems.GRAY_FREEZER);
-    public static final FreezerBlock IRON_FREEZER = new IronFreezerBlock(BlockBehaviour.Properties.create().explosionResistance(3.5f).strength(5.0f).sound(SoundType.METAL).color(MaterialColor.METAL), () -> PaladinFurnitureModBlocksItems.IRON_FRIDGE);
+    public static final FreezerBlock IRON_FREEZER = new IronFreezerBlock(BlockBehaviour.Properties.of().explosionResistance(3.5f).strength(5.0f).sound(SoundType.METAL).mapColor(MapColor.METAL), () -> PaladinFurnitureModBlocksItems.IRON_FRIDGE);
     public static final FridgeBlock IRON_FRIDGE = new IronFridgeBlock(BlockBehaviour.Properties.copy(IRON_FREEZER).noOcclusion(), () -> PaladinFurnitureModBlocksItems.IRON_FREEZER);
-    public static final FridgeBlock XBOX_FRIDGE = new XboxFridgeBlock(BlockBehaviour.Properties.copy(WHITE_FREEZER).explosionResistance(1200.0F).noOcclusion().color(MaterialColor.COLOR_BLACK), null);
+    public static final FridgeBlock XBOX_FRIDGE = new XboxFridgeBlock(BlockBehaviour.Properties.copy(WHITE_FREEZER).explosionResistance(1200.0F).noOcclusion().mapColor(MapColor.COLOR_BLACK), null);
 
     public static final StoveBlock WHITE_STOVE = new StoveBlock(BlockBehaviour.Properties.copy(WHITE_FREEZER));
     public static final KitchenRangeHoodBlock WHITE_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(BlockBehaviour.Properties.copy(WHITE_FREEZER).noOcclusion());
@@ -66,15 +66,15 @@ public class PaladinFurnitureModBlocksItems {
 
     public static final Block RAW_CONCRETE = new Block(BlockBehaviour.Properties.copy(Blocks.GRAY_CONCRETE).sound(SoundType.STONE));
     public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, BlockBehaviour.Properties.copy(Blocks.GRAY_CONCRETE_POWDER).sound(SoundType.SAND));
-    public static final Block LEATHER_BLOCK = new Block(BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL).sound(SoundType.WOOL).color(MaterialColor.COLOR_ORANGE));
+    public static final Block LEATHER_BLOCK = new Block(BlockBehaviour.Properties.copy(Blocks.WHITE_WOOL).sound(SoundType.WOOL).mapColor(MapColor.COLOR_ORANGE));
 
     public static final Block IRON_CHAIN = new ChainBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BARS).sound(SoundType.METAL));
-    public static final PendantBlock GRAY_MODERN_PENDANT = new PendantBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).color(MaterialColor.COLOR_GRAY));
-    public static final PendantBlock WHITE_MODERN_PENDANT = new PendantBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).color(MaterialColor.SNOW));
-    public static final PendantBlock GLASS_MODERN_PENDANT = new PendantBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).color(MaterialColor.QUARTZ));
-    public static final SimpleLightBlock SIMPLE_LIGHT = new SimpleLightBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).color(MaterialColor.COLOR_LIGHT_GRAY));
+    public static final PendantBlock GRAY_MODERN_PENDANT = new PendantBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).mapColor(MapColor.COLOR_GRAY));
+    public static final PendantBlock WHITE_MODERN_PENDANT = new PendantBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).mapColor(MapColor.SNOW));
+    public static final PendantBlock GLASS_MODERN_PENDANT = new PendantBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).mapColor(MapColor.QUARTZ));
+    public static final SimpleLightBlock SIMPLE_LIGHT = new SimpleLightBlock(BlockBehaviour.Properties.copy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).mapColor(MapColor.COLOR_LIGHT_GRAY));
 
-    public static final LightSwitchBlock LIGHT_SWITCH = new LightSwitchBlock(BlockBehaviour.Properties.copy(Blocks.WHITE_CONCRETE).sound(SoundType.STONE).noOcclusion().color(MaterialColor.SNOW));
+    public static final LightSwitchBlock LIGHT_SWITCH = new LightSwitchBlock(BlockBehaviour.Properties.copy(Blocks.WHITE_CONCRETE).sound(SoundType.STONE).noOcclusion().mapColor(MapColor.SNOW));
     public static Item LIGHT_SWITCH_ITEM;
     public static Item FURNITURE_BOOK;
     public static final Block BASIC_LAMP = new BasicLampBlock(BlockBehaviour.Properties.copy(Blocks.OAK_PLANKS).lightLevel(createLightLevelFromLitBlockState(15)));
@@ -91,7 +91,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final CutleryBlock BASIC_CUTLERY = new CutleryBlock(BlockBehaviour.Properties.copy(Blocks.GRAY_CONCRETE).noOcclusion());
 
     public static final BasicToiletBlock BASIC_TOILET = new BasicToiletBlock(BlockBehaviour.Properties.copy(Blocks.SMOOTH_QUARTZ).noOcclusion());
-    public static final WallToiletPaperBlock WALL_TOILET_PAPER = new WallToiletPaperBlock(BlockBehaviour.Properties.create().mapColor(MaterialColor.QUARTZ).noOcclusion());
+    public static final WallToiletPaperBlock WALL_TOILET_PAPER = new WallToiletPaperBlock(BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).noOcclusion());
     public static final BasicBathtubBlock BASIC_BATHTUB = new BasicBathtubBlock(BlockBehaviour.Properties.copy(Blocks.SMOOTH_QUARTZ).noOcclusion(), BathtubBehavior.TUB_BEHAVIOR, LayeredCauldronBlock.RAIN);
 
 

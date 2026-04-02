@@ -1,11 +1,12 @@
 package com.unlikepaladin.pfm.registry.forge;
 
+import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.fml.ModList;
@@ -27,7 +28,7 @@ public class BlockItemRegistryImpl {
     public static void registerBlockPlatformSpecific(String blockId, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerBlockItemPlatformSpecific(blockId, block, new Pair<>("building_blocks", BuiltInRegistries.ITEM_GROUP.get(CreativeModeTabs.BUILDING_BLOCKS)));
+            registerBlockItemPlatformSpecific(blockId, block, new Tuple<>("building_blocks", BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS)));
         }
         blocks.put(blockId, block);
     }

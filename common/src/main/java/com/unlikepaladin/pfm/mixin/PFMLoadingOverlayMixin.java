@@ -4,7 +4,7 @@ import com.unlikepaladin.pfm.client.screens.overlay.GLText;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.LoadingOverlay;
 import com.mojang.blaze3d.vertex.PoseStack;
 import org.spongepowered.asm.mixin.Final;
@@ -29,7 +29,7 @@ public class PFMLoadingOverlayMixin {
     private GLText.GLTtext pfm$assemblingFurniture;
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/packs/resources/ReloadInstance;getActualProgress()F"))
-    private void onRender(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void onRender(GuiGraphics context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (PFMRuntimeResources.isAnyGeneratorRunning()) {
             if (!BlockItemRegistry.isModLoaded("vulkanmod")) {
                 if (pfm$glText == null || this.pfm$assemblingFurniture == null) {

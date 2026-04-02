@@ -8,7 +8,6 @@ import net.fabricmc.api.Environment;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;

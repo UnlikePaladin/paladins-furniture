@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.runtime.PFMResourceProgress;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.FastColor;
 import net.minecraft.client.gui.screens.Overlay;
 import net.minecraft.client.resources.metadata.texture.TextureMetadataSection;
@@ -86,7 +87,7 @@ public class PFMGeneratingOverlay extends Overlay {
 
     private float lastNotifAlpha = 1.0f;
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         long l = Util.getMillis();
         if (this.reloading && this.reloadStartTime == -1L) {
             this.reloadStartTime = l;
@@ -168,7 +169,7 @@ public class PFMGeneratingOverlay extends Overlay {
         }
     }
 
-    private void renderProgressBar(DrawContext context, int minX, int minY, int maxX, int maxY, float opacity) {
+    private void renderProgressBar(GuiGraphics context, int minX, int minY, int maxX, int maxY, float opacity) {
         int i = Mth.ceil((float)(maxX - minX - 2) * this.progress);
         int j = Math.round(opacity * 255.0f);
         int k = FastColor.ARGB32.color(j, 255, 255, 255);

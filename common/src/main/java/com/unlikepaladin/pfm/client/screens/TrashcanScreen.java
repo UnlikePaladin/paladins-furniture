@@ -3,7 +3,7 @@ package com.unlikepaladin.pfm.client.screens;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.menus.TrashcanScreenHandler;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
@@ -36,7 +36,7 @@ public class TrashcanScreen extends AbstractContainerScreen<TrashcanScreenHandle
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         this.renderBackground(context);
         if (this.narrow) {
             this.renderBg(context, delta, mouseX, mouseY);
@@ -47,7 +47,7 @@ public class TrashcanScreen extends AbstractContainerScreen<TrashcanScreenHandle
     }
 
     @Override
-    protected void renderBg(DrawContext context, float delta, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
         int i = this.leftPos;
         int j = this.topPos;
         context.blit(background, i, j, 0, 0, this.imageWidth, this.imageHeight);

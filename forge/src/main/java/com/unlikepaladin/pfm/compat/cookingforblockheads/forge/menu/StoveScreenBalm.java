@@ -1,12 +1,10 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
 import net.blay09.mods.balm.api.energy.EnergyStorage;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.Slot;
@@ -26,20 +24,20 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
         this.inventoryLabelY = this.imageHeight - 94;
     }
 
-    public void render(DrawContext context, int mouseX, int mouseY, float partialTicks) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(context);
         super.render(context, mouseX, mouseY, partialTicks);
         this.renderTooltip(context, mouseX, mouseY);
         StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();
         if (tileEntity.hasPowerUpgrade() && mouseX >= this.leftPos + this.imageWidth - 25 && mouseY >= this.topPos + 22 && mouseX < this.leftPos + this.imageWidth - 25 + 35 + 18 && mouseY < this.topPos + 22 + 72) {
             EnergyStorage energyStorage = tileEntity.getEnergyStorage();
-            context.drawTooltip(Minecraft.getInstance().font, Component.translatable("tooltip.cookingforblockheads:energy_stored", new Object[]{energyStorage.getEnergy(), energyStorage.getCapacity()}), mouseX, mouseY);
+            context.renderTooltip(Minecraft.getInstance().font, Component.translatable("tooltip.cookingforblockheads:energy_stored", new Object[]{energyStorage.getEnergy(), energyStorage.getCapacity()}), mouseX, mouseY);
         }
 
     }
 
     @Override
-    protected void renderLabels(DrawContext context, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphics context, int mouseX, int mouseY) {
         super.renderLabels(context, mouseX, mouseY);
         StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();
 
@@ -54,7 +52,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
 
     }
 
-    protected void renderBg(DrawContext context, float partialTicks, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics context, float partialTicks, int mouseX, int mouseY) {
         context.blit(texture, this.leftPos + 22, this.topPos, 0, 0, this.imageWidth - 22, this.imageHeight);
         context.blit(texture, this.leftPos, this.topPos + 10, 176, 30, 25, 87);
         StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();

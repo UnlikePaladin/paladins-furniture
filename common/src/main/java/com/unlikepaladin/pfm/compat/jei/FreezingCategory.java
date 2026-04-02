@@ -19,6 +19,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 
@@ -96,7 +97,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
         return this.cachedArrows.getUnchecked(freezeTime);
     }
 
-    protected void drawFreezeTime(FreezingRecipe recipe, DrawContext context, int y) {
+    protected void drawFreezeTime(FreezingRecipe recipe, GuiGraphics context, int y) {
         int freezeTime = recipe.getCookingTime();
         if (freezeTime > 0) {
             int freezeTimeSeconds = freezeTime / 20;
@@ -104,23 +105,23 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
             Minecraft minecraft = Minecraft.getInstance();
             Font fontRenderer = minecraft.font;
             int stringWidth = fontRenderer.width(timeString);
-            context.drawText(fontRenderer, timeString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
+            context.drawString(fontRenderer, timeString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
         }
     }
 
-    protected void drawExperience(FreezingRecipe recipe, DrawContext context, int y) {
+    protected void drawExperience(FreezingRecipe recipe, GuiGraphics context, int y) {
         float experience = recipe.getExperience();
         if (experience > 0) {
             Component experienceString = Component.nullToEmpty(experience + " XP");
             Minecraft minecraft = Minecraft.getInstance();
             Font fontRenderer = minecraft.font;
             int stringWidth = fontRenderer.width(experienceString);
-            context.drawText(fontRenderer, experienceString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
+            context.drawString(fontRenderer, experienceString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
         }
     }
 
     @Override
-    public void draw(FreezingRecipe recipe, IRecipeSlotsView recipeSlotsView, DrawContext context, double mouseX, double mouseY) {
+    public void draw(FreezingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics context, double mouseX, double mouseY) {
         animatedFreezeIcon.draw(context, 1, 20);
 
         IDrawableAnimated arrow = getArrow(recipe);

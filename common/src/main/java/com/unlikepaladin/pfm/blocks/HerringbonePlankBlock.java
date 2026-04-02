@@ -4,7 +4,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -21,7 +21,7 @@ public class HerringbonePlankBlock extends HorizontalDirectionalBlock {
     private static final List<FurnitureBlock> PLANKS = new ArrayList<>();
     public HerringbonePlankBlock(Properties settings) {
         super(settings);
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(HerringbonePlankBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(HerringbonePlankBlock.class)){
             PLANKS.add(new FurnitureBlock(this, "herringbone_planks"));
         }
     }

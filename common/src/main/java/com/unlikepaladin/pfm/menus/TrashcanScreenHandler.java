@@ -29,7 +29,7 @@ public class TrashcanScreenHandler extends AbstractContainerMenu {
         this.trashcanBlockEntity = trashcanBlockEntity;
         TrashcanScreenHandler.checkContainerSize(inventory, 9);
         this.inventory = inventory;
-        this.level = playerInventory.player.getLevel();
+        this.level = playerInventory.player.level();
         inventory.startOpen(playerInventory.player);
         for (i = 0; i < 3; ++i) {
             for (j = 0; j < 3; ++j) {

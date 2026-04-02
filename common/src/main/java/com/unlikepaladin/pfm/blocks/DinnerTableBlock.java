@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -38,7 +38,7 @@ public class DinnerTableBlock extends HorizontalDirectionalBlock  {
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(DinnerTableBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(DinnerTableBlock.class)){
             WOOD_DINNER_TABLES.add(new FurnitureBlock(this, "table_dinner"));
         }
         else if (this.getClass().isAssignableFrom(DinnerTableBlock.class)){

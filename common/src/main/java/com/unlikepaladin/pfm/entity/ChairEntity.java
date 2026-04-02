@@ -37,21 +37,21 @@ public class ChairEntity extends Mob {
     public void tick() {
         this.setDeltaMovement(Vec3.ZERO);
         if (!this.isVehicle()) {
-            if (!this.getLevel().isClientSide){
+            if (!this.level().isClientSide){
                 this.discard();
             }
         }
-        else if (this.getLevel().getBlockState(this.blockPosition()).getBlock() instanceof BasicToiletBlock && getLevel().isClientSide()){
-            if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isDown() && this.getLevel().getBlockState(this.blockPosition()).getValue(BasicToiletBlock.TOILET_STATE) == ToiletState.CLEAN) {
+        else if (this.level().getBlockState(this.blockPosition()).getBlock() instanceof BasicToiletBlock && level().isClientSide()){
+            if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isDown() && this.level().getBlockState(this.blockPosition()).getValue(BasicToiletBlock.TOILET_STATE) == ToiletState.CLEAN) {
                 fart(this.blockPosition());
             }
             super.tick();
         }
-        else if (this.getLevel().getBlockState(this.blockPosition()).getBlock() instanceof AbstractSittableBlock || this.getLevel().getBlockState(this.blockPosition()).getBlock() instanceof BasicBathtubBlock){
+        else if (this.level().getBlockState(this.blockPosition()).getBlock() instanceof AbstractSittableBlock || this.level().getBlockState(this.blockPosition()).getBlock() instanceof BasicBathtubBlock){
             super.tick();
         }
         else {
-            if (!this.getLevel().isClientSide) {
+            if (!this.level().isClientSide) {
                 this.ejectPassengers();
                 this.discard();
             }
@@ -81,8 +81,8 @@ public class ChairEntity extends Mob {
     @Override
     public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
         Direction direction = this.getMotionDirection();
-        if (this.getLevel().getBlockState(this.blockPosition()).getBlock() instanceof AbstractSittableBlock) {
-            direction = this.getLevel().getBlockState(this.blockPosition()).getValue(AbstractSittableBlock.FACING).getOpposite();
+        if (this.level().getBlockState(this.blockPosition()).getBlock() instanceof AbstractSittableBlock) {
+            direction = this.level().getBlockState(this.blockPosition()).getValue(AbstractSittableBlock.FACING).getOpposite();
         }
         if (direction.getAxis() != Direction.Axis.Y) {
             int[][] dismountingOffsets = DismountHelper.offsetsForDirection(direction);
@@ -93,10 +93,10 @@ public class ChairEntity extends Mob {
                 AABB box = passenger.getLocalBoundsForPose(entityPose);
                 for (int[] dismountingOffset : dismountingOffsets) {
                     dismountPos.set(chairPos.getX() + dismountingOffset[0], chairPos.getY() + 0.3, chairPos.getZ() + dismountingOffset[1]);
-                    double dismountHeight = this.getLevel().getBlockFloorHeight(dismountPos);
+                    double dismountHeight = this.level().getBlockFloorHeight(dismountPos);
                     if (DismountHelper.isBlockFloorValid(dismountHeight)) {
                         Vec3 vec3d = Vec3.upFromBottomCenterOf(dismountPos, dismountHeight);
-                        if (DismountHelper.canDismountTo(this.getLevel(), passenger, box.move(vec3d))) {
+                        if (DismountHelper.canDismountTo(this.level(), passenger, box.move(vec3d))) {
                             passenger.setPose(entityPose);
                             return vec3d;
                         }

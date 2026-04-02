@@ -102,7 +102,7 @@ public class ColorRegistry {
         registerItemColor(PaladinFurnitureModBlocksItems.BASIC_SINK.asItem(), (stack, index) -> index == 1 ?  0x3c44a9 : 0xFFFFFF);
         registerItemColor(PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM, (stack, tintIndex) -> {
             if (stack.hasTag() && tintIndex == 1) {
-                return DyeColor.byName(stack.getTagElement("BlockEntityTag").getString("color"), DyeColor.WHITE).getMaterialColor().col;
+                return DyeColor.byName(stack.getTagElement("BlockEntityTag").getString("color"), DyeColor.WHITE).getMapColor().col;
             } else if (stack.hasTag() && tintIndex == 0) {
                 WoodVariant variantBase = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(stack.getTagElement("BlockEntityTag").getString("variant")));
                 if (getItemColor(variantBase.getLogBlock().asItem()) != null) {

@@ -6,6 +6,7 @@ import com.google.common.collect.Sets;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.storage.loot.LootTables;
+import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
@@ -57,8 +58,8 @@ public class PFMLootTableProvider extends PFMProvider {
             if (!identifiers.add(identifier)) {
                 throw new IllegalStateException("Duplicate loot table " + identifier);
             } else {
-                Path path2 = getOutput(path, identifier);
-                String string = PFMDataGenerator.GSON.toJson(LootDataType.LOOT_TABLES.getGson().toJsonTree(builder.build()));
+                Path path2 = getResultItem(path, identifier);
+                String string = PFMDataGenerator.GSON.toJson(LootDataType.TABLE.parser().toJsonTree(builder.build()));
                 enqueueJsonWrite(getWriteQueue(), path2, string);
             }
         }));

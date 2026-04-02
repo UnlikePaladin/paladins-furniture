@@ -7,7 +7,7 @@ import me.shedaniel.clothconfig2.api.animator.ValueAnimator;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.REIRuntime;
 import me.shedaniel.rei.api.client.gui.widgets.BurningFire;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.ResourceLocation;
@@ -47,15 +47,15 @@ public class FreezingWidget extends BurningFire {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         this.darkBackgroundAlpha.update(delta);
         renderBackground(context, false, 1.0F);
         renderBackground(context, true, this.darkBackgroundAlpha.value());
     }
 
-    public void renderBackground(DrawContext context, boolean dark, float alpha) {
+    public void renderBackground(GuiGraphics context, boolean dark, float alpha) {
         if (getAnimationDuration() > 0) {
-            int height = 14 - MathHelper.ceil((System.currentTimeMillis() / (animationDuration / 14) % 14d));
+            int height = 14 - Mth.ceil((System.currentTimeMillis() / (animationDuration / 14) % 14d));
             //drawTexture(matrices, getX(), getY(), 1, 74, 14, 14 - height);
             context.blit(background, getX(), getY() +2, 56, 36,14, 14);
             context.blit(background, getX(), getY() + 14 - height, 176, 12 - height, 14, height);

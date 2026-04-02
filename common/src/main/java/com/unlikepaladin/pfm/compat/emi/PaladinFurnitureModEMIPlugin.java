@@ -13,7 +13,7 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 @EmiEntrypoint
@@ -48,8 +48,8 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
 
     private static EmiRenderable simplifiedRenderer(int u, int v) {
         return (context, x, y, delta) -> {
-            RenderSystem.setShaderTexture(GameRenderer::getPositionTexShader);
-            context.drawTexture(new ResourceLocation("emi", "textures/gui/widgets.png"), x, y, u, v, 16, 16, 256, 256);
+            RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            context.blit(new ResourceLocation("emi", "textures/gui/widgets.png"), x, y, u, v, 16, 16, 256, 256);
         };
     }
 }

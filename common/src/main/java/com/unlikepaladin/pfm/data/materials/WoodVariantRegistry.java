@@ -1,17 +1,17 @@
 package com.unlikepaladin.pfm.data.materials;
 
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.block.enums.Instrument;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.BasePressurePlateBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -85,10 +85,10 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
             if (state.getProperties().size() <= 2 && !(baseBlock instanceof SlabBlock) && !name.contains("slab") && !(baseBlock instanceof BasePressurePlateBlock) && !name.contains("pressure_plate")) {
                 // needs to use wood sound type
                 // if (state.getSoundType() == SoundType.WOOD) { //wood from tcon has diff sounds
-                BlockSoundGroup soundGroup = state.getSoundGroup();
-                Instrument instrument = state.getInstrument();
+                SoundType soundGroup = state.getSoundType();
+                NoteBlockInstrument instrument = state.instrument();
                 // and have correct material
-                if (soundGroup == BlockSoundGroup.BAMBOO_WOOD || soundGroup == BlockSoundGroup.CHERRY_WOOD || soundGroup == BlockSoundGroup.WOOD || soundGroup == BlockSoundGroup.NETHER_WOOD || instrument == Instrument.BASS) {
+                if (soundGroup == SoundType.BAMBOO_WOOD || soundGroup == SoundType.CHERRY_WOOD || soundGroup == SoundType.WOOD || soundGroup == SoundType.NETHER_WOOD || instrument == NoteBlockInstrument.BASS) {
                     // we do not allow "/" in the wood name
                     name = name.replace("/", "_");
                     ResourceLocation id = new ResourceLocation(blockId.getNamespace(), name);

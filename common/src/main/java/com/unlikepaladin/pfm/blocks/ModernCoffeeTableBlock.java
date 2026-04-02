@@ -6,7 +6,7 @@ import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -37,7 +37,7 @@ public class ModernCoffeeTableBlock extends Block {
         registerDefaultState(this.getStateDefinition().any().setValue(AXIS, Direction.Axis.X));
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(ModernCoffeeTableBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(ModernCoffeeTableBlock.class)){
             WOOD_COFFEE_MODERN_TABLES.add(new FurnitureBlock(this, "coffee_table_modern"));
         }
         else if (this.getClass().isAssignableFrom(ModernCoffeeTableBlock.class)){

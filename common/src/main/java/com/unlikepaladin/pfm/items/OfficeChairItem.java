@@ -87,8 +87,8 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
                     }
                 }
 
-                chair.refreshPositionAndAngles(hitResult.getPos().x, hitResult.getPos().y+0.1f,
-                        hitResult.getPos().z, user.getYaw(), 0);
+                chair.moveTo(hitResult.getLocation().x, hitResult.getLocation().y+0.1f,
+                        hitResult.getLocation().z, user.getYRot(), 0);
                 chair.setPersistenceRequired();
                 chair.setPFMColor(color);
                 chair.setYRot(user.getYRot());

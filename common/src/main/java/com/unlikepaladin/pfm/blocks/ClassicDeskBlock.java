@@ -6,7 +6,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -41,7 +41,7 @@ public class ClassicDeskBlock extends HorizontalDirectionalBlock {
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
         this.deskBlock = new FurnitureBlock(this, "desk_classic");
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(ClassicDeskBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(ClassicDeskBlock.class)){
             WOOD_CLASSIC_DESKS.add(deskBlock);
         }
         else if (this.getClass().isAssignableFrom(ClassicDeskBlock.class)){
@@ -70,7 +70,7 @@ public class ClassicDeskBlock extends HorizontalDirectionalBlock {
     }
 
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        if (AbstractSittableBlock.isWoodBased(this.getDefaultState())) {
+        if (AbstractSittableBlock.isWoodBased(this.defaultBlockState())) {
             return 20;
         }
         return 0;

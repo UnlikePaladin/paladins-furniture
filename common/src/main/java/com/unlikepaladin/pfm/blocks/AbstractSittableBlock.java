@@ -5,11 +5,10 @@ import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.world.level.block.*;
-import net.minecraft.block.enums.Instrument;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.player.Player;
@@ -17,7 +16,7 @@ import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.InteractionResult;
@@ -193,9 +192,9 @@ public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock {
     }
 
     public static boolean isWoodBased(BlockState state) {
-        Instrument instrument = state.getInstrument();
-        BlockSoundGroup soundGroup = state.getSoundGroup();
-        return soundGroup == BlockSoundGroup.BAMBOO_WOOD || soundGroup == BlockSoundGroup.WOOL || soundGroup == BlockSoundGroup.CHERRY_WOOD || soundGroup == BlockSoundGroup.WOOD || soundGroup == BlockSoundGroup.NETHER_WOOD || instrument == Instrument.BASS;
+        NoteBlockInstrument instrument = state.instrument();
+        SoundType soundGroup = state.getSoundType();
+        return soundGroup == SoundType.BAMBOO_WOOD || soundGroup == SoundType.WOOL || soundGroup == SoundType.CHERRY_WOOD || soundGroup == SoundType.WOOD || soundGroup == SoundType.NETHER_WOOD || instrument == NoteBlockInstrument.BASS;
     }
 }
 

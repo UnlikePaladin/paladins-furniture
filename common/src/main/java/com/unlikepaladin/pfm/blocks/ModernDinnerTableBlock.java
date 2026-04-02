@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -36,7 +36,7 @@ public class ModernDinnerTableBlock extends Block {
         registerDefaultState(this.getStateDefinition().any().setValue(AXIS, Direction.Axis.X));
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(ModernDinnerTableBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(ModernDinnerTableBlock.class)){
             WOOD_DINNER_MODERN_TABLES.add(new FurnitureBlock(this, "table_modern_dinner"));
         }
         else if (this.getClass().isAssignableFrom(ModernDinnerTableBlock.class)){

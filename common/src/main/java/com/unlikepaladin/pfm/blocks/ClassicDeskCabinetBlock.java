@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
@@ -54,7 +54,7 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
         this.deskCabinetBlock = new FurnitureBlock(this, "desk_cabinet_classic");
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(ClassicDeskCabinetBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(ClassicDeskCabinetBlock.class)){
             WOOD_CLASSIC_DESK_CABINETS.add(deskCabinetBlock);
         }
         else if (this.getClass().isAssignableFrom(ClassicDeskCabinetBlock.class)){
@@ -83,7 +83,7 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     }
 
     public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
-        if (AbstractSittableBlock.isWoodBased(this.getDefaultState())) {
+        if (AbstractSittableBlock.isWoodBased(this.defaultBlockState())) {
             return 20;
         }
         return 0;

@@ -48,7 +48,7 @@ public class GenericOutputSlot extends Slot {
 
     @Override
     protected void checkTakeAchievements(ItemStack stack) {
-        stack.onCraftedBy(this.player.getLevel(), this.player, this.amount);
+        stack.onCraftedBy(this.player.level(), this.player, this.amount);
         this.amount = 0;
     }
 }

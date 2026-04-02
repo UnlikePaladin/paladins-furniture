@@ -31,8 +31,8 @@ public class NetworkRegistryFabric {
             BlockPos pos = attachedData.readBlockPos();
             boolean active = attachedData.readBoolean();
             server.executeBlocking(() -> {
-                if(Objects.nonNull(player.getLevel().getBlockEntity(pos))){
-                    Level level = player.getLevel();
+                if(Objects.nonNull(player.level().getBlockEntity(pos))){
+                    Level level = player.level();
                     if (level.hasChunkAt(pos)) {
                         MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) level.getBlockEntity(pos);
                         microwaveBlockEntity.setActive(active);
@@ -46,8 +46,8 @@ public class NetworkRegistryFabric {
         ServerPlayNetworking.registerGlobalReceiver(NetworkIDs.TRASHCAN_CLEAR, (server, player, handler, attachedData, responseSender) -> {
             BlockPos pos = attachedData.readBlockPos();
             server.executeBlocking(() -> {
-                if(Objects.nonNull(player.getLevel().getBlockEntity(pos))){
-                    Level level = player.getLevel();
+                if(Objects.nonNull(player.level().getBlockEntity(pos))){
+                    Level level = player.level();
                     if (level.hasChunkAt(pos)) {
                         TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) level.getBlockEntity(pos);
                         trashcanBlockEntity.clearContent();
@@ -64,7 +64,7 @@ public class NetworkRegistryFabric {
                     BlockPos blockPos = attachedData.readBlockPos();
                     server.executeBlocking(() -> {
                         // Use the pos in the main thread
-                        Level level = player.level;
+                        Level level = player.level();
                         if (level.hasChunkAt(blockPos)) {
                             level.setBlockAndUpdate(blockPos, level.getBlockState(blockPos).setValue(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
                             level.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundSource.BLOCKS, 0.3f, level.random.nextFloat() * 0.1f + 0.9f);

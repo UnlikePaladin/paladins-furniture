@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -45,7 +45,7 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
 
     public KitchenCounterOvenBlock(Properties settings) {
         super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenCounterOvenBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(KitchenCounterOvenBlock.class)){
             WOOD_COUNTER_OVENS.add(new FurnitureBlock(this, "kitchen_counter_oven"));
         }
         else if (this.getClass().isAssignableFrom(KitchenCounterOvenBlock.class)){

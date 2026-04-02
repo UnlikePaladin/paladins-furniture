@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -37,7 +37,7 @@ public class BasicDeskBlock extends Block {
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
         this.deskBlock = new FurnitureBlock(this, "desk_basic");
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(BasicDeskBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(BasicDeskBlock.class)){
             WOOD_BASIC_DESKS.add(deskBlock);
         }
         else if (this.getClass().isAssignableFrom(BasicDeskBlock.class)){

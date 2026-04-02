@@ -7,8 +7,8 @@ import com.unlikepaladin.pfm.compat.imm_ptl.fabric.entity.PFMMirrorEntity;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MaterialColor;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
+
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
 
@@ -26,8 +26,8 @@ public class PFMImmersivePortalsImpl implements PFMModCompatibility {
 
     @Override
     public void createBlocks() {
-        PaladinFurnitureModBlocksItems.WHITE_MIRROR = new PFMMirrorBlockIP(BlockBehaviour.Properties.create().mapColor(MaterialColor.SNOW).noOcclusion());
-        PaladinFurnitureModBlocksItems.GRAY_MIRROR = new PFMMirrorBlockIP(BlockBehaviour.Properties.create().mapColor(MaterialColor.COLOR_GRAY).noOcclusion());
+        PaladinFurnitureModBlocksItems.WHITE_MIRROR = new PFMMirrorBlockIP(BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).noOcclusion());
+        PaladinFurnitureModBlocksItems.GRAY_MIRROR = new PFMMirrorBlockIP(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).noOcclusion());
     }
 
     @Override

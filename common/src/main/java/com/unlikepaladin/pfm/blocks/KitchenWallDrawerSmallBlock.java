@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
@@ -34,7 +34,7 @@ public class KitchenWallDrawerSmallBlock extends KitchenWallDrawerBlock {
     public KitchenWallDrawerSmallBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(OPEN, false));
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenWallDrawerSmallBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(KitchenWallDrawerSmallBlock.class)){
             WOOD_SMALL_WALL_DRAWERS.add(new FurnitureBlock(this, "kitchen_wall_small_drawer"));
         }
         else if (this.getClass().isAssignableFrom(KitchenWallDrawerSmallBlock.class)){

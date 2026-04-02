@@ -7,17 +7,16 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.flag.FeatureFlag;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.event.CreativeModeTabEvent;
+import net.minecraft.world.item.*;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.registries.RegisterEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +28,8 @@ public class ItemGroupRegistryForge {
 
     @SubscribeEvent
     public static void registerItemGroups(RegisterEvent event){
-        event.register(Registries.ITEM_GROUP, helper -> {
-            ItemGroup dyeGroup = CreativeModeTab.builder().title(Component.translatable("itemGroup.pfm.dye_kits"))
+        event.register(Registries.CREATIVE_MODE_TAB, helper -> {
+            CreativeModeTab dyeGroup = CreativeModeTab.builder().title(Component.translatable("itemGroup.pfm.dye_kits"))
                         .icon(() -> new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED))
                         .displayItems((enabledFeatures, stacks) -> {
                             stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_RED));
@@ -50,16 +49,16 @@ public class ItemGroupRegistryForge {
                             stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_LIGHT_GRAY));
                             stacks.accept(new ItemStack(PaladinFurnitureModBlocksItems.DYE_KIT_BLACK));
                         }).build();
-            helper.register(new Identifier(MOD_ID, "dye_kits"), dyeGroup);
-            PaladinFurnitureMod.DYE_KITS.setRight(dyeGroup);
+            helper.register(new ResourceLocation(MOD_ID, "dye_kits"), dyeGroup);
+            PaladinFurnitureMod.DYE_KITS.setB(dyeGroup);
 
-            ItemGroup furnitureGroup = CreativeModeTab.builder().title(Component.translatable("itemGroup.pfm.furniture"))
-                    .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultStack())
+            CreativeModeTab furnitureGroup = CreativeModeTab.builder().title(Component.translatable("itemGroup.pfm.furniture"))
+                    .icon(() -> PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).getVariantToBlockMap().get(WoodVariantRegistry.OAK).asItem().getDefaultInstance())
                     .displayItems((enabledFeatures, entries) -> {
                     }).build();
-            helper.register(new Identifier(MOD_ID, "furniture"), furnitureGroup);
-            PaladinFurnitureMod.FURNITURE_GROUP.setRight(furnitureGroup);
-            PaladinFurnitureMod.BUILDING_BLOCKS.setRight(BuiltInRegistries.ITEM_GROUP.get(CreativeModeTab.BUILDING_BLOCKS));
+            helper.register(new ResourceLocation(MOD_ID, "furniture"), furnitureGroup);
+            PaladinFurnitureMod.FURNITURE_GROUP.setB(furnitureGroup);
+            PaladinFurnitureMod.BUILDING_BLOCKS.setB(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS));
         });
     }
 

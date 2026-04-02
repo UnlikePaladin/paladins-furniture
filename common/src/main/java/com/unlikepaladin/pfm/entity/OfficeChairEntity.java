@@ -175,7 +175,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
             return InteractionResult.PASS;
         }
 
-        if (getLevel().isClientSide) {
+        if (level().isClientSide) {
             return InteractionResult.CONSUME;
         }
 
@@ -211,10 +211,10 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
                 AABB box = passenger.getLocalBoundsForPose(entityPose);
                 for (int[] dismountingOffset : dismountingOffsets) {
                     dismountPos.set(chairPos.getX() + dismountingOffset[0], chairPos.getY() + 0.3, chairPos.getZ() + dismountingOffset[1]);
-                    double dismountHeight = this.getLevel().getBlockFloorHeight(dismountPos);
+                    double dismountHeight = this.level().getBlockFloorHeight(dismountPos);
                     if (DismountHelper.isBlockFloorValid(dismountHeight)) {
                         Vec3 vec3d = Vec3.upFromBottomCenterOf(dismountPos, dismountHeight);
-                        if (DismountHelper.canDismountTo(this.getLevel(), passenger, box.move(vec3d))) {
+                        if (DismountHelper.canDismountTo(this.level(), passenger, box.move(vec3d))) {
                             passenger.setPose(entityPose);
                             return vec3d;
                         }
@@ -270,8 +270,8 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
             ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultInstance();
             stack.getOrCreateTag().putString("Color", this.getPFMColor().getSerializedName());
 
-            ItemEntity itemEntity = new ItemEntity(getLevel(), this.getX(), this.getY(), this.getZ(), stack);
-            this.getLevel().addFreshEntity(itemEntity);
+            ItemEntity itemEntity = new ItemEntity(level(), this.getX(), this.getY(), this.getZ(), stack);
+            this.level().addFreshEntity(itemEntity);
         }
     }
 

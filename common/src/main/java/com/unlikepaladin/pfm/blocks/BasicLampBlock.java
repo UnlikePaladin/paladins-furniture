@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -94,8 +94,8 @@ public class BasicLampBlock extends PowerableBlock implements EntityBlock {
     }
 
     @Override
-    public MaterialColor defaultMaterialColor() {
-        return super.defaultMaterialColor();
+    public MapColor defaultMapColor() {
+        return super.defaultMapColor();
     }
 
     private static final VoxelShape SINGLE = Shapes.or(box(7, 1.5, 7, 9, 6, 9), box(3, 0, 3,13, 1.5, 13),box(1.5, 5, 1.5,14.5, 16, 14.5));

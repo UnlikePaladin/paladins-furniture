@@ -7,8 +7,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.item.Item;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.block.SoundType;
 
 public class FurnitureBlock extends PFMMaterial {
     private Item baseMaterial;
@@ -83,10 +82,10 @@ public class FurnitureBlock extends PFMMaterial {
             secondMaterial = secondMaterial.replace("gray", "");
             secondMaterial = "stripped".concat(secondMaterial);
         }
-        if (block.defaultBlockState().getSoundGroup().equals(BlockSoundGroup.NETHER_WOOD) && (!secondMaterial.contains("stem"))) {
+        if (block.defaultBlockState().getSoundType().equals(SoundType.NETHER_WOOD) && (!secondMaterial.contains("stem"))) {
             secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "stem");
         }
-        else if (block.defaultBlockState().getSoundGroup().equals(BlockSoundGroup.WOOD) && !secondMaterial.contains("log")) {
+        else if (block.defaultBlockState().getSoundType().equals(SoundType.WOOD) && !secondMaterial.contains("log")) {
             secondMaterial = secondMaterial.replace("blocks/", "").replace(furnitureName, "log");
         }
         else {
@@ -207,10 +206,10 @@ public class FurnitureBlock extends PFMMaterial {
         if (secondMaterial.contains("raw_")) {
             secondMaterial = secondMaterial.replace("raw_", "");
         }
-        if (block.defaultBlockState().getSoundGroup().equals(BlockSoundGroup.NETHER_WOOD) && !secondMaterial.contains("stem")) {
+        if (block.defaultBlockState().getSoundType().equals(SoundType.NETHER_WOOD) && !secondMaterial.contains("stem")) {
             secondMaterial = secondMaterial.replace(furnitureName, "stem");
         }
-        else if (block.defaultBlockState().getSoundGroup().equals(BlockSoundGroup.WOOD) && !secondMaterial.contains("log")) {
+        else if (block.defaultBlockState().getSoundType().equals(SoundType.WOOD) && !secondMaterial.contains("log")) {
             secondMaterial = secondMaterial.replace(furnitureName, "log");
         }
         else {

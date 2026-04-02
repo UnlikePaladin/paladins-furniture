@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -38,7 +38,7 @@ public class ClassicTableBlock extends Block {
         registerDefaultState(this.getStateDefinition().any());
         this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(ClassicTableBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(ClassicTableBlock.class)){
             WOOD_CLASSIC_TABLES.add(new FurnitureBlock(this, "table_classic"));
         }
         else if (this.getClass().isAssignableFrom(ClassicTableBlock.class)){

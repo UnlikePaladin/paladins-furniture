@@ -6,11 +6,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.world.level.block.BasePressurePlateBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.block.enums.Instrument;
+import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.sound.BlockSoundGroup;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -76,10 +76,10 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
             if (state.getProperties().size() <= 2 && !(baseBlock instanceof SlabBlock) && !name.contains("slab") && !(baseBlock instanceof BasePressurePlateBlock) && !name.contains("pressure_plate")) {
                 // needs to use wood sound type
                 // if (state.getSoundType() == SoundType.WOOD) { //wood from tcon has diff sounds
-                BlockSoundGroup soundGroup = state.getSoundGroup();
-                Instrument instrument = state.getInstrument();
+                SoundType soundGroup = state.getSoundType();
+                NoteBlockInstrument instrument = state.instrument();
                 // and have correct material
-                if (soundGroup == BlockSoundGroup.DEEPSLATE || soundGroup == BlockSoundGroup.POLISHED_DEEPSLATE || soundGroup == BlockSoundGroup.STONE || instrument == Instrument.BASEDRUM) {
+                if (soundGroup == SoundType.DEEPSLATE || soundGroup == SoundType.POLISHED_DEEPSLATE || soundGroup == SoundType.STONE || instrument == NoteBlockInstrument.BASEDRUM) {
                     // we do not allow "/" in the wood name
                     name = name.replace("/", "_");
                     ResourceLocation id = new ResourceLocation(blockId.getNamespace(), name);
