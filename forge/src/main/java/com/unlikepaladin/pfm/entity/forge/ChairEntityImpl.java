@@ -3,7 +3,7 @@ package com.unlikepaladin.pfm.entity.forge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.networking.forge.ToiletUsePacket;
 import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 
 public class ChairEntityImpl {

@@ -3,8 +3,8 @@ package com.unlikepaladin.pfm.registry.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
 import com.unlikepaladin.pfm.networking.neoforge.*;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -16,7 +16,7 @@ import net.neoforged.neoforge.network.simple.SimpleChannel;
 public class NetworkRegistryNeoForge {
     private static final String PROTOCOL_VERSION = "1";
     public static final SimpleChannel PFM_CHANNEL = NetworkRegistry.newSimpleChannel(
-            new Identifier(PaladinFurnitureMod.MOD_ID, "main_channel"),
+            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "main_channel"),
             () -> PROTOCOL_VERSION,
             PROTOCOL_VERSION::equals,
             PROTOCOL_VERSION::equals
@@ -35,10 +35,10 @@ public class NetworkRegistryNeoForge {
 
     @SubscribeEvent
     public static void onServerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayerEntity) {
+        if (event.getEntity() instanceof ServerPlayer) {
             if (PaladinFurnitureMod.getPFMConfig().shouldGiveGuideBook()) {
                 //Give book
-                PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayerEntity) event.getEntity());
+                PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayer) event.getEntity());
             }
             //Sync Config
             NetworkRegistryNeoForge.PFM_CHANNEL.send(PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event::getEntity), new SyncConfigPacket(PaladinFurnitureMod.getPFMConfig().options));

@@ -28,28 +28,21 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.entry.InputIngredient;
-import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
-import me.shedaniel.rei.api.common.registry.RecipeManagerContext;
-import me.shedaniel.rei.api.common.util.CollectionUtils;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.screen.ScreenHandler;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 
 public class FurnitureDisplay implements Display {
     protected FurnitureRecipe recipe;
-    protected Identifier recipeId;
+    protected ResourceLocation recipeId;
     public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "furniture"));
     private int itemsPerInnerRecipe;
-    public FurnitureDisplay(RecipeEntry<FurnitureRecipe> entry) {
+    public FurnitureDisplay(RecipeHolder<FurnitureRecipe> entry) {
         this.recipe = entry.value();
         this.recipeId = entry.id();
         this.itemsPerInnerRecipe = entry.value().getIngredients().size();
@@ -114,7 +107,7 @@ public class FurnitureDisplay implements Display {
     }
 
     @Override
-    public Optional<Identifier> getDisplayLocation() {
+    public Optional<ResourceLocation> getDisplayLocation() {
         return Optional.of(recipeId);
     }
 }

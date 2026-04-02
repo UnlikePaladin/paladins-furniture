@@ -7,11 +7,9 @@ import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.RequirementsStrategy;
-import net.minecraft.advancements.CriterionTriggerInstance;
+import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -28,7 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.function.Consumer;
 
 public class DynamicFurnitureRecipeJsonFactory {
     private final Advancement.Builder builder = Advancement.Builder.advancement();
@@ -165,8 +162,8 @@ public class DynamicFurnitureRecipeJsonFactory {
     }
 
     public void save(RecipeOutput exporter, ResourceLocation recipeId) {
-        this.builder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).requirements(RequirementsStrategy.OR);
-        exporter.accept(new DynamicFurnitureRecipeJsonProvider(recipeId, outputClass, nbtElement, outputCount, group, vanillaIngredients, supportedVariants, variantChildren, builder, new ResourceLocation(recipeId.getNamespace(), "recipes/furniture/" + recipeId.getPath())));
+        this.builder.parent(new ResourceLocation("recipes/root")).addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).requirements(AdvancementRequirements.Strategy.OR);
+        exporter.accept(new DynamicFurnitureRecipeJsonProvider(recipeId, outputClass, nbtElement, outputCount, group, vanillaIngredients, supportedVariants, variantChildren, builder.build(new ResourceLocation(recipeId.getNamespace(), "recipes/furniture/" + recipeId.getPath()))));
     }
 
 
@@ -250,18 +247,18 @@ public class DynamicFurnitureRecipeJsonFactory {
         }
 
         @Override
-        public Identifier id() {
+        public ResourceLocation id() {
             return this.recipeId;
         }
 
         @Override
-        public RecipeSerializer<?> serializer() {
+        public RecipeSerializer<?> type() {
             return RecipeTypes.DYNAMIC_FURNITURE_SERIALIZER;
         }
 
         @Nullable
         @Override
-        public AdvancementEntry advancement() {
+        public AdvancementHolder advancement() {
             return this.advancement;
         }
     }

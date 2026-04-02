@@ -3,7 +3,7 @@ package com.unlikepaladin.pfm.menus.forge;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.networking.forge.MicrowaveActivePacket;
 import com.unlikepaladin.pfm.registry.forge.NetworkRegistryForge;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 
 public class AbstractMicrowaveScreenHandlerImpl {

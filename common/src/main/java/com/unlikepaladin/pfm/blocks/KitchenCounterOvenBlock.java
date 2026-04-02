@@ -104,7 +104,7 @@ public class KitchenCounterOvenBlock extends SmokerBlock implements DynamicRende
 
     @Override
     @Nullable
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
         return createFurnaceTicker(world, type, BlockEntities.KITCHEN_COUNTER_OVEN_BLOCK_ENTITY);
     }
 

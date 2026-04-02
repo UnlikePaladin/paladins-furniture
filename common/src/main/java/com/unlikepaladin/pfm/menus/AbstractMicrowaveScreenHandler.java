@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
@@ -83,7 +84,7 @@ public abstract class AbstractMicrowaveScreenHandler extends RecipeBookMenu<Cont
     }
 
     @Override
-    public boolean recipeMatches(RecipeEntry<? extends Recipe<? super Container>> recipe) {
+    public boolean recipeMatches(RecipeHolder<? extends Recipe<Container>> recipe) {
         return recipe != null && recipe.value() != null && recipe.value().matches(this.container, this.level);
     }
 
@@ -173,7 +174,7 @@ public abstract class AbstractMicrowaveScreenHandler extends RecipeBookMenu<Cont
     }
 
     protected boolean isCookable(ItemStack itemStack) {
-        Optional<? extends RecipeEntry<? extends AbstractCookingRecipe>> optionalRecipeEntry = this.level.getRecipeManager().getRecipeFor(this.recipeType, new SimpleContainer(itemStack), this.level);
+        Optional<? extends RecipeHolder<? extends AbstractCookingRecipe>> optionalRecipeEntry = this.level.getRecipeManager().getRecipeFor(this.recipeType, new SimpleContainer(itemStack), this.level);
         return optionalRecipeEntry != null && optionalRecipeEntry.isPresent() && optionalRecipeEntry.get().value() != null;
     }
 

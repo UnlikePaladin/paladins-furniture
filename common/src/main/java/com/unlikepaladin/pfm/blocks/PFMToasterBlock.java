@@ -68,7 +68,7 @@ public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
 
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return BasicToiletBlock.createTickerHelper(type, BlockEntities.TOASTER_BLOCK_ENTITY, PFMToasterBlockEntity::serverTick);
+        return createTickerHelper(type, BlockEntities.TOASTER_BLOCK_ENTITY, PFMToasterBlockEntity::serverTick);
     }
 
 

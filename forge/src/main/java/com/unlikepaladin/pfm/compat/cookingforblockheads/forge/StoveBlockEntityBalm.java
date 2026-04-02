@@ -1,6 +1,5 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
-import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.registry.BlockEntities;
@@ -20,6 +19,7 @@ import net.blay09.mods.cookingforblockheads.block.OvenBlock;
 import net.blay09.mods.cookingforblockheads.compat.Compat;
 import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
 import net.blay09.mods.cookingforblockheads.tile.IMutableNameable;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -29,10 +29,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.recipe.SmeltingRecipe;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
@@ -281,7 +279,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
             return result;
         } else {
             this.singleSlotRecipeWrapper.setItem(0, itemStack);
-            RecipeEntry<SmeltingRecipe> entry = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level).orElse(null);
+            RecipeHolder<SmeltingRecipe> entry = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level).orElse(null);
             if (entry != null) {
                 result = entry.value().getResultItem(level.registryAccess());
                 if (!result.isEmpty() && result.getItem().isEdible()) {

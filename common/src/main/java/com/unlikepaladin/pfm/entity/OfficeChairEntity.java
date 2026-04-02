@@ -232,8 +232,8 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
     }
 
     @Override
-    public Vec3d getPassengerRidingPos(Entity passenger) {
-        return new Vec3d(0, 0.75, 0);
+    public Vec3 getPassengerRidingPosition(Entity passenger) {
+        return new Vec3(0, 0.75, 0);
     }
 
     @Override

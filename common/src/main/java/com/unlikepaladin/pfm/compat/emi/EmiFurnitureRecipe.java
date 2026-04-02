@@ -21,7 +21,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.inventory.TransientCraftingContainer;
 import net.minecraft.world.item.Item;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 public class EmiFurnitureRecipe extends EmiPatternCraftingRecipe {
 
     private final FurnitureRecipe recipe;
-    public EmiFurnitureRecipe(RecipeEntry<FurnitureRecipe> entry) {
+    public EmiFurnitureRecipe(RecipeHolder<FurnitureRecipe> entry) {
         super(padIngredients(entry.value()), EmiStack.EMPTY,
                 entry.id());
         for (int i = 0; i < input.size(); i++) {

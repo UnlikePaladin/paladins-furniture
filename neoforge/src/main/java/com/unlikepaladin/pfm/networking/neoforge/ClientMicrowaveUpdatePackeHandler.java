@@ -2,10 +2,10 @@ package com.unlikepaladin.pfm.networking.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.client.screens.MicrowaveScreen;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.chat.Component;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.Objects;
@@ -15,15 +15,15 @@ public class ClientMicrowaveUpdatePackeHandler {
     public static void handlePacket(MicrowaveUpdatePacket msg, NetworkEvent.Context ctx) {
         BlockPos blockPos = msg.entityPos;
         boolean active = msg.active;
-        World world = MinecraftClient.getInstance().world;
-        if (world.isChunkLoaded(blockPos)) {
+        Level world = Minecraft.getInstance().level;
+        if (world.hasChunkAt(blockPos)) {
             MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) world.getBlockEntity(blockPos);
-            if (Objects.nonNull(MinecraftClient.getInstance().currentScreen) && MinecraftClient.getInstance().currentScreen instanceof MicrowaveScreen microwaveScreen)  {
-                microwaveScreen.getScreenHandler().setActive(blockEntity, active);
+            if (Objects.nonNull(Minecraft.getInstance().screen) && Minecraft.getInstance().screen instanceof MicrowaveScreen microwaveScreen)  {
+                microwaveScreen.getMenu().setActive(blockEntity, active);
             }
         }
         else {
-            Objects.requireNonNull(ctx.getSender()).sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+            Objects.requireNonNull(ctx.getSender()).displayClientMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"), false);
         }
     }
 }

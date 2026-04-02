@@ -29,9 +29,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Pair;
-import net.minecraft.world.poi.PointOfInterestType;
-import net.minecraft.world.poi.PointOfInterestTypes;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -89,7 +86,7 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
         buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
         sender.sendPacket(NetworkIDs.CONFIG_SYNC_ID, buffer);
     }
-//new Identifier(MOD_ID, "dye_kits")
+//new ResourceLocation(MOD_ID, "dye_kits")
     public static void initializeItemGroup() {
         PaladinFurnitureMod.DYE_KITS.setB(Registry.register(BuiltInRegistries.CREATIVE_MODE_TAB, new ResourceLocation(MOD_ID, "dye_kits"), FabricItemGroup.builder()
                 .title(Component.translatable("itemGroup.pfm.dye_kits"))

@@ -10,6 +10,7 @@ import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.tags.BlockTags;

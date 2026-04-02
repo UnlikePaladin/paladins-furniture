@@ -23,7 +23,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.server.level.ServerLevel;
@@ -94,7 +94,7 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
             if (hit.getDirection() == Direction.UP && world.getBlockEntity(pos) instanceof StoveBlockEntity) {
                 ItemStack itemStack;
                 StoveBlockEntity stoveBlockEntity;
-                Optional<RecipeEntry<CampfireCookingRecipe>> optional;
+                Optional<RecipeHolder<CampfireCookingRecipe>> optional;
                 BlockEntity blockEntity = world.getBlockEntity(pos);
                 if (blockEntity instanceof StoveBlockEntity && (optional = (stoveBlockEntity = (StoveBlockEntity)blockEntity).getRecipeFor(itemStack = player.getItemInHand(hand))).isPresent()) {
                     if (stoveBlockEntity.addItem(player.getAbilities().instabuild ? itemStack.copy() : itemStack, optional.get().value().getCookingTime())) {

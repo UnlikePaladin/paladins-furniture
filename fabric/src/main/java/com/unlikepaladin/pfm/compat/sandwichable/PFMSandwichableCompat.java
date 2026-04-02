@@ -8,7 +8,7 @@ import io.github.foundationgames.sandwichable.recipe.ToastingRecipe;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
@@ -22,7 +22,7 @@ public class PFMSandwichableCompat {
         List<ItemStack> items = pfmToasterBlockEntity.getItems();
         for (int i = 0; i < 2; i++) {
             SimpleContainer inv = new SimpleContainer(pfmToasterBlockEntity.getItems().get(i));
-            Optional<RecipeEntry<ToastingRecipe>> match = world.getRecipeManager().getRecipeFor(ToastingRecipe.Type.INSTANCE, inv, world);
+            Optional<RecipeHolder<ToastingRecipe>> match = world.getRecipeManager().getRecipeFor(ToastingRecipe.Type.INSTANCE, inv, world);
 
             boolean changed = false;
             if(match.isPresent()) {

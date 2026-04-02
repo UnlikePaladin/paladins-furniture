@@ -3,16 +3,16 @@ package com.unlikepaladin.pfm.compat.imm_ptl.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.compat.imm_ptl.forge.entity.PFMMirrorEntity;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,17 +25,17 @@ public class PFMMirrorBlockIP extends MirrorBlock {
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void onPlaced(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.onPlaced(world, pos, state, placer, itemStack);
         if (PaladinFurnitureMod.getPFMConfig().doImmersivePortalsMirrorsSpawn()) {
             if (!world.isClient && world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos)).isEmpty()) {
-                PFMMirrorEntity.createMirror((ServerWorld) world, pos, state.get(FACING).getOpposite());
+                PFMMirrorEntity.createMirror((ServerWorld) world, pos, state.getValue(FACING).getOpposite());
             }
         }
     }
 
     @Override
-    public void onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+    public void onBreak(Level world, BlockPos pos, BlockState state, Player player) {
         super.onBreak(world, pos, state, player);
         if (PaladinFurnitureMod.getPFMConfig().doImmersivePortalsMirrorsSpawn()) {
         List<PFMMirrorEntity> mirrorBlockEntities;
@@ -61,7 +61,7 @@ public class PFMMirrorBlockIP extends MirrorBlock {
                     ((Entity)pfmMirrorEntity).remove(Entity.RemovalReason.KILLED);
                 });
             }
-            PFMMirrorEntity.createMirror((ServerWorld) world, pos, state.get(FACING).getOpposite());
+            PFMMirrorEntity.createMirror((ServerWorld) world, pos, state.getValue(FACING).getOpposite());
             world.updateNeighbors(pos, state.getBlock());
         }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);

@@ -23,7 +23,7 @@ public class InnerTrashcanBlockImpl {
         if (world.hasChunkAt(pos) && world.getBlockEntity(pos) instanceof TrashcanBlockEntityImpl){
             TrashcanBlockEntityImpl trashcanScreenHandler = (TrashcanBlockEntityImpl) world.getBlockEntity(pos);
             MenuProvider namedScreenHandlerFactory = new SimpleMenuProvider(((containerId, inv, player1) -> new TrashcanScreenHandler(trashcanScreenHandler, containerId, inv, trashcanScreenHandler)), Component.translatable("container.pfm.trashcan"));
-            if (player instanceof ServerPlayerEntity) {
+            if (player instanceof ServerPlayer) {
                 ((ServerPlayer)player).openMenu(namedScreenHandlerFactory, packetByteBuf -> {
                     packetByteBuf.writeBlockPos(trashcanScreenHandler.getBlockPos());
                 } );

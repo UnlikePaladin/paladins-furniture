@@ -8,6 +8,7 @@ import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,9 +21,9 @@ public class FreezingDisplay implements Display {
     public List<EntryIngredient> output;
     public int cookTime;
     private final float xp;
-    private final Identifier recipeId;
+    private final ResourceLocation recipeId;
 
-    public FreezingDisplay(RecipeEntry<FreezingRecipe> recipe) {
+    public FreezingDisplay(RecipeHolder<FreezingRecipe> recipe) {
         input = EntryIngredients.ofIngredients(recipe.value().getIngredients());
         output = Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess())));
         cookTime = recipe.value().getCookingTime();
@@ -50,7 +51,7 @@ public class FreezingDisplay implements Display {
     }
 
     @Override
-    public Optional<Identifier> getDisplayLocation() {
+    public Optional<ResourceLocation> getDisplayLocation() {
         return Optional.of(recipeId);
     }
 }

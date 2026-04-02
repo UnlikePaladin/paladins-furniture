@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.networking.neoforge;
 
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.BlockPos;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.NetworkEvent;
 
@@ -29,14 +29,14 @@ public class MicrowaveUpdatePacket {
         ctx.setPacketHandled(true);
     }
 
-    public static void encode(MicrowaveUpdatePacket packet, PacketByteBuf buffer) {
+    public static void encode(MicrowaveUpdatePacket packet, FriendlyByteBuf buffer) {
         BlockPos entityPos = packet.entityPos;
         boolean active = packet.active;
         buffer.writeBlockPos(entityPos);
         buffer.writeBoolean(active);
     }
 
-    public static MicrowaveUpdatePacket decode(PacketByteBuf buffer) {
+    public static MicrowaveUpdatePacket decode(FriendlyByteBuf buffer) {
         BlockPos entityPos = buffer.readBlockPos();
         boolean active = buffer.readBoolean();
         return new MicrowaveUpdatePacket(entityPos, active);

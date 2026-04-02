@@ -31,7 +31,7 @@ public class FreezerScreen extends AbstractContainerScreen<AbstractFreezerScreen
     @Override
     public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         if (this.narrow) {
-            this.renderBg(context, mouseX, mouseY, delta);
+            this.renderBackground(context, mouseX, mouseY, delta);
         } else {
             super.render(context, mouseX, mouseY, delta);
         }

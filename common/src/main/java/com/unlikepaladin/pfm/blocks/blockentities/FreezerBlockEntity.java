@@ -11,10 +11,11 @@ import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.RecipeHolder;
+import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,7 +50,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public class FreezerBlockEntity extends BaseContainerBlockEntity implements MenuProvider, WorldlyContainer, RecipeHolder, StackedContentsCompatible {
+public class FreezerBlockEntity extends BaseContainerBlockEntity implements MenuProvider, WorldlyContainer, RecipeCraftingHolder, StackedContentsCompatible {
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.FREEZER_BLOCK_ENTITY, pos, state);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
@@ -190,7 +191,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         fuelTimes.put(item2, fuelTime);
     }
     private static int getFreezeTime(Level world, RecipeType<? extends AbstractCookingRecipe> recipeType, Container inventory) {
-        return world.getRecipeManager().getRecipeFor(recipeType, inventory, world).map(RecipeEntry::value).map(AbstractCookingRecipe::getCookingTime).orElse(200);
+        return world.getRecipeManager().getRecipeFor(recipeType, inventory, world).map(RecipeHolder::value).map(AbstractCookingRecipe::getCookingTime).orElse(200);
     }
 
     public static boolean canUseAsFuel(ItemStack stack) {
@@ -286,7 +287,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
     }
 
     @Override
-    public void setRecipeUsed(@Nullable RecipeEntry<?> recipe) {
+    public void setRecipeUsed(@Nullable RecipeHolder<?> recipe) {
         if (recipe != null) {
             ResourceLocation identifier = recipe.id();
             this.recipesUsed.addTo(identifier, 1);
@@ -294,7 +295,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
     }
 
     @Override
-    public RecipeEntry<?> getRecipeUsed() {
+    public RecipeHolder<?> getRecipeUsed() {
         return null;
     }
 
@@ -431,7 +432,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         }
         ItemStack itemStack = blockEntity.inventory.get(1);
         if (blockEntity.isActive() || !itemStack.isEmpty() && !blockEntity.inventory.get(0).isEmpty()) {
-            RecipeEntry<?> recipEntry = world.getRecipeManager().getRecipeFor(blockEntity.recipeType, blockEntity, world).orElse(null);
+            RecipeHolder<?> recipEntry = world.getRecipeManager().getRecipeFor(blockEntity.recipeType, blockEntity, world).orElse(null);
             Recipe recipe = recipEntry != null ? recipEntry.value() : null;
             int i = blockEntity.getMaxStackSize();
             if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(world.registryAccess(), recipe, blockEntity.inventory, i)) {

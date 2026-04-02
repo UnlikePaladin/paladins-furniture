@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.resources.metadata.animation.AnimationMetadataSection;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceMetadata;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.inventory.InventoryMenu;
 
@@ -27,7 +28,7 @@ public class PFMSpriteRegistryImpl {
                 ResourceLocation templateId = info.name();
                 ResourceLocation variantSpriteId = new ResourceLocation(templateId.getNamespace(), templateId.getPath().replace("template", variantBase.getPath()));
                 SpriteContents variantInfo = new SpriteContents(variantSpriteId, new FrameSize(info.width(), info.height()),
-                        image, AnimationMetadataSection.EMPTY);
+                        image, ResourceMetadata.EMPTY);
                 ((PFMSpriteContentExtensions)variantInfo).pfm$setInitialized(false);
                 infos.add(new Tuple<>(variantSpriteId, variantInfo));
             }

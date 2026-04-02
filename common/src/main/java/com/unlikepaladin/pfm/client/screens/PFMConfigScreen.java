@@ -122,7 +122,7 @@ public class PFMConfigScreen extends Screen {
 
 
     @Override
-    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void renderBackground(GuiGraphics context, int mouseX, int mouseY, float delta) {
         this.renderDirtBackground(context);
     }
 }

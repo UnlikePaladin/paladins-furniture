@@ -3,20 +3,20 @@ package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.FreezerBlockEntityBalm;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.capabilities.Capability;
 import net.neoforged.neoforge.common.util.LazyOptional;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class FreezerBlockEntityImpl extends FreezerBlockEntity {
+
     private final LazyOptional<IItemHandlerModifiable>[] handlers;
 
     public FreezerBlockEntityImpl(BlockPos pos, BlockState state) {
@@ -24,7 +24,7 @@ public class FreezerBlockEntityImpl extends FreezerBlockEntity {
         this.handlers = SidedInvWrapper.create(this, Direction.UP, Direction.DOWN, Direction.NORTH);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends FreezerBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends FreezerBlockEntity> getFactory() {
         return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? FreezerBlockEntityBalm::new : FreezerBlockEntityImpl::new;
     }
 

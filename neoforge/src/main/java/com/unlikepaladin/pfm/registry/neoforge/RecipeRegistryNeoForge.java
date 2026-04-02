@@ -8,10 +8,10 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.SimpleFurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.neoforge.FurnitureSerializerNeoForge;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.recipe.CookingRecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SimpleCookingSerializer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -22,9 +22,9 @@ public class RecipeRegistryNeoForge {
 
     @SubscribeEvent
     public static void registerRecipeSerializers(RegisterEvent event) {
-        event.register(Registries.RECIPE_SERIALIZER.getKey(), recipeSerializerRegisterHelper -> {
+        event.register(BuiltInRegistries.RECIPE_SERIALIZER.key(), recipeSerializerRegisterHelper -> {
             recipeSerializerRegisterHelper.register(
-                    RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new CookingRecipeSerializer<>(FreezingRecipe::new, 200)
+                    RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new SimpleCookingSerializer<>(FreezingRecipe::new, 200)
             );
             recipeSerializerRegisterHelper.register(
                     RecipeTypes.SIMPLE_FURNITURE_ID, RecipeTypes.SIMPLE_FURNITURE_SERIALIZER = new FurnitureSerializerNeoForge<>(new SimpleFurnitureRecipe.Serializer())
@@ -42,7 +42,7 @@ public class RecipeRegistryNeoForge {
 
     @SubscribeEvent
     public static void registerRecipeTypes(RegisterEvent event){
-        event.register(Registries.RECIPE_TYPE.getKey(), recipeTypeRegisterHelper -> {
+        event.register(BuiltInRegistries.RECIPE_TYPE.key(), recipeTypeRegisterHelper -> {
             recipeTypeRegisterHelper.register(RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE = new RecipeType<>() {
                 @Override
                 public String toString() {

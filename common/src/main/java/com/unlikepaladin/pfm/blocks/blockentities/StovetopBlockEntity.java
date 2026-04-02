@@ -16,7 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.Containers;
@@ -143,7 +143,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         return stack;
     }
 
-    public Optional<RecipeEntry<CampfireCookingRecipe>> getRecipeFor(ItemStack item) {
+    public Optional<RecipeHolder<CampfireCookingRecipe>> getRecipeFor(ItemStack item) {
         if (this.itemsBeingCooked.stream().noneMatch(ItemStack::isEmpty)) {
             return Optional.empty();
         }

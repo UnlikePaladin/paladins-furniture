@@ -18,7 +18,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -71,7 +71,7 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack itemStack;
         StovetopBlockEntity stovetopBlockEntity;
-        Optional<RecipeEntry<CampfireCookingRecipe>> optional;
+        Optional<RecipeHolder<CampfireCookingRecipe>> optional;
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof StovetopBlockEntity && (optional = (stovetopBlockEntity = (StovetopBlockEntity)blockEntity).getRecipeFor(itemStack = player.getItemInHand(hand))).isPresent()) {
             if (!world.isClientSide && stovetopBlockEntity.addItem(player.getAbilities().instabuild ? itemStack.copy() : itemStack, optional.get().value().getCookingTime())) {

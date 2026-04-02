@@ -10,6 +10,7 @@ import com.unlikepaladin.pfm.ducks.PFMSpriteExtensions;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.*;
+import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.inventory.InventoryMenu;

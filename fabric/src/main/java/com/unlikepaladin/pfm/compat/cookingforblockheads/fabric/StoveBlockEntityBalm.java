@@ -29,9 +29,9 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.Container;
-import net.minecraft.recipe.SmeltingRecipe;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -279,7 +279,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements IKitchenSme
             return result;
         } else {
             this.singleSlotRecipeWrapper.setItem(0, itemStack);
-            RecipeEntry<SmeltingRecipe> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level).orElse(null);
+            RecipeHolder<SmeltingRecipe> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level).orElse(null);
             if (recipe != null) {
                 result = recipe.value().getResultItem(level.registryAccess());
                 if (!result.isEmpty() && result.getItem().isEdible()) {

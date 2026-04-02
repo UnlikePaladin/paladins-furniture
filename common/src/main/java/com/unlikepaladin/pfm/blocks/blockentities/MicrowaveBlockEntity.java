@@ -7,10 +7,11 @@ import com.unlikepaladin.pfm.registry.SoundIDs;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.RecipeHolder;
+import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -43,7 +44,7 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
-public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements MenuProvider, WorldlyContainer, RecipeHolder {
+public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements MenuProvider, WorldlyContainer, RecipeCraftingHolder {
     public boolean isActive = false;
 
     public MicrowaveBlockEntity(BlockPos pos, BlockState state) {
@@ -159,7 +160,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     }
 
     private static int getCookingTime(Level level, RecipeType<? extends AbstractCookingRecipe> recipeType, Container inventory) {
-        return level.getRecipeManager().getRecipeFor(recipeType, inventory, level).map(RecipeEntry::value).map(AbstractCookingRecipe::getCookingTime).orElse(200);
+        return level.getRecipeManager().getRecipeFor(recipeType, inventory, level).map(RecipeHolder::value).map(AbstractCookingRecipe::getCookingTime).orElse(200);
     }
 
     @Override
@@ -292,11 +293,11 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     }
 
     @Override
-    public RecipeEntry<?> getRecipeUsed() {
+    public RecipeHolder<?> getRecipeUsed() {
         return null;
     }
 
-    public RecipeEntry<?> getRecipe() {
+    public RecipeHolder<?> getRecipe() {
         return level.getRecipeManager().getRecipeFor(this.recipeType, this, level).orElse(null);
     }
     public static boolean canAcceptRecipeOutput(RegistryAccess registryManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
@@ -321,7 +322,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     }
 
     @Override
-    public void setRecipeUsed(@Nullable RecipeEntry<?> recipe) {
+    public void setRecipeUsed(@Nullable RecipeHolder<?> recipe) {
         if (recipe != null) {
             ResourceLocation identifier = recipe.id();
             this.recipesUsed.addTo(identifier, 1);
@@ -348,7 +349,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
         boolean bl2 = false;
         ItemStack itemStack = blockEntity.container.get(0);
         if (blockEntity.isActive || !itemStack.isEmpty()) {
-            RecipeEntry<? extends AbstractCookingRecipe> recipeEntry = level.getRecipeManager().getRecipeFor(blockEntity.recipeType, blockEntity, level).orElse(null);
+            RecipeHolder<? extends AbstractCookingRecipe> recipeEntry = level.getRecipeManager().getRecipeFor(blockEntity.recipeType, blockEntity, level).orElse(null);
             Recipe recipe = recipeEntry != null ? recipeEntry.value() : null;
             int i = blockEntity.getMaxStackSize();
             if (blockEntity.isActive && canAcceptRecipeOutput(level.registryAccess(), recipe, blockEntity.container, i)) {

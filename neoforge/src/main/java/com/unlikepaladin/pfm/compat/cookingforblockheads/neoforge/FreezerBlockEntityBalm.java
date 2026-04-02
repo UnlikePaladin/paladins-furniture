@@ -4,7 +4,6 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
-import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.neoforge.FreezerBlockEntityImpl;
 import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
@@ -19,11 +18,13 @@ import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IngredientPredicate;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.Container;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
 import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.capabilities.Capability;
 import net.neoforged.neoforge.common.util.LazyOptional;
@@ -31,8 +32,8 @@ import net.neoforged.neoforge.items.wrapper.InvWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import net.blay09.mods.cookingforblockheads.api.SourceItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import java.util.*;
 
@@ -72,7 +73,7 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements Ba
     }
 
     @Override
-    public Inventory getContainer() {
+    public Container getContainer() {
         return this;
     }
 
@@ -121,8 +122,8 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements Ba
         Capability<?> capability = forgeProviders.getCapability(provider.getProviderClass());
         Objects.requireNonNull(provider);
         capabilities.put(capability, LazyOptional.of(provider::getInstance));
-        if (provider.getProviderClass() == Inventory.class) {
-            capabilities.put(Capabilities.ITEM_HANDLER, LazyOptional.of(() -> new InvWrapper((Inventory)provider.getInstance())));
+        if (provider.getProviderClass() == Container.class) {
+            capabilities.put(Capabilities.ITEM_HANDLER, LazyOptional.of(() -> new InvWrapper((Container)provider.getInstance())));
         } else if (provider.getProviderClass() == FluidTank.class) {
             capabilities.put(Capabilities.FLUID_HANDLER, LazyOptional.of(() -> new NeoForgeFluidTank((FluidTank)provider.getInstance())));
         } else if (provider.getProviderClass() == EnergyStorage.class) {

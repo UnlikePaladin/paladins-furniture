@@ -1,6 +1,6 @@
 package com.unlikepaladin.pfm.compat;
 
-import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.recipes.RecipeOutput;
 
 import java.util.Optional;
 

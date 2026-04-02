@@ -1,33 +1,24 @@
 package com.unlikepaladin.pfm.recipes;
 
 import com.google.gson.*;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
-import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
@@ -40,7 +31,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     public SimpleFurnitureRecipe(String group, ItemStack output, List<Ingredient> input) {
         this.group = group;
         this.output = output;
-        this.input = DefaultedList.copyOf(Ingredient.EMPTY, input.toArray(Ingredient[]::new));
+        this.input = NonNullList.of(Ingredient.EMPTY, input.toArray(Ingredient[]::new));
     }
 
     @Override
@@ -103,7 +94,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
 
     @Override
     public ItemStack getToastSymbol() {
-        return PaladinFurnitureModBlocksItems.WORKING_TABLE.asItem().getDefaultStack();
+        return PaladinFurnitureModBlocksItems.WORKING_TABLE.asItem().getDefaultInstance();
     }
 
     @Override
@@ -133,22 +124,22 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
                 simpleFurnitureRecipeInstance.group(
                         Codec.STRING.optionalFieldOf("group", "").forGetter(SimpleFurnitureRecipe::getGroup),
                         FURNITURE_RESULT.fieldOf("result").forGetter(recipe -> recipe.output),
-                        Ingredient.DISALLOW_EMPTY_CODEC.listOf().fieldOf("ingredients").forGetter(SimpleFurnitureRecipe::getIngredients))
+                        Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").forGetter(SimpleFurnitureRecipe::getIngredients))
                         .apply(simpleFurnitureRecipeInstance, SimpleFurnitureRecipe::new)
         );
 
-        private static final Codec<Item> CRAFTING_RESULT_ITEM = Codecs.validate(Registries.ITEM.getCodec(), (item) -> {
+        private static final Codec<Item> CRAFTING_RESULT_ITEM = ExtraCodecs.validate(BuiltInRegistries.ITEM.byNameCodec(), (item) -> {
             return item == Items.AIR ? DataResult.error(() -> {
                 return "Crafting result must not be minecraft:air";
             }) : DataResult.success(item);
         });
 
         public static final Codec<ItemStack> FURNITURE_RESULT = RecordCodecBuilder.create((instance) -> {
-            return instance.group(CRAFTING_RESULT_ITEM.fieldOf("item").forGetter(ItemStack::getItem), Codecs.createStrictOptionalFieldCodec(Codecs.POSITIVE_INT, "count", 1)
-                            .forGetter(ItemStack::getCount), Codecs.createStrictOptionalFieldCodec(NbtCompound.CODEC, "tag", new NbtCompound()).forGetter(ItemStack::getNbt))
+            return instance.group(CRAFTING_RESULT_ITEM.fieldOf("item").forGetter(ItemStack::getItem), ExtraCodecs.strictOptionalField(ExtraCodecs.POSITIVE_INT, "count", 1)
+                            .forGetter(ItemStack::getCount), ExtraCodecs.strictOptionalField(CompoundTag.CODEC, "tag", new CompoundTag()).forGetter(ItemStack::getTag))
                     .apply(instance, (item, integer, nbtElement) -> {
                 ItemStack stack = new ItemStack(item, integer);
-                stack.setNbt(nbtElement);
+                stack.setTag(nbtElement);
                 return stack;
             });
         });
@@ -159,8 +150,8 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
         }
 
         @Override
-        public SimpleFurnitureRecipe fromNetwork(ResourceLocation identifier, FriendlyByteBuf packetByteBuf) {
-            String string = packetByteBuf.readString();
+        public SimpleFurnitureRecipe fromNetwork(FriendlyByteBuf packetByteBuf) {
+            String string = packetByteBuf.readUtf();
             int i = packetByteBuf.readVarInt();
             NonNullList<Ingredient> defaultedList = NonNullList.withSize(i, Ingredient.EMPTY);
             for (int j = 0; j < defaultedList.size(); ++j) {

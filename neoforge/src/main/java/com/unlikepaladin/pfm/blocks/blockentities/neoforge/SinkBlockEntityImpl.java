@@ -3,10 +3,10 @@ package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.SinkBlockEntityBalm;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class SinkBlockEntityImpl {
-    public static BlockEntityType.BlockEntityFactory<? extends SinkBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends SinkBlockEntity> getFactory() {
         return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? SinkBlockEntityBalm::new : SinkBlockEntity::new;
     }
 }

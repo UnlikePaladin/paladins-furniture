@@ -57,7 +57,7 @@ public class PFMAssetGenerator extends PFMGenerator {
 
             if (!cached.equals(current)) {
                 List<PFMProvider> providers = new ArrayList<>();
-                //MinecraftClient.getInstance().setOverlay(new PFMGeneratingOverlay(MinecraftClient.getInstance().getOverlay(), this, MinecraftClient.getInstance(), true));
+                //Minecraft.getInstance().setOverlay(new PFMGeneratingOverlay(Minecraft.getInstance().getOverlay(), this, Minecraft.getInstance(), true));
                 getLogger().info("Starting PFM Asset Generation");
                 PFMFileUtil.deleteDir(output.toFile());
                 PFMRuntimeResources.createDirIfNeeded(output);

@@ -5,7 +5,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
@@ -24,7 +24,7 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
     public void setup(Level level, IVariableProvider variables) {
         String recipeId = variables.get("recipe").asString();
         RecipeManager manager = level.getRecipeManager();
-        Recipe<?> recipe = manager.byKey(new ResourceLocation(recipeId)).map(RecipeEntry::value).orElse(null);
+        Recipe<?> recipe = manager.byKey(new ResourceLocation(recipeId)).map(RecipeHolder::value).orElse(null);
         this.recipe = recipe instanceof FurnitureRecipe ? (FurnitureRecipe) recipe : null;
         this.variant = variables.has("variant") ? ResourceLocation.tryParse(variables.get("variant").asString()) : null;
     }

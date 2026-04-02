@@ -6,17 +6,17 @@ import com.unlikepaladin.pfm.blocks.blockentities.neoforge.StoveBlockEntityImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
 public class StoveBlockImpl {
@@ -24,37 +24,37 @@ public class StoveBlockImpl {
         return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? PFMCookingForBlockHeadsCompat.getStoveBlockEntity(pos , state) : new StoveBlockEntityImpl(BlockEntities.STOVE_BLOCK_ENTITY, pos, state);
     }
 
-    public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
+    public static void openMenuScreen(Level world, BlockPos pos, Player player) {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             PFMCookingForBlockHeadsCompat.openMenuScreen(world, pos, player);
         } else {
-            NamedScreenHandlerFactory screenHandlerFactory = world.getBlockState(pos).createScreenHandlerFactory(world, pos);
+            MenuProvider screenHandlerFactory = world.getBlockState(pos).getMenuProvider(world, pos);
             if (screenHandlerFactory != null) {
                 // With this call the server will request the client to open the appropriate Screenhandler
-                player.openHandledScreen(screenHandlerFactory);
-                player.incrementStat(Statistics.STOVE_OPENED);
+                player.openMenu(screenHandlerFactory);
+                player.awardStat(Statistics.STOVE_OPENED);
             }
         }
     }
 
-    public static <T extends BlockEntity> BlockEntityTicker<T> getModdedTicker(World world, BlockState state, BlockEntityType<T> type) {
+    public static <T extends BlockEntity> BlockEntityTicker<T> getModdedTicker(Level world, BlockState state, BlockEntityType<T> type) {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             return PFMCookingForBlockHeadsCompat.getStoveTicker(world, type);
         } else {
-            if (world.isClient) {
-                return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::clientTick);
+            if (world.isClientSide) {
+                return createTickerHelper(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::clientTick);
             } else {
-                return checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::litServerTick);
+                return createTickerHelper(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntity::litServerTick);
             }
         }
     }
 
     @Nullable
-    public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> checkType(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
+    public static <E extends BlockEntity, A extends BlockEntity> BlockEntityTicker<A> createTickerHelper(BlockEntityType<A> givenType, BlockEntityType<E> expectedType, BlockEntityTicker<? super E> ticker) {
         return expectedType == givenType ? (BlockEntityTicker<A>) ticker : null;
     }
 
-    public static ActionResult onUseCookingForBlockheads(BlockState blockState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult) {
+    public static InteractionResult onUseCookingForBlockheads(BlockState blockState, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         return PFMCookingForBlockHeadsCompat.onUseStove(blockState, world, pos, player, hand, blockHitResult);
     }
 }

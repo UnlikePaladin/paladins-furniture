@@ -5,6 +5,7 @@ import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.entries.LootPoolEntry;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntries;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -25,7 +26,7 @@ public abstract class PFMLootPool$BuilderMixin {
 
     @Inject(method = "build", at = @At("HEAD"))
     private void setPFMName(CallbackInfoReturnable<LootTable> cir) {
-        List<LootPoolEntry> entryList = entries.build();
+        List<LootPoolEntryContainer> entryList = entries.build();
         if ( PFMGenerator.isDataRunning() && !entryList.isEmpty() && entryList.get(0).getType().equals(LootPoolEntries.ITEM)) {
             PFMLootItemAccessor entry = (PFMLootItemAccessor) entryList.get(0);
             name(ForgeRegistries.ITEMS.getKey(entry.getItem().value()).getPath());

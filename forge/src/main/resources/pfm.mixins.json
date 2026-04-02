@@ -13,9 +13,11 @@
     "PFMCookingPotBlockEntityMixin",
     "PFMLootItemAccessor",
     "PFMLootPool$BuilderMixin",
-    "PFMMinecraftServerMixin",
     "PFMSaveLoaderMixin",
     "PFMSimpleReloadableResourceManagerMixin"
+  ],
+  "server": [
+    "PFMMinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

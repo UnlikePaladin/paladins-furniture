@@ -1,11 +1,13 @@
 package com.unlikepaladin.pfm.networking.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.NetworkEvent;
 import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.Objects;
@@ -19,16 +21,16 @@ public class TrashcanClearPacket {
 
     public static void handle(TrashcanClearPacket msg, NetworkEvent.Context ctx) {
         ctx.enqueueWork(() -> {
-            ServerPlayerEntity player = ctx.getSender();
+            ServerPlayer player = ctx.getSender();
             BlockPos entityPos = msg.blockPos;
-            World world = Objects.requireNonNull(player).getEntityWorld();
+            Level world = Objects.requireNonNull(player).level();
             ctx.enqueueWork(() -> {
-                if (world.isChunkLoaded(entityPos)) {
+                if (world.hasChunkAt(entityPos)) {
                     TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(entityPos);
-                    trashcanBlockEntity.clear();
+                    trashcanBlockEntity.clearContent();
                 }
                 else {
-                    player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+                    player.displayClientMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"), false);
                 }
             });
         });
@@ -36,11 +38,11 @@ public class TrashcanClearPacket {
     }
 
 
-    public static void encode(TrashcanClearPacket packet, PacketByteBuf buffer) {
+    public static void encode(TrashcanClearPacket packet, FriendlyByteBuf buffer) {
         buffer.writeBlockPos(packet.blockPos);
     }
 
-    public static TrashcanClearPacket decode(PacketByteBuf buffer) {
+    public static TrashcanClearPacket decode(FriendlyByteBuf buffer) {
         BlockPos blockPos = buffer.readBlockPos();
         return new TrashcanClearPacket(blockPos);
     }

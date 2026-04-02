@@ -31,6 +31,6 @@ public abstract class PFMTextureAtlasSpriteMixin implements PFMSpriteExtensions 
 
     @Override
     public ResourceLocation pfm$getId() {
-        return contents.getId();
+        return contents.name();
     }
 }

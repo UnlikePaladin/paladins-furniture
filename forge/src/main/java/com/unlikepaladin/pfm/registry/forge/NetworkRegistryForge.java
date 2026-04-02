@@ -4,9 +4,9 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
 import com.unlikepaladin.pfm.networking.forge.*;
 import io.netty.util.AttributeKey;
-import net.minecraft.server.network.ServerPlayerConfigurationTask;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.network.ConfigurationTask;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.network.GatherLoginConfigurationTasksEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -45,7 +45,7 @@ public class NetworkRegistryForge {
 
     @SubscribeEvent
     public static void onConfigSync(GatherLoginConfigurationTasksEvent event) {
-        event.addTask(new SimpleConfigurationTask(new ServerPlayerConfigurationTask.Key("pfm:sync_config"), (context) -> {
+        event.addTask(new SimpleConfigurationTask(new ConfigurationTask.Type("pfm:sync_config"), (context) -> {
             NetworkRegistryForge.PFM_CHANNEL.send(new SyncConfigPacket(PaladinFurnitureMod.getPFMConfig().options), context.getConnection());
         }));
     }

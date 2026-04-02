@@ -2,13 +2,13 @@ package com.unlikepaladin.pfm.recipes.neoforge;
 
 import com.mojang.serialization.Codec;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.jetbrains.annotations.Nullable;
 
-public class FurnitureSerializerNeoForge <J extends Recipe<I>, T extends RecipeSerializer<J>, I extends Inventory> implements RecipeSerializer<J> {
+public class FurnitureSerializerNeoForge <J extends Recipe<I>, T extends RecipeSerializer<J>, I extends Container> implements RecipeSerializer<J> {
     public FurnitureSerializerNeoForge(T recipeSerializer) {
         this.serializer = recipeSerializer;
     }
@@ -20,13 +20,13 @@ public class FurnitureSerializerNeoForge <J extends Recipe<I>, T extends RecipeS
     }
 
     @Override
-    public @Nullable J read(PacketByteBuf buf) {
-        return serializer.read(buf);
+    public @Nullable J fromNetwork(FriendlyByteBuf buf) {
+        return serializer.fromNetwork(buf);
     }
 
     @Override
-    public void write(PacketByteBuf buf, J recipe) {
-        serializer.write(buf, recipe);
+    public void toNetwork(FriendlyByteBuf buf, J recipe) {
+        serializer.toNetwork(buf, recipe);
     }
 }
 

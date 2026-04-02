@@ -9,7 +9,7 @@ import dev.emi.emi.api.widget.WidgetHolder;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 
@@ -50,7 +50,7 @@ public class EmiFreezingRecipe implements EmiRecipe {
         return 38;
     }
 
-    public EmiFreezingRecipe(RecipeEntry<FreezingRecipe> entry) {
+    public EmiFreezingRecipe(RecipeHolder<FreezingRecipe> entry) {
         FreezingRecipe recipe = entry.value();
         input = EmiIngredient.of(recipe.getIngredients().get(0));
         output = EmiStack.of(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));

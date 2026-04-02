@@ -8,9 +8,11 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.flag.FeatureFlags;
 import org.spongepowered.asm.mixin.Final;
@@ -35,10 +37,10 @@ public class PFMModResourcePackCreatorMixin {
     private void addPFMResources(Consumer<Pack> consumer, CallbackInfo ci) {
         if (type == net.minecraft.server.packs.PackType.CLIENT_RESOURCES) {
             AbstractBakedModel.reloading = true;
-            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Assets for PFM"), SharedConstants.getCurrentVersion().getPackVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
-            Pack.ResourcesSupplier packFactory = new ResourcePackProfile.PackFactory() {
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Assets for PFM"), SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES), Optional.empty());
+            Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
                 @Override
-                public ResourcePack open(String name) {
+                public PackResources openPrimary(String name) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.areAssetsRunning())
                             PFMRuntimeResources.prepareAndRunAssetGen(false);
@@ -46,17 +48,17 @@ public class PFMModResourcePackCreatorMixin {
                 }
 
                 @Override
-                public ResourcePack openWithOverlays(String name, ResourcePackProfile.Metadata metadata) {
-                    return this.open(name);
+                public PackResources openFull(String name, Pack.Info metadata) {
+                    return this.openPrimary(name);
                 }
             };
             Pack.Info metadata = new Pack.Info(Component.literal("Runtime Generated Assets for PFM"), PackCompatibility.COMPATIBLE, FeatureFlags.DEFAULT_FLAGS, List.of());
-            consumer.accept(ResourcePackProfile.of("pfm-asset-resources", Component.literal("PFM Assets"), true,  packFactory, metadata, Pack.Position.BOTTOM, false, ResourcePackSource.NONE));
-        } else if (type == ResourceType.SERVER_DATA) {
-            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Data for PFM"), SharedConstants.getCurrentVersion().getPackVersion(ResourceType.SERVER_DATA), Optional.empty());
-            Pack.ResourcesSupplier packFactory = new ResourcePackProfile.PackFactory() {
+            consumer.accept(Pack.create("pfm-asset-resources", Component.literal("PFM Assets"), true,  packFactory, metadata, Pack.Position.BOTTOM, false, PackSource.DEFAULT));
+        } else if (type == PackType.SERVER_DATA) {
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Data for PFM"), SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA), Optional.empty());
+            Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
                 @Override
-                public ResourcePack open(String name) {
+                public PackResources openPrimary(String name) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.isDataRunning())
                             PFMRuntimeResources.prepareAndRunDataGen(false);
@@ -64,12 +66,12 @@ public class PFMModResourcePackCreatorMixin {
                 }
 
                 @Override
-                public ResourcePack openWithOverlays(String name, ResourcePackProfile.Metadata metadata) {
-                    return this.open(name);
+                public PackResources openFull(String name, Pack.Info metadata) {
+                    return this.openPrimary(name);
                 }
             };
             Pack.Info metadata = new Pack.Info(Component.literal("Runtime Generated Data for PFM"), PackCompatibility.COMPATIBLE, FeatureFlags.DEFAULT_FLAGS, List.of());
-            consumer.accept(ResourcePackProfile.of("pfm-data-resources", Component.literal("PFM Data"), true,  packFactory, metadata, Pack.Position.BOTTOM, false, ResourcePackSource.NONE));
+            consumer.accept(Pack.create("pfm-data-resources", Component.literal("PFM Data"), true,  packFactory, metadata, Pack.Position.BOTTOM, false, PackSource.DEFAULT));
         }
     }
 }

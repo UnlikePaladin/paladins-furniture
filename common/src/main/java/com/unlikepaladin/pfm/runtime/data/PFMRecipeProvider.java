@@ -15,12 +15,15 @@ import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.*;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
@@ -31,8 +34,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
@@ -60,7 +61,7 @@ public class PFMRecipeProvider extends PFMProvider {
         WorkbenchScreenHandler.ALL_RECIPES.clear();
         generateRecipes(new RecipeOutput() {
             @Override
-            public void accept(RecipeJsonProvider recipeJsonProvider) {
+            public void accept(FinishedRecipe recipeJsonProvider) {
                 if (!set.add(recipeJsonProvider.id())) {
                     getParent().getLogger().error("Duplicate recipe " + recipeJsonProvider.id());
                     throw new IllegalStateException("Duplicate recipe " + recipeJsonProvider.id());
@@ -70,21 +71,21 @@ public class PFMRecipeProvider extends PFMProvider {
                     throw new IllegalStateException("Recipe Json Provider is null");
                 }
                 Path recipePath = path.resolve("data/" + recipeJsonProvider.id().getNamespace() + "/recipes/" + recipeJsonProvider.id().getPath() + ".json");
-                enqueueJsonWrite(getWriteQueue(), recipePath, recipeJsonProvider.toJson());
-                AdvancementEntry entry = recipeJsonProvider.advancement();
+                enqueueJsonWrite(getWriteQueue(), recipePath, recipeJsonProvider.serializeRecipe());
+                AdvancementHolder entry = recipeJsonProvider.advancement();
                 if (entry != null) {
                     Path advancementPath = path.resolve("data/" + recipeJsonProvider.id().getNamespace() + "/advancements/" + recipeJsonProvider.advancement().id().getPath() + ".json");
-                    enqueueJsonWrite(getWriteQueue(), advancementPath, entry.value().toJson());
+                    enqueueJsonWrite(getWriteQueue(), advancementPath, entry.value().serializeToJson());
                 }
             }
 
             @Override
-            public Advancement.Builder getAdvancementBuilder() {
-                return Advancement.Builder.createUntelemetered().parent(CraftingRecipeJsonBuilder.ROOT);
+            public Advancement.Builder advancement() {
+                return Advancement.Builder.recipeAdvancement().parent(RecipeBuilder.ROOT_RECIPE_ADVANCEMENT);
             }
         });
 
-        enqueueJsonWrite(getWriteQueue(), path.resolve("data/pfm/advancements/recipes/root.json"), Advancement.Builder.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).build(new ResourceLocation("root")).value().toJson());
+        enqueueJsonWrite(getWriteQueue(), path.resolve("data/pfm/advancements/recipes/root.json"), Advancement.Builder.advancement().addCriterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).build(new ResourceLocation("root")).value().serializeToJson());
         waitForWrite();
         endProviderRun();
     }
@@ -348,7 +349,7 @@ public class PFMRecipeProvider extends PFMProvider {
         }
     }
 
-    public static void offerOfficeChairRecipes(RecipeExporter exporter) {
+    public static void offerOfficeChairRecipes(RecipeOutput exporter) {
         for (DyeColor color : DyeColor.values()) {
             CompoundTag tag = new CompoundTag();
             tag.putString("Color", color.getSerializedName());
@@ -641,7 +642,7 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     private static Criterion<InventoryChangeTrigger.TriggerInstance> conditionsFromTag(TagKey<Item> tag) {
-        return conditionsFromItemPredicates(ItemPredicate.Builder.create().tag(tag).build());
+        return conditionsFromItemPredicates(ItemPredicate.Builder.item().of(tag).build());
     }
 
     public static Criterion<InventoryChangeTrigger.TriggerInstance> conditionsFromPredicates(ItemPredicate.Builder... predicates) {
@@ -649,7 +650,7 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static Criterion<InventoryChangeTrigger.TriggerInstance> conditionsFromItemPredicates(ItemPredicate... predicates) {
-        return Criteria.INVENTORY_CHANGED.create(new InventoryChangedCriterion.Conditions(Optional.empty(), NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, NumberRange.IntRange.ANY, List.of(predicates)));
+        return CriteriaTriggers.INVENTORY_CHANGED.createCriterion(new InventoryChangeTrigger.TriggerInstance(Optional.empty(), MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, MinMaxBounds.Ints.ANY, List.of(predicates)));
     }
 
     private static String getItemPath(Ingredient item) {

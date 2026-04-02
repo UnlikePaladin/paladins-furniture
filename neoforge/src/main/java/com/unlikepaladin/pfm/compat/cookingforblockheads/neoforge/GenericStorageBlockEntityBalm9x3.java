@@ -16,10 +16,10 @@ import net.blay09.mods.balm.neoforge.fluid.NeoForgeFluidTank;
 import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Container;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.capabilities.Capabilities;
 import net.neoforged.neoforge.common.capabilities.Capability;
 import net.neoforged.neoforge.common.util.LazyOptional;
@@ -38,7 +38,7 @@ public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9
     }
 
     @Override
-    public Inventory getContainer() {
+    public Container getContainer() {
         return this;
     }
 
@@ -87,8 +87,8 @@ public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9
         Capability<?> capability = forgeProviders.getCapability(provider.getProviderClass());
         Objects.requireNonNull(provider);
         capabilities.put(capability, LazyOptional.of(provider::getInstance));
-        if (provider.getProviderClass() == Inventory.class) {
-            capabilities.put(Capabilities.ITEM_HANDLER, LazyOptional.of(() -> new InvWrapper((Inventory)provider.getInstance())));
+        if (provider.getProviderClass() == Container.class) {
+            capabilities.put(Capabilities.ITEM_HANDLER, LazyOptional.of(() -> new InvWrapper((Container)provider.getInstance())));
         } else if (provider.getProviderClass() == FluidTank.class) {
             capabilities.put(Capabilities.FLUID_HANDLER, LazyOptional.of(() -> new NeoForgeFluidTank((FluidTank)provider.getInstance())));
         } else if (provider.getProviderClass() == EnergyStorage.class) {

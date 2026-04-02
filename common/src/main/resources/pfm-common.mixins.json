@@ -14,11 +14,12 @@
     "PFMMixinDedicatedServer"
   ],
   "client": [
-    "PFMModelManagerMixin",
+    "PFMSpriteLoaderMixin",
     "PFMLanguageManagerAccessor",
+    "PFMLoadingOverlayMixin",
     "PFMMissingSpriteAccessor",
     "PFMMixinClientPacketListener",
-    "PFMLoadingOverlayMixin",
+    "PFMModelManagerMixin",
     "PFMSimpleReloadableResourceManagerMixin",
     "PFMSpriteAtlasTextureMixin",
     "PFMSpriteContentsAccessor",

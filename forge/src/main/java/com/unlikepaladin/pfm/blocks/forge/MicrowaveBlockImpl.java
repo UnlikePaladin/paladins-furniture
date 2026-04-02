@@ -21,7 +21,7 @@ public class MicrowaveBlockImpl {
     public static void openScreen(Player player, BlockState state, Level world, BlockPos pos) {
         if (world.hasChunkAt(pos) && world.getBlockEntity(pos) instanceof MicrowaveBlockEntityImpl microwaveBlockEntity){
             MenuProvider namedScreenHandlerFactory = new SimpleMenuProvider(((containerId, inv, player1) -> new MicrowaveScreenHandler(microwaveBlockEntity, containerId, inv, microwaveBlockEntity, new MicrowavePropertyDelegate(microwaveBlockEntity, 2))), Component.translatable("container.pfm.microwave"));
-            if (player instanceof ServerPlayerEntity) {
+            if (player instanceof ServerPlayer) {
                 ((ServerPlayer)player).openMenu(namedScreenHandlerFactory, packetByteBuf -> {
                     packetByteBuf.writeBoolean(microwaveBlockEntity.isActive);
                     packetByteBuf.writeBlockPos(microwaveBlockEntity.getBlockPos());

@@ -19,7 +19,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
@@ -108,7 +108,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     public NonNullList<ItemStack> getItemsBeingCooked() {
         return this.itemsBeingCooked;
     }
-    public Optional<RecipeEntry<CampfireCookingRecipe>> getRecipeFor(ItemStack item) {
+    public Optional<RecipeHolder<CampfireCookingRecipe>> getRecipeFor(ItemStack item) {
         if (this.itemsBeingCooked.stream().noneMatch(ItemStack::isEmpty)) {
             return Optional.empty();
         }
@@ -203,7 +203,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
                 }
                 if (stoveBlockEntity.cookingTimes[i] < stoveBlockEntity.cookingTotalTimes[i]) continue;
                 SimpleContainer inventory = new SimpleContainer(itemStack);
-                ItemStack itemStack2 = level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, level).map(campfireCookingRecipe -> campfireCookingRecipe.assemble(inventory, level.registryAccess())).orElse(itemStack);
+                ItemStack itemStack2 = level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, level).map(campfireCookingRecipe -> campfireCookingRecipe.value().assemble(inventory, level.registryAccess())).orElse(itemStack);
                     if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
                         Containers.dropItemStack(level, pos.getX(), pos.above().getY(), pos.getZ(), itemStack2);
                         stoveBlockEntity.itemsBeingCooked.set(i, ItemStack.EMPTY);

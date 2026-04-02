@@ -5,10 +5,10 @@ import com.unlikepaladin.pfm.blocks.DynamicRenderLayerInterface;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderLayers;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.RenderType;
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 import org.spongepowered.asm.mixin.Debug;
 import org.spongepowered.asm.mixin.Mixin;
@@ -19,13 +19,12 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Debug(export = true, print = true)
-@Mixin(RenderLayers.class)
+@Mixin(ItemBlockRenderTypes.class)
 public class PFMRenderLayersNeoForgeMixin {
 
     @Shadow
@@ -41,7 +40,7 @@ public class PFMRenderLayersNeoForgeMixin {
     private static final Map<BlockState, Object> pfm$renderLayers = new ConcurrentHashMap<>();
     @Inject(method = "getRenderLayers", at = @At("TAIL"), cancellable = true)
     private static void modifyFurnitureRenderLayer(BlockState state, CallbackInfoReturnable<ChunkRenderTypeSet> cir) {
-        if (state.getBlock().getTranslationKey().contains("pfm")) {
+        if (state.getBlock().getDescriptionId().contains("pfm")) {
             if (!cir.getReturnValue().getClass().isAssignableFrom(ChunkRenderTypeSet.class)) {
                 return;
             }
@@ -49,27 +48,27 @@ public class PFMRenderLayersNeoForgeMixin {
             if (pfm$renderLayers.containsKey(state)) {
                 Object previous = pfm$renderLayers.get(state);
                 if (previous instanceof Collection<?>) {
-                    cir.setReturnValue(ChunkRenderTypeSet.of((Collection<RenderLayer>) previous));
+                    cir.setReturnValue(ChunkRenderTypeSet.of((Collection<RenderType>) previous));
                 } else {
-                    cir.setReturnValue(ChunkRenderTypeSet.of((RenderLayer) previous));
+                    cir.setReturnValue(ChunkRenderTypeSet.of((RenderType) previous));
                 }
                 return;
             }
 
-            if (MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(state) instanceof AbstractBakedModel abstractBakedModel) {
+            if (Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state) instanceof AbstractBakedModel abstractBakedModel) {
                 VariantBase<?> variant = abstractBakedModel.getVariant(state);
                 if (variant != null) {
-                    ChunkRenderTypeSet baseRenderTypes = getRenderLayers(variant.getBaseBlock().getDefaultState());
+                    ChunkRenderTypeSet baseRenderTypes = getRenderLayers(variant.getBaseBlock().defaultBlockState());
                     ChunkRenderTypeSet currentRenderTypes = cir.getReturnValue();
 
                     // Combine the render types using union
                     ChunkRenderTypeSet combinedRenderTypes = ChunkRenderTypeSet.union(baseRenderTypes, currentRenderTypes);
 
                     // Prioritize cutout and translucent over solid
-                    if (combinedRenderTypes.contains(RenderLayer.getCutout()) || combinedRenderTypes.contains(RenderLayer.getTranslucent()) || combinedRenderTypes.contains(RenderLayer.getCutoutMipped())) {
+                    if (combinedRenderTypes.contains(RenderType.cutout()) || combinedRenderTypes.contains(RenderType.translucent()) || combinedRenderTypes.contains(RenderType.cutoutMipped())) {
                         // Remove solid if higher-priority layers are present
                         combinedRenderTypes = ChunkRenderTypeSet.intersection(combinedRenderTypes,
-                                ChunkRenderTypeSet.of(RenderLayer.getCutout(), RenderLayer.getTranslucent(), RenderLayer.getCutoutMipped())
+                                ChunkRenderTypeSet.of(RenderType.cutout(), RenderType.translucent(), RenderType.cutoutMipped())
                         );
                     }
 
@@ -80,9 +79,9 @@ public class PFMRenderLayersNeoForgeMixin {
                 }
             }
             if (state.getBlock() instanceof DynamicRenderLayerInterface) {
-                RenderLayer renderLayer = ((DynamicRenderLayerInterface) state.getBlock()).getCustomRenderLayer();
+                RenderType renderLayer = ((DynamicRenderLayerInterface) state.getBlock()).getCustomRenderLayer();
                 if (PaladinFurnitureMod.getPFMConfig().isShaderSolidFixOn())
-                    cir.setReturnValue(PaladinFurnitureModClient.areShadersOn() ? ChunkRenderTypeSet.of(RenderLayer.getSolid()) : ChunkRenderTypeSet.of(renderLayer));
+                    cir.setReturnValue(PaladinFurnitureModClient.areShadersOn() ? ChunkRenderTypeSet.of(RenderType.solid()) : ChunkRenderTypeSet.of(renderLayer));
                 else
                     cir.setReturnValue(ChunkRenderTypeSet.of(renderLayer));
             }

@@ -2,20 +2,15 @@ package com.unlikepaladin.pfm.recipes;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.JsonOps;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.RawLogTableBlock;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.VariantHelper;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.world.Container;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
@@ -24,15 +19,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
@@ -42,7 +34,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
     private final FurnitureOutput furnitureOutput;
     private final List<ResourceLocation> supportedVariants;
     private final FurnitureIngredients ingredients;
-    public DynamicFurnitureRecipe(String group, FurnitureOutput furnitureOutput, List<Identifier> supportedVariants, FurnitureIngredients furnitureIngredients) {
+    public DynamicFurnitureRecipe(String group, FurnitureOutput furnitureOutput, List<ResourceLocation> supportedVariants, FurnitureIngredients furnitureIngredients) {
         this.group = group;
         this.furnitureOutput = furnitureOutput;
         this.supportedVariants = supportedVariants;
@@ -310,7 +302,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         public static Codec<FurnitureOutput> CODEC = RecordCodecBuilder.create(furnitureOutputInstance -> furnitureOutputInstance.group(
                 Codec.STRING.fieldOf("outputClass").forGetter(out -> out.outputClass),
                 Codec.INT.optionalFieldOf("count", 1).forGetter(out -> out.outputCount),
-                NbtCompound.CODEC.optionalFieldOf("tag", new NbtCompound()).forGetter(out -> out.nbt)
+                CompoundTag.CODEC.optionalFieldOf("tag", new CompoundTag()).forGetter(out -> out.nbt)
         ).apply(furnitureOutputInstance, FurnitureOutput::new));
 
         private final String outputClass;
@@ -352,8 +344,8 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
 
     public static final class FurnitureIngredients {
         public static Codec<FurnitureIngredients> CODEC = RecordCodecBuilder.create(furnitureIngredientsInstance -> furnitureIngredientsInstance.group(
-                Ingredient.DISALLOW_EMPTY_CODEC.listOf().optionalFieldOf("vanillaIngredients", new ArrayList<>()).forGetter(ingredients -> ingredients.vanillaIngredients),
-                Codecs.strictUnboundedMap(Codec.STRING, Codec.INT).fieldOf("variantChildren").forGetter(ingredients -> ingredients.variantChildren)
+                Ingredient.CODEC_NONEMPTY.listOf().optionalFieldOf("vanillaIngredients", new ArrayList<>()).forGetter(ingredients -> ingredients.vanillaIngredients),
+                ExtraCodecs.strictUnboundedMap(Codec.STRING, Codec.INT).fieldOf("variantChildren").forGetter(ingredients -> ingredients.variantChildren)
         ).apply(furnitureIngredientsInstance, FurnitureIngredients::new));
 
         private final List<Ingredient> vanillaIngredients;
@@ -391,9 +383,9 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         }
 
         @Override
-        public DynamicFurnitureRecipe fromNetwork(PacketByteBuf buf) {
+        public DynamicFurnitureRecipe fromNetwork(FriendlyByteBuf buf) {
             String group = buf.readUtf();
-            List<Identifier> supportedVariants = buf.readList(FriendlyByteBuf::readIdentifier);
+            List<ResourceLocation> supportedVariants = buf.readList(FriendlyByteBuf::readResourceLocation);
             FurnitureIngredients ingredients = FurnitureIngredients.read(buf);
             FurnitureOutput output = FurnitureOutput.read(buf);
             return new DynamicFurnitureRecipe(group, output, supportedVariants, ingredients);

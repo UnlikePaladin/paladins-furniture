@@ -20,6 +20,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 
 import java.util.Collection;
@@ -38,10 +39,10 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel world = Objects.requireNonNull(mc.level);
 
-        List<FreezingRecipe> freezingRecipes = world.getRecipeManager().getAllRecipesFor(RecipeTypes.FREEZING_RECIPE).stream().map(RecipeEntry::value).collect(Collectors.toList());;
+        List<FreezingRecipe> freezingRecipes = world.getRecipeManager().getAllRecipesFor(RecipeTypes.FREEZING_RECIPE).stream().map(RecipeHolder::value).collect(Collectors.toList());;
         registration.addRecipes(PaladinFurnitureModJEI.FREEZING_RECIPE, freezingRecipes);
 
-        List<FurnitureRecipe> furnitureRecipes = world.getRecipeManager().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeEntry::value).collect(Collectors.toList());
+        List<FurnitureRecipe> furnitureRecipes = world.getRecipeManager().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeHolder::value).collect(Collectors.toList());
         registration.addRecipes(PaladinFurnitureModJEI.FURNITURE_RECIPE, furnitureRecipes);
     }
 

@@ -16,6 +16,7 @@ import net.blay09.mods.cookingforblockheads.api.capability.IKitchenSmeltingProvi
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;

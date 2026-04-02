@@ -5,15 +5,13 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
@@ -80,7 +78,7 @@ public class WorkbenchScreenHandler extends AbstractContainerMenu {
         }
         this.addDataSlot(this.selectedRecipe);
         if (ALL_RECIPES.isEmpty()) {
-           level.getRecipeManager().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeEntry::value).forEach(recipe -> {
+           level.getRecipeManager().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeHolder::value).forEach(recipe -> {
                ALL_RECIPES.addAll(recipe.getInnerRecipes());
            });
            ALL_RECIPES.sort(FurnitureRecipe.CraftableFurnitureRecipe::compareTo);

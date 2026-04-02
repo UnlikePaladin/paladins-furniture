@@ -19,7 +19,7 @@ public class GiveGuideBookCriterion extends SimpleCriterionTrigger<GiveGuideBook
     }
 
     @Override
-    protected Conditions conditionsFromJson(JsonObject obj, Optional<LootContextPredicate> playerPredicate, AdvancementEntityPredicateDeserializer predicateDeserializer) {
+    protected Conditions createInstance(JsonObject obj, Optional<ContextAwarePredicate> playerPredicate, DeserializationContext predicateDeserializer) {
         return new GiveGuideBookCriterion.Conditions(playerPredicate);
     }
 

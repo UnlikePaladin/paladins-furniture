@@ -10,10 +10,10 @@ import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import com.unlikepaladin.pfm.runtime.data.SimpleFurnitureRecipeJsonFactory;
 import net.blay09.mods.cookingforblockheads.CookingForBlockheads;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
-import net.minecraft.block.Blocks;
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.registry.tag.BlockTags;
-import net.minecraft.util.Identifier;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.level.block.Blocks;
 
 import java.util.Optional;
 
@@ -27,13 +27,13 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     public void generateTags() {
         super.generateTags();
 
-        PFMTagProvider.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+        PFMTagProvider.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK);
     }
 
     @Override
-    public void generateRecipes(RecipeExporter exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK, 4).group("kitchen").criterion(PFMRecipeProvider.getCriterionNameFromOutput(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK), PFMRecipeProvider.conditionsFromItem(ModItems.recipeBook)).input(ModItems.recipeBook).input(Blocks.WHITE_CONCRETE, 2).input(Blocks.GRAY_CONCRETE).offerTo(exporter, new Identifier("pfm", PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK.asItem().getTranslationKey().replace("block.pfm.", "")));
+    public void generateRecipes(RecipeOutput exporter) {
+        SimpleFurnitureRecipeJsonFactory.create(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK, 4).group("kitchen").unlockedBy(PFMRecipeProvider.getunlockedByNameFromOutput(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK), PFMRecipeProvider.conditionsFromItem(ModItems.recipeBook)).input(ModItems.recipeBook).input(Blocks.WHITE_CONCRETE, 2).input(Blocks.GRAY_CONCRETE).save(exporter, new ResourceLocation("pfm", PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     @Override

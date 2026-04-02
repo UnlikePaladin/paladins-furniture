@@ -14,11 +14,13 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.Level;
 import java.util.Optional;
 
@@ -51,7 +53,7 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
     public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         // if (this.recipeBook.isOpen() && this.narrow) {
         if (this.narrow) {
-            this.renderBg(context, mouseX, mouseY, delta);
+            this.renderBackground(context, mouseX, mouseY, delta);
             //this.recipeBook.render(context, mouseX, mouseY, delta);
         } else {
             //this.recipeBook.render(context, mouseX, mouseY, delta);
@@ -76,7 +78,7 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
         context.blit(this.background, i + 147, j + 66 + -k, 176, 40 - k, 13, k +1);
     }
 
-    public Optional<RecipeEntry<SmokingRecipe>> getRecipe(Level world, Container inventory) {
+    public Optional<RecipeHolder<SmokingRecipe>> getRecipe(Level world, Container inventory) {
         return world.getRecipeManager().getRecipeFor(RecipeType.SMOKING, inventory, world);
     }
 
@@ -85,8 +87,8 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
         super.containerTick();
         this.isActive = menu.isActive;
         NonNullList<ItemStack> inventory = NonNullList.withSize(1,menu.getContainer().getItem(0));
-        Optional<RecipeEntry<SmokingRecipe>> recipe = getRecipe(menu.microwaveBlockEntity.getLevel(), menu.getContainer());
-        if(recipe.isEmpty() || !MicrowaveBlockEntity.canAcceptRecipeOutput(microwaveBlockEntity.getLevel().registryAccess(), recipe.<Recipe<?>>map(RecipeEntry::value).orElse(null), inventory, microwaveBlockEntity.getMaxStackSize()) && !this.menu.isActive()) {
+        Optional<RecipeHolder<SmokingRecipe>> recipe = getRecipe(menu.microwaveBlockEntity.getLevel(), menu.getContainer());
+        if(recipe.isEmpty() || !MicrowaveBlockEntity.canAcceptRecipeOutput(microwaveBlockEntity.getLevel().registryAccess(), recipe.<Recipe<?>>map(RecipeHolder::value).orElse(null), inventory, microwaveBlockEntity.getMaxStackSize()) && !this.menu.isActive()) {
             this.startButton.active = false;
         }
         else {

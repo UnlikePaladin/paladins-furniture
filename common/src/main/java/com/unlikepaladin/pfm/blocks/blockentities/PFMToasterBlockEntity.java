@@ -8,6 +8,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -112,10 +113,10 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
 
     public void setCurrentItem(int i, ItemStack stack) {
         items.set(i, stack);
-        sync(this, world);
+        sync(this, getLevel());
     }
     public Optional<Player> getLastUser() {
-        return Optional.ofNullable(this.lastUser).map(this.level::getPlayerByUUID);
+        return Optional.ofNullable(this.lastUser).map(this.getLevel()::getPlayerByUUID);
     }
 
     public void setLastUser(@Nullable Player player) {
@@ -172,7 +173,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
         else {
             for (int i = 0; i < 2; i++) {
                 SimpleContainer inv = new SimpleContainer(items.get(i));
-                Optional<RecipeEntry<CampfireCookingRecipe>> match = level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inv, level);
+                Optional<RecipeHolder<CampfireCookingRecipe>> match = level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inv, level);
 
                 boolean changed = false;
                 if(match.isPresent()) {

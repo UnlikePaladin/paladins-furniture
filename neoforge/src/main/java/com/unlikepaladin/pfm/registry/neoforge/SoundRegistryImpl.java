@@ -1,14 +1,14 @@
 package com.unlikepaladin.pfm.registry.neoforge;
 
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.util.Identifier;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class SoundRegistryImpl {
-    public static Map<Identifier, SoundEvent> soundEventMap = new LinkedHashMap<>();
-    public static void register(Identifier identifier, SoundEvent event) {
+    public static Map<ResourceLocation, SoundEvent> soundEventMap = new LinkedHashMap<>();
+    public static void register(ResourceLocation identifier, SoundEvent event) {
         soundEventMap.put(identifier, event);
     }
 }
