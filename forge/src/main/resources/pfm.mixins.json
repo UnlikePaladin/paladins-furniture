@@ -11,6 +11,7 @@
   ],
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
+    "PFMKitchenImplMixin",
     "PFMLootItemAccessor",
     "PFMLootPool$BuilderMixin",
     "PFMSaveLoaderMixin",

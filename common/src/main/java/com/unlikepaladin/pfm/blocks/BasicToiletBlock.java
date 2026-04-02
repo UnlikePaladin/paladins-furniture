@@ -116,7 +116,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements EntityBlo
     }
 
     @Override
-    public Function<Settings, AbstractSittableBlock> getChairConstructor() {
+    public Function<Properties, AbstractSittableBlock> getChairConstructor() {
         return BasicToiletBlock::new;
     }
 

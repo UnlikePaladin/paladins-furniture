@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 
 public class HerringbonePlankBlock extends HorizontalDirectionalBlock {
     private static final List<FurnitureBlock> PLANKS = new ArrayList<>();
-    public static final MapCodec<HerringbonePlankBlock> CODEC = createCodec(HerringbonePlankBlock::new);
+    public static final MapCodec<HerringbonePlankBlock> CODEC = simpleCodec(HerringbonePlankBlock::new);
 
     public HerringbonePlankBlock(Properties settings) {
         super(settings);
@@ -30,7 +30,7 @@ public class HerringbonePlankBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 

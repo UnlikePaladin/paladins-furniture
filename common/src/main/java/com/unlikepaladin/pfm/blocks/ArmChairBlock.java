@@ -29,7 +29,7 @@ public class ArmChairBlock extends AbstractSittableBlock {
     }
 
     @Override
-    public Function<Settings, AbstractSittableBlock> getChairConstructor() {
+    public Function<Properties, AbstractSittableBlock> getChairConstructor() {
         return ArmChairBlock::new;
     }
 

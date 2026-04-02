@@ -65,7 +65,7 @@ public class ClassicChairBlock extends BasicChairBlock {
     }
 
     @Override
-    public Function<Settings, AbstractSittableBlock> getChairConstructor() {
+    public Function<Properties, AbstractSittableBlock> getChairConstructor() {
         return ClassicChairBlock::new;
     }
 }

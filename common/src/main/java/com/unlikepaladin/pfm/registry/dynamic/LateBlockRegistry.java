@@ -11,6 +11,7 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.flag.FeatureFlag;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LayeredCauldronBlock;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.item.DyeColor;
 
 import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.biome.Biome;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
@@ -59,48 +59,48 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.furnitureEntryMap.put(HerringbonePlankBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_herringbone_planks", () -> new HerringbonePlankBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).sound(SoundType.WOOD).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.BUILDING_BLOCKS), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_herringbone_planks", () -> new HerringbonePlankBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).sound(SoundType.WOOD).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.BUILDING_BLOCKS), true);
             }
         }});
         PaladinFurnitureMod.furnitureEntryMap.put(BasicChairBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_chair", () -> new BasicChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_chair", () -> new BasicChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_chair", () -> new BasicChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_chair", () -> new BasicChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_chair", () -> new BasicChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_chair", () -> new BasicChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
         }}});
         PaladinFurnitureMod.furnitureEntryMap.put(DinnerChairBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_chair_dinner", () -> new DinnerChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_chair_dinner", () -> new DinnerChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_chair_dinner", () -> new DinnerChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_chair_dinner", () -> new DinnerChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_chair_dinner", () -> new DinnerChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_chair_dinner", () -> new DinnerChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicChairBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_chair_classic", () -> new ClassicChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_chair_classic", () -> new ClassicChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_chair_classic", () -> new ClassicChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_chair_classic", () -> new ClassicChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_chair_classic", () -> new ClassicChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_chair_classic", () -> new ClassicChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicChairDyeableBlock.class, new FurnitureEntry<>() {{
             int i = 0;
             for (DyeColor color : DyeColor.values()) {
                 if (i > 15)
                     break;
-                this.addBlock(registerLateBlock("oak_chair_classic_" + color.getName(), () -> new ClassicChairDyeableBlock(color, BlockBehaviour.Properties.copy(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).allBlocks.get(0))), true, PaladinFurnitureMod.FURNITURE_GROUP));
+                this.addBlock(registerLateBlock("oak_chair_classic_" + color.getName(), () -> new ClassicChairDyeableBlock(color, BlockBehaviour.Properties.ofFullCopy(PaladinFurnitureMod.furnitureEntryMap.get(BasicChairBlock.class).allBlocks.get(0))), true, PaladinFurnitureMod.FURNITURE_GROUP));
                 i++;
             }
         }});
@@ -108,21 +108,21 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.furnitureEntryMap.put(ModernChairBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_chair_modern", () -> new ModernChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_chair_modern", () -> new ModernChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_chair_modern", () -> new ModernChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_chair_modern", () -> new ModernChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_chair_modern", () -> new ModernChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_chair_modern", () -> new ModernChairBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(FroggyChairBlock.class, new FurnitureEntry<>() {{
             this.addBlock(registerLateBlock("froggy_chair", () -> new FroggyChairBlock(BlockBehaviour.Properties.of().strength(9.0f).explosionResistance(8.0f).noOcclusion().requiresCorrectToolForDrops().mapColor(MapColor.COLOR_GREEN)), true, PaladinFurnitureMod.FURNITURE_GROUP));
-            this.addBlock(registerLateBlock("froggy_chair_pink", () -> new FroggyChairBlock(BlockBehaviour.Properties.copy(this.allBlocks.get(0)).mapColor(MapColor.COLOR_PINK)), true, PaladinFurnitureMod.FURNITURE_GROUP));
-            this.addBlock(registerLateBlock("froggy_chair_light_blue", () -> new FroggyChairBlock(BlockBehaviour.Properties.copy(this.allBlocks.get(0)).mapColor(MapColor.COLOR_LIGHT_BLUE)), true, PaladinFurnitureMod.FURNITURE_GROUP));
-            this.addBlock(registerLateBlock("froggy_chair_blue", () -> new FroggyChairBlock(BlockBehaviour.Properties.copy(this.allBlocks.get(0)).mapColor(MapColor.COLOR_BLUE)), true, PaladinFurnitureMod.FURNITURE_GROUP));
-            this.addBlock(registerLateBlock("froggy_chair_orange", () -> new FroggyChairBlock(BlockBehaviour.Properties.copy(this.allBlocks.get(0)).mapColor(MapColor.COLOR_ORANGE)), true, PaladinFurnitureMod.FURNITURE_GROUP));
-            this.addBlock(registerLateBlock("froggy_chair_yellow", () -> new FroggyChairBlock(BlockBehaviour.Properties.copy(this.allBlocks.get(0)).mapColor(MapColor.COLOR_YELLOW)), true, PaladinFurnitureMod.FURNITURE_GROUP));
+            this.addBlock(registerLateBlock("froggy_chair_pink", () -> new FroggyChairBlock(BlockBehaviour.Properties.ofFullCopy(this.allBlocks.get(0)).mapColor(MapColor.COLOR_PINK)), true, PaladinFurnitureMod.FURNITURE_GROUP));
+            this.addBlock(registerLateBlock("froggy_chair_light_blue", () -> new FroggyChairBlock(BlockBehaviour.Properties.ofFullCopy(this.allBlocks.get(0)).mapColor(MapColor.COLOR_LIGHT_BLUE)), true, PaladinFurnitureMod.FURNITURE_GROUP));
+            this.addBlock(registerLateBlock("froggy_chair_blue", () -> new FroggyChairBlock(BlockBehaviour.Properties.ofFullCopy(this.allBlocks.get(0)).mapColor(MapColor.COLOR_BLUE)), true, PaladinFurnitureMod.FURNITURE_GROUP));
+            this.addBlock(registerLateBlock("froggy_chair_orange", () -> new FroggyChairBlock(BlockBehaviour.Properties.ofFullCopy(this.allBlocks.get(0)).mapColor(MapColor.COLOR_ORANGE)), true, PaladinFurnitureMod.FURNITURE_GROUP));
+            this.addBlock(registerLateBlock("froggy_chair_yellow", () -> new FroggyChairBlock(BlockBehaviour.Properties.ofFullCopy(this.allBlocks.get(0)).mapColor(MapColor.COLOR_YELLOW)), true, PaladinFurnitureMod.FURNITURE_GROUP));
         }});
         PaladinFurnitureMod.furnitureEntryMap.put(SimpleSofaBlock.class, new FurnitureEntry<>() {{
             int i = 0;
@@ -149,159 +149,159 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.furnitureEntryMap.put(BasicTableBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_table_basic", () -> new BasicTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_table_basic", () -> new BasicTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_table_basic", () -> new BasicTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_table_basic", () -> new BasicTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_table_basic", () -> new BasicTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_table_basic", () -> new BasicTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicTableBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_table_classic", () -> new ClassicTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_table_classic", () -> new ClassicTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_table_classic", () -> new ClassicTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_table_classic", () -> new ClassicTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_table_classic", () -> new ClassicTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_table_classic", () -> new ClassicTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
 
         PaladinFurnitureMod.furnitureEntryMap.put(LogTableBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
                 String postfix = variant.isNetherWood() ? "stem" : "log";
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_table_" + postfix, () -> new LogTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_table_" + postfix, () -> new LogTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_table_" + postfix, () -> new LogTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_table_" + postfix, () -> new LogTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_table_natural", () -> new LogTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_table_natural", () -> new LogTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
 
         PaladinFurnitureMod.furnitureEntryMap.put(RawLogTableBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
                 String postfix = variant.isNetherWood() ? "stem" : "log";
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_raw_table_" + postfix, () -> new RawLogTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_raw_table_" + postfix, () -> new RawLogTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" +variant.getSerializedName()+"_raw_table_" + postfix, () -> new RawLogTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" +variant.getSerializedName()+"_raw_table_" + postfix, () -> new RawLogTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
         }});
         PaladinFurnitureMod.furnitureEntryMap.put(DinnerTableBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_table_dinner", () -> new DinnerTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_table_dinner", () -> new DinnerTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_table_dinner", () -> new DinnerTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_table_dinner", () -> new DinnerTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_table_dinner", () -> new DinnerTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_table_dinner", () -> new DinnerTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
         }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ModernDinnerTableBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_table_modern_dinner", () -> new ModernDinnerTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_table_modern_dinner", () -> new ModernDinnerTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_table_modern_dinner", () -> new ModernDinnerTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_table_modern_dinner", () -> new ModernDinnerTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_table_modern_dinner", () -> new ModernDinnerTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_table_modern_dinner", () -> new ModernDinnerTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
         }}});
         PaladinFurnitureMod.furnitureEntryMap.put(BasicCoffeeTableBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ModernCoffeeTableBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicCoffeeTableBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(BasicDeskBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_desk_basic", () -> new BasicDeskBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_desk_basic", () -> new BasicDeskBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_desk_basic", () -> new BasicDeskBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_desk_basic", () -> new BasicDeskBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_desk_basic", () -> new BasicDeskBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_desk_basic", () -> new BasicDeskBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(BasicDeskCabinetBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_desk_cabinet_basic", () -> new BasicDeskCabinetBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_desk_cabinet_basic", () -> new BasicDeskCabinetBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_desk_cabinet_basic", () -> new BasicDeskCabinetBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_desk_cabinet_basic", () -> new BasicDeskCabinetBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_desk_cabinet_basic", () -> new BasicDeskCabinetBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_desk_cabinet_basic", () -> new BasicDeskCabinetBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicDeskBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_desk_classic", () -> new ClassicDeskBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_desk_classic", () -> new ClassicDeskBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_desk_classic", () -> new ClassicDeskBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_desk_classic", () -> new ClassicDeskBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_desk_classic", () -> new ClassicDeskBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_desk_classic", () -> new ClassicDeskBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicDeskCabinetBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = OfficeChairItem.getItemFactory(new Item.Properties());
         LateBlockRegistry.registerLateItem("office_chair", () -> PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM, PaladinFurnitureMod.FURNITURE_GROUP);
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicNightstandBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_classic_nightstand", () -> new ClassicNightstandBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_classic_nightstand", () -> new ClassicNightstandBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_classic_nightstand", () -> new ClassicNightstandBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_classic_nightstand", () -> new ClassicNightstandBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_classic_nightstand", () -> new ClassicNightstandBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_classic_nightstand", () -> new ClassicNightstandBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(SimpleBedBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
@@ -334,51 +334,51 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.furnitureEntryMap.put(SimpleBunkLadderBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_simple_bunk_ladder", () -> new SimpleBunkLadderBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_simple_bunk_ladder", () -> new SimpleBunkLadderBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(LogStoolBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
                 String postfix = variant.isNetherWood() ? "stem" : "log";
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName() + "_" + postfix + "_stool", () -> new LogStoolBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName() + "_" + postfix + "_stool", () -> new LogStoolBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(SimpleStoolBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_simple_stool", () -> new SimpleStoolBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_simple_stool", () -> new SimpleStoolBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_simple_stool", () -> new SimpleStoolBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_simple_stool", () -> new SimpleStoolBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_simple_stool", () -> new SimpleStoolBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_simple_stool", () -> new SimpleStoolBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(ClassicStoolBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_classic_stool", () -> new ClassicStoolBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_classic_stool", () -> new ClassicStoolBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_classic_stool", () -> new ClassicStoolBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_classic_stool", () -> new ClassicStoolBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_classic_stool", () -> new ClassicStoolBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_classic_stool", () -> new ClassicStoolBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
 
         PaladinFurnitureMod.furnitureEntryMap.put(ModernStoolBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_modern_stool", () -> new ModernStoolBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_modern_stool", () -> new ModernStoolBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_modern_stool", () -> new ModernStoolBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_modern_stool", () -> new ModernStoolBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_modern_stool", () -> new ModernStoolBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_modern_stool", () -> new ModernStoolBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }
             for (ExtraStoolVariant variant : ExtraStoolVariant.values()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_modern_stool", () -> new ModernStoolBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_modern_stool", () -> new ModernStoolBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }
         }});
 
@@ -392,47 +392,47 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.furnitureEntryMap.put(KitchenCounterBlock.class, new FurnitureEntry<>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_counter", () -> new KitchenCounterBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_drawer", () -> new KitchenDrawerBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_sink", () -> new KitchenSinkBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion(), Biome.Precipitation.RAIN, SinkBehavior.WATER_SINK_BEHAVIOR), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_counter_oven", () -> new KitchenCounterOvenBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_counter", () -> new KitchenWallCounterBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_drawer", () -> new KitchenWallDrawerBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_small_drawer", () -> new KitchenWallDrawerSmallBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_counter", () -> new KitchenCounterBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_drawer", () -> new KitchenDrawerBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_sink", () -> new KitchenSinkBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion(), Biome.Precipitation.RAIN, SinkBehavior.WATER_SINK_BEHAVIOR), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_counter_oven", () -> new KitchenCounterOvenBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_counter", () -> new KitchenWallCounterBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_drawer", () -> new KitchenWallDrawerBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_small_drawer", () -> new KitchenWallDrawerSmallBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped()) {
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_counter", () -> new KitchenCounterBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
-                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_drawer", () -> new KitchenDrawerBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
-                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
-                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_sink", () -> new KitchenSinkBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion(), Biome.Precipitation.RAIN, SinkBehavior.WATER_SINK_BEHAVIOR), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
-                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_counter_oven", () -> new KitchenCounterOvenBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
-                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_wall_counter", () -> new KitchenWallCounterBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
-                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_wall_drawer", () -> new KitchenWallDrawerBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
-                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_wall_small_drawer", () -> new KitchenWallDrawerSmallBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_counter", () -> new KitchenCounterBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_drawer", () -> new KitchenDrawerBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_sink", () -> new KitchenSinkBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion(), Biome.Precipitation.RAIN, SinkBehavior.WATER_SINK_BEHAVIOR), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_counter_oven", () -> new KitchenCounterOvenBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_wall_counter", () -> new KitchenWallCounterBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_wall_drawer", () -> new KitchenWallDrawerBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_wall_small_drawer", () -> new KitchenWallDrawerSmallBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
                 }
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {if (variant.identifier.getPath().equals("quartz"))
                     continue;
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_counter", () -> new KitchenCounterBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_drawer", () -> new KitchenDrawerBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_sink", () -> new KitchenSinkBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion(), Biome.Precipitation.RAIN, SinkBehavior.WATER_SINK_BEHAVIOR), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_counter_oven", () -> new KitchenCounterOvenBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_counter", () -> new KitchenWallCounterBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_small_drawer", () -> new KitchenWallDrawerSmallBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_drawer", () -> new KitchenWallDrawerBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_counter", () -> new KitchenCounterBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_drawer", () -> new KitchenDrawerBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_sink", () -> new KitchenSinkBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion(), Biome.Precipitation.RAIN, SinkBehavior.WATER_SINK_BEHAVIOR), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_counter_oven", () -> new KitchenCounterOvenBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_counter", () -> new KitchenWallCounterBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_small_drawer", () -> new KitchenWallDrawerSmallBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_drawer", () -> new KitchenWallDrawerBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }
             for (ExtraCounterVariant variant : ExtraCounterVariant.values()) {
                 MapColor color = variant.getBaseBlock().defaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_counter", () -> new KitchenCounterBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_drawer", () -> new KitchenDrawerBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_sink", () -> new KitchenSinkBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion(), Biome.Precipitation.RAIN, SinkBehavior.WATER_SINK_BEHAVIOR), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_counter_oven", () -> new KitchenCounterOvenBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_counter", () -> new KitchenWallCounterBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_drawer", () -> new KitchenWallDrawerBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
-                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_small_drawer", () -> new KitchenWallDrawerSmallBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_counter", () -> new KitchenCounterBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_drawer", () -> new KitchenDrawerBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock( variant.getSerializedName()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenSinkBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_sink", () -> new KitchenSinkBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion(), Biome.Precipitation.RAIN, SinkBehavior.WATER_SINK_BEHAVIOR), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenCounterOvenBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_counter_oven", () -> new KitchenCounterOvenBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallCounterBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_counter", () -> new KitchenWallCounterBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_drawer", () -> new KitchenWallDrawerBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                PaladinFurnitureMod.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_wall_small_drawer", () -> new KitchenWallDrawerSmallBlock(BlockBehaviour.Properties.ofFullCopy(variant.getBaseBlock()).mapColor(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureMod.furnitureEntryMap.put(FreezerBlock.class, new FurnitureEntry<FreezerBlock>() {{
             this.addBlock(LateBlockRegistry.registerLateBlock( "white_freezer", () -> PaladinFurnitureModBlocksItems.WHITE_FREEZER, true, PaladinFurnitureMod.FURNITURE_GROUP));

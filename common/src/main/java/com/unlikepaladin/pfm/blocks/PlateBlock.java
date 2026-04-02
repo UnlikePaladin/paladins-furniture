@@ -7,6 +7,7 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
@@ -50,7 +51,7 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty CUTLERY = BooleanProperty.create("cutlery");
 
     private static final List<FurnitureBlock> PLATES = new ArrayList<>();
-    public static final MapCodec<PlateBlock> CODEC = createCodec(PlateBlock::new);
+    public static final MapCodec<PlateBlock> CODEC = simpleCodec(PlateBlock::new);
 
     public PlateBlock(Properties settings) {
         super(settings);
@@ -59,7 +60,7 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 

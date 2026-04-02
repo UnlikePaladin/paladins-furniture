@@ -5,9 +5,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -25,7 +23,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.Containers;
 import net.minecraft.world.phys.BlockHitResult;
@@ -51,7 +48,7 @@ import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     private static final List<KitchenStovetopBlock> KITCHEN_STOVETOPS = new ArrayList<>();
-    public static final MapCodec<KitchenStovetopBlock> CODEC = createCodec(KitchenStovetopBlock::new);
+    public static final MapCodec<KitchenStovetopBlock> CODEC = simpleCodec(KitchenStovetopBlock::new);
 
     public KitchenStovetopBlock(Properties settings) {
         super(settings);
@@ -60,7 +57,7 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 

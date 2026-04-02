@@ -5,19 +5,19 @@ import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.NetworkEvent;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 import java.util.Optional;
 
-public class TrashcanClearPacket implements CustomPayload {
-    public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "trashcan_clear");
+public class TrashcanClearPacket implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "trashcan_clear");
     private final BlockPos blockPos;
 
-    public TrashcanClearPacket(PacketByteBuf buffer) {
+    public TrashcanClearPacket(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos());
     }
 
@@ -27,12 +27,12 @@ public class TrashcanClearPacket implements CustomPayload {
 
     public static void handle(TrashcanClearPacket msg, PlayPayloadContext ctx) {
         ctx.workHandler().execute(() -> {
-            Optional<PlayerEntity> optionalPlayerEntity = ctx.player();
+            Optional<Player> optionalPlayerEntity = ctx.player();
             BlockPos entityPos = msg.blockPos;
             if (optionalPlayerEntity.isPresent()) {
-                PlayerEntity player = optionalPlayerEntity.get();
-                World world = player.getEntityWorld();
-                if (world.isChunkLoaded(entityPos)) {
+                Player player = optionalPlayerEntity.get();
+                Level world = player.level();
+                if (world.hasChunkAt(entityPos)) {
                     TrashcanBlockEntity trashcanBlockEntity = (TrashcanBlockEntity) world.getBlockEntity(entityPos);
                     trashcanBlockEntity.clearContent();
                 } else {
@@ -48,7 +48,7 @@ public class TrashcanClearPacket implements CustomPayload {
     }
 
     @Override
-    public Identifier id() {
+    public ResourceLocation id() {
         return ID;
     }
 }

@@ -35,7 +35,7 @@ import java.util.List;
 
 public class PFMCookingForBlockHeadsCompat {
 
-    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.copy(Blocks.GRAY_CONCRETE));//PaladinFurnitureModBlocksItems.GRAY_STOVE));
+    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE));//PaladinFurnitureModBlocksItems.GRAY_STOVE));
     public static <T extends AbstractContainerMenu> TriFunc<Integer, Inventory, FriendlyByteBuf, T> getStoveScreenHandler() {
         return (integer, playerInventory, packetByteBuf) -> {
             BlockPos pos = packetByteBuf.readBlockPos();
@@ -67,7 +67,7 @@ public class PFMCookingForBlockHeadsCompat {
         ItemStack heldItem = player.getItemInHand(hand);
         if (heldItem.getItem() == ModItems.heatingUnit) {
             return InteractionResult.PASS;
-        } else if (hit.getDirection() == Direction.UP && heldItem.isIn(ModItemTags.UTENSILS)) {
+        } else if (hit.getDirection() == Direction.UP && heldItem.is(ModItemTags.UTENSILS)) {
             Direction stateFacing = state.getValue(StoveBlock.FACING);
             double hx =  (hit.getLocation().x - hit.getBlockPos().getX());
             double hz = (hit.getLocation().z - hit.getBlockPos().getZ());

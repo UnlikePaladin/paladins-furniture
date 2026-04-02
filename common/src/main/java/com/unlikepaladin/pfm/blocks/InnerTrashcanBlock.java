@@ -32,14 +32,14 @@ import org.jetbrains.annotations.Nullable;
 import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 
 public class InnerTrashcanBlock extends BaseEntityBlock {
-    public static final MapCodec<InnerTrashcanBlock> CODEC = createCodec(InnerTrashcanBlock::new);
+    public static final MapCodec<InnerTrashcanBlock> CODEC = simpleCodec(InnerTrashcanBlock::new);
     public InnerTrashcanBlock(Properties settings) {
         super(settings);
         registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 

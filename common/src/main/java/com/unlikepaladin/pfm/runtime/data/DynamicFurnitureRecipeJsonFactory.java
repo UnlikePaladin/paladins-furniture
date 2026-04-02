@@ -1,27 +1,18 @@
 package com.unlikepaladin.pfm.runtime.data;
 
 import com.google.common.collect.Lists;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.DynamicFurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.advancements.*;
-import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.NbtTypes;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
@@ -166,15 +157,15 @@ public class DynamicFurnitureRecipeJsonFactory {
         return childInput(ingredient, 1);
     }
 
-    public void save(RecipeOutput exporter, Identifier recipeId) {
+    public void save(RecipeOutput exporter, ResourceLocation recipeId) {
         if (emptyCriterion) {
-            builder.addCriterion("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.ofItems(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
+            builder.addCriterion("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.of(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
         }
         exporter.accept(recipeId,
                 new DynamicFurnitureRecipe(this.group == null || this.group.isBlank() ? " " : this.group,
-                        new DynamicFurnitureRecipe.FurnitureOutput(outputClass, outputCount, nbtElement != null && nbtElement.getNbtType() == NbtCompound.TYPE ? (NbtCompound) nbtElement : new NbtCompound()), supportedVariants,
+                        new DynamicFurnitureRecipe.FurnitureOutput(outputClass, outputCount, nbtElement != null && nbtElement.getType() == CompoundTag.TYPE ? (CompoundTag) nbtElement : new CompoundTag()), supportedVariants,
                         new DynamicFurnitureRecipe.FurnitureIngredients(vanillaIngredients, variantChildren)),
-                builder.build(recipeId.withPrefixedPath("recipes/furniture/")));
+                builder.build(recipeId.withPrefix("recipes/furniture/")));
     }
 
 

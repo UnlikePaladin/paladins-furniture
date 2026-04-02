@@ -6,6 +6,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity3x3;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
@@ -63,9 +64,9 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         }
     }
 
-    public static final MapCodec<BasicDeskCabinetBlock> CODEC = createCodec(BasicDeskCabinetBlock::new);
+    public static final MapCodec<BasicDeskCabinetBlock> CODEC = simpleCodec(BasicDeskCabinetBlock::new);
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 

@@ -1,15 +1,14 @@
 package com.unlikepaladin.pfm.advancements;
 
-import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
-import net.minecraft.advancements.critereon.AbstractCriterionTriggerInstance;
-import net.minecraft.advancements.critereon.DeserializationContext;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 
 import java.util.Optional;
 
@@ -21,23 +20,23 @@ public class GiveGuideBookCriterion extends SimpleCriterionTrigger<GiveGuideBook
     }
 
     @Override
-    public Codec<Conditions> getConditionsCodec() {
+    public Codec<Conditions> codec() {
         return Conditions.CODEC;
     }
 
     public static class Conditions
-            implements AbstractCriterion.Conditions {
+            implements SimpleCriterionTrigger.SimpleInstance {
         public static final Codec<GiveGuideBookCriterion.Conditions> CODEC = RecordCodecBuilder.create((instance) -> {
-            return instance.group(Codecs.createStrictOptionalFieldCodec(EntityPredicate.LOOT_CONTEXT_PREDICATE_CODEC, "player").forGetter(GiveGuideBookCriterion.Conditions::player)).apply(instance, GiveGuideBookCriterion.Conditions::new);
+            return instance.group(ExtraCodecs.strictOptionalField(EntityPredicate.ADVANCEMENT_CODEC, "player").forGetter(GiveGuideBookCriterion.Conditions::player)).apply(instance, GiveGuideBookCriterion.Conditions::new);
         });
-        private final Optional<LootContextPredicate> player;
+        private final Optional<ContextAwarePredicate> player;
 
-        public Conditions(Optional<LootContextPredicate> playerPredicate) {
+        public Conditions(Optional<ContextAwarePredicate> playerPredicate) {
             this.player = playerPredicate;
         }
 
         @Override
-        public Optional<LootContextPredicate> player() {
+        public Optional<ContextAwarePredicate> player() {
             return player;
         }
     }

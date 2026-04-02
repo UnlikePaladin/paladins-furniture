@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.packet.CustomPayload;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.chat.contents.TranslatableContents;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
@@ -14,8 +14,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SyncConfigPacket implements CustomPayload {
-    public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "sync_config");
+public class SyncConfigPacket implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "sync_config");
     public final Map<String, AbstractConfigOption> configOptions;
     public SyncConfigPacket(Map<String, AbstractConfigOption> configOptions) {
         this.configOptions = configOptions;
@@ -45,7 +45,7 @@ public class SyncConfigPacket implements CustomPayload {
     }
 
     @Override
-    public Identifier id() {
+    public ResourceLocation id() {
         return ID;
     }
 }

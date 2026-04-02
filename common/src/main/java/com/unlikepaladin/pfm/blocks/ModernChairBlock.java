@@ -66,7 +66,7 @@ public class ModernChairBlock extends BasicChairBlock {
     }
 
     @Override
-    public Function<Settings, AbstractSittableBlock> getChairConstructor() {
+    public Function<Properties, AbstractSittableBlock> getChairConstructor() {
         return ModernChairBlock::new;
     }
 }

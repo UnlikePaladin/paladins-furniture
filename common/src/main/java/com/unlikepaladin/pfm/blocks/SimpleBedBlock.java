@@ -137,7 +137,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
             PiglinAi.angerNearbyPiglins(player, false);
         }
         world.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);
-        return super.onBreak(world, pos, state, player);
+        return super.playerWillDestroy(world, pos, state, player);
     }
 
     @Override

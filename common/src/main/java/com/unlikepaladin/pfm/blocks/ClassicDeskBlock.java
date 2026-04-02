@@ -32,7 +32,7 @@ import java.util.stream.Stream;
 public class ClassicDeskBlock extends HorizontalDirectionalBlock {
     private final Block baseBlock;
 
-    public static final MapCodec<ClassicDeskBlock> CODEC = createCodec(ClassicDeskBlock::new);
+    public static final MapCodec<ClassicDeskBlock> CODEC = simpleCodec(ClassicDeskBlock::new);
     private static final List<FurnitureBlock> WOOD_CLASSIC_DESKS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_CLASSIC_DESKS = new ArrayList<>();
     private final BlockState baseBlockState;
@@ -59,7 +59,7 @@ public class ClassicDeskBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 

@@ -33,7 +33,7 @@ import static com.unlikepaladin.pfm.blocks.ClassicStoolBlock.rotateShape;
 
 public class CutleryBlock extends HorizontalDirectionalBlock {
     private static final List<FurnitureBlock> CUTLERY = new ArrayList<>();
-    public static final MapCodec<CutleryBlock> CODEC = createCodec(CutleryBlock::new);
+    public static final MapCodec<CutleryBlock> CODEC = simpleCodec(CutleryBlock::new);
 
     public CutleryBlock(Properties settings) {
         super(settings);
@@ -42,7 +42,7 @@ public class CutleryBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 

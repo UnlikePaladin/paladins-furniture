@@ -17,7 +17,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.recipe.Ingredient;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +49,7 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntity implements BalmCo
 
             @Override
             public IngredientToken findIngredient(ItemStack itemStack, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
-                IngredientToken result = applyIceUnit(stack -> ItemStack.areItemsEqual(stack, itemStack));
+                IngredientToken result = applyIceUnit(stack -> ItemStack.isSameItem(stack, itemStack));
                 if (result != null)
                     return result;
 

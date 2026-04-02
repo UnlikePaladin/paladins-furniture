@@ -42,7 +42,7 @@ import static com.unlikepaladin.pfm.blocks.ClassicStoolBlock.rotateShape;
 public class WorkingTableBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
     private static final List<WorkingTableBlock> WORKING_TABLES = new ArrayList<>();
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final MapCodec<WorkingTableBlock> CODEC = createCodec(WorkingTableBlock::new);
+    public static final MapCodec<WorkingTableBlock> CODEC = simpleCodec(WorkingTableBlock::new);
 
     public WorkingTableBlock(Properties settings) {
         super(settings);
@@ -51,7 +51,7 @@ public class WorkingTableBlock extends HorizontalDirectionalBlock implements Sim
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 

@@ -2,14 +2,14 @@ package com.unlikepaladin.pfm.networking.neoforge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.util.Identifier;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-public class MicrowaveUpdatePacket implements CustomPayload {
-    public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_update");
+public class MicrowaveUpdatePacket implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "microwave_update");
     public final BlockPos entityPos;
     public final boolean active;
 
@@ -43,7 +43,7 @@ public class MicrowaveUpdatePacket implements CustomPayload {
     }
 
     @Override
-    public Identifier id() {
+    public ResourceLocation id() {
         return ID;
     }
 }

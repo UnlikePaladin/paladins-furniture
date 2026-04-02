@@ -3,14 +3,17 @@ package com.unlikepaladin.pfm.networking.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
-public class MicrowaveActivePacket implements CustomPayload {
-    public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_active");
+public class MicrowaveActivePacket implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "microwave_active");
     private final BlockPos entityPos;
     private final boolean active;
 
@@ -19,7 +22,7 @@ public class MicrowaveActivePacket implements CustomPayload {
         this.active = active;
     }
 
-    public MicrowaveActivePacket(PacketByteBuf buffer) {
+    public MicrowaveActivePacket(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos(), buffer.readBoolean());
     }
 
@@ -32,7 +35,7 @@ public class MicrowaveActivePacket implements CustomPayload {
             if (ctx.player().isPresent()) {
                 Player player = ctx.player().get();
                 Level world = player.level();
-                if (world.isChunkLoaded(entityPos)) {
+                if (world.hasChunkAt(entityPos)) {
                     MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(entityPos);
                     microwaveBlockEntity.setActive(active);
                 }
@@ -52,7 +55,7 @@ public class MicrowaveActivePacket implements CustomPayload {
     }
 
     @Override
-    public Identifier id() {
+    public ResourceLocation id() {
         return ID;
     }
 }

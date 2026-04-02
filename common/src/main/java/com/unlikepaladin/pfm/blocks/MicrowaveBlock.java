@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -51,7 +52,7 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
     private final Block baseBlock;
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> MICROWAVES = new ArrayList<>();
-    public static final MapCodec<MicrowaveBlock> CODEC = createCodec(MicrowaveBlock::new);
+    public static final MapCodec<MicrowaveBlock> CODEC = simpleCodec(MicrowaveBlock::new);
 
     public MicrowaveBlock(Properties settings) {
         super(settings);
@@ -62,7 +63,7 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 

@@ -17,11 +17,9 @@ import net.blay09.mods.cookingforblockheads.api.KitchenItemProcessor;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.KitchenOperation;
 import net.blay09.mods.cookingforblockheads.api.event.OvenCookedEvent;
-import net.blay09.mods.cookingforblockheads.block.OvenBlock;
 import net.blay09.mods.cookingforblockheads.block.entity.IMutableNameable;
-import net.blay09.mods.cookingforblockheads.compat.Compat;
-import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
-import net.blay09.mods.cookingforblockheads.tile.IMutableNameable;
+import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.recipe.ModRecipes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -34,7 +32,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.Container;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -50,7 +47,6 @@ import net.minecraft.world.phys.AABB;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Iterator;
 import java.util.List;
 
 public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItemProcessor, BalmMenuProvider, IMutableNameable, BalmContainerProvider, BalmEnergyStorageProvider {
@@ -278,16 +274,16 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     }
 
     public ItemStack getSmeltingResult(ItemStack itemStack) {
-        this.singleSlotRecipeWrapper.setStack(0, itemStack);
+        this.singleSlotRecipeWrapper.setItem(0, itemStack);
         ItemStack ovenRecipeResult = this.getSmeltingResult(ModRecipes.ovenRecipeType, this.singleSlotRecipeWrapper);
         return !ovenRecipeResult.isEmpty() ? ovenRecipeResult : this.getSmeltingResult(RecipeType.SMELTING, this.singleSlotRecipeWrapper);
     }
 
     public <T extends Container> ItemStack getSmeltingResult(RecipeType<? extends Recipe<T>> recipeType, T container) {
-        RecipeHolder<?> recipe = this.level.getRecipeManager().getRecipeFor(recipeType, container, this.world).orElse(null);
+        RecipeHolder<?> recipe = this.level.getRecipeManager().getRecipeFor(recipeType, container, this.level).orElse(null);
         if (recipe != null) {
-            ItemStack result = recipe.value().getResult(this.world.getRegistryManager());
-            if (!result.isEmpty() && result.getItem().isFood()) {
+            ItemStack result = recipe.value().getResultItem(this.level.registryAccess());
+            if (!result.isEmpty() && result.getItem().isEdible()) {
                 return result;
             }
         }
@@ -336,7 +332,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
         this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade");
         this.energyStorage.setEnergy(tagCompound.getInt("EnergyStored"));
         if (tagCompound.contains("CustomName", 8)) {
-            this.customName = Component.Serialization.fromJson(tagCompound.getString("CustomName"));
+            this.customName = Component.Serializer.fromJson(tagCompound.getString("CustomName"));
         }
 
     }
@@ -351,12 +347,12 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
         tagCompound.putBoolean("HasPowerUpgrade", this.hasPowerUpgrade);
         tagCompound.putInt("EnergyStored", this.energyStorage.getEnergy());
         if (this.customName != null) {
-            tagCompound.putString("CustomName", Component.Serialization.toJsonString(this.customName));
+            tagCompound.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
     }
 
     @Override
-    protected void writeUpdateTag(NbtCompound tag) {
+    protected void writeUpdateTag(CompoundTag tag) {
         this.saveAdditional(tag);
         super.writeUpdateTag(tag);
     }
@@ -426,7 +422,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     }
 
     public AABB balmGetRenderBoundingBox() {
-        return new AABB(this.getBlockPos().offset(-1, 0, -1).toCenterPos(), this.getBlockPos().offset(2, 1, 2).toCenterPos());
+        return new AABB(this.getBlockPos().offset(-1, 0, -1).getCenter(), this.getBlockPos().offset(2, 1, 2).getCenter());
     }
 
     public Component getName() {

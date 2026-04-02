@@ -34,7 +34,7 @@ import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 public class WallToiletPaperBlock extends HorizontalDirectionalBlock {
     protected static final BooleanProperty WALL = BooleanProperty.create("wall");
     private static final List<FurnitureBlock> TOILET_PAPER = new ArrayList<>();
-    public static final MapCodec<WallToiletPaperBlock> CODEC = createCodec(WallToiletPaperBlock::new);
+    public static final MapCodec<WallToiletPaperBlock> CODEC = simpleCodec(WallToiletPaperBlock::new);
     public WallToiletPaperBlock(Properties settings) {
         super(settings);
         this.registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WALL, false));
@@ -43,7 +43,7 @@ public class WallToiletPaperBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 

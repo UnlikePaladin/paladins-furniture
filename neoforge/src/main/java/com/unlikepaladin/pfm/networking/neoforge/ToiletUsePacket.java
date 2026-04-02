@@ -7,17 +7,19 @@ import com.unlikepaladin.pfm.registry.SoundIDs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.NetworkEvent;
+import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
 import java.util.Optional;
 
-public class ToiletUsePacket implements CustomPayload {
-    public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "toilet_use");
+public class ToiletUsePacket implements CustomPacketPayload {
+    public static final ResourceLocation ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "toilet_use");
     private final BlockPos blockPos;
-    public ToiletUsePacket(PacketByteBuf buf) {
+    public ToiletUsePacket(FriendlyByteBuf buf) {
         this(buf.readBlockPos());
     }
 
@@ -27,9 +29,9 @@ public class ToiletUsePacket implements CustomPayload {
 
     public static void handle(ToiletUsePacket msg, PlayPayloadContext ctx) {
         ctx.workHandler().execute(() -> {
-            Optional<PlayerEntity> optionalPlayerEntity = ctx.player();
+            Optional<Player> optionalPlayerEntity = ctx.player();
             if (optionalPlayerEntity.isPresent()) {
-                PlayerEntity player = optionalPlayerEntity.get();
+                Player player = optionalPlayerEntity.get();
                 BlockPos blockPos = msg.blockPos;
                 Level world = player.level();
                 if (world.hasChunkAt(blockPos)) {
@@ -49,7 +51,7 @@ public class ToiletUsePacket implements CustomPayload {
     }
 
     @Override
-    public Identifier id() {
+    public ResourceLocation id() {
         return ID;
     }
 }

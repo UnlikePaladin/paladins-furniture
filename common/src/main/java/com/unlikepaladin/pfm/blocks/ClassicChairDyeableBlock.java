@@ -6,7 +6,7 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.item.DyeColor;
@@ -22,7 +22,7 @@ public class ClassicChairDyeableBlock extends ClassicChairBlock implements Dyeab
     private final DyeColor color;
     private static final List<FurnitureBlock> WOOD_DYEABLE_CLASSIC_CHAIRS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DYEABLE_CLASSIC_CHAIRS = new ArrayList<>();
-    public static MapCodec<ClassicChairDyeableBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(DyeColor.CODEC.fieldOf("color").forGetter(abstractSittableBlock -> abstractSittableBlock.color), createSettingsCodec()).apply(instance, ClassicChairDyeableBlock::new));;;
+    public static MapCodec<ClassicChairDyeableBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(DyeColor.CODEC.fieldOf("color").forGetter(abstractSittableBlock -> abstractSittableBlock.color), propertiesCodec()).apply(instance, ClassicChairDyeableBlock::new));;;
 
     public ClassicChairDyeableBlock(DyeColor color, Properties settings) {
         super(settings);
@@ -54,7 +54,7 @@ public class ClassicChairDyeableBlock extends ClassicChairBlock implements Dyeab
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 }

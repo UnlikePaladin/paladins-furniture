@@ -24,13 +24,13 @@ import static com.unlikepaladin.pfm.blocks.DinnerTableBlock.rotateShape;
 public class BasicSinkBlock extends AbstractSinkBlock {
     private static final List<BasicSinkBlock> SINKS = new ArrayList<>();
 
-    public BasicSinkBlock(Properties settings, Biome.Precipitation precipitationPredicate, CauldronBehavior.CauldronBehaviorMap behaviorMap) {
+    public BasicSinkBlock(Properties settings, Biome.Precipitation precipitationPredicate, CauldronInteraction.InteractionMap behaviorMap) {
         super(settings, precipitationPredicate, behaviorMap);
         SINKS.add(this);
     }
 
     @Override
-    public Function3<Settings, Biome.Precipitation, CauldronBehavior.CauldronBehaviorMap, AbstractSinkBlock> getSinkConstructor() {
+    public Function3<Properties, Biome.Precipitation, CauldronInteraction.InteractionMap, AbstractSinkBlock> getSinkConstructor() {
         return BasicSinkBlock::new;
     }
 

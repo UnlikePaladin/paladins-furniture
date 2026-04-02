@@ -39,7 +39,7 @@ public class PendantBlock extends PowerableBlock implements DynamicRenderLayerIn
     private final BlockState baseBlockState;
     private final Block baseBlock;
     private static final List<PendantBlock> PENDANTS = new ArrayList<>();
-    public static final MapCodec<PendantBlock> CODEC = createCodec(PendantBlock::new);
+    public static final MapCodec<PendantBlock> CODEC = simpleCodec(PendantBlock::new);
 
     public PendantBlock(Properties settings) {
         super(settings);
@@ -50,7 +50,7 @@ public class PendantBlock extends PowerableBlock implements DynamicRenderLayerIn
     }
 
     @Override
-    protected MapCodec<? extends PowerableBlock> getCodec() {
+    protected MapCodec<? extends PowerableBlock> codec() {
         return CODEC;
     }
 

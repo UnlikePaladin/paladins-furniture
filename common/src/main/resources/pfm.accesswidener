@@ -1,8 +1,6 @@
 accessWidener v1 named
 
 accessible class net/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier
-accessible method net/minecraft/data/loot/BlockLoot createSingleItemTable (Lnet/minecraft/world/level/ItemLike;)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
-accessible method net/minecraft/data/loot/BlockLoot createSinglePropConditionTable (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/level/block/state/properties/Property;Ljava/lang/Comparable;)Lnet/minecraft/world/level/storage/loot/LootTable$Builder;
 accessible class net/minecraft/data/tags/IntrinsicHolderTagsProvider$IntrinsicTagAppender
 accessible method net/minecraft/client/renderer/entity/ItemRenderer renderModelLists (Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V
 accessible class net/minecraft/data/HashCache$CacheUpdater
@@ -11,6 +9,4 @@ accessible field net/minecraft/world/flag/FeatureFlagSet universe Lnet/minecraft
 accessible field net/minecraft/world/flag/FeatureFlagSet mask J
 accessible field net/minecraft/world/flag/FeatureFlag mask J
 mutable field net/minecraft/world/flag/FeatureFlag mask J
-accessible class net/minecraft/data/server/tag/TagProvider$ProvidedTagBuilder
-accessible method net/minecraft/client/gui/screens/PopupScreen <init> (Lnet/minecraft/network/chat/Component;Ljava/util/List;Lcom/google/common/collect/ImmutableList;)V
 accessible class net/minecraft/client/renderer/texture/atlas/SpriteSource$SpriteSupplier

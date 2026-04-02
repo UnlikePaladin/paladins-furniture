@@ -20,12 +20,12 @@ public class TrashcanBlockImpl {
     }
 
     public static void openScreen(Player player, BlockState state, Level world, BlockPos pos) {
-        if (world.hasChunkAt(pos) && world.getBlockEntity(pos) instanceof TrashcanBlockEntityImpl){
+        if (world.hasChunkAt(pos) && world.getBlockEntity(pos) instanceof TrashcanBlockEntityImpl) {
             TrashcanBlockEntityImpl trashcanScreenHandler = (TrashcanBlockEntityImpl) world.getBlockEntity(pos);
             MenuProvider namedScreenHandlerFactory = new SimpleMenuProvider(((containerId, inv, player1) -> new TrashcanScreenHandler(trashcanScreenHandler, containerId, inv, trashcanScreenHandler)), Component.translatable("container.pfm.trashcan"));
-                player.openMenu(namedScreenHandlerFactory, packetByteBuf -> {
-                    packetByteBuf.writeBlockPos(trashcanScreenHandler.getBlockPos());
-                }
+            player.openMenu(namedScreenHandlerFactory, packetByteBuf -> {
+                        packetByteBuf.writeBlockPos(trashcanScreenHandler.getBlockPos());
+                    }
             );
         }
     }

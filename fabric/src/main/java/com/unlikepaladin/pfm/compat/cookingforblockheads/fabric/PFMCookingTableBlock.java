@@ -27,9 +27,9 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
         super(arg);
     }
 
-    public static final MapCodec<PFMCookingTableBlock> CODEC = createCodec(PFMCookingTableBlock::new);
+    public static final MapCodec<PFMCookingTableBlock> CODEC = simpleCodec(PFMCookingTableBlock::new);
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 

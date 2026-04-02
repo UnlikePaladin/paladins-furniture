@@ -28,8 +28,8 @@ import java.util.function.Predicate;
 public interface SinkBehavior extends CauldronInteraction {
 
     SinkBehavior FILL_SINK_WITH_WATER = (state, world, pos, player, hand, stack) -> SinkBehavior.fillCauldron(world, pos, player, hand, stack, state.setValue(KitchenSinkBlock.LEVEL_4, 3), SoundEvents.BUCKET_EMPTY);
-    CauldronBehaviorMap WATER_SINK_BEHAVIOR = CauldronBehaviorMap.createMap("sink");
-    CauldronBehaviorMap CLEAN_SHULKER_BOX = (state, world, pos, player, hand, stack) -> {
+    InteractionMap WATER_SINK_BEHAVIOR = CauldronInteraction.newInteractionMap("sink");
+    CauldronInteraction CLEAN_SHULKER_BOX = (state, world, pos, player, hand, stack) -> {
         if (state.getValue(KitchenSinkBlock.LEVEL_4) == 0) {
             return InteractionResult.PASS;
         }

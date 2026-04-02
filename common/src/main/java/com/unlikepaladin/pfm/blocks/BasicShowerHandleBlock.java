@@ -2,10 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHandleBlockEntity;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
@@ -50,9 +47,9 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
         SHOWER_HANDLE_BLOCKS.add(this);
     }
 
-    public static final MapCodec<BasicShowerHandleBlock> CODEC = createCodec(BasicShowerHandleBlock::new);
+    public static final MapCodec<BasicShowerHandleBlock> CODEC = simpleCodec(BasicShowerHandleBlock::new);
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
@@ -186,7 +183,7 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
             PiglinAi.angerNearbyPiglins(player, false);
         }
         world.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);
-        return super.onBreak(world, pos, state, player);
+        return super.playerWillDestroy(world, pos, state, player);
     }
 
     @Nullable

@@ -427,10 +427,10 @@ public class BlockPortalShape {
 
             Vec3 p1 = Vec3.atLowerCornerOf(rectanglePart.l).add(offset);
             Vec3 p2 = Vec3.atLowerCornerOf(rectanglePart.h).add(1, 1, 1).add(offset);
-            double p1LocalX = p1.subtract(center).dotProduct(portal.getAxisW());
-            double p1LocalY = p1.subtract(center).dotProduct(portal.getAxisH());
-            double p2LocalX = p2.subtract(center).dotProduct(portal.getAxisW());
-            double p2LocalY = p2.subtract(center).dotProduct(portal.getAxisH());
+            double p1LocalX = p1.subtract(center).dot(portal.getAxisW());
+            double p1LocalY = p1.subtract(center).dot(portal.getAxisH());
+            double p2LocalX = p2.subtract(center).dot(portal.getAxisW());
+            double p2LocalY = p2.subtract(center).dot(portal.getAxisH());
             mesh2D.addQuad(
                     p1LocalX, p1LocalY,
                     p2LocalX, p2LocalY

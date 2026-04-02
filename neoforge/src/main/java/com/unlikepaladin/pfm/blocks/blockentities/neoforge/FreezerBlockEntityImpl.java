@@ -26,6 +26,6 @@ public class FreezerBlockEntityImpl extends FreezerBlockEntity {
     @Override
     public void invalidateCapabilities() {
         super.invalidateCapabilities();
-        world.invalidateCapabilities(pos);
+        level.invalidateCapabilities(worldPosition);
     }
 }

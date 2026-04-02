@@ -36,7 +36,6 @@ public class PFMMirrorBlockIP extends MirrorBlock {
 
     @Override
     public void onBreak(Level world, BlockPos pos, BlockState state, Player player) {
-        super.onBreak(world, pos, state, player);
         if (PaladinFurnitureMod.getPFMConfig().doImmersivePortalsMirrorsSpawn()) {
         List<PFMMirrorEntity> mirrorBlockEntities;
             if (!world.isClient && !(mirrorBlockEntities = world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos))).isEmpty()) {

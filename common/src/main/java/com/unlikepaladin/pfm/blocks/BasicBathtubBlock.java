@@ -353,9 +353,9 @@ public class BasicBathtubBlock extends BedBlock {
         }
     }
 
-    public static final MapCodec<BasicBathtubBlock> CODEC = RecordCodecBuilder.mapCodec( (instance) -> instance.group(createSettingsCodec(), BathtubBehavior.CODEC.fieldOf("behaviorMap").forGetter(basicBathtubBlock -> basicBathtubBlock.behaviorMap), Biome.Precipitation.CODEC.fieldOf("precipitation").forGetter(basicBathtubBlock -> basicBathtubBlock.precipitation)).apply(instance, BasicBathtubBlock::new));
+    public static final MapCodec<BasicBathtubBlock> CODEC = RecordCodecBuilder.mapCodec( (instance) -> instance.group(propertiesCodec(), BathtubBehavior.CODEC.fieldOf("behaviorMap").forGetter(basicBathtubBlock -> basicBathtubBlock.behaviorMap), Biome.Precipitation.CODEC.fieldOf("precipitation").forGetter(basicBathtubBlock -> basicBathtubBlock.precipitation)).apply(instance, BasicBathtubBlock::new));
     @Override
-    public MapCodec<BedBlock> getCodec() {
+    public MapCodec<BedBlock> codec() {
         return (MapCodec<BedBlock>)(Object)CODEC;
     }
 }

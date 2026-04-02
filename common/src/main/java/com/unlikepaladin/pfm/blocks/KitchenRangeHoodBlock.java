@@ -30,7 +30,7 @@ public class KitchenRangeHoodBlock extends HorizontalDirectionalBlock {
     public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
     public static final BooleanProperty DRAWER = BooleanProperty.create("drawer");
     private static final List<FurnitureBlock> OVEN_RANGE_HOOD = new ArrayList<>();
-    public static final MapCodec<KitchenRangeHoodBlock> CODEC = createCodec(KitchenRangeHoodBlock::new);
+    public static final MapCodec<KitchenRangeHoodBlock> CODEC = simpleCodec(KitchenRangeHoodBlock::new);
 
     public KitchenRangeHoodBlock(Properties settings) {
         super(settings);
@@ -39,7 +39,7 @@ public class KitchenRangeHoodBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 

@@ -30,7 +30,7 @@ import java.util.stream.Stream;
 public class SimpleLightBlock extends PowerableBlock {
     public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
     private static final List<SimpleLightBlock> SIMPLE_LIGHTS = new ArrayList<>();
-    public static final MapCodec<SimpleLightBlock> CODEC = createCodec(SimpleLightBlock::new);
+    public static final MapCodec<SimpleLightBlock> CODEC = simpleCodec(SimpleLightBlock::new);
 
     public SimpleLightBlock(Properties settings) {
         super(settings);
@@ -39,7 +39,7 @@ public class SimpleLightBlock extends PowerableBlock {
     }
 
     @Override
-    protected MapCodec<? extends PowerableBlock> getCodec() {
+    protected MapCodec<? extends PowerableBlock> codec() {
         return CODEC;
     }
 

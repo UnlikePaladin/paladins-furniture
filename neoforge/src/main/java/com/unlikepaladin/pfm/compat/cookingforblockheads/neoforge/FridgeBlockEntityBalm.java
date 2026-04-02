@@ -10,6 +10,7 @@ import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.Container;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 

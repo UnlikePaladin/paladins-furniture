@@ -36,7 +36,7 @@ import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 public class MirrorBlock extends HorizontalDirectionalBlock {
 
     protected static List<FurnitureBlock> mirrorBlockList = new ArrayList<>();
-    public static final MapCodec<MirrorBlock> CODEC = createCodec(MirrorBlock::new);
+    public static final MapCodec<MirrorBlock> CODEC = simpleCodec(MirrorBlock::new);
 
     public MirrorBlock(BlockBehaviour.Properties settings) {
         super(settings);
@@ -44,7 +44,7 @@ public class MirrorBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 

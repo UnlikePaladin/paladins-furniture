@@ -6,7 +6,6 @@ import com.unlikepaladin.pfm.compat.PFMClientModCompatibility;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.PFMCookingForBlockheads;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.client.PFMCookingForBlockheadsClient;
 import com.unlikepaladin.pfm.data.PFMTag;
-import com.unlikepaladin.pfm.data.PFMTags;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
@@ -19,12 +18,10 @@ import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModBlockTags;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
-import net.minecraft.block.Block;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
@@ -66,7 +63,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     public void generateTags() {
         super.generateTags();
 
-        PFMTagProvider.getOrCreateTagBuilder(BlockTags.PICKAXE_MINEABLE)
+        PFMTagProvider.getOrCreateTagBuilder(BlockTags.MINEABLE_WITH_PICKAXE)
                 .add(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK);
 
         List<Block> storageBlocks = new ArrayList<>(PaladinFurnitureMod.furnitureEntryMap.get(KitchenDrawerBlock.class).getAllBlocks());

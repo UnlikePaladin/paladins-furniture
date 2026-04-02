@@ -20,7 +20,6 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.Util;
-import net.minecraft.util.dynamic.Codecs;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 

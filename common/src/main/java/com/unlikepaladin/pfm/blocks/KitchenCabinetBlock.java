@@ -60,9 +60,9 @@ public class KitchenCabinetBlock extends HorizontalDirectionalBlock implements E
         }
     }
 
-    public static final MapCodec<KitchenCabinetBlock> CODEC = createCodec(KitchenCabinetBlock::new);
+    public static final MapCodec<KitchenCabinetBlock> CODEC = simpleCodec(KitchenCabinetBlock::new);
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 

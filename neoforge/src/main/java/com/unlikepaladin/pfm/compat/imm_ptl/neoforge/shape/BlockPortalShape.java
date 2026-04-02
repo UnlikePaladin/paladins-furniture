@@ -415,10 +415,10 @@ public class BlockPortalShape {
             ).forEach(part -> {
                 Vec3d p1 = Vec3d.of(part.l).add(offset);
                 Vec3d p2 = Vec3d.of(part.h).add(1, 1, 1).add(offset);
-                double p1LocalX = p1.subtract(center).dotProduct(portal.axisW);
-                double p1LocalY = p1.subtract(center).dotProduct(portal.axisH);
-                double p2LocalX = p2.subtract(center).dotProduct(portal.axisW);
-                double p2LocalY = p2.subtract(center).dotProduct(portal.axisH);
+                double p1LocalX = p1.subtract(center).dot(portal.axisW);
+                double p1LocalY = p1.subtract(center).dot(portal.axisH);
+                double p2LocalX = p2.subtract(center).dot(portal.axisW);
+                double p2LocalY = p2.subtract(center).dot(portal.axisH);
                 shape.addTriangleForRectangle(
                         p1LocalX, p1LocalY,
                         p2LocalX, p2LocalY
@@ -429,10 +429,10 @@ public class BlockPortalShape {
 
             Vec3d p1 = Vec3d.of(rectanglePart.l).add(offset);
             Vec3d p2 = Vec3d.of(rectanglePart.h).add(1, 1, 1).add(offset);
-            double p1LocalX = p1.subtract(center).dotProduct(portal.axisW);
-            double p1LocalY = p1.subtract(center).dotProduct(portal.axisH);
-            double p2LocalX = p2.subtract(center).dotProduct(portal.axisW);
-            double p2LocalY = p2.subtract(center).dotProduct(portal.axisH);
+            double p1LocalX = p1.subtract(center).dot(portal.axisW);
+            double p1LocalY = p1.subtract(center).dot(portal.axisH);
+            double p2LocalX = p2.subtract(center).dot(portal.axisW);
+            double p2LocalY = p2.subtract(center).dot(portal.axisH);
             shape.addTriangleForRectangle(
                     p1LocalX, p1LocalY,
                     p2LocalX, p2LocalY

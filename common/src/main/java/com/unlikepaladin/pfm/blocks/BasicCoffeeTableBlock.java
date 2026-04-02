@@ -285,7 +285,7 @@ public class BasicCoffeeTableBlock extends Block {
     }
 
     @Override
-    protected MapCodec<? extends Block> getCodec() {
+    protected MapCodec<? extends Block> codec() {
         return CODEC;
     }
 }

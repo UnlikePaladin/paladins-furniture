@@ -15,9 +15,12 @@ import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.balm.forge.energy.ForgeEnergyStorage;
 import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
-import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IngredientPredicate;
+import net.blay09.mods.cookingforblockheads.api.CacheHint;
+import net.blay09.mods.cookingforblockheads.api.IngredientToken;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.block.entity.FridgeBlockEntity;
+import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.Container;
@@ -61,7 +64,7 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements Ba
 
             @Override
             public IngredientToken findIngredient(ItemStack itemStack, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
-                IngredientToken result = applyIceUnit(stack -> ItemStack.areItemsEqual(stack, itemStack));
+                IngredientToken result = applyIceUnit(stack -> ItemStack.isSameItem(stack, itemStack));
                 if (result != null)
                     return result;
 

@@ -59,7 +59,7 @@ public class FroggyChairBlock extends BasicChairBlock {
     }
 
     @Override
-    public Function<Settings, AbstractSittableBlock> getChairConstructor() {
+    public Function<Properties, AbstractSittableBlock> getChairConstructor() {
         return FroggyChairBlock::new;
     }
 }

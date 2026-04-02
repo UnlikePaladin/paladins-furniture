@@ -5,11 +5,11 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity3x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -47,7 +47,7 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     public static BooleanProperty OPEN = BlockStateProperties.OPEN;
 
 
-    public static final MapCodec<ClassicDeskCabinetBlock> CODEC = createCodec(ClassicDeskCabinetBlock::new);
+    public static final MapCodec<ClassicDeskCabinetBlock> CODEC = simpleCodec(ClassicDeskCabinetBlock::new);
     private static final List<FurnitureBlock> WOOD_CLASSIC_DESK_CABINETS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_CLASSIC_DESK_CABINETS = new ArrayList<>();
     private final BlockState baseBlockState;
@@ -68,7 +68,7 @@ public class ClassicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
 
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 

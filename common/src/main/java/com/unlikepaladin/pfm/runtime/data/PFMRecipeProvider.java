@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.runtime.data;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
@@ -15,6 +16,7 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.Util;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -41,6 +43,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Tuple;
+import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -73,10 +76,10 @@ public class PFMRecipeProvider extends PFMProvider {
                     throw new IllegalStateException("Recipe Json Provider is null");
                 }
                 Path recipePath = path.resolve("data/" + recipeId.getNamespace() + "/recipes/" + recipeId.getPath() + ".json");
-                enqueueJsonWrite(getWriteQueue(), recipePath, Util.getResult(Recipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe), IllegalStateException::new));
+                enqueueJsonWrite(getWriteQueue(), recipePath, Util.getOrThrow(Recipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe), IllegalStateException::new));
                 if (advancementEntry != null) {
                     Path advancementPath = path.resolve("data/" + recipeId.getNamespace() + "/advancements/" + advancementEntry.id().getPath() + ".json");
-                    enqueueJsonWrite(getWriteQueue(), advancementPath, Util.getResult(Advancement.CODEC.encodeStart(JsonOps.INSTANCE, advancementEntry.value()), IllegalStateException::new));
+                    enqueueJsonWrite(getWriteQueue(), advancementPath, Util.getOrThrow(Advancement.CODEC.encodeStart(JsonOps.INSTANCE, advancementEntry.value()), IllegalStateException::new));
                 }
             }
 
@@ -86,7 +89,7 @@ public class PFMRecipeProvider extends PFMProvider {
             }
         });
 
-        enqueueJsonWrite(getWriteQueue(), path.resolve("data/pfm/advancements/recipes/root.json"), Util.getResult(Advancement.CODEC.encodeStart(JsonOps.INSTANCE, Advancement.Builder.create().criterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).build(new ResourceLocation("root")).value()), IllegalAccessError::new));
+        enqueueJsonWrite(getWriteQueue(), path.resolve("data/pfm/advancements/recipes/root.json"), Util.getOrThrow(Advancement.CODEC.encodeStart(JsonOps.INSTANCE, Advancement.Builder.advancement().addCriterion("has_planks", conditionsFromTag(ItemTags.PLANKS)).build(new ResourceLocation("root")).value()), IllegalAccessError::new));
         waitForWrite();
         endProviderRun();
     }

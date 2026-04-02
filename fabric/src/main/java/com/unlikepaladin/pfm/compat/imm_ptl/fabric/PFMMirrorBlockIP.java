@@ -45,7 +45,7 @@ public class PFMMirrorBlockIP extends MirrorBlock {
                 world.blockUpdated(pos, state.getBlock());
             }
         }
-        return super.onBreak(world, pos, state, player);
+        return super.playerWillDestroy(world, pos, state, player);
     }
 
     @Override

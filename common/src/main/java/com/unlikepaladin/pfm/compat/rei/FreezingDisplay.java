@@ -17,7 +17,7 @@ import java.util.Optional;
 public class FreezingDisplay implements Display {
     public static final CategoryIdentifier<FreezingDisplay> IDENTIFIER = CategoryIdentifier.of(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "freezing"));
 
-    private final RecipeEntry<FreezingRecipe> recipeEntry;
+    private final RecipeHolder<FreezingRecipe> recipeEntry;
     public List<EntryIngredient> input;
     public List<EntryIngredient> output;
     public int cookTime;

@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -43,7 +44,7 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
     public static BooleanProperty OPEN = BlockStateProperties.OPEN;
     private static final List<FurnitureBlock> WOOD_NIGHTSTAND = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_NIGHTSTAND = new ArrayList<>();
-    public static final MapCodec<ClassicNightstandBlock> CODEC = createCodec(ClassicNightstandBlock::new);
+    public static final MapCodec<ClassicNightstandBlock> CODEC = simpleCodec(ClassicNightstandBlock::new);
 
     public ClassicNightstandBlock(Properties settings) {
         super(settings);
@@ -58,7 +59,7 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
 
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 

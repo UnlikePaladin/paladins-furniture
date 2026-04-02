@@ -1,33 +1,21 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge;
 
-import com.google.common.collect.Lists;
-import com.google.common.collect.Table;
-import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.neoforge.FreezerBlockEntityImpl;
 import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.provider.BalmProviderHolder;
-import net.blay09.mods.balm.neoforge.energy.NeoForgeEnergyStorage;
-import net.blay09.mods.balm.neoforge.fluid.NeoForgeFluidTank;
-import net.blay09.mods.balm.neoforge.provider.NeoForgeBalmProviders;
-import net.blay09.mods.cookingforblockheads.api.capability.DefaultKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.IngredientPredicate;
+import net.blay09.mods.cookingforblockheads.api.CacheHint;
+import net.blay09.mods.cookingforblockheads.api.IngredientToken;
+import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.block.entity.FridgeBlockEntity;
+import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.Container;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.core.Direction;
-import net.neoforged.neoforge.common.capabilities.Capabilities;
-import net.neoforged.neoforge.common.capabilities.Capability;
-import net.neoforged.neoforge.common.util.LazyOptional;
-import net.neoforged.neoforge.items.wrapper.InvWrapper;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import net.blay09.mods.cookingforblockheads.api.SourceItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -59,7 +47,7 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl implements Ba
 
             @Override
             public IngredientToken findIngredient(ItemStack itemStack, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
-                IngredientToken result = applyIceUnit(stack -> ItemStack.areItemsEqual(stack, itemStack));
+                IngredientToken result = applyIceUnit(stack -> ItemStack.isSameItem(stack, itemStack));
                 if (result != null)
                     return result;
 

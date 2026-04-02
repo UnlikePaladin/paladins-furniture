@@ -18,6 +18,8 @@ import net.blay09.mods.cookingforblockheads.block.entity.FridgeBlockEntity;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -26,9 +28,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.recipe.Ingredient;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -49,7 +49,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PFMCookingForBlockHeadsCompat {
-    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.copy(Blocks.GRAY_CONCRETE));//PaladinFurnitureModBlocksItems.GRAY_STOVE));
+    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE));//PaladinFurnitureModBlocksItems.GRAY_STOVE));
     public static <T extends AbstractContainerMenu> TriFunc<Integer, Inventory, FriendlyByteBuf, T> getStoveScreenHandler() {
         return (integer, playerInventory, packetByteBuf) -> {
             BlockPos pos = packetByteBuf.readBlockPos();
@@ -81,7 +81,7 @@ public class PFMCookingForBlockHeadsCompat {
         ItemStack heldItem = player.getItemInHand(hand);
         if (heldItem.getItem() == ModItems.heatingUnit) {
             return InteractionResult.PASS;
-        } else if (hit.getDirection() == Direction.UP && heldItem.isIn(ModItemTags.UTENSILS)) {
+        } else if (hit.getDirection() == Direction.UP && heldItem.is(ModItemTags.UTENSILS)) {
             Direction stateFacing = state.getValue(StoveBlock.FACING);
             double hx =  (hit.getLocation().x - hit.getBlockPos().getX());
             double hz = (hit.getLocation().z - hit.getBlockPos().getZ());
@@ -164,7 +164,7 @@ public class PFMCookingForBlockHeadsCompat {
 
                 @Override
                 public IngredientToken findIngredient(ItemStack itemStack, Collection<IngredientToken> ingredientTokens, CacheHint cacheHint) {
-                    IngredientToken result = applyIceUnit(stack -> ItemStack.areItemsEqual(stack, itemStack));
+                    IngredientToken result = applyIceUnit(stack -> ItemStack.isSameItem(stack, itemStack));
                     if (result != null)
                         return result;
 

@@ -32,7 +32,7 @@ public class KitchenSinkBlock extends AbstractSinkBlock {
     private static final List<FurnitureBlock> WOOD_SINKS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_SINKS = new ArrayList<>();
 
-    public KitchenSinkBlock(Properties settings, Biome.Precipitation precipitationPredicate, CauldronBehavior.CauldronBehaviorMap map) {
+    public KitchenSinkBlock(Properties settings, Biome.Precipitation precipitationPredicate, CauldronInteraction.InteractionMap map) {
         super(settings, precipitationPredicate, map);
         if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(KitchenSinkBlock.class)){
             WOOD_SINKS.add(new FurnitureBlock(this, "kitchen_sink"));
@@ -78,7 +78,7 @@ public class KitchenSinkBlock extends AbstractSinkBlock {
     }
 
     @Override
-    public Function3<Settings, Biome.Precipitation, CauldronBehavior.CauldronBehaviorMap, AbstractSinkBlock> getSinkConstructor() {
+    public Function3<Properties, Biome.Precipitation, CauldronInteraction.InteractionMap, AbstractSinkBlock> getSinkConstructor() {
         return KitchenSinkBlock::new;
     }
 }

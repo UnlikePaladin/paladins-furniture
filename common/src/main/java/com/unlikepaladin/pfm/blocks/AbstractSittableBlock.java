@@ -49,7 +49,7 @@ public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock {
 
         this.height = 0.7f;
         if (!CODECS.containsKey(this)) {
-            CODECS.put(this.getClass(), createCodec(settings1 -> getChairConstructor().apply(settings1)));
+            CODECS.put(this.getClass(), simpleCodec(settings1 -> getChairConstructor().apply(settings1)));
         }
     }
 
@@ -207,10 +207,10 @@ public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock {
 
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODECS.get(this.getClass());
     }
 
-    public abstract Function<Settings, AbstractSittableBlock> getChairConstructor();
+    public abstract Function<Properties, AbstractSittableBlock> getChairConstructor();
 }
 

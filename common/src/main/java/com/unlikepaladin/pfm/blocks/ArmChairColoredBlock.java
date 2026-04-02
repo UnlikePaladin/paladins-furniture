@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -33,7 +34,7 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
     public static final EnumProperty<ArmChairShape> SHAPE = EnumProperty.create("shape", ArmChairShape.class);
     private static final List<FurnitureBlock> COLORED_ARMCHAIRS = new ArrayList<>();
     private final DyeColor color;
-    public static MapCodec<ArmChairColoredBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(DyeColor.CODEC.fieldOf("color").forGetter(abstractSittableBlock -> abstractSittableBlock.color), createSettingsCodec()).apply(instance, ArmChairColoredBlock::new));;
+    public static MapCodec<ArmChairColoredBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(DyeColor.CODEC.fieldOf("color").forGetter(abstractSittableBlock -> abstractSittableBlock.color), propertiesCodec()).apply(instance, ArmChairColoredBlock::new));;
 
     public ArmChairColoredBlock(DyeColor color, Properties settings) {
         super(settings);
@@ -45,7 +46,7 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 

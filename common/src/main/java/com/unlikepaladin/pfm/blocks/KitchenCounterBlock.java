@@ -44,9 +44,9 @@ public class KitchenCounterBlock extends HorizontalDirectionalBlock {
         }
     }
 
-    public static final MapCodec<KitchenCounterBlock> CODEC = createCodec(KitchenCounterBlock::new);
+    public static final MapCodec<KitchenCounterBlock> CODEC = simpleCodec(KitchenCounterBlock::new);
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 

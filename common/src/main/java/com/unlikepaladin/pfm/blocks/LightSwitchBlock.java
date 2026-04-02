@@ -2,10 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.LightSwitchBlockEntity;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -44,7 +41,7 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
     private static final List<LightSwitchBlock> LIGHT_SWITCHES = new ArrayList<>();
-    public static final MapCodec<LightSwitchBlock> CODEC = createCodec(LightSwitchBlock::new);
+    public static final MapCodec<LightSwitchBlock> CODEC = simpleCodec(LightSwitchBlock::new);
 
     public LightSwitchBlock(Properties settings) {
         super(settings);
@@ -53,7 +50,7 @@ public class LightSwitchBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
