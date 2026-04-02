@@ -2,10 +2,10 @@ package com.unlikepaladin.pfm.registry.dynamic;
 
 import com.unlikepaladin.pfm.blocks.DyeableFurnitureBlock;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
-import net.minecraft.block.Block;
-import net.minecraft.entity.vehicle.BoatEntity;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -52,7 +52,7 @@ public class FurnitureEntry<T extends Block> {
         return getEntryFromVariant(variant, false);
     }
 
-    public List<Identifier> getVariants() {
+    public List<ResourceLocation> getVariants() {
         return variantToBlockMap.keySet().stream().map(variantBase -> variantBase.identifier).toList();
     }
 
@@ -104,7 +104,7 @@ public class FurnitureEntry<T extends Block> {
         return variantToBlockMapNonBase;
     }
 
-    public Optional<T> getFromIdentifier(Identifier identifier, boolean base) {
+    public Optional<T> getFromIdentifier(ResourceLocation identifier, boolean base) {
         if (base){
             for (VariantBase<?> variantBase : variantToBlockMap.keySet()) {
                 if (variantBase.identifier.equals(identifier)) {
@@ -119,23 +119,23 @@ public class FurnitureEntry<T extends Block> {
             }
         }
         for (T block : allBlocks)  {
-            if (block.getTranslationKey().contains(identifier.getPath())) {
+            if (block.getDescriptionId().contains(identifier.getPath())) {
                 return Optional.of(block);
             }
         }
         return Optional.empty();
     }
 
-    public T getFromVanillaWoodType(BoatEntity.Type woodType, boolean base){
+    public T getFromVanillaWoodType(Boat.Type woodType, boolean base){
         if (base) {
             for (VariantBase<?> variant : variantToBlockMap.keySet()){
-                if (variant.getBaseBlock().equals(woodType.getBaseBlock())) {
+                if (variant.getBaseBlock().equals(woodType.getPlanks())) {
                     return variantToBlockMap.get(variant);
                 }
             }
         } else {
             for (VariantBase<?> variant : variantToBlockMapNonBase.keySet()){
-                if (variant.getBaseBlock().equals(woodType.getBaseBlock())) {
+                if (variant.getBaseBlock().equals(woodType.getPlanks())) {
                     return variantToBlockMapNonBase.get(variant);
                 }
             }

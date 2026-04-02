@@ -8,41 +8,44 @@ import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.recipe.CampfireCookingRecipe;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SmokerBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.item.crafting.CampfireCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.Containers;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,49 +56,50 @@ import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterface {
     private static final List<FurnitureBlock> STOVES = new ArrayList<>();
-    public static final BooleanProperty OPEN = Properties.OPEN;
-    public StoveBlock(Settings settings) {
+    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
+    public StoveBlock(Properties settings) {
         super(settings);
         if (this.getClass().isAssignableFrom(StoveBlock.class)){
             STOVES.add(new FurnitureBlock(this, "stove"));
         }
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(LIT, false).with(OPEN, false));
+        registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(LIT, false).setValue(OPEN, false));
     }
     public static Stream<FurnitureBlock> streamStoves() {
         return STOVES.stream();
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, LIT, OPEN);
     }
+
     @Override
-    protected void openScreen(World world, BlockPos pos, PlayerEntity player) {
+    protected void openContainer(Level world, BlockPos pos, Player player) {
         openMenuScreen(world, pos, player);
     }
 
     @ExpectPlatform
-    public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
+    public static void openMenuScreen(Level world, BlockPos pos, Player player) {
 
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             return onUseCookingForBlockheads(state, world, pos, player, hand, hit);
         } else {
-            if (world.isClient) {
-                return ActionResult.SUCCESS;
+            if (world.isClientSide) {
+                return InteractionResult.SUCCESS;
             }
-            if (hit.getSide() == Direction.UP && world.getBlockEntity(pos) instanceof StoveBlockEntity) {
+            if (hit.getDirection() == Direction.UP && world.getBlockEntity(pos) instanceof StoveBlockEntity) {
                 ItemStack itemStack;
                 StoveBlockEntity stoveBlockEntity;
-                Optional<RecipeEntry<CampfireCookingRecipe>> optional;
+                Optional<RecipeHolder<CampfireCookingRecipe>> optional;
                 BlockEntity blockEntity = world.getBlockEntity(pos);
-                if (blockEntity instanceof StoveBlockEntity && (optional = (stoveBlockEntity = (StoveBlockEntity)blockEntity).getRecipeFor(itemStack = player.getStackInHand(hand))).isPresent()) {
-                    if (stoveBlockEntity.addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack, optional.get().value().getCookingTime())) {
-                        player.incrementStat(Statistics.STOVE_OPENED);
-                        return ActionResult.SUCCESS;
+                if (blockEntity instanceof StoveBlockEntity && (optional = (stoveBlockEntity = (StoveBlockEntity)blockEntity).getRecipeFor(itemStack = player.getItemInHand(hand))).isPresent()) {
+                    if (stoveBlockEntity.addItem(player.getAbilities().instabuild ? itemStack.copy() : itemStack, optional.get().value().getCookingTime())) {
+                        player.awardStat(Statistics.STOVE_OPENED);
+                        return InteractionResult.SUCCESS;
                     }
                 }
                 if(blockEntity instanceof StoveBlockEntity){
@@ -103,42 +107,42 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
                     for (int i = 0; i < stoveBlockEntity.getItemsBeingCooked().size(); i++) {
                         ItemStack stack = stoveBlockEntity.getItemsBeingCooked().get(i);
                         if (stack.isEmpty()) continue;
-                        if(world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isEmpty()) {
-                            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stoveBlockEntity.removeStack(i));
-                            world.spawnEntity(itemEntity);
-                            player.incrementStat(Statistics.STOVE_OPENED);
-                            return ActionResult.SUCCESS;
+                        if(world.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SimpleContainer(stack), world).isEmpty()) {
+                            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stoveBlockEntity.removeItemNoUpdate(i));
+                            world.addFreshEntity(itemEntity);
+                            player.awardStat(Statistics.STOVE_OPENED);
+                            return InteractionResult.SUCCESS;
                         }
                     }
-                    return ActionResult.CONSUME;
+                    return InteractionResult.CONSUME;
                 }
-                return ActionResult.PASS;
+                return InteractionResult.PASS;
             }
             else{
-                this.openScreen(world, pos, player);
+                this.openContainer(world, pos, player);
             }
-            return ActionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
     }
 
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
     }
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    protected static final VoxelShape STOVE = VoxelShapes.union(createCuboidShape(0, 0, 1, 16, 1, 16),createCuboidShape(0, 1, 0, 16, 16, 16),createCuboidShape(0, 16, 15, 16, 19, 16));
+    protected static final VoxelShape STOVE = Shapes.or(box(0, 0, 1, 16, 1, 16),box(0, 1, 0, 16, 16, 16),box(0, 16, 15, 16, 19, 16));
     protected static final VoxelShape STOVE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STOVE);
     protected static final VoxelShape STOVE_WEST = rotateShape(Direction.NORTH, Direction.WEST, STOVE);
     protected static final VoxelShape STOVE_EAST = rotateShape(Direction.NORTH, Direction.EAST, STOVE);
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+        Direction dir = state.getValue(FACING);
         return switch (dir) {
             case WEST -> STOVE_WEST;
             case NORTH -> STOVE;
@@ -146,16 +150,17 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
             default -> STOVE_EAST;
         };
     }
+
     @Override
-    public void randomDisplayTick(BlockState state, World world, BlockPos pos, Random random) {
-        if (!state.get(LIT)) {
+    public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource random) {
+        if (!state.getValue(LIT)) {
             return;
         }
         double x = (double)pos.getX() + 0.5;
         double y = pos.getY();
         double z = (double)pos.getZ() + 0.5;
         if (random.nextDouble() < 0.1) {
-            world.playSound(x, y, z, SoundEvents.BLOCK_SMOKER_SMOKE, SoundCategory.BLOCKS, 1.0f, 1.0f, false);
+            world.playLocalSound(x, y, z, SoundEvents.SMOKER_SMOKE, SoundSource.BLOCKS, 1.0f, 1.0f, false);
         }
         int min = 0;
         int max = 3;
@@ -169,7 +174,7 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
     }
 
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return getBlockEntity(pos, state);
     }
 
@@ -179,45 +184,45 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
     }
 
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(World world, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
         return getModdedTicker(world, state, type);
     }
 
     @ExpectPlatform
-    public static <T extends BlockEntity> BlockEntityTicker<T> getModdedTicker(World world, BlockState state, BlockEntityType<T> type){
+    public static <T extends BlockEntity> BlockEntityTicker<T> getModdedTicker(Level world, BlockState state, BlockEntityType<T> type){
         throw new AssertionError();
     }
 
     @ExpectPlatform
-    public static ActionResult onUseCookingForBlockheads(BlockState blockState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult blockHitResult){
+    public static InteractionResult onUseCookingForBlockheads(BlockState blockState, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult){
         throw new AssertionError();
     }
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.isOf(newState.getBlock())) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.is(newState.getBlock())) {
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof StoveBlockEntity)
         {
-            if (world instanceof ServerWorld) {
-                ItemScatterer.spawn(world, pos, (StoveBlockEntity)blockEntity);
-                ((StoveBlockEntity)blockEntity).getRecipesUsedAndDropExperience((ServerWorld) world, Vec3d.ofCenter(pos));
-                ItemScatterer.spawn(world, pos, ((StoveBlockEntity)blockEntity).getItemsBeingCooked());
+            if (world instanceof ServerLevel) {
+                Containers.dropContents(world, pos, (StoveBlockEntity)blockEntity);
+                ((StoveBlockEntity)blockEntity).getRecipesToAwardAndPopExperience((ServerLevel) world, Vec3.atCenterOf(pos));
+                Containers.dropContents(world, pos, ((StoveBlockEntity)blockEntity).getItemsBeingCooked());
             }
-            world.updateComparators(pos, this);
+            world.updateNeighbourForOutputSignal(pos, this);
         }
-        super.onStateReplaced(state, world, pos, newState, moved);
+        super.onRemove(state, world, pos, newState, moved);
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter world, BlockPos pos, PathComputationType type) {
         return false;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public RenderLayer getCustomRenderLayer() {
-        return RenderLayer.getTranslucent();
+    public RenderType getCustomRenderLayer() {
+        return RenderType.translucent();
     }
 }

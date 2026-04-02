@@ -4,15 +4,13 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.registry.SoundIDs;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 import java.util.Optional;
 
@@ -33,20 +31,20 @@ public class ToiletUsePacket implements CustomPayload {
             if (optionalPlayerEntity.isPresent()) {
                 PlayerEntity player = optionalPlayerEntity.get();
                 BlockPos blockPos = msg.blockPos;
-                World world = player.getEntityWorld();
-                if (world.isChunkLoaded(blockPos)) {
-                    world.setBlockState(blockPos, world.getBlockState(blockPos).with(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
-                    world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundCategory.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
+                Level world = player.level();
+                if (world.hasChunkAt(blockPos)) {
+                    world.setBlockAndUpdate(blockPos, world.getBlockState(blockPos).setValue(BasicToiletBlock.TOILET_STATE, ToiletState.DIRTY));
+                    world.playSound(null, blockPos.getX(), blockPos.getY(), blockPos.getZ(), SoundIDs.TOILET_USED_EVENT, SoundSource.BLOCKS, 0.3f, world.random.nextFloat() * 0.1f + 0.9f);
                 }
                 else {
-                    player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+                    player.displayClientMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"), false);
                 }
             }
         });
     }
 
     @Override
-    public void write(PacketByteBuf buffer) {
+    public void write(FriendlyByteBuf buffer) {
         buffer.writeBlockPos(this.blockPos);
     }
 

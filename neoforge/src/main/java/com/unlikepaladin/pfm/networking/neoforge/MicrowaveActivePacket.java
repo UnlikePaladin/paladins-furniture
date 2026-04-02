@@ -2,14 +2,12 @@ package com.unlikepaladin.pfm.networking.neoforge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.neoforged.neoforge.network.handling.PlayPayloadContext;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.network.NetworkEvent;
 
 public class MicrowaveActivePacket implements CustomPayload {
     public static final Identifier ID = new Identifier(PaladinFurnitureMod.MOD_ID, "microwave_active");
@@ -32,21 +30,21 @@ public class MicrowaveActivePacket implements CustomPayload {
             BlockPos entityPos = msg.entityPos;
             boolean active = msg.active;
             if (ctx.player().isPresent()) {
-                PlayerEntity player = ctx.player().get();
-                World world = player.getEntityWorld();
+                Player player = ctx.player().get();
+                Level world = player.level();
                 if (world.isChunkLoaded(entityPos)) {
                     MicrowaveBlockEntity microwaveBlockEntity = (MicrowaveBlockEntity) world.getBlockEntity(entityPos);
                     microwaveBlockEntity.setActive(active);
                 }
                 else {
-                    player.sendMessage(Text.of("Trying to access unloaded chunks, are you cheating?"), false);
+                    player.displayClientMessage(Component.literal("Trying to access unloaded chunks, are you cheating?"), false);
                 }
             }
         });
     }
 
     @Override
-    public void write(PacketByteBuf buffer) {
+    public void write(FriendlyByteBuf buffer) {
         BlockPos entityPos = this.entityPos;
         boolean active = this.active;
         buffer.writeBlockPos(entityPos);

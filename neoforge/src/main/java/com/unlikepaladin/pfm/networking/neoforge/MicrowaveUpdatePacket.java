@@ -1,10 +1,10 @@
 package com.unlikepaladin.pfm.networking.neoforge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.packet.CustomPayload;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
 
@@ -18,7 +18,7 @@ public class MicrowaveUpdatePacket implements CustomPayload {
         this.active = active;
     }
 
-    public MicrowaveUpdatePacket(PacketByteBuf buffer) {
+    public MicrowaveUpdatePacket(FriendlyByteBuf buffer) {
         this(buffer.readBlockPos(), buffer.readBoolean());
     }
 
@@ -35,7 +35,7 @@ public class MicrowaveUpdatePacket implements CustomPayload {
     }
 
     @Override
-    public void write(PacketByteBuf buffer) {
+    public void write(FriendlyByteBuf buffer) {
         BlockPos entityPos = this.entityPos;
         boolean active = this.active;
         buffer.writeBlockPos(entityPos);

@@ -4,21 +4,13 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.recipes.DynamicFurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
-import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.SimpleFurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.forge.FurnitureSerializerForge;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntityType;
-import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import net.minecraft.recipe.CookingRecipeSerializer;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Identifier;
-import net.minecraft.registry.Registry;
+import net.minecraft.world.item.crafting.SimpleCookingSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegisterEvent;
 
@@ -29,7 +21,7 @@ public class RecipeRegistryForge {
     public static void registerRecipeSerializers(RegisterEvent event) {
         event.register(ForgeRegistries.Keys.RECIPE_SERIALIZERS, recipeSerializerRegisterHelper -> {
             recipeSerializerRegisterHelper.register(
-                    RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new CookingRecipeSerializer<>(FreezingRecipe::new, 200)
+                    RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new SimpleCookingSerializer<>(FreezingRecipe::new, 200)
             );
             recipeSerializerRegisterHelper.register(
                     RecipeTypes.SIMPLE_FURNITURE_ID, RecipeTypes.SIMPLE_FURNITURE_SERIALIZER = new FurnitureSerializerForge<>(new SimpleFurnitureRecipe.Serializer())

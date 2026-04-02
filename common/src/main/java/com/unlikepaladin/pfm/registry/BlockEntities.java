@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.registry;
 
 import com.unlikepaladin.pfm.blocks.blockentities.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class BlockEntities {
     public static BlockEntityType<? extends GenericStorageBlockEntity9x3> DRAWER_BLOCK_ENTITY;

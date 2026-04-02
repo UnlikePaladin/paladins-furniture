@@ -20,12 +20,13 @@ import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModBlockTags;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.registry.tag.BlockTags;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +35,8 @@ import java.util.Optional;
 public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     private PFMClientModCompatibility clientModCompatibility;
     @Override
-    public void generateRecipes(RecipeExporter exporter) {
-        SimpleFurnitureRecipeJsonFactory.create(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK, 4).group("kitchen").criterion(PFMRecipeProvider.getCriterionNameFromOutput(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK), PFMRecipeProvider.conditionsFromItem(ModItems.recipeBook)).input(ModItems.recipeBook).input(Blocks.WHITE_CONCRETE, 2).input(Blocks.GRAY_CONCRETE).offerTo(exporter, new Identifier("pfm", PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK.asItem().getTranslationKey().replace("block.pfm.", "")));
+    public void generateRecipes(RecipeOutput exporter) {
+        SimpleFurnitureRecipeJsonFactory.create(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK, 4).group("kitchen").unlockedBy(PFMRecipeProvider.getunlockedByNameFromOutput(PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK), PFMRecipeProvider.conditionsFromItem(ModItems.recipeBook)).input(ModItems.recipeBook).input(Blocks.WHITE_CONCRETE, 2).input(Blocks.GRAY_CONCRETE).save(exporter, new ResourceLocation("pfm", PFMCookingForBlockHeadsCompat.COOKING_TABLE_BLOCK.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
     @Override
@@ -44,6 +45,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
             clientModCompatibility = new PFMCookingForBlockheadsClient(this);
         return Optional.of(clientModCompatibility);
     }
+
     @Override
     public String getModId() {
         return "cookingforblockheads";
@@ -94,7 +96,7 @@ public class PFMCookingForBlockheadsImpl extends PFMCookingForBlockheads {
     }
 
     private <T> void registerLookup(String provName, Class<T> clazz, BlockEntityType<?>... blockEntities) {
-        Identifier identifier = new Identifier(getModId(), provName);
+        ResourceLocation identifier = new ResourceLocation(getModId(), provName);
         BlockApiLookup<T, Void> lookup = BlockApiLookup.get(identifier, clazz, Void.class);
         lookup.registerForBlockEntities((blockEntity, context) -> {
             return blockEntity instanceof BalmBlockEntity ? ((BalmBlockEntity) blockEntity).getProvider(clazz) : ((BlockEntityContract)blockEntity).getProvider(clazz);

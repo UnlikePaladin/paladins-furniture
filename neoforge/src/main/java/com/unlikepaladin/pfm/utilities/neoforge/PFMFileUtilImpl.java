@@ -2,7 +2,7 @@ package com.unlikepaladin.pfm.utilities.neoforge;
 
 
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
-import net.minecraft.resource.ResourcePack;
+import net.minecraft.server.packs.PackResources;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLPaths;
 
@@ -15,7 +15,7 @@ public class PFMFileUtilImpl {
         return FMLPaths.GAMEDIR.relative().normalize();
     }
 
-    public static List<ResourcePack> getSubPacks(ResourcePack pack) {
+    public static List<PackResources> getSubPacks(PackResources pack) {
         return List.of(pack);
     }
 

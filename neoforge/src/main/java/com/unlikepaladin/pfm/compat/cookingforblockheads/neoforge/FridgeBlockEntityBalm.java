@@ -7,9 +7,9 @@ import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.provider.BalmProviderHolder;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Container;
 
 import java.util.List;
 
@@ -23,7 +23,7 @@ public class FridgeBlockEntityBalm extends FridgeBlockEntity implements BalmCont
     }
 
     @Override
-    public Inventory getContainer() {
+    public Container getContainer() {
         return this;
     }
 

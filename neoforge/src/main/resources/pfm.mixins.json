@@ -6,18 +6,20 @@
   "client": [
     "BlockColorsAccessor",
     "ItemColorsAccessor",
-    "PFMModelLoaderMixin",
+    "PFMModelBakeryMixin",
     "PFMRenderLayersNeoForgeMixin"
   ],
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
-    "PFMItemEntryAccessor",
+    "PFMLootItemAccessor",
     "PFMKitchenImplMixin",
     "PFMLootPool$BuilderMixin",
-    "PFMMinecraftServerMixin",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSaveLoaderMixin",
-    "SimpleRegistryAccessor"
+    "MappedRegistryAccessor"
+  ],
+  "server": [
+    "PFMMinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

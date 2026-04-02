@@ -10,21 +10,20 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.SimpleFurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.advancement.*;
-import net.minecraft.advancement.criterion.RecipeUnlockedCriterion;
-import net.minecraft.data.server.recipe.CraftingRecipeJsonBuilder;
-import net.minecraft.data.server.recipe.RecipeExporter;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.advancements.*;
+import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.FinishedRecipe;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.collection.DefaultedList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,56 +33,56 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuilder {
+public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
     private final Item output;
     private final int outputCount;
     private final DefaultedList<Ingredient> inputs = DefaultedList.of();
-    private final Map<String, AdvancementCriterion<?>> criteria = new LinkedHashMap<>();
+    private final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
     private boolean showNotification = true;
     private boolean emptyCriterion = true;
 
     @NotNull
-    private NbtCompound nbtElement;
+    private Tag nbtElement;
     @Nullable
     private String group;
 
-    public SimpleFurnitureRecipeJsonFactory(ItemConvertible output, int outputCount) {
+    public SimpleFurnitureRecipeJsonFactory(ItemLike output, int outputCount) {
         this.output = output.asItem();
         this.outputCount = outputCount;
         this.nbtElement = new NbtCompound();
     }
 
-    public SimpleFurnitureRecipeJsonFactory(ItemConvertible output, int outputCount, @NotNull NbtCompound nbtElement) {
+    public SimpleFurnitureRecipeJsonFactory(ItemLike output, int outputCount, Tag nbtElement) {
         this.output = output.asItem();
         this.outputCount = outputCount;
         this.nbtElement = nbtElement;
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, int count, NbtCompound nbtElement) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output, int count, Tag nbtElement) {
         return new SimpleFurnitureRecipeJsonFactory(output, count, nbtElement);
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, NbtCompound nbtElement) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output, Tag nbtElement) {
         return new SimpleFurnitureRecipeJsonFactory(output, 1, nbtElement);
     }
 
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output) {
         return new SimpleFurnitureRecipeJsonFactory(output, 1);
     }
-    public static SimpleFurnitureRecipeJsonFactory create(ItemConvertible output, int count) {
+    public static SimpleFurnitureRecipeJsonFactory create(ItemLike output, int count) {
         return new SimpleFurnitureRecipeJsonFactory(output, count);
     }
     public SimpleFurnitureRecipeJsonFactory input(TagKey<Item> tag) {
-        return this.input(Ingredient.fromTag(tag));
+        return this.input(Ingredient.of(tag));
     }
 
-    public SimpleFurnitureRecipeJsonFactory input(ItemConvertible itemProvider) {
+    public SimpleFurnitureRecipeJsonFactory input(ItemLike itemProvider) {
         return this.input(itemProvider, 1);
     }
 
-    public SimpleFurnitureRecipeJsonFactory input(ItemConvertible itemProvider, int size) {
+    public SimpleFurnitureRecipeJsonFactory input(ItemLike itemProvider, int size) {
         for (int i = 0; i < size; ++i) {
-            this.input(Ingredient.ofItems(itemProvider));
+            this.input(Ingredient.of(itemProvider));
         }
         return this;
     }
@@ -100,7 +99,7 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
     }
 
     @Override
-    public SimpleFurnitureRecipeJsonFactory criterion(String name, AdvancementCriterion<?> criterionConditions) {
+    public SimpleFurnitureRecipeJsonFactory unlockedBy(String name, Criterion<?> criterionConditions) {
         this.criteria.put(name, criterionConditions);
         this.emptyCriterion = false;
         return this;
@@ -118,23 +117,22 @@ public class SimpleFurnitureRecipeJsonFactory implements CraftingRecipeJsonBuild
     }
 
     @Override
-    public Item getOutputItem() {
+    public Item getResult() {
         return this.output;
     }
 
-    @Override
-    public void offerTo(RecipeExporter exporter, Identifier recipeId) {
+    public void save(RecipeOutput exporter, ResourceLocation recipeId) {
         if (emptyCriterion) {
             criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.ofItems(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
         }
-        Advancement.Builder advancement$builder = exporter.getAdvancementBuilder().criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).criteriaMerger(AdvancementRequirements.CriterionMerger.OR);
-        this.criteria.forEach(advancement$builder::criterion);
+        Advancement.Builder advancement$builder = exporter.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeId)).rewards(AdvancementRewards.Builder.recipe(recipeId)).requirements(AdvancementRequirements.Strategy.OR);
+        this.criteria.forEach(advancement$builder::addCriterion);
         ItemStack stack = new ItemStack(this.output, this.outputCount);
         stack.setNbt(nbtElement);
-        exporter.accept(recipeId, new SimpleFurnitureRecipe(this.group == null || this.group.isBlank() ? " " : this.group, stack, this.inputs), advancement$builder.build(recipeId.withPrefixedPath("recipes/furniture/")));
+        exporter.accept(recipeId, new SimpleFurnitureRecipe(this.group == null || this.group.isBlank() ? " " : this.group, stack, this.inputs), advancement$builder.build(recipeId.withPrefix("recipes/furniture/")));
     }
 
-    private void validate(Identifier recipeId) {
+    private void validate(ResourceLocation recipeId) {
         if (this.criteria.isEmpty()) {
             throw new IllegalStateException("No way of obtaining recipe " + recipeId);
         }

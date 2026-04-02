@@ -3,7 +3,8 @@ package com.unlikepaladin.pfm.registry.neoforge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
 import com.unlikepaladin.pfm.networking.neoforge.*;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
@@ -34,10 +35,10 @@ public class NetworkRegistryNeoForge {
 
     @SubscribeEvent
     public static void onServerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayerEntity) {
+        if (event.getEntity() instanceof ServerPlayer) {
             if (PaladinFurnitureMod.getPFMConfig().shouldGiveGuideBook()) {
                 //Give book
-                PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayerEntity) event.getEntity());
+                PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayer) event.getEntity());
             }
             //Sync Config
             PacketDistributor.TRACKING_ENTITY_AND_SELF.with(event.getEntity()).send(new SyncConfigPacket(PaladinFurnitureMod.getPFMConfig().options));

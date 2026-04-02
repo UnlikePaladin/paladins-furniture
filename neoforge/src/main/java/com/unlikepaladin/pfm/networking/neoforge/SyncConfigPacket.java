@@ -3,9 +3,9 @@ package com.unlikepaladin.pfm.networking.neoforge;
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
-import net.minecraft.network.PacketByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.util.Identifier;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.handling.PlayPayloadContext;
@@ -21,11 +21,11 @@ public class SyncConfigPacket implements CustomPayload {
         this.configOptions = configOptions;
     }
 
-    public SyncConfigPacket(PacketByteBuf buffer) {
+    public SyncConfigPacket(FriendlyByteBuf buffer) {
         Collection<AbstractConfigOption> configOptions = buffer.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
         Map<String, AbstractConfigOption> map = new HashMap<>();
         configOptions.forEach(abstractConfigOption -> {
-            map.put(((TranslatableTextContent)abstractConfigOption.getTitle().getContent()).getKey(), abstractConfigOption);
+            map.put(((TranslatableContents)abstractConfigOption.getTitle().getContents()).getKey(), abstractConfigOption);
         });
         this.configOptions = map;
     }
@@ -39,7 +39,7 @@ public class SyncConfigPacket implements CustomPayload {
     }
 
     @Override
-    public void write(PacketByteBuf buffer) {
+    public void write(FriendlyByteBuf buffer) {
         Collection<AbstractConfigOption> configOptions = this.configOptions.values();
         buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
     }

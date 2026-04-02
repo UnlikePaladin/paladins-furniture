@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import dev.emi.emi.api.recipe.EmiPlayerInventory;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.handler.StandardRecipeHandler;
-import net.minecraft.screen.slot.Slot;
+import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;

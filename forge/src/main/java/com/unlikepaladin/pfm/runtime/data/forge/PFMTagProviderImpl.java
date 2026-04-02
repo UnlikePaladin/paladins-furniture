@@ -1,14 +1,11 @@
 package com.unlikepaladin.pfm.runtime.data.forge;
 
 import com.unlikepaladin.pfm.data.PFMTag;
-import com.unlikepaladin.pfm.mixin.forge.PFMAbstractTagProvider$ObjectBuilderMixin;
-import net.minecraft.data.server.tag.TagProvider;
-import net.minecraft.data.server.tag.ValueLookupTagProvider;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.TagBuilder;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.Registry;
+import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagBuilder;
+import net.minecraft.tags.TagKey;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
@@ -16,13 +13,13 @@ import java.util.stream.Stream;
 public class PFMTagProviderImpl {
 
     public static <T> PFMTag<T> getProviderPlatform(TagBuilder builder, Registry<T> registry, String modID) {
-        return new ObjectBuilder<>(builder, t -> registry.getKey(t).get(), modID);
+        return new ObjectBuilder<>(builder, t -> registry.getResourceKey(t).get(), modID);
     }
 
-    public static class ObjectBuilder<T> extends TagProvider.ProvidedTagBuilder<T>  implements PFMTag<T> {
-        private final Function<T, RegistryKey<T>> valueToKey;
+    public static class ObjectBuilder<T> extends TagsProvider.TagAppender<T>  implements PFMTag<T> {
+        private final Function<T, ResourceKey<T>> valueToKey;
 
-        ObjectBuilder(TagBuilder arg, Function<T, RegistryKey<T>> function, String modId) {
+        ObjectBuilder(TagBuilder arg, Function<T, ResourceKey<T>> function, String modId) {
             super(arg, modId);
             this.valueToKey = function;
         }
@@ -44,14 +41,14 @@ public class PFMTagProviderImpl {
         }
 
         @Override
-        public PFMTag<T> addKey(RegistryKey<T>... keys) {
-            for (RegistryKey<T> key : keys){
+        public PFMTag<T> addKey(ResourceKey<T>... keys) {
+            for (ResourceKey<T> key : keys){
                 super.add(key);
             }
             return this;
         }
 
-        public final RegistryKey<T> getKey(T value) {
+        public final ResourceKey<T> getKey(T value) {
             return this.valueToKey.apply(value);
         }
     }

@@ -2,14 +2,14 @@ package com.unlikepaladin.pfm.recipes.forge;
 
 import com.google.gson.JsonObject;
 import com.mojang.serialization.Codec;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.Container;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
-public class FurnitureSerializerForge <J extends Recipe<I>, T extends RecipeSerializer<J>, I extends Inventory> implements RecipeSerializer<J> {
+public class FurnitureSerializerForge <J extends Recipe<I>, T extends RecipeSerializer<J>, I extends Container> implements RecipeSerializer<J> {
     public FurnitureSerializerForge(T recipeSerializer) {
         this.serializer = recipeSerializer;
     }
@@ -21,13 +21,13 @@ public class FurnitureSerializerForge <J extends Recipe<I>, T extends RecipeSeri
     }
 
     @Override
-    public @Nullable J read(PacketByteBuf buf) {
-        return serializer.read(buf);
+    public @Nullable J fromNetwork(FriendlyByteBuf buf) {
+        return serializer.fromNetwork(buf);
     }
 
     @Override
-    public void write(PacketByteBuf buf, J recipe) {
-        serializer.write(buf, recipe);
+    public void toNetwork(FriendlyByteBuf buf, J recipe) {
+        serializer.toNetwork(buf, recipe);
     }
 }
 

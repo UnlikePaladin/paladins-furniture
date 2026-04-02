@@ -2,9 +2,9 @@ package com.unlikepaladin.pfm.registry.neoforge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
-import net.minecraft.particle.DefaultParticleType;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -13,8 +13,8 @@ import net.neoforged.neoforge.registries.RegisterEvent;
 public class ParticleTypeRegistryNeoForge {
     @SubscribeEvent
     public static void register(RegisterEvent event) {
-        event.register(Registries.PARTICLE_TYPE.getKey(), particleTypeRegisterHelper -> {
-            particleTypeRegisterHelper.register(new Identifier(PaladinFurnitureMod.MOD_ID, "shower_water"), ParticleIDs.WATER_DROP = new DefaultParticleType(false));
+        event.register(BuiltInRegistries.PARTICLE_TYPE.key(), particleTypeRegisterHelper -> {
+            particleTypeRegisterHelper.register(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "shower_water"), ParticleIDs.WATER_DROP = new SimpleParticleType(false));
         });
     }
 }

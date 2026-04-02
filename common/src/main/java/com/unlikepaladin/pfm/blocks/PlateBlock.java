@@ -6,32 +6,36 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ItemStackParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.Registries;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.registry.Registry;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.Containers;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Registry;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -43,14 +47,14 @@ import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class PlateBlock extends HorizontalFacingBlockWithEntity {
 
-    public static final BooleanProperty CUTLERY = BooleanProperty.of("cutlery");
+    public static final BooleanProperty CUTLERY = BooleanProperty.create("cutlery");
 
     private static final List<FurnitureBlock> PLATES = new ArrayList<>();
     public static final MapCodec<PlateBlock> CODEC = createCodec(PlateBlock::new);
 
-    public PlateBlock(AbstractBlock.Settings settings) {
+    public PlateBlock(Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(CUTLERY, false));
+        registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(CUTLERY, false));
         PLATES.add(new FurnitureBlock(this, "plate"));
     }
 
@@ -64,32 +68,32 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player.getStackInHand(hand);
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack itemStack = player.getItemInHand(hand);
         PlateBlockEntity plateBlockEntity;
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof PlateBlockEntity && (itemStack.isFood())) {
-            if (!world.isClient && ((PlateBlockEntity)blockEntity).addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack)) {
-                player.incrementStat(Statistics.PLATE_USED);
-                return ActionResult.SUCCESS;
+        if (blockEntity instanceof PlateBlockEntity && (itemStack.isEdible())) {
+            if (!world.isClientSide && ((PlateBlockEntity)blockEntity).addItem(player.getAbilities().instabuild ? itemStack.copy() : itemStack)) {
+                player.awardStat(Statistics.PLATE_USED);
+                return InteractionResult.SUCCESS;
             }
-            return ActionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
-        if(Registries.BLOCK.get(Registries.ITEM.getId(itemStack.getItem())) instanceof CutleryBlock) {
-            world.setBlockState(pos, state.with(CUTLERY, true));
-            itemStack.decrement(1);
-            return ActionResult.SUCCESS;
+        if(BuiltInRegistries.BLOCK.get(BuiltInRegistries.ITEM.getKey(itemStack.getItem())) instanceof CutleryBlock) {
+            world.setBlockAndUpdate(pos, state.setValue(CUTLERY, true));
+            itemStack.shrink(1);
+            return InteractionResult.SUCCESS;
         }
-        if (player.isSneaking() && blockEntity instanceof PlateBlockEntity) {
+        if (player.isShiftKeyDown() && blockEntity instanceof PlateBlockEntity) {
             plateBlockEntity = (PlateBlockEntity)blockEntity;
             if (!plateBlockEntity.getItemInPlate().isEmpty()) {
-                if (!world.isClient) {
+                if (!world.isClientSide) {
                     ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, plateBlockEntity.removeItem());
-                    world.spawnEntity(itemEntity);
-                    player.incrementStat(Statistics.PLATE_USED);
-                    return ActionResult.SUCCESS;
+                    world.addFreshEntity(itemEntity);
+                    player.awardStat(Statistics.PLATE_USED);
+                    return InteractionResult.SUCCESS;
                 }
-                return ActionResult.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
         if(blockEntity instanceof PlateBlockEntity){
@@ -97,40 +101,40 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
                 if (!plateBlockEntity.getItemInPlate().isEmpty()) {
                     ItemStack stack = plateBlockEntity.getItemInPlate();
                     spawnItemParticles(player, stack, 16);
-                    if (Registries.ITEM.getId(stack.getItem()).toString().equals("sandwichable:sandwich")) {
+                    if (BuiltInRegistries.ITEM.getKey(stack.getItem()).toString().equals("sandwichable:sandwich")) {
                        eatSandwich(stack, world, player);
                     }
                     else {
                         if (!player.isCreative()) {
-                            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stack.finishUsing(world, player));
-                            world.spawnEntity(itemEntity);
+                            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stack.finishUsingItem(world, player));
+                            world.addFreshEntity(itemEntity);
                         }
-                        player.eatFood(world, stack);
+                        player.eat(world, stack);
                     }
                     plateBlockEntity.removeItem();
-                    player.incrementStat(Statistics.PLATE_USED);
-                    return ActionResult.SUCCESS;
+                    player.awardStat(Statistics.PLATE_USED);
+                    return InteractionResult.SUCCESS;
                 }
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.use(state, world, pos, player, hand, hit);
     }
 
     @ExpectPlatform
-    public static void eatSandwich(ItemStack stack, World world, PlayerEntity player) {
+    public static void eatSandwich(ItemStack stack, Level world, Player player) {
 
     }
     @Override
-    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (state.get(CUTLERY) && !player.getAbilities().creativeMode) {
+    public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+        if (state.getValue(CUTLERY) && !player.getAbilities().instabuild) {
             ItemEntity itemEntity = new ItemEntity( world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
-            world.spawnEntity(itemEntity);
+            world.addFreshEntity(itemEntity);
         }
-        return super.onBreak(world, pos, state, player);
+        return super.playerWillDestroy(world, pos, state, player);
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return getBlockEntity(pos, state);
     }
 
@@ -140,41 +144,41 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        super.appendProperties(stateManager);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        super.createBlockStateDefinition(stateManager);
         stateManager.add(CUTLERY);
     }
 
     @Nullable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection());
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.canPlaceAt(world, pos)) {
-            if (state.get(CUTLERY)) {
-                ItemEntity itemEntity = new ItemEntity((World) world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
-                world.spawnEntity(itemEntity);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        if (!state.canSurvive(world, pos)) {
+            if (state.getValue(CUTLERY)) {
+                ItemEntity itemEntity = new ItemEntity((Level) world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
+                world.addFreshEntity(itemEntity);
             }
-            return Blocks.AIR.getDefaultState();
+            return Blocks.AIR.defaultBlockState();
         }
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    protected static final VoxelShape PLATE = VoxelShapes.union(createCuboidShape(2,0,3, 12,1,13));
+    protected static final VoxelShape PLATE = Shapes.or(box(2,0,3, 12,1,13));
     protected static final VoxelShape PLATE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, PLATE);
     protected static final VoxelShape PLATE_EAST = rotateShape(Direction.NORTH, Direction.EAST, PLATE);
     protected static final VoxelShape PLATE_WEST = rotateShape(Direction.NORTH, Direction.WEST, PLATE);
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+        Direction dir = state.getValue(FACING);
         return switch (dir) {
             case WEST -> PLATE_SOUTH;
             case NORTH -> PLATE_WEST;
@@ -184,36 +188,36 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.isOf(newState.getBlock())) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.is(newState.getBlock())) {
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof PlateBlockEntity plateBlockEntity) {
-            ItemScatterer.spawn(world, pos, plateBlockEntity.getInventory());
-            world.updateComparators(pos, this);
-            plateBlockEntity.markRemoved();
+            Containers.dropContents(world, pos, plateBlockEntity.getContainer());
+            world.updateNeighbourForOutputSignal(pos, this);
+            plateBlockEntity.setRemoved();
         }
-        super.onStateReplaced(state, world, pos, newState, moved);
+        super.onRemove(state, world, pos, newState, moved);
     }
 
     protected final Random random = new Random();
     private void spawnItemParticles(LivingEntity entity, ItemStack stack, int count) {
         for (int i = 0; i < count; ++i) {
-            Vec3d vec3d = new Vec3d(((double)this.random.nextFloat() - 0.5) * 0.1, Math.random() * 0.1 + 0.1, 0.0);
-            vec3d = vec3d.rotateX(-entity.getPitch() * ((float)Math.PI / 180));
-            vec3d = vec3d.rotateY(-entity.getYaw() * ((float)Math.PI / 180));
+            Vec3 vec3d = new Vec3(((double)this.random.nextFloat() - 0.5) * 0.1, Math.random() * 0.1 + 0.1, 0.0);
+            vec3d = vec3d.xRot(-entity.getXRot() * ((float)Math.PI / 180));
+            vec3d = vec3d.yRot(-entity.getYRot() * ((float)Math.PI / 180));
             double d = (double)(-this.random.nextFloat()) * 0.6 - 0.3;
-            Vec3d vec3d2 = new Vec3d(((double)this.random.nextFloat() - 0.5) * 0.3, d, 0.6);
-            vec3d2 = vec3d2.rotateX(-entity.getPitch() * ((float)Math.PI / 180));
-            vec3d2 = vec3d2.rotateY(-entity.getYaw() * ((float)Math.PI / 180));
+            Vec3 vec3d2 = new Vec3(((double)this.random.nextFloat() - 0.5) * 0.3, d, 0.6);
+            vec3d2 = vec3d2.xRot(-entity.getXRot() * ((float)Math.PI / 180));
+            vec3d2 = vec3d2.yRot(-entity.getYRot() * ((float)Math.PI / 180));
             vec3d2 = vec3d2.add(entity.getX(), entity.getEyeY(), entity.getZ());
-            entity.getEntityWorld().addParticle(new ItemStackParticleEffect(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
+            entity.level().addParticle(new ItemParticleOption(ParticleTypes.ITEM, stack), vec3d2.x, vec3d2.y, vec3d2.z, vec3d.x, vec3d.y + 0.05, vec3d.z);
         }
     }
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         Direction direction = Direction.DOWN;
-        return Block.sideCoversSmallSquare(world, pos.offset(direction), direction.getOpposite());
+        return Block.canSupportCenter(world, pos.relative(direction), direction.getOpposite());
     }
 }
