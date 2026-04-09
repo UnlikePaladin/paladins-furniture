@@ -12,46 +12,50 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityTicker;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemActionResult;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PFMCookingForBlockHeadsCompat {
 
-    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE));//PaladinFurnitureModBlocksItems.GRAY_STOVE));
-    public static TriFunc<Integer, PlayerInventory, StoveScreenHandler.StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
+    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE));//PaladinFurnitureModBlocksItems.GRAY_STOVE));
+    public static TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
         return (integer, playerInventory, data) -> {
             BlockPos pos = data.pos();
-            BlockEntity blockEntity = playerInventory.player.getWorld().getBlockEntity(pos);
+            BlockEntity blockEntity = playerInventory.player.level().getBlockEntity(pos);
             return new StoveScreenHandlerBalm(integer, playerInventory, (StoveBlockEntityBalm)blockEntity);
         };
     }
 
-    public static <D extends StovePacket> PacketCodec<RegistryByteBuf, D> getStovePacket() {
-        return (PacketCodec<RegistryByteBuf, D>) StoveScreenHandler.PACKET_CODEC;
+    public static <D extends StovePacket> StreamCodec<RegistryFriendlyByteBuf, D> getStovePacket() {
+        return (StreamCodec<RegistryFriendlyByteBuf, D>) StoveScreenHandler.PACKET_CODEC;
     }
 
-    public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
-        StoveBlockEntityBalm stove = (StoveBlockEntityBalm)world.getBlockEntity(pos);
-        if (!world.isClient) {
+    public static void openMenuScreen(Level level, BlockPos pos, Player player) {
+        StoveBlockEntityBalm stove = (StoveBlockEntityBalm)level.getBlockEntity(pos);
+        if (!level.isClientSide) {
             Balm.getNetworking().openGui(player, stove);
         }
     }
@@ -60,34 +64,34 @@ public class PFMCookingForBlockHeadsCompat {
         return new StoveBlockEntityBalm(pos, state);
     }
 
-    public static <T extends BlockEntity> BlockEntityTicker<T> getStoveTicker(World world, BlockEntityType<T> type) {
-        if (world.isClient) {
-            return StoveBlockImpl.checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityBalm::clientTick);
+    public static <T extends BlockEntity> BlockEntityTicker<T> getStoveTicker(Level level, BlockEntityType<T> type) {
+        if (level.isClientSide) {
+            return StoveBlockImpl.createTickerHelper(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityBalm::clientTick);
         } else {
-            return StoveBlockImpl.checkType(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityBalm::serverTick);
+            return StoveBlockImpl.createTickerHelper(type, BlockEntities.STOVE_BLOCK_ENTITY, StoveBlockEntityBalm::serverTick);
         }
     }
 
-    public static ItemActionResult onUseStove(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack heldItem = player.getStackInHand(hand);
+    public static ItemInteractionResult onUseStove(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack heldItem = player.getItemInHand(hand);
         if (heldItem.getItem() == ModItems.heatingUnit) {
-            return ItemActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        } else if (hit.getSide() == Direction.UP && heldItem.isIn(ModItemTags.UTENSILS)) {
-            Direction stateFacing = state.get(StoveBlock.FACING);
-            double hx =  (hit.getPos().x - hit.getBlockPos().getX());
-            double hz = (hit.getPos().z - hit.getBlockPos().getZ());
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        } else if (hit.getDirection() == Direction.UP && heldItem.is(ModItemTags.UTENSILS)) {
+            Direction stateFacing = state.getValue(StoveBlock.FACING);
+            double hx =  (hit.getLocation().x - hit.getBlockPos().getX());
+            double hz = (hit.getLocation().z - hit.getBlockPos().getZ());
             switch (stateFacing) {
                 case NORTH:
-                    hx = 1.0 - (hit.getPos().x - hit.getBlockPos().getX());
-                    hz = 1.0 - (hit.getPos().z - hit.getBlockPos().getZ());
+                    hx = 1.0 - (hit.getLocation().x - hit.getBlockPos().getX());
+                    hz = 1.0 - (hit.getLocation().z - hit.getBlockPos().getZ());
                     break;
                 case WEST:
-                    hz = 1.0 - (hit.getPos().x - hit.getBlockPos().getX());
-                    hx = (hit.getPos().z - hit.getBlockPos().getZ());
+                    hz = 1.0 - (hit.getLocation().x - hit.getBlockPos().getX());
+                    hx = (hit.getLocation().z - hit.getBlockPos().getZ());
                     break;
                 case EAST:
-                    hz = (hit.getPos().x - hit.getBlockPos().getX());
-                    hx = 1.0 - (hit.getPos().z - hit.getBlockPos().getZ());
+                    hz = (hit.getLocation().x - hit.getBlockPos().getX());
+                    hx = 1.0 - (hit.getLocation().z - hit.getBlockPos().getZ());
             }
             int index = -1;
             if (hx < 0.5f && hz < 0.5f) {
@@ -106,29 +110,29 @@ public class PFMCookingForBlockHeadsCompat {
                     tileOven.setToolItem(index, toolItem);
                 }
             }
-            return ItemActionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         } else {
             StoveBlockEntityBalm oven = (StoveBlockEntityBalm)level.getBlockEntity(pos);
-            if (hit.getSide() == state.get(Properties.HORIZONTAL_FACING) && oven != null) {
-                if (player.isSneaking()) {
-                    return ItemActionResult.SUCCESS;
+            if (hit.getDirection() == state.getValue(BlockStateProperties.HORIZONTAL_FACING) && oven != null) {
+                if (player.isShiftKeyDown()) {
+                    return ItemInteractionResult.SUCCESS;
                 }
 
                 if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem) != ItemStack.EMPTY) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getInputContainer(), heldItem, false);
-                    player.setStackInHand(hand, heldItem);
+                    player.setItemInHand(hand, heldItem);
 
-                    return ItemActionResult.SUCCESS;
+                    return ItemInteractionResult.SUCCESS;
                 } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(heldItem)) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getFuelContainer(), heldItem, false);
-                    player.setStackInHand(hand, heldItem);
-                    return ItemActionResult.SUCCESS;
+                    player.setItemInHand(hand, heldItem);
+                    return ItemInteractionResult.SUCCESS;
                 }
             }
-            if (!level.isClient) {
+            if (!level.isClientSide) {
                 Balm.getNetworking().openGui(player, oven);
             }
-            return ItemActionResult.SUCCESS;
+            return ItemInteractionResult.SUCCESS;
         }
     }
 }

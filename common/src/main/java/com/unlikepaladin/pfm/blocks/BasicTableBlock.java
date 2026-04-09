@@ -2,38 +2,42 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.*;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.BlockMirror;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 
 import java.util.*;
 import java.util.stream.Stream;
 
 public class BasicTableBlock extends Block {
     private final Block baseBlock;
-    public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
+    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> WOOD_BASIC_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_BASIC_TABLES = new ArrayList<>();
-    public BasicTableBlock(Settings settings) {
-        super(settings.luminance((state) -> 0).emissiveLighting((blockstate, b, c) -> false));
-        setDefaultState(this.getStateManager().getDefaultState().with(AXIS, Direction.Axis.X));
-        this.baseBlockState = this.getDefaultState();
+    public BasicTableBlock(Properties settings) {
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        registerDefaultState(this.getStateDefinition().any().setValue(AXIS, Direction.Axis.X));
+        this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(BasicTableBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(BasicTableBlock.class)){
             WOOD_BASIC_TABLES.add(new FurnitureBlock(this, "table_basic"));
         }
         else if (this.getClass().isAssignableFrom(BasicTableBlock.class)){
@@ -49,29 +53,30 @@ public class BasicTableBlock extends Block {
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
         stateManager.add(AXIS);
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (!state.isOf(state.getBlock())) {
-            oldState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+        if (!state.is(state.getBlock())) {
+            oldState.handleNeighborChanged(world, pos, Blocks.AIR, pos, false);
         }
     }
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+    public boolean isCollisionShapeFullBlock(BlockState state, BlockGetter world, BlockPos pos) {
         return false;
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        Direction.Axis facing = ctx.getHorizontalPlayerFacing().getAxis();
-        return this.getDefaultState().with(AXIS, facing);
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        Direction.Axis facing = ctx.getHorizontalDirection().getAxis();
+        return this.defaultBlockState().setValue(AXIS, facing);
     }
     @Override
     public FluidState getFluidState(BlockState state) {
@@ -83,7 +88,7 @@ public class BasicTableBlock extends Block {
         return PaladinFurnitureMod.getPFMConfig().doTablesOfDifferentMaterialsConnect() ? blockState.getBlock() instanceof BasicTableBlock : blockState.getBlock() == this;
     }
 
-    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
@@ -92,45 +97,45 @@ public class BasicTableBlock extends Block {
 
     /** Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/ */
     public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{ shape, VoxelShapes.empty() };
-        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
+        VoxelShape[] buffer = new VoxelShape[]{ shape, Shapes.empty() };
+        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
         for (int i = 0; i < times; i++) {
-            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
+            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
             buffer[0] = buffer[1];
-            buffer[1] = VoxelShapes.empty();
+            buffer[1] = Shapes.empty();
         }
         return buffer[0];
     }
 
-    final static VoxelShape TABLE_BASIC_BASE = createCuboidShape(0, 14, 0, 16, 16, 16);
-    final static VoxelShape TABLE_BASIC_NORTH_EAST_LEG = createCuboidShape(12, 0, 2, 14, 14, 4);
-    final static VoxelShape TABLE_BASIC_SOUTH_WEST_LEG = createCuboidShape(2, 0, 12,4, 14, 14);
-    final static VoxelShape TABLE_BASIC_NORTH_WEST_LEG = createCuboidShape(2, 0, 2,4, 14, 4);
-    final static VoxelShape TABLE_BASIC_SOUTH_EAST_LEG = createCuboidShape(12, 0, 12,14, 14, 14);
-    final static VoxelShape TABLE_BASIC_EAST_WEST_NORTH = createCuboidShape(4, 0, 2,12, 2, 4);
-    final static VoxelShape TABLE_BASIC_EAST_WEST_SOUTH = createCuboidShape(4, 0, 12,12, 2, 14);
-    final static VoxelShape TABLE_BASIC_SOUTH_EAST_TOP = createCuboidShape(4, 0, 2,16, 2, 4);
-    final static VoxelShape TABLE_BASIC_SOUTH_EAST_BOTTOM = createCuboidShape(4, 0, 12,16, 2, 14);
-    final static VoxelShape TABLE_BASIC_SOUTH_WEST_BOTTOM = createCuboidShape(0, 0, 12,12, 2, 14);
-    final static VoxelShape TABLE_BASIC_SOUTH_WEST_TOP = createCuboidShape(0, 0, 2,12, 2, 4);
-    final static VoxelShape TABLE_BASIC_NORTH_SOUTH_WEST = createCuboidShape(0, 0, 2,16, 2, 4);
-    final static VoxelShape TABLE_BASIC_NORTH_SOUTH_EAST = createCuboidShape(0, 0, 12, 16, 2, 14);
-    final static VoxelShape TABLE_BASIC_NORTH_EAST_CORNER = createCuboidShape(14, 0, 2, 16, 2, 4);
-    final static VoxelShape TABLE_BASIC_SOUTH_EAST_CORNER = createCuboidShape(14, 0, 12, 16, 2, 14);
-    final static VoxelShape TABLE_BASIC_NORTH_WEST_CORNER = createCuboidShape(0, 0, 2, 2, 2, 4);
-    final static VoxelShape TABLE_BASIC_SOUTH_WEST_CORNER = createCuboidShape(0, 0, 12, 2, 2, 14);
+    final static VoxelShape TABLE_BASIC_BASE = box(0, 14, 0, 16, 16, 16);
+    final static VoxelShape TABLE_BASIC_NORTH_EAST_LEG = box(12, 0, 2, 14, 14, 4);
+    final static VoxelShape TABLE_BASIC_SOUTH_WEST_LEG = box(2, 0, 12,4, 14, 14);
+    final static VoxelShape TABLE_BASIC_NORTH_WEST_LEG = box(2, 0, 2,4, 14, 4);
+    final static VoxelShape TABLE_BASIC_SOUTH_EAST_LEG = box(12, 0, 12,14, 14, 14);
+    final static VoxelShape TABLE_BASIC_EAST_WEST_NORTH = box(4, 0, 2,12, 2, 4);
+    final static VoxelShape TABLE_BASIC_EAST_WEST_SOUTH = box(4, 0, 12,12, 2, 14);
+    final static VoxelShape TABLE_BASIC_SOUTH_EAST_TOP = box(4, 0, 2,16, 2, 4);
+    final static VoxelShape TABLE_BASIC_SOUTH_EAST_BOTTOM = box(4, 0, 12,16, 2, 14);
+    final static VoxelShape TABLE_BASIC_SOUTH_WEST_BOTTOM = box(0, 0, 12,12, 2, 14);
+    final static VoxelShape TABLE_BASIC_SOUTH_WEST_TOP = box(0, 0, 2,12, 2, 4);
+    final static VoxelShape TABLE_BASIC_NORTH_SOUTH_WEST = box(0, 0, 2,16, 2, 4);
+    final static VoxelShape TABLE_BASIC_NORTH_SOUTH_EAST = box(0, 0, 12, 16, 2, 14);
+    final static VoxelShape TABLE_BASIC_NORTH_EAST_CORNER = box(14, 0, 2, 16, 2, 4);
+    final static VoxelShape TABLE_BASIC_SOUTH_EAST_CORNER = box(14, 0, 12, 16, 2, 14);
+    final static VoxelShape TABLE_BASIC_NORTH_WEST_CORNER = box(0, 0, 2, 2, 2, 4);
+    final static VoxelShape TABLE_BASIC_SOUTH_WEST_CORNER = box(0, 0, 12, 2, 2, 14);
     final static Map<String, VoxelShape> VOXEL_SHAPES = new HashMap<>();
 
-    public boolean canConnect(BlockView world, BlockState state, BlockPos neighborPos, BlockPos pos){
+    public boolean canConnect(BlockGetter world, BlockState state, BlockPos neighborPos, BlockPos pos){
         BlockState neighborState = world.getBlockState(neighborPos);
-        if (neighborState.contains(AXIS)) {
-            return neighborState.get(AXIS) == state.get(AXIS) && canConnect(neighborState);
+        if (neighborState.hasProperty(AXIS)) {
+            return neighborState.getValue(AXIS) == state.getValue(AXIS) && canConnect(neighborState);
         }
         return false;
     }
 
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction.Axis dir = state.get(BasicTableBlock.AXIS);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction.Axis dir = state.getValue(BasicTableBlock.AXIS);
 
         Boolean north = canConnect(world, state, pos.north(), pos);
         boolean east = canConnect(world, state, pos.east(), pos);
@@ -141,7 +146,7 @@ public class BasicTableBlock extends Block {
         boolean cornerSouthEast = south && east && !canConnect(world, state, pos.south().east(), pos);
         boolean cornerSouthWest = south && west && !canConnect(world, state, pos.south().west(), pos);
 
-        String key = north.toString()+ east + west + south + cornerNorthWest + cornerNorthEast + cornerSouthEast + cornerSouthWest + dir.asString();
+        String key = north.toString()+ east + west + south + cornerNorthWest + cornerNorthEast + cornerSouthEast + cornerSouthWest + dir.getSerializedName();
         if (!VOXEL_SHAPES.containsKey(key)) {
             generateVoxelShape(key, north, east, west, south, cornerNorthWest, cornerNorthEast, cornerSouthEast, cornerSouthWest, dir);
         }
@@ -151,86 +156,86 @@ public class BasicTableBlock extends Block {
     private static void generateVoxelShape(String key, Boolean north, Boolean east, Boolean west, Boolean south, Boolean cornerNorthWest, Boolean cornerNorthEast, Boolean cornerSouthEast, Boolean cornerSouthWest, Direction.Axis axis) {
         VoxelShape newVoxelShape = TABLE_BASIC_BASE;
         if (!north && !south && !east && !west) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_NORTH, TABLE_BASIC_EAST_WEST_SOUTH);
+            newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_EAST_WEST_NORTH, TABLE_BASIC_EAST_WEST_SOUTH);
         }
         if (!north && !east) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_NORTH_EAST_LEG, TABLE_BASIC_NORTH_WEST_LEG));
+            newVoxelShape = Shapes.or(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_NORTH_EAST_LEG, TABLE_BASIC_NORTH_WEST_LEG));
         }
         if (!north && !west)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_NORTH_WEST_LEG, TABLE_BASIC_SOUTH_WEST_LEG));
+            newVoxelShape = Shapes.or(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_NORTH_WEST_LEG, TABLE_BASIC_SOUTH_WEST_LEG));
         }
         if (!south && !east)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_SOUTH_EAST_LEG, TABLE_BASIC_NORTH_EAST_LEG));
+            newVoxelShape = Shapes.or(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_SOUTH_EAST_LEG, TABLE_BASIC_NORTH_EAST_LEG));
         }
         if (!south && !west)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_SOUTH_WEST_LEG, TABLE_BASIC_SOUTH_EAST_LEG));
+            newVoxelShape = Shapes.or(newVoxelShape, getShapeForAxis(axis, TABLE_BASIC_SOUTH_WEST_LEG, TABLE_BASIC_SOUTH_EAST_LEG));
         }
         if (cornerNorthEast) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, VoxelShapes.union(TABLE_BASIC_NORTH_EAST_LEG, TABLE_BASIC_NORTH_EAST_CORNER), VoxelShapes.union(TABLE_BASIC_NORTH_WEST_LEG, TABLE_BASIC_NORTH_WEST_CORNER)));
+            newVoxelShape = Shapes.or(newVoxelShape, getShapeForAxis(axis, Shapes.or(TABLE_BASIC_NORTH_EAST_LEG, TABLE_BASIC_NORTH_EAST_CORNER), Shapes.or(TABLE_BASIC_NORTH_WEST_LEG, TABLE_BASIC_NORTH_WEST_CORNER)));
         }
         if (cornerNorthWest) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, VoxelShapes.union(TABLE_BASIC_NORTH_WEST_LEG, TABLE_BASIC_NORTH_WEST_CORNER), VoxelShapes.union(TABLE_BASIC_SOUTH_WEST_LEG, TABLE_BASIC_SOUTH_WEST_CORNER)));
+            newVoxelShape = Shapes.or(newVoxelShape, getShapeForAxis(axis, Shapes.or(TABLE_BASIC_NORTH_WEST_LEG, TABLE_BASIC_NORTH_WEST_CORNER), Shapes.or(TABLE_BASIC_SOUTH_WEST_LEG, TABLE_BASIC_SOUTH_WEST_CORNER)));
         }
         if (cornerSouthWest) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, VoxelShapes.union(TABLE_BASIC_SOUTH_WEST_LEG, TABLE_BASIC_SOUTH_WEST_CORNER), VoxelShapes.union(TABLE_BASIC_SOUTH_EAST_LEG, TABLE_BASIC_SOUTH_EAST_CORNER)));
+            newVoxelShape = Shapes.or(newVoxelShape, getShapeForAxis(axis, Shapes.or(TABLE_BASIC_SOUTH_WEST_LEG, TABLE_BASIC_SOUTH_WEST_CORNER), Shapes.or(TABLE_BASIC_SOUTH_EAST_LEG, TABLE_BASIC_SOUTH_EAST_CORNER)));
         }
         if (cornerSouthEast) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, getShapeForAxis(axis, VoxelShapes.union(TABLE_BASIC_SOUTH_EAST_LEG, TABLE_BASIC_SOUTH_EAST_CORNER), VoxelShapes.union(TABLE_BASIC_NORTH_EAST_LEG, TABLE_BASIC_NORTH_EAST_CORNER)));
+            newVoxelShape = Shapes.or(newVoxelShape, getShapeForAxis(axis, Shapes.or(TABLE_BASIC_SOUTH_EAST_LEG, TABLE_BASIC_SOUTH_EAST_CORNER), Shapes.or(TABLE_BASIC_NORTH_EAST_LEG, TABLE_BASIC_NORTH_EAST_CORNER)));
         }
 
         if (axis == Direction.Axis.Z) {
             if (!north && south && !east && !west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_NORTH);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_EAST_WEST_NORTH);
             }
             if (north && !south && !east && !west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_SOUTH);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_EAST_WEST_SOUTH);
             }
             if (!north && east && !west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_TOP);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_SOUTH_EAST_TOP);
             }
             if (!south && !east && west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_BOTTOM);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_SOUTH_WEST_BOTTOM);
             }
             if (!south && east && !west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_BOTTOM);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_SOUTH_EAST_BOTTOM);
             }
             if (!north && !east && west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_TOP);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_SOUTH_WEST_TOP);
             }
             if (!north && east && west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_WEST);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_WEST);
             }
             if (!south && east && west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_EAST);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_EAST);
             }
         }
         else {
             if (!north && south && !west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_BOTTOM);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_SOUTH_EAST_BOTTOM);
             }
             if (north && !south && !west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_BOTTOM);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_SOUTH_WEST_BOTTOM);
             }
             if (!north && south && !east) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_EAST_TOP);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_SOUTH_EAST_TOP);
             }
             if (north && !south && !east) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_TOP);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_SOUTH_WEST_TOP);
             }
             if (north && !south && !east) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_SOUTH_WEST_TOP);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_SOUTH_WEST_TOP);
             }
             if (!north && !south && !east) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_NORTH);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_EAST_WEST_NORTH);
             }
             if (!north && !south && !west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_EAST_WEST_SOUTH);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_EAST_WEST_SOUTH);
             }
             if (north && south && !east) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_WEST);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_WEST);
             }
             if (north && south && !west) {
-                newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_EAST);
+                newVoxelShape = Shapes.or(newVoxelShape, TABLE_BASIC_NORTH_SOUTH_EAST);
             }
             newVoxelShape = rotateShape(Direction.NORTH, Direction.EAST, newVoxelShape);
         }
@@ -243,24 +248,24 @@ public class BasicTableBlock extends Block {
         } else if (axis == Direction.Axis.X) {
             return b;
         }
-        return VoxelShapes.empty();
+        return Shapes.empty();
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 
     @Override
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
+    public BlockState rotate(BlockState state, Rotation rotation) {
         switch (rotation) {
             case COUNTERCLOCKWISE_90, CLOCKWISE_90 -> {
-                switch (state.get(AXIS)) {
+                switch (state.getValue(AXIS)) {
                     case X -> {
-                        return state.with(AXIS, Direction.Axis.Z);
+                        return state.setValue(AXIS, Direction.Axis.Z);
                     }
                     case Z -> {
-                        return state.with(AXIS, Direction.Axis.X);
+                        return state.setValue(AXIS, Direction.Axis.X);
                     }
                 }
                 return state;
@@ -270,8 +275,8 @@ public class BasicTableBlock extends Block {
     }
 
     @Override
-    public BlockState mirror(BlockState state, BlockMirror mirror) {
-        return state.rotate(mirror.getRotation(Direction.get(Direction.AxisDirection.NEGATIVE, state.get(AXIS))));
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(Direction.get(Direction.AxisDirection.NEGATIVE, state.getValue(AXIS))));
     }
 }
 

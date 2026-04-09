@@ -4,24 +4,24 @@ import com.unlikepaladin.pfm.blocks.BasicTableBlock;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Supplier;
 
 public class FabricBasicTableModel extends PFMFabricBakedModel {
-    public FabricBasicTableModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public FabricBasicTableModel(ModelState settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
 
@@ -31,9 +31,9 @@ public class FabricBasicTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof BasicTableBlock) {
-            Direction.Axis dir = state.get(BasicTableBlock.AXIS);
+            Direction.Axis dir = state.getValue(BasicTableBlock.AXIS);
             BasicTableBlock block = (BasicTableBlock) state.getBlock();
             boolean north = block.canConnect(world, state, pos.north(), pos);
             boolean east = block.canConnect(world, state, pos.east(), pos);
@@ -44,7 +44,7 @@ public class FabricBasicTableModel extends PFMFabricBakedModel {
             boolean cornerSouthEast = south && east && !block.canConnect(world, state, pos.south().east(), pos);
             boolean cornerSouthWest = south && west && !block.canConnect(world, state, pos.south().west(), pos);
 
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             pushTextureTransform(context, spriteList.get(0));
             ((FabricBakedModel) getTemplateBakedModels().get(0)).emitBlockQuads(world, state, pos, randomSupplier, context);
             context.popTransform();
@@ -170,7 +170,7 @@ public class FabricBasicTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (stack.getItem() instanceof BlockItem) {
             pushTextureTransform(context, getSpriteList(stack).get(0));
             // base
@@ -191,7 +191,7 @@ public class FabricBasicTableModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public Sprite pfm$getParticle(BlockState state) {
+    public TextureAtlasSprite pfm$getParticle(BlockState state) {
         return getSpriteList(state).get(0);
     }
 }

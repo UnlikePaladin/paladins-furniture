@@ -2,15 +2,15 @@ package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 public class LampBlockEntityImpl extends LampBlockEntity {
@@ -18,34 +18,34 @@ public class LampBlockEntityImpl extends LampBlockEntity {
         super(pos, state);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends LampBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends LampBlockEntity> getFactory() {
         return LampBlockEntityImpl::new;
     }
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        NbtCompound nbt = super.toInitialChunkDataNbt(registryLookup);
-        nbt.putString("color", this.color.asString());
+    public CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        CompoundTag nbt = super.getUpdateTag(registryLookup);
+        nbt.putString("color", this.color.getSerializedName());
         nbt.putString("variant", this.variant.getIdentifier().toString());
         return nbt;
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        this.readNbt(tag, registryLookup);
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registryLookup) {
+        this.loadAdditional(tag, registryLookup);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup registryLookup) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider registryLookup) {
         super.onDataPacket(net, pkt, registryLookup);
-        this.color = DyeColor.byName(pkt.getNbt().getString("color"), DyeColor.WHITE);
-        this.variant = WoodVariantRegistry.getVariant(Identifier.tryParse(pkt.getNbt().getString("variant")));
+        this.color = DyeColor.byName(pkt.getTag().getString("color"), DyeColor.WHITE);
+        this.variant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(pkt.getTag().getString("variant")));
     }
 
 }

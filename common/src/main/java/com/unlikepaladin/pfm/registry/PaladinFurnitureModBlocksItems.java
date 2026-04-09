@@ -6,14 +6,19 @@ import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.items.DyeKit;
-import net.minecraft.block.*;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Pair;
-import net.minecraft.world.biome.Biome;
+import com.unlikepaladin.pfm.registry.dynamic.FurnitureEntry;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.item.DyeColor;
+
+import net.minecraft.world.level.material.MapColor;
 
 import java.util.*;
 import java.util.ArrayList;
@@ -23,84 +28,84 @@ import java.util.stream.Stream;
 
 public class PaladinFurnitureModBlocksItems {
     public static final List<Block> BLOCKS = new ArrayList<>();
-    public static final Map<Pair<String, ItemGroup>, Set<Item>> ITEM_GROUP_LIST_MAP = new LinkedHashMap<>();
+    public static final Map<Tuple<String, CreativeModeTab>, Set<Item>> ITEM_GROUP_LIST_MAP = new LinkedHashMap<>();
     public static Set<BlockState> originalHomePOIBedStates = new HashSet<>();
-    public static final FreezerBlock WHITE_FREEZER = new FreezerBlock(AbstractBlock.Settings.create().resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE).mapColor(MapColor.WHITE), () -> PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
-    public static final FridgeBlock WHITE_FRIDGE = new FridgeBlock(AbstractBlock.Settings.copy(WHITE_FREEZER).nonOpaque(), () -> PaladinFurnitureModBlocksItems.WHITE_FREEZER);
-    public static final FreezerBlock GRAY_FREEZER = new FreezerBlock(AbstractBlock.Settings.create().resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.STONE).mapColor(MapColor.GRAY), () -> PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
-    public static final FridgeBlock GRAY_FRIDGE = new FridgeBlock(AbstractBlock.Settings.copy(GRAY_FREEZER).nonOpaque(), () -> PaladinFurnitureModBlocksItems.GRAY_FREEZER);
-    public static final FreezerBlock IRON_FREEZER = new IronFreezerBlock(AbstractBlock.Settings.create().resistance(3.5f).strength(5.0f).sounds(BlockSoundGroup.METAL).mapColor(MapColor.IRON_GRAY), () -> PaladinFurnitureModBlocksItems.IRON_FRIDGE);
-    public static final FridgeBlock IRON_FRIDGE = new IronFridgeBlock(AbstractBlock.Settings.copy(IRON_FREEZER).nonOpaque(), () -> PaladinFurnitureModBlocksItems.IRON_FREEZER);
-    public static final FridgeBlock XBOX_FRIDGE = new XboxFridgeBlock(AbstractBlock.Settings.copy(WHITE_FREEZER).resistance(1200.0F).nonOpaque().mapColor(MapColor.BLACK), null);
+    public static final FreezerBlock WHITE_FREEZER = new FreezerBlock(BlockBehaviour.Properties.of().explosionResistance(3.5f).strength(5.0f).sound(SoundType.STONE).mapColor(MapColor.SNOW), () -> PaladinFurnitureModBlocksItems.WHITE_FRIDGE);
+    public static final FridgeBlock WHITE_FRIDGE = new FridgeBlock(BlockBehaviour.Properties.ofFullCopy(WHITE_FREEZER).noOcclusion(), () -> PaladinFurnitureModBlocksItems.WHITE_FREEZER);
+    public static final FreezerBlock GRAY_FREEZER = new FreezerBlock(BlockBehaviour.Properties.of().explosionResistance(3.5f).strength(5.0f).sound(SoundType.STONE).mapColor(MapColor.COLOR_GRAY), () -> PaladinFurnitureModBlocksItems.GRAY_FRIDGE);
+    public static final FridgeBlock GRAY_FRIDGE = new FridgeBlock(BlockBehaviour.Properties.ofFullCopy(GRAY_FREEZER).noOcclusion(), () -> PaladinFurnitureModBlocksItems.GRAY_FREEZER);
+    public static final FreezerBlock IRON_FREEZER = new IronFreezerBlock(BlockBehaviour.Properties.of().explosionResistance(3.5f).strength(5.0f).sound(SoundType.METAL).mapColor(MapColor.METAL), () -> PaladinFurnitureModBlocksItems.IRON_FRIDGE);
+    public static final FridgeBlock IRON_FRIDGE = new IronFridgeBlock(BlockBehaviour.Properties.ofFullCopy(IRON_FREEZER).noOcclusion(), () -> PaladinFurnitureModBlocksItems.IRON_FREEZER);
+    public static final FridgeBlock XBOX_FRIDGE = new XboxFridgeBlock(BlockBehaviour.Properties.ofFullCopy(WHITE_FREEZER).explosionResistance(1200.0F).noOcclusion().mapColor(MapColor.COLOR_BLACK), null);
 
-    public static final StoveBlock WHITE_STOVE = new StoveBlock(AbstractBlock.Settings.copy(WHITE_FREEZER));
-    public static final KitchenRangeHoodBlock WHITE_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(AbstractBlock.Settings.copy(WHITE_FREEZER).nonOpaque());
-    public static final StoveBlock GRAY_STOVE = new StoveBlock(AbstractBlock.Settings.copy(GRAY_FREEZER));
-    public static final KitchenRangeHoodBlock GRAY_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(AbstractBlock.Settings.copy(GRAY_FREEZER).nonOpaque());
-    public static final StoveBlock IRON_STOVE = new IronStoveBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
-    public static final KitchenRangeHoodBlock IRON_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK).nonOpaque());
-    public static final MicrowaveBlock IRON_MICROWAVE = new MicrowaveBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
-    public static final TrashcanBlock TRASHCAN = new TrashcanBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
-    public static final InnerTrashcanBlock MESH_TRASHCAN = new InnerTrashcanBlock(AbstractBlock.Settings.copy(Blocks.CHAIN).nonOpaque());
+    public static final StoveBlock WHITE_STOVE = new StoveBlock(BlockBehaviour.Properties.ofFullCopy(WHITE_FREEZER));
+    public static final KitchenRangeHoodBlock WHITE_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(BlockBehaviour.Properties.ofFullCopy(WHITE_FREEZER).noOcclusion());
+    public static final StoveBlock GRAY_STOVE = new StoveBlock(BlockBehaviour.Properties.ofFullCopy(GRAY_FREEZER));
+    public static final KitchenRangeHoodBlock GRAY_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(BlockBehaviour.Properties.ofFullCopy(GRAY_FREEZER).noOcclusion());
+    public static final StoveBlock IRON_STOVE = new IronStoveBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK));
+    public static final KitchenRangeHoodBlock IRON_OVEN_RANGEHOOD = new KitchenRangeHoodBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noOcclusion());
+    public static final MicrowaveBlock IRON_MICROWAVE = new MicrowaveBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK));
+    public static final TrashcanBlock TRASHCAN = new TrashcanBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK));
+    public static final InnerTrashcanBlock MESH_TRASHCAN = new InnerTrashcanBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHAIN).noOcclusion());
 
-    public static final Item DYE_KIT_YELLOW = new DyeKit(new Item.Settings().maxCount(16), DyeColor.YELLOW);
-    public static final Item DYE_KIT_BLUE = new DyeKit(new Item.Settings().maxCount(16), DyeColor.BLUE);
-    public static final Item DYE_KIT_WHITE = new DyeKit(new Item.Settings().maxCount(16), DyeColor.WHITE);
-    public static final Item DYE_KIT_PINK = new DyeKit(new Item.Settings().maxCount(16), DyeColor.PINK);
-    public static final Item DYE_KIT_PURPLE = new DyeKit(new Item.Settings().maxCount(16), DyeColor.PURPLE);
-    public static final Item DYE_KIT_GREEN = new DyeKit(new Item.Settings().maxCount(16), DyeColor.GREEN);
-    public static final Item DYE_KIT_LIGHT_BLUE = new DyeKit(new Item.Settings().maxCount(16), DyeColor.LIGHT_BLUE);
-    public static final Item DYE_KIT_LIGHT_GRAY = new DyeKit(new Item.Settings().maxCount(16), DyeColor.LIGHT_GRAY);
-    public static final Item DYE_KIT_LIME = new DyeKit(new Item.Settings().maxCount(16), DyeColor.LIME);
-    public static final Item DYE_KIT_ORANGE = new DyeKit(new Item.Settings().maxCount(16), DyeColor.ORANGE);
-    public static final Item DYE_KIT_BLACK = new DyeKit(new Item.Settings().maxCount(16), DyeColor.BLACK);
-    public static final Item DYE_KIT_BROWN = new DyeKit(new Item.Settings().maxCount(16), DyeColor.BROWN);
-    public static final Item DYE_KIT_MAGENTA = new DyeKit(new Item.Settings().maxCount(16), DyeColor.MAGENTA);
-    public static final Item DYE_KIT_RED = new DyeKit(new Item.Settings().maxCount(16), DyeColor.RED);
-    public static final Item DYE_KIT_CYAN = new DyeKit(new Item.Settings().maxCount(16), DyeColor.CYAN);
-    public static final Item DYE_KIT_GRAY = new DyeKit(new Item.Settings().maxCount(16), DyeColor.GRAY);
+    public static final Item DYE_KIT_YELLOW = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.YELLOW);
+    public static final Item DYE_KIT_BLUE = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.BLUE);
+    public static final Item DYE_KIT_WHITE = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.WHITE);
+    public static final Item DYE_KIT_PINK = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.PINK);
+    public static final Item DYE_KIT_PURPLE = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.PURPLE);
+    public static final Item DYE_KIT_GREEN = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.GREEN);
+    public static final Item DYE_KIT_LIGHT_BLUE = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.LIGHT_BLUE);
+    public static final Item DYE_KIT_LIGHT_GRAY = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.LIGHT_GRAY);
+    public static final Item DYE_KIT_LIME = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.LIME);
+    public static final Item DYE_KIT_ORANGE = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.ORANGE);
+    public static final Item DYE_KIT_BLACK = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.BLACK);
+    public static final Item DYE_KIT_BROWN = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.BROWN);
+    public static final Item DYE_KIT_MAGENTA = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.MAGENTA);
+    public static final Item DYE_KIT_RED = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.RED);
+    public static final Item DYE_KIT_CYAN = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.CYAN);
+    public static final Item DYE_KIT_GRAY = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.GRAY);
 
-    public static final Block RAW_CONCRETE = new Block(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE));
-    public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND));
-    public static final Block LEATHER_BLOCK = new Block(AbstractBlock.Settings.copy(Blocks.WHITE_WOOL).sounds(BlockSoundGroup.WOOL).mapColor(MapColor.ORANGE));
+    public static final Block RAW_CONCRETE = new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE).sound(SoundType.STONE));
+    public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE_POWDER).sound(SoundType.SAND));
+    public static final Block LEATHER_BLOCK = new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).sound(SoundType.WOOL).mapColor(MapColor.COLOR_ORANGE));
 
-    public static final Block IRON_CHAIN = new ChainBlock(AbstractBlock.Settings.copy(Blocks.IRON_BARS).sounds(BlockSoundGroup.METAL));
-    public static final PendantBlock GRAY_MODERN_PENDANT = new PendantBlock(AbstractBlock.Settings.copy(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)).mapColor(MapColor.GRAY));
-    public static final PendantBlock WHITE_MODERN_PENDANT = new PendantBlock(AbstractBlock.Settings.copy(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)).mapColor(MapColor.WHITE));
-    public static final PendantBlock GLASS_MODERN_PENDANT = new PendantBlock(AbstractBlock.Settings.copy(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)).mapColor(MapColor.OFF_WHITE));
-    public static final SimpleLightBlock SIMPLE_LIGHT = new SimpleLightBlock(AbstractBlock.Settings.copy(Blocks.IRON_BARS).sounds(BlockSoundGroup.STONE).nonOpaque().luminance(createLightLevelFromLitBlockState(15)).mapColor(MapColor.LIGHT_GRAY));
+    public static final Block IRON_CHAIN = new ChainBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS).sound(SoundType.METAL));
+    public static final PendantBlock GRAY_MODERN_PENDANT = new PendantBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).mapColor(MapColor.COLOR_GRAY));
+    public static final PendantBlock WHITE_MODERN_PENDANT = new PendantBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).mapColor(MapColor.SNOW));
+    public static final PendantBlock GLASS_MODERN_PENDANT = new PendantBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).mapColor(MapColor.QUARTZ));
+    public static final SimpleLightBlock SIMPLE_LIGHT = new SimpleLightBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BARS).sound(SoundType.STONE).noOcclusion().lightLevel(createLightLevelFromLitBlockState(15)).mapColor(MapColor.COLOR_LIGHT_GRAY));
 
-    public static final LightSwitchBlock LIGHT_SWITCH = new LightSwitchBlock(AbstractBlock.Settings.copy(Blocks.WHITE_CONCRETE).sounds(BlockSoundGroup.STONE).nonOpaque().mapColor(MapColor.WHITE));
+    public static final LightSwitchBlock LIGHT_SWITCH = new LightSwitchBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_CONCRETE).sound(SoundType.STONE).noOcclusion().mapColor(MapColor.SNOW));
     public static Item LIGHT_SWITCH_ITEM;
     public static Item FURNITURE_BOOK;
-    public static final Block BASIC_LAMP = new BasicLampBlock(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).luminance(createLightLevelFromLitBlockState(15)));
-    public static final Block TOASTER_BLOCK = new PFMToasterBlock(AbstractBlock.Settings.copy(IRON_STOVE));
+    public static final Block BASIC_LAMP = new BasicLampBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.OAK_PLANKS).lightLevel(createLightLevelFromLitBlockState(15)));
+    public static final Block TOASTER_BLOCK = new PFMToasterBlock(BlockBehaviour.Properties.ofFullCopy(IRON_STOVE));
     private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
-        return state -> state.get(Properties.LIT) ? litLevel : 0;
+        return state -> state.getValue(BlockStateProperties.LIT) ? litLevel : 0;
     }
 
-    public static final WorkingTableBlock WORKING_TABLE = new WorkingTableBlock(AbstractBlock.Settings.copy(Blocks.CRAFTING_TABLE).sounds(BlockSoundGroup.WOOD));
 
-    public static final KitchenStovetopBlock KITCHEN_STOVETOP = new KitchenStovetopBlock(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK));
+    public static final KitchenStovetopBlock KITCHEN_STOVETOP = new KitchenStovetopBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK));
 
-    public static final PlateBlock BASIC_PLATE = new PlateBlock(AbstractBlock.Settings.copy(Blocks.WHITE_CONCRETE).nonOpaque());
-    public static final CutleryBlock BASIC_CUTLERY = new CutleryBlock(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).nonOpaque());
+    public static final WorkingTableBlock WORKING_TABLE = new WorkingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE).sound(SoundType.WOOD));
+    public static final PlateBlock BASIC_PLATE = new PlateBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_CONCRETE).noOcclusion());
+    public static final CutleryBlock BASIC_CUTLERY = new CutleryBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE).noOcclusion());
 
-    public static final BasicToiletBlock BASIC_TOILET = new BasicToiletBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque());
-    public static final WallToiletPaperBlock WALL_TOILET_PAPER = new WallToiletPaperBlock(AbstractBlock.Settings.create().mapColor(MapColor.OFF_WHITE).nonOpaque());
-    public static final BasicBathtubBlock BASIC_BATHTUB = new BasicBathtubBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque(), BathtubBehavior.TUB_BEHAVIOR, Biome.Precipitation.RAIN);
+    public static final BasicToiletBlock BASIC_TOILET = new BasicToiletBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SMOOTH_QUARTZ).noOcclusion());
+    public static final WallToiletPaperBlock WALL_TOILET_PAPER = new WallToiletPaperBlock(BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).noOcclusion());
+    public static final BasicBathtubBlock BASIC_BATHTUB = new BasicBathtubBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SMOOTH_QUARTZ).noOcclusion(), BathtubBehavior.TUB_BEHAVIOR, Biome.Precipitation.RAIN);
 
 
     public static Block WHITE_MIRROR;
     public static Block GRAY_MIRROR;
 
-    public static final BasicShowerHeadBlock BASIC_SHOWER_HEAD = new BasicShowerHeadBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque());
-    public static final BasicShowerHandleBlock BASIC_SHOWER_HANDLE = new BasicShowerHandleBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque());
+    public static final BasicShowerHeadBlock BASIC_SHOWER_HEAD = new BasicShowerHeadBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SMOOTH_QUARTZ).noOcclusion());
+    public static final BasicShowerHandleBlock BASIC_SHOWER_HANDLE = new BasicShowerHandleBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SMOOTH_QUARTZ).noOcclusion());
     public static Item BASIC_SHOWER_HANDLE_ITEM;
     public static Item BASIC_LAMP_ITEM;
     public static Item OFFICE_CHAIR_ITEM;
 
-    public static final BasicSinkBlock BASIC_SINK = new BasicSinkBlock(AbstractBlock.Settings.copy(Blocks.SMOOTH_QUARTZ).nonOpaque(), Biome.Precipitation.RAIN, SinkBehavior.WATER_SINK_BEHAVIOR);
+    public static final BasicSinkBlock BASIC_SINK = new BasicSinkBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SMOOTH_QUARTZ).noOcclusion(), Biome.Precipitation.RAIN, SinkBehavior.WATER_SINK_BEHAVIOR);
     public static final List<BedBlock> beds = new ArrayList<>();
 
     public static Block[] getBeds() {

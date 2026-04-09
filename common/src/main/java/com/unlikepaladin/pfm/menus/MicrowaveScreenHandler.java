@@ -2,20 +2,22 @@ package com.unlikepaladin.pfm.menus;
 
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.book.RecipeBookCategory;
-import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.inventory.RecipeBookType;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.network.chat.Component;
 
 public class MicrowaveScreenHandler
         extends AbstractMicrowaveScreenHandler {
-    public MicrowaveScreenHandler(int syncId, PlayerInventory playerInventory, MicrowaveData buf) {
-        super(ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipeBookCategory.SMOKER, syncId, playerInventory, buf);
+    public MicrowaveScreenHandler(int syncId, Inventory playerInventory, MicrowaveData buf) {
+        super(ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipeBookType.SMOKER, syncId, playerInventory, buf);
     }
 
-    public MicrowaveScreenHandler(MicrowaveBlockEntity microwaveBlockEntity, int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
-        super(microwaveBlockEntity, ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipeBookCategory.SMOKER, syncId, playerInventory, inventory, propertyDelegate);
+    public MicrowaveScreenHandler(MicrowaveBlockEntity microwaveBlockEntity, int containerId, Inventory playerInventory, Container inventory, ContainerData dataAccess) {
+        super(microwaveBlockEntity, ScreenHandlerIDs.MICROWAVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipeBookType.SMOKER, containerId, playerInventory, inventory, dataAccess);
     }
 }
 

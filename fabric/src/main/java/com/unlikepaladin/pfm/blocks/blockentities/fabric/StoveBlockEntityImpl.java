@@ -5,17 +5,15 @@ import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.StoveBlockEntityBalm;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 
 import org.jetbrains.annotations.Nullable;;
 
@@ -30,21 +28,21 @@ public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedSc
     }
 
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup lookup) {
-        return createNbt(lookup);
+    public CompoundTag getUpdateTag(HolderLookup.Provider lookup) {
+        return saveWithoutMetadata(lookup);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends BlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends BlockEntity> getFactory() {
         return PaladinFurnitureMod.getModList().contains("cookingforblockheads") ? StoveBlockEntityBalm::new :StoveBlockEntityImpl::new;
     }
 
     @Override
-    public StoveScreenHandler.StoveData getScreenOpeningData(ServerPlayerEntity player) {
-        return new StoveScreenHandler.StoveData(this.pos);
+    public StoveScreenHandler.StoveData getScreenOpeningData(ServerPlayer serverPlayerEntity) {
+        return new StoveScreenHandler.StoveData(this.getBlockPos());
     }
 }

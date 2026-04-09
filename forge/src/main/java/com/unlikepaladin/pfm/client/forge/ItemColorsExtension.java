@@ -1,11 +1,11 @@
 package com.unlikepaladin.pfm.client.forge;
 
-import net.minecraft.client.color.item.ItemColorProvider;
-import net.minecraft.item.Item;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.world.item.Item;
 
 import java.util.Map;
 
 public interface ItemColorsExtension {
-    Map<RegistryEntry.Reference<Item>, ItemColorProvider> getColorMap();
+    Map<Holder.Reference<Item>, ItemColor> getColorMap();
 }

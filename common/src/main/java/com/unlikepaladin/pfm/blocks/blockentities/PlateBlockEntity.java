@@ -2,63 +2,63 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.Clearable;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.Clearable;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.Nullable;
 
 public class PlateBlockEntity extends BlockEntity implements Clearable {
-    protected final DefaultedList<ItemStack> itemInPlate = DefaultedList.ofSize(1, ItemStack.EMPTY);
+    protected final NonNullList<ItemStack> itemInPlate = NonNullList.withSize(1, ItemStack.EMPTY);
     public PlateBlockEntity(BlockPos blockPos, BlockState blockState) {
         super(BlockEntities.PLATE_BLOCK_ENTITY, blockPos, blockState);
     }
 
     @Override
-    protected void readNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.readNbt(nbt, registryLookup);
+    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.loadAdditional(nbt, registryLookup);
         this.itemInPlate.clear();
-        Inventories.readNbt(nbt, this.itemInPlate, registryLookup);
+        ContainerHelper.loadAllItems(nbt, this.itemInPlate, registryLookup);
     }
 
     @Override
-    protected void writeNbt(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
+    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         this.saveInitialChunkData(nbt);
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
         this.itemInPlate.clear();
-        world.updateListeners(pos, this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+        level.sendBlockUpdated(getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
     }
 
-    private void updateListeners() {
-        this.markDirty();
-        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), Block.NOTIFY_LISTENERS);
+    private void sendBlockUpdated() {
+        this.setChanged();
+        this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
     }
 
     public boolean addItem(ItemStack item) {
         if (itemInPlate.get(0).isEmpty()) {
             this.itemInPlate.set(0, item.split(1));
-            this.updateListeners();
+            this.sendBlockUpdated();
             return true;
         }
         return false;
     }
 
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt) {
-        super.writeNbt(nbt, world.getRegistryManager());
-        Inventories.writeNbt(nbt, this.itemInPlate, true, world.getRegistryManager());
+    protected CompoundTag saveInitialChunkData(CompoundTag nbt) {
+        super.saveAdditional(nbt, level.registryAccess());
+        ContainerHelper.saveAllItems(nbt, this.itemInPlate, true, level.registryAccess());
         return nbt;
     }
 
@@ -69,20 +69,20 @@ public class PlateBlockEntity extends BlockEntity implements Clearable {
     public ItemStack removeItem() {
         ItemStack stack = this.itemInPlate.get(0).copy();
         this.itemInPlate.set(0, ItemStack.EMPTY);
-        updateListeners();
+        sendBlockUpdated();
         return stack;
     }
 
-    public Inventory getInventory(){
-        SimpleInventory inventory = new SimpleInventory(itemInPlate.size());
+    public Container getContainer(){
+        SimpleContainer inventory = new SimpleContainer(itemInPlate.size());
         for (int i = 0; i < itemInPlate.size(); i++) {
-            inventory.setStack(i, itemInPlate.get(i));
+            inventory.setItem(i, itemInPlate.get(i));
         }
         return inventory;
     }
 
     @ExpectPlatform
-    public static BlockEntityType.BlockEntityFactory<? extends PlateBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends PlateBlockEntity> getFactory() {
         throw new UnsupportedOperationException();
     }
 }

@@ -3,42 +3,45 @@ package com.unlikepaladin.pfm.blocks;
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.*;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.DirectionProperty;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class DinnerTableBlock extends HorizontalFacingBlock  {
+public class DinnerTableBlock extends HorizontalDirectionalBlock  {
 
     private final Block baseBlock;
-    public static final DirectionProperty FACING = Properties.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     private final BlockState baseBlockState;
 
     private static final List<FurnitureBlock> WOOD_DINNER_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DINNER_TABLES = new ArrayList<>();
-    public static final MapCodec<DinnerTableBlock> CODEC = createCodec(DinnerTableBlock::new);
+    public static final MapCodec<DinnerTableBlock> CODEC = simpleCodec(DinnerTableBlock::new);
 
-    public DinnerTableBlock(Settings settings) {
-        super(settings.luminance((state) -> 0).emissiveLighting((blockstate, b, c) -> false));
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
-        this.baseBlockState = this.getDefaultState();
+    public DinnerTableBlock(Properties settings) {
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
+        this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(DinnerTableBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(DinnerTableBlock.class)){
             WOOD_DINNER_TABLES.add(new FurnitureBlock(this, "table_dinner"));
         }
         else if (this.getClass().isAssignableFrom(DinnerTableBlock.class)){
@@ -47,7 +50,7 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 
@@ -59,25 +62,25 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+    public boolean isCollisionShapeFullBlock(BlockState state, BlockGetter world, BlockPos pos) {
         return false;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
         stateManager.add(FACING);
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (!state.isOf(state.getBlock())) {
-            oldState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+        if (!state.is(state.getBlock())) {
+            oldState.handleNeighborChanged(world, pos, Blocks.AIR, pos, false);
         }
     }
 
-
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection());
     }
     @Override
     public FluidState getFluidState(BlockState state) {
@@ -85,8 +88,8 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
     boolean canConnect(BlockState blockState)
@@ -94,18 +97,18 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
         return PaladinFurnitureMod.getPFMConfig().doTablesOfDifferentMaterialsConnect() ? blockState.getBlock() instanceof DinnerTableBlock : blockState.getBlock() == this;
     }
 
-    public boolean isTable(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
+    public boolean isTable(BlockGetter world, BlockPos pos, Direction direction, Direction tableDirection)
     {
-        BlockState state = world.getBlockState(pos.offset(direction));
+        BlockState state = world.getBlockState(pos.relative(direction));
         if(canConnect(state))
         {
-            Direction sourceDirection = state.get(FACING);
+            Direction sourceDirection = state.getValue(FACING);
             return sourceDirection.equals(tableDirection);
         }
         return false;
     }
 
-    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
@@ -116,32 +119,32 @@ public class DinnerTableBlock extends HorizontalFacingBlock  {
      * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/
      */
     public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
+        VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
 
-        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
+        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
         for (int i = 0; i < times; i++) {
-            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
+            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
             buffer[0] = buffer[1];
-            buffer[1] = VoxelShapes.empty();
+            buffer[1] = Shapes.empty();
         }
 
         return buffer[0];
     }
 
-    final static VoxelShape dinner_table = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(0.1, 0, 2, 15.8, 14, 4.05), createCuboidShape(0.1, 0, 11.9, 15.8, 14, 13.95));
-    final static VoxelShape dinner_table_middle = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16));
-    final static VoxelShape dinner_table_one_east = VoxelShapes.union(createCuboidShape(0, 14, 0, 16, 16, 16), createCuboidShape(0.1, 0, 2, 15.8, 14, 4.05));
+    final static VoxelShape dinner_table = Shapes.or(box(0, 14, 0, 16, 16, 16), box(0.1, 0, 2, 15.8, 14, 4.05), box(0.1, 0, 11.9, 15.8, 14, 13.95));
+    final static VoxelShape dinner_table_middle = Shapes.or(box(0, 14, 0, 16, 16, 16));
+    final static VoxelShape dinner_table_one_east = Shapes.or(box(0, 14, 0, 16, 16, 16), box(0.1, 0, 2, 15.8, 14, 4.05));
     final static VoxelShape dinner_table_one_south = rotateShape(Direction.NORTH, Direction.WEST, dinner_table_one_east);
     final static VoxelShape dinner_table_one = rotateShape(Direction.NORTH, Direction.EAST, dinner_table_one_east);
     final static VoxelShape dinner_table_one_west = rotateShape(Direction.NORTH, Direction.SOUTH, dinner_table_one_east);
     final static VoxelShape dinner_table_east = rotateShape(Direction.NORTH, Direction.EAST, dinner_table);
 
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+        Direction dir = state.getValue(FACING);
         boolean dirNorthOrSouth = dir.equals(Direction.NORTH) || dir.equals(Direction.SOUTH);
         boolean dirWestOrEast = dir.equals(Direction.WEST) || dir.equals(Direction.EAST);
-        boolean left = isTable(view, pos, dir.rotateYCounterclockwise(), dir);
-        boolean right = isTable(view, pos, dir.rotateYClockwise(), dir);
+        boolean left = isTable(view, pos, dir.getCounterClockWise(), dir);
+        boolean right = isTable(view, pos, dir.getClockWise(), dir);
 
         if (left && right) {
             return dinner_table_middle;

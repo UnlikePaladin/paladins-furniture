@@ -2,9 +2,9 @@ package com.unlikepaladin.pfm.config.option;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import net.minecraft.nbt.*;
-import net.minecraft.util.crash.CrashException;
-import net.minecraft.util.crash.CrashReport;
-import net.minecraft.util.crash.CrashReportSection;
+import net.minecraft.ReportedException;
+import net.minecraft.CrashReport;
+import net.minecraft.CrashReportCategory;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.*;
@@ -89,10 +89,10 @@ public class ConfigIO {
             return ConfigOptionTypes.byId(b).read(input, depth, tracker);
         }
         catch (IOException iOException) {
-            CrashReport crashReport = CrashReport.create(iOException, "Loading Config data");
-            CrashReportSection crashReportSection = crashReport.addElement("Config Element");
-            crashReportSection.add("Config type", b);
-            throw new CrashException(crashReport);
+            CrashReport crashReport = CrashReport.forThrowable(iOException, "Loading Config data");
+            CrashReportCategory crashReportSection = crashReport.addCategory("Config Element");
+            crashReportSection.setDetail("Config type", b);
+            throw new ReportedException(crashReport);
         }
     }
 }

@@ -13,22 +13,21 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     private final IDrawable BACKGROUND;
-    public static final Identifier TEXTURE_GUI_VANILLA = new Identifier("pfm:textures/gui/gui_jei.png");
+    public static final ResourceLocation TEXTURE_GUI_VANILLA = new ResourceLocation("pfm:textures/gui/gui_jei.png");
     public final IDrawable ICON;
-    public static final Text TITLE = Text.translatable("rei.pfm.furniture");
+    public static final Component TITLE = Component.translatable("rei.pfm.furniture");
     private final ICraftingGridHelper craftingGridHelper;
     private static final int craftOutputSlot = 9;
     private static final int craftInputSlot1 = 0;
@@ -39,7 +38,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         this.BACKGROUND = guiHelper.createDrawable(TEXTURE_GUI_VANILLA, 0, 60, 116, 54);
         craftingGridHelper = guiHelper.createCraftingGridHelper();
     }
-    public static final Identifier IDENTIFIER = new Identifier(PaladinFurnitureMod.MOD_ID, "crafting");
+    public static final ResourceLocation IDENTIFIER = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "crafting");
 
     @Override
     public RecipeType<FurnitureRecipe> getRecipeType() {
@@ -47,7 +46,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
     }
 
     @Override
-    public Text getTitle() {
+    public Component getTitle() {
         return TITLE;
     }
 
@@ -95,7 +94,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
             ItemStack focusedStack = focused.get().getTypedValue().getItemStack().get();
             if (!focusToOutput.containsKey(focusedStack)) {
                 for (ItemStack stack : outputs) {
-                    if (ItemStack.areItemsAndComponentsEqual(stack, focusedStack)) {
+                    if (ItemStack.isSameItemSameComponents(stack, focusedStack)) {
                         focusToOutput.put(focusedStack, stack);
                         break;
                     }
@@ -137,7 +136,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         List<Ingredient> ingredients = recipe.getIngredients();
         HashMap<Item, Integer> containedItems = new HashMap<>();
         for (Ingredient ingredient : ingredients) {
-            for (ItemStack stack : ingredient.getMatchingStacks()) {
+            for (ItemStack stack : ingredient.getItems()) {
                 if (!containedItems.containsKey(stack.getItem())) {
                     containedItems.put(stack.getItem(), stack.getCount());
                 } else {
