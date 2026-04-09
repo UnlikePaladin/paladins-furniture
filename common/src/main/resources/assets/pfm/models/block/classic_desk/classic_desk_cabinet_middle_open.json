@@ -1,7 +1,6 @@
 {
 	"format_version": "1.21.6",
 	"credit": "By UnlikePaladin",
-	"parent": "block/block",
 	"textures": {
 		"handle": "block/stone",
 		"base": "block/oak_planks",

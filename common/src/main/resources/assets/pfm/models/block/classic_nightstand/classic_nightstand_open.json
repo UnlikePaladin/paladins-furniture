@@ -1,6 +1,5 @@
 {
 	"credit": "By UnlikePaladin",
-	"parent": "block/block",
 	"textures": {
 		"handle": "block/stone",
 		"base": "block/oak_planks",
