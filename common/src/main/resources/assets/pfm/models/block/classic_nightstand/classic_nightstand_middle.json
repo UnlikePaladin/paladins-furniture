@@ -2,10 +2,10 @@
 	"credit": "By UnlikePaladin",
 	"parent": "block/block",
 	"textures": {
-		"2": "block/stone",
+		"handle": "block/stone",
 		"base": "block/oak_planks",
-		"particle": "block/oak_log",
-		"support": "block/oak_log"
+		"support": "block/oak_log",
+		"particle": "#support"
 	},
 	"elements": [
 		{
@@ -106,12 +106,12 @@
 			"to": [1, 6.5, 9.5],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
-				"north": {"uv": [3, 3, 4, 4], "texture": "#2"},
-				"east": {"uv": [3, 3, 5, 4], "texture": "#2"},
-				"south": {"uv": [4, 3, 5, 4], "texture": "#2"},
-				"west": {"uv": [3, 3, 5, 4], "texture": "#2"},
-				"up": {"uv": [3, 3, 5, 4], "rotation": 270, "texture": "#2"},
-				"down": {"uv": [3, 3, 5, 4], "rotation": 90, "texture": "#2"}
+				"north": {"uv": [3, 3, 4, 4], "texture": "#handle"},
+				"east": {"uv": [3, 3, 5, 4], "texture": "#handle"},
+				"south": {"uv": [4, 3, 5, 4], "texture": "#handle"},
+				"west": {"uv": [3, 3, 5, 4], "texture": "#handle"},
+				"up": {"uv": [3, 3, 5, 4], "rotation": 270, "texture": "#handle"},
+				"down": {"uv": [3, 3, 5, 4], "rotation": 90, "texture": "#handle"}
 			}
 		},
 		{
@@ -119,12 +119,12 @@
 			"to": [1, 11.5, 9.5],
 			"rotation": {"angle": 0, "axis": "y", "origin": [8, 0, 8]},
 			"faces": {
-				"north": {"uv": [5, 3, 6, 4], "texture": "#2"},
-				"east": {"uv": [4, 3, 6, 4], "texture": "#2"},
-				"south": {"uv": [3, 3, 4, 4], "texture": "#2"},
-				"west": {"uv": [3, 3, 5, 4], "texture": "#2"},
-				"up": {"uv": [4, 3, 6, 4], "rotation": 270, "texture": "#2"},
-				"down": {"uv": [3, 3, 5, 4], "rotation": 90, "texture": "#2"}
+				"north": {"uv": [5, 3, 6, 4], "texture": "#handle"},
+				"east": {"uv": [4, 3, 6, 4], "texture": "#handle"},
+				"south": {"uv": [3, 3, 4, 4], "texture": "#handle"},
+				"west": {"uv": [3, 3, 5, 4], "texture": "#handle"},
+				"up": {"uv": [4, 3, 6, 4], "rotation": 270, "texture": "#handle"},
+				"down": {"uv": [3, 3, 5, 4], "rotation": 90, "texture": "#handle"}
 			}
 		}
 	],

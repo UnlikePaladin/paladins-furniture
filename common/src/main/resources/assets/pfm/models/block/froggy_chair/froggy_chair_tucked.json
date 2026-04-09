@@ -5,7 +5,7 @@
 		"0": "pfm:block/froggy_chair",
 		"1": "pfm:block/froggy_chair_top",
 		"2": "pfm:block/froggy_chair_back",
-		"particle": "pfm:block/froggy_chair"
+		"particle": "#0"
 	},
 	"elements": [
 		{
