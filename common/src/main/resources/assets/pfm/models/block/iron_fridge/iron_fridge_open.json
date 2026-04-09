@@ -3,7 +3,7 @@
 	"texture_size": [64, 64],
 	"textures": {
 		"0": "pfm:block/iron_fridge",
-		"particle": "pfm:block/iron_fridge"
+		"particle": "#0"
 	},
 	"elements": [
 		{
