@@ -3,7 +3,7 @@
 	"textures": {
 		"0": "block/light_gray_concrete",
 		"3": "pfm:block/shower_head",
-		"particle": "block/light_gray_concrete"
+		"particle": "#0"
 	},
 	"elements": [
 		{

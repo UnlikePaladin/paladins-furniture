@@ -3,7 +3,7 @@
 	"textures": {
 		"3": "block/stone",
 		"4": "pfm:block/toilet_paper",
-		"particle": "pfm:block/toilet_paper"
+		"particle": "#4"
 	},
 	"elements": [
 		{

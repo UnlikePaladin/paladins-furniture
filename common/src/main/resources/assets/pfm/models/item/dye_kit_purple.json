@@ -1,7 +1,6 @@
 {
-    "parent":"item/generated",
-    "textures": {
-        "layer0": "pfm:item/dye_kits/purple"
-    }
-    
+	"parent": "item/generated",
+	"textures": {
+		"layer0": "pfm:item/dye_kits/purple"
+	}
 }
