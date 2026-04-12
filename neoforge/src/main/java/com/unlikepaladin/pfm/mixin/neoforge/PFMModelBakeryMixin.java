@@ -45,7 +45,7 @@ import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
-import net.minecraft.client.render.model.json.JsonUnbakedModel;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.*;
@@ -69,13 +69,13 @@ public abstract class PFMModelBakeryMixin {
 
     @Unique
     ResourceLocation pfm$localId;
-    @WrapOperation(method = "getModel", at = @At(value = "INVOKE", target = "loadBlockModel"))
-    private BlockModel pfm$wrapCall(ModelLoader instance, ResourceLocation resourceId, Operation<JsonUnbakedModel> original) {
+    @WrapOperation(method = "getModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/ModelBakery;loadBlockModel(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/block/model/BlockModel;"))
+    private BlockModel pfm$wrapCall(ModelBakery instance, ResourceLocation resourceId, Operation<BlockModel> original) {
         pfm$localId = resourceId;
         return null;
     }
 
-    @ModifyVariable(method = "getOrLoadModel", at = @At(value = "STORE"))
+    @ModifyVariable(method = "getModel", at = @At(value = "STORE"))
     private UnbakedModel pfm$loadModels(UnbakedModel olModel, ResourceLocation olId) throws IOException {
         ResourceLocation resourceId = pfm$localId;
         if (ModelHelper.containsIdentifier(UnbakedMirrorModel.MIRROR_MODEL_IDS, resourceId)){

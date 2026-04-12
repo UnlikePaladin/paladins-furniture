@@ -16,7 +16,7 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 public class PFMSpriteRegistry {
-    public static ResourceLocation HERRINGBONE_PLANKS = ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/template_herringbone_planks");
+    public static ResourceLocation HERRINGBONE_PLANKS = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/template_herringbone_planks");
     public static Map<ResourceLocation, Function<SpriteContents, List<Tuple<ResourceLocation, SpriteContents>>>> DYNAMIC_SPRITE_GENERATORS = new HashMap<>();
 
     public static void registerAdditionalSprites() {

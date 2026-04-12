@@ -149,7 +149,7 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
     @Override
     public List<CraftableFurnitureRecipe> getAvailableOutputs(FurnitureRecipe.FurnitureRecipeInput input, HolderLookup.Provider registryManager) {
         constructInnerRecipes();
-        PlayerInventory inventory = input.playerInventory();
+        Inventory inventory = input.playerInventory();
         List<CraftableFurnitureRecipe> stacks = Lists.newArrayList();
         for (ResourceLocation id : furnitureInnerRecipes.keySet()) {
             List<FurnitureInnerRecipe> recipes = furnitureInnerRecipes.get(id);

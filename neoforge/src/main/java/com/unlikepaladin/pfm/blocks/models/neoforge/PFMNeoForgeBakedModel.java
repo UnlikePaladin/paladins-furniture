@@ -194,7 +194,7 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         int id = 0;
         for (VertexFormatElement element1 : DefaultVertexFormat.BLOCK.getElements())
         {
-            if (element1.getType() == type && element1.getIndex() == index)
+            if (element1.type() == type && element1.index() == index)
                 break;
             id++;
         }

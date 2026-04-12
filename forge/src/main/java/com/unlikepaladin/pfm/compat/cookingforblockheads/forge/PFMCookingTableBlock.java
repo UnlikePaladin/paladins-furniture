@@ -35,29 +35,42 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack heldItem, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
-        CookingTableBlockEntity blockEntity = (CookingTableBlockEntity)world.getBlockEntity(pos);
-        if (!heldItem.isEmpty()) {
-            if (blockEntity != null) {
-                if (!blockEntity.hasNoFilterBook() && heldItem.getItem() == ModItems.noFilterBook) {
-                    blockEntity.setNoFilterBook(heldItem.split(1));
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult blockHitResult) {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        if (blockEntity instanceof CookingTableBlockEntity cookingTable) {
+            if (player.isShiftKeyDown()) {
+                ItemStack noFilterBook = cookingTable.getNoFilterBook();
+                if (!noFilterBook.isEmpty()) {
+                    if (!player.getInventory().add(noFilterBook)) {
+                        player.drop(noFilterBook, false);
+                    }
+
+                    cookingTable.setNoFilterBook(ItemStack.EMPTY);
+                    return InteractionResult.SUCCESS;
+                }
+            }
+
+            if (!world.isClientSide) {
+                Balm.getNetworking().openGui(player, cookingTable);
+            }
+        }
+
+        return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+        if (!itemStack.isEmpty()) {
+            BlockEntity blockEntity = level.getBlockEntity(pos);
+            if (blockEntity instanceof CookingTableBlockEntity cookingTable) {
+                if (!cookingTable.hasNoFilterBook() && itemStack.getItem() == ModItems.noFilterBook) {
+                    cookingTable.setNoFilterBook(itemStack.split(1));
                     return ItemInteractionResult.SUCCESS;
                 }
             }
-        } else if (player.isShiftKeyDown() && blockEntity != null) {
-            ItemStack noFilterBook = blockEntity.getNoFilterBook();
-            if (!noFilterBook.isEmpty()) {
-                if (!player.getInventory().add(noFilterBook)) {
-                    player.drop(noFilterBook, false);
-                }
-                blockEntity.setNoFilterBook(ItemStack.EMPTY);
-                return ItemInteractionResult.SUCCESS;
-            }
+
         }
-        if (!world.isClientSide) {
-            Balm.getNetworking().openGui(player, blockEntity);
-        }
-        return ItemInteractionResult.SUCCESS;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override

@@ -36,8 +36,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.inventory.ContainerData;
@@ -289,7 +289,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
         return !ovenRecipeResult.isEmpty() ? ovenRecipeResult : this.getSmeltingResult(RecipeType.SMELTING, recipeInput);
     }
 
-    public <T extends Container> ItemStack getSmeltingResult(RecipeType<? extends Recipe<T>> recipeType, T container) {
+    public <T extends RecipeInput> ItemStack getSmeltingResult(RecipeType<? extends Recipe<T>> recipeType, T container) {
         RecipeHolder<?> recipe = this.level.getRecipeManager().getRecipeFor(recipeType, container, this.level).orElse(null);
         if (recipe != null) {
             ItemStack result = recipe.value().getResultItem(this.level.registryAccess());

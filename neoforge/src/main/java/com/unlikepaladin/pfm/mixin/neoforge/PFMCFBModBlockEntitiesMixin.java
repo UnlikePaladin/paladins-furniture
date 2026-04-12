@@ -3,7 +3,7 @@ package com.unlikepaladin.pfm.mixin.neoforge;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.PFMCookingForBlockHeadsCompat;
 import net.blay09.mods.cookingforblockheads.block.entity.ModBlockEntities;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 

@@ -49,7 +49,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     public boolean matches(FurnitureRecipe.FurnitureRecipeInput input, Level world) {
         List<Ingredient> ingredients = this.getIngredients();
         BitSet hasIngredients = new BitSet(ingredients.size());
-        PlayerInventory playerInventory = input.playerInventory();
+        Inventory playerInventory = input.playerInventory();
         for (int i = 0; i < ingredients.size(); i++) {
             Ingredient ingredient = ingredients.get(i);
             for (ItemStack stack : ingredient.getItems()) {

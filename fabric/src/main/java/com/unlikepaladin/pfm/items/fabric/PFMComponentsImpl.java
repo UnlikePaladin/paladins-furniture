@@ -8,7 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 
 
 public class PFMComponentsImpl {
-    public static <T> ComponentType<T> register(ResourceLocation id, ComponentType<T> type) {
+    public static <T> DataComponentType<T> register(ResourceLocation id, DataComponentType<T> type) {
         return Registry.register(
                 BuiltInRegistries.DATA_COMPONENT_TYPE,
                 id,

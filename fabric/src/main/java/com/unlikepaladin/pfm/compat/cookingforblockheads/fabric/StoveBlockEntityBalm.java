@@ -36,8 +36,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
@@ -287,7 +287,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
         return !ovenRecipeResult.isEmpty() ? ovenRecipeResult : this.getSmeltingResult(RecipeType.SMELTING, recipeInput);
     }
 
-    public <T extends Container> ItemStack getSmeltingResult(RecipeType<? extends Recipe<T>> recipeType, T container) {
+    public <T extends RecipeInput> ItemStack getSmeltingResult(RecipeType<? extends Recipe<T>> recipeType, T container) {
         RecipeHolder<?> recipe = this.level.getRecipeManager().getRecipeFor(recipeType, container, this.level).orElse(null);
         if (recipe != null) {
             ItemStack result = recipe.value().getResultItem(this.level.registryAccess());

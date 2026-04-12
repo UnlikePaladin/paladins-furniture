@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
@@ -89,11 +90,11 @@ public class UnbakedBedModel implements UnbakedModel {
 
     }
 
-    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Tuple<String, String>> unresolvedTextureReferences) {
         return Collections.emptyList();
     }
 
-    public static Pair<BakedModel, BakedModel> inventoryModels = new Pair<>(null,null);
+    public static Tuple<BakedModel, BakedModel> inventoryModels = new Tuple<>(null,null);
     @Nullable
     @Override
     public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
@@ -109,9 +110,9 @@ public class UnbakedBedModel implements UnbakedModel {
             bakedModelList.add(model);
             if (modelPart.getPath().contains("full")) {
                 if (modelPart.getPath().contains("simple"))
-                    inventoryModels.setLeft(model);
+                    inventoryModels.setA(model);
                 else
-                    inventoryModels.setRight(model);
+                    inventoryModels.setB(model);
             }
         }
 

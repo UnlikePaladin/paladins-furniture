@@ -27,7 +27,7 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.inventory.ContainerData;
@@ -162,7 +162,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     }
 
     private static int getCookingTime(Level level, RecipeType<? extends AbstractCookingRecipe> recipeType, Container inventory) {
-        return level.getRecipeManager().getRecipeFor(recipeType, new SingleStackRecipeInput(inventory.getStack(0)), level).map(RecipeHolder::value).map(AbstractCookingRecipe::getCookingTime).orElse(200);
+        return level.getRecipeManager().getRecipeFor(recipeType, new SingleRecipeInput(inventory.getItem(0)), level).map(RecipeHolder::value).map(AbstractCookingRecipe::getCookingTime).orElse(200);
     }
 
     @Override
@@ -308,7 +308,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     }
 
     public RecipeHolder<?> getRecipe() {
-        return level.getRecipeManager().getRecipeFor(this.recipeType, new SingleStackRecipeInput(this.inventory.get(0)), level).orElse(null);
+        return level.getRecipeManager().getRecipeFor(this.recipeType, new SingleRecipeInput(this.container.get(0)), level).orElse(null);
     }
     public static boolean canAcceptRecipeOutput(RegistryAccess registryManager, @Nullable Recipe<?> recipe, NonNullList<ItemStack> slots, int count) {
         if (slots.get(0).isEmpty() || recipe == null) {
@@ -359,7 +359,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
         boolean bl2 = false;
         ItemStack itemStack = blockEntity.container.get(0);
         if (blockEntity.isActive || !itemStack.isEmpty()) {
-            RecipeHolder<? extends AbstractCookingRecipe> recipeEntry = level.getRecipeManager().getRecipeFor(blockEntity.recipeType, new SingleStackRecipeInput(itemStack), level).orElse(null);
+            RecipeHolder<? extends AbstractCookingRecipe> recipeEntry = level.getRecipeManager().getRecipeFor(blockEntity.recipeType, new SingleRecipeInput(itemStack), level).orElse(null);
             Recipe recipe = recipeEntry != null ? recipeEntry.value() : null;
             int i = blockEntity.getMaxStackSize();
             if (blockEntity.isActive && canAcceptRecipeOutput(level.registryAccess(), recipe, blockEntity.container, i)) {

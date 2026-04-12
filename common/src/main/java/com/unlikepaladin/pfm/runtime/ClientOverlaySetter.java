@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.runtime;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.client.screens.overlay.PFMGeneratingOverlay;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.Util;
@@ -26,7 +27,7 @@ public class ClientOverlaySetter {
         RenderSystem.applyModelViewMatrix();
         client.getMainRenderTarget().bindWrite(true);
         long i = Util.getNanos();
-        client.gameRenderer.render(client.getRenderTickCounter(), shouldTick(client));
+        client.gameRenderer.render(client.getTimer(), shouldTick(client));
         client.getMainRenderTarget().unbindWrite();
         matrixStack.popMatrix();
 
@@ -37,12 +38,12 @@ public class ClientOverlaySetter {
 
         RenderSystem.applyModelViewMatrix();
         client.getWindow().updateDisplay();
-        ((RenderTickCounter.Dynamic)client.getRenderTickCounter()).tick(client.isPaused());
-        ((RenderTickCounter.Dynamic)client.getRenderTickCounter()).setTickFrozen(!shouldTick(client));
+        ((DeltaTracker.Timer)client.getTimer()).updatePauseState(client.isPaused());
+        ((DeltaTracker.Timer)client.getTimer()).updateFrozenState(!shouldTick(client));
     }
 
 
-    private static boolean shouldTick(MinecraftClient client) {
-        return client.world == null || client.world.getTickManager().shouldTick();
+    private static boolean shouldTick(Minecraft client) {
+        return client.level == null || client.level.tickRateManager().runsNormally();
     }
 }

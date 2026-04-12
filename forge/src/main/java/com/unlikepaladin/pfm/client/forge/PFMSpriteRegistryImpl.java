@@ -27,7 +27,7 @@ public class PFMSpriteRegistryImpl {
             NativeImage image = PFMMissingSpriteAccessor.pfm$invokeCreateImage(info.width(), info.height());
             for (VariantBase<?> variantBase : variantBaseList) {
                 ResourceLocation templateId = info.name();
-                ResourceLocation variantSpriteId = ResourceLocation(templateId.getNamespace(), templateId.getPath().replace("template", variantBase.getPath()));
+                ResourceLocation variantSpriteId = ResourceLocation.fromNamespaceAndPath(templateId.getNamespace(), templateId.getPath().replace("template", variantBase.getPath()));
                 SpriteContents variantInfo = new SpriteContents(variantSpriteId, new FrameSize(info.width(), info.height()),
                         image, ResourceMetadata.EMPTY);
                 ((PFMSpriteContentExtensions)variantInfo).pfm$setInitialized(false);

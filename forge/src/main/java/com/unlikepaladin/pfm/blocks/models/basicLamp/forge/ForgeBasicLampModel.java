@@ -79,7 +79,7 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
     static List<TextureAtlasSprite> getOakStrippedLogSprite() {
         if (!oakSprite.isEmpty())
             return oakSprite;
-        TextureAtlasSprite wood = new Material(InventoryMenu.BLOCK_ATLAS, ResourceLocation.fromNamespaceAndPath("minecraft:block/stripped_oak_log")).sprite();
+        TextureAtlasSprite wood = new Material(InventoryMenu.BLOCK_ATLAS, ResourceLocation.parse("minecraft:block/stripped_oak_log")).sprite();
         oakSprite.add(wood);
         return oakSprite;
     }

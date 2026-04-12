@@ -19,7 +19,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
-import net.minecraft.client.util.ModelIdentifier;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.data.models.model.TextureMapping;
@@ -30,7 +29,6 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import javax.imageio.ImageIO;
@@ -269,7 +267,7 @@ public class ModelHelper {
     }
 
     @ExpectPlatform
-    public static BakedModel getModelFromIdentifier(Identifier id) {
+    public static BakedModel getModelFromIdentifier(ResourceLocation id) {
         throw new AssertionError();
     }
 

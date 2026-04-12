@@ -23,7 +23,7 @@ import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 
-public abstract class AbstractMicrowaveScreenHandler extends RecipeBookMenu<SingleRecipeInput, Container> {
+public abstract class AbstractMicrowaveScreenHandler extends RecipeBookMenu<SingleRecipeInput, AbstractCookingRecipe> {
     private final Container container;
     private final ContainerData dataAccess;
     protected final Level level;
@@ -86,7 +86,7 @@ public abstract class AbstractMicrowaveScreenHandler extends RecipeBookMenu<Sing
     }
 
     @Override
-    public boolean matches(RecipeEntry<AbstractCookingRecipe> recipe) {
+    public boolean recipeMatches(RecipeHolder<AbstractCookingRecipe> recipe) {
         return recipe != null && recipe.value() != null && recipe.value().matches(new SingleRecipeInput(this.container.getItem(0)), this.level);
     }
 
@@ -176,7 +176,7 @@ public abstract class AbstractMicrowaveScreenHandler extends RecipeBookMenu<Sing
     }
 
     protected boolean isCookable(ItemStack itemStack) {
-        Optional<? extends RecipeEntry<? extends AbstractCookingRecipe>> optionalRecipeEntry = this.level.getRecipeManager().getRecipeFor(this.recipeType, new SingleRecipeInput(itemStack), this.level);
+        Optional<? extends RecipeHolder<? extends AbstractCookingRecipe>> optionalRecipeEntry = this.level.getRecipeManager().getRecipeFor(this.recipeType, new SingleRecipeInput(itemStack), this.level);
         return optionalRecipeEntry != null && optionalRecipeEntry.isPresent() && optionalRecipeEntry.get().value() != null;
     }
 

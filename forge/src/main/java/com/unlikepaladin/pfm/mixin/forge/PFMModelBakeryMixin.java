@@ -42,6 +42,7 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
+import net.minecraft.client.renderer.block.model.BlockModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
@@ -66,8 +67,8 @@ public abstract class PFMModelBakeryMixin {
 
     @Unique
     ResourceLocation pfm$localId;
-    @WrapOperation(method = "getModel", at = @At(value = "INVOKE", target = "loadBlockModel"))
-    private BlockModel pfm$wrapCall(ModelLoader instance, ResourceLocation resourceId, Operation<JsonUnbakedModel> original) {
+    @WrapOperation(method = "getModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/ModelBakery;loadBlockModel(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/block/model/BlockModel;"))
+    private BlockModel pfm$wrapCall(ModelBakery instance, ResourceLocation resourceId, Operation<BlockModel> original) {
         pfm$localId = resourceId;
         return null;
     }

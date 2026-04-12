@@ -45,7 +45,7 @@ public class PFMBedBlockEntity extends BedBlockEntity implements DyeableFurnitur
     }
 
     @Override
-    public boolean supports(BlockState state) {
-        return getType().supports(state);
+    public boolean isValidBlockState(BlockState state) {
+        return getType().isValid(state);
     }
 }

@@ -118,16 +118,16 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
                 ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_log"),
                 ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "log_" + id.getPath()),
                 ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "log"),
-                ResourceLocation.fromNamespaceAndPath(id.getPath() + "_log"),
-                ResourceLocation.fromNamespaceAndPath("log_" + id.getPath()),
-                ResourceLocation.fromNamespaceAndPath(id.getPath() + "log"),
+                ResourceLocation.parse(id.getPath() + "_log"),
+                ResourceLocation.parse("log_" + id.getPath()),
+                ResourceLocation.parse(id.getPath() + "log"),
                 ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath() + "_stem"),
                 ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "stem_" + id.getPath()),
-                ResourceLocation.fromNamespaceAndPath(id.getPath() + "_stem"),
-                ResourceLocation.fromNamespaceAndPath("stem_" + id.getPath()),
+                ResourceLocation.parse(id.getPath() + "_stem"),
+                ResourceLocation.parse("stem_" + id.getPath()),
                 ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "stalk_" + id.getPath()),
-                ResourceLocation.fromNamespaceAndPath(id.getPath() + "_stalk"),
-                ResourceLocation.fromNamespaceAndPath("stalk_" + id.getPath())
+                ResourceLocation.parse(id.getPath() + "_stalk"),
+                ResourceLocation.parse("stalk_" + id.getPath())
         };
         Block temp = null;
         for (ResourceLocation r : test) {

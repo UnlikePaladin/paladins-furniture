@@ -9,7 +9,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.recipe.input.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +36,7 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
     }
 
     static int getSlotWithStackIgnoreNBT(Inventory inventory, ItemStack stack) {
-        for(int i = 0; i < inventory.items.size(); ++i) {
+        for (int i = 0; i < inventory.items.size(); ++i) {
             if (!inventory.items.get(i).isEmpty() && stack.is(inventory.items.get(i).getItem())) {
                 return i;
             }
@@ -66,10 +66,15 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
 
     interface CraftableFurnitureRecipe extends Comparable<CraftableFurnitureRecipe> {
         List<Ingredient> getIngredients();
+
         ItemStack getResultItem(HolderLookup.Provider registryManager);
+
         ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput inventory, HolderLookup.Provider registryManager);
+
         boolean matches(FurnitureRecipe.FurnitureRecipeInput playerInventory, Level world);
+
         FurnitureRecipe parent();
+
         ItemStack getRecipeOuput();
 
         @Override
@@ -80,7 +85,7 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
         default ItemStack craftAndRemoveItems(FurnitureRecipe.FurnitureRecipeInput input, HolderLookup.Provider registryManager) {
             ItemStack output = getResultItem(registryManager).copy();
             List<Ingredient> ingredients = getIngredients();
-            PlayerInventory playerInventory = input.playerInventory();
+            Inventory playerInventory = input.playerInventory();
             for (Ingredient ingredient : ingredients) {
                 for (ItemStack stack : ingredient.getItems()) {
                     int indexOfStack = FurnitureRecipe.getSlotWithStackIgnoreNBT(playerInventory, stack);
@@ -106,7 +111,7 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
                                         break;
                                     } else {
                                         int stackSize = stack1.getCount();
-                                        remainingCount = Math.max(remainingCount-stackSize, 0);
+                                        remainingCount = Math.max(remainingCount - stackSize, 0);
                                         playerInventory.setItem(indexOfStack, ItemStack.EMPTY);
                                     }
                                 } else {
@@ -122,16 +127,17 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
             return output;
         }
     }
-    public static record FurnitureRecipeInput(PlayerInventory playerInventory) implements RecipeInput {
+
+    public static record FurnitureRecipeInput(Inventory playerInventory) implements RecipeInput {
 
         @Override
-        public ItemStack getStackInSlot(int slot) {
-            return playerInventory.getStack(slot);
+        public ItemStack getItem(int slot) {
+            return playerInventory.getItem(slot);
         }
 
         @Override
-        public int getSize() {
-            return playerInventory.size();
+        public int size() {
+            return playerInventory.getContainerSize();
         }
 
         @Override

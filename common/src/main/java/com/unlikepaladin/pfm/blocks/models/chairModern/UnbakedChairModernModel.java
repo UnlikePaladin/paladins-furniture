@@ -24,8 +24,8 @@ import java.util.function.Function;
 
 public class UnbakedChairModernModel implements UnbakedModel {
     public static final ResourceLocation[] CHAIR_MODERN_PARTS_BASE = new ResourceLocation[] {
-            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/chair_modern/chair_modern"),
-            new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/chair_modern/chair_modern_tucked")
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair_modern/chair_modern"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair_modern/chair_modern_tucked")
     };
 
     public static final ResourceLocation CHAIR_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair_modern");

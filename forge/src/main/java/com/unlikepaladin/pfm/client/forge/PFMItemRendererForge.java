@@ -77,7 +77,7 @@ public class PFMItemRendererForge extends BlockEntityWithoutLevelRenderer {
             this.blockEntityRenderDispatcher.renderItem(renderBed, matrices, vertexConsumers, light, overlay);
             matrices.popPose();
         } else if (stack.getItem() == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
-            matrices.push();
+            matrices.pushPose();
             BakedModel chairModel = ModelHelper.getModelFromIdentifier(OfficeChairEntityRenderer.MODEL_IDS[0]);
 
             chairModel.applyTransform(mode, matrices, leftHanded);

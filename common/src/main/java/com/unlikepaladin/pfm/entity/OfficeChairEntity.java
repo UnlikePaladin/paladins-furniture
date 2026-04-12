@@ -18,7 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.vehicle.DismountHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
@@ -266,7 +266,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
     }
 
     @Override
-    protected void dropAllDeathLoot(ServerWorld world, DamageSource source) {
+    protected void dropAllDeathLoot(ServerLevel world, DamageSource source) {
         super.dropAllDeathLoot(world, source);
         if (!source.isCreativePlayer()) {
             ItemStack stack = PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM.getDefaultInstance();

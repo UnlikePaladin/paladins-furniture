@@ -9,10 +9,10 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.recipe.CampfireCookingRecipe;
+import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 
@@ -27,8 +27,8 @@ public class PFMSandwichableCompat {
         for (int i = 0; i < 2; i++) {
             SimpleContainer inv = new SimpleContainer(pfmToasterBlockEntity.getItems().get(i));
             // had to disable this as it errored, until sandwichable is updated
-         //   Optional<RecipeHolder<ToastingRecipe>> match = world.getRecipeManager().getRecipeFor(ToastingRecipe.Type.INSTANCE, new SingleStackRecipeInput(inv.getStack(0)), world);
-            Optional<RecipeEntry<CampfireCookingRecipe>> match = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(items.get(i)), world);
+         //   Optional<RecipeHolder<ToastingRecipe>> match = world.getRecipeManager().getRecipeFor(ToastingRecipe.Type.INSTANCE, new SingleRecipeInput(inv.getStack(0)), world);
+            Optional<RecipeHolder<CampfireCookingRecipe>> match = world.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(items.get(i)), world);
 
             boolean changed = false;
             if(match.isPresent()) {
