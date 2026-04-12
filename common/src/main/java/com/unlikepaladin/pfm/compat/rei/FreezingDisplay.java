@@ -7,26 +7,25 @@ import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class FreezingDisplay implements Display {
-    public static final CategoryIdentifier<FreezingDisplay> IDENTIFIER = CategoryIdentifier.of(Identifier.of(PaladinFurnitureMod.MOD_ID, "freezing"));
+    public static final CategoryIdentifier<FreezingDisplay> IDENTIFIER = CategoryIdentifier.of(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "freezing"));
 
-    private final RecipeEntry<FreezingRecipe> recipeEntry;
+    private final RecipeHolder<FreezingRecipe> recipeEntry;
     public List<EntryIngredient> input;
     public List<EntryIngredient> output;
     public int cookTime;
     private final float xp;
 
-    public FreezingDisplay(RecipeEntry<FreezingRecipe> recipe) {
+    public FreezingDisplay(RecipeHolder<FreezingRecipe> recipe) {
         input = EntryIngredients.ofIngredients(recipe.value().getIngredients());
-        output = Collections.singletonList(EntryIngredients.of(recipe.value().getResult(BasicDisplay.registryAccess())));
+        output = Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess())));
         cookTime = recipe.value().getCookingTime();
         xp = recipe.value().getExperience();
         recipeEntry = recipe;
@@ -52,7 +51,7 @@ public class FreezingDisplay implements Display {
     }
 
     @Override
-    public Optional<Identifier> getDisplayLocation() {
+    public Optional<ResourceLocation> getDisplayLocation() {
         return Optional.of(recipeEntry.id());
     }
 }

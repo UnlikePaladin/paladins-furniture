@@ -9,9 +9,10 @@ import com.unlikepaladin.pfm.networking.*;
 import com.unlikepaladin.pfm.networking.neoforge.*;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import io.netty.buffer.Unpooled;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -36,28 +37,28 @@ public class NetworkRegistryNeoForge {
             });
         }));
 
-        registrar.playToServer(NetworkIDs.TRASHCAN_CLEAR, TrashcanClearPayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayerEntity) context.player()));
+        registrar.playToServer(NetworkIDs.TRASHCAN_CLEAR, TrashcanClearPayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayer) context.player()));
 
-        registrar.playToServer(NetworkIDs.TOILET_USE_ID, ToiletUsePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayerEntity) context.player()));
+        registrar.playToServer(NetworkIDs.TOILET_USE_ID, ToiletUsePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayer) context.player()));
 
-        registrar.playToServer(NetworkIDs.MICROWAVE_ACTIVATE_PACKET_ID, MicrowaveActivatePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayerEntity) context.player()));
+        registrar.playToServer(NetworkIDs.MICROWAVE_ACTIVATE_PACKET_ID, MicrowaveActivatePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player().getServer(), (ServerPlayer) context.player()));
 
-        registrar.playToClient(NetworkIDs.MICROWAVE_UPDATE_PACKET_ID, MicrowaveUpdatePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player(), MinecraftClient.getInstance()));
+        registrar.playToClient(NetworkIDs.MICROWAVE_UPDATE_PACKET_ID, MicrowaveUpdatePayload.PACKET_SIMPLE_CODEC, (payload, context) -> payload.handle(context.player(), Minecraft.getInstance()));
 
     }
 
     @SubscribeEvent
     public static void onServerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayerEntity) {
+        if (event.getEntity() instanceof ServerPlayer) {
             if (PaladinFurnitureMod.getPFMConfig().shouldGiveGuideBook()) {
                 //Give book
-                PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayerEntity) event.getEntity());
+                PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayer) event.getEntity());
             }
             //Sync Config
-            RegistryByteBuf buffer = new RegistryByteBuf(Unpooled.buffer(), event.getEntity().getRegistryManager());
+            RegistryFriendlyByteBuf buffer = new RegistryFriendlyByteBuf(Unpooled.buffer(), event.getEntity().registryAccess());
             Collection<AbstractConfigOption> configOptions = PaladinFurnitureMod.getPFMConfig().options.values();
             buffer.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
-            PacketDistributor.sendToPlayer((ServerPlayerEntity) event.getEntity(), new SyncConfigPayload(buffer));
+            PacketDistributor.sendToPlayer((ServerPlayer) event.getEntity(), new SyncConfigPayload(buffer));
         }
    }
 }

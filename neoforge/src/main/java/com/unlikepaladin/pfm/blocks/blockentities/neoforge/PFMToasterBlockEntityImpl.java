@@ -1,15 +1,15 @@
 package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,42 +19,42 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
     }
 
     public static boolean isMetal(ItemStack stack) {
-        return stack.getTranslationKey().contains("iron");
+        return stack.getDescriptionId().contains("iron");
     }
 
     public static void sandwichableToast(PFMToasterBlockEntity pfmToasterBlockEntity) {
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends PFMToasterBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends PFMToasterBlockEntity> getFactory() {
         return PFMToasterBlockEntityImpl::new;
     }
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt, RegistryWrapper.WrapperLookup registryLookup) {
-        super.writeNbt(nbt, registryLookup);
-        Inventories.writeNbt(nbt, items, true, registryLookup);
+    protected CompoundTag saveInitialChunkData(CompoundTag nbt, HolderLookup.Provider registryLookup) {
+        super.saveAdditional(nbt, registryLookup);
+        ContainerHelper.saveAllItems(nbt, items, true, registryLookup);
         return nbt;
     }
 
     @Override
-    public @NotNull NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return this.saveInitialChunkData(new NbtCompound(), registryLookup);
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return this.saveInitialChunkData(new CompoundTag(), registryLookup);
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup registryLookup) {
-        this.readNbt(tag, registryLookup);
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider registryLookup) {
+        this.loadAdditional(tag, registryLookup);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup registryLookup) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider registryLookup) {
         super.onDataPacket(net, pkt, registryLookup);
         this.getItems().clear();
-        Inventories.readNbt(pkt.getNbt(), this.items, registryLookup);
+        ContainerHelper.loadAllItems(pkt.getTag(), this.items, registryLookup);
     }
 }

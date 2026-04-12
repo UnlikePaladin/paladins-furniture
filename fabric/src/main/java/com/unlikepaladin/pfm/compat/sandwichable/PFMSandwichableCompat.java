@@ -5,16 +5,16 @@ import io.github.foundationgames.sandwichable.Sandwichable;
 import io.github.foundationgames.sandwichable.blocks.BlocksRegistry;
 import io.github.foundationgames.sandwichable.items.ItemsRegistry;
 import io.github.foundationgames.sandwichable.recipe.ToastingRecipe;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.recipe.CampfireCookingRecipe;
-import net.minecraft.recipe.RecipeEntry;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.recipe.RecipeType;
 import net.minecraft.recipe.input.SingleStackRecipeInput;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,31 +22,31 @@ import java.util.Optional;
 public class PFMSandwichableCompat {
 
     public static void toastSandwich(PFMToasterBlockEntity pfmToasterBlockEntity) {
-        World world = pfmToasterBlockEntity.getWorld();
+        Level world = pfmToasterBlockEntity.getLevel();
         List<ItemStack> items = pfmToasterBlockEntity.getItems();
         for (int i = 0; i < 2; i++) {
-            SimpleInventory inv = new SimpleInventory(pfmToasterBlockEntity.getItems().get(i));
+            SimpleContainer inv = new SimpleContainer(pfmToasterBlockEntity.getItems().get(i));
             // had to disable this as it errored, until sandwichable is updated
-         //   Optional<RecipeEntry<ToastingRecipe>> match = world.getRecipeManager().getFirstMatch(ToastingRecipe.Type.INSTANCE, new SingleStackRecipeInput(inv.getStack(0)), world);
+         //   Optional<RecipeHolder<ToastingRecipe>> match = world.getRecipeManager().getRecipeFor(ToastingRecipe.Type.INSTANCE, new SingleStackRecipeInput(inv.getStack(0)), world);
             Optional<RecipeEntry<CampfireCookingRecipe>> match = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(items.get(i)), world);
 
             boolean changed = false;
             if(match.isPresent()) {
-                pfmToasterBlockEntity.setCurrentItem(i, match.get().value().getResult(world.getRegistryManager()).copy());
+                pfmToasterBlockEntity.setItem(i, match.get().value().getResultItem(world.registryAccess()).copy());
                 changed = true;
             } else {
-                if(items.get(i).contains(DataComponentTypes.FOOD)) {
-                    Item item = items.get(i).isIn(Sandwichable.SMALL_FOODS) ? ItemsRegistry.BURNT_MORSEL : ItemsRegistry.BURNT_FOOD;
+                if(items.get(i).has(DataComponents.FOOD)) {
+                    Item item = items.get(i).is(Sandwichable.SMALL_FOODS) ? ItemsRegistry.BURNT_MORSEL : ItemsRegistry.BURNT_FOOD;
                     items.set(i, new ItemStack(item, 1));
                     changed = true;
                 }
             }
 
-            if (!world.isClient() && changed) {
+            if (!world.isClientSide() && changed) {
                 ItemStack advStack = items.get(i);
                 pfmToasterBlockEntity.getLastUser().ifPresent(player -> {
-                    if (player instanceof ServerPlayerEntity) {
-                        Sandwichable.TOAST_ITEM.trigger((ServerPlayerEntity) player, advStack);
+                    if (player instanceof ServerPlayer) {
+                        Sandwichable.TOAST_ITEM.trigger((ServerPlayer) player, advStack);
                     }
                 });
             }
@@ -54,7 +54,7 @@ public class PFMSandwichableCompat {
     }
 
     public static boolean isMetal(ItemStack stack) {
-        return stack.isIn(Sandwichable.METAL_ITEMS);
+        return stack.is(Sandwichable.METAL_ITEMS);
     }
 
     public static boolean isSandwich(ItemStack stack) {

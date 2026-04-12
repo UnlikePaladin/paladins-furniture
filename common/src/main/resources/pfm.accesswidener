@@ -1,16 +1,12 @@
 accessWidener v1 named
 
-accessible class net/minecraft/block/entity/BlockEntityType$BlockEntityFactory
-accessible method net/minecraft/data/server/loottable/BlockLootTableGenerator drops (Lnet/minecraft/item/ItemConvertible;)Lnet/minecraft/loot/LootTable$Builder;
-accessible method net/minecraft/data/server/loottable/BlockLootTableGenerator dropsWithProperty (Lnet/minecraft/block/Block;Lnet/minecraft/state/property/Property;Ljava/lang/Comparable;)Lnet/minecraft/loot/LootTable$Builder;
-accessible class net/minecraft/data/server/tag/ValueLookupTagProvider$ObjectBuilder
-accessible method net/minecraft/client/render/item/ItemRenderer renderBakedItemModel (Lnet/minecraft/client/render/model/BakedModel;Lnet/minecraft/item/ItemStack;IILnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumer;)V
-accessible class net/minecraft/data/DataCache$CachedDataWriter
-accessible class net/minecraft/data/DataCache$CachedData
-accessible field net/minecraft/resource/featuretoggle/FeatureSet universe Lnet/minecraft/resource/featuretoggle/FeatureUniverse;
-accessible field net/minecraft/resource/featuretoggle/FeatureSet featuresMask J
-mutable field net/minecraft/resource/featuretoggle/FeatureFlag mask J
-accessible field net/minecraft/resource/featuretoggle/FeatureFlag mask J
-accessible class net/minecraft/data/server/tag/TagProvider$ProvidedTagBuilder
-accessible method net/minecraft/client/gui/screen/DialogScreen <init> (Lnet/minecraft/text/Text;Ljava/util/List;Lcom/google/common/collect/ImmutableList;)V
-accessible class net/minecraft/client/texture/atlas/AtlasSource$SpriteRegion
+accessible class net/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier
+accessible class net/minecraft/data/tags/IntrinsicHolderTagsProvider$IntrinsicTagAppender
+accessible method net/minecraft/client/renderer/entity/ItemRenderer renderModelLists (Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/item/ItemStack;IILcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;)V
+accessible class net/minecraft/data/HashCache$CacheUpdater
+accessible class net/minecraft/data/HashCache$ProviderCache
+accessible field net/minecraft/world/flag/FeatureFlagSet universe Lnet/minecraft/world/flag/FeatureFlagUniverse;
+accessible field net/minecraft/world/flag/FeatureFlagSet mask J
+accessible field net/minecraft/world/flag/FeatureFlag mask J
+mutable field net/minecraft/world/flag/FeatureFlag mask J
+accessible class net/minecraft/client/renderer/texture/atlas/SpriteSource$SpriteSupplier

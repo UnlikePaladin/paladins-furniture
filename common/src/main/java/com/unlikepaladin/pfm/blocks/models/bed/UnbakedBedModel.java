@@ -8,12 +8,16 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -22,43 +26,43 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class UnbakedBedModel implements UnbakedModel {
-    public static final Identifier[] BED_MODEL_PARTS_BASE = new Identifier[] {
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/mattresses/red_foot_mattress"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/mattresses/red_head_mattress"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/foot/simple_bed_foot_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/foot/simple_bed_foot_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/head/simple_bed_head"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/full/simple_bed"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/mattresses/red_foot_mattress"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/mattresses/red_head_mattress"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/bunk/foot/classic_bed_foot_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/bunk/foot/classic_bed_foot_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/head/simple_bed_head"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/full/classic_bed"),
+    public static final ResourceLocation[] BED_MODEL_PARTS_BASE = new ResourceLocation[] {
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/mattresses/red_foot_mattress"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/mattresses/red_head_mattress"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/foot/simple_bed_foot_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/head/simple_bed_head_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/foot/simple_bed_foot_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/foot/simple_bed_foot_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/head/simple_bed_head"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/full/simple_bed"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/mattresses/red_foot_mattress"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/mattresses/red_head_mattress"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/foot/classic_bed_foot_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/head/classic_bed_head_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/bunk/foot/classic_bed_foot_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/bunk/foot/classic_bed_foot_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed/template/bunk/head/simple_bed_head"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/classic_bed/template/full/classic_bed"),
     };
 
-    private static final Identifier PARENT = Identifier.of("block/block");
-    public static final Identifier BED_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/simple_bed");
-    public static final List<Identifier> BED_MODEL_IDS = new ArrayList<>() {
+    private static final ResourceLocation PARENT = ResourceLocation.parse("block/block");
+    public static final ResourceLocation BED_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/simple_bed");
+    public static final List<ResourceLocation> BED_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 int i = 0;
                 for (DyeColor dyeColor : DyeColor.values()) {
                     if (i > 15)
                         break;
-                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_" + dyeColor.getName() + "_simple_bed"));
+                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_" + dyeColor.getName() + "_simple_bed"));
                     i++;
                 }
             }
@@ -67,7 +71,7 @@ public class UnbakedBedModel implements UnbakedModel {
                 for (DyeColor dyeColor : DyeColor.values()) {
                     if (i > 15)
                         break;
-                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_" + dyeColor.getName() + "_classic_bed"));
+                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_" + dyeColor.getName() + "_classic_bed"));
                     i++;
                 }
             }
@@ -76,23 +80,23 @@ public class UnbakedBedModel implements UnbakedModel {
     };
 
     @Override
-    public Collection<Identifier> getModelDependencies() {
+    public Collection<ResourceLocation> getDependencies() {
         return List.of(PARENT);
     }
 
     @Override
-    public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelLoader) {
 
     }
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         return Collections.emptyList();
     }
 
     public static Pair<BakedModel, BakedModel> inventoryModels = new Pair<>(null,null);
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
+    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(BED_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(BED_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(BED_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(BED_MODEL_ID).getCachedModelParts().get(rotationContainer));
 
@@ -100,7 +104,7 @@ public class UnbakedBedModel implements UnbakedModel {
             PFMRuntimeResources.modelCacheMap.put(BED_MODEL_ID, new PFMBakedModelContainer());
 
         List<BakedModel> bakedModelList = new ArrayList<>();
-        for (Identifier modelPart : BED_MODEL_PARTS_BASE) {
+        for (ResourceLocation modelPart : BED_MODEL_PARTS_BASE) {
             BakedModel model = loader.bake(modelPart, rotationContainer);
             bakedModelList.add(model);
             if (modelPart.getPath().contains("full")) {
@@ -116,7 +120,7 @@ public class UnbakedBedModel implements UnbakedModel {
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Identifier model, ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public static BakedModel getBakedModel(ResourceLocation model, ModelState settings, List<BakedModel> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 }

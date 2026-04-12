@@ -6,55 +6,58 @@ import com.unlikepaladin.pfm.data.materials.*;
 import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.function.Function;
 
 public class UnbakedChairDinnerModel implements UnbakedModel {
-    public static final Identifier[] CHAIR_DINNER_PARTS_BASE = new Identifier[] {
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/chair_dinner/chair_dinner"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/chair_dinner/chair_dinner_tucked")
+    public static final ResourceLocation[] CHAIR_DINNER_PARTS_BASE = new ResourceLocation[] {
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair_dinner/chair_dinner"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair_dinner/chair_dinner_tucked")
     };
 
-    public static final Identifier CHAIR_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/chair_dinner");
-    public static final List<Identifier> CHAIR_DINNER_MODEL_IDS = new ArrayList<>() {
+    public static final ResourceLocation CHAIR_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/chair_dinner");
+    public static final List<ResourceLocation> CHAIR_DINNER_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
 
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_chair_dinner"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_chair_dinner"));
                 if (variant.hasStripped())
-                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_chair_dinner"));
+                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_chair_dinner"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
 
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_chair_dinner"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_chair_dinner"));
             }
             add(CHAIR_MODEL_ID);
         }
     };
 
-    private static final Identifier PARENT = Identifier.of("block/block");
-    public Collection<Identifier> getModelDependencies() {
+    private static final ResourceLocation PARENT = ResourceLocation.parse("block/block");
+    public Collection<ResourceLocation> getDependencies() {
         return List.of(PARENT);
     }
 
     @Override
-    public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelLoader) {
 
     }
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         return Collections.emptyList();
     }
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
+    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(CHAIR_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(CHAIR_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(CHAIR_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(CHAIR_MODEL_ID).getCachedModelParts().get(rotationContainer));
 
@@ -62,7 +65,7 @@ public class UnbakedChairDinnerModel implements UnbakedModel {
             PFMRuntimeResources.modelCacheMap.put(CHAIR_MODEL_ID, new PFMBakedModelContainer());
 
         List<BakedModel> bakedModelList = new ArrayList<>();
-        for (Identifier modelPart : CHAIR_DINNER_PARTS_BASE) {
+        for (ResourceLocation modelPart : CHAIR_DINNER_PARTS_BASE) {
             bakedModelList.add(loader.bake(modelPart, rotationContainer));
         }
 
@@ -71,7 +74,7 @@ public class UnbakedChairDinnerModel implements UnbakedModel {
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Identifier modelId, ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public static BakedModel getBakedModel(ResourceLocation modelId, ModelState settings, List<BakedModel> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 }

@@ -43,11 +43,11 @@ import com.unlikepaladin.pfm.blocks.models.modernCoffeeTable.UnbakedModernCoffee
 import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinnerTableModel;
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
-import net.minecraft.client.render.model.ModelLoader;
-import net.minecraft.client.render.model.UnbakedModel;
+import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.client.render.model.json.JsonUnbakedModel;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -58,26 +58,26 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
-@Mixin(ModelLoader.class)
-public abstract class PFMModelLoaderMixin {
+@Mixin(ModelBakery.class)
+public abstract class PFMModelBakeryMixin {
     @Shadow
-    @Final private Map<Identifier, UnbakedModel> unbakedModels;
+    @Final private Map<ResourceLocation, UnbakedModel> unbakedCache;
 
-    @Shadow @Final private Map<Identifier, UnbakedModel> modelsToBake;
+    @Shadow @Final private Map<ResourceLocation, UnbakedModel> topLevelModels;
 
-    @Shadow protected abstract JsonUnbakedModel loadModelFromJson(Identifier id) throws IOException;
+    @Shadow protected abstract BlockModel loadBlockModel(ResourceLocation id) throws IOException;
 
     @Unique
-    Identifier pfm$localId;
-    @WrapOperation(method = "getOrLoadModel", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/model/ModelLoader;loadModelFromJson(Lnet/minecraft/util/Identifier;)Lnet/minecraft/client/render/model/json/JsonUnbakedModel;"))
-    private JsonUnbakedModel pfm$wrapCall(ModelLoader instance, Identifier resourceId, Operation<JsonUnbakedModel> original) {
+    ResourceLocation pfm$localId;
+    @WrapOperation(method = "getModel", at = @At(value = "INVOKE", target = "loadBlockModel"))
+    private BlockModel pfm$wrapCall(ModelLoader instance, ResourceLocation resourceId, Operation<JsonUnbakedModel> original) {
         pfm$localId = resourceId;
         return null;
     }
 
     @ModifyVariable(method = "getOrLoadModel", at = @At(value = "STORE"))
-    private UnbakedModel pfm$loadModels(UnbakedModel olModel, Identifier olId) throws IOException {
-        Identifier resourceId = pfm$localId;
+    private UnbakedModel pfm$loadModels(UnbakedModel olModel, ResourceLocation olId) throws IOException {
+        ResourceLocation resourceId = pfm$localId;
         if (ModelHelper.containsIdentifier(UnbakedMirrorModel.MIRROR_MODEL_IDS, resourceId)){
             return new UnbakedMirrorModel(UnbakedMirrorModel.DEFAULT_TEXTURES[2], ModelHelper.getVanillaConcreteColor(resourceId), UnbakedMirrorModel.DEFAULT_TEXTURES[1], new ArrayList<>(), ModelHelper.getColor(resourceId));
         } else if (UnbakedBedModel.BED_MODEL_IDS.contains(resourceId)){
@@ -140,15 +140,15 @@ public abstract class PFMModelLoaderMixin {
             UnbakedModel model = new UnbakedKitchenWallDrawerSmallModel();
             return model;
         }
-        else if (ModelHelper.containsIdentifier(UnbakedIronFridgeModel.IRON_FRIDGE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+        else if (ModelHelper.containsIdentifier(UnbakedIronFridgeModel.IRON_FRIDGE_MODEL_IDS.toArray(new ResourceLocation[0]), resourceId)){
             UnbakedModel model = new UnbakedIronFridgeModel();
             return model;
         }
-        else if (ModelHelper.containsIdentifier(UnbakedFridgeModel.FRIDGE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+        else if (ModelHelper.containsIdentifier(UnbakedFridgeModel.FRIDGE_MODEL_IDS.toArray(new ResourceLocation[0]), resourceId)){
             UnbakedModel model = new UnbakedFridgeModel(resourceId);
             return model;
         }
-        else if (ModelHelper.containsIdentifier(UnbakedFreezerModel.FREEZER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+        else if (ModelHelper.containsIdentifier(UnbakedFreezerModel.FREEZER_MODEL_IDS.toArray(new ResourceLocation[0]), resourceId)){
             UnbakedModel model = new UnbakedFreezerModel(resourceId);
             return model;
         }
@@ -220,6 +220,6 @@ public abstract class PFMModelLoaderMixin {
             UnbakedModel model = new UnbakedHerringboneModel(resourceId);
             return model;
         }
-        return loadModelFromJson(resourceId);
+        return loadBlockModel(resourceId);
     }
 }

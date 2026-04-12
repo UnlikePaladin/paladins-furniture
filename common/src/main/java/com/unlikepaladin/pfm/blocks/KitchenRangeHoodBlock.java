@@ -2,19 +2,22 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.*;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -23,20 +26,20 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
-public class KitchenRangeHoodBlock extends HorizontalFacingBlock {
-    public static final BooleanProperty DOWN = Properties.DOWN;
-    public static final BooleanProperty DRAWER = BooleanProperty.of("drawer");
+public class KitchenRangeHoodBlock extends HorizontalDirectionalBlock {
+    public static final BooleanProperty DOWN = BlockStateProperties.DOWN;
+    public static final BooleanProperty DRAWER = BooleanProperty.create("drawer");
     private static final List<FurnitureBlock> OVEN_RANGE_HOOD = new ArrayList<>();
-    public static final MapCodec<KitchenRangeHoodBlock> CODEC = createCodec(KitchenRangeHoodBlock::new);
+    public static final MapCodec<KitchenRangeHoodBlock> CODEC = simpleCodec(KitchenRangeHoodBlock::new);
 
-    public KitchenRangeHoodBlock(Settings settings) {
+    public KitchenRangeHoodBlock(Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(DOWN, false).with(DRAWER, false));
+        registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(DOWN, false).setValue(DRAWER, false));
         OVEN_RANGE_HOOD.add(new FurnitureBlock(this, "oven_range_hood"));
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 
@@ -45,8 +48,8 @@ public class KitchenRangeHoodBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        super.appendProperties(builder);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(FACING);
         builder.add(DOWN);
         builder.add(DRAWER);
@@ -54,10 +57,10 @@ public class KitchenRangeHoodBlock extends HorizontalFacingBlock {
 
     @Nullable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        boolean down = ctx.getWorld().getBlockState(ctx.getBlockPos().down()).getBlock() instanceof KitchenRangeHoodBlock;
-        boolean drawer = ctx.getWorld().getBlockState(ctx.getBlockPos().up()).getBlock() instanceof KitchenWallDrawerSmallBlock;
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing()).with(DOWN, down).with(DRAWER, drawer);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        boolean down = ctx.getLevel().getBlockState(ctx.getClickedPos().below()).getBlock() instanceof KitchenRangeHoodBlock;
+        boolean drawer = ctx.getLevel().getBlockState(ctx.getClickedPos().above()).getBlock() instanceof KitchenWallDrawerSmallBlock;
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection()).setValue(DOWN, down).setValue(DRAWER, drawer);
     }
 
     @Override
@@ -66,39 +69,39 @@ public class KitchenRangeHoodBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
         if (direction.getAxis().isVertical()) {
-            boolean down = world.getBlockState(pos.down()).getBlock() instanceof KitchenRangeHoodBlock;
-            boolean drawer = world.getBlockState(pos.up()).getBlock() instanceof KitchenWallDrawerSmallBlock;
-            return state.with(DOWN, down).with(DRAWER, drawer);
+            boolean down = world.getBlockState(pos.below()).getBlock() instanceof KitchenRangeHoodBlock;
+            boolean drawer = world.getBlockState(pos.above()).getBlock() instanceof KitchenWallDrawerSmallBlock;
+            return state.setValue(DOWN, down).setValue(DRAWER, drawer);
         }
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    protected static final VoxelShape RANGE_HOOD = VoxelShapes.union(createCuboidShape(2, 4, 0,14, 16, 7),createCuboidShape(0, 0, 0,16, 4, 15));
+    protected static final VoxelShape RANGE_HOOD = Shapes.or(box(2, 4, 0,14, 16, 7),box(0, 0, 0,16, 4, 15));
     protected static final VoxelShape RANGE_HOOD_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD);
     protected static final VoxelShape RANGE_HOOD_EAST = rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD);
     protected static final VoxelShape RANGE_HOOD_WEST = rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD);
 
-    protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER = VoxelShapes.union(createCuboidShape(2, 0, 0,14, 28, 7));
+    protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER = Shapes.or(box(2, 0, 0,14, 28, 7));
     protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD_BOTTOM_DRAWER);
     protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER_EAST = rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD_BOTTOM_DRAWER);
     protected static final VoxelShape RANGE_HOOD_BOTTOM_DRAWER_WEST = rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD_BOTTOM_DRAWER);
 
-    protected static final VoxelShape RANGE_HOOD_BOTTOM = VoxelShapes.union(createCuboidShape(2, 0, 0,14, 16, 7));
+    protected static final VoxelShape RANGE_HOOD_BOTTOM = Shapes.or(box(2, 0, 0,14, 16, 7));
     protected static final VoxelShape RANGE_HOOD_BOTTOM_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD_BOTTOM);
     protected static final VoxelShape RANGE_HOOD_BOTTOM_EAST = rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD_BOTTOM);
     protected static final VoxelShape RANGE_HOOD_BOTTOM_WEST = rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD_BOTTOM);
 
-    protected static final VoxelShape RANGE_HOOD_DRAWER = VoxelShapes.union(createCuboidShape(2, 16, 0,14, 28, 7),createCuboidShape(0, 12, 0,16, 16, 15));
+    protected static final VoxelShape RANGE_HOOD_DRAWER = Shapes.or(box(2, 16, 0,14, 28, 7),box(0, 12, 0,16, 16, 15));
     protected static final VoxelShape RANGE_HOOD_DRAWER_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, RANGE_HOOD_DRAWER);
     protected static final VoxelShape RANGE_HOOD_DRAWER_EAST = rotateShape(Direction.NORTH, Direction.EAST, RANGE_HOOD_DRAWER);
     protected static final VoxelShape RANGE_HOOD_DRAWER_WEST = rotateShape(Direction.NORTH, Direction.WEST, RANGE_HOOD_DRAWER);
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        boolean down = state.get(DOWN);
-        boolean drawer = state.get(DRAWER);
-        Direction direction = state.get(FACING);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        boolean down = state.getValue(DOWN);
+        boolean drawer = state.getValue(DRAWER);
+        Direction direction = state.getValue(FACING);
         if (down && drawer) {
             return switch (direction) {
                 case NORTH -> RANGE_HOOD_BOTTOM_DRAWER;
@@ -131,7 +134,7 @@ public class KitchenRangeHoodBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 }

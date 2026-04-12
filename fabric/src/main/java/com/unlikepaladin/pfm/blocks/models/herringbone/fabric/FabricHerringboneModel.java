@@ -10,41 +10,41 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.ducks.PFMSpriteContentExtensions;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.MissingSprite;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
 import java.util.function.Supplier;
 
 public class FabricHerringboneModel extends PFMFabricBakedModel {
-    public FabricHerringboneModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
+    public FabricHerringboneModel(ModelState settings, List<BakedModel> templateBakedModels) {
         super(settings, templateBakedModels);
     }
 
     @Override
-    public Sprite pfm$getParticle(BlockState state) {
+    public TextureAtlasSprite pfm$getParticle(BlockState state) {
         VariantBase<?> variant = getVariant(state);
         if (variant instanceof WoodVariant) {
-            Identifier finalId = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
-            SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, finalId);
-            if (!((PFMSpriteContentExtensions)mainTexture.getSprite().getContents()).pfm$isInitialized()) {
-                SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
-                ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
+            ResourceLocation finalId = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
+            Material mainTexture = new Material(InventoryMenu.BLOCK_ATLAS, finalId);
+            if (!((PFMSpriteContentExtensions)mainTexture.sprite().contents()).pfm$isInitialized()) {
+                Material baseTextureSpriteId = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.PRIMARY));
+                ModelHelper.generateTexture(herringboneTextureId.sprite(), baseTextureSpriteId.sprite(), 7, finalId);
             }
-            return mainTexture.getSprite();
+            return mainTexture.sprite();
         }
-        return super.getParticleSprite();
+        return super.getParticleIcon();
     }
 
     @Override
@@ -52,9 +52,9 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
         return false;
     }
 
-    static SpriteIdentifier herringboneTextureId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, PFMSpriteRegistry.HERRINGBONE_PLANKS);
+    static Material herringboneTextureId = new Material(InventoryMenu.BLOCK_ATLAS, PFMSpriteRegistry.HERRINGBONE_PLANKS);
     @Override
-    public void emitBlockQuads(BlockRenderView blockView, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         VariantBase<?> variant = getVariant(state);
         if (variant instanceof WoodVariant) {
             generateTextureIfNeeded(context, variant);
@@ -66,20 +66,20 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
     }
 
     private void generateTextureIfNeeded(RenderContext context, VariantBase<?> variant) {
-        Identifier finalId = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
-        SpriteIdentifier mainTexture = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, finalId);
-        if (!((PFMSpriteContentExtensions)mainTexture.getSprite().getContents()).pfm$isInitialized()) {
-            SpriteIdentifier baseTextureSpriteId = new SpriteIdentifier(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.PRIMARY));
-            ModelHelper.generateTexture(herringboneTextureId.getSprite(), baseTextureSpriteId.getSprite(), 7, finalId);
+        ResourceLocation finalId = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
+        Material mainTexture = new Material(InventoryMenu.BLOCK_ATLAS, finalId);
+        if (!((PFMSpriteContentExtensions)mainTexture.sprite().contents()).pfm$isInitialized()) {
+            Material baseTextureSpriteId = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.PRIMARY));
+            ModelHelper.generateTexture(herringboneTextureId.sprite(), baseTextureSpriteId.sprite(), 7, finalId);
         }
-        pushTextureTransform(context, mainTexture.getSprite());
+        pushTextureTransform(context, mainTexture.sprite());
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (!(stack.getItem() instanceof BlockItem)) return;
 
-        VariantBase<?> variant = getVariant(((BlockItem) stack.getItem()).getBlock().getDefaultState());
+        VariantBase<?> variant = getVariant(((BlockItem) stack.getItem()).getBlock().defaultBlockState());
         if (variant instanceof WoodVariant) {
             generateTextureIfNeeded(context, variant);
             for (BakedModel model : getTemplateBakedModels()) {

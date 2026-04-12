@@ -13,16 +13,17 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.GeneratedSlotWidget;
 import dev.emi.emi.api.widget.SlotWidget;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.CraftingInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingContainer;
+import net.minecraft.world.inventory.TransientCraftingContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -30,25 +31,25 @@ import java.util.stream.Collectors;
 public class EmiFurnitureRecipe extends EmiPatternCraftingRecipe {
 
     private final FurnitureRecipe recipe;
-    public EmiFurnitureRecipe(RecipeEntry<FurnitureRecipe> entry) {
+    public EmiFurnitureRecipe(RecipeHolder<FurnitureRecipe> entry) {
         super(padIngredients(entry.value()), EmiStack.EMPTY,
                 entry.id());
         for (int i = 0; i < input.size(); i++) {
-            PlayerInventory playerInventory;
-            if (PaladinFurnitureMod.isClient) {
-                playerInventory = MinecraftClient.getInstance().player.getInventory();
+            Inventory playerInventory;
+            if (PaladinFurnitureMod.isClientSide) {
+                playerInventory = Minecraft.getInstance().player.getInventory();
             } else {
-                playerInventory = new PlayerInventory(null);
+                playerInventory = new Inventory(null);
             }
-            CraftingInventory inv = new CraftingInventory(new ScreenHandler(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, -1) {
+            CraftingContainer inv = new TransientCraftingContainer(new AbstractContainerMenu(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, -1) {
 
                 @Override
-                public boolean canUse(PlayerEntity player) {
+                public boolean stillValid(Player player) {
                     return false;
                 }
 
                 @Override
-                public ItemStack quickMove(PlayerEntity player, int index) {
+                public ItemStack quickMoveStack(Player player, int index) {
                     return null;
                 }
             }, 3, 3);
@@ -57,13 +58,13 @@ public class EmiFurnitureRecipe extends EmiPatternCraftingRecipe {
                     continue;
                 }
                 if (!input.get(j).isEmpty()) {
-                    inv.setStack(j, input.get(j).getEmiStacks().get(0).getItemStack().copy());
+                    inv.setItem(j, input.get(j).getEmiStacks().get(0).getItemStack().copy());
                 }
             }
             List<EmiStack> stacks = input.get(i).getEmiStacks();
             for (EmiStack stack : stacks) {
-                inv.setStack(i, stack.getItemStack().copy());
-                ItemStack remainder = entry.value().getRemainder(new FurnitureRecipe.FurnitureRecipeInput(playerInventory)).get(i);
+                inv.setItem(i, stack.getItemStack().copy());
+                ItemStack remainder = entry.value().getRemainingItems(new FurnitureRecipe.FurnitureRecipeInput(playerInventory)).get(i);
                 if (!remainder.isEmpty()) {
                     stack.setRemainder(EmiStack.of(remainder));
                 }
@@ -83,7 +84,7 @@ public class EmiFurnitureRecipe extends EmiPatternCraftingRecipe {
     }
 
     @Override
-    public Identifier getId() {
+    public ResourceLocation getId() {
         return super.getId();
     }
 
@@ -101,7 +102,7 @@ public class EmiFurnitureRecipe extends EmiPatternCraftingRecipe {
         List<Ingredient> ingredients = recipe.getIngredients();
         HashMap<Item, Integer> containedItems = new HashMap<>();
         for (Ingredient ingredient : ingredients) {
-            for (ItemStack stack : ingredient.getMatchingStacks()) {
+            for (ItemStack stack : ingredient.getItems()) {
                 if (!containedItems.containsKey(stack.getItem())) {
                     containedItems.put(stack.getItem(), stack.getCount());
                 } else {
@@ -139,7 +140,7 @@ public class EmiFurnitureRecipe extends EmiPatternCraftingRecipe {
         }
         List<EmiIngredient> finalList = new ArrayList<>();
         for (List<ItemStack> ingredientList : ingredients) {
-            finalList.add(EmiIngredient.of(Ingredient.ofStacks(ingredientList.stream())));
+            finalList.add(EmiIngredient.of(Ingredient.of(ingredientList.stream())));
         }
         return finalList;
     }
@@ -150,7 +151,7 @@ public class EmiFurnitureRecipe extends EmiPatternCraftingRecipe {
             int selectedRecipe = r.nextInt(recipe.getInnerRecipes().size());
             List<ItemStack> ingredients = collectIngredientsFromRecipe(recipe.getInnerRecipes().get(selectedRecipe));
             if (ingredients.size() > slot) {
-                return EmiIngredient.of(Ingredient.ofStacks(ingredients.get(slot)), ingredients.get(slot).getCount());
+                return EmiIngredient.of(Ingredient.of(ingredients.get(slot)), ingredients.get(slot).getCount());
             } else {
                 return EmiStack.EMPTY;
             }
@@ -161,7 +162,7 @@ public class EmiFurnitureRecipe extends EmiPatternCraftingRecipe {
     public SlotWidget getOutputWidget(int x, int y) {
         return new GeneratedSlotWidget((r -> {
             int selectedRecipe = r.nextInt(recipe.getInnerRecipes().size());
-            return EmiIngredient.of(Ingredient.ofStacks(recipe.getInnerRecipes().get(selectedRecipe).getRecipeOuput()), recipe.getInnerRecipes().get(selectedRecipe).getRecipeOuput().getCount());
+            return EmiIngredient.of(Ingredient.of(recipe.getInnerRecipes().get(selectedRecipe).getRecipeOuput()), recipe.getInnerRecipes().get(selectedRecipe).getRecipeOuput().getCount());
         }), unique, x, y);
     }
 }

@@ -5,21 +5,21 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import java.util.function.Supplier;
 
 public class FabricClassicNightstandModel extends PFMFabricBakedModel {
-    public FabricClassicNightstandModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public FabricClassicNightstandModel(ModelState settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
 
@@ -29,14 +29,14 @@ public class FabricClassicNightstandModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(BlockRenderView world, BlockState state, BlockPos pos, Supplier<Random> randomSupplier, RenderContext context) {
+    public void emitBlockQuads(BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         if (state.getBlock() instanceof ClassicNightstandBlock) {
             ClassicNightstandBlock block = (ClassicNightstandBlock) state.getBlock();
-            Direction dir = state.get(ClassicNightstandBlock.FACING);
-            boolean left = block.isStand(world, pos, dir.rotateYCounterclockwise(), dir);
-            boolean right = block.isStand(world, pos, dir.rotateYClockwise(), dir);
-            int openIndexOffset = state.get(ClassicNightstandBlock.OPEN) ? 4 : 0;
-            List<Sprite> spriteList = getSpriteList(state);
+            Direction dir = state.getValue(ClassicNightstandBlock.FACING);
+            boolean left = block.isStand(world, pos, dir.getCounterClockWise(), dir);
+            boolean right = block.isStand(world, pos, dir.getClockWise(), dir);
+            int openIndexOffset = state.getValue(ClassicNightstandBlock.OPEN) ? 4 : 0;
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
             if (left && right) {
                 ((FabricBakedModel) getTemplateBakedModels().get((openIndexOffset))).emitBlockQuads(world, state, pos, randomSupplier, context);
@@ -52,15 +52,15 @@ public class FabricClassicNightstandModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitItemQuads(ItemStack stack, Supplier<Random> randomSupplier, RenderContext context) {
-        List<Sprite> spriteList = getSpriteList(stack);
+    public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
+        List<TextureAtlasSprite> spriteList = getSpriteList(stack);
         pushTextureTransform(context, ModelHelper.getOakPlankLogSprites(), spriteList);
         ((FabricBakedModel) getTemplateBakedModels().get((3))).emitItemQuads(stack, randomSupplier, context);
         context.popTransform();
     }
 
     @Override
-    public Sprite pfm$getParticle(BlockState state) {
+    public TextureAtlasSprite pfm$getParticle(BlockState state) {
         return getSpriteList(state).get(0);
     }
 }

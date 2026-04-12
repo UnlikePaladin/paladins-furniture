@@ -2,39 +2,38 @@ package com.unlikepaladin.pfm.client.screens;
 
 import com.unlikepaladin.pfm.menus.WorkbenchScreenHandler;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ingame.HandledScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.network.ClientPlayNetworkHandler;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.render.model.json.ModelTransformationMode;
-import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.sound.PositionedSoundInstance;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.registry.Registries;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.registry.tag.TagKey;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Language;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.ChatFormatting;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
-    private static final Identifier TEXTURE = Identifier.of("pfm:textures/gui/container/working_table.png");
+public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHandler> {
+    private static final ResourceLocation TEXTURE = ResourceLocation.parse("pfm:textures/gui/container/working_table.png");
     private static final int SCROLLBAR_WIDTH = 12;
     private static final int SCROLLBAR_HEIGHT = 15;
     private static final int RECIPE_LIST_COLUMNS = 6;
@@ -48,43 +47,43 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     private boolean mouseClicked;
     private int scrollOffset;
     private boolean canCraft;
-    private TextFieldWidget searchBox;
+    private EditBox searchBox;
 
-    public WorkbenchScreen(WorkbenchScreenHandler handler, PlayerInventory inventory, Text title) {
-        super(handler, inventory, title);
-        handler.setContentsChangedListener(this::onInventoryChange);
-        this.canCraft = handler.canCraft();
+    public WorkbenchScreen(WorkbenchScreenHandler menu, Inventory inventory, Component title) {
+        super(menu, inventory, title);
+        menu.setContentsChangedListener(this::onInventoryChange);
+        this.canCraft = menu.canCraft();
     }
 
     @Override
     protected void init() {
         super.init();
-        this.searchBox = new TextFieldWidget(this.textRenderer, this.x + 20, this.y + 18, 110, this.textRenderer.fontHeight, Text.translatable("itemGroup.search"));
+        this.searchBox = new EditBox(this.font, this.leftPos + 20, this.topPos + 18, 110, this.font.lineHeight, Component.translatable("itemGroup.search"));
         this.searchBox.setMaxLength(50);
-        this.searchBox.setDrawsBackground(false);
+        this.searchBox.setBordered(false);
         this.searchBox.setVisible(true);
-        this.searchBox.setEditableColor(0xFFFFFF);
-        this.addSelectableChild(this.searchBox);
-        this.backgroundHeight = 180;
-        this.backgroundWidth = 176;
-        this.playerInventoryTitleY = this.backgroundHeight - 92;
+        this.searchBox.setTextColor(0xFFFFFF);
+        this.addWidget(this.searchBox);
+        this.imageHeight = 180;
+        this.imageWidth = 176;
+        this.inventoryLabelY = this.imageHeight - 92;
     }
 
     @Override
-    public void resize(MinecraftClient client, int width, int height) {
-        String string = this.searchBox.getText();
+    public void resize(Minecraft client, int width, int height) {
+        String string = this.searchBox.getValue();
         this.init(client, width, height);
-        this.searchBox.setText(string);
-        if (!this.searchBox.getText().isEmpty()) {
+        this.searchBox.setValue(string);
+        if (!this.searchBox.getValue().isEmpty()) {
             this.search();
         }
     }
 
     @Override
     public boolean charTyped(char chr, int modifiers) {
-        String string = this.searchBox.getText();
+        String string = this.searchBox.getValue();
         if (this.searchBox.charTyped(chr, modifiers)) {
-            if (!Objects.equals(string, this.searchBox.getText())) {
+            if (!Objects.equals(string, this.searchBox.getValue())) {
                 this.search();
             }
             return true;
@@ -94,13 +93,13 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        boolean bl2 = InputUtil.fromKeyCode(keyCode, scanCode).toInt().isPresent();
-        if (bl2 && this.handleHotbarKeyPressed(keyCode, scanCode)) {
+        boolean bl2 = InputConstants.getKey(keyCode, scanCode).getNumericKeyValue().isPresent();
+        if (bl2 && this.checkHotbarKeyPressed(keyCode, scanCode)) {
             return true;
         }
-        String string = this.searchBox.getText();
+        String string = this.searchBox.getValue();
         if (this.searchBox.keyPressed(keyCode, scanCode, modifiers)) {
-            if (!Objects.equals(string, this.searchBox.getText())) {
+            if (!Objects.equals(string, this.searchBox.getValue())) {
                 this.search();
             }
             return true;
@@ -113,19 +112,19 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     private final Set<TagKey<Item>> searchResultTags = new HashSet<>();
 
     private void search() {
-        this.handler.getSearchableRecipes().clear();
+        this.menu.getSearchableRecipes().clear();
         this.searchResultTags.clear();
-        String string = this.searchBox.getText();
+        String string = this.searchBox.getValue();
         if (string.isEmpty()) {
-            this.handler.updateInput();
-            this.handler.searching = false;
+            this.menu.updateInput();
+            this.menu.searching = false;
         } else {
-            this.handler.updateInput();
-            List<FurnitureRecipe.CraftableFurnitureRecipe> filteredRecipes = handler.getSortedRecipes().stream()
-                    .filter(recipe -> I18n.translate(recipe.getResult(client.world.getRegistryManager()).getTranslationKey())
+            this.menu.updateInput();
+            List<FurnitureRecipe.CraftableFurnitureRecipe> filteredRecipes = menu.getSortedRecipes().stream()
+                    .filter(recipe -> I18n.get(recipe.getResultItem(minecraft.level.registryAccess()).getDescriptionId())
                     .toLowerCase().contains(string.trim().toLowerCase())).toList();
-            this.handler.getSearchableRecipes().addAll(filteredRecipes);
-            this.handler.searching = true;
+            this.menu.getSearchableRecipes().addAll(filteredRecipes);
+            this.menu.searching = true;
         }
         this.scrollAmount = 0.0f;
         this.scrollOffset = 0;
@@ -133,7 +132,7 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
 
     private void searchForTags(String id) {
         int i = id.indexOf(58);
-        Predicate<Identifier> predicate;
+        Predicate<ResourceLocation> predicate;
         if (i == -1) {
             predicate = (idx) -> idx.getPath().contains(id);
         } else {
@@ -142,32 +141,32 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
             predicate = (idx) -> idx.getNamespace().contains(string) && idx.getPath().contains(string2);
         }
 
-        Stream<TagKey<Item>> keyStream = Registries.ITEM.streamTags().filter((tagKey) -> predicate.test(tagKey.id()));
+        Stream<TagKey<Item>> keyStream = BuiltInRegistries.ITEM.getTagNames().filter((tagKey) -> predicate.test(tagKey.location()));
         keyStream.forEach(this.searchResultTags::add);
     }
 
     @Override
-    public void handledScreenTick() {
-        super.handledScreenTick();
+    public void containerTick() {
+        super.containerTick();
         if (this.searchBox != null) {
             //this.searchBox.tick();
         }
     }
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         super.render(context, mouseX, mouseY, delta);
-        this.drawMouseoverTooltip(context, mouseX, mouseY);
+        this.renderTooltip(context, mouseX, mouseY);
     }
 
     @Override
-    protected void drawBackground(DrawContext context, float delta, int mouseX, int mouseY) {
-        int x = this.x;
-        int y = this.y;
-        context.drawTexture(TEXTURE, x, y, 0, 0, this.backgroundWidth, this.backgroundHeight);
+    protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
+        int x = this.leftPos;
+        int y = this.topPos;
+        context.blit(TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight);
         int k = (int)(41.0f * this.scrollAmount);
-        context.drawTexture(TEXTURE, x + 119, y + 31 + k, 176 + (this.shouldScroll() ? 0 : 12), 0, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
-        int xOffSetForIcons = this.x + RECIPE_LIST_OFFSET_X;
-        int yOffsetForIcons = this.y + RECIPE_LIST_OFFSET_Y;
+        context.blit(TEXTURE, x + 119, y + 31 + k, 176 + (this.shouldScroll() ? 0 : 12), 0, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT);
+        int xOffSetForIcons = this.leftPos + RECIPE_LIST_OFFSET_X;
+        int yOffsetForIcons = this.topPos + RECIPE_LIST_OFFSET_Y;
         int scrollOffsetForIcons = this.scrollOffset + 18;
         this.renderRecipeBackground(context, mouseX, mouseY, xOffSetForIcons, yOffsetForIcons, scrollOffsetForIcons);
         this.renderRecipeIcons(context, xOffSetForIcons, yOffsetForIcons, scrollOffsetForIcons);
@@ -175,26 +174,26 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     }
 
     @Override
-    protected void drawMouseoverTooltip(DrawContext context, int x, int y) {
-        super.drawMouseoverTooltip(context, x, y);
-        int xOffsetForTooltip = this.x + RECIPE_LIST_OFFSET_X;
-        int yOffsetForTooltip = this.y + RECIPE_LIST_OFFSET_Y;
+    protected void renderTooltip(GuiGraphics context, int x, int y) {
+        super.renderTooltip(context, x, y);
+        int xOffsetForTooltip = this.leftPos + RECIPE_LIST_OFFSET_X;
+        int yOffsetForTooltip = this.topPos + RECIPE_LIST_OFFSET_Y;
         int scrollOffsetForTooltip = this.scrollOffset + 18;
-        for (int recipeIndex = this.scrollOffset; recipeIndex < scrollOffsetForTooltip && recipeIndex < this.handler.getVisibleRecipeCount(); ++recipeIndex) {
+        for (int recipeIndex = this.scrollOffset; recipeIndex < scrollOffsetForTooltip && recipeIndex < this.menu.getVisibleRecipeCount(); ++recipeIndex) {
             int m = recipeIndex - this.scrollOffset;
             int n = xOffsetForTooltip + m % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
             int o = yOffsetForTooltip + m / RECIPE_LIST_COLUMNS * RECIPE_ENTRY_HEIGHT + 2;
             if (x < n || x >= n + RECIPE_ENTRY_WIDTH || y < o || y >= o + RECIPE_ENTRY_HEIGHT) continue;
-            List<Text> tooltip = new ArrayList<>();
+            List<Component> tooltip = new ArrayList<>();
             int iCopy = recipeIndex;
-            if (this.handler.searching) {
-                iCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(iCopy));
+            if (this.menu.searching) {
+                iCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(iCopy));
             }
-            tooltip.add(getTooltipFromItem(this.handler.getSortedRecipes().get(iCopy).getResult(client.world.getRegistryManager())).get(0));
-            tooltip.add(Text.translatable("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
+            tooltip.add(getTooltipFromContainerItem(this.menu.getSortedRecipes().get(iCopy).getResultItem(minecraft.level.registryAccess())).get(0));
+            tooltip.add(Component.translatable("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
             HashMap<Item, Integer> itemStackCountMap = new HashMap<>();
-            for (Ingredient ingredient : this.handler.getSortedRecipes().get(iCopy).getIngredients()) {
-                for (ItemStack stack : ingredient.getMatchingStacks()) {
+            for (Ingredient ingredient : this.menu.getSortedRecipes().get(iCopy).getIngredients()) {
+                for (ItemStack stack : ingredient.getItems()) {
                     if (!itemStackCountMap.containsKey(stack.getItem())) {
                         itemStackCountMap.put(stack.getItem(), stack.getCount());
                     } else {
@@ -203,51 +202,51 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
                 }
             }
             itemStackCountMap.forEach((item, integer) -> {
-                int itemCount = handler.getPlayerInventory().count(item);
-                Style style = Style.EMPTY.withColor(Formatting.GRAY);
+                int itemCount = menu.getPlayerInventory().countItem(item);
+                Style style = Style.EMPTY.withColor(ChatFormatting.GRAY);
                 if (itemCount < integer) {
-                    style = style.withColor(Formatting.RED);
+                    style = style.withColor(ChatFormatting.RED);
                 }
-                tooltip.add(Text.literal(integer + " ").append(Text.literal(getTooltipFromItem(item.getDefaultStack()).get(0).getString())).setStyle(style));
+                tooltip.add(Component.literal(integer + " ").append(Component.literal(getTooltipFromContainerItem(item.getDefaultInstance()).get(0).getString())).setStyle(style));
             });
-            context.drawTooltip(this.textRenderer, tooltip, x, y);
+            context.renderComponentTooltip(this.font, tooltip, x, y);
         }
     }
 
-    private void renderRecipeBackground(DrawContext context, int mouseX, int mouseY, int x, int y, int scrollOffset) {
-        for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getVisibleRecipeCount(); ++i) {
+    private void renderRecipeBackground(GuiGraphics context, int mouseX, int mouseY, int x, int y, int scrollOffset) {
+        for (int i = this.scrollOffset; i < scrollOffset && i < this.menu.getVisibleRecipeCount(); ++i) {
             int j = i - this.scrollOffset;
             int k = x + j % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
             int l = j / RECIPE_LIST_COLUMNS;
             int m = y + l * RECIPE_ENTRY_HEIGHT + 2;
-            int v = this.backgroundHeight;
+            int v = this.imageHeight;
             int iCopy = i;
-            if (this.handler.searching) {
-                iCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(iCopy));
+            if (this.menu.searching) {
+                iCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(iCopy));
             }
-            if (iCopy == this.handler.getSelectedRecipe()) {
+            if (iCopy == this.menu.getSelectedRecipe()) {
                 v += 55;
             }
-            else if (!this.handler.getAvailableRecipes().contains(this.handler.getSortedRecipes().get(iCopy))) {
+            else if (!this.menu.getAvailableRecipes().contains(this.menu.getSortedRecipes().get(iCopy))) {
                 v += 18;
             } else if (mouseX >= k && mouseY >= m && mouseX < k + 16 && mouseY < m + 18) {
                 v += 36;
             }
-            context.drawTexture(TEXTURE, k, m - 1, 0, v, 16, 18);
+            context.blit(TEXTURE, k, m - 1, 0, v, 16, 18);
         }
     }
 
-    private void renderRecipeIcons(DrawContext context, int x, int y, int scrollOffset) {
-        for (int i = this.scrollOffset; i < scrollOffset && i < this.handler.getVisibleRecipeCount(); ++i) {
+    private void renderRecipeIcons(GuiGraphics context, int x, int y, int scrollOffset) {
+        for (int i = this.scrollOffset; i < scrollOffset && i < this.menu.getVisibleRecipeCount(); ++i) {
             int iMinusScrollOffset = i - this.scrollOffset;
             int xOffset = x + iMinusScrollOffset % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH;
             int l = iMinusScrollOffset / RECIPE_LIST_COLUMNS;
             int yOffset = y + l * RECIPE_ENTRY_HEIGHT + 2;
             int iCopy = i;
-            if (this.handler.searching) {
-                iCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(iCopy));
+            if (this.menu.searching) {
+                iCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(iCopy));
             }
-            context.drawItem(this.handler.getSortedRecipes().get(iCopy).getResult(client.world.getRegistryManager()), xOffset, yOffset);
+            context.renderItem(this.menu.getSortedRecipes().get(iCopy).getResultItem(minecraft.level.registryAccess()), xOffset, yOffset);
         }
     }
 
@@ -255,27 +254,27 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         this.mouseClicked = false;
         if (this.canCraft) {
-            int xOffsetForMouseClick = this.x + RECIPE_LIST_OFFSET_X;
-            int yOffsetForMouseClick = this.y + RECIPE_LIST_OFFSET_Y;
+            int xOffsetForMouseClick = this.leftPos + RECIPE_LIST_OFFSET_X;
+            int yOffsetForMouseClick = this.topPos + RECIPE_LIST_OFFSET_Y;
             int scrollOffsetForMouseClick = this.scrollOffset + 18;
             for (int clickedRecipeId = this.scrollOffset; clickedRecipeId < scrollOffsetForMouseClick; ++clickedRecipeId) {
                 int m = clickedRecipeId - this.scrollOffset;
                 double d = mouseX - (double)(xOffsetForMouseClick + m % RECIPE_LIST_COLUMNS * RECIPE_ENTRY_WIDTH);
                 double e = mouseY - (double)(yOffsetForMouseClick + m / RECIPE_LIST_COLUMNS * RECIPE_ENTRY_HEIGHT);
                 int clickedRecipeIdCopy = clickedRecipeId;
-                if (this.handler.searching) {
-                    if (clickedRecipeIdCopy < this.handler.getSearchableRecipes().size())
-                        clickedRecipeIdCopy = this.handler.getSortedRecipes().indexOf(this.handler.getSearchableRecipes().get(clickedRecipeIdCopy));
+                if (this.menu.searching) {
+                    if (clickedRecipeIdCopy < this.menu.getSearchableRecipes().size())
+                        clickedRecipeIdCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(clickedRecipeIdCopy));
                     else
                         clickedRecipeIdCopy = -1;
                 }
-                if (!(d >= 0.0) || !(e >= 0.0) || !(d < 16.0) || !(e < 18.0) || !this.handler.onButtonClick(this.client.player, clickedRecipeIdCopy)) continue;
-                this.client.getSoundManager().play(PositionedSoundInstance.master(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0f));
-                this.client.interactionManager.clickButton(this.handler.syncId, clickedRecipeIdCopy);
+                if (!(d >= 0.0) || !(e >= 0.0) || !(d < 16.0) || !(e < 18.0) || !this.menu.clickMenuButton(this.minecraft.player, clickedRecipeIdCopy)) continue;
+                this.minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.UI_STONECUTTER_SELECT_RECIPE, 1.0f));
+                this.minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, clickedRecipeIdCopy);
                 return true;
             }
-            xOffsetForMouseClick = this.x + 119;
-            yOffsetForMouseClick = this.y + 9;
+            xOffsetForMouseClick = this.leftPos + 119;
+            yOffsetForMouseClick = this.topPos + 9;
             if (mouseX >= (double)xOffsetForMouseClick && mouseX < (double)(xOffsetForMouseClick + SCROLLBAR_WIDTH) && mouseY >= (double)yOffsetForMouseClick && mouseY < (double)(yOffsetForMouseClick + SCROLLBAR_AREA_HEIGHT)) {
                 this.mouseClicked = true;
             }
@@ -286,10 +285,10 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
         if (this.mouseClicked && this.shouldScroll()) {
-            int i = this.y + 30;
+            int i = this.topPos + 30;
             int j = i + 54;
             this.scrollAmount = ((float)mouseY - (float)i - 7.5f) / ((float)(j - i) - SCROLLBAR_HEIGHT);
-            this.scrollAmount = MathHelper.clamp(this.scrollAmount, 0.0f, 1.0f);
+            this.scrollAmount = Mth.clamp(this.scrollAmount, 0.0f, 1.0f);
             this.scrollOffset = (int)((double)(this.scrollAmount * (float)this.getMaxScroll()) + 0.5) * RECIPE_LIST_COLUMNS;
             return true;
         }
@@ -301,22 +300,22 @@ public class WorkbenchScreen extends HandledScreen<WorkbenchScreenHandler> {
         if (this.shouldScroll()) {
             int i = this.getMaxScroll();
             this.scrollAmount = (float)((double)this.scrollAmount - verticalAmount / (double)i);
-            this.scrollAmount = MathHelper.clamp(this.scrollAmount, 0.0f, 1.0f);
+            this.scrollAmount = Mth.clamp(this.scrollAmount, 0.0f, 1.0f);
             this.scrollOffset = (int)((double)(this.scrollAmount * (float)i) + 0.5) * RECIPE_LIST_COLUMNS;
         }
         return true;
     }
 
     private boolean shouldScroll() {
-        return this.handler.getVisibleRecipeCount() > 18;
+        return this.menu.getVisibleRecipeCount() > 18;
     }
 
     protected int getMaxScroll() {
-        return (this.handler.getVisibleRecipeCount() + RECIPE_LIST_COLUMNS - 1) / RECIPE_LIST_COLUMNS - RECIPE_LIST_ROWS;
+        return (this.menu.getVisibleRecipeCount() + RECIPE_LIST_COLUMNS - 1) / RECIPE_LIST_COLUMNS - RECIPE_LIST_ROWS;
     }
 
     private void onInventoryChange() {
-        this.canCraft = this.handler.canCraft();
+        this.canCraft = this.menu.canCraft();
         if (!this.canCraft) {
             this.scrollAmount = 0.0f;
             this.scrollOffset = 0;

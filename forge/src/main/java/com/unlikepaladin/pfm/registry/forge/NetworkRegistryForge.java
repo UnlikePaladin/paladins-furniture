@@ -4,9 +4,9 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
 import com.unlikepaladin.pfm.networking.forge.*;
 import io.netty.util.AttributeKey;
-import net.minecraft.server.network.ServerPlayerConfigurationTask;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.Identifier;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.network.ConfigurationTask;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.network.GatherLoginConfigurationTasksEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,10 +18,9 @@ import net.minecraftforge.network.config.SimpleConfigurationTask;
 public class NetworkRegistryForge {
 
     public static final SimpleChannel PFM_CHANNEL = ChannelBuilder.named(
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "main_channel")
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "main_channel")
     ).networkProtocolVersion(1).simpleChannel();
     public static final AttributeKey<ForgePacketHandler> CONTEXT = AttributeKey.newInstance("pfm:handshake");
-
 
     public static void registerPackets() {
         int id = 0;
@@ -36,17 +35,17 @@ public class NetworkRegistryForge {
 
     @SubscribeEvent
     public static void onServerJoin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayerEntity) {
+        if (event.getEntity() instanceof ServerPlayer) {
             if (PaladinFurnitureMod.getPFMConfig().shouldGiveGuideBook()) {
                 //Give book
-                PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayerEntity) event.getEntity());
+                PFMCriteria.GUIDE_BOOK_CRITERION.trigger((ServerPlayer) event.getEntity());
             }
         }
    }
 
     @SubscribeEvent
     public static void onConfigSync(GatherLoginConfigurationTasksEvent event) {
-        event.addTask(new SimpleConfigurationTask(new ServerPlayerConfigurationTask.Key("pfm:sync_config"), (context) -> {
+        event.addTask(new SimpleConfigurationTask(new ConfigurationTask.Type("pfm:sync_config"), (context) -> {
             NetworkRegistryForge.PFM_CHANNEL.send(new SyncConfigPacket(PaladinFurnitureMod.getPFMConfig().options), context.getConnection());
         }));
     }

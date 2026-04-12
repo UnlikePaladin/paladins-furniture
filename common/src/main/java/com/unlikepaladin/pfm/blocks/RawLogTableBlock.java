@@ -9,7 +9,7 @@ import java.util.stream.Stream;
 public class RawLogTableBlock extends LogTableBlock{
     private static final List<FurnitureBlock> LOG_TABLES = new ArrayList<>();
 
-    public RawLogTableBlock(Settings settings) {
+    public RawLogTableBlock(Properties settings) {
         super(settings);
         if(this.getClass().isAssignableFrom(RawLogTableBlock.class)){
             LOG_TABLES.add(new FurnitureBlock(this, "table_"));

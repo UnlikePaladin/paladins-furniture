@@ -1,14 +1,11 @@
 package com.unlikepaladin.pfm.recipes.forge;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.input.RecipeInput;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
 
 public class FurnitureSerializerForge <J extends Recipe<I>, T extends RecipeSerializer<J>, I extends RecipeInput> implements RecipeSerializer<J> {
     public FurnitureSerializerForge(T recipeSerializer) {
@@ -22,8 +19,8 @@ public class FurnitureSerializerForge <J extends Recipe<I>, T extends RecipeSeri
     }
 
     @Override
-    public PacketCodec<RegistryByteBuf, J> packetCodec() {
-        return serializer.packetCodec();
+    public StreamCodec<RegistryFriendlyByteBuf, J> streamCodec() {
+        return serializer.streamCodec();
     }
 }
 

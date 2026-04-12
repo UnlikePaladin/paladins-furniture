@@ -16,23 +16,24 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.resources.ResourceLocation;
 
 import static mezz.jei.api.recipe.RecipeIngredientRole.INPUT;
 import static mezz.jei.api.recipe.RecipeIngredientRole.OUTPUT;
 
 public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
-    public static final Text TITLE = Text.translatable("rei.pfm.freezer");
+    public static final Component TITLE = Component.translatable("rei.pfm.freezer");
     public final IDrawable ICON;
-    public static final Identifier IDENTIFIER = Identifier.of(PaladinFurnitureMod.MOD_ID, "freezing");
+    public static final ResourceLocation IDENTIFIER = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "freezing");
     private final IDrawable BACKGROUND;
-    public static final Identifier FREEZE_GUI = Identifier.of(PaladinFurnitureMod.MOD_ID, "textures/gui/container/freezer.png");
+    public static final ResourceLocation FREEZE_GUI = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "textures/gui/container/freezer.png");
     protected final IDrawableStatic staticFreezeIcon;
     protected final IDrawableAnimated animatedFreezeIcon;
     private final int regularFreezeTime;
@@ -61,7 +62,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     }
 
     @Override
-    public Text getTitle() {
+    public Component getTitle() {
         return TITLE;
     }
 
@@ -85,7 +86,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
                 .addIngredients(recipe.getIngredients().get(inputSlot));
 
         builder.addSlot(OUTPUT, 61, 19)
-                .addItemStack(recipe.getResult(MinecraftClient.getInstance().world.getRegistryManager()));
+                .addItemStack(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
     }
 
     protected IDrawableAnimated getArrow(FreezingRecipe recipe) {
@@ -96,31 +97,31 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
         return this.cachedArrows.getUnchecked(freezeTime);
     }
 
-    protected void drawFreezeTime(FreezingRecipe recipe, DrawContext context, int y) {
+    protected void drawFreezeTime(FreezingRecipe recipe, GuiGraphics context, int y) {
         int freezeTime = recipe.getCookingTime();
         if (freezeTime > 0) {
             int freezeTimeSeconds = freezeTime / 20;
-            Text timeString = Text.of(freezeTimeSeconds + "s");
-            MinecraftClient minecraft = MinecraftClient.getInstance();
-            TextRenderer fontRenderer = minecraft.textRenderer;
-            int stringWidth = fontRenderer.getWidth(timeString);
-            context.drawText(fontRenderer, timeString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
+            Component timeString = Component.nullToEmpty(freezeTimeSeconds + "s");
+            Minecraft minecraft = Minecraft.getInstance();
+            Font fontRenderer = minecraft.font;
+            int stringWidth = fontRenderer.width(timeString);
+            context.drawString(fontRenderer, timeString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
         }
     }
 
-    protected void drawExperience(FreezingRecipe recipe, DrawContext context, int y) {
+    protected void drawExperience(FreezingRecipe recipe, GuiGraphics context, int y) {
         float experience = recipe.getExperience();
         if (experience > 0) {
-            Text experienceString = Text.of(experience + " XP");
-            MinecraftClient minecraft = MinecraftClient.getInstance();
-            TextRenderer fontRenderer = minecraft.textRenderer;
-            int stringWidth = fontRenderer.getWidth(experienceString);
-            context.drawText(fontRenderer, experienceString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
+            Component experienceString = Component.nullToEmpty(experience + " XP");
+            Minecraft minecraft = Minecraft.getInstance();
+            Font fontRenderer = minecraft.font;
+            int stringWidth = fontRenderer.width(experienceString);
+            context.drawString(fontRenderer, experienceString, BACKGROUND.getWidth() - stringWidth, y, 0xFF808080, true);
         }
     }
 
     @Override
-    public void draw(FreezingRecipe recipe, IRecipeSlotsView recipeSlotsView, DrawContext context, double mouseX, double mouseY) {
+    public void draw(FreezingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics context, double mouseX, double mouseY) {
         animatedFreezeIcon.draw(context, 1, 20);
 
         IDrawableAnimated arrow = getArrow(recipe);

@@ -5,20 +5,22 @@
   "compatibilityLevel": "JAVA_8",
   "client": [
     "BlockColorsAccessor",
-    "HandledScreensAccessor",
     "ItemColorsAccessor",
-    "PFMModelLoaderMixin",
+    "PFMModelBakeryMixin",
+    "HandledScreensAccessor",
     "PFMRenderLayersNeoForgeMixin"
   ],
   "mixins": [
     "PFMCFBModBlockEntitiesMixin",
     "PFMCookingPotBlockEntityMixin",
-    "PFMItemEntryAccessor",
+    "PFMLootItemAccessor",
     "PFMLootPool$BuilderMixin",
-    "PFMMinecraftServerMixin",
     "PFMReloadableResourceManagerImplMixin",
     "PFMSaveLoaderMixin",
-    "SimpleRegistryAccessor"
+    "MappedRegistryAccessor"
+  ],
+  "server": [
+    "PFMMinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -5,11 +5,15 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -32,51 +36,51 @@ public class UnbakedIronFridgeModel implements UnbakedModel {
         }
     };
 
-    public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
+    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : FRIDGE_MODEL_PARTS_BASE) {
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
             }
         }
     };
 
 
-    private static final Identifier PARENT = Identifier.of("block/block");
-    private final SpriteIdentifier frameTex;
+    private static final ResourceLocation PARENT = ResourceLocation.parse("block/block");
+    private final Material frameTex;
 
     @Override
-    public Collection<Identifier> getModelDependencies() {
+    public Collection<ResourceLocation> getDependencies() {
         return List.of(PARENT);
     }
 
     @Override
-    public void setParents(Function<Identifier, UnbakedModel> modelLoader) {
+    public void resolveParents(Function<ResourceLocation, UnbakedModel> modelLoader) {
 
     }
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getMaterials(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         return List.of(frameTex);
     }
 
-    public static final List<Identifier> IRON_FRIDGE_MODEL_IDS = new ArrayList<>() { {
-        add(Identifier.of(PaladinFurnitureMod.MOD_ID, "block/iron_fridge"));
+    public static final List<ResourceLocation> IRON_FRIDGE_MODEL_IDS = new ArrayList<>() { {
+        add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/iron_fridge"));
     }};
 
     public UnbakedIronFridgeModel() {
-        this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, Identifier.of("minecraft", "block/iron_block"));
+        this.frameTex = new Material(InventoryMenu.BLOCK_ATLAS, ResourceLocation.fromNamespaceAndPath("minecraft", "block/iron_block"));
     }
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
-        Map<String,BakedModel> bakedModels = new LinkedHashMap<>();
+    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
+        Map<String, BakedModel> bakedModels = new LinkedHashMap<>();
         for (String modelPart : FRIDGE_MODEL_PARTS_BASE) {
-            bakedModels.put(modelPart, loader.bake(Identifier.of(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
+            bakedModels.put(modelPart, loader.bake(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
         }
         return getBakedModel(textureGetter.apply(frameTex), rotationContainer, bakedModels, FRIDGE_MODEL_PARTS_BASE);
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Sprite frame, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
+    public static BakedModel getBakedModel(TextureAtlasSprite frame, ModelState settings, Map<String, BakedModel> bakedModels, List<String> MODEL_PARTS) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 }

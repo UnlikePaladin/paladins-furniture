@@ -3,17 +3,17 @@ package com.unlikepaladin.pfm.networking;
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.packet.CustomPayload;
-import net.minecraft.text.TranslatableTextContent;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.contents.TranslatableContents;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 import java.util.*;
 
-public final class SyncConfigPayload implements CustomPayload {
-    public static final PacketCodec<RegistryByteBuf, SyncConfigPayload> PACKET_CODEC = CustomPayload.codecOf(SyncConfigPayload::write, SyncConfigPayload::new);
-    public static final PacketCodec<PacketByteBuf, SyncConfigPayload> PACKET_SIMPLE_CODEC = CustomPayload.codecOf(SyncConfigPayload::write, SyncConfigPayload::new);
+public final class SyncConfigPayload implements CustomPacketPayload {
+    public static final StreamCodec<RegistryFriendlyByteBuf, SyncConfigPayload> PACKET_CODEC = CustomPacketPayload.codec(SyncConfigPayload::write, SyncConfigPayload::new);
+    public static final StreamCodec<FriendlyByteBuf, SyncConfigPayload> PACKET_SIMPLE_CODEC = CustomPacketPayload.codec(SyncConfigPayload::write, SyncConfigPayload::new);
 
     private final Map<String, AbstractConfigOption> configOptionMap;
 
@@ -22,19 +22,19 @@ public final class SyncConfigPayload implements CustomPayload {
     }
 
     @Override
-    public Id<? extends CustomPayload> getId() {
+    public Type<? extends CustomPacketPayload> type() {
         return NetworkIDs.CONFIG_SYNC_ID;
     }
 
-    public SyncConfigPayload(RegistryByteBuf buf) {
-        this((PacketByteBuf) buf);
+    public SyncConfigPayload(RegistryFriendlyByteBuf buf) {
+        this((FriendlyByteBuf) buf);
     }
 
-    public SyncConfigPayload(PacketByteBuf buf) {
+    public SyncConfigPayload(FriendlyByteBuf buf) {
         ArrayList<AbstractConfigOption> configOptions = buf.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
         Map<String, AbstractConfigOption> map = new HashMap<>();
         configOptions.forEach(abstractConfigOption -> {
-            map.put(((TranslatableTextContent) abstractConfigOption.getTitle().getContent()).getKey(), abstractConfigOption);
+            map.put(((TranslatableContents) abstractConfigOption.getTitle().getContents()).getKey(), abstractConfigOption);
         });
         this.configOptionMap = map;
     }
@@ -43,11 +43,11 @@ public final class SyncConfigPayload implements CustomPayload {
         return configOptionMap;
     }
 
-    public void write(RegistryByteBuf buf) {
-        write((PacketByteBuf) buf);
+    public void write(RegistryFriendlyByteBuf buf) {
+        write((FriendlyByteBuf) buf);
     }
 
-    public void write(PacketByteBuf buf) {
+    public void write(FriendlyByteBuf buf) {
         Collection<AbstractConfigOption> configOptions = configOptionMap.values();
         buf.writeCollection(configOptions, AbstractConfigOption::writeConfigOption);
     }
