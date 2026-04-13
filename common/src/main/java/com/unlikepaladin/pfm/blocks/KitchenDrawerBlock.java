@@ -3,29 +3,31 @@ package com.unlikepaladin.pfm.blocks;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.mob.PiglinBrain;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.BlockRotation;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.Containers;
+
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -33,23 +35,23 @@ import java.util.List;
 import java.util.stream.Stream;
 
 
-public class KitchenDrawerBlock extends KitchenCounterBlock implements BlockEntityProvider {
+public class KitchenDrawerBlock extends KitchenCounterBlock implements EntityBlock {
     private float height = 0.36f;
     private final Block baseBlock;
-    public static final BooleanProperty OPEN = Properties.OPEN;
+    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
 
     private final BlockState baseBlockState;
     private static final List<FurnitureBlock> WOOD_DRAWERS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DRAWERS = new ArrayList<>();
-    public KitchenDrawerBlock(Settings settings) {
+    public KitchenDrawerBlock(Properties settings) {
         super(settings);
-        this.baseBlockState = this.getDefaultState();
+        this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
         if (!(this.baseBlock instanceof KitchenWallDrawerSmallBlock)) {
-            setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
+            registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(OPEN, false));
         }
         counterFurnitureBlock = new FurnitureBlock(this, "kitchen_drawer");
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenDrawerBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(KitchenDrawerBlock.class)){
             WOOD_DRAWERS.add(counterFurnitureBlock);
         }
         else if (this.getClass().isAssignableFrom(KitchenDrawerBlock.class)){
@@ -64,70 +66,70 @@ public class KitchenDrawerBlock extends KitchenCounterBlock implements BlockEnti
         return STONE_DRAWERS.stream();
     }
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.isOf(newState.getBlock())) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.is(newState.getBlock())) {
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof Inventory) {
-            ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
-            world.updateComparators(pos, this);
+        if (blockEntity instanceof Container) {
+            Containers.dropContents(world, pos, (Container) blockEntity);
+            world.updateNeighbourForOutputSignal(pos, this);
         }
-        super.onStateReplaced(state, world, pos, newState, moved);
+        super.onRemove(state, world, pos, newState, moved);
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+    public boolean isCollisionShapeFullBlock(BlockState state, BlockGetter world, BlockPos pos) {
         return false;
     }
 
 
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(Properties.HORIZONTAL_FACING);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        stateManager.add(BlockStateProperties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
     }
-    public BlockState rotate(BlockState state, BlockRotation rotation) {
-        return state.with(FACING, rotation.rotate(state.get(FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        if (world.isClientSide) {
+            return InteractionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (world instanceof ServerWorld serverWorld && blockEntity instanceof GenericStorageBlockEntity9x3) {
-            player.openHandledScreen((GenericStorageBlockEntity9x3)blockEntity);
-            player.incrementStat(Statistics.DRAWER_SEARCHED);
-            PiglinBrain.onGuardedBlockInteracted(serverWorld, player, true);
+            player.openMenu((GenericStorageBlockEntity9x3)blockEntity);
+            player.awardStat(Statistics.DRAWER_SEARCHED);
+            PiglinAi.angerNearbyPiglins(serverWorld, player, true);
         }
-        return ActionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
 
     /**
      * Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/
      */
     public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{shape, VoxelShapes.empty()};
-        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
+        VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
+        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
         for (int i = 0; i < times; i++) {
-            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
+            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
             buffer[0] = buffer[1];
-            buffer[1] = VoxelShapes.empty();
+            buffer[1] = Shapes.empty();
         }
 
         return buffer[0];
     }
 
-    protected static final VoxelShape STRAIGHT = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 1, 12), createCuboidShape(0, 1, 0,16, 14, 13),createCuboidShape(0, 14, 0,16, 16, 16), createCuboidShape(1, 8, 12,15, 13, 14), createCuboidShape(1, 2, 12, 15, 7, 14), createCuboidShape(6, 4, 14, 10, 5, 15), createCuboidShape(6, 10, 14, 10, 11, 15));
-    protected static final VoxelShape STRAIGHT_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 1, 12), createCuboidShape(0, 1, 0,16, 14, 13), createCuboidShape(6, 10, 19, 10, 11, 20), createCuboidShape(1, 8, 13, 15, 13, 19), createCuboidShape(0, 14, 0, 16, 16, 16),createCuboidShape(1, 2, 12, 15, 7, 14), createCuboidShape(6, 4, 14, 10, 5, 15));
-    protected static final VoxelShape OUTER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,12, 1, 12),createCuboidShape(0, 1, 0,13, 14, 13),createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(5, 10, 19,8, 11, 20),createCuboidShape(1, 8, 13,12, 13, 19),createCuboidShape(1, 2, 12,12, 7, 14),createCuboidShape(5, 4, 14,8, 5, 15),createCuboidShape(12, 8, 1,14, 13, 12),createCuboidShape(12, 2, 1,14, 7, 12),createCuboidShape(14, 4, 5,15, 5, 8),createCuboidShape(14, 10, 5,15, 11, 8));
-    protected static final VoxelShape OUTER_CORNER = VoxelShapes.union(createCuboidShape(0, 0, 0,12, 1, 12),createCuboidShape(0, 1, 0,13, 14, 13),createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(5, 10, 14,8, 11, 15),createCuboidShape(1, 8, 13,12, 13, 14),createCuboidShape(1, 2, 12,12, 7, 14),createCuboidShape(5, 4, 14,8, 5, 15),createCuboidShape(12, 8, 1,14, 13, 12),createCuboidShape(12, 2, 1,14, 7, 12),createCuboidShape(14, 4, 5,15, 5, 8),createCuboidShape(14, 10, 5,15, 11, 8));
-    protected static final VoxelShape INNER_CORNER = VoxelShapes.union(createCuboidShape(4, 0, 0,16, 1, 16),createCuboidShape(0, 0, 0,4, 1, 11.9),createCuboidShape(3, 1, 0,16, 14, 16),createCuboidShape(0, 1, 0,3, 14, 13),createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(1, 2, 12,3, 7, 14),createCuboidShape(1, 8, 12,3, 13, 14),createCuboidShape(2, 8, 14,13, 13, 15));
-    protected static final VoxelShape RIGHT_EDGE = VoxelShapes.union(createCuboidShape(0,0,0,14, 1, 12),createCuboidShape(0,1,0,14, 14, 13),createCuboidShape(0,14,0,16, 16, 16),createCuboidShape(14,0,0,16, 14, 16),createCuboidShape(1,8,12,13, 13, 14),createCuboidShape(1, 2, 12,13, 7, 14),createCuboidShape(6, 4, 14,9,5,15),createCuboidShape(6,10,14,9, 11, 15));
-    protected static final VoxelShape LEFT_EDGE = VoxelShapes.union(createCuboidShape(2,0,0,16, 1, 12),createCuboidShape(2,1,0,16, 14, 13),createCuboidShape(0,0,0,2, 14, 16),createCuboidShape(0,14,0,16, 16, 16),createCuboidShape(3,8,12,15, 13, 14),createCuboidShape(3, 2, 12,15, 7, 14),createCuboidShape(8,4,14,11, 5, 15),createCuboidShape(8, 10, 14,11, 11, 15));
-    protected static final VoxelShape RIGHT_EDGE_OPEN =  VoxelShapes.union(createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(14, 0, 0,16, 14, 16),createCuboidShape(0, 0, 0,14, 1, 12),createCuboidShape(0, 1, 0,14, 14, 13),createCuboidShape(6, 10, 19,10, 11, 20),createCuboidShape(1, 8, 13,13, 13, 19),createCuboidShape(1, 2, 12,13, 7, 14),createCuboidShape(6, 4, 14,10, 5, 15));
-    protected static final VoxelShape LEFT_EDGE_OPEN = VoxelShapes.union(createCuboidShape(0, 14, 0,16, 16, 16),createCuboidShape(0, 0, 0,2, 14, 16),createCuboidShape(2, 0, 0,16, 1, 12),createCuboidShape(2, 1, 0,16, 14, 13),createCuboidShape(8, 10, 19,12, 11, 20),createCuboidShape(3, 8, 13,15, 13, 19),createCuboidShape(3, 2, 12,15, 7, 14),createCuboidShape(8, 4, 14,12, 5, 15));
+    protected static final VoxelShape STRAIGHT = Shapes.or(box(0, 0, 0,16, 1, 12), box(0, 1, 0,16, 14, 13),box(0, 14, 0,16, 16, 16), box(1, 8, 12,15, 13, 14), box(1, 2, 12, 15, 7, 14), box(6, 4, 14, 10, 5, 15), box(6, 10, 14, 10, 11, 15));
+    protected static final VoxelShape STRAIGHT_OPEN = Shapes.or(box(0, 0, 0,16, 1, 12), box(0, 1, 0,16, 14, 13), box(6, 10, 19, 10, 11, 20), box(1, 8, 13, 15, 13, 19), box(0, 14, 0, 16, 16, 16),box(1, 2, 12, 15, 7, 14), box(6, 4, 14, 10, 5, 15));
+    protected static final VoxelShape OUTER_CORNER_OPEN = Shapes.or(box(0, 0, 0,12, 1, 12),box(0, 1, 0,13, 14, 13),box(0, 14, 0,16, 16, 16),box(5, 10, 19,8, 11, 20),box(1, 8, 13,12, 13, 19),box(1, 2, 12,12, 7, 14),box(5, 4, 14,8, 5, 15),box(12, 8, 1,14, 13, 12),box(12, 2, 1,14, 7, 12),box(14, 4, 5,15, 5, 8),box(14, 10, 5,15, 11, 8));
+    protected static final VoxelShape OUTER_CORNER = Shapes.or(box(0, 0, 0,12, 1, 12),box(0, 1, 0,13, 14, 13),box(0, 14, 0,16, 16, 16),box(5, 10, 14,8, 11, 15),box(1, 8, 13,12, 13, 14),box(1, 2, 12,12, 7, 14),box(5, 4, 14,8, 5, 15),box(12, 8, 1,14, 13, 12),box(12, 2, 1,14, 7, 12),box(14, 4, 5,15, 5, 8),box(14, 10, 5,15, 11, 8));
+    protected static final VoxelShape INNER_CORNER = Shapes.or(box(4, 0, 0,16, 1, 16),box(0, 0, 0,4, 1, 11.9),box(3, 1, 0,16, 14, 16),box(0, 1, 0,3, 14, 13),box(0, 14, 0,16, 16, 16),box(1, 2, 12,3, 7, 14),box(1, 8, 12,3, 13, 14),box(2, 8, 14,13, 13, 15));
+    protected static final VoxelShape RIGHT_EDGE = Shapes.or(box(0,0,0,14, 1, 12),box(0,1,0,14, 14, 13),box(0,14,0,16, 16, 16),box(14,0,0,16, 14, 16),box(1,8,12,13, 13, 14),box(1, 2, 12,13, 7, 14),box(6, 4, 14,9,5,15),box(6,10,14,9, 11, 15));
+    protected static final VoxelShape LEFT_EDGE = Shapes.or(box(2,0,0,16, 1, 12),box(2,1,0,16, 14, 13),box(0,0,0,2, 14, 16),box(0,14,0,16, 16, 16),box(3,8,12,15, 13, 14),box(3, 2, 12,15, 7, 14),box(8,4,14,11, 5, 15),box(8, 10, 14,11, 11, 15));
+    protected static final VoxelShape RIGHT_EDGE_OPEN =  Shapes.or(box(0, 14, 0,16, 16, 16),box(14, 0, 0,16, 14, 16),box(0, 0, 0,14, 1, 12),box(0, 1, 0,14, 14, 13),box(6, 10, 19,10, 11, 20),box(1, 8, 13,13, 13, 19),box(1, 2, 12,13, 7, 14),box(6, 4, 14,10, 5, 15));
+    protected static final VoxelShape LEFT_EDGE_OPEN = Shapes.or(box(0, 14, 0,16, 16, 16),box(0, 0, 0,2, 14, 16),box(2, 0, 0,16, 1, 12),box(2, 1, 0,16, 14, 13),box(8, 10, 19,12, 11, 20),box(3, 8, 13,15, 13, 19),box(3, 2, 12,15, 7, 14),box(8, 4, 14,12, 5, 15));
 
     protected static final VoxelShape STRAIGHT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT);
     protected static final VoxelShape STRAIGHT_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT_OPEN);
@@ -157,11 +159,11 @@ public class KitchenDrawerBlock extends KitchenCounterBlock implements BlockEnti
     protected static final VoxelShape RIGHT_EDGE_OPEN_EAST = rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE_OPEN);
     protected static final VoxelShape RIGHT_EDGE_EAST = rotateShape(Direction.NORTH, Direction.EAST, RIGHT_EDGE);
 
-    protected static final VoxelShape MIDDLE = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 13),createCuboidShape(13, 2, 14,14, 6, 15),createCuboidShape(1, 1, 13,15, 15, 14));
-    protected static final VoxelShape MIDDLE_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 13),createCuboidShape(1, 1, 13,2, 15, 27),createCuboidShape(0, 2, 25,1, 6, 26));
-    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,13, 16, 13),createCuboidShape(1, 2, 12.75,2, 15, 23.75),createCuboidShape(0, 2.5, 21.75,1, 6.5, 22.75),createCuboidShape(13, 2, 1,14, 15, 12),createCuboidShape(14, 2.5, 10,15, 6.5, 11));
-    protected static final VoxelShape MIDDLE_OUTER_CORNER = VoxelShapes.union(createCuboidShape(0, 0, 0,13, 16, 13),createCuboidShape(13, 2, 1,14, 15, 12),createCuboidShape(14, 2.5, 10,15, 6.5, 11),createCuboidShape(1, 2, 12,12, 15, 14),createCuboidShape(10, 2.5, 14,11, 6.5, 15));
-    protected static final VoxelShape MIDDLE_INNER_CORNER = VoxelShapes.union(createCuboidShape(3, 0, 13,16, 16, 16),createCuboidShape(0, 0, 0,16, 16, 13),createCuboidShape(2, 1, 14,3, 15, 16),createCuboidShape(0, 1, 13,3, 15, 14));
+    protected static final VoxelShape MIDDLE = Shapes.or(box(0, 0, 0,16, 16, 13),box(13, 2, 14,14, 6, 15),box(1, 1, 13,15, 15, 14));
+    protected static final VoxelShape MIDDLE_OPEN = Shapes.or(box(0, 0, 0,16, 16, 13),box(1, 1, 13,2, 15, 27),box(0, 2, 25,1, 6, 26));
+    protected static final VoxelShape MIDDLE_OUTER_CORNER_OPEN = Shapes.or(box(0, 0, 0,13, 16, 13),box(1, 2, 12.75,2, 15, 23.75),box(0, 2.5, 21.75,1, 6.5, 22.75),box(13, 2, 1,14, 15, 12),box(14, 2.5, 10,15, 6.5, 11));
+    protected static final VoxelShape MIDDLE_OUTER_CORNER = Shapes.or(box(0, 0, 0,13, 16, 13),box(13, 2, 1,14, 15, 12),box(14, 2.5, 10,15, 6.5, 11),box(1, 2, 12,12, 15, 14),box(10, 2.5, 14,11, 6.5, 15));
+    protected static final VoxelShape MIDDLE_INNER_CORNER = Shapes.or(box(3, 0, 13,16, 16, 16),box(0, 0, 0,16, 16, 13),box(2, 1, 14,3, 15, 16),box(0, 1, 13,3, 15, 14));
     protected static final VoxelShape MIDDLE_INNER_CORNER_WEST =  rotateShape(Direction.NORTH, Direction.WEST, MIDDLE_INNER_CORNER);
     protected static final VoxelShape MIDDLE_INNER_CORNER_EAST =  rotateShape(Direction.NORTH, Direction.EAST, MIDDLE_INNER_CORNER);
     protected static final VoxelShape MIDDLE_INNER_CORNER_SOUTH =  rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_INNER_CORNER);
@@ -179,17 +181,17 @@ public class KitchenDrawerBlock extends KitchenCounterBlock implements BlockEnti
     protected static final VoxelShape MIDDLE_OPEN_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MIDDLE_OPEN);
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction direction = state.get(KitchenCounterBlock.FACING);
-        boolean right = canConnect(world, pos, state.get(KitchenCounterBlock.FACING).rotateYCounterclockwise());
-        boolean left = canConnect(world, pos, state.get(KitchenCounterBlock.FACING).rotateYClockwise());
-        BlockState neighborStateFacing = world.getBlockState(pos.offset(direction));
-        BlockState neighborStateOpposite = world.getBlockState(pos.offset(direction.getOpposite()));
-        boolean open = state.get(OPEN);
-        if (canConnectToCounter(neighborStateFacing) && neighborStateFacing.getProperties().contains(Properties.HORIZONTAL_FACING)) {
-            Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
-            if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
-                if (direction2 == direction.rotateYCounterclockwise()) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction direction = state.getValue(KitchenCounterBlock.FACING);
+        boolean right = canConnect(world, pos, state.getValue(KitchenCounterBlock.FACING).getCounterClockWise());
+        boolean left = canConnect(world, pos, state.getValue(KitchenCounterBlock.FACING).getClockWise());
+        BlockState neighborStateFacing = world.getBlockState(pos.relative(direction));
+        BlockState neighborStateOpposite = world.getBlockState(pos.relative(direction.getOpposite()));
+        boolean open = state.getValue(OPEN);
+        if (canConnectToCounter(neighborStateFacing) && neighborStateFacing.getProperties().contains(BlockStateProperties.HORIZONTAL_FACING)) {
+            Direction direction2 = neighborStateFacing.getValue(BlockStateProperties.HORIZONTAL_FACING);
+            if (direction2.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction2.getOpposite())) {
+                if (direction2 == direction.getCounterClockWise()) {
                     switch (direction) {
                         case NORTH: {
                             if (open) {
@@ -274,16 +276,16 @@ public class KitchenDrawerBlock extends KitchenCounterBlock implements BlockEnti
                 }
             }
         }
-        else if (canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.getProperties().contains(Properties.HORIZONTAL_FACING)) {
+        else if (canConnectToCounter(neighborStateOpposite) && neighborStateOpposite.getProperties().contains(BlockStateProperties.HORIZONTAL_FACING)) {
             Direction direction3;
             if (neighborStateOpposite.getBlock() instanceof AbstractFurnaceBlock) {
-                direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING).getOpposite();
+                direction3 = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
             }
             else {
-                direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
+                direction3 = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING);
             }
-            if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3)) {
-                if (direction3 == direction.rotateYCounterclockwise()) {
+            if (direction3.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, world, pos, direction3)) {
+                if (direction3 == direction.getCounterClockWise()) {
                     switch (direction) {
                         case NORTH: return INNER_CORNER_WEST;
                         case SOUTH: return INNER_CORNER_EAST;
@@ -431,19 +433,19 @@ public class KitchenDrawerBlock extends KitchenCounterBlock implements BlockEnti
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return GenericStorageBlockEntity9x3.getFactory().create(pos,state);
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
     }
 
 }

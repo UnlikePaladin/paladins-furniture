@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.runtime.forge;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,8 +19,8 @@ public class TextureReloadQueueImpl {
         // quick check to avoid scheduling empty work
         if (list.isEmpty()) return;
 
-        MinecraftClient.getInstance().execute(() -> {
-            List<Identifier> spriteIdentifiers = new ArrayList<>(list);
+        Minecraft.getInstance().execute(() -> {
+            List<ResourceLocation> spriteIdentifiers = new ArrayList<>(list);
             list.clear();
             reloadSpritesOnClientThread(spriteIdentifiers);
         });

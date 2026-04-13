@@ -1,25 +1,28 @@
 package com.unlikepaladin.pfm.blocks.models.forge;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormatElement;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.forge.PFMBakedModelGetQuadsExtension;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.*;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.json.ModelOverrideList;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.item.ModelTransformationMode;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.IQuadTransformer;
 import net.minecraftforge.client.model.QuadTransformers;
 import net.minecraftforge.client.model.data.ModelData;
@@ -31,17 +34,17 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public abstract class PFMForgeBakedModel extends AbstractBakedModel implements PFMBakedModelGetQuadsExtension {
     @Override
-    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         return getQuads(state, face, random);
     }
 
     protected Map<Pair<ItemStack, Direction>, List<BakedQuad>> cache = new HashMap<>();
     @Override
-    public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuadsCached(ItemStack stack, @Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         Pair<ItemStack, Direction> directionPair = new Pair<>(stack, face);
         if (cache.containsKey(directionPair))
             return cache.get(directionPair);
@@ -51,7 +54,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return quads;
     }
 
-    public PFMForgeBakedModel(ModelBakeSettings settings, List<BakedModel> templateBakedModels) {
+    public PFMForgeBakedModel(ModelState settings, List<BakedModel> templateBakedModels) {
         super(settings, templateBakedModels);
     }
     public static ModelProperty<BlockState> STATE = new ModelProperty<>();
@@ -60,18 +63,18 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
     @NotNull
     @Override
-    public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
+    public ModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
         return tileData.derive().with(STATE, state).build();
     }
 
-    final Map<Pair<Identifier, SpriteData>, List<BakedQuad>> separatedQuads =  Collections.synchronizedMap(new LinkedHashMap<>(1024, 0.75f, true) {
+    final Map<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> separatedQuads =  Collections.synchronizedMap(new LinkedHashMap<>(1024, 0.75f, true) {
         @Override
-        protected boolean removeEldestEntry(Map.Entry<Pair<Identifier, SpriteData>, List<BakedQuad>> eldest) {
+        protected boolean removeEldestEntry(Map.Entry<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> eldest) {
             return size() > 250; // Adjust based on your mod's needs
         }
     });
 
-    public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, List<Sprite> toReplace, List<Sprite> replacements) {
+    public List<BakedQuad> getQuadsWithTexture(List<BakedQuad> quads, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacements) {
         if (quads == null)
             return Collections.emptyList();
 
@@ -89,7 +92,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
         for (BakedQuad quad : quads) {
             SpriteData sprite = new SpriteData(quad.getSprite());
-            Pair<Identifier, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
+            Pair<ResourceLocation, SpriteData> pair = new Pair<>(sprite.getId(), sprite);
 
             separatedQuads.compute(pair, (key, existingList) -> {
                 if (existingList == null) {
@@ -108,15 +111,15 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         List<BakedQuad> transformedQuads = new ArrayList<>(quads.size());
 
         // Synchronize the snapshot creation, otherwise embeddium explodes
-        Map<Pair<Identifier, SpriteData>, List<BakedQuad>> snapshot;
+        Map<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> snapshot;
         synchronized (separatedQuads) {
             snapshot = new HashMap<>(separatedQuads);
         }
 
-        for (Map.Entry<Pair<Identifier, SpriteData>, List<BakedQuad>> entry : snapshot.entrySet()) {
-            Identifier keyId = entry.getKey().getFirst();
+        for (Map.Entry<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> entry : snapshot.entrySet()) {
+            ResourceLocation keyId = entry.getKey().getFirst();
             int index = IntStream.range(0, toReplace.size())
-                    .filter(i -> keyId.equals(toReplace.get(i).getContents().getId()))
+                    .filter(i -> keyId.equals(toReplace.get(i).contents().name()))
                     .findFirst()
                     .orElse(-1);
 
@@ -146,26 +149,26 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
             // Use computeIfAbsent for atomic check-and-put operation
             BakedQuad resultQuad = quadToTransformedQuad.computeIfAbsent(quadKey, key -> {
-                if (quad.getSprite().getContents().getId().equals(spriteData.getId())) {
+                if (quad.getSprite().contents().name().equals(spriteData.getId())) {
                     // Same sprite, return original quad
                     return quad;
                 } else {
                     // Transform the quad
-                    Sprite sprite = spriteData.getSprite();
+                    TextureAtlasSprite sprite = spriteData.getSprite();
 
-                    int[] vertexData = new int[quad.getVertexData().length];
-                    System.arraycopy(quad.getVertexData(), 0, vertexData, 0, vertexData.length);
+                    int[] vertexData = new int[quad.getVertices().length];
+                    System.arraycopy(quad.getVertices(), 0, vertexData, 0, vertexData.length);
                     float[][] uv = new float[4][2];
                     for (int vertexIndx = 0; vertexIndx < 4; vertexIndx++) {
                         unpackUV(vertexData, uv[vertexIndx], vertexIndx);
-                        Sprite originalSprite = quad.getSprite();
-                        float frameU = originalSprite.getFrameFromU(uv[vertexIndx][0]);
-                        float frameV = originalSprite.getFrameFromV(uv[vertexIndx][1]);
-                        uv[vertexIndx][0] = sprite.getFrameU(frameU);
-                        uv[vertexIndx][1] = sprite.getFrameV(frameV);
+                        TextureAtlasSprite originalSprite = quad.getSprite();
+                        float frameU = originalSprite.getUOffset(uv[vertexIndx][0]);
+                        float frameV = originalSprite.getVOffset(uv[vertexIndx][1]);
+                        uv[vertexIndx][0] = sprite.getU(frameU);
+                        uv[vertexIndx][1] = sprite.getV(frameV);
                         packUV(uv[vertexIndx], vertexData, vertexIndx);
                     }
-                    return new BakedQuad(vertexData, quad.getColorIndex(), quad.getFace(), sprite, quad.hasShade(), quad.getLightEmission());
+                    return new BakedQuad(vertexData, quad.getTintIndex(), quad.getDirection(), sprite, quad.isShade(), quad.getLightEmission());
                 }
             });
 
@@ -189,16 +192,16 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     }
 
 
-    private static final Map<Pair<VertexFormatElement.ComponentType, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
-    public static int findVertexElement(VertexFormatElement.ComponentType type, int index) {
-        Pair<VertexFormatElement.ComponentType, Integer> pairToFind = new Pair<>(type, index);
+    private static final Map<Pair<VertexFormatElement.Type, Integer>, Integer> ELEMENT_INTEGER_MAP = new ConcurrentHashMap<>();
+    public static int findVertexElement(VertexFormatElement.Type type, int index) {
+        Pair<VertexFormatElement.Type, Integer> pairToFind = new Pair<>(type, index);
         if (ELEMENT_INTEGER_MAP.containsKey(pairToFind))
             return ELEMENT_INTEGER_MAP.get(pairToFind);
 
         int id = 0;
-        for (VertexFormatElement element1 : VertexFormats.POSITION_COLOR_TEXTURE_LIGHT_NORMAL.getElements())
+        for (VertexFormatElement element1 : DefaultVertexFormat.BLOCK.getElements())
         {
-            if (element1.type() == type && element1.uvIndex() == index)
+            if (element1.type() == type && element1.index() == index)
                 break;
             id++;
         }
@@ -207,33 +210,33 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
     }
 
     @Override
-    public Sprite getParticleIcon(@NotNull ModelData data) {
+    public TextureAtlasSprite getParticleIcon(@NotNull ModelData data) {
         if (data.has(STATE) && data.get(STATE) != null)
             return getSpriteList(data.get(STATE)).get(0);
         return super.getParticleIcon(data);
     }
 
     @Override
-    public Sprite getParticleSprite() {
-        return getTemplateBakedModels().get(0).getParticleSprite();
+    public TextureAtlasSprite getParticleIcon() {
+        return getTemplateBakedModels().get(0).getParticleIcon();
     }
 
 
     public static class SpriteData {
         float minU, maxU, minV, maxV;
         int x, y;
-        Identifier id;
-        Sprite sprite;
+        ResourceLocation id;
+        TextureAtlasSprite sprite;
 
-        public SpriteData(Sprite sprite) {
+        public SpriteData(TextureAtlasSprite sprite) {
             this.sprite = sprite;
-            this.minU = sprite.getMinU();
-            this.maxU = sprite.getMaxU();
-            this.minV = sprite.getMinV();
-            this.maxV = sprite.getMaxV();
+            this.minU = sprite.getU0();
+            this.maxU = sprite.getU1();
+            this.minV = sprite.getV0();
+            this.maxV = sprite.getV1();
             this.x = sprite.getX();
             this.y = sprite.getY();
-            this.id = sprite.getContents().getId();
+            this.id = sprite.contents().name();
         }
 
         @Override
@@ -241,11 +244,11 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
             return obj instanceof SpriteData && ((SpriteData) obj).id == id && ((SpriteData) obj).minV == minV && ((SpriteData) obj).maxV == maxV && ((SpriteData) obj).minU == minU && ((SpriteData) obj).maxU == maxU && ((SpriteData) obj).x == x && ((SpriteData) obj).y == y;
         }
 
-        public Sprite getSprite() {
+        public TextureAtlasSprite getSprite() {
             return sprite;
         }
 
-        public Identifier getId() {
+        public ResourceLocation getId() {
             return id;
         }
 
@@ -257,15 +260,15 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
 
     public static final class PFMCachingBakedModel implements BakedModel {
         private final Map<Direction, List<BakedQuad>> transformedQuads;
-        private final Sprite particleSprite;
+        private final TextureAtlasSprite particleSprite;
 
-        public PFMCachingBakedModel(Map<Direction, List<BakedQuad>> transformedQuads, Sprite particleSprite) {
+        public PFMCachingBakedModel(Map<Direction, List<BakedQuad>> transformedQuads, TextureAtlasSprite particleSprite) {
             this.transformedQuads = transformedQuads;
             this.particleSprite = particleSprite;
         }
 
         @Override
-        public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, Random random) {
+        public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random) {
             return transformedQuads.get(face);
         }
 
@@ -275,28 +278,28 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         }
 
         @Override
-        public boolean hasDepth() {
+        public boolean isGui3d() {
             return true;
         }
 
         @Override
-        public boolean isSideLit() {
+        public boolean usesBlockLight() {
             return true;
         }
 
         @Override
-        public boolean isBuiltin() {
+        public boolean isCustomRenderer() {
             return false;
         }
 
         @Override
-        public Sprite getParticleSprite() {
+        public TextureAtlasSprite getParticleIcon() {
             return particleSprite;
         }
 
         @Override
-        public ModelOverrideList getOverrides() {
-            return ModelOverrideList.EMPTY;
+        public ItemOverrides getOverrides() {
+            return ItemOverrides.EMPTY;
         }
 
         @Override

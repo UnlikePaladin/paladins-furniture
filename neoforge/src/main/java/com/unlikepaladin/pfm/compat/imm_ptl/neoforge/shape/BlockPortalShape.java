@@ -1,11 +1,11 @@
 package com.unlikepaladin.pfm.compat.imm_ptl.neoforge.shape;
 /*
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtInt;
 import net.minecraft.nbt.NbtList;
-import net.minecraft.util.Pair;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.util.Tuple;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.util.math.Vec3i;
 import org.apache.commons.lang3.Validate;
@@ -55,7 +55,7 @@ public class BlockPortalShape {
     }
 
     public BlockPortalShape(
-            NbtCompound tag
+            CompoundTag tag
     ) {
         this(
                 readArea(tag.getList("poses", 3)),
@@ -80,12 +80,12 @@ public class BlockPortalShape {
         return result;
     }
 
-    public static BlockPortalShape fromTag(NbtCompound tag) {
+    public static BlockPortalShape fromTag(CompoundTag tag) {
         return new BlockPortalShape(tag);
     }
 
-    public NbtCompound toTag() {
-        NbtCompound data = new NbtCompound();
+    public CompoundTag toTag() {
+        CompoundTag data = new CompoundTag();
         NbtList list = new NbtList();
 
         area.forEach(blockPos -> {
@@ -415,10 +415,10 @@ public class BlockPortalShape {
             ).forEach(part -> {
                 Vec3d p1 = Vec3d.of(part.l).add(offset);
                 Vec3d p2 = Vec3d.of(part.h).add(1, 1, 1).add(offset);
-                double p1LocalX = p1.subtract(center).dotProduct(portal.axisW);
-                double p1LocalY = p1.subtract(center).dotProduct(portal.axisH);
-                double p2LocalX = p2.subtract(center).dotProduct(portal.axisW);
-                double p2LocalY = p2.subtract(center).dotProduct(portal.axisH);
+                double p1LocalX = p1.subtract(center).dot(portal.axisW);
+                double p1LocalY = p1.subtract(center).dot(portal.axisH);
+                double p2LocalX = p2.subtract(center).dot(portal.axisW);
+                double p2LocalY = p2.subtract(center).dot(portal.axisH);
                 shape.addTriangleForRectangle(
                         p1LocalX, p1LocalY,
                         p2LocalX, p2LocalY
@@ -429,10 +429,10 @@ public class BlockPortalShape {
 
             Vec3d p1 = Vec3d.of(rectanglePart.l).add(offset);
             Vec3d p2 = Vec3d.of(rectanglePart.h).add(1, 1, 1).add(offset);
-            double p1LocalX = p1.subtract(center).dotProduct(portal.axisW);
-            double p1LocalY = p1.subtract(center).dotProduct(portal.axisH);
-            double p2LocalX = p2.subtract(center).dotProduct(portal.axisW);
-            double p2LocalY = p2.subtract(center).dotProduct(portal.axisH);
+            double p1LocalX = p1.subtract(center).dot(portal.axisW);
+            double p1LocalY = p1.subtract(center).dot(portal.axisH);
+            double p2LocalX = p2.subtract(center).dot(portal.axisW);
+            double p2LocalY = p2.subtract(center).dot(portal.axisH);
             shape.addTriangleForRectangle(
                     p1LocalX, p1LocalY,
                     p2LocalX, p2LocalY

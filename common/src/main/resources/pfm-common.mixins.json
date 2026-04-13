@@ -6,7 +6,7 @@
   "mixins": [
     "PFMDataCache$CachedDataMixin",
     "PFMFeatureFlagFactory",
-    "PFMPlayerInventoryMixin",
+    "PFMInventoryMixin",
     "PFMPointOfInterestTypeAccessor",
     "PFMPointOfInterestTypesAccessor",
     "PFMServerRecipeManagerMixin",
@@ -17,21 +17,20 @@
     "PFMMixinDedicatedServer"
   ],
   "client": [
-    "PFMBakedModelManagerMixin",
+    "PFMSpriteLoaderMixin",
     "PFMBlockModelRendererAccessor",
     "PFMLanguageManagerAccessor",
+    "PFMLoadingOverlayMixin",
     "PFMMinecraftClientAcccessor",
     "PFMMissingSpriteAccessor",
     "PFMMixinClientPacketListener",
+    "PFMModelManagerMixin",
+    "PFMSimpleReloadableResourceManagerMixin",
     "PFMNativeImageAccessor",
-    "PFMReloadableResourceManagerImplMixin",
-    "PFMSplashOverlayMixin",
-    "PFMSpriteAtlasTextureAccessor",
-    "PFMSpriteAtlasTextureMixin",
     "PFMSpriteContentsAccessor",
     "PFMSpriteContentsMixin",
-    "PFMSpriteLoaderMixin",
-    "PFMSpriteMixin",
+    "PFMTextureAtlasSpriteMixin",
+    "PFMTextureSlotFactory",
     "PFMTitleScreenMixin"
   ],
   "injectors": {

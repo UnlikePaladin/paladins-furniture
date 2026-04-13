@@ -2,27 +2,29 @@ package com.unlikepaladin.pfm.items;
 
 import com.unlikepaladin.pfm.blocks.PendantBlock;
 import com.unlikepaladin.pfm.blocks.PowerableBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.item.tooltip.TooltipType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.nbt.NbtLong;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.LongTag;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -32,19 +34,19 @@ import java.util.List;
 public class LightSwitchItem extends BlockItem {
     private Block block;
 
-    public LightSwitchItem(Block block, Settings settings) {
+    public LightSwitchItem(Block block, Properties settings) {
         super(block, settings);
         this.block = block;
     }
 
     @Override
-    public ActionResult use(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getStackInHand(hand);
-        if (world.isClient) {
+    public ActionResult use(Level world, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (world.isClientSide) {
             return ActionResult.FAIL;
         }
-        if (player.isSneaking()) {
-            stack.remove(DataComponentTypes.BLOCK_ENTITY_DATA);
+        if (player.isShiftKeyDown()) {
+            stack.remove(DataComponents.BLOCK_ENTITY_DATA);
             createTag(stack);
             return ActionResult.SUCCESS.withNewHandStack(stack);
         }
@@ -53,38 +55,38 @@ public class LightSwitchItem extends BlockItem {
 
 
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        BlockPos pos = context.getBlockPos();
-        BlockState state = context.getWorld().getBlockState(context.getBlockPos());
+    public InteractionResult useOn(UseOnContext context) {
+        BlockPos pos = context.getClickedPos();
+        BlockState state = context.getLevel().getBlockState(context.getClickedPos());
         Block block = state.getBlock();
         if(block instanceof PowerableBlock){
            if (block instanceof PendantBlock){
-               boolean isSingle = (!state.get(PendantBlock.DOWN) && !state.get(PendantBlock.UP));
-               boolean isRoot = (state.get(PendantBlock.DOWN) && !state.get(PendantBlock.UP));
+               boolean isSingle = (!state.getValue(PendantBlock.DOWN) && !state.getValue(PendantBlock.UP));
+               boolean isRoot = (state.getValue(PendantBlock.DOWN) && !state.getValue(PendantBlock.UP));
 
                if (isSingle || isRoot) {
-                    addLight(context.getStack(), pos);
+                    addLight(context.getItemInHand(), pos);
                }
                else {
-                    if (context.getWorld().isClient)
-                        context.getPlayer().sendMessage(Text.translatable("message.pfm.light_switch_not_canopy"), false);
+                    if (context.getLevel().isClientSide)
+                        context.getPlayer().displayClientMessage(Component.translatable("message.pfm.light_switch_not_canopy"), false);
                }
            }
            else {
-               addLight(context.getStack(), pos);
+               addLight(context.getItemInHand(), pos);
            }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
-        return super.useOnBlock(context);
+        return super.useOn(context);
     }
 
     @Override
-    protected boolean canPlace(ItemPlacementContext context, BlockState state) {
-        BlockPos pos = context.getBlockPos();
-        WorldView world = context.getWorld();
-        Direction side = context.getSide();
-        NbtList lights = getLights(context.getStack());
-        boolean canPlace = state.canPlaceAt(world, pos) && side.getAxis().isHorizontal();
+    protected boolean canPlace(BlockPlaceContext context, BlockState state) {
+        BlockPos pos = context.getClickedPos();
+        LevelReader world = context.getLevel();
+        Direction side = context.getNearestLookingDirection();
+        ListTag lights = getLights(context.getItemInHand());
+        boolean canPlace = state.canSurvive(world, pos) && side.getAxis().isHorizontal();
 
         if (!canPlace) {
             return false;
@@ -92,25 +94,25 @@ public class LightSwitchItem extends BlockItem {
         if (lights != null) {
             ArrayList<BlockPos> removedLights = new ArrayList<>();
             ArrayList<BlockPos> lightOffsets = new ArrayList<>();
-            for (Iterator<NbtElement> iterator = lights.iterator(); iterator.hasNext();) {
-                NbtElement nbtElement = iterator.next();
-                BlockPos lightPos = BlockPos.fromLong(((NbtLong) nbtElement).longValue());
-                double distance = Math.sqrt(lightPos.getSquaredDistance(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
+            for (Iterator<Tag> iterator = lights.iterator(); iterator.hasNext();) {
+                Tag nbtElement = iterator.next();
+                BlockPos lightPos = BlockPos.of(((LongTag) nbtElement).getAsLong());
+                double distance = Math.sqrt(lightPos.distToLowCornerSqr(pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5));
                 if (distance > 16) {
-                    removedLights.add(BlockPos.fromLong(((NbtLong) nbtElement).longValue()));
+                    removedLights.add(BlockPos.of(((LongTag) nbtElement).getAsLong()));
                     iterator.remove();
                 } else {
                     lightOffsets.add(pos.subtract(lightPos));
                 }
             }
-            context.getStack().remove(DataComponentTypes.BLOCK_ENTITY_DATA);
-            createTag(context.getStack());
+            context.getItemInHand().remove(DataComponents.BLOCK_ENTITY_DATA);
+            createTag(context.getItemInHand());
             for (BlockPos blockPos : lightOffsets) {
-                addLight(context.getStack(), blockPos);
+                addLight(context.getItemInHand(), blockPos);
             }
 
-            if (!removedLights.isEmpty() && context.getWorld().isClient){
-                context.getPlayer().sendMessage(Text.translatable("message.pfm.light_switch_far", removedLights.toString()), false);
+            if (!removedLights.isEmpty() && context.getLevel().isClientSide){
+                context.getPlayer().displayClientMessage(Component.translatable("message.pfm.light_switch_far", removedLights.toString()), false);
             }
         }
         return true;
@@ -118,24 +120,24 @@ public class LightSwitchItem extends BlockItem {
 
     private void addLight(ItemStack stack, BlockPos pos)
     {
-        NbtCompound nbtCompound = createTag(stack);
-        if(!nbtCompound.contains("lights", NbtElement.LIST_TYPE)) {
-            nbtCompound.put("lights", new NbtList());
+        CompoundTag nbtCompound = createTag(stack);
+        if(!nbtCompound.contains("lights", Tag.TAG_LIST)) {
+            nbtCompound.put("lights", new ListTag());
         }
 
-        NbtList tagList = (NbtList) nbtCompound.get("lights");
+        ListTag tagList = (ListTag) nbtCompound.get("lights");
         if(!containsLight(tagList, pos))  {
-            tagList.add(NbtLong.of(pos.asLong()));
+            tagList.add(LongTag.valueOf(pos.asLong()));
         }
-        stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbtCompound));
+        stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(nbtCompound));
     }
 
-    private boolean containsLight(NbtList tagList, BlockPos pos)
+    private boolean containsLight(ListTag tagList, BlockPos pos)
     {
         for(int i = 0; i < tagList.size(); i++)
         {
-            NbtLong tagLong = (NbtLong) tagList.get(i);
-            if(tagLong.longValue() == pos.asLong())
+            LongTag tagLong = (LongTag) tagList.get(i);
+            if(tagLong.getAsLong() == pos.asLong())
             {
                 return true;
             }
@@ -144,34 +146,34 @@ public class LightSwitchItem extends BlockItem {
     }
 
     @Nullable
-    public static NbtList getLights(ItemStack stack) {
-        if(stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA)) {
-            NbtCompound blockEntityTag = stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).getNbt();
-            if(blockEntityTag.contains("lights", NbtElement.LIST_TYPE)) {
-                return (NbtList) blockEntityTag.get("lights");
+    public static ListTag getLights(ItemStack stack) {
+        if(stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
+            CompoundTag blockEntityTag = stack.get(DataComponents.BLOCK_ENTITY_DATA).getUnsafe();
+            if(blockEntityTag.contains("lights", Tag.TAG_LIST)) {
+                return (ListTag) blockEntityTag.get("lights");
             }
         }
         return null;
     }
 
-    private static NbtCompound createTag(ItemStack stack)
+    private static CompoundTag createTag(ItemStack stack)
     {
-        if(!stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA))
+        if(!stack.has(DataComponents.BLOCK_ENTITY_DATA))
         {
-            NbtCompound nbtCompound = new NbtCompound();
+            CompoundTag nbtCompound = new CompoundTag();
             nbtCompound.putString("id", "pfm:light_switch_block_entity");
-            stack.set(DataComponentTypes.BLOCK_ENTITY_DATA, NbtComponent.of(nbtCompound));
+            stack.set(DataComponents.BLOCK_ENTITY_DATA, CustomData.of(nbtCompound));
         }
-        return stack.get(DataComponentTypes.BLOCK_ENTITY_DATA).copyNbt();
+        return stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, TooltipContext context, List<Text> tooltip, TooltipType type) {
-        NbtList nbtList;
-        if (stack.contains(DataComponentTypes.BLOCK_ENTITY_DATA) && (nbtList = getLights(stack)) != null) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        ListTag nbtList;
+        if (stack.has(DataComponents.BLOCK_ENTITY_DATA) && (nbtList = getLights(stack)) != null) {
             int lightNum = nbtList.size();
-            tooltip.add(Text.translatable("tooltip.pfm.light_switch_connected", lightNum));
+            tooltip.add(Component.translatable("tooltip.pfm.light_switch_connected", lightNum));
         }
-        super.appendTooltip(stack, context, tooltip, type);
+        super.appendHoverText(stack, context, tooltip, type);
     }
 }

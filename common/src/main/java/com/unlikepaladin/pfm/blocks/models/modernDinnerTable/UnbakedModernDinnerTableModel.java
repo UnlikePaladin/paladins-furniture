@@ -7,10 +7,13 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -19,26 +22,26 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class UnbakedModernDinnerTableModel implements UnbakedModel {
-    public static final Identifier[] MODERN_DINNER_MODEL_PARTS_BASE = new Identifier[] {
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/table_modern_dinner_base"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/table_modern_dinner_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/table_modern_dinner_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/table_modern_dinner_legs"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/table_modern_dinner_middle"),
+    public static final ResourceLocation[] MODERN_DINNER_MODEL_PARTS_BASE = new ResourceLocation[] {
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/table_modern_dinner_base"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/table_modern_dinner_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/table_modern_dinner_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/table_modern_dinner_legs"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/table_modern_dinner/table_modern_dinner_middle"),
     };
 
 
-    private static final Identifier PARENT = Identifier.of("block/block");
-    public static final Identifier TABLE_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/modern_dinner_table");
-    public static final List<Identifier> TABLE_MODEL_IDS = new ArrayList<>() {
+    private static final ResourceLocation PARENT = ResourceLocation.parse("block/block");
+    public static final ResourceLocation TABLE_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/modern_dinner_table");
+    public static final List<ResourceLocation> TABLE_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_table_modern_dinner"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_table_modern_dinner"));
                 if (variant.hasStripped())
-                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_table_modern_dinner"));
+                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_table_modern_dinner"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_table_modern_dinner"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_table_modern_dinner"));
             }
             add(TABLE_MODEL_ID);
         }
@@ -50,7 +53,7 @@ public class UnbakedModernDinnerTableModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
+    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(TABLE_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(TABLE_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(TABLE_MODEL_ID).getCachedModelParts().get(rotationContainer));
 
@@ -58,7 +61,7 @@ public class UnbakedModernDinnerTableModel implements UnbakedModel {
             PFMRuntimeResources.modelCacheMap.put(TABLE_MODEL_ID, new PFMBakedModelContainer());
 
         List<BakedModel> bakedModelList = new ArrayList<>();
-        for (Identifier modelPart : MODERN_DINNER_MODEL_PARTS_BASE) {
+        for (ResourceLocation modelPart : MODERN_DINNER_MODEL_PARTS_BASE) {
             bakedModelList.add(loader.bake(modelPart, rotationContainer));
         }
 
@@ -67,13 +70,13 @@ public class UnbakedModernDinnerTableModel implements UnbakedModel {
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Identifier modelId, ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public static BakedModel getBakedModel(ResourceLocation modelId, ModelState settings, List<BakedModel> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolve(Resolver resolver) {
-        for (Identifier c : MODERN_DINNER_MODEL_PARTS_BASE)
+        for (ResourceLocation c : MODERN_DINNER_MODEL_PARTS_BASE)
             resolver.resolve(c);
     }
 }

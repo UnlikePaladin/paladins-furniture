@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum MiddleShape implements StringIdentifiable {
+public enum MiddleShape implements StringRepresentable {
     LEFT("left"),
     RIGHT("right"),
     MIDDLE("middle"),
@@ -16,7 +16,7 @@ public enum MiddleShape implements StringIdentifiable {
         return this.name;
     }
 
-    public String asString() {
+    public String getSerializedName() {
         return this.name;
     }
 

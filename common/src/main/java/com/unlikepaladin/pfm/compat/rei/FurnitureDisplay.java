@@ -31,30 +31,22 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.display.DisplaySerializer;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.resource.featuretoggle.FeatureSet;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 
 public class FurnitureDisplay implements Display {
-    public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(Identifier.of(PaladinFurnitureMod.MOD_ID, "furniture"));
+    public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "furniture"));
     private int itemsPerInnerRecipe;
     public List<EntryIngredient> input;
     public List<EntryIngredient> output;
     public Optional<Identifier> location;
-    public FurnitureDisplay(RecipeEntry<FurnitureRecipe> recipeEntry, FeatureSet set) {
+    public FurnitureDisplay(RecipeHolder<FurnitureRecipe> recipeEntry, FeatureSet set) {
         this(recipeEntry.value(), set);
         this.location = Optional.of(recipeEntry.id().getValue());
     }
@@ -112,7 +104,7 @@ public class FurnitureDisplay implements Display {
     }
 
     @Override
-    public Optional<Identifier> getDisplayLocation() {
+    public Optional<ResourceLocation> getDisplayLocation() {
         return location;
     }
 

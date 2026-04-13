@@ -2,47 +2,45 @@ package com.unlikepaladin.pfm.menus;
 
 import com.unlikepaladin.pfm.blocks.blockentities.StovePacket;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.recipe.RecipePropertySet;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.book.RecipeBookCategory;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.recipe.book.RecipeBookType;
-import net.minecraft.screen.AbstractFurnaceScreenHandler;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.inventory.AbstractFurnaceMenu;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.core.BlockPos;
 
-public class StoveScreenHandler extends AbstractFurnaceScreenHandler {
-    private final Inventory inventory;
-    public StoveScreenHandler(int syncId, PlayerInventory playerInventory, StoveData data) {
+public class StoveScreenHandler extends AbstractFurnaceMenu {
+    private final Container inventory;
+    public StoveScreenHandler(int syncId, Inventory playerInventory, StoveData data) {
         super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipePropertySet.SMOKER_INPUT, RecipeBookType.SMOKER, syncId, playerInventory);
-        this.inventory = (Inventory) playerInventory.player.getWorld().getBlockEntity(data.pos());
-        inventory.onOpen(playerInventory.player);
+        this.inventory = (Container) playerInventory.player.level().getBlockEntity(data.pos());
+        inventory.startOpen(playerInventory.player);
     }
 
-    public StoveScreenHandler(int syncId, PlayerInventory playerInventory, Inventory inventory, PropertyDelegate propertyDelegate) {
-        super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipePropertySet.SMOKER_INPUT, RecipeBookType.SMOKER, syncId, playerInventory, inventory, propertyDelegate);
+    public StoveScreenHandler(int containerId, Inventory playerInventory, Container inventory, ContainerData dataAccess) {
+        super(ScreenHandlerIDs.STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipePropertySet.SMOKER_INPUT, RecipeBookType.SMOKER, containerId, playerInventory, inventory, dataAccess);
         this.inventory = inventory;
-        inventory.onOpen(playerInventory.player);
+        inventory.startOpen(playerInventory.player);
     }
 
     @Override
-    public void onClosed(PlayerEntity player) {
-        super.onClosed(player);
-        this.inventory.onClose(player);
+    public void removed(Player player) {
+        super.removed(player);
+        this.inventory.stopOpen(player);
     }
 
-    public static final PacketCodec<RegistryByteBuf, StoveData> PACKET_CODEC = PacketCodec.of(StoveData::write, StoveData::new);
+    public static final StreamCodec<RegistryFriendlyByteBuf, StoveData> PACKET_CODEC = StreamCodec.ofMember(StoveData::write, StoveData::new);
     public record StoveData(BlockPos pos) implements StovePacket {
-        public StoveData(RegistryByteBuf buf) {
+        public StoveData(RegistryFriendlyByteBuf buf) {
             this(buf.readBlockPos());
         }
-        public void write(RegistryByteBuf buf) {
+        public void write(RegistryFriendlyByteBuf buf) {
             buf.writeBlockPos(pos);
         }
     }

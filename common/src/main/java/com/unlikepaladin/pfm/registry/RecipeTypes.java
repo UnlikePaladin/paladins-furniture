@@ -6,10 +6,10 @@ import com.unlikepaladin.pfm.recipes.FreezingRecipe;
 import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import net.minecraft.recipe.RecipePropertySet;
 import com.unlikepaladin.pfm.recipes.SimpleFurnitureRecipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 
 public class RecipeTypes {
     public static RecipeType<FreezingRecipe> FREEZING_RECIPE;
@@ -22,9 +22,9 @@ public class RecipeTypes {
     public static RecipeSerializer<DynamicFurnitureRecipe> DYNAMIC_FURNITURE_SERIALIZER;
     public static RegistryKey<RecipePropertySet> FURNITURE_INPUT = RegistryKey.of(RecipePropertySet.REGISTRY, Identifier.of(PaladinFurnitureMod.MOD_ID, "furniture"));
 
-    public static final Identifier FURNITURE_ID = Identifier.of(PaladinFurnitureMod.MOD_ID,"furniture");
-    public static final Identifier SIMPLE_FURNITURE_ID = Identifier.of(PaladinFurnitureMod.MOD_ID,"simple_furniture");
-    public static final Identifier DYNAMIC_FURNITURE_ID = Identifier.of(PaladinFurnitureMod.MOD_ID,"dynamic_furniture");
-    public static final Identifier FREEZING_ID = Identifier.of(PaladinFurnitureMod.MOD_ID,"freezing");
+    public static final ResourceLocation FURNITURE_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"furniture");
+    public static final ResourceLocation SIMPLE_FURNITURE_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"simple_furniture");
+    public static final ResourceLocation DYNAMIC_FURNITURE_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"dynamic_furniture");
+    public static final ResourceLocation FREEZING_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"freezing");
 
 }

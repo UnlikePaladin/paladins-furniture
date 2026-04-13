@@ -12,32 +12,30 @@ import com.unlikepaladin.pfm.runtime.PFMAssetGenerator;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.*;
-import net.minecraft.util.Formatting;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.network.chat.*;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.Entry> {
+public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionListWidget.Entry> {
     final PFMConfigScreen parent;
     int maxKeyNameLength;
     public BitSet hasChanges;
     public Map<AbstractConfigOption, Boolean> newConfigValues;
     public Map<AbstractConfigOption, Integer> configOptionToIndexForHasChanges;
 
-    public PFMOptionListWidget(PFMConfigScreen parent, MinecraftClient client) {
+    public PFMOptionListWidget(PFMConfigScreen parent, Minecraft client) {
         super(client, parent.width + 125, parent.height - 75, 43, 20);
         this.parent = parent;
         String string = null;
@@ -46,14 +44,14 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         newConfigValues = new HashMap<>(PaladinFurnitureMod.getPFMConfig().options.size());
         configOptionToIndexForHasChanges = new HashMap<>(PaladinFurnitureMod.getPFMConfig().options.size());
         for(Map.Entry<String, AbstractConfigOption> configOptionEntry : PaladinFurnitureMod.getPFMConfig().options.entrySet()) {
-            Text text;
+            Component text;
             int i;
             String configOptionCategory = configOptionEntry.getValue().getCategory();
             if (!configOptionCategory.equals(string)) {
                 string = configOptionCategory;
-                this.addEntry(new CategoryEntry(Text.translatable(configOptionCategory)));
+                this.addEntry(new CategoryEntry(Component.translatable(configOptionCategory)));
             }
-            if ((i = client.textRenderer.getWidth(text = configOptionEntry.getValue().getTitle())) > this.maxKeyNameLength) {
+            if ((i = client.font.width(text = configOptionEntry.getValue().getTitle())) > this.maxKeyNameLength) {
                 this.maxKeyNameLength = i;
             }
             if (configOptionEntry.getValue().getType() == Boolean.class) {
@@ -65,14 +63,14 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
             configOptionToIndexForHasChanges.put(configOptionEntry.getValue(), index);
             index++;
         }
-        this.addEntry(new CategoryEntry(Text.literal("")));
-        this.addEntry(new ButtonEntry(Side.CLIENT, Text.translatable("pfm.option.regenAssets"), Text.translatable("pfm.config.regen"), Text.translatable("pfm.option.regenAssets.tooltip"), button -> {
+        this.addEntry(new CategoryEntry(Component.literal("")));
+        this.addEntry(new ButtonEntry(Side.CLIENT, Component.translatable("pfm.option.regenAssets"), Component.translatable("pfm.config.regen"), Component.translatable("pfm.option.regenAssets.tooltip"), button -> {
             PFMFileUtil.deleteDir(PFMRuntimeResources.getAssetPackDirectory().toFile());
             PFMAssetGenerator.FROZEN = false;
             PFMRuntimeResources.prepareAndRunAssetGen(true);
-            MinecraftClient.getInstance().reloadResourcesConcurrently();
+            Minecraft.getInstance().delayTextureReload();
         }));
-        ButtonEntry entry = new ButtonEntry(Side.SERVER, Text.translatable("pfm.option.regenData"), Text.translatable("pfm.config.regen"), Text.translatable("pfm.option.regenData.tooltip"), button -> {
+        ButtonEntry entry = new ButtonEntry(Side.SERVER, Component.translatable("pfm.option.regenData"), Component.translatable("pfm.config.regen"), Component.translatable("pfm.option.regenData.tooltip"), button -> {
             PFMFileUtil.deleteDir(PFMRuntimeResources.getDataPackDirectory().toFile());
             PFMDataGenerator.FROZEN = false;
             PFMRuntimeResources.prepareAndRunDataGen(true);
@@ -89,8 +87,8 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
     }
 
     @Override
-    protected int getScrollbarX() {
-        return super.getScrollbarX() + 15;
+    protected int getScrollbarPosition() {
+        return super.getScrollbarPosition() + 15;
     }
 
     @Override
@@ -101,17 +99,17 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
     @Environment(value= EnvType.CLIENT)
     public class CategoryEntry
             extends Entry {
-        final MutableText text;
+        final MutableComponent text;
         private final int textWidth;
 
-        public CategoryEntry(MutableText text) {
+        public CategoryEntry(MutableComponent text) {
             this.text = text;
-            this.textWidth = PFMOptionListWidget.this.client.textRenderer.getWidth(this.text);
+            this.textWidth = PFMOptionListWidget.this.minecraft.font.width(this.text);
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.text.setStyle(Style.EMPTY.withBold(true)), (PFMOptionListWidget.this.client.currentScreen.width / 2 - this.textWidth / 2), y + entryHeight - (PFMOptionListWidget.this).client.textRenderer.fontHeight - 1, 0xFFFFFF, true);
+        public void render(GuiGraphics context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            context.drawString(PFMOptionListWidget.this.minecraft.font, this.text.setStyle(Style.EMPTY.withBold(true)), (PFMOptionListWidget.this.minecraft.screen.width / 2 - this.textWidth / 2), y + entryHeight - (PFMOptionListWidget.this).minecraft.font.lineHeight - 1, 0xFFFFFF, true);
         }
 
         public boolean changeFocus(boolean lookForwards) {
@@ -119,22 +117,22 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
         }
 
         @Override
-        public List<? extends Element> children() {
+        public List<? extends GuiEventListener> children() {
             return Collections.emptyList();
         }
 
         @Override
-        public List<? extends Selectable> selectableChildren() {
-            return ImmutableList.of(new Selectable(){
+        public List<? extends NarratableEntry> narratables() {
+            return ImmutableList.of(new NarratableEntry(){
 
                 @Override
-                public Selectable.SelectionType getType() {
-                    return Selectable.SelectionType.HOVERED;
+                public NarratableEntry.NarrationPriority narrationPriority() {
+                    return NarratableEntry.NarrationPriority.HOVERED;
                 }
 
                 @Override
-                public void appendNarrations(NarrationMessageBuilder builder) {
-                    builder.put(NarrationPart.TITLE, PFMOptionListWidget.CategoryEntry.this.text);
+                public void updateNarration(NarrationElementOutput builder) {
+                    builder.add(NarratedElementType.TITLE, PFMOptionListWidget.CategoryEntry.this.text);
                 }
             });
         }
@@ -144,57 +142,57 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
     public class BooleanEntry
             extends Entry {
         private final BooleanConfigOption configOption;
-        private final Text optionName;
-        private final ButtonWidget valueButton;
-        private final ButtonWidget resetButton;
+        private final Component optionName;
+        private final Button valueButton;
+        private final Button resetButton;
 
         private final Tooltip supplier;
         int index;
         boolean hasChanges = false;
-        BooleanEntry(final BooleanConfigOption configOption, final Text optionName, int index) {
+        BooleanEntry(final BooleanConfigOption configOption, final Component optionName, int index) {
             this.configOption = configOption;
             this.optionName = optionName;
             this.index = index;
-            final MutableText sideText = configOption.getSide() == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
-            final MutableText styledTooltip = ((MutableText)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(Formatting.WHITE));
-            final Text tooltipText = sideText.append(Text.literal("\n")).append(styledTooltip);
-            this.supplier = Tooltip.of(tooltipText);
+            final MutableComponent sideText = configOption.getSide() == Side.CLIENT ? Component.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Component.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+            final MutableComponent styledTooltip = ((MutableComponent)configOption.getToolTip()).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(ChatFormatting.WHITE));
+            final Component tooltipText = sideText.append(Component.literal("\n")).append(styledTooltip);
+            this.supplier = Tooltip.create(tooltipText);
 
-            this.valueButton = ButtonWidget.builder(optionName, button -> {
+            this.valueButton = Button.builder(optionName, button -> {
                 PFMOptionListWidget.this.parent.focusedConfigOption = configOption;
                 PFMOptionListWidget.this.newConfigValues.put(configOption, !PFMOptionListWidget.this.newConfigValues.get(configOption));
                 hasChanges = !hasChanges;
                 PFMOptionListWidget.this.hasChanges.set(index, hasChanges);
-            }).tooltip(supplier).dimensions(0,0,75,20).narrationSupplier(Supplier::get).build();
+            }).tooltip(supplier).bounds(0,0,75,20).createNarration(Supplier::get).build();
 
-            this.resetButton = ButtonWidget.builder(Text.translatable("controls.reset"), button -> {
+            this.resetButton = Button.builder(Component.translatable("controls.reset"), button -> {
                 PFMOptionListWidget.this.newConfigValues.put(configOption, configOption.getDefaultValue());
                 hasChanges = true;
                 PFMOptionListWidget.this.hasChanges.set(index, true);
-            }).dimensions(0,0,50,20).narrationSupplier(textSupplier -> Text.translatable("narrator.controls.reset", optionName)).build();
+            }).bounds(0,0,50,20).createNarration(textSupplier -> Component.translatable("narrator.controls.reset", optionName)).build();
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), 0xFFFFFF, false);
+        public void render(GuiGraphics context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            context.drawString(PFMOptionListWidget.this.minecraft.font, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), 0xFFFFFF, false);
             this.resetButton.setX(x + 190);
             this.resetButton.setY(y);
             this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption)) : !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption));;
             this.resetButton.render(context, mouseX, mouseY, tickDelta);
             this.valueButton.setX(x + 105);
             this.valueButton.setY(y);
-            this.valueButton.setMessage(PFMOptionListWidget.this.newConfigValues.get(configOption) ? ScreenTexts.YES : ScreenTexts.NO);
+            this.valueButton.setMessage(PFMOptionListWidget.this.newConfigValues.get(configOption) ? CommonComponents.GUI_YES : CommonComponents.GUI_NO);
             this.valueButton.active = this.configOption.getSide() != Side.SERVER || !PFMConfigScreen.isOnServer;
             this.valueButton.render(context, mouseX, mouseY, tickDelta);
         }
 
         @Override
-        public List<? extends Element> children() {
+        public List<? extends GuiEventListener> children() {
             return ImmutableList.of(this.valueButton, this.resetButton);
         }
 
         @Override
-        public List<? extends Selectable> selectableChildren() {
+        public List<? extends NarratableEntry> narratables() {
             return ImmutableList.of(this.valueButton, this.resetButton);
         }
 
@@ -215,43 +213,43 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
     @Environment(value=EnvType.CLIENT)
     public class ButtonEntry
             extends Entry {
-        private final Text optionName;
-        private final ButtonWidget button;
+        private final Component optionName;
+        private final Button button;
 
         private final Tooltip supplier;
         private final Side side;
-        ButtonEntry(Side side, final Text optionName, Text buttonText, Text tooltip, ButtonWidget.PressAction pressAction) {
+        ButtonEntry(Side side, final Component optionName, Component buttonText, Component tooltip, Button.OnPress pressAction) {
             this.optionName = optionName;
             this.side = side;
-            final MutableText sideText = side == Side.CLIENT ? Text.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Text.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
-            final MutableText styledTooltip = ((MutableText)tooltip).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(Formatting.WHITE));
-            final Text tooltipText = sideText.append(Text.literal("\n")).append(styledTooltip);
-            this.supplier = Tooltip.of(tooltipText);
+            final MutableComponent sideText = side == Side.CLIENT ? Component.translatable("pfm.option.client").setStyle(Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)) : Component.translatable("pfm.option.server").setStyle((Style.EMPTY.withItalic(false).withBold(true).withColor(0xf77f34)));
+            final MutableComponent styledTooltip = ((MutableComponent)tooltip).setStyle(Style.EMPTY.withItalic(true).withBold(false).withColor(ChatFormatting.WHITE));
+            final Component tooltipText = sideText.append(Component.literal("\n")).append(styledTooltip);
+            this.supplier = Tooltip.create(tooltipText);
 
-            this.button = new ButtonWidget(0, 0, 135, 20, buttonText, pressAction, Supplier::get){
+            this.button = new Button(0, 0, 135, 20, buttonText, pressAction, Supplier::get){
                 @Override
-                protected MutableText getNarrationMessage() {
-                    return (MutableText) optionName;
+                protected MutableComponent createNarrationMessage() {
+                    return (MutableComponent) optionName;
                 }
             };
             button.setTooltip(supplier);
         }
 
         @Override
-        public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            context.drawText(PFMOptionListWidget.this.client.textRenderer, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.client.textRenderer.fontHeight / 2), 0xFFFFFF, false);
+        public void render(GuiGraphics context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            context.drawString(PFMOptionListWidget.this.minecraft.font, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), 0xFFFFFF, false);
             this.button.setX(x+105);
             this.button.setY(y);
             this.button.render(context, mouseX, mouseY, tickDelta);
         }
 
         @Override
-        public List<? extends Element> children() {
+        public List<? extends GuiEventListener> children() {
             return ImmutableList.of(this.button);
         }
 
         @Override
-        public List<? extends Selectable> selectableChildren() {
+        public List<? extends NarratableEntry> narratables() {
             return ImmutableList.of(this.button);
         }
 
@@ -267,7 +265,7 @@ public class PFMOptionListWidget extends ElementListWidget<PFMOptionListWidget.E
     }
 
     @Environment(value=EnvType.CLIENT)
-    public static abstract class Entry extends ElementListWidget.Entry<Entry> {
+    public static abstract class Entry extends ContainerObjectSelectionList.Entry<PFMOptionListWidget.Entry> {
     }
 }
 

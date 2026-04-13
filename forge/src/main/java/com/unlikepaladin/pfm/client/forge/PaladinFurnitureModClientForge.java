@@ -40,10 +40,10 @@ import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.client.event.ModelEvent;
@@ -81,10 +81,10 @@ public class PaladinFurnitureModClientForge {
         event.register(PaladinFurnitureModClient.USE_TOILET_KEYBIND = registerKey("key.pfm.toiletUse", "keybindings.category.pfm", GLFW.GLFW_KEY_U));
     }
 
-    public static KeyBinding registerKey(String name, String category, int keyCode) {
-        return new KeyBinding(
+    public static KeyMapping registerKey(String name, String category, int keyCode) {
+        return new KeyMapping(
                 name, // The translation key of the keybinding's name
-                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 keyCode, // The keycode of the key
                 category // The translation key of the keybinding's category.
         );
@@ -92,104 +92,104 @@ public class PaladinFurnitureModClientForge {
 
 
     public static void registerExtraModels(Consumer<ModelIdentifier> event) {
-        for (Identifier id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedBasicTableModel.BASIC_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedBasicTableModel.BASIC_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedClassicTableModel.CLASSIC_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedClassicTableModel.CLASSIC_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedLogTableModel.LOG_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedLogTableModel.LOG_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedDinnerTableModel.DINNER_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedDinnerTableModel.DINNER_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedModernDinnerTableModel.MODERN_DINNER_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedModernDinnerTableModel.MODERN_DINNER_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedClassicNightstandModel.NIGHTSTAND_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedChairModel.CHAIR_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedChairModel.CHAIR_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedChairDinnerModel.CHAIR_DINNER_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedChairDinnerModel.CHAIR_DINNER_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedChairModernModel.CHAIR_MODERN_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedChairModernModel.CHAIR_MODERN_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedChairClassicModel.CHAIR_CLASSIC_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedChairClassicModel.CHAIR_CLASSIC_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedSimpleStoolModel.SIMPLE_STOOL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedSimpleStoolModel.SIMPLE_STOOL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedClassicStoolModel.CLASSIC_STOOL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedClassicStoolModel.CLASSIC_STOOL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedModernStoolModel.MODERN_STOOL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedModernStoolModel.MODERN_STOOL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedLogStoolModel.LOG_STOOL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedLogStoolModel.LOG_STOOL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedKitchenCounterModel.COUNTER_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedKitchenCounterModel.COUNTER_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedKitchenDrawerModel.COUNTER_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedKitchenDrawerModel.COUNTER_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedKitchenCabinetModel.CABINET_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedKitchenCabinetModel.CABINET_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedKitchenWallDrawerModel.COUNTER_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedKitchenWallDrawerModel.COUNTER_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedKitchenWallCounterModel.COUNTER_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedKitchenWallCounterModel.COUNTER_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedKitchenCounterOvenModel.OVEN_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedKitchenCounterOvenModel.OVEN_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedKitchenSinkModel.SINK_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedKitchenSinkModel.SINK_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedKitchenWallDrawerSmallModel.DRAWER_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedLadderModel.LADDER_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedLadderModel.LADDER_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedCoffeeBasicTableModel.BASIC_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedCoffeeBasicTableModel.BASIC_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedModernCoffeeTableModel.MODERN_COFFEE_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedModernCoffeeTableModel.MODERN_COFFEE_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedClassicCoffeeTableModel.CLASSIC_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedClassicCoffeeTableModel.CLASSIC_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedBasicDeskModel.BASIC_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedBasicDeskModel.BASIC_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedBasicDeskCabinetModel.BASIC_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        for (Identifier id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
-            event.accept(new ModelIdentifier(id, "block"));
+        for (ResourceLocation id : UnbakedClassicDeskModel.BASIC_MODEL_PARTS_BASE) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
-        UnbakedMirrorModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelIdentifier(model, "block")));
-        UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelIdentifier(model, "block")));
-        UnbakedFridgeModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelIdentifier(model, "block")));
-        UnbakedFreezerModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelIdentifier(model, "block")));
-        UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelIdentifier(model, "block")));
-        event.accept(new ModelIdentifier(Identifier.of("minecraft:block/cube_all"), "block"));
-        for (Identifier id : OfficeChairEntityRenderer.MODEL_IDS) {
-            event.accept(new ModelIdentifier(id, "block"));
+        UnbakedMirrorModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelResourceLocation(model, "block")));
+        UnbakedIronFridgeModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelResourceLocation(model, "block")));
+        UnbakedFridgeModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelResourceLocation(model, "block")));
+        UnbakedFreezerModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelResourceLocation(model, "block")));
+        UnbakedBasicLampModel.ALL_MODEL_IDS.forEach(model -> event.accept(new ModelResourceLocation(model, "block")));
+        event.accept(new ModelResourceLocation(ResourceLocation.parse("minecraft:block/cube_all"), "block"));
+        for (ResourceLocation id : OfficeChairEntityRenderer.MODEL_IDS) {
+            event.accept(new ModelResourceLocation(id, "block"));
         }
         event.accept(new ModelIdentifier(UnbakedBedModel.BED_MODEL_ID, "block"));
     }

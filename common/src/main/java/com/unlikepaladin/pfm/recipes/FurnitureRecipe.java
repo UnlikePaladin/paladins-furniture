@@ -1,20 +1,17 @@
 package com.unlikepaladin.pfm.recipes;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.input.RecipeInput;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.resource.featuretoggle.FeatureSet;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -32,35 +29,39 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
 
     String outputClass();
 
-    default List<CraftableFurnitureRecipe> getAvailableOutputs(FurnitureRecipe.FurnitureRecipeInput inventory, RegistryWrapper.WrapperLookup registryManager) {
+    default List<CraftableFurnitureRecipe> getAvailableOutputs(FurnitureRecipe.FurnitureRecipeInput inventory, HolderLookup.Provider registryManager) {
         return getInnerRecipes(inventory.playerInventory.player.getWorld().getEnabledFeatures());
     }
 
-    static int getSlotWithStackIgnoreNBT(PlayerInventory inventory, Item item) {
-        for(int i = 0; i < inventory.main.size(); ++i) {
-            if (!inventory.main.get(i).isEmpty() && inventory.main.get(i).getItem() == item) {
+    static int getSlotWithStackIgnoreNBT(Inventory inventory, Item item) {
+        for(int i = 0; i < inventory.items.size(); ++i) {
+            if (!inventory.items.get(i).isEmpty() && inventory.items.get(i).getItem() == item) {
                 return i;
             }
         }
         return -1;
     }
 
+    default ItemStack getToastSymbol() {
+        return PaladinFurnitureModBlocksItems.WORKING_TABLE.asItem().getDefaultInstance();
+    }
+
     default int getMaxInnerRecipeSize() {
         return getIngredientPlacement().getIngredients().size();
     }
 
-    default int getOutputCount(RegistryWrapper.WrapperLookup registryManager) {
-        return getResult(registryManager).getCount();
+    default int getOutputCount(HolderLookup.Provider registryManager) {
+        return getResultItem(registryManager).getCount();
     }
 
     ItemStack getResult(RegistryWrapper.WrapperLookup registryManager);
 
-    default List<? extends CraftableFurnitureRecipe> getInnerRecipesForVariant(World world, Identifier identifier) {
+    default List<? extends CraftableFurnitureRecipe> getInnerRecipesForVariant(Level world, ResourceLocation identifier) {
         return Collections.singletonList(getInnerRecipes(world.getEnabledFeatures()).getFirst());
     }
 
-    default String getName(RegistryWrapper.WrapperLookup registryManager) {
-        return getResult(registryManager).getName().getString();
+    default String getName(HolderLookup.Provider registryManager) {
+        return getResultItem(registryManager).getHoverName().getString();
     }
 
     void write(RegistryByteBuf buf);
@@ -74,15 +75,20 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
     }
 
     default List<Ingredient> getIngredients(World world) {
-        return getIngredientPlacement().getIngredients();
+        return placementInfo().getIngredients();
     }
 
     interface CraftableFurnitureRecipe extends Comparable<CraftableFurnitureRecipe> {
         List<Ingredient> getIngredients();
-        ItemStack getResult(RegistryWrapper.WrapperLookup registryManager);
-        ItemStack craft(FurnitureRecipe.FurnitureRecipeInput inventory, RegistryWrapper.WrapperLookup registryManager);
-        boolean matches(FurnitureRecipe.FurnitureRecipeInput playerInventory, World world);
+
+        ItemStack getResultItem(HolderLookup.Provider registryManager);
+
+        ItemStack assemble(FurnitureRecipe.FurnitureRecipeInput inventory, HolderLookup.Provider registryManager);
+
+        boolean matches(FurnitureRecipe.FurnitureRecipeInput playerInventory, Level world);
+
         FurnitureRecipe parent();
+
         ItemStack getRecipeOuput();
         @Override
         default int compareTo(@NotNull FurnitureRecipe.CraftableFurnitureRecipe o) {
@@ -93,7 +99,7 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
             if (!this.getRecipeOuput().isItemEnabled(featureSet))
                 return false;
             for (Ingredient ingredient : this.getIngredients()) {
-                for (RegistryEntry<Item> item : ingredient.getMatchingItems()) {
+                for (RegistryEntry<Item> item : ingredient.getItems()) {
                     if (!item.value().isEnabled(featureSet))
                         return false;
                 }
@@ -101,10 +107,10 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
             return true;
         }
 
-        default ItemStack craftAndRemoveItems(FurnitureRecipe.FurnitureRecipeInput input, RegistryWrapper.WrapperLookup registryManager) {
-            ItemStack output = getResult(registryManager).copy();
+        default ItemStack craftAndRemoveItems(FurnitureRecipe.FurnitureRecipeInput input, HolderLookup.Provider registryManager) {
+            ItemStack output = getResultItem(registryManager).copy();
             List<Ingredient> ingredients = getIngredients();
-            PlayerInventory playerInventory = input.playerInventory();
+            Inventory playerInventory = input.playerInventory();
             Map<Item, Integer> ingredientCounts = getItemCounts();
             for (Map.Entry<Item, Integer> entry : ingredientCounts.entrySet()) {
                 Item item = entry.getKey();
@@ -112,33 +118,33 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
 
                 int indexOfStack = FurnitureRecipe.getSlotWithStackIgnoreNBT(playerInventory, item);
                 if (indexOfStack != -1) {
-                    if (playerInventory.getStack(indexOfStack).getCount() >= count) {
-                        ItemStack stack1 = playerInventory.getStack(indexOfStack);
-                        stack1.decrement(count);
-                        playerInventory.setStack(indexOfStack, stack1);
-                        playerInventory.markDirty();
+                    if (playerInventory.getItem(indexOfStack).getCount() >= count) {
+                        ItemStack stack1 = playerInventory.getItem(indexOfStack);
+                        stack1.shrink(count);
+                        playerInventory.setItem(indexOfStack, stack1);
+                        playerInventory.setChanged();
                     } else {
-                        int remainingCount = count - playerInventory.getStack(indexOfStack).getCount();
-                        playerInventory.setStack(indexOfStack, ItemStack.EMPTY);
+                        int remainingCount = count - playerInventory.getItem(indexOfStack).getCount();
+                        playerInventory.setItem(indexOfStack, ItemStack.EMPTY);
                         while (remainingCount > 0) {
                             indexOfStack = FurnitureRecipe.getSlotWithStackIgnoreNBT(playerInventory, item);
                             if (indexOfStack != -1) {
-                                ItemStack stack1 = playerInventory.getStack(indexOfStack);
+                                ItemStack stack1 = playerInventory.getItem(indexOfStack);
                                 if (stack1.getCount() >= remainingCount) {
-                                    stack1.decrement(remainingCount);
-                                    playerInventory.setStack(indexOfStack, stack1);
+                                    stack1.shrink(remainingCount);
+                                    playerInventory.setItem(indexOfStack, stack1);
                                     break;
                                 } else {
                                     int stackSize = stack1.getCount();
                                     remainingCount = Math.max(remainingCount-stackSize, 0);
-                                    playerInventory.setStack(indexOfStack, ItemStack.EMPTY);
+                                    playerInventory.setItem(indexOfStack, ItemStack.EMPTY);
                                 }
                             } else {
                                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Unable to craft recipe, this should never happen");
                                 return ItemStack.EMPTY;
                             }
                         }
-                        playerInventory.markDirty();
+                        playerInventory.setChanged();
                     }
                 }
             }
@@ -148,7 +154,7 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
         default Map<Item, Integer> getItemCounts() {
             Map<Item, Integer> ingredientCounts = new HashMap<>();
             for (Ingredient ingredient : this.getIngredients()) {
-                for (RegistryEntry<Item> itemRegistryEntry : ingredient.getMatchingItems()) {
+                for (RegistryEntry<Item> itemRegistryEntry : ingredient.getItems()) {
                     if (ingredientCounts.containsKey(itemRegistryEntry.value())) {
                         ingredientCounts.put(itemRegistryEntry.value(), ingredientCounts.get(itemRegistryEntry.value())+1);
                     } else {
@@ -160,16 +166,16 @@ public interface FurnitureRecipe extends Recipe<FurnitureRecipe.FurnitureRecipeI
         }
 
     }
-    record FurnitureRecipeInput(PlayerInventory playerInventory) implements RecipeInput {
+    record FurnitureRecipeInput(Inventory playerInventory) implements RecipeInput {
 
         @Override
-        public ItemStack getStackInSlot(int slot) {
-            return playerInventory.getStack(slot);
+        public ItemStack getItem(int slot) {
+            return playerInventory.getItem(slot);
         }
 
         @Override
         public int size() {
-            return playerInventory.size();
+            return playerInventory.getContainerSize();
         }
 
         @Override

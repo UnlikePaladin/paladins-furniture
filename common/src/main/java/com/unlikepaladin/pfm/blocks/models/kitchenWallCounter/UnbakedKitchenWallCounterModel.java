@@ -7,10 +7,13 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -19,30 +22,30 @@ import java.util.function.Function;
 
 @Environment(EnvType.CLIENT)
 public class UnbakedKitchenWallCounterModel implements UnbakedModel {
-    public static final Identifier[] COUNTER_MODEL_PARTS_BASE = new Identifier[] {
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_inner_corner_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_inner_corner_right"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_outer_corner_left"),
-            Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_outer_corner_right")
+    public static final ResourceLocation[] COUNTER_MODEL_PARTS_BASE = new ResourceLocation[] {
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_inner_corner_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_inner_corner_right"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_outer_corner_left"),
+            ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter/kitchen_counter_middle_outer_corner_right")
     };
 
-    private static final Identifier PARENT = Identifier.of("block/block");
-    public static final Identifier COUNTER_MODEL_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/kitchen_wall_counter");
-    public static final List<Identifier> COUNTER_MODEL_IDS = new ArrayList<>() {
+    private static final ResourceLocation PARENT = ResourceLocation.parse("block/block");
+    public static final ResourceLocation COUNTER_MODEL_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/kitchen_wall_counter");
+    public static final List<ResourceLocation> COUNTER_MODEL_IDS = new ArrayList<>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_counter"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_kitchen_wall_counter"));
                 if (variant.hasStripped())
-                    add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.asString() + "_kitchen_wall_counter"));
+                    add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/stripped_" + variant.getSerializedName() + "_kitchen_wall_counter"));
             }
             for(StoneVariant variant : StoneVariantRegistry.getVariants()){
                 if (variant.identifier.getPath().equals("quartz"))
                     continue;
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_counter"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_kitchen_wall_counter"));
             }
             for(ExtraCounterVariant variant : ExtraCounterVariant.values()){
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_kitchen_wall_counter"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_kitchen_wall_counter"));
             }
             add(COUNTER_MODEL_ID);
         }
@@ -54,7 +57,7 @@ public class UnbakedKitchenWallCounterModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
+    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
         if (PFMRuntimeResources.modelCacheMap.containsKey(COUNTER_MODEL_ID) && PFMRuntimeResources.modelCacheMap.get(COUNTER_MODEL_ID).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(COUNTER_MODEL_ID, rotationContainer, PFMRuntimeResources.modelCacheMap.get(COUNTER_MODEL_ID).getCachedModelParts().get(rotationContainer));
 
@@ -62,7 +65,7 @@ public class UnbakedKitchenWallCounterModel implements UnbakedModel {
             PFMRuntimeResources.modelCacheMap.put(COUNTER_MODEL_ID, new PFMBakedModelContainer());
 
         List<BakedModel> bakedModelList = new ArrayList<>();
-        for (Identifier modelPart : COUNTER_MODEL_PARTS_BASE) {
+        for (ResourceLocation modelPart : COUNTER_MODEL_PARTS_BASE) {
             bakedModelList.add(loader.bake(modelPart, rotationContainer));
         }
 
@@ -71,13 +74,13 @@ public class UnbakedKitchenWallCounterModel implements UnbakedModel {
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Identifier modelId, ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public static BakedModel getBakedModel(ResourceLocation modelId, ModelState settings, List<BakedModel> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolve(Resolver resolver) {
-        for (Identifier c : COUNTER_MODEL_PARTS_BASE)
+        for (ResourceLocation c : COUNTER_MODEL_PARTS_BASE)
             resolver.resolve(c);
     }
 }

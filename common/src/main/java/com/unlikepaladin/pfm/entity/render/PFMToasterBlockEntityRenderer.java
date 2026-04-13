@@ -1,33 +1,34 @@
 package com.unlikepaladin.pfm.entity.render;
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.PFMToasterBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ModelTransformationMode;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.Direction;
 
 import java.util.Objects;
 
 public class PFMToasterBlockEntityRenderer <T extends PFMToasterBlockEntity> implements BlockEntityRenderer<T> {
 
-        public PFMToasterBlockEntityRenderer(BlockEntityRendererFactory.Context context) {
+        public PFMToasterBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
         }
         @Override
-        public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay) {
+        public void render(T blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
             if (blockEntity instanceof PFMToasterBlockEntity) {
-                matrices.push();
-                DefaultedList<ItemStack> items = blockEntity.getItems();
+                matrices.pushPose();
+                NonNullList<ItemStack> items = blockEntity.getItems();
                 Direction dir = Direction.NORTH;
-                if (blockEntity.getCachedState().getBlock() instanceof PFMToasterBlock) {
+                if (blockEntity.getBlockState().getBlock() instanceof PFMToasterBlock) {
                     dir = Objects.requireNonNull(blockEntity.getToasterFacing());
-                    if (blockEntity.isToasting() || blockEntity.getCachedState().get(PFMToasterBlock.ON)) {
+                    if (blockEntity.isToasting() || blockEntity.getBlockState().getValue(PFMToasterBlock.ON)) {
                         matrices.translate(0.0D, -0.11D, 0.0D);
                     }
                 }
@@ -48,14 +49,14 @@ public class PFMToasterBlockEntityRenderer <T extends PFMToasterBlockEntity> imp
                         rot = 180;
                 }
 
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((float)rot));
+                matrices.mulPose(Axis.YP.rotationDegrees((float)rot));
                 matrices.scale(0.8f,0.8f,0.8f);
                 matrices.translate(0.0D, 0.0D, -0.55D);
                 matrices.translate(0.0D, 0.0D, 0.41D);
-                MinecraftClient.getInstance().getItemRenderer().renderItem(items.get(0), ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, blockEntity.getWorld(), 346746554);
+                Minecraft.getInstance().getItemRenderer().renderStatic(items.get(0), ItemDisplayContext.GROUND, light, overlay, matrices, vertexConsumers, blockEntity.getLevel(), 346746554);
                 matrices.translate(0.0D, 0.0D, 0.29D);
-                MinecraftClient.getInstance().getItemRenderer().renderItem(items.get(1), ModelTransformationMode.GROUND, light, overlay, matrices, vertexConsumers, blockEntity.getWorld(),834871346);
-                matrices.pop();
+                Minecraft.getInstance().getItemRenderer().renderStatic(items.get(1), ItemDisplayContext.GROUND, light, overlay, matrices, vertexConsumers, blockEntity.getLevel(),834871346);
+                matrices.popPose();
             }
         }
 

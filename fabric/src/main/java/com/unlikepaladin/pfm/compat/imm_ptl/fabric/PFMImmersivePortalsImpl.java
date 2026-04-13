@@ -5,10 +5,11 @@ import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.compat.imm_ptl.fabric.client.PFMImmersivePortalsClient;
 import com.unlikepaladin.pfm.registry.EntityRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.MapColor;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.SpawnGroup;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MapColor;
+
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
 
 import java.util.Optional;
 
@@ -18,14 +19,14 @@ public class PFMImmersivePortalsImpl implements PFMModCompatibility {
 
     @Override
     public void registerEntityTypes() {
-      //  MIRROR = EntityType.Builder.create(PFMMirrorEntity::new, SpawnGroup.MISC).dimensions(0.0F, 0.0F).makeFireImmune().disableSummon().build("mirror_entity");
+      //  MIRROR = EntityType.Builder.of(PFMMirrorEntity::new, MobCategory.MISC).sized(0.0F, 0.0F).fireImmune().noSummon().build("mirror_entity");
    //     EntityRegistry.registerEntityType("mirror_entity", MIRROR);
     }
 
     @Override
     public void createBlocks() {
-      //  PaladinFurnitureModBlocksItems.WHITE_MIRROR = new PFMMirrorBlockIP(AbstractBlock.Settings.create().mapColor(MapColor.WHITE).nonOpaque());
-        //PaladinFurnitureModBlocksItems.GRAY_MIRROR = new PFMMirrorBlockIP(AbstractBlock.Settings.create().mapColor(MapColor.GRAY).nonOpaque());
+      //  PaladinFurnitureModBlocksItems.WHITE_MIRROR = new PFMMirrorBlockIP(BlockBehaviour.Properties.of().mapColor(MapColor.SNOW).noOcclusion());
+        //PaladinFurnitureModBlocksItems.GRAY_MIRROR = new PFMMirrorBlockIP(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).noOcclusion());
     }
 
     @Override

@@ -6,18 +6,18 @@ import me.shedaniel.clothconfig2.api.animator.ValueAnimator;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.REIRuntime;
 import me.shedaniel.rei.api.client.gui.widgets.BurningFire;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
 public class FreezingWidget extends BurningFire {
-    private final Identifier background = Identifier.of(PaladinFurnitureMod.MOD_ID,"textures/gui/container/freezer.png");
+    private final ResourceLocation background = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID,"textures/gui/container/freezer.png");
     private Rectangle bounds;
     private double animationDuration = -1;
     private final NumberAnimator<Float> darkBackgroundAlpha = ValueAnimator.ofFloat()
@@ -46,26 +46,26 @@ public class FreezingWidget extends BurningFire {
     }
 
     @Override
-    public void render(DrawContext context, int mouseX, int mouseY, float delta) {
+    public void render(GuiGraphics context, int mouseX, int mouseY, float delta) {
         this.darkBackgroundAlpha.update(delta);
         renderBackground(context, false, 1.0F);
         renderBackground(context, true, this.darkBackgroundAlpha.value());
     }
 
-    public void renderBackground(DrawContext context, boolean dark, float alpha) {
+    public void renderBackground(GuiGraphics context, boolean dark, float alpha) {
         if (getAnimationDuration() > 0) {
-            int height = 14 - MathHelper.ceil((System.currentTimeMillis() / (animationDuration / 14) % 14d));
+            int height = 14 - Mth.ceil((System.currentTimeMillis() / (animationDuration / 14) % 14d));
             //drawTexture(matrices, getX(), getY(), 1, 74, 14, 14 - height);
-            context.drawTexture(RenderLayer::getGuiTextured, background, getX(), getY() +2, 56, 36,14, 14, 256, 256);
-            context.drawTexture(RenderLayer::getGuiTextured, background, getX(), getY() + 14 - height, 176, 12 - height, 14, height, 256, 256);
+            context.blit(RenderType::getGuiTextured, background, getX(), getY() +2, 56, 36,14, 14, 256, 256);
+            context.blit(RenderType::getGuiTextured, background, getX(), getY() + 14 - height, 176, 12 - height, 14, height, 256, 256);
 
         } else {
-            context.drawTexture(RenderLayer::getGuiTextured, background, getX(), getY(), 1, 74, 14, 14, 256, 256);
+            context.blit(RenderType::getGuiTextured, background, getX(), getY(), 1, 74, 14, 14, 256, 256);
         }
     }
 
     @Override
-    public List<? extends Element> children() {
+    public List<? extends GuiEventListener> children() {
         return Collections.emptyList();
     }
 }

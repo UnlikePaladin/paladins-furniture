@@ -2,33 +2,35 @@ package com.unlikepaladin.pfm.items.fabric;
 
 import com.unlikepaladin.pfm.items.FurnitureGuideBook;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.ClickEvent;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.Identifier;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.Component;
+
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.level.Level;
 import vazkii.patchouli.api.PatchouliAPI;
 
 public class FurnitureGuideBookImpl extends FurnitureGuideBook {
-    public FurnitureGuideBookImpl(Item.Settings settings) {
+    public FurnitureGuideBookImpl(Item.Properties settings) {
         super(settings);
     }
 
-    public static ActionResult openBook(World world, PlayerEntity user, Hand hand) {
-        if (!world.isClient() && FabricLoader.getInstance().isModLoaded("patchouli")) {
-                PatchouliAPI.get().openBookGUI((ServerPlayerEntity) user, Identifier.of("pfm:guide_book"));
-            return ActionResult.SUCCESS;
+    public static ActionResult openBook(Level world, Player user, InteractionHand hand) {
+        if (!world.isClientSide() && FabricLoader.getInstance().isModLoaded("patchouli")) {
+                PatchouliAPI.get().openBookGUI((ServerPlayer) user, ResourceLocation.parse("pfm:guide_book"));
+            return InteractionResultHolder.success(user.getItemInHand(hand));
         }
-        else if (world.isClient && !FabricLoader.getInstance().isModLoaded("patchouli"))
+        else if (world.isClientSide && !FabricLoader.getInstance().isModLoaded("patchouli"))
         {
-            Text text = Text.translatable("message.pfm.patchouli_not_installed").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/UnlikePaladin/paladins-furniture/wiki")));
-            user.sendMessage(text,false);
+            Component text = Component.translatable("message.pfm.patchouli_not_installed").setStyle(Style.EMPTY.withClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/UnlikePaladin/paladins-furniture/wiki")));
+            user.displayClientMessage(text,false);
         }
-        return ActionResult.PASS;
+        return InteractionResultHolder.pass(user.getItemInHand(hand));
     }
 }

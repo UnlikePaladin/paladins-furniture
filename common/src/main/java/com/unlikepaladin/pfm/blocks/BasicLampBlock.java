@@ -6,60 +6,64 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.PFMComponents;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.component.type.NbtComponent;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.*;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MapColor;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
-public class BasicLampBlock extends PowerableBlock implements BlockEntityProvider {
-    private static final BooleanProperty LIT = Properties.LIT;
-    public static final MapCodec<BasicLampBlock> CODEC = createCodec(BasicLampBlock::new);
+public class BasicLampBlock extends PowerableBlock implements EntityBlock {
+    private static final BooleanProperty LIT = BlockStateProperties.LIT;
+    public static final MapCodec<BasicLampBlock> CODEC = simpleCodec(BasicLampBlock::new);
 
-    public BasicLampBlock(AbstractBlock.Settings settings) {
+    public BasicLampBlock(Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(LIT, false).with(POWERLOCKED, false));
+        registerDefaultState(this.getStateDefinition().any().setValue(LIT, false).setValue(POWERLOCKED, false));
     }
 
     @Override
-    protected MapCodec<? extends PowerableBlock> getCodec() {
+    protected MapCodec<? extends PowerableBlock> codec() {
         return CODEC;
     }
 
     @Override
-    public void setPowered(World world, BlockPos lightPos, boolean powered) {
+    public void setPowered(Level world, BlockPos lightPos, boolean powered) {
         BlockState state = world.getBlockState(lightPos);
-        world.setBlockState(lightPos, state.with(LIT, powered).with(POWERLOCKED,powered));
+        world.setBlockAndUpdate(lightPos, state.setValue(LIT, powered).setValue(POWERLOCKED,powered));
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof LampBlockEntity) {
             DyeColor color = itemStack.getOrDefault(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE);
@@ -67,19 +71,19 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
             ((LampBlockEntity) blockEntity).setPFMColor(color);
             ((LampBlockEntity) blockEntity).setVariant(variant);
         }
-        super.onPlaced(world, pos, state, placer, itemStack);
+        super.setPlacedBy(world, pos, state, placer, itemStack);
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        super.appendProperties(stateManager);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        super.createBlockStateDefinition(stateManager);
         stateManager.add(LIT);
         stateManager.add(POWERLOCKED);
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return getBlockEntity(pos, state);
     }
 
@@ -89,28 +93,28 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+    public boolean isCollisionShapeFullBlock(BlockState state, BlockGetter world, BlockPos pos) {
         return false;
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 
     @Override
-    public MapColor getDefaultMapColor() {
-        return super.getDefaultMapColor();
+    public MapColor defaultMapColor() {
+        return super.defaultMapColor();
     }
 
-    private static final VoxelShape SINGLE = VoxelShapes.union(createCuboidShape(7, 1.5, 7, 9, 6, 9), createCuboidShape(3, 0, 3,13, 1.5, 13),createCuboidShape(1.5, 5, 1.5,14.5, 16, 14.5));
-    private static final VoxelShape TOP = VoxelShapes.union(createCuboidShape(7, 0, 7,9, 6, 9),createCuboidShape(1.5, 5, 1.5,14.5, 16, 14.5));
-    private static final VoxelShape MIDDLE = VoxelShapes.union(createCuboidShape(7, 0, 7,9, 16, 9));
-    private static final VoxelShape BOTTOM = VoxelShapes.union(createCuboidShape(7, 1.5, 7, 9, 16, 9), createCuboidShape(3, 0, 3,13, 1.5, 13));
+    private static final VoxelShape SINGLE = Shapes.or(box(7, 1.5, 7, 9, 6, 9), box(3, 0, 3,13, 1.5, 13),box(1.5, 5, 1.5,14.5, 16, 14.5));
+    private static final VoxelShape TOP = Shapes.or(box(7, 0, 7,9, 6, 9),box(1.5, 5, 1.5,14.5, 16, 14.5));
+    private static final VoxelShape MIDDLE = Shapes.or(box(7, 0, 7,9, 16, 9));
+    private static final VoxelShape BOTTOM = Shapes.or(box(7, 1.5, 7, 9, 16, 9), box(3, 0, 3,13, 1.5, 13));
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        boolean up = world.getBlockState(pos.up()).getBlock() instanceof BasicLampBlock;
-        boolean down = world.getBlockState(pos.down()).getBlock() instanceof BasicLampBlock;
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        boolean up = world.getBlockState(pos.above()).getBlock() instanceof BasicLampBlock;
+        boolean down = world.getBlockState(pos.below()).getBlock() instanceof BasicLampBlock;
         if (up && down) {
             return MIDDLE;
         } else if (up) {
@@ -123,44 +127,44 @@ public class BasicLampBlock extends PowerableBlock implements BlockEntityProvide
     }
 
     @Override
-    protected ActionResult onUseWithItem(ItemStack stack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (stack.getItem() instanceof LightSwitchItem)
-            return ActionResult.PASS;
+            return ItemInteractionResult.PASS;
 
-        return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        if (world.isClientSide) {
+            return InteractionResult.SUCCESS;
         }
 
-        if (!state.get(POWERLOCKED)) {
+        if (!state.getValue(POWERLOCKED)) {
             togglePower(state, world, pos);
-            float f = state.get(LIT) ? 0.9f : 0.8f;
-            world.playSound(null, pos, SoundEvents.BLOCK_LEVER_CLICK, SoundCategory.BLOCKS, 0.3f, f);
-            world.emitGameEvent(player, state.get(LIT) ? GameEvent.BLOCK_ACTIVATE : GameEvent.BLOCK_DEACTIVATE, pos);
-            return ActionResult.CONSUME;
+            float f = state.getValue(LIT) ? 0.9f : 0.8f;
+            world.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.3f, f);
+            world.gameEvent(player, state.getValue(LIT) ? GameEvent.BLOCK_ACTIVATE : GameEvent.BLOCK_DEACTIVATE, pos);
+            return InteractionResult.CONSUME;
         }
-        return super.onUse(state, world, pos, player, hit);
+        return super.useWithoutItem(state, world, pos, player, hit);
     }
 
-    public BlockState togglePower(BlockState state, World world, BlockPos pos) {
+    public BlockState togglePower(BlockState state, Level world, BlockPos pos) {
         state = state.cycle(LIT);
-        world.setBlockState(pos, state, Block.NOTIFY_ALL);
-        world.updateNeighborsAlways(pos, this);
+        world.setBlock(pos, state, Block.UPDATE_ALL);
+        world.updateNeighborsAt(pos, this);
         return state;
     }
 
     @Override
-    protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
-        return direction.getAxis().isVertical() && neighborState.getBlock() instanceof BasicLampBlock ? state.with(LIT, neighborState.get(LIT)).with(POWERLOCKED, neighborState.get(POWERLOCKED)) : super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        return direction.getAxis().isVertical() && neighborState.getBlock() instanceof BasicLampBlock ? state.setValue(LIT, neighborState.getValue(LIT)).setValue(POWERLOCKED, neighborState.getValue(POWERLOCKED)) : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
     @Override
-    public ItemStack getPickStack(WorldView world, BlockPos pos, BlockState state) {
-        ItemStack stack = super.getPickStack(world, pos, state);
+    public ItemStack getCloneItemStack(LevelReader world, BlockPos pos, BlockState state) {
+        ItemStack stack = super.getCloneItemStack(world, pos, state);
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof LampBlockEntity) {
             stack.set(PFMComponents.VARIANT_COMPONENT, ((LampBlockEntity) blockEntity).getVariant().identifier);

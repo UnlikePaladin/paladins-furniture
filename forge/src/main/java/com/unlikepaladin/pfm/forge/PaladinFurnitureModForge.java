@@ -8,14 +8,21 @@ import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.items.forge.PFMComponentsImpl;
 import com.unlikepaladin.pfm.registry.dynamic.forge.LateBlockRegistryForge;
 import com.unlikepaladin.pfm.registry.forge.*;
-import com.unlikepaladin.pfm.utilities.Version;
-import net.minecraft.registry.VersionedIdentifier;
-import net.minecraft.resource.*;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
+import com.unlikepaladin.pfm.utilities.Version;
 import net.minecraft.SharedConstants;
-import net.minecraft.resource.metadata.PackResourceMetadata;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.PackLocationInfo;
+import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackSelectionConfig;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraft.server.packs.repository.KnownPack;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackCompatibility;
+import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddPackFindersEvent;
@@ -35,7 +42,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
     public static PaladinFurnitureModConfig pfmConfig;
     public PaladinFurnitureModForge(FMLJavaModLoadingContext loadContext) {
         pfmConfig = new PaladinFurnitureModConfig(FMLPaths.CONFIGDIR.get());
-        PaladinFurnitureMod.isClient = FMLEnvironment.dist == Dist.CLIENT;
+        PaladinFurnitureMod.isClientSide = FMLEnvironment.dist == Dist.CLIENT;
         try {
             pfmConfig.initialize();
         } catch (IOException e) {
@@ -52,7 +59,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         MinecraftForge.EVENT_BUS.register(SoundRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(NetworkRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(PFMComponentsImpl.class);
-        if (isClient) {
+        if (isClientSide) {
             loadContext.getModEventBus().addListener(EventPriority.LOW, ColorRegistryForge::registerBlockColors);
             loadContext.getModEventBus().addListener(EventPriority.LOWEST, ColorRegistryForge::registerItemColors);
         }
@@ -65,11 +72,11 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
 
     @SubscribeEvent
     public static void generateResources(AddPackFindersEvent event) {
-        if (event.getPackType() == ResourceType.CLIENT_RESOURCES) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
-            ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
+        if (event.getPackType() == PackType.CLIENT_RESOURCES) {
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Assets for PFM"), SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES), Optional.empty());
+            Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
                 @Override
-                public ResourcePack open(ResourcePackInfo info) {
+                public PackResources openPrimary(PackLocationInfo info) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.areAssetsRunning())
                             PFMRuntimeResources.prepareAndRunAssetGen(false);
@@ -77,18 +84,18 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
                 }
 
                 @Override
-                public ResourcePack openWithOverlays(ResourcePackInfo info, ResourcePackProfile.Metadata metadata) {
-                    return this.open(info);
+                public PackResources openFull(PackLocationInfo info, Pack.Metadata metadata) {
+                    return this.openPrimary(info);
                 }
             };
             event.addRepositorySource(profileAdder -> {
-                profileAdder.accept(ResourcePackProfile.create(new ResourcePackInfo("pfm-asset-resources", Text.literal("PFM Assets"), ResourcePackSource.NONE, Optional.of(new VersionedIdentifier(PaladinFurnitureMod.MOD_ID, "pfm_assets", Version.getCurrentVersion()))),  packFactory, ResourceType.CLIENT_RESOURCES, new ResourcePackPosition(true, ResourcePackProfile.InsertionPosition.BOTTOM, false)));
+                profileAdder.accept(Pack.readMetaAndCreate(new PackLocationInfo("pfm-asset-resources", Component.literal("PFM Assets"), PackSource.DEFAULT, Optional.of(new KnownPack(PaladinFurnitureMod.MOD_ID, "pfm_assets", Version.getCurrentVersion()))),  packFactory, PackType.CLIENT_RESOURCES, new PackSelectionConfig(true, Pack.Position.BOTTOM, false)));
             });
-        } else if (event.getPackType() == ResourceType.SERVER_DATA) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().getResourceVersion(ResourceType.SERVER_DATA), Optional.empty());
-            ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
+        } else if (event.getPackType() == PackType.SERVER_DATA) {
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Data for PFM"), SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA), Optional.empty());
+            Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
                 @Override
-                public ResourcePack open(ResourcePackInfo info) {
+                public PackResources openPrimary(PackLocationInfo info) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.isDataRunning())
                             PFMRuntimeResources.prepareAndRunDataGen(false);
@@ -96,12 +103,12 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
                 }
 
                 @Override
-                public ResourcePack openWithOverlays(ResourcePackInfo info, ResourcePackProfile.Metadata metadata) {
-                    return this.open(info);
+                public PackResources openFull(PackLocationInfo info, Pack.Metadata metadata) {
+                    return this.openPrimary(info);
                 }
             };
             event.addRepositorySource(profileAdder -> {
-                profileAdder.accept(ResourcePackProfile.create(new ResourcePackInfo("pfm-data-resources", Text.literal("PFM Data"), ResourcePackSource.NONE, Optional.of(new VersionedIdentifier(PaladinFurnitureMod.MOD_ID, "pfm_data", Version.getCurrentVersion()))),  packFactory, ResourceType.SERVER_DATA, new ResourcePackPosition(true, ResourcePackProfile.InsertionPosition.BOTTOM, false)));
+                profileAdder.accept(Pack.readMetaAndCreate(new PackLocationInfo("pfm-data-resources", Component.literal("PFM Data"), PackSource.DEFAULT, Optional.of(new KnownPack(PaladinFurnitureMod.MOD_ID, "pfm_data", Version.getCurrentVersion()))),  packFactory, PackType.SERVER_DATA, new PackSelectionConfig(true, Pack.Position.BOTTOM, false)));
             });
         }
     }

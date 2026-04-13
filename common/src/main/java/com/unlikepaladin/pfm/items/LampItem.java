@@ -3,27 +3,23 @@ package com.unlikepaladin.pfm.items;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.text.Text;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
 
-import java.util.Map;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 
 public class LampItem extends BlockItem {
-    public LampItem(Block block, Settings settings) {
+    public LampItem(Block block, Properties settings) {
         super(block, settings);
     }
 
     @Override
-    public Text getName(ItemStack stack) {
+    public Component getName(ItemStack stack) {
         DyeColor color = DyeColor.WHITE;
         WoodVariant variant = WoodVariantRegistry.OAK;
 
@@ -33,22 +29,19 @@ public class LampItem extends BlockItem {
         if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
             variant = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
         }
-        return Text.translatable(String.format("block.pfm.basic_%s_%s_lamp", color.asString(), variant.asString()));
+        return Text.translatable(String.format("block.pfm.basic_%s_%s_lamp", color.getSerializedName(), variant.getSerializedName()));
     }
 
     @Override
-    public ItemStack getDefaultStack() {
+    public ItemStack getDefaultInstance() {
         ItemStack stack = new ItemStack(this);
         stack.set(PFMComponents.COLOR_COMPONENT, DyeColor.WHITE);
         stack.set(PFMComponents.VARIANT_COMPONENT, WoodVariantRegistry.OAK.identifier);
         return stack;
     }
 
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-    }
-
     @ExpectPlatform
-    public static BlockItem getItemFactory(Block block, Settings settings) {
+    public static BlockItem getItemFactory(Block block, Properties settings) {
         throw new UnsupportedOperationException();
     }
 }

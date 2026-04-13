@@ -2,24 +2,28 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.*;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.math.random.Random;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
@@ -29,19 +33,19 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
 
-public class WallToiletPaperBlock extends HorizontalFacingBlock {
-    protected static final BooleanProperty WALL = BooleanProperty.of("wall");
+public class WallToiletPaperBlock extends HorizontalDirectionalBlock {
+    protected static final BooleanProperty WALL = BooleanProperty.create("wall");
     private static final List<FurnitureBlock> TOILET_PAPER = new ArrayList<>();
-    public static final MapCodec<WallToiletPaperBlock> CODEC = createCodec(WallToiletPaperBlock::new);
-    public WallToiletPaperBlock(Settings settings) {
+    public static final MapCodec<WallToiletPaperBlock> CODEC = simpleCodec(WallToiletPaperBlock::new);
+    public WallToiletPaperBlock(Properties settings) {
         super(settings);
-        this.setDefaultState(getDefaultState().with(FACING, Direction.NORTH).with(WALL, false));
+        this.registerDefaultState(defaultBlockState().setValue(FACING, Direction.NORTH).setValue(WALL, false));
         TOILET_PAPER.add(new FurnitureBlock(this, "toilet_paper"));
 
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 
@@ -50,50 +54,50 @@ public class WallToiletPaperBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(WALL, FACING);
-        super.appendProperties(builder);
+        super.createBlockStateDefinition(builder);
     }
 
     @Nullable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection());
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        Direction direction = state.get(FACING);
-        BlockPos blockPos = pos.offset(direction);
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
+        Direction direction = state.getValue(FACING);
+        BlockPos blockPos = pos.relative(direction);
         BlockState blockState = world.getBlockState(blockPos);
-        return blockState.isSideSolidFullSquare(world, blockPos, direction);
+        return blockState.isFaceSturdy(world, blockPos, direction);
     }
 
     @Override
-    protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, Random random) {
-        if (direction == state.get(FACING) && !state.canPlaceAt(world, pos)) {
-            return Blocks.AIR.getDefaultState();
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        if (direction == state.getValue(FACING) && !state.canSurvive(world, pos)) {
+            return Blocks.AIR.defaultBlockState();
         }
         return state;
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (player.isSneaking()) {
-            world.setBlockState(pos, state.cycle(WALL));
-            return ActionResult.SUCCESS;
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        if (player.isShiftKeyDown()) {
+            world.setBlockAndUpdate(pos, state.cycle(WALL));
+            return InteractionResult.SUCCESS;
         }
-        return super.onUse(state, world, pos, player, hit);
+        return super.useWithoutItem(state, world, pos, player, hit);
     }
 
-    public static final VoxelShape WALL_PAPER_SOUTH = VoxelShapes.union(createCuboidShape(11.5, 12, 12,12.5, 13, 16), createCuboidShape(3.5, 12, 11.5,4.5, 13, 16), createCuboidShape(4.5, 10.5, 10.5,11.5, 14.5, 14.5));
+    public static final VoxelShape WALL_PAPER_SOUTH = Shapes.or(box(11.5, 12, 12,12.5, 13, 16), box(3.5, 12, 11.5,4.5, 13, 16), box(4.5, 10.5, 10.5,11.5, 14.5, 14.5));
     public static final VoxelShape WALL_PAPER_NORTH = rotateShape(Direction.SOUTH, Direction.NORTH, WALL_PAPER_SOUTH);
     public static final VoxelShape WALL_PAPER_EAST = rotateShape(Direction.SOUTH, Direction.EAST, WALL_PAPER_SOUTH);
     public static final VoxelShape WALL_PAPER_WEST = rotateShape(Direction.SOUTH, Direction.WEST, WALL_PAPER_SOUTH);
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction direction = state.get(FACING);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction direction = state.getValue(FACING);
         switch (direction) {
             case EAST: {
                 return WALL_PAPER_EAST;
@@ -112,7 +116,7 @@ public class WallToiletPaperBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 }

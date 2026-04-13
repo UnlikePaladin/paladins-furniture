@@ -6,8 +6,14 @@ import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import com.unlikepaladin.pfm.entity.render.state.OfficeChairEntityRenderState;
 import net.minecraft.client.model.*;
-import net.minecraft.client.render.entity.model.EntityModel;
-import net.minecraft.client.render.entity.model.EntityModelPartNames;
+import net.minecraft.client.model.AgeableListModel;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartNames;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.CubeListBuilder;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
+import net.minecraft.client.model.geom.builders.MeshDefinition;
+import net.minecraft.client.model.geom.builders.PartDefinition;
 
 import java.util.List;
 import java.util.Map;
@@ -19,15 +25,15 @@ public class OfficeChairModelEmpty extends EntityModel<OfficeChairEntityRenderSt
     }
 
 
-    public static TexturedModelData getTexturedModelData() {
-        ModelData modelData = new ModelData();
-        ModelPartData modelPartData = modelData.getRoot();
-        modelPartData.addChild(EntityModelPartNames.CUBE, ModelPartBuilder.create().uv(0, 0).cuboid(0F, 0F, 0F, 0F, 0F, 0F), ModelTransform.pivot(0F, 0F, 0F));
-        return TexturedModelData.of(modelData, 16, 16);
+    public static LayerDefinition getTexturedModelData() {
+        MeshDefinition modelData = new MeshDefinition();
+        PartDefinition modelPartData = modelData.getRoot();
+        modelPartData.addOrReplaceChild(PartNames.CUBE, CubeListBuilder.create().texOffs(0, 0).addBox(0F, 0F, 0F, 0F, 0F, 0F), PartPose.offset(0F, 0F, 0F));
+        return LayerDefinition.create(modelData, 16, 16);
     }
 
     @Override
-    public void setAngles(OfficeChairEntityRenderState state) {
-        super.setAngles(state);
+    public void setupAnim(OfficeChairEntityRenderState state) {
+        super.setupAnim(state);
     }
 }

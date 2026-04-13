@@ -22,8 +22,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.util.InputUtil;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -34,16 +34,16 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        PaladinFurnitureMod.isClient = true;
+        PaladinFurnitureMod.isClientSide = true;
         PaladinFurnitureModFabric.registerLateEntries();
         PaladinFurnitureModFabric.replaceHomePOIStates();
         ColorRegistryFabric.registerAll();
         ClientPacketRegistry.registerClientPackets();
         TextureReloadQueueImpl.registerTextureReload();
         PFMSpriteRegistry.registerAdditionalSprites();
-        PaladinFurnitureModClient.USE_TOILET_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        PaladinFurnitureModClient.USE_TOILET_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.pfm.toiletUse", // The translation key of the keybinding's name
-                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 GLFW.GLFW_KEY_U, // The keycode of the key
                 "keybindings.category.pfm" // The translation key of the keybinding's category.
         ));

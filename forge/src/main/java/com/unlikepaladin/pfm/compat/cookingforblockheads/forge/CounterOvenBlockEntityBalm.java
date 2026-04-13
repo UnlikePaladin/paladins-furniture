@@ -1,7 +1,6 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Table;
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
@@ -16,10 +15,10 @@ import net.blay09.mods.balm.forge.fluid.ForgeFluidTank;
 import net.blay09.mods.balm.forge.provider.ForgeBalmProviders;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.Container;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
@@ -38,7 +37,7 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implement
     }
 
     @Override
-    public Inventory getContainer() {
+    public Container getContainer() {
         return this;
     }
 
@@ -87,8 +86,8 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implement
         Capability<?> capability = forgeProviders.getCapability(provider.getProviderClass());
         Objects.requireNonNull(provider);
         capabilities.put(capability, LazyOptional.of(provider::getInstance));
-        if (provider.getProviderClass() == Inventory.class) {
-            capabilities.put(ForgeCapabilities.ITEM_HANDLER, LazyOptional.of(() -> new InvWrapper((Inventory)provider.getInstance())));
+        if (provider.getProviderClass() == Container.class) {
+            capabilities.put(ForgeCapabilities.ITEM_HANDLER, LazyOptional.of(() -> new InvWrapper((Container)provider.getInstance())));
         } else if (provider.getProviderClass() == FluidTank.class) {
             capabilities.put(ForgeCapabilities.FLUID_HANDLER, LazyOptional.of(() -> new ForgeFluidTank((FluidTank)provider.getInstance())));
         } else if (provider.getProviderClass() == EnergyStorage.class) {

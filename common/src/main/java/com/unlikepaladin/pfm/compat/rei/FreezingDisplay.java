@@ -9,18 +9,15 @@ import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.display.DisplaySerializer;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.network.codec.PacketCodecs;
-import net.minecraft.recipe.RecipeEntry;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
 public class FreezingDisplay implements Display {
-    public static final CategoryIdentifier<FreezingDisplay> IDENTIFIER = CategoryIdentifier.of(Identifier.of(PaladinFurnitureMod.MOD_ID, "freezing"));
+    public static final CategoryIdentifier<FreezingDisplay> IDENTIFIER = CategoryIdentifier.of(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "freezing"));
     public static final DisplaySerializer<FreezingDisplay> SERIALIZER = DisplaySerializer.of(
             RecordCodecBuilder.mapCodec(instance -> instance.group(
                     EntryIngredient.codec().listOf().fieldOf("inputs").forGetter(FreezingDisplay::getInputEntries),
@@ -49,9 +46,9 @@ public class FreezingDisplay implements Display {
     private final float xp;
     public Optional<Identifier> location;
 
-    public FreezingDisplay(RecipeEntry<FreezingRecipe> recipe) {
+    public FreezingDisplay(RecipeHolder<FreezingRecipe> recipe) {
         input = Collections.singletonList(EntryIngredients.ofIngredient(recipe.value().ingredient()));
-        output = Collections.singletonList(EntryIngredients.of(recipe.value().result()));
+        output = Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess())));
         cookTime = recipe.value().getCookingTime();
         xp = recipe.value().getExperience();
         location = Optional.of(recipe.id().getValue());
@@ -94,7 +91,7 @@ public class FreezingDisplay implements Display {
     }
 
     @Override
-    public Optional<Identifier> getDisplayLocation() {
+    public Optional<ResourceLocation> getDisplayLocation() {
         return location;
     }
 

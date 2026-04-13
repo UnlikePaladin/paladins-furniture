@@ -7,12 +7,12 @@ import net.minecraft.item.BlockItem;
 
 public class BedBlockItem extends BlockItem implements PFMBuiltinItemRendererExtension {
 
-    public BedBlockItem(Block block, Settings settings) {
+    public BedBlockItem(Block block, Properties settings) {
         super(block, settings);
     }
 
     @ExpectPlatform
-    public static BlockItem getItemFactory(Block block, Settings settings) {
+    public static BlockItem getItemFactory(Block block, Properties settings) {
         throw new AssertionError();
     }
 

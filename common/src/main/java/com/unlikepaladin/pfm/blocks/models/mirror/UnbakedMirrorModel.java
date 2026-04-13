@@ -5,12 +5,11 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.*;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -19,17 +18,17 @@ import java.util.function.Function;
 @Environment(EnvType.CLIENT)
 public class UnbakedMirrorModel implements UnbakedModel {
     public static final String[] BASE_MODEL_PARTS = new String[] {"block/mirror/mirror_base", "block/mirror/mirror_top", "block/mirror/mirror_bottom", "block/mirror/mirror_left","block/mirror/mirror_right", "block/mirror/mirror_right_top", "block/mirror/mirror_left_top", "block/mirror/mirror_right_bottom", "block/mirror/mirror_left_bottom"};
-    public static final Identifier[] DEFAULT_TEXTURES = new Identifier[] {Identifier.of("minecraft","block/white_concrete"), Identifier.of("minecraft","block/glass"), Identifier.of("pfm","block/mirror")};
-    private static final Identifier PARENT = Identifier.of("block/block");
-    public static final Identifier[] MIRROR_MODEL_IDS = {Identifier.of(PaladinFurnitureMod.MOD_ID, "block/white_mirror"), Identifier.of(PaladinFurnitureMod.MOD_ID, "block/gray_mirror")};
+    public static final ResourceLocation[] DEFAULT_TEXTURES = new ResourceLocation[] {ResourceLocation.fromNamespaceAndPath("minecraft","block/white_concrete"), ResourceLocation.fromNamespaceAndPath("minecraft","block/glass"), ResourceLocation.fromNamespaceAndPath("pfm","block/mirror")};
+    private static final ResourceLocation PARENT = ResourceLocation.parse("block/block");
+    public static final ResourceLocation[] MIRROR_MODEL_IDS = {ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/white_mirror"), ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/gray_mirror")};
     private final List<String> MODEL_PARTS;
-    protected final SpriteIdentifier reflectTex;
-    protected final SpriteIdentifier glassTex;
-    protected final SpriteIdentifier frameTex;
-    public UnbakedMirrorModel(Identifier reflect, Identifier defaultFrameTexture, Identifier glass, List<String> modelParts, DyeColor color) {
-        this.reflectTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, reflect);
-        this.frameTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, defaultFrameTexture);
-        this.glassTex = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, glass);
+    protected final Material reflectTex;
+    protected final Material glassTex;
+    protected final Material frameTex;
+    public UnbakedMirrorModel(ResourceLocation reflect, ResourceLocation defaultFrameTexture, ResourceLocation glass, List<String> modelParts, DyeColor color) {
+        this.reflectTex = new Material(InventoryMenu.BLOCK_ATLAS, reflect);
+        this.frameTex = new Material(InventoryMenu.BLOCK_ATLAS, defaultFrameTexture);
+        this.glassTex = new Material(InventoryMenu.BLOCK_ATLAS, glass);
         for(String modelPartName : BASE_MODEL_PARTS){
             String s = modelPartName;
             if (color != DyeColor.WHITE)
@@ -39,14 +38,14 @@ public class UnbakedMirrorModel implements UnbakedModel {
         MODEL_PARTS = modelParts;
     }
 
-    public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
+    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : BASE_MODEL_PARTS) {
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
             }
             for (String part : BASE_MODEL_PARTS) {
                 part = part.replace("mirror", "gray_mirror");
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
             }
         }
     };
@@ -61,22 +60,22 @@ public class UnbakedMirrorModel implements UnbakedModel {
 
     @Nullable
     @Override
-    public BakedModel bake(Baker loader, Function<SpriteIdentifier, Sprite> textureGetter, ModelBakeSettings rotationContainer) {
+    public BakedModel bake(ModelBaker loader, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
         Map<String,BakedModel> bakedModels = new LinkedHashMap<>();
         for (String modelPartName: MODEL_PARTS) {
-            bakedModels.put(modelPartName, loader.bake(Identifier.of(PaladinFurnitureMod.MOD_ID, modelPartName), rotationContainer));
+            bakedModels.put(modelPartName, loader.bake(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, modelPartName), rotationContainer));
         }
         return getBakedModel(textureGetter.apply(frameTex), textureGetter.apply(glassTex), textureGetter.apply(reflectTex), rotationContainer, bakedModels, MODEL_PARTS);
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Sprite frame, Sprite glassTex, Sprite reflectTex, ModelBakeSettings settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
+    public static BakedModel getBakedModel(TextureAtlasSprite frame, TextureAtlasSprite glassTex, TextureAtlasSprite reflectTex, ModelState settings, Map<String,BakedModel> bakedModels, List<String> MODEL_PARTS) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
     public void resolve(Resolver resolver) {
         for (String c : MODEL_PARTS)
-            resolver.resolve(Identifier.of(PaladinFurnitureMod.MOD_ID, c));
+            resolver.resolve(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, c));
     }
 }
