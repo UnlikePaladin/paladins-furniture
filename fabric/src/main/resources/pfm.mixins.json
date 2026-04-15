@@ -3,23 +3,25 @@
   "package": "com.unlikepaladin.pfm.mixin.fabric",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "PFMTerrainParticleMixin",
     "PFMBlockModelShaperMixin",
     "PFMBreakingItemParticleMixin",
+    "PFMItemBlockRenderTypesFabricMixin",
     "PFMItemRendererMixin",
-    "PFMItemBlockRenderTypesFabricMixin"
+    "PFMTerrainParticleMixin"
   ],
   "mixins": [
     "PFMAbstractTagProvider$ObjectBuilderMixin",
     "PFMCFBModBlockEntitiesMixin",
     "PFMCookingPotBlockEntityMixin",
     "PFMModResourcePackCreatorMixin",
+    "PFMSaveLoaderMixin",
     "PFMSimpleReloadableResourceManagerMixin",
-    "PFMSaveLoaderMixin"
+    "RecipeOutputMixin"
   ],
   "server": [
     "PFMMinecraftServerMixin"
   ],
+  "plugin": "com.unlikepaladin.pfm.mixin.fabric.PFMMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }

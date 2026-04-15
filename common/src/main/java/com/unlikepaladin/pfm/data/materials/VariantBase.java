@@ -120,9 +120,6 @@ public abstract class VariantBase<T> implements StringRepresentable, Comparable<
         else if (Objects.equals(key, "secondary"))
             return getSecondaryBlock();
         else if (this.children.get(key) != null) {
-            if (!(children.get(key) instanceof ItemLike)) {
-                System.out.println("FAAAH");
-            }
             return (ItemLike) this.children.get(key);
         }
         return getBaseBlock();
