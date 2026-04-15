@@ -6,13 +6,13 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.SimpleFurnitureRecipe;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.crafting.SimpleCookingSerializer;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.core.Registry;
 
 public class RecipeRegistryFabric {
     public static void registerRecipes() {
-        RecipeTypes.FREEZING_RECIPE_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, RecipeTypes.FREEZING_ID, new SimpleCookingSerializer<>(FreezingRecipe::new, 200));
+        RecipeTypes.FREEZING_RECIPE_SERIALIZER = Registry.register(BuiltInRegistries.RECIPE_SERIALIZER, RecipeTypes.FREEZING_ID, new AbstractCookingRecipe.Serializer<>(FreezingRecipe::new, 200));
         RecipeTypes.FREEZING_RECIPE = Registry.register(BuiltInRegistries.RECIPE_TYPE, RecipeTypes.FREEZING_ID,  new RecipeType<FreezingRecipe>() {
             @Override
             public String toString() {return RecipeTypes.FREEZING_ID.getPath();}

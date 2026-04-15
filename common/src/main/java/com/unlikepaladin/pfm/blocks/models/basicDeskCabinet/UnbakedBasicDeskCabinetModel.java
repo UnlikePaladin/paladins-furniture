@@ -65,7 +65,7 @@ public class UnbakedBasicDeskCabinetModel implements UnbakedModel {
     };
 
     @Override
-    public void resolve(Resolver resolver) {
+    public void resolveDependencies(Resolver resolver) {
         for (ResourceLocation c : BASIC_MODEL_PARTS_BASE)
             resolver.resolve(c);
     }

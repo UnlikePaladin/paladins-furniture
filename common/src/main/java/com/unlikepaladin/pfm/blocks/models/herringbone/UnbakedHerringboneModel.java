@@ -39,7 +39,7 @@ public class UnbakedHerringboneModel implements UnbakedModel {
     };
 
     @Override
-    public void resolve(Resolver resolver) {
+    public void resolveDependencies(Resolver resolver) {
         for (ResourceLocation modelPart : TEMPLATE_MODEL) {
             resolver.resolve(modelPart);
         }

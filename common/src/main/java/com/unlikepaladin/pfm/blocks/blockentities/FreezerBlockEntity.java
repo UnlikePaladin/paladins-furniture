@@ -11,8 +11,10 @@ import net.minecraft.core.*;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.RecipeCraftingHolder;
 import net.minecraft.world.inventory.StackedContentsCompatible;
 import net.minecraft.world.item.crafting.*;
@@ -51,11 +53,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class FreezerBlockEntity extends BaseContainerBlockEntity implements MenuProvider, WorldlyContainer, RecipeCraftingHolder, StackedContentsCompatible {
-    private final ServerRecipeManager.CachedCheck<SingleRecipeInput, ? extends AbstractCookingRecipe> matchGetter;
+    private final RecipeManager.CachedCheck<SingleRecipeInput, ? extends AbstractCookingRecipe> matchGetter;
     public FreezerBlockEntity(BlockPos pos, BlockState state) {
         super(BlockEntities.FREEZER_BLOCK_ENTITY, pos, state);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
-        this.matchGetter = ServerRecipeManager.createCheck(recipeType);
+        this.matchGetter = RecipeManager.createCheck(recipeType);
     }
     private final ContainerOpenersCounter stateManager = new ContainerOpenersCounter() {
 
@@ -192,9 +194,9 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         Item item2 = item.asItem();
         fuelTimes.put(item2, fuelTime);
     }
-    private static int getFreezeTime(World world, RecipeType<? extends AbstractCookingRecipe> recipeType, FreezerBlockEntity blockEntity) {
-        SingleStackRecipeInput singleStackRecipeInput = new SingleStackRecipeInput(blockEntity.getItem(0));
-        return blockEntity.matchGetter.getFirstMatch(singleStackRecipeInput, (ServerWorld) world).map((recipe) -> recipe.value().getCookingTime()).orElse(200);
+    private static int getFreezeTime(Level world, RecipeType<? extends AbstractCookingRecipe> recipeType, FreezerBlockEntity blockEntity) {
+        SingleRecipeInput singleStackRecipeInput = new SingleRecipeInput(blockEntity.getItem(0));
+        return blockEntity.matchGetter.getRecipeFor(singleStackRecipeInput, (ServerLevel) world).map((recipe) -> recipe.value().cookingTime()).orElse(200);
     }
 
     public static boolean canUseAsFuel(ItemStack stack) {
@@ -223,7 +225,9 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         }
         return true;
     }
-    public void provideRecipeInputs(StackedItemContents finder) {
+
+    @Override
+    public void fillStackedContents(StackedItemContents finder) {
         for (ItemStack itemStack : this.inventory) {
             finder.accountStack(itemStack);
         }
@@ -335,7 +339,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         this.fuelTimeTotal = this.getFuelTime(this.inventory.get(1));
         CompoundTag nbtCompound = nbt.getCompound("RecipesUsed");
         for (String string : nbtCompound.getAllKeys()) {
-            this.recipesUsed.put(ResourceKey.of(Registries.RECIPE, ResourceLocation.parse(string)), nbtCompound.getInt(string));
+            this.recipesUsed.put(ResourceKey.create(Registries.RECIPE, ResourceLocation.parse(string)), nbtCompound.getInt(string));
         }
     }
 
@@ -347,7 +351,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         nbt.putShort("FreezeTime", (short)this.freezeTime);
         nbt.putShort("FreezeTimeTotal", (short)this.freezeTimeTotal);
         CompoundTag nbtCompound = new CompoundTag();
-        this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.getValue().toString(), integer));
+        this.recipesUsed.forEach((identifier, integer) -> nbtCompound.putInt(identifier.location().toString(), integer));
         nbt.put("RecipesUsed", nbtCompound);
     }
 
@@ -358,7 +362,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
 
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.getValue(FreezerBlock.FACING).getNormal();
+        Vec3i vec3i = state.getValue(FreezerBlock.FACING).getUnitVec3i();
         double d = (double)this.worldPosition.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
@@ -376,11 +380,11 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
     }
 
 
-    private static boolean canAcceptRecipeOutput(RegistryAccess registryManager, @Nullable RecipeEntry<? extends AbstractCookingRecipe> recipe, NonNullList<ItemStack> slots, int count) {
+    private static boolean canAcceptRecipeOutput(RegistryAccess registryManager, @Nullable RecipeHolder<? extends AbstractCookingRecipe> recipe, NonNullList<ItemStack> slots, int count) {
         if (slots.get(0).isEmpty() || recipe == null) {
             return false;
         }
-        ItemStack itemStack = recipe.value().craft(new SingleStackRecipeInput(slots.get(0)), registryManager);
+        ItemStack itemStack = recipe.value().assemble(new SingleRecipeInput(slots.get(0)), registryManager);
         if (itemStack.isEmpty()) {
             return false;
         }
@@ -397,12 +401,12 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         return itemStack2.getCount() < itemStack.getMaxStackSize();
     }
 
-    private static boolean craftRecipe(RegistryAccess registryManager, @Nullable RecipeEntry<? extends AbstractCookingRecipe> recipe, NonNullList<ItemStack> slots, int count) {
+    private static boolean craftRecipe(RegistryAccess registryManager, @Nullable RecipeHolder<? extends AbstractCookingRecipe> recipe, NonNullList<ItemStack> slots, int count) {
         if (recipe == null || !FreezerBlockEntity.canAcceptRecipeOutput(registryManager,recipe, slots, count)) {
             return false;
         }
         ItemStack itemStack = slots.get(0);
-        ItemStack itemStack2 = recipe.value().craft(new SingleStackRecipeInput(itemStack), registryManager);
+        ItemStack itemStack2 = recipe.value().assemble(new SingleRecipeInput(itemStack), registryManager);
         ItemStack itemStack3 = slots.get(2);
         if (itemStack2.is(Items.OBSIDIAN) || itemStack2.is(Items.ICE) || itemStack2.is(Items.BLUE_ICE)) {
             slots.set(0, new ItemStack(Items.BUCKET));
@@ -442,7 +446,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         }
         ItemStack itemStack = blockEntity.inventory.get(1);
         if (blockEntity.isActive() || !itemStack.isEmpty() && !blockEntity.inventory.get(0).isEmpty()) {
-            RecipeEntry<? extends AbstractCookingRecipe> recipEntry = blockEntity.matchGetter.getFirstMatch(new SingleStackRecipeInput(blockEntity.inventory.get(0)), (ServerWorld) level).orElse(null);
+            RecipeHolder<? extends AbstractCookingRecipe> recipEntry = blockEntity.matchGetter.getRecipeFor(new SingleRecipeInput(blockEntity.inventory.get(0)), (ServerLevel) level).orElse(null);
             int i = blockEntity.getMaxStackSize();
             if (!blockEntity.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(level.registryAccess(), recipEntry, blockEntity.inventory, i)) {
                 blockEntity.fuelTimeTotal = blockEntity.fuelTime = blockEntity.getFuelTime(itemStack);
@@ -452,7 +456,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
                         Item item = itemStack.getItem();
                         itemStack.shrink(1);
                         if (itemStack.isEmpty()) {
-                            Item item2 = item.getCraftingRemainingItem().getItem();
+                            Item item2 = item.getCraftingRemainder().getItem();
                             blockEntity.inventory.set(1, item2 == null ? ItemStack.EMPTY : new ItemStack(item2));
                         }
                     }

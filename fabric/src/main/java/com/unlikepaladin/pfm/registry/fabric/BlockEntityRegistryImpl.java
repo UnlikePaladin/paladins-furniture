@@ -17,6 +17,6 @@ import java.util.Set;
 public class BlockEntityRegistryImpl {
 
     public static <T extends BlockEntity> BlockEntityType<T> registerBlockEntity(String id, Block[] block, BlockEntityType.BlockEntitySupplier<T> factory) {
-        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, id), new BlockEntityType.Builder<>(factory, Set.of(block)));
+        return Registry.register(BuiltInRegistries.BLOCK_ENTITY_TYPE, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, id), new BlockEntityType<>(factory, Set.of(block)));
     }
 }

@@ -4,11 +4,15 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.FreezingRecipe;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.annotation.Nullable;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.Display;
 import me.shedaniel.rei.api.common.display.DisplaySerializer;
+import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
@@ -22,20 +26,20 @@ public class FreezingDisplay implements Display {
             RecordCodecBuilder.mapCodec(instance -> instance.group(
                     EntryIngredient.codec().listOf().fieldOf("inputs").forGetter(FreezingDisplay::getInputEntries),
                     EntryIngredient.codec().listOf().fieldOf("outputs").forGetter(FreezingDisplay::getOutputEntries),
-                    Identifier.CODEC.optionalFieldOf("location").forGetter(FreezingDisplay::getDisplayLocation),
+                    ResourceLocation.CODEC.optionalFieldOf("location").forGetter(FreezingDisplay::getDisplayLocation),
                     Codec.INT.fieldOf("cookTime").forGetter(d -> d.cookTime),
                     Codec.FLOAT.fieldOf("xp").forGetter(d -> d.xp)
             ).apply(instance, FreezingDisplay::new)),
-            PacketCodec.tuple(
-                    EntryIngredient.streamCodec().collect(PacketCodecs.toList()),
+            StreamCodec.composite(
+                    EntryIngredient.streamCodec().apply(ByteBufCodecs.list()),
                     FreezingDisplay::getInputEntries,
-                    EntryIngredient.streamCodec().collect(PacketCodecs.toList()),
+                    EntryIngredient.streamCodec().apply(ByteBufCodecs.list()),
                     FreezingDisplay::getOutputEntries,
-                    PacketCodecs.optional(Identifier.PACKET_CODEC),
+                    ByteBufCodecs.optional(ResourceLocation.STREAM_CODEC),
                     FreezingDisplay::getDisplayLocation,
-                    PacketCodecs.INTEGER,
+                    ByteBufCodecs.INT,
                     d -> d.cookTime,
-                    PacketCodecs.FLOAT,
+                    ByteBufCodecs.FLOAT,
                     d -> d.xp,
                     FreezingDisplay::new
             ));
@@ -44,17 +48,17 @@ public class FreezingDisplay implements Display {
     public List<EntryIngredient> output;
     public int cookTime;
     private final float xp;
-    public Optional<Identifier> location;
+    public Optional<ResourceLocation> location;
 
     public FreezingDisplay(RecipeHolder<FreezingRecipe> recipe) {
-        input = Collections.singletonList(EntryIngredients.ofIngredient(recipe.value().ingredient()));
-        output = Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess())));
-        cookTime = recipe.value().getCookingTime();
-        xp = recipe.value().getExperience();
-        location = Optional.of(recipe.id().getValue());
+        input = Collections.singletonList(EntryIngredients.ofIngredient(recipe.value().input()));
+        output = Collections.singletonList(EntryIngredients.of(recipe.value().result()));
+        cookTime = recipe.value().cookingTime();
+        xp = recipe.value().experience();
+        location = Optional.of(recipe.id().location());
     }
 
-    public FreezingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<Identifier> location, int cookTime, float xp) {
+    public FreezingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, int cookTime, float xp) {
         this.input = inputs;
         this.output = outputs;
         this.cookTime = cookTime;
@@ -63,10 +67,10 @@ public class FreezingDisplay implements Display {
     }
 
     public FreezingDisplay(FreezingRecipe freezingRecipe) {
-        this.input = Collections.singletonList(EntryIngredients.ofIngredient(freezingRecipe.ingredient()));
+        this.input = Collections.singletonList(EntryIngredients.ofIngredient(freezingRecipe.input()));
         this.output = Collections.singletonList(EntryIngredients.of(freezingRecipe.result()));
-        this.cookTime = freezingRecipe.getCookingTime();
-        this.xp = freezingRecipe.getExperience();
+        this.cookTime = freezingRecipe.cookingTime();
+        this.xp = freezingRecipe.experience();
         this.location = Optional.empty();
     }
 

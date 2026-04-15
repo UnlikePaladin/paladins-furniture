@@ -122,7 +122,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
             double speed = this.getDeltaMovement().horizontalDistance();
             wheelSpinAngle += (float)(speed * 200);  // Adjust multiplier to control spin speed
 
-            this.tryCheckInsideBlocks();
+            this.applyEffectsFromBlocks();
         } else {
             super.travel(movementInput);
         }

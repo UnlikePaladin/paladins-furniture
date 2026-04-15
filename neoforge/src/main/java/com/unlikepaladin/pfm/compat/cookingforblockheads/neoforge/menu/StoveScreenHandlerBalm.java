@@ -83,7 +83,7 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
                 slot.onQuickCraft(slotStack, itemStack);
             } else if (slotIndex >= 20) {
                 ItemStack smeltingResult = this.tileEntity.getSmeltingResult(slotStack);
-                if (StoveBlockEntityBalm.isItemFuel(player.getWorld(), slotStack)) {
+                if (StoveBlockEntityBalm.isItemFuel(player.level(), slotStack)) {
                     if (!this.moveItemStackTo(slotStack, 3, 4, false)) {
                         return ItemStack.EMPTY;
                     }
@@ -134,13 +134,13 @@ public class StoveScreenHandlerBalm extends AbstractContainerMenu implements ICo
     }
 
     public boolean isFuel(ItemStack itemStack) {
-        return OvenBlockEntity.isItemFuel(this.tileEntity.getWorld(), itemStack);
+        return OvenBlockEntity.isItemFuel(this.tileEntity.getLevel(), itemStack);
     }
 
     public static class SlotOvenFuel extends Slot {
         private final StoveScreenHandlerBalm menu;
 
-        public SlotOvenFuel(StoveScreenHandlerBalm menu, Inventory container, int i, int x, int y) {
+        public SlotOvenFuel(StoveScreenHandlerBalm menu, Container container, int i, int x, int y) {
             super(container, i, x, y);
             this.menu = menu;
         }

@@ -19,9 +19,7 @@ import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.repository.KnownPack;
 import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.world.flag.FeatureFlags;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
@@ -33,7 +31,6 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 
@@ -60,7 +57,7 @@ public class PaladinFurnitureModNeoForge extends PaladinFurnitureMod {
         modEventBus.addListener(EventPriority.LOW, ColorRegistryNeoForge::registerBlockColors);
         modEventBus.addListener(EventPriority.LOWEST, ColorRegistryNeoForge::registerItemColors);
         LateBlockRegistryNeoForge.addDynamicBlockRegistration(modEventBus);
-        PaladinFurnitureMod.isClientSide = FMLEnvironment.dist == Dist.CLIENT;
+        PaladinFurnitureMod.isClient = FMLEnvironment.dist == Dist.CLIENT;
         NeoForge.EVENT_BUS.addListener(NetworkRegistryNeoForge::onServerJoin);
         modEventBus.addListener(ItemGroupRegistryNeoForge::registerItemGroups);
         modEventBus.addListener(ItemGroupRegistryNeoForge::addToVanillaItemGroups);

@@ -4,6 +4,8 @@ import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -16,7 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -30,9 +32,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -93,17 +92,17 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
             return InteractionResult.CONSUME;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (world instanceof ServerWorld && blockEntity instanceof GenericStorageBlockEntity9x3) {
+        if (world instanceof ServerLevel && blockEntity instanceof GenericStorageBlockEntity9x3) {
             player.openMenu((GenericStorageBlockEntity9x3)blockEntity);
             player.awardStat(Statistics.CABINET_SEARCHED);
-            PiglinAi.angerNearbyPiglins((ServerWorld) world, player, true);
+            PiglinAi.angerNearbyPiglins((ServerLevel) world, player, true);
         }
         return InteractionResult.SUCCESS;
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-            return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+            return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
         }
 
     @Override

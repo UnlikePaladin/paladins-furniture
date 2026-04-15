@@ -22,13 +22,13 @@ import java.util.Optional;
 public class PFMSandwichableCompat {
 
     public static void toastSandwich(PFMToasterBlockEntity pfmToasterBlockEntity) {
-       /* World world = pfmToasterBlockEntity.getWorld();
+       /* Level world = pfmToasterBlockEntity.getWorld();
         List<ItemStack> items = pfmToasterBlockEntity.getItems();
         for (int i = 0; i < 2; i++) {
             SimpleContainer inv = new SimpleContainer(pfmToasterBlockEntity.getItems().get(i));
             // had to disable this as it errored, until sandwichable is updated
-         //   Optional<RecipeHolder<ToastingRecipe>> match = world.getRecipeManager().getRecipeFor(ToastingRecipe.Type.INSTANCE, new SingleRecipeInput(inv.getStack(0)), world);
-            Optional<RecipeHolder<CampfireCookingRecipe>> match = world.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(items.get(i)), world);
+         //   Optional<RecipeHolder<ToastingRecipe>> match = world.recipeAccess().getRecipeFor(ToastingRecipe.Type.INSTANCE, new SingleRecipeInput(inv.getStack(0)), world);
+            Optional<RecipeHolder<CampfireCookingRecipe>> match = world.recipeAccess().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(items.get(i)), world);
 
             boolean changed = false;
             if(match.isPresent()) {

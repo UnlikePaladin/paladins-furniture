@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -14,14 +15,12 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -72,8 +71,8 @@ public class ShowerTowelBlock extends HorizontalDirectionalBlock implements Dyea
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (direction.getOpposite() == state.getValue(FACING) && !state.canSurvive(world, pos)) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (direction.getOpposite() == state.getValue(FACING) && !state.canSurvive(levelReader, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
         return state;

@@ -11,7 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -98,7 +98,7 @@ public class KitchenDrawerBlock extends KitchenCounterBlock implements EntityBlo
             return InteractionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (world instanceof ServerWorld serverWorld && blockEntity instanceof GenericStorageBlockEntity9x3) {
+        if (world instanceof ServerLevel serverWorld && blockEntity instanceof GenericStorageBlockEntity9x3) {
             player.openMenu((GenericStorageBlockEntity9x3)blockEntity);
             player.awardStat(Statistics.DRAWER_SEARCHED);
             PiglinAi.angerNearbyPiglins(serverWorld, player, true);

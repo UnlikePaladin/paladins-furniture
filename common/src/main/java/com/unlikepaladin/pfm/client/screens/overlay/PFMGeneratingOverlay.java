@@ -2,23 +2,21 @@ package com.unlikepaladin.pfm.client.screens.overlay;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMResourceProgress;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.util.FastColor;
+import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.util.ARGB;
 import net.minecraft.client.gui.screens.Overlay;
-import net.minecraft.client.gui.screen.SplashOverlay;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderPhase;
-import net.minecraft.client.render.VertexFormat;
-import net.minecraft.client.render.VertexFormats;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.metadata.texture.TextureMetadataSection;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.SimpleTexture;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.TriState;
@@ -47,7 +45,7 @@ public class PFMGeneratingOverlay extends Overlay {
     private final Overlay parent;
     private int textureWidth, textureHeight;
     private final GLText glText;
-    private static final int PFM_ORANGE = ColorHelper.getArgb(255, 231, 95, 9);
+    private static final int PFM_ORANGE = ARGB.color(255, 231, 95, 9);
     private final GLText.GLTtext progressText;
     private final GLText.GLTtext notificationText;
     private String lastNotification = null;
@@ -76,7 +74,7 @@ public class PFMGeneratingOverlay extends Overlay {
         for (int x = 0; x < bufferedImage.getWidth(); x++) {
             for (int y = 0; y < bufferedImage.getHeight(); y++) {
                 int argb = bufferedImage.getRGB(x, y);
-                nativeImage.setColorArgb(x, y, argb);
+                nativeImage.setPixel(x, y, argb);
             }
         }
 
@@ -170,7 +168,7 @@ public class PFMGeneratingOverlay extends Overlay {
     private void renderProgressBar(GuiGraphics context, int minX, int minY, int maxX, int maxY, float opacity) {
         int i = Mth.ceil((float)(maxX - minX - 2) * this.progress);
         int j = Math.round(opacity * 255.0f);
-        int k = ColorHelper.getArgb(j, 255, 255, 255);
+        int k = ARGB.color(j, 255, 255, 255);
         context.fill(minX + 2, minY + 2, minX + i, maxY - 2, k);
         context.fill(minX + 1, minY, maxX - 1, minY + 1, k);
         context.fill(minX + 1, maxY, maxX - 1, maxY - 1, k);
@@ -208,17 +206,17 @@ public class PFMGeneratingOverlay extends Overlay {
         }
     }
 
-    private static final RenderLayer.MultiPhase PFM_LOGO = RenderLayer.of(
+    private static final RenderType.CompositeRenderType PFM_LOGO = RenderType.create(
             "pfm_logo",
-            VertexFormats.POSITION_TEXTURE_COLOR,
-            VertexFormat.DrawMode.QUADS,
+            DefaultVertexFormat.POSITION_TEX_COLOR,
+            VertexFormat.Mode.QUADS,
             786432,
-            RenderLayer.MultiPhaseParameters.builder()
-                    .texture(new RenderPhase.Texture(pfmLogo, TriState.DEFAULT, false))
-                    .program(RenderLayer.POSITION_TEXTURE_COLOR_PROGRAM)
-                    .transparency(RenderLayer.TRANSLUCENT_TRANSPARENCY)
-                    .depthTest(RenderLayer.ALWAYS_DEPTH_TEST)
-                    .writeMaskState(RenderLayer.COLOR_MASK)
-                    .build(false)
+            RenderType.CompositeState.builder()
+                    .setTextureState(new RenderStateShard.TextureStateShard(pfmLogo, TriState.DEFAULT, false))
+                    .setShaderState(RenderType.POSITION_TEXTURE_COLOR_SHADER)
+                    .setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
+                    .setDepthTestState(RenderType.NO_DEPTH_TEST)
+                    .setWriteMaskState(RenderType.COLOR_WRITE)
+                    .createCompositeState(false)
     );
 }

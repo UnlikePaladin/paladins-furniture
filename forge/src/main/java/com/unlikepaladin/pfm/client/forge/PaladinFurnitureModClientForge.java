@@ -91,7 +91,7 @@ public class PaladinFurnitureModClientForge {
     }
 
 
-    public static void registerExtraModels(Consumer<ModelIdentifier> event) {
+    public static void registerExtraModels(Consumer<ModelResourceLocation> event) {
         for (ResourceLocation id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
             event.accept(new ModelResourceLocation(id, "block"));
         }
@@ -191,6 +191,6 @@ public class PaladinFurnitureModClientForge {
         for (ResourceLocation id : OfficeChairEntityRenderer.MODEL_IDS) {
             event.accept(new ModelResourceLocation(id, "block"));
         }
-        event.accept(new ModelIdentifier(UnbakedBedModel.BED_MODEL_ID, "block"));
+        event.accept(new ModelResourceLocation(UnbakedBedModel.BED_MODEL_ID, "block"));
     }
 }

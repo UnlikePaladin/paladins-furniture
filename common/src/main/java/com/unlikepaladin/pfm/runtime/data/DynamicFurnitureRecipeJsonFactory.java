@@ -1,23 +1,19 @@
 package com.unlikepaladin.pfm.runtime.data;
 
 import com.google.common.collect.Lists;
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.recipes.DynamicFurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.nbt.Tag;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntryList;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
@@ -126,7 +122,7 @@ public class DynamicFurnitureRecipeJsonFactory {
         return outputClass;
     }
 
-    public DynamicFurnitureRecipeJsonFactory vanillaInput(RegistryEntryList<Item> tag) {
+    public DynamicFurnitureRecipeJsonFactory vanillaInput(HolderSet<Item> tag) {
         return this.vanillaInput(Ingredient.of(tag));
     }
 
@@ -160,26 +156,26 @@ public class DynamicFurnitureRecipeJsonFactory {
         return childInput(ingredient, 1);
     }
 
-    public void offerTo(RecipeExporter exporter, RegistryKey<Recipe<?>> recipeKey) {
+    public void save(RecipeOutput exporter, ResourceKey<Recipe<?>> recipeKey) {
         if (emptyCriterion) {
-            criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.ofItems(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
+            criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.of(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
         }
 
-        Advancement.Builder advancement$builder = exporter.getAdvancementBuilder().criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeKey)).rewards(AdvancementRewards.Builder.recipe(recipeKey)).criteriaMerger(AdvancementRequirements.CriterionMerger.OR);
-        this.criteria.forEach(advancement$builder::criterion);
+        Advancement.Builder advancement$builder = exporter.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeKey)).rewards(AdvancementRewards.Builder.recipe(recipeKey)).requirements(AdvancementRequirements.Strategy.OR);
+        this.criteria.forEach(advancement$builder::addCriterion);
 
         exporter.accept(recipeKey,
                 new DynamicFurnitureRecipe(this.group == null || this.group.isBlank() ? " " : this.group,
                         new DynamicFurnitureRecipe.FurnitureOutput(outputClass, outputCount, components), supportedVariants,
                         new DynamicFurnitureRecipe.FurnitureIngredients(vanillaIngredients, variantChildren)),
-                advancement$builder.build(recipeKey.getValue().withPrefixedPath("recipes/furniture/")));
+                advancement$builder.build(recipeKey.location().withPrefix("recipes/furniture/")));
     }
 
     public void save(RecipeOutput exporter, ResourceLocation recipeId) {
         if (emptyCriterion) {
             criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.of(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
         }
-        RegistryKey<Recipe<?>> recipeKey = RegistryKey.of(RegistryKeys.RECIPE, recipeId);
+        ResourceKey<Recipe<?>> recipeKey = ResourceKey.create(Registries.RECIPE, recipeId);
         Advancement.Builder advancement$builder = exporter.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeKey)).rewards(AdvancementRewards.Builder.recipe(recipeKey)).requirements(AdvancementRequirements.Strategy.OR);
 
         this.criteria.forEach(advancement$builder::addCriterion);
@@ -188,6 +184,6 @@ public class DynamicFurnitureRecipeJsonFactory {
                 new DynamicFurnitureRecipe(this.group == null || this.group.isBlank() ? " " : this.group,
                         new DynamicFurnitureRecipe.FurnitureOutput(outputClass, outputCount, components), supportedVariants,
                         new DynamicFurnitureRecipe.FurnitureIngredients(vanillaIngredients, variantChildren)),
-                advancement$builder.build(recipeKey.getValue().withPrefixedPath("recipes/furniture/")));
+                advancement$builder.build(recipeKey.location().withPrefix("recipes/furniture/")));
     }
 }

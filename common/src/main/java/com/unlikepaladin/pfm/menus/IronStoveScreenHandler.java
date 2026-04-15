@@ -5,20 +5,17 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.recipe.RecipePropertySet;
+import net.minecraft.world.item.crafting.RecipePropertySet;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.inventory.RecipeBookType;
-import net.minecraft.recipe.book.RecipeBookType;
 import net.minecraft.world.inventory.AbstractFurnaceMenu;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.screen.ScreenHandlerType;
 
-public class IronStoveScreenHandler extends AbstractFurnaceScreenHandler {
+public class IronStoveScreenHandler extends AbstractFurnaceMenu {
     private final Container inventory;
     public IronStoveScreenHandler(int syncId, Inventory playerInventory) {
         super(ScreenHandlerIDs.IRON_STOVE_SCREEN_HANDLER, RecipeType.SMOKING, RecipePropertySet.SMOKER_INPUT, RecipeBookType.SMOKER, syncId, playerInventory);
-        this.inventory = new SimpleInventory(3);
+        this.inventory = new SimpleContainer(3);
     }
 
     public IronStoveScreenHandler(int syncId, Inventory playerInventory, Container inventory, ContainerData propertyDelegate) {

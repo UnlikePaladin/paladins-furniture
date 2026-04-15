@@ -6,25 +6,18 @@ import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.forge.PFMBakedModelGetQuadsExtension;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedOverrides;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
-import net.minecraft.client.render.model.json.ModelTransformation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.item.ModelTransformationMode;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.IQuadTransformer;
-import net.minecraftforge.client.model.QuadTransformers;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +25,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.IntStream;
 import net.minecraft.util.RandomSource;
 
@@ -298,8 +290,8 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         }
 
         @Override
-        public ItemOverrides getOverrides() {
-            return ItemOverrides.EMPTY;
+        public BakedOverrides overrides() {
+            return BakedOverrides.EMPTY;
         }
 
         @Override

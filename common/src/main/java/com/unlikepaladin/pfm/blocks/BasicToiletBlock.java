@@ -10,7 +10,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -73,7 +73,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements EntityBlo
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (!world.isClientSide) {
             player.awardStat(Statistics.TOILET_USED);
         }
@@ -83,13 +83,13 @@ public class BasicToiletBlock extends AbstractSittableBlock implements EntityBlo
             if (!player.getAbilities().instabuild)
                 player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
             world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else if (!world.isClientSide && state.getValue(TOILET_STATE) == ToiletState.EMPTY && (player.getItemInHand(hand).getItem() == Items.WATER_BUCKET)) {
             world.setBlockAndUpdate(pos, state.setValue(TOILET_STATE, ToiletState.CLEAN));
             if (!player.getAbilities().instabuild)
                 player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.BUCKET)));
             world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0f, 1.0f);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
         return super.useItemOn(stack, state, world, pos, player, hand, hit);

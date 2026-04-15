@@ -295,7 +295,7 @@ public class ModelHelper {
     }
 
     public static DyeColor getColor(ResourceLocation identifier) {
-        if (BuiltInRegistries.BLOCK.get(identifier) instanceof DyeableFurnitureBlock block) {
+        if (BuiltInRegistries.BLOCK.getValue(identifier) instanceof DyeableFurnitureBlock block) {
             return block.getPFMColor();
         }
         for (DyeColor color : DyeColor.values()) {
@@ -319,7 +319,7 @@ public class ModelHelper {
     }
 
     public static Block getWoolColor(String string) {
-        Block block = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("minecraft", string+"_wool"));
+        Block block = BuiltInRegistries.BLOCK.getValue(ResourceLocation.fromNamespaceAndPath("minecraft", string+"_wool"));
         if (block != Blocks.AIR) {
             return block;
         }

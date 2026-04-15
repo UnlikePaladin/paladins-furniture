@@ -15,19 +15,19 @@ import vazkii.patchouli.api.IVariableProvider;
 
 public class FreezingRecipeProcessor implements IComponentProcessor {
     @Override
-    public void setup(World level, IVariableProvider variables) {
+    public void setup(Level level, IVariableProvider variables) {
 
     }
 
     @Override
-    public IVariable process(World level, String key) {
+    public IVariable process(Level level, String key) {
         return null;
     }
    /* private Recipe<?> recipe;
     @Override
     public void setup(Level level, IVariableProvider variables) {
         String recipeId = variables.get("recipe", level.registryAccess()).asString();
-        RecipeManager manager = level.getRecipeManager();
+        RecipeManager manager = level.recipeAccess();
         recipe = manager.byKey(ResourceLocation.parse(recipeId)).map(RecipeHolder::value).orElse(null);
     }
 

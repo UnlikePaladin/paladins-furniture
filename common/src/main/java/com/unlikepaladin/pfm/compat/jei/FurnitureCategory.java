@@ -16,7 +16,7 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.resources.ResourceLocation;
@@ -137,7 +137,7 @@ public class FurnitureCategory implements IRecipeCategory<FurnitureRecipe> {
         List<Ingredient> ingredients = recipe.getIngredients();
         HashMap<Item, Integer> containedItems = new HashMap<>();
         for (Ingredient ingredient : ingredients) {
-            for (RegistryEntry<Item> itemRegistryEntry : ingredient.getMatchingItems()) {
+            for (Holder<Item> itemRegistryEntry : ingredient.getMatchingItems()) {
                 if (!containedItems.containsKey(itemRegistryEntry.value())) {
                     containedItems.put(itemRegistryEntry.value(), stack.getCount());
                 } else {

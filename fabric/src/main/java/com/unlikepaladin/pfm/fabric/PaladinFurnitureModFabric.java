@@ -4,7 +4,6 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.advancements.PFMCriteria;
 import com.unlikepaladin.pfm.advancements.fabric.CriteriaRegistryFabric;
 import com.unlikepaladin.pfm.blocks.BasicChairBlock;
-import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
@@ -14,7 +13,6 @@ import com.unlikepaladin.pfm.networking.SyncConfigPayload;
 import com.unlikepaladin.pfm.registry.*;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import com.unlikepaladin.pfm.registry.fabric.*;
-import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import com.unlikepaladin.pfm.utilities.fabric.PFMFileUtilImpl;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.DedicatedServerModInitializer;
@@ -30,7 +28,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.sounds.SoundEvent;
@@ -132,12 +129,12 @@ public class PaladinFurnitureModFabric extends PaladinFurnitureMod implements Mo
                 }
                 ).build()));
 
-        PaladinFurnitureMod.BUILDING_BLOCKS.setB(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS));
+        PaladinFurnitureMod.BUILDING_BLOCKS.setB(BuiltInRegistries.CREATIVE_MODE_TAB.getValue(CreativeModeTabs.BUILDING_BLOCKS));
     }
 
     @Override
     public void onInitializeServer() {
-        PaladinFurnitureMod.isClientSide = false;
+        PaladinFurnitureMod.isClient = false;
         registerLateEntries();
         replaceHomePOIStates();
     }

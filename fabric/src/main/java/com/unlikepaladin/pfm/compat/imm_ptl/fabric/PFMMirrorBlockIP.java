@@ -12,7 +12,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.WorldView;
@@ -52,7 +52,7 @@ public class PFMMirrorBlockIP extends MirrorBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         if (PaladinFurnitureMod.getPFMConfig().doImmersivePortalsMirrorsSpawn() && !world.isClientSide()) {
             List<PFMMirrorEntity> mirrorBlockEntities = new ArrayList<>();
             if (canConnect(neighborState, state)) {
@@ -67,7 +67,7 @@ public class PFMMirrorBlockIP extends MirrorBlock {
        //     PFMMirrorEntity.createMirror((ServerLevel) world, pos, state.getValue(FACING).getOpposite());
           //  world.blockUpdated(pos, state.getBlock());
         }
-        return super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 }
 */

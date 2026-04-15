@@ -2,8 +2,8 @@ package com.unlikepaladin.pfm.items;
 
 import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.item.BlockItem;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.BlockItem;
 
 public class BedBlockItem extends BlockItem implements PFMBuiltinItemRendererExtension {
 

@@ -12,7 +12,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.balm.api.container.ContainerUtils;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.tag.ModItemTags;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -32,7 +32,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 
 public class PFMCookingForBlockHeadsCompat {
-    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE).registryKey(LateBlockRegistry.getBlockRegistryKey("cooking_table")));
+    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.GRAY_CONCRETE).setId(LateBlockRegistry.getBlockRegistryKey("cooking_table")));
     public static TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, StoveScreenHandlerBalm> getStoveScreenHandler() {
         return (integer, playerInventory, data) -> {
             BlockPos pos = data.pos();
@@ -64,10 +64,10 @@ public class PFMCookingForBlockHeadsCompat {
         }
     }
 
-    public static ActionResult onUseStove(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public static InteractionResult onUseStove(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack heldItem = player.getItemInHand(hand);
         if (heldItem.getItem() == ModItems.heatingUnit) {
-            return ActionResult.PASS_TO_DEFAULT_BLOCK_ACTION;
+            return InteractionResult.TRY_WITH_EMPTY_HAND;
         } else if (hit.getDirection() == Direction.UP && heldItem.is(ModItemTags.UTENSILS)) {
             Direction stateFacing = state.getValue(StoveBlock.FACING);
             double hx =  (hit.getLocation().x - hit.getBlockPos().getX());
@@ -102,29 +102,29 @@ public class PFMCookingForBlockHeadsCompat {
                     tileOven.setToolItem(index, toolItem);
                 }
             }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             StoveBlockEntityBalm oven = (StoveBlockEntityBalm)level.getBlockEntity(pos);
             if (hit.getDirection() == state.getValue(BlockStateProperties.HORIZONTAL_FACING) && oven != null) {
                 if (player.isShiftKeyDown()) {
-                    return ActionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
 
                 if (!heldItem.isEmpty() && oven.getSmeltingResult(heldItem) != ItemStack.EMPTY) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getInputContainer(), heldItem, false);
                     player.setItemInHand(hand, heldItem);
 
-                    return ActionResult.SUCCESS;
-                } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(heldItem)) {
+                    return InteractionResult.SUCCESS;
+                } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(level, heldItem)) {
                     heldItem = ContainerUtils.insertItemStacked(oven.getFuelContainer(), heldItem, false);
                     player.setItemInHand(hand, heldItem);
-                    return ActionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
             if (!level.isClientSide) {
                 Balm.getNetworking().openGui(player, oven);
             }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
     }
 }

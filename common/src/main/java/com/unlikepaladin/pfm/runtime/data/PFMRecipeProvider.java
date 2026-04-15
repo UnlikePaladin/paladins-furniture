@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.runtime.data;
 
 import com.google.common.collect.Sets;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
@@ -17,22 +16,22 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.Util;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
-import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
@@ -44,7 +43,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.resources.ResourceLocation;
@@ -53,8 +51,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
 import java.util.*;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 
 // TODO : Remake EMI screen to work with the new recipe system
 
@@ -77,15 +73,15 @@ public class PFMRecipeProvider extends PFMProvider {
         createWriter();
 
         Path path = getParent().getOutput();
-        Set<RegistryKey<Recipe<?>>> set = Sets.newHashSet();
+        Set<ResourceKey<Recipe<?>>> set = Sets.newHashSet();
         WorkbenchScreenHandler.ALL_RECIPES.clear();
         WorkbenchScreenHandler.CRAFTABLE_RECIPES.clear();
-        RegistryWrapper.WrapperLookup lookup = createWrapperLookup();
-        RegistryOps<JsonElement> ops = lookup.getOps(JsonOps.INSTANCE);
+        HolderLookup.Provider lookup = createWrapperLookup();
+        RegistryOps<JsonElement> ops = lookup.createSerializationContext(JsonOps.INSTANCE);
 
-        generateRecipes(new RecipeExporter() {
+        generateRecipes(new RecipeOutput() {
             @Override
-            public void accept(RegistryKey<Recipe<?>> recipeId, Recipe<?> recipe, @Nullable AdvancementHolder advancementEntry) {
+            public void accept(ResourceKey<Recipe<?>> recipeId, Recipe<?> recipe, @Nullable AdvancementHolder advancementEntry) {
                 if (!set.add(recipeId)) {
                     getParent().getLogger().error("Duplicate recipe " + recipeId);
                     throw new IllegalStateException("Duplicate recipe " + recipeId);
@@ -94,10 +90,10 @@ public class PFMRecipeProvider extends PFMProvider {
                     getParent().getLogger().error("Recipe Json Provider is null");
                     throw new IllegalStateException("Recipe Json Provider is null");
                 }
-                Path recipePath = path.resolve("data/" + recipeId.getValue().getNamespace() + "/recipe/" + recipeId.getValue().getPath() + ".json");
+                Path recipePath = path.resolve("data/" + recipeId.location().getNamespace() + "/recipe/" + recipeId.location().getPath() + ".json");
                 enqueueJsonWrite(getWriteQueue(), recipePath, Recipe.CODEC.encodeStart(ops, recipe).getOrThrow(IllegalStateException::new));
                 if (advancementEntry != null) {
-                    Path advancementPath = path.resolve("data/" + recipeId.getValue().getNamespace() + "/advancement/" + advancementEntry.id().getPath() + ".json");enqueueJsonWrite(getWriteQueue(), advancementPath, Advancement.CODEC.encodeStart(ops, advancementEntry.value()).getOrThrow(IllegalStateException::new));
+                    Path advancementPath = path.resolve("data/" + recipeId.location().getNamespace() + "/advancement/" + advancementEntry.id().getPath() + ".json");enqueueJsonWrite(getWriteQueue(), advancementPath, Advancement.CODEC.encodeStart(ops, advancementEntry.value()).getOrThrow(IllegalStateException::new));
                 }
             }
 
@@ -107,7 +103,7 @@ public class PFMRecipeProvider extends PFMProvider {
             }
 
             @Override
-            public void addRootAdvancement() {
+            public void includeRootAdvancement() {
 
             }
         });
@@ -394,7 +390,7 @@ public class PFMRecipeProvider extends PFMProvider {
     public Block getVanillaBed(Block block) {
         if (block instanceof SimpleBedBlock){
             String color = ((SimpleBedBlock) block).getPFMColor().getName();
-            return BuiltInRegistries.BLOCK.get(ResourceLocation.parse("minecraft:" + color + "_bed"));
+            return BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse("minecraft:" + color + "_bed"));
         }
         return null;
     }
@@ -481,7 +477,7 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static void offerHerringbonePlanks(ItemLike output, Item baseMaterial, RecipeOutput exporter) {
-        ShapedRecipeBuilder.shaped(createWrapperLookup().getOrThrow(RegistryKeys.ITEM), RecipeCategory.BUILDING_BLOCKS, output, 4).define('X', baseMaterial).pattern("XX").pattern("XX").unlockedBy("has_wood_slabs", conditionsFromItem(baseMaterial)).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
+        ShapedRecipeBuilder.shaped(createWrapperLookup().lookupOrThrow(Registries.ITEM), RecipeCategory.BUILDING_BLOCKS, output, 4).define('X', baseMaterial).pattern("XX").pattern("XX").unlockedBy("has_wood_slabs", conditionsFromItem(baseMaterial)).save(exporter, ResourceKey.create(Registries.RECIPE ,ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", ""))));
     }
 
     public static void offerDinnerTableRecipe(Class<? extends Block> output, String legMaterial, String baseMaterial, List<ResourceLocation> variants, RecipeOutput exporter) {
@@ -515,17 +511,17 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     public static void offerSimpleBedRecipe(Class<? extends Block> output, String legMaterial, List<ResourceLocation> variants, Ingredient baseBed, RecipeOutput exporter) {
-        DyeColor color = ((BedBlock)((BlockItem)Arrays.stream(baseBed.getItems()).findFirst().get().getItem()).getBlock()).getColor();
+        DyeColor color = ((BedBlock)((BlockItem)(baseBed.items().stream().findFirst().get().value())).getBlock()).getColor();
         DataComponentPatch.Builder builder = DataComponentPatch.builder();
         builder.set(PFMComponents.COLOR_COMPONENT, color);
         DynamicFurnitureRecipeJsonFactory.create(output, 1, variants, builder.build()).group("bedroom").childInput(legMaterial, 5).vanillaInput(baseBed, 1).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US) + "_"+ color.getSerializedName()));
     }
 
     public static void offerClassicBedRecipe(Class<? extends Block> output, String legMaterial, List<ResourceLocation> variants, Ingredient baseBed, String fence, RecipeOutput exporter) {
-        DyeColor color = ((BedBlock)((BlockItem)Arrays.stream(baseBed.getItems()).findFirst().get().getItem()).getBlock()).getColor();
+        DyeColor color = ((BedBlock)((BlockItem)(baseBed.items().stream().findFirst().get().value())).getBlock()).getColor();
         DataComponentPatch.Builder builder = DataComponentPatch.builder();
         builder.set(PFMComponents.COLOR_COMPONENT, color);
-        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants, builder.build()).group("bedroom").childInput(legMaterial, 3).childInput(fence, 2).vanillaInput(baseBed, 1).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US) + "_"+ ((BedBlock)((BlockItem)Arrays.stream(baseBed.getItems()).findFirst().get().getItem()).getBlock()).getColor()));
+        DynamicFurnitureRecipeJsonFactory.create(output, 1, variants, builder.build()).group("bedroom").childInput(legMaterial, 3).childInput(fence, 2).vanillaInput(baseBed, 1).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.getSimpleName().replaceAll("([a-z])([A-Z])", "$1_$2").toLowerCase(Locale.US) + "_"+ color.getSerializedName()));
     }
 
     public static void offerSimpleBunkLadderRecipe(Class<? extends Block> output, String base, List<ResourceLocation> variants, RecipeOutput exporter) {
@@ -644,18 +640,14 @@ public class PFMRecipeProvider extends PFMProvider {
         SimpleFurnitureRecipeJsonFactory.create(output, 2).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base,3).input(Ingredient.of(Items.GLASS), 2).save(exporter, ResourceLocation.fromNamespaceAndPath("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
-    private static Criterion<InventoryChangeTrigger.TriggerInstance> conditionsFromItem(MinMaxBounds.Ints count, ItemLike item) {
-        return conditionsFromItemPredicates(ItemPredicate.Builder.item().of(item).withCount(count).build());
-    }
-
     public static Criterion<InventoryChangeTrigger.TriggerInstance> conditionsFromItem(ItemLike item) {
-        return conditionsFromItemPredicates(ItemPredicate.Builder.item().of(createWrapperLookup().getOrThrow(RegistryKeys.ITEM), item).build());
+        return conditionsFromItemPredicates(ItemPredicate.Builder.item().of(createWrapperLookup().lookupOrThrow(Registries.ITEM), item).build());
     }
 
     public static Criterion<InventoryChangeTrigger.TriggerInstance> conditionsFromIngredient(Ingredient item) {
         List<Item> items = new ArrayList<>();
-        for (RegistryEntry<Item> item1:
-                item.getMatchingItems()) {
+        for (Holder<Item> item1:
+                item.items()) {
             if (items.contains(item1.value()))
                 continue;
             items.add(item1.value());
@@ -664,7 +656,7 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     private static Criterion<InventoryChangeTrigger.TriggerInstance> conditionsFromTag(TagKey<Item> tag) {
-        return conditionsFromItemPredicates(ItemPredicate.Builder.item().of(createWrapperLookup().getOrThrow(RegistryKeys.ITEM), tag).build());
+        return conditionsFromItemPredicates(ItemPredicate.Builder.item().of(createWrapperLookup().lookupOrThrow(Registries.ITEM), tag).build());
     }
 
     public static Criterion<InventoryChangeTrigger.TriggerInstance> conditionsFromPredicates(ItemPredicate.Builder... predicates) {
@@ -676,9 +668,9 @@ public class PFMRecipeProvider extends PFMProvider {
     }
 
     private static String getItemPath(Ingredient item) {
-        List<RegistryEntry<Item>> n = item.getItems();
+        List<Holder<Item>> n = item.items();
         if (!n.isEmpty()) {
-            return BuiltInRegistries.ITEM.getKey(n[0].getItem()).getPath();
+            return BuiltInRegistries.ITEM.getKey(n.getFirst().value()).getPath();
         } else {
             return item.toString();
         }

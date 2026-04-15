@@ -2,6 +2,8 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,10 +18,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockAndTintGetter;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -66,8 +64,8 @@ public class ClassicTableBlock extends Block {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override

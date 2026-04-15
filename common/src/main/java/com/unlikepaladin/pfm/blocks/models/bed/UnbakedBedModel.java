@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.blocks.models.bed;
 
+import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
@@ -80,7 +81,7 @@ public class UnbakedBedModel implements UnbakedModel {
         }
     };
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getTextureDependencies(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         return Collections.emptyList();
     }
 
@@ -116,8 +117,8 @@ public class UnbakedBedModel implements UnbakedModel {
     }
 
     @Override
-    public void resolve(Resolver resolver) {
-        for (Identifier c : BED_MODEL_PARTS_BASE)
+    public void resolveDependencies(Resolver resolver) {
+        for (ResourceLocation c : BED_MODEL_PARTS_BASE)
             resolver.resolve(c);
     }
 }

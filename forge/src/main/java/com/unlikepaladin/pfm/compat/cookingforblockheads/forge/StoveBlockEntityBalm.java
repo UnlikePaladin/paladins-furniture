@@ -293,9 +293,9 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     public <T extends RecipeInput> ItemStack getSmeltingResult(RecipeType<? extends Recipe<T>> recipeType, T recipeInput) {
         MinecraftServer server = this.level.getServer();
         if (server != null) {
-            RecipeEntry<? extends Recipe<T>> recipe = server.getRecipeManager().getRecipeFor(recipeType, recipeInput, this.level).orElse(null);
+            RecipeHolder<? extends Recipe<T>> recipe = server.getRecipeManager().getRecipeFor(recipeType, recipeInput, this.level).orElse(null);
             if (recipe != null) {
-                ItemStack result = recipe.value().craft(recipeInput, this.level.registryAccess());
+                ItemStack result = recipe.value().assemble(recipeInput, this.level.registryAccess());
                 if (!result.isEmpty() && result.has(DataComponents.FOOD)) {
                     return result;
                 }
@@ -531,7 +531,7 @@ public class StoveBlockEntityBalm extends BalmBlockEntity implements KitchenItem
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.getValue(BlockStateProperties.HORIZONTAL_FACING).getNormal();
+        Vec3i vec3i = state.getValue(BlockStateProperties.HORIZONTAL_FACING).getUnitVec3i();
         double d = (double)this.worldPosition.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;

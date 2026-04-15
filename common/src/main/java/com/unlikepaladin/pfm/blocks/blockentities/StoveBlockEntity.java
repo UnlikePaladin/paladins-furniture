@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.entity.LivingEntity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.SimpleContainer;
@@ -26,7 +26,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -40,7 +40,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -87,7 +87,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.getValue(BlockStateProperties.HORIZONTAL_FACING).getNormal();
+        Vec3i vec3i = state.getValue(BlockStateProperties.HORIZONTAL_FACING).getUnitVec3i();
         double d = (double)this.worldPosition.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
@@ -119,7 +119,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         if (this.itemsBeingCooked.stream().noneMatch(ItemStack::isEmpty)) {
             return Optional.empty();
         }
-        return ((ServerWorld)this.level).getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(item), this.level);
+        return ((ServerLevel)this.level).recipeAccess().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(item), this.level);
     }
 
     @Override
@@ -210,7 +210,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
                 }
                 if (stoveBlockEntity.cookingTimes[i] < stoveBlockEntity.cookingTotalTimes[i]) continue;
                 SingleRecipeInput inventory = new SingleRecipeInput(itemStack);
-                ItemStack itemStack2 = level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, level).map(campfireCookingRecipe -> campfireCookingRecipe.value().assemble(inventory, level.registryAccess())).orElse(itemStack);
+                ItemStack itemStack2 = level.recipeAccess().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, level).map(campfireCookingRecipe -> campfireCookingRecipe.value().assemble(inventory, level.registryAccess())).orElse(itemStack);
                     if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
                         Containers.dropItemStack(level, pos.getX(), pos.above().getY(), pos.getZ(), itemStack2);
                         stoveBlockEntity.itemsBeingCooked.set(i, ItemStack.EMPTY);
@@ -262,20 +262,20 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity {
         }
     }
 
-    public boolean addItem(ServerWorld world, @Nullable LivingEntity entity, ItemStack stack) {
+    public boolean addItem(ServerLevel world, @Nullable LivingEntity entity, ItemStack stack) {
         for (int i = 0; i < this.itemsBeingCooked.size(); i++) {
             ItemStack itemStack = this.itemsBeingCooked.get(i);
             if (itemStack.isEmpty()) {
-                Optional<RecipeEntry<CampfireCookingRecipe>> optional = world.getRecipeManager()
-                        .getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(stack), world);
+                Optional<RecipeHolder<CampfireCookingRecipe>> optional = world.recipeAccess()
+                        .getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(stack), world);
                 if (optional.isEmpty()) {
                     return false;
                 }
 
-                this.cookingTotalTimes[i] = ((CampfireCookingRecipe)((RecipeEntry<?>)optional.get()).value()).getCookingTime();
+                this.cookingTotalTimes[i] = ((CampfireCookingRecipe)((RecipeHolder<?>)optional.get()).value()).cookingTime();
                 this.cookingTimes[i] = 0;
-                this.itemsBeingCooked.set(i, stack.splitUnlessCreative(1, entity));
-                world.emitGameEvent(GameEvent.BLOCK_CHANGE, this.getPos(), GameEvent.Emitter.of(entity, this.getCachedState()));
+                this.itemsBeingCooked.set(i, stack.consumeAndReturn(1, entity));
+                world.gameEvent(GameEvent.BLOCK_CHANGE, this.getBlockPos(), GameEvent.Context.of(entity, this.getBlockState()));
                 this.sendBlockUpdated();
                 return true;
             }

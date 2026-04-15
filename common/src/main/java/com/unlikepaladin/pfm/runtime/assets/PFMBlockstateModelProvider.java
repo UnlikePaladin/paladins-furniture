@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;
 import java.util.function.Consumer;
@@ -45,7 +44,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         startProviderRun();
         createWriter();
 
-        Path path = getParent().getResultItem();
+        Path path = getParent().getOutput();
 
         Consumer<BlockStateGenerator> blockStateSupplierConsumer = blockStateSupplier -> {
             Path jsonPath = getBlockStateJsonPath(path, blockStateSupplier.getBlock());
@@ -86,7 +85,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         return root.resolve("assets/" + id.getNamespace() + "/models/" + id.getPath() + ".json");
     }
 
-    private static final Identifier replaceable = Identifier.of("block/stone");
+    private static final ResourceLocation replaceable = ResourceLocation.parse("block/stone");
 
     static class PFMBlockStateModelGenerator {
         public static Map<ModelTemplate, ResourceLocation> ModelIDS = new HashMap<>();
@@ -349,7 +348,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
                     ids.add(id);
                     this.blockStateCollector.accept(stateSupplierBiFunction.apply(block, ids));
                     generatedStates.add(BuiltInRegistries.BLOCK.getKey(block));
-                    Identifier itemModelId = PaladinFurnitureMod.getLoader() == PaladinFurnitureMod.Loader.FORGE ? Identifier.of("minecraft:builtin/entity") : replaceable;
+                    ResourceLocation itemModelId = PaladinFurnitureMod.getLoader() == PaladinFurnitureMod.Loader.FORGE ? ResourceLocation.parse("minecraft:builtin/entity") : replaceable;
                     PFMBlockstateModelProvider.modelPathMap.put(block, itemModelId);
                 }});
             });

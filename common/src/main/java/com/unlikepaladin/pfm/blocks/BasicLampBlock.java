@@ -7,8 +7,9 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.items.LightSwitchItem;
 import com.unlikepaladin.pfm.items.PFMComponents;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,28 +19,23 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
 public class BasicLampBlock extends PowerableBlock implements EntityBlock {
@@ -127,11 +123,11 @@ public class BasicLampBlock extends PowerableBlock implements EntityBlock {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (stack.getItem() instanceof LightSwitchItem)
-            return ItemInteractionResult.PASS;
+            return InteractionResult.PASS;
 
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override
@@ -158,8 +154,8 @@ public class BasicLampBlock extends PowerableBlock implements EntityBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        return direction.getAxis().isVertical() && neighborState.getBlock() instanceof BasicLampBlock ? state.setValue(LIT, neighborState.getValue(LIT)).setValue(POWERLOCKED, neighborState.getValue(POWERLOCKED)) : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        return direction.getAxis().isVertical() && neighborState.getBlock() instanceof BasicLampBlock ? state.setValue(LIT, neighborState.getValue(LIT)).setValue(POWERLOCKED, neighborState.getValue(POWERLOCKED)) : super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override

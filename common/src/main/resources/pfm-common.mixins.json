@@ -10,14 +10,12 @@
     "PFMPointOfInterestTypeAccessor",
     "PFMPointOfInterestTypesAccessor",
     "PFMServerRecipeManagerMixin",
-    "PFMTextureKeyFactory",
     "ServerRecipeManagerAccessor"
   ],
   "server": [
     "PFMMixinDedicatedServer"
   ],
   "client": [
-    "PFMSpriteLoaderMixin",
     "PFMBlockModelRendererAccessor",
     "PFMLanguageManagerAccessor",
     "PFMLoadingOverlayMixin",
@@ -25,10 +23,12 @@
     "PFMMissingSpriteAccessor",
     "PFMMixinClientPacketListener",
     "PFMModelManagerMixin",
-    "PFMSimpleReloadableResourceManagerMixin",
     "PFMNativeImageAccessor",
+    "PFMSimpleReloadableResourceManagerMixin",
+    "PFMSpriteAtlasTextureMixin",
     "PFMSpriteContentsAccessor",
     "PFMSpriteContentsMixin",
+    "PFMSpriteLoaderMixin",
     "PFMTextureAtlasSpriteMixin",
     "PFMTextureSlotFactory",
     "PFMTitleScreenMixin"

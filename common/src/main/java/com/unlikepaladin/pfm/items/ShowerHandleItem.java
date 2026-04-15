@@ -11,7 +11,6 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -37,17 +36,17 @@ public class ShowerHandleItem extends BlockItem {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (world.isClientSide) {
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
         if (player.isShiftKeyDown()) {
             stack.remove(DataComponents.BLOCK_ENTITY_DATA);
             createNbt(stack);
-            return ActionResult.SUCCESS.withNewHandStack(stack);
+            return InteractionResult.SUCCESS.heldItemTransformedTo(stack);
         }
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override

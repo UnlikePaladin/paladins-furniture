@@ -50,8 +50,8 @@ public class UnbakedMirrorModel implements UnbakedModel {
         }
     };
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
-        List<SpriteIdentifier> list = new ArrayList<>(2);
+    public Collection<Material> getTextureDependencies(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+        List<Material> list = new ArrayList<>(2);
         list.add(glassTex);
         list.add(frameTex);
         list.add(reflectTex);
@@ -74,7 +74,7 @@ public class UnbakedMirrorModel implements UnbakedModel {
     }
 
     @Override
-    public void resolve(Resolver resolver) {
+    public void resolveDependencies(Resolver resolver) {
         for (String c : MODEL_PARTS)
             resolver.resolve(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, c));
     }

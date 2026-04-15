@@ -3,20 +3,20 @@ package com.unlikepaladin.pfm.menus;
 import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import com.unlikepaladin.pfm.menus.slots.GenericOutputSlot;
 import com.unlikepaladin.pfm.menus.slots.FreezerFuelSlot;
-import com.unlikepaladin.pfm.recipes.FreezingRecipe;
+import com.unlikepaladin.pfm.registry.RecipeTypes;
+import net.minecraft.recipebook.ServerPlaceRecipe;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+
+import java.util.List;
 
 public abstract class AbstractFreezerScreenHandler extends RecipeBookMenu{
     private final Container container;
@@ -41,7 +41,7 @@ public abstract class AbstractFreezerScreenHandler extends RecipeBookMenu{
         container.startOpen(playerInventory.player);
         this.dataAccess = dataAccess;
         this.level = playerInventory.player.getCommandSenderWorld();
-        this.recipePropertySet = this.world.getRecipeManager().getPropertySet(RecipeTypes.FREEZING_INPUT);
+        this.recipePropertySet = this.level.recipeAccess().propertySet(RecipeTypes.FREEZING_INPUT);
         this.addSlot(new Slot(container, 0, 56, 17));
         this.addSlot(new FreezerFuelSlot(this, container, 1, 56, 53));
         this.addSlot(new GenericOutputSlot(playerInventory.player, container, 2, 116, 35,0));
@@ -101,7 +101,7 @@ public abstract class AbstractFreezerScreenHandler extends RecipeBookMenu{
     }
 
     protected boolean isFreezeable(ItemStack itemStack) {
-        return this.recipePropertySet.canUse(itemStack);
+        return this.recipePropertySet.test(itemStack);
     }
 
     public boolean isFuel(ItemStack itemStack) {
@@ -135,13 +135,13 @@ public abstract class AbstractFreezerScreenHandler extends RecipeBookMenu{
     }
 
     @Override
-    public boolean shouldMoveToInventory(Slot slot) {
-        return slot.id != 1;
+    public boolean canDragTo(Slot slot) {
+        return slot.index != 1;
     }
 
     @Override
-    public boolean canInsertIntoSlot(ItemStack stack, Slot slot) {
-        return slot.id != 1;
+    public boolean canTakeItemForPickAll(ItemStack itemStack, Slot slot) {
+        return slot.index != 1;
     }
 
     @Override
@@ -150,22 +150,26 @@ public abstract class AbstractFreezerScreenHandler extends RecipeBookMenu{
         this.container.stopOpen(player);
     }
 
-    public AbstractRecipeScreenHandler.PostFillAction fillInputSlots(boolean craftAll, boolean creative, RecipeEntry<?> recipe, final ServerWorld world, PlayerInventory inventory) {
+    @Override
+    public PostPlaceAction handlePlacement(boolean craftAll, boolean creative, RecipeHolder<?> recipe, ServerLevel world, Inventory inventory) {
         final List<Slot> list = List.of(this.getSlot(0), this.getSlot(2));
-        RecipeEntry<AbstractCookingRecipe> recipeEntry = (RecipeEntry<AbstractCookingRecipe>) recipe;
-        return InputSlotFiller.fill(new InputSlotFiller.Handler<>() {
-            public void populateRecipeFinder(RecipeFinder finder) {
-                AbstractFreezerScreenHandler.this.populateRecipeFinder(finder);
+        RecipeHolder<AbstractCookingRecipe> recipeEntry = (RecipeHolder<AbstractCookingRecipe>) recipe;
+        return ServerPlaceRecipe.placeRecipe(new ServerPlaceRecipe.CraftingMenuAccess<>() {
+            @Override
+            public void fillCraftSlotsStackedContents(StackedItemContents finder) {
+                AbstractFreezerScreenHandler.this.fillCraftSlotsStackedContents(finder);
             }
 
-            public void clear() {
+            @Override
+            public void clearCraftingContent() {
                 list.forEach((slot) -> {
-                    slot.setStackNoCallbacks(ItemStack.EMPTY);
+                    slot.set(ItemStack.EMPTY);
                 });
             }
 
-            public boolean matches(RecipeEntry<AbstractCookingRecipe> entry) {
-                return entry.value().matches(new SingleStackRecipeInput(AbstractFreezerScreenHandler.this.inventory.getStack(0)), world);
+            @Override
+            public boolean recipeMatches(RecipeHolder<AbstractCookingRecipe> entry) {
+                return entry.value().matches(new SingleRecipeInput(AbstractFreezerScreenHandler.this.container.getItem(0)), world);
             }
         }, 1, 1, List.of(this.getSlot(0)), list, inventory, recipeEntry, craftAll, creative);
     }

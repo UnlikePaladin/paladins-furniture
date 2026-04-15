@@ -29,21 +29,21 @@ public class BlockItemRegistryImpl {
     public static void registerBlockPlatformSpecific(String blockId, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerBlockItemPlatformSpecific(blockId, block, new Tuple<>("building_blocks", BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS)));
+            registerBlockItemPlatformSpecific(blockId, block, new Tuple<>("building_blocks", BuiltInRegistries.CREATIVE_MODE_TAB.getValue(CreativeModeTabs.BUILDING_BLOCKS)));
         }
         blocks.put(blockId, block);
     }
 
     public static void registerBlockItemPlatformSpecific(String itemName, Block block, Tuple<String, CreativeModeTab> group) {
         if (AbstractSittableBlock.isWoodBased(block.defaultBlockState())) {
-            registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Properties().useBlockPrefixedTranslationKey().registryKey(LateBlockRegistry.getItemRegistryKey(itemName))) {
+            registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Properties().useBlockDescriptionPrefix().setId(LateBlockRegistry.getItemRegistryKey(itemName))) {
                 @Override
                 public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType) {
                     return 300;
                 }
             }, group);
         }
-        registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Properties().useBlockPrefixedTranslationKey().registryKey(LateBlockRegistry.getItemRegistryKey(itemName))), group);
+        registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Properties().useBlockDescriptionPrefix().setId(LateBlockRegistry.getItemRegistryKey(itemName))), group);
     }
 
     public static boolean isModLoaded(String modId) {

@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
 import com.unlikepaladin.pfm.registry.Statistics;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
@@ -13,23 +14,17 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
@@ -55,7 +50,7 @@ public class XboxFridgeBlock extends FridgeBlock
             return InteractionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (world instanceof ServerWorld serverWorld && blockEntity instanceof FridgeBlockEntity) {
+        if (world instanceof ServerLevel serverWorld && blockEntity instanceof FridgeBlockEntity) {
             player.openMenu((FridgeBlockEntity)blockEntity);
             player.awardStat(Statistics.FRIDGE_OPENED);
             PiglinAi.angerNearbyPiglins(serverWorld, player, true);
@@ -76,7 +71,7 @@ public class XboxFridgeBlock extends FridgeBlock
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         DoubleBlockHalf doubleBlockHalf = state.getValue(HALF);
         if (direction.getAxis() == Direction.Axis.Y && doubleBlockHalf == DoubleBlockHalf.LOWER == (direction == Direction.UP)) {
             if (neighborState.is(this) && neighborState.getValue(HALF) != doubleBlockHalf) {
@@ -101,7 +96,7 @@ public class XboxFridgeBlock extends FridgeBlock
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockPos blockPos = ctx.getClickedPos();
         Level world = ctx.getLevel();
-        if (blockPos.getY() < world.getMaxBuildHeight() - 1 && world.getBlockState(blockPos.above()).canBeReplaced(ctx)) {
+        if (blockPos.getY() < world.getMaxY() - 1 && world.getBlockState(blockPos.above()).canBeReplaced(ctx)) {
             return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection()).setValue(OPEN, false).setValue(HALF, DoubleBlockHalf.LOWER);
         }
         return null;

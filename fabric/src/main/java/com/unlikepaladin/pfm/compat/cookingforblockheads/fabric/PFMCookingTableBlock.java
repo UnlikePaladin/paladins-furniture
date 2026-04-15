@@ -5,7 +5,7 @@ import net.blay09.mods.balm.api.Balm;
 import net.blay09.mods.cookingforblockheads.block.entity.CookingTableBlockEntity;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.util.ItemUtils;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -60,18 +60,18 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected ActionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         if (!itemStack.isEmpty()) {
             BlockEntity blockEntity = level.getBlockEntity(pos);
             if (blockEntity instanceof CookingTableBlockEntity cookingTable) {
                 if (!cookingTable.hasNoFilterBook() && itemStack.getItem() == ModItems.noFilterBook) {
                     cookingTable.setNoFilterBook(itemStack.split(1));
-                    return ActionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
             }
 
         }
-        return ActionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override

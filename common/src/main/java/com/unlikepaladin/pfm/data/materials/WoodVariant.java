@@ -7,14 +7,11 @@ import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.block.BlockSetType;
 import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.level.block.Block;
 
-import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -91,14 +88,14 @@ public class WoodVariant extends VariantBase<WoodVariant> {
             };
             for (ResourceLocation r : nether_targets) {
                 if (BuiltInRegistries.BLOCK.containsKey(r)) {
-                    found = BuiltInRegistries.BLOCK.get(r);
+                    found = BuiltInRegistries.BLOCK.getValue(r);
                     break;
                 }
             }
         }
         for (ResourceLocation r : targets) {
             if (BuiltInRegistries.BLOCK.containsKey(r)) {
-                found = BuiltInRegistries.BLOCK.get(r);
+                found = BuiltInRegistries.BLOCK.getValue(r);
                 break;
             }
         }
@@ -207,8 +204,8 @@ public class WoodVariant extends VariantBase<WoodVariant> {
 
         public static Finder simple(ResourceLocation woodTypeName, ResourceLocation planksName, ResourceLocation logName) {
             return new Finder(woodTypeName,
-                    () -> BuiltInRegistries.BLOCK.get(planksName),
-                    () -> BuiltInRegistries.BLOCK.get(logName));
+                    () -> BuiltInRegistries.BLOCK.getValue(planksName),
+                    () -> BuiltInRegistries.BLOCK.getValue(logName));
         }
 
         public void addChild(String childType, String childName) {
@@ -224,11 +221,11 @@ public class WoodVariant extends VariantBase<WoodVariant> {
                 try {
                     Block plank = planksFinder.get();
                     Block log = logFinder.get();
-                    Block d = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("minecraft","air"));
+                    Block d = BuiltInRegistries.BLOCK.getValue(ResourceLocation.fromNamespaceAndPath("minecraft","air"));
                     if (plank != d && log != d && plank != null && log != null) {
                         WoodVariant w = new WoodVariant(id, plank, log);
                         for (Map.Entry<String, ResourceLocation> entry : childNames.entrySet()){
-                            Object child = BuiltInRegistries.BLOCK.getOptional(entry.getValue()).isPresent() ? BuiltInRegistries.BLOCK.get(entry.getValue()) : BuiltInRegistries.ITEM.get(entry.getValue());
+                            Object child = BuiltInRegistries.BLOCK.getOptional(entry.getValue()).isPresent() ? BuiltInRegistries.BLOCK.getValue(entry.getValue()) : BuiltInRegistries.ITEM.getValue(entry.getValue());
                             w.addChild(entry.getKey(), child);
                         }
                         return Optional.of(w);

@@ -13,7 +13,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.math.Box;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.shape.VoxelShape;
 import net.minecraft.world.level.Level;
 import qouteall.imm_ptl.core.portal.Mirror;
@@ -136,7 +136,7 @@ public class PFMMirrorEntity extends Mirror {
         return false;
     }
 
-    public static void createMirror(ServerWorld world, BlockPos glassPos, Direction facing) {
+    public static void createMirror(ServerLevel world, BlockPos glassPos, Direction facing) {
         if (!isMirrorBlock(world, glassPos, facing.getOpposite())) {
             return;
         }
@@ -159,12 +159,12 @@ public class PFMMirrorEntity extends Mirror {
             return;
         }
         pfmMirrorEntity.facing = facing;
-        Vec3d pos = Helper.getBoxSurfaceInversed(wallBox, facing.getOpposite()).getCenter();
+        Vec3 pos = Helper.getBoxSurfaceInversed(wallBox, facing.getOpposite()).getCenter();
         pos = Helper.putCoordinate(
                 pos, facing.getAxis(),
                 Helper.getCoordinate(
                         shape.innerAreaBox.getCenterVec().add(
-                                Vec3d.of(facing.getVector()).multiply(distanceToCenter)
+                                Vec3.of(facing.getVector()).multiply(distanceToCenter)
                         ),
                         facing.getAxis()
                 )
@@ -189,7 +189,7 @@ public class PFMMirrorEntity extends Mirror {
                 return null;
             }
 
-            return collisionShape.getBoundingBox().offset(Vec3d.of(blockPos));
+            return collisionShape.getBoundingBox().offset(Vec3.of(blockPos));
         }).filter(b -> b != null).reduce(Box::union).orElse(null);
     }
 }

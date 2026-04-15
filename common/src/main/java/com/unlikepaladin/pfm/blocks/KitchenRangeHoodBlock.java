@@ -2,6 +2,8 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,14 +15,11 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -72,13 +71,13 @@ public class KitchenRangeHoodBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         if (direction.getAxis().isVertical()) {
-            boolean down = world.getBlockState(pos.below()).getBlock() instanceof KitchenRangeHoodBlock;
-            boolean drawer = world.getBlockState(pos.above()).getBlock() instanceof KitchenWallDrawerSmallBlock;
+            boolean down = levelReader.getBlockState(pos.below()).getBlock() instanceof KitchenRangeHoodBlock;
+            boolean drawer = levelReader.getBlockState(pos.above()).getBlock() instanceof KitchenWallDrawerSmallBlock;
             return state.setValue(DOWN, down).setValue(DRAWER, drawer);
         }
-        return super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     protected static final VoxelShape RANGE_HOOD = Shapes.or(box(2, 4, 0,14, 16, 7),box(0, 0, 0,16, 4, 15));

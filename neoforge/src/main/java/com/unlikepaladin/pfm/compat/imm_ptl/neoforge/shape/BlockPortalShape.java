@@ -6,7 +6,7 @@ import net.minecraft.nbt.NbtList;
 import net.minecraft.util.Tuple;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.util.math.Vec3i;
 import org.apache.commons.lang3.Validate;
 import qouteall.imm_ptl.core.portal.GeometryPortalShape;
@@ -372,25 +372,25 @@ public class BlockPortalShape {
     }
 
     public void initPortalPosAxisShape(Portal portal, Direction.AxisDirection axisDirection) {
-        Vec3d center = innerAreaBox.getCenterVec();
+        Vec3 center = innerAreaBox.getCenterVec();
         portal.setPos(center.x, center.y, center.z);
 
         initPortalAxisShape(portal, center, Direction.from(axis, axisDirection));
     }
 
-    public void initPortalAxisShape(Portal portal, Vec3d center, Direction facing) {
+    public void initPortalAxisShape(Portal portal, Vec3 center, Direction facing) {
         Validate.isTrue(facing.getAxis() == axis);
 
         Pair<Direction, Direction> perpendicularDirections = Helper.getPerpendicularDirections(facing);
         Direction wDirection = perpendicularDirections.getLeft();
         Direction hDirection = perpendicularDirections.getRight();
 
-        portal.axisW = Vec3d.of(wDirection.getVector());
-        portal.axisH = Vec3d.of(hDirection.getVector());
+        portal.axisW = Vec3.of(wDirection.getVector());
+        portal.axisH = Vec3.of(hDirection.getVector());
         portal.width = Helper.getCoordinate(innerAreaBox.getSize(), wDirection.getAxis());
         portal.height = Helper.getCoordinate(innerAreaBox.getSize(), hDirection.getAxis());
 
-        Vec3d offset = Vec3d.of(
+        Vec3 offset = Vec3.of(
                 Direction.get(Direction.AxisDirection.POSITIVE, axis)
                         .getVector()
         ).multiply(0.5);
@@ -413,8 +413,8 @@ public class BlockPortalShape {
                             .map(blockPos -> new IntBox(blockPos, blockPos)),
                     Stream.of(rectanglePart)
             ).forEach(part -> {
-                Vec3d p1 = Vec3d.of(part.l).add(offset);
-                Vec3d p2 = Vec3d.of(part.h).add(1, 1, 1).add(offset);
+                Vec3 p1 = Vec3.of(part.l).add(offset);
+                Vec3 p2 = Vec3.of(part.h).add(1, 1, 1).add(offset);
                 double p1LocalX = p1.subtract(center).dot(portal.axisW);
                 double p1LocalY = p1.subtract(center).dot(portal.axisH);
                 double p2LocalX = p2.subtract(center).dot(portal.axisW);
@@ -427,8 +427,8 @@ public class BlockPortalShape {
 
             portal.specialShape = shape;
 
-            Vec3d p1 = Vec3d.of(rectanglePart.l).add(offset);
-            Vec3d p2 = Vec3d.of(rectanglePart.h).add(1, 1, 1).add(offset);
+            Vec3 p1 = Vec3.of(rectanglePart.l).add(offset);
+            Vec3 p2 = Vec3.of(rectanglePart.h).add(1, 1, 1).add(offset);
             double p1LocalX = p1.subtract(center).dot(portal.axisW);
             double p1LocalY = p1.subtract(center).dot(portal.axisH);
             double p2LocalX = p2.subtract(center).dot(portal.axisW);

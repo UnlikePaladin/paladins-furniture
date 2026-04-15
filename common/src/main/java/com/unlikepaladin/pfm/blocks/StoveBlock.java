@@ -9,7 +9,8 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.*;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SmokerBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -23,9 +24,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.item.crafting.CampfireCookingRecipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
@@ -40,9 +38,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,43 +76,44 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
             return onUseCookingForBlockheads(state, world, pos, player, hand, hit);
         } else {
             if (world.isClientSide) {
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
             if (hit.getDirection() == Direction.UP && world.getBlockEntity(pos) instanceof StoveBlockEntity) {
                 ItemStack itemStack;
-                Optional<RecipeHolder<CampfireCookingRecipe>> optional;
                 BlockEntity blockEntity = world.getBlockEntity(pos);
-                if (blockEntity instanceof StoveBlockEntity && (optional = (stoveBlockEntity = (StoveBlockEntity)blockEntity).getRecipeFor(itemStack = player.getItemInHand(hand))).isPresent()) {
-                    if (stoveBlockEntity.addItem(player.getAbilities().instabuild ? itemStack.copy() : itemStack, optional.get().value().getCookingTime())) {
-                        player.awardStat(Statistics.STOVE_OPENED);
-                        return ItemInteractionResult.SUCCESS;
+                if (blockEntity instanceof StoveBlockEntity stoveBlockEntity && world.recipeAccess().propertySet(RecipePropertySet.CAMPFIRE_INPUT).test(itemStack = player.getItemInHand(hand))) {
+                    if (world instanceof ServerLevel serverWorld) {
+                        if (stoveBlockEntity.addItem(serverWorld, player, itemStack)) {
+                            player.awardStat(Statistics.STOVETOP_USED);
+                            return InteractionResult.SUCCESS;
+                        }
                     }
-                    return ActionResult.CONSUME;
+                    return InteractionResult.CONSUME;
                 }
                 if(blockEntity instanceof StoveBlockEntity stoveBlockEntity){
                     for (int i = 0; i < stoveBlockEntity.getItemsBeingCooked().size(); i++) {
-                        ItemStack currentItemStack = stoveBlockEntity.getItemsBeingCooked().get(i);
-                        if (currentItemStack.isEmpty()) continue;
-                        if(world.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(currentItemStack), world).isEmpty()) {
+                        ItemStack itemStack1 = stoveBlockEntity.getItemsBeingCooked().get(i);
+                        if (itemStack1.isEmpty()) continue;
+                        if(world instanceof ServerLevel serverWorld && serverWorld.recipeAccess().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(stack), world).isEmpty()) {
                             ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stoveBlockEntity.removeItemNoUpdate(i));
                             world.addFreshEntity(itemEntity);
                             player.awardStat(Statistics.STOVE_OPENED);
-                            return ItemInteractionResult.SUCCESS;
+                            return InteractionResult.SUCCESS;
                         }
                     }
-                    return ItemInteractionResult.CONSUME;
+                    return InteractionResult.CONSUME;
                 }
-                return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                return InteractionResult.TRY_WITH_EMPTY_HAND;
             }
             else{
                 this.openContainer(world, pos, player);
             }
-            return ItemInteractionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
     }
 
@@ -128,8 +124,8 @@ public class StoveBlock extends SmokerBlock implements DynamicRenderLayerInterfa
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     protected static final VoxelShape STOVE = Shapes.or(box(0, 0, 1, 16, 1, 16),box(0, 1, 0, 16, 16, 16),box(0, 16, 15, 16, 19, 16));

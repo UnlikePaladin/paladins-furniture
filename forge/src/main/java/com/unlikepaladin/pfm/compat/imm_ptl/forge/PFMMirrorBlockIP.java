@@ -49,7 +49,7 @@ public class PFMMirrorBlockIP extends MirrorBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         if (PaladinFurnitureMod.getPFMConfig().doImmersivePortalsMirrorsSpawn() && !world.isClientSide()) {
             List<PFMMirrorEntity> mirrorBlockEntities = new ArrayList<>();
             if (canConnect(neighborState, state)) {

@@ -25,7 +25,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.block.WireOrientation;
+import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.Nullable;
 
 public class TrashcanBlock extends BaseEntityBlock {
@@ -94,7 +94,7 @@ public class TrashcanBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable Orientation wireOrientation, boolean notify) {
         boolean bl = world.hasNeighborSignal(pos);
         if (bl != state.getValue(POWERED)) {
             if (bl) {

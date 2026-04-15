@@ -6,9 +6,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.player.Inventory;
@@ -117,7 +120,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
         } else {
             this.menu.updateInput();
             List<FurnitureRecipe.CraftableFurnitureRecipe> filteredRecipes = menu.getSortedRecipes().stream()
-                    .filter(recipe -> I18n.get(recipe.getRecipeOutput().getName().getString())
+                    .filter(recipe -> I18n.get(recipe.getRecipeOuput().getHoverName().getString())
                     .toLowerCase().contains(string.trim().toLowerCase())).toList();
             this.menu.getSearchableRecipes().addAll(filteredRecipes);
             this.menu.searching = true;
@@ -137,7 +140,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             predicate = (idx) -> idx.getNamespace().contains(string) && idx.getPath().contains(string2);
         }
 
-        Stream<TagKey<Item>> keyStream = Registries.ITEM.streamTags().filter((tagKey) -> predicate.test(tagKey.getTag().id())).map(RegistryEntryList.Named::getTag);
+        Stream<TagKey<Item>> keyStream = BuiltInRegistries.ITEM.getTags().filter((tagKey) -> predicate.test(tagKey.key().location())).map(HolderSet.Named::key);
         keyStream.forEach(this.searchResultTags::add);
     }
 
@@ -158,9 +161,9 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
     protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
         int x = this.leftPos;
         int y = this.topPos;
-        context.blit(RenderLayer::getGuiTextured, TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight);
+        context.blit(RenderType::guiTextured, TEXTURE, x, y, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
         int k = (int)(41.0f * this.scrollAmount);
-        context.blit(RenderLayer::getGuiTextured, TEXTURE, x + 119, y + 31 + k, 176 + (this.shouldScroll() ? 0 : 12), 0, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT, 256, 256);
+        context.blit(RenderType::guiTextured, TEXTURE, x + 119, y + 31 + k, 176 + (this.shouldScroll() ? 0 : 12), 0, SCROLLBAR_WIDTH, SCROLLBAR_HEIGHT, 256, 256);
         int xOffSetForIcons = this.leftPos + RECIPE_LIST_OFFSET_X;
         int yOffsetForIcons = this.topPos + RECIPE_LIST_OFFSET_Y;
         int scrollOffsetForIcons = this.scrollOffset + 18;
@@ -185,11 +188,11 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             if (this.menu.searching) {
                 iCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(iCopy));
             }
-            tooltip.add(getTooltipFromContainerItem(this.menu.getSortedRecipes().get(iCopy).getRecipeOutput()).get(0));
+            tooltip.add(getTooltipFromContainerItem(this.menu.getSortedRecipes().get(iCopy).getRecipeOuput()).get(0));
             tooltip.add(Component.translatable("container.pfm.working_table.ingredient_required").setStyle(Style.EMPTY.withItalic(true)));
             HashMap<Item, Integer> itemStackCountMap = new HashMap<>();
-            for (Ingredient ingredient : this.handler.getSortedRecipes().get(iCopy).getIngredients()) {
-                for (RegistryEntry<Item> item : ingredient.getMatchingItems()) {
+            for (Ingredient ingredient : this.menu.getSortedRecipes().get(iCopy).getIngredients()) {
+                for (Holder<Item> item : ingredient.items()) {
                     if (!itemStackCountMap.containsKey(item.value())) {
                         itemStackCountMap.put(item.value(), 1);
                     } else {
@@ -228,7 +231,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             } else if (mouseX >= k && mouseY >= m && mouseX < k + 16 && mouseY < m + 18) {
                 v += 36;
             }
-            context.blit(RenderLayer::getGuiTextured, TEXTURE, k, m - 1, 0, v, 16, 18, 256, 256);
+            context.blit(RenderType::guiTextured, TEXTURE, k, m - 1, 0, v, 16, 18, 256, 256);
         }
     }
 
@@ -242,7 +245,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
             if (this.menu.searching) {
                 iCopy = this.menu.getSortedRecipes().indexOf(this.menu.getSearchableRecipes().get(iCopy));
             }
-            context.renderItem(this.menu.getSortedRecipes().get(iCopy).getRecipeOutput(), xOffset, yOffset);
+            context.renderItem(this.menu.getSortedRecipes().get(iCopy).getRecipeOuput(), xOffset, yOffset);
         }
     }
 

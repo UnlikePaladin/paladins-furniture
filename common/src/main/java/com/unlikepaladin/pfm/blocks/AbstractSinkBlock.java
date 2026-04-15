@@ -7,7 +7,6 @@ import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
 import net.minecraft.core.cauldron.CauldronInteraction;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -23,7 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -74,13 +73,13 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemStack itemStack = player.getItemInHand(hand);
         CauldronInteraction sinkBehavior = this.behaviorMap.map().get(itemStack.getItem());
         if (sinkBehavior != null && itemStack.getItem() != Items.AIR) {
             return sinkBehavior.interact(state, world, pos, player, hand, itemStack);
         }
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
     @Override
@@ -209,7 +208,7 @@ public abstract class AbstractSinkBlock extends AbstractCauldronBlock implements
     public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         if (!world.isClientSide && entity.isOnFire() && this.isEntityInsideContent(state, pos, entity)) {
             entity.clearFire();
-            if (entity.mayInteract(world, pos)) {
+            if (entity.mayInteract((ServerLevel) world, pos)) {
                 this.onFireCollision(state, world, pos);
             }
         }

@@ -29,7 +29,7 @@ public class PFMMirrorBlockIP extends MirrorBlock {
         super.onPlaced(world, pos, state, placer, itemStack);
         if (PaladinFurnitureMod.getPFMConfig().doImmersivePortalsMirrorsSpawn()) {
             if (!world.isClient && world.getNonSpectatingEntities(PFMMirrorEntity.class, new Box(pos)).isEmpty()) {
-                PFMMirrorEntity.createMirror((ServerWorld) world, pos, state.getValue(FACING).getOpposite());
+                PFMMirrorEntity.createMirror((ServerLevel) world, pos, state.getValue(FACING).getOpposite());
             }
         }
     }
@@ -60,7 +60,7 @@ public class PFMMirrorBlockIP extends MirrorBlock {
                     ((Entity)pfmMirrorEntity).remove(Entity.RemovalReason.KILLED);
                 });
             }
-            PFMMirrorEntity.createMirror((ServerWorld) world, pos, state.getValue(FACING).getOpposite());
+            PFMMirrorEntity.createMirror((ServerLevel) world, pos, state.getValue(FACING).getOpposite());
             world.updateNeighbors(pos, state.getBlock());
         }
         return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);

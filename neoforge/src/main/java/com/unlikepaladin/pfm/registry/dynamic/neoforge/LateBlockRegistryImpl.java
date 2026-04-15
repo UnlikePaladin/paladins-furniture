@@ -16,9 +16,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.FuelValues;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.registries.RegisterEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,14 +48,15 @@ public class LateBlockRegistryImpl {
 
     public static void registerBlockItemPlatformSpecific(String itemName, Block block, Tuple<String, CreativeModeTab> group) {
         if (AbstractSittableBlock.isWoodBased(block.defaultBlockState())) {
-            registerLateItem(itemName, () -> new BlockItem(block, new Item.Properties().useBlockPrefixedTranslationKey().registryKey(LateBlockRegistry.getItemRegistryKey(itemName))) {
+            registerLateItem(itemName, () -> new BlockItem(block, new Item.Properties().useBlockDescriptionPrefix().setId(LateBlockRegistry.getItemRegistryKey(itemName))) {
+
                 @Override
-                public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType, FuelRegistry fuelValues) {
+                public int getBurnTime(ItemStack itemStack, @Nullable RecipeType<?> recipeType, FuelValues fuelValues) {
                     return 300;
                 }
             }, group);
         }
-        registerLateItem(itemName, () -> new BlockItem(block, new Item.Properties().useBlockPrefixedTranslationKey().registryKey(LateBlockRegistry.getItemRegistryKey(itemName))), group);
+        registerLateItem(itemName, () -> new BlockItem(block, new Item.Properties().useBlockDescriptionPrefix().setId(LateBlockRegistry.getItemRegistryKey(itemName))), group);
     }
 
 

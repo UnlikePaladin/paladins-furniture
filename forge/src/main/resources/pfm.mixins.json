@@ -6,9 +6,9 @@
   "client": [
     "BlockColorsAccessor",
     "ItemColorsAccessor",
+    "PFMItemBlockRenderTypesForgeMixin",
     "PFMItemRendererMixinForge",
-    "PFMModelBakeryMixin",
-    "PFMItemBlockRenderTypesForgeMixin"
+    "PFMReferencedModelsCollectorMixin"
   ],
   "mixins": [
     "PFMCFBModBlockEntitiesMixin",

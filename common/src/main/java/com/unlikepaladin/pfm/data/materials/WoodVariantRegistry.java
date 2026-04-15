@@ -124,7 +124,7 @@ public class WoodVariantRegistry extends VariantRegistryBase<WoodVariant> {
         Block temp = null;
         for (ResourceLocation r : test) {
             if (BuiltInRegistries.BLOCK.containsKey(r)) {
-                temp = BuiltInRegistries.BLOCK.get(r);
+                temp = BuiltInRegistries.BLOCK.getValue(r);
                 break;
             }
         }

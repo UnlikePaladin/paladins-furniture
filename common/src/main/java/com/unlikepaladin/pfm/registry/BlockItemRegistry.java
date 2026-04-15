@@ -51,7 +51,7 @@ public class BlockItemRegistry {
     public static void registerBlock(String blockName, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerBlockItemPlatformSpecific(blockName, block, new Tuple<>("building_blocks", BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS)));
+            registerBlockItemPlatformSpecific(blockName, block, new Tuple<>("building_blocks", BuiltInRegistries.CREATIVE_MODE_TAB.getValue(CreativeModeTabs.BUILDING_BLOCKS)));
         }
         registerBlockPlatformSpecific(blockName, block, false);
     }

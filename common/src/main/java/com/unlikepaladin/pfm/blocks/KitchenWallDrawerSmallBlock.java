@@ -11,7 +11,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
@@ -102,10 +102,10 @@ public class KitchenWallDrawerSmallBlock extends KitchenWallDrawerBlock {
             return InteractionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (world instanceof ServerWorld && blockEntity instanceof GenericStorageBlockEntity3x3) {
+        if (world instanceof ServerLevel && blockEntity instanceof GenericStorageBlockEntity3x3) {
             player.openMenu((GenericStorageBlockEntity3x3)blockEntity);
             player.awardStat(Statistics.DRAWER_SEARCHED);
-            PiglinAi.angerNearbyPiglins((ServerWorld) world, player, true);
+            PiglinAi.angerNearbyPiglins((ServerLevel) world, player, true);
         }
         return InteractionResult.CONSUME;
     }

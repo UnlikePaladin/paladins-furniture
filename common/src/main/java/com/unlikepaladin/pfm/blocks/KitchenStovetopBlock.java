@@ -6,6 +6,8 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.*;
+import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -16,12 +18,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CampfireCookingRecipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.recipe.RecipePropertySet;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -29,14 +26,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -74,15 +69,16 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        Optional<RecipeHolder<CampfireCookingRecipe>> optional;
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof StovetopBlockEntity stovetopBlockEntity) {
-            if (!world.isClientSide && stovetopBlockEntity.addItem(player.getAbilities().instabuild ? itemStack.copy() : itemStack, optional.get().value().getCookingTime())) {
-                player.awardStat(Statistics.STOVETOP_USED);
-                return ItemInteractionResult.SUCCESS;
+        if (blockEntity instanceof StovetopBlockEntity stovetopBlockEntity && world.recipeAccess().propertySet(RecipePropertySet.CAMPFIRE_INPUT).test(itemStack)) {
+            if (world instanceof ServerLevel serverWorld) {
+                if (stovetopBlockEntity.addItem(serverWorld, player, itemStack)) {
+                    player.awardStat(Statistics.STOVETOP_USED);
+                    return InteractionResult.SUCCESS;
+                }
             }
-            return ActionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
         return super.useItemOn(itemStack, state, world, pos, player, hand, hit);
     }
@@ -96,7 +92,7 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
             for (int i = 0; i < stovetopBlockEntity.getItemsBeingCooked().size(); i++) {
                 ItemStack stack = stovetopBlockEntity.getItemsBeingCooked().get(i);
                 if (stack.isEmpty()) continue;
-                if(world instanceof ServerWorld serverWorld && serverWorld.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(stack), world).isEmpty()) {
+                if(world instanceof ServerLevel serverWorld && serverWorld.recipeAccess().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(stack), world).isEmpty()) {
                     ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stovetopBlockEntity.removeItemNoUpdate(i));
                     world.addFreshEntity(itemEntity);
                     player.awardStat(Statistics.STOVETOP_USED);
@@ -111,8 +107,8 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
 
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        return direction == Direction.DOWN && !this.canSurvive(state, world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        return direction == Direction.DOWN && !this.canSurvive(state, levelReader, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     public BlockState rotate(BlockState state, Rotation rotation) {

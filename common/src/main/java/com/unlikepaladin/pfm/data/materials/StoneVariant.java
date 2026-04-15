@@ -140,8 +140,8 @@ public class StoneVariant extends VariantBase<StoneVariant> {
 
         public static Finder simple(ResourceLocation stoneTypeName, ResourceLocation polishedName, ResourceLocation rawName) {
             return new Finder(stoneTypeName,
-                    () -> BuiltInRegistries.BLOCK.get(polishedName),
-                    () -> BuiltInRegistries.BLOCK.get(rawName));
+                    () -> BuiltInRegistries.BLOCK.getValue(polishedName),
+                    () -> BuiltInRegistries.BLOCK.getValue(rawName));
         }
 
         public void addChild(String childType, String childName) {
@@ -157,11 +157,11 @@ public class StoneVariant extends VariantBase<StoneVariant> {
                 try {
                     Block plank = polishedFinder.get();
                     Block log = rawFinder.get();
-                    Block d = BuiltInRegistries.BLOCK.get(ResourceLocation.fromNamespaceAndPath("minecraft","air"));
+                    Block d = BuiltInRegistries.BLOCK.getValue(ResourceLocation.fromNamespaceAndPath("minecraft","air"));
                     if (plank != d && log != d && plank != null && log != null) {
                         StoneVariant w = new StoneVariant(id, plank, log);
                         for (Map.Entry<String, ResourceLocation> entry : childNames.entrySet()){
-                            Object child = BuiltInRegistries.BLOCK.getOptional(entry.getValue()).isPresent() ? BuiltInRegistries.BLOCK.get(entry.getValue()) : BuiltInRegistries.ITEM.get(entry.getValue());
+                            Object child = BuiltInRegistries.BLOCK.getOptional(entry.getValue()).isPresent() ? BuiltInRegistries.BLOCK.getValue(entry.getValue()) : BuiltInRegistries.ITEM.getValue(entry.getValue());
                             w.addChild(entry.getKey(), child);
                         }
                         return Optional.of(w);

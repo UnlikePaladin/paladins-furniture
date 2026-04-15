@@ -4,40 +4,32 @@ import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.Containers;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.*;
-import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -109,7 +101,7 @@ public class FridgeBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         return direction.getAxis().isVertical() && neighborState.getBlock() == this ? neighborState.getValue(FACING) == state.getValue(FACING) ? state.setValue(OPEN, neighborState.getValue(OPEN)) : state : state;
     }
 
@@ -124,7 +116,7 @@ public class FridgeBlock extends HorizontalFacingBlockWithEntity {
             return InteractionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (world instanceof ServerWorld serverWorld && blockEntity instanceof FridgeBlockEntity) {
+        if (world instanceof ServerLevel serverWorld && blockEntity instanceof FridgeBlockEntity) {
             player.openMenu((FridgeBlockEntity)blockEntity);
             player.awardStat(Statistics.FRIDGE_OPENED);
             PiglinAi.angerNearbyPiglins(serverWorld, player, true);

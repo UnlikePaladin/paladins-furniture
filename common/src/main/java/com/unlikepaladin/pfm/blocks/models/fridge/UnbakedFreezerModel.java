@@ -45,7 +45,7 @@ public class UnbakedFreezerModel implements UnbakedModel {
     private static final ResourceLocation PARENT = ResourceLocation.parse("block/block");
     private final Material frameTex;
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getTextureDependencies(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         return List.of(frameTex);
     }
 
@@ -77,7 +77,7 @@ public class UnbakedFreezerModel implements UnbakedModel {
     }
 
     @Override
-    public void resolve(Resolver resolver) {
+    public void resolveDependencies(Resolver resolver) {
         for (ResourceLocation c : ALL_MODEL_IDS)
             resolver.resolve(c);
     }

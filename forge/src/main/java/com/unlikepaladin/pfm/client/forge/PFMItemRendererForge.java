@@ -9,6 +9,8 @@ import com.unlikepaladin.pfm.client.PFMBakedModelManagerAccessor;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
@@ -26,6 +28,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.client.ForgeHooksClient;
 
 import java.util.*;
@@ -70,17 +73,17 @@ public class PFMItemRendererForge extends BlockEntityWithoutLevelRenderer {
 
             BakedModel actualModel = ModelHelper.getModelFromIdentifier(UnbakedBedModel.BED_MODEL_ID);
 
-            ItemRenderer itemRenderer = MinecraftClient.getInstance().getItemRenderer();
-            BlockState state = stack.getItem() instanceof BlockItem ? ((BlockItem) stack.getItem()).getBlock().getDefaultState() : null;
+            ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+            BlockState state = stack.getItem() instanceof BlockItem ? ((BlockItem) stack.getItem()).getBlock().defaultBlockState() : null;
 
-            Random random = Random.create();
+            RandomSource random = RandomSource.create();
             long randomSeed = 42L;
             for (Direction direction : Direction.values()) {
                 random.setSeed(randomSeed);
-                itemRenderer.renderBakedItemQuads(matrices, consumer, ((PFMBakedModelGetQuadsExtension) actualModel).getQuadsCached(stack, state, direction, random), stack, light, overlay);
+                itemRenderer.renderQuadList(matrices, consumer, ((PFMBakedModelGetQuadsExtension) actualModel).getQuadsCached(stack, state, direction, random), stack, light, overlay);
             }
             random.setSeed(randomSeed);
-            itemRenderer.renderBakedItemQuads(matrices, consumer, ((PFMBakedModelGetQuadsExtension)actualModel).getQuadsCached(stack, state, null, random), stack, light, overlay);
+            itemRenderer.renderQuadList(matrices, consumer, ((PFMBakedModelGetQuadsExtension)actualModel).getQuadsCached(stack, state, null, random), stack, light, overlay);
 
             this.renderBed.setColor(((SimpleBedBlock)block).getColor());
             this.blockEntityRenderDispatcher.renderItem(renderBed, matrices, vertexConsumers, light, overlay);

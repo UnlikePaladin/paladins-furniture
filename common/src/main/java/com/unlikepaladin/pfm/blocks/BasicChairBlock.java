@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.data.PFMTags;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -10,18 +11,12 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.ScheduledTickView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -123,11 +118,11 @@ public class BasicChairBlock extends AbstractSittableBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (!canTuck(world.getBlockState(pos.relative(state.getValue(FACING).getOpposite()))) && state.getValue(TUCKED)){
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (!canTuck(levelReader.getBlockState(pos.relative(state.getValue(FACING).getOpposite()))) && state.getValue(TUCKED)){
             return state.setValue(TUCKED, false);
         }
-        return super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     public boolean canTuck(BlockState state) {

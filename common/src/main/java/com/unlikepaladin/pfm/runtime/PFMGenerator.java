@@ -86,7 +86,7 @@ public abstract class PFMGenerator implements PFMResourceProgress {
         return logger;
     }
 
-    public Path getResultItem() {
+    public Path getOutput() {
         return output;
     }
 

@@ -67,8 +67,8 @@ public class EmiFreezingRecipe implements EmiRecipe {
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        widgets.addFillingArrow(24, 5, 50 * recipe.getCookingTime()).tooltip((mx, my) -> {
-            return List.of(ClientTooltipComponent.create(Component.translatable("emi.cooking.time", recipe.getCookingTime() / 20f).getVisualOrderText()));
+        widgets.addFillingArrow(24, 5, 50 * recipe.cookingTime()).tooltip((mx, my) -> {
+            return List.of(ClientTooltipComponent.create(Component.translatable("emi.cooking.time", recipe.cookingTime() / 20f).getVisualOrderText()));
         });
         if (infiniBurn) {
             widgets.addTexture(FreezingWidget.FULL_FREEZER, 1, 24);

@@ -15,19 +15,15 @@ import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
-import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
 
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class PFMTagProvider extends PFMProvider {
@@ -298,6 +294,6 @@ public class PFMTagProvider extends PFMProvider {
     }
 
     protected Path getResultItem(ResourceLocation id) {
-        return getParent().getResultItem().resolve("data/" + id.getNamespace() + "/tags/block/" + id.getPath() + ".json");
+        return getParent().getOutput().resolve("data/" + id.getNamespace() + "/tags/block/" + id.getPath() + ".json");
     }
 }

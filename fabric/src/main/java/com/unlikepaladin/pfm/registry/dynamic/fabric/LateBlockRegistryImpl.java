@@ -9,13 +9,9 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.fabricmc.fabric.api.registry.FlammableBlockRegistry;
-import net.fabricmc.fabric.api.registry.FuelRegistry;
+import net.fabricmc.fabric.api.registry.FuelRegistryEvents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.component.CustomData;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.flag.FeatureFlag;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 
@@ -38,7 +34,7 @@ public class LateBlockRegistryImpl {
         return block;
     }
     public static void registerLateBlockItem(String itemName, Block block, Tuple<String, CreativeModeTab> group) {
-        registerLateItem(itemName, () -> new BlockItem(block, new Item.Properties().registryKey(LateBlockRegistry.getItemRegistryKey(itemName)).useBlockPrefixedTranslationKey()), group);
+        registerLateItem(itemName, () -> new BlockItem(block, new Item.Properties().setId(LateBlockRegistry.getItemRegistryKey(itemName)).useBlockDescriptionPrefix()), group);
         if (AbstractSittableBlock.isWoodBased(block.defaultBlockState())) {
             FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
             FuelRegistryEvents.BUILD.register((builder, context) -> {

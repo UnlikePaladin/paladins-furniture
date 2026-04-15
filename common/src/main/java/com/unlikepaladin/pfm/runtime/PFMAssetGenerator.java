@@ -71,7 +71,7 @@ public class PFMAssetGenerator extends PFMGenerator {
                 providers.add(new PFMLangProvider(this));
                 this.setTotalCount(providers.size());
 
-                if (PaladinFurnitureMod.isClientSide && !PaladinFurnitureMod.getPFMConfig().disableGeneratingScreen())
+                if (PaladinFurnitureMod.isClient && !PaladinFurnitureMod.getPFMConfig().disableGeneratingScreen())
                     ClientOverlaySetter.setOverlayToPFMOverlay(this);
                 boolean allDone = false;
 
@@ -87,7 +87,7 @@ public class PFMAssetGenerator extends PFMGenerator {
 
                     int completedTasks = (int) futures.stream().filter(Future::isDone).count();
                     this.setCount(completedTasks);
-                    if (PaladinFurnitureMod.isClientSide)
+                    if (PaladinFurnitureMod.isClient)
                         ClientOverlaySetter.updateScreen();
                 }
                 executor.shutdown();

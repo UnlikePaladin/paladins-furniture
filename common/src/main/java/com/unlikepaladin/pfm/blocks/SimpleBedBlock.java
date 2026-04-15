@@ -7,6 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -18,7 +19,7 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.*;
@@ -29,9 +30,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.ArrayList;
@@ -114,7 +112,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         if (direction == getDirectionTowardsOtherPart(state.getValue(PART), state.getValue(FACING))) {
             if (neighborState.getBlock() instanceof SimpleBedBlock && neighborState.getValue(PART) != state.getValue(PART)) {
                 return state.setValue(OCCUPIED, neighborState.getValue(OCCUPIED));
@@ -134,7 +132,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
             world.levelEvent(player, LevelEvent.PARTICLES_DESTROY_BLOCK, blockPos, Block.getId(blockState));
         }
         this.spawnDestroyParticles(world, player, pos, state);
-        if (world instanceof ServerWorld serverWorld && state.is(BlockTags.GUARDED_BY_PIGLINS)) {
+        if (world instanceof ServerLevel serverWorld && state.is(BlockTags.GUARDED_BY_PIGLINS)) {
             PiglinAi.angerNearbyPiglins(serverWorld, player, false);
         }
         world.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);

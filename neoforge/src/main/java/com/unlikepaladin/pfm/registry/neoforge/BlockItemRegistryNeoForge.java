@@ -40,7 +40,7 @@ public class BlockItemRegistryNeoForge {
             if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(PaladinFurnitureMod.FURNITURE_GROUP)) {
                 PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(PaladinFurnitureMod.FURNITURE_GROUP, new LinkedHashSet<>());
             }
-            PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Properties().rarity(Rarity.RARE).stacksTo(1).registryKey(LateBlockRegistry.getItemRegistryKey("furniture_book")));
+            PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Properties().rarity(Rarity.RARE).stacksTo(1).setId(LateBlockRegistry.getItemRegistryKey("furniture_book")));
             PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.get(PaladinFurnitureMod.FURNITURE_GROUP).add(PaladinFurnitureModBlocksItems.FURNITURE_BOOK);
             BlockItemRegistry.registerCommonItems();
             BlockItemRegistryImpl.items.forEach((itemName, itemSupplier) -> {

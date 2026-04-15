@@ -29,7 +29,7 @@ public class LampItem extends BlockItem {
         if (stack.get(PFMComponents.VARIANT_COMPONENT) != null) {
             variant = WoodVariantRegistry.getVariant(stack.get(PFMComponents.VARIANT_COMPONENT));
         }
-        return Text.translatable(String.format("block.pfm.basic_%s_%s_lamp", color.getSerializedName(), variant.getSerializedName()));
+        return Component.translatable(String.format("block.pfm.basic_%s_%s_lamp", color.getSerializedName(), variant.getSerializedName()));
     }
 
     @Override

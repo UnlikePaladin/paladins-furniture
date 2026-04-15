@@ -8,6 +8,7 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
+import net.minecraft.client.renderer.block.model.BakedOverrides;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,7 +16,6 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
@@ -76,8 +76,8 @@ public abstract class AbstractBakedModel implements BakedModel {
     }
 
     @Override
-    public ItemOverrides getOverrides() {
-        return ItemOverrides.EMPTY;
+    public BakedOverrides overrides() {
+        return BakedOverrides.EMPTY;
     }
 
     Map<Block, VariantBase<?>> blockVariantMap = new HashMap<>();

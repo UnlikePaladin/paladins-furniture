@@ -54,7 +54,7 @@ public class UnbakedBasicTableModel implements UnbakedModel {
         }
     };
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getTextureDependencies(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         return Collections.emptyList();
     }
 
@@ -82,8 +82,8 @@ public class UnbakedBasicTableModel implements UnbakedModel {
     }
 
     @Override
-    public void resolve(Resolver resolver) {
-        for (Identifier c : BASIC_MODEL_PARTS_BASE)
+    public void resolveDependencies(Resolver resolver) {
+        for (ResourceLocation c : BASIC_MODEL_PARTS_BASE)
             resolver.resolve(c);
     }
 }

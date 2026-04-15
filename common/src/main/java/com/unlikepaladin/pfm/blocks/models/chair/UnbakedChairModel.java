@@ -79,7 +79,7 @@ public class UnbakedChairModel implements UnbakedModel {
     }
 
     @Override
-    public void resolve(Resolver resolver) {
+    public void resolveDependencies(Resolver resolver) {
         for (ResourceLocation c : CHAIR_PARTS_BASE)
             resolver.resolve(c);
     }

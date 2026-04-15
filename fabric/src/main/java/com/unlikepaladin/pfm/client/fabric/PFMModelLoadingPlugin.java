@@ -40,7 +40,7 @@ import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.client.util.ModelIdentifier;
+import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 

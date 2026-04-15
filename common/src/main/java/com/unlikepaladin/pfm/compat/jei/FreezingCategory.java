@@ -90,7 +90,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     }
 
     protected IDrawableAnimated getArrow(FreezingRecipe recipe) {
-        int freezeTime = recipe.getCookingTime();
+        int freezeTime = recipe.cookingTime();
         if (freezeTime <= 0) {
             freezeTime = regularFreezeTime;
         }
@@ -98,7 +98,7 @@ public class FreezingCategory implements IRecipeCategory<FreezingRecipe>  {
     }
 
     protected void drawFreezeTime(FreezingRecipe recipe, GuiGraphics context, int y) {
-        int freezeTime = recipe.getCookingTime();
+        int freezeTime = recipe.cookingTime();
         if (freezeTime > 0) {
             int freezeTimeSeconds = freezeTime / 20;
             Component timeString = Component.nullToEmpty(freezeTimeSeconds + "s");

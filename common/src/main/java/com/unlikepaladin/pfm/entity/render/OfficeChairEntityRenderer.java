@@ -32,7 +32,6 @@ import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.BitSet;
 import java.util.List;
 
 public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, OfficeChairEntityRenderState, OfficeChairModelEmpty> {
@@ -117,7 +116,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
                 .flatMap(List::stream).toList());
         baseQuads.addAll(modelBase.getQuads(null, null, mobEntity.random));
         for (BakedQuad quad : baseQuads) {
-            float brightness = ModelHelper.getBrightness(quad.getFace(), quad.hasShade(), mobEntity.isDarkenedDim);
+            float brightness = ModelHelper.getBrightness(quad.getDirection(), quad.isShade(), mobEntity.isDarkenedDim);
 
             solid.putBulkData(matrixStack.last(), quad, brightness, brightness, brightness, 1.0f, light, OverlayTexture.NO_OVERLAY);
             VertexConsumer damage = new SheetedDecalTextureGenerator(
@@ -137,7 +136,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
         wheelQuads.addAll(wheelModel.getQuads(null, null, mobEntity.random));
 
         // Calculate wheel rotation based on movement direction
-        Vec3d velocity = mobEntity.velocity;
+        Vec3 velocity = mobEntity.velocity;
         float wheelYaw = 0.0F;
         double speed = velocity.horizontalDistance();
         if (speed > 1.0E-7) {
@@ -166,7 +165,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
             matrixStack.translate(-0.5, -0.08, -0.5);
 
             for (BakedQuad quad : wheelQuads) {
-                float brightness = ModelHelper.getBrightness(quad.getFace(), quad.hasShade(), mobEntity.isDarkenedDim);
+                float brightness = ModelHelper.getBrightness(quad.getDirection(), quad.isShade(), mobEntity.isDarkenedDim);
 
                 solid.putBulkData(matrixStack.last(), quad, brightness, brightness, brightness, 1.0f, light, OverlayTexture.NO_OVERLAY);
                 VertexConsumer damage = new SheetedDecalTextureGenerator(
@@ -182,7 +181,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
 
         // top
         matrixStack.pushPose();
-        matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - mobEntity.bodyYaw));
+        matrixStack.mulPose(Axis.YP.rotationDegrees(180.0F - mobEntity.bodyRot));
 
         matrixStack.translate(-0.45, 0, -0.5);
 
@@ -194,7 +193,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
 
 
         for (BakedQuad quad : chairQuads) {
-            float brightness = ModelHelper.getBrightness(quad.getFace(), quad.hasShade(), mobEntity.isDarkenedDim);
+            float brightness = ModelHelper.getBrightness(quad.getDirection(), quad.isShade(), mobEntity.isDarkenedDim);
 
             float red = 1.0f;
             float green = 1.0f;
@@ -226,17 +225,17 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
     }
 
     @Override
-    public void updateRenderState(OfficeChairEntity livingEntity, OfficeChairEntityRenderState livingEntityRenderState, float f) {
-        super.updateRenderState(livingEntity, livingEntityRenderState, f);
+    public void extractRenderState(OfficeChairEntity livingEntity, OfficeChairEntityRenderState livingEntityRenderState, float f) {
+        super.extractRenderState(livingEntity, livingEntityRenderState, f);
         livingEntityRenderState.color = livingEntity.getPFMColor();
         livingEntityRenderState.health = livingEntity.getHealth();
         livingEntityRenderState.maxHealth = livingEntity.getMaxHealth();
-        livingEntityRenderState.velocity = livingEntity.getVelocity();
-        livingEntityRenderState.timeUntilRegen = livingEntity.timeUntilRegen;
+        livingEntityRenderState.velocity = livingEntity.getDeltaMovement();
+        livingEntityRenderState.invulnerableTime = livingEntity.invulnerableTime;
         livingEntityRenderState.wheelSpinAngle = livingEntity.getWheelSpinAngle();
-        livingEntityRenderState.world = livingEntity.getWorld();
-        livingEntityRenderState.pos = livingEntity.getPos();
+        livingEntityRenderState.world = livingEntity.level();
+        livingEntityRenderState.pos = livingEntity.position();
         livingEntityRenderState.random = livingEntity.getRandom();
-        livingEntityRenderState.isDarkenedDim = !livingEntity.getWorld().getDimension().bedWorks();
+        livingEntityRenderState.isDarkenedDim = !livingEntity.level().dimensionType().bedWorks();
     }
 }

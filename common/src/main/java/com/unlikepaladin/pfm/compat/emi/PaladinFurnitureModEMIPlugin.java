@@ -44,10 +44,10 @@ public class PaladinFurnitureModEMIPlugin implements EmiPlugin {
         registry.addRecipeHandler(ScreenHandlerIDs.WORKBENCH_SCREEN_HANDLER, new FurnitureRecipeHandler());
         registry.addRecipeHandler(ScreenHandlerIDs.FREEZER_SCREEN_HANDLER, new FreezerRecipeHandler(FREEZER));
 
-        for (RecipeHolder<FurnitureRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE)) {
+        for (RecipeHolder<FurnitureRecipe> recipe : registry.recipeAccess().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE)) {
             registry.addRecipe(new EmiFurnitureRecipe(recipe));
         }
-        for (RecipeHolder<FreezingRecipe> recipe : registry.getRecipeManager().getAllRecipesFor(RecipeTypes.FREEZING_RECIPE)) {
+        for (RecipeHolder<FreezingRecipe> recipe : registry.recipeAccess().getAllRecipesFor(RecipeTypes.FREEZING_RECIPE)) {
             registry.addRecipe(new EmiFreezingRecipe(recipe));
         }
     }

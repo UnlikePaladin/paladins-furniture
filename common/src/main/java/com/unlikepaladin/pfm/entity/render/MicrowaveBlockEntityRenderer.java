@@ -12,6 +12,7 @@ import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
+import net.minecraft.world.item.crafting.RecipePropertySet;
 
 public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
@@ -28,7 +29,7 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
             itemStack = blockEntity.getItem(0);
             matrices.pushPose();
             if (recipePropertySet == null)
-                recipePropertySet = blockEntity.getWorld().getRecipeManager().getPropertySet(RecipePropertySet.SMOKER_INPUT);
+                recipePropertySet = blockEntity.getLevel().recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT);
 
             int lightAbove = LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().above());
             Direction facing = blockEntity.getFacing();
@@ -58,7 +59,7 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
             }
             matrices.translate(x, y ,z);
             matrices.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
-            if (blockEntity.isActive && recipePropertySet.canUse(itemStack)) {
+            if (blockEntity.isActive && recipePropertySet.test(itemStack)) {
                 matrices.mulPose(Axis.YP.rotationDegrees((blockEntity.getLevel().getDayTime() + tickDelta) * 4));}
             matrices.scale(0.5f, 0.5f, 0.5f);
             this.itemRenderer.renderStatic(itemStack, ItemDisplayContext.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getLevel(), 0);

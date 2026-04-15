@@ -10,8 +10,8 @@ import com.unlikepaladin.pfm.recipes.neoforge.FurnitureSerializerNeoForge;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SimpleCookingSerializer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -24,7 +24,7 @@ public class RecipeRegistryNeoForge {
     public static void registerRecipeSerializers(RegisterEvent event) {
         event.register(BuiltInRegistries.RECIPE_SERIALIZER.key(), recipeSerializerRegisterHelper -> {
             recipeSerializerRegisterHelper.register(
-                    RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new SimpleCookingSerializer<>(FreezingRecipe::new, 200)
+                    RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new AbstractCookingRecipe.Serializer<>(FreezingRecipe::new, 200)
             );
             recipeSerializerRegisterHelper.register(
                     RecipeTypes.SIMPLE_FURNITURE_ID, RecipeTypes.SIMPLE_FURNITURE_SERIALIZER = new FurnitureSerializerNeoForge<>(new SimpleFurnitureRecipe.Serializer())

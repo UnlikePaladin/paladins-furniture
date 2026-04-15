@@ -5,22 +5,14 @@ import com.unlikepaladin.pfm.client.PFMSpriteRegistry;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.fabric.modelLoaders.PFMModelLoadingV1;
-import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
-import com.unlikepaladin.pfm.config.option.Side;
 import com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric;
-import com.unlikepaladin.pfm.networking.MicrowaveUpdatePayload;
-import com.unlikepaladin.pfm.networking.SyncConfigPayload;
 import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
-import com.unlikepaladin.pfm.registry.NetworkIDs;
-import com.unlikepaladin.pfm.registry.fabric.NetworkRegistryFabric;
 import com.unlikepaladin.pfm.runtime.fabric.TextureReloadQueueImpl;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.platform.InputConstants;
@@ -34,7 +26,7 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        PaladinFurnitureMod.isClientSide = true;
+        PaladinFurnitureMod.isClient = true;
         PaladinFurnitureModFabric.registerLateEntries();
         PaladinFurnitureModFabric.replaceHomePOIStates();
         ColorRegistryFabric.registerAll();

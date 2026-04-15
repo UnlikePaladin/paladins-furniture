@@ -162,7 +162,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
     public boolean hasMetalInside() {
         if (PaladinFurnitureMod.getModList().contains("sandwichable"))
             return isMetal(items.get(0)) || isMetal(items.get(1));
-        return items.get(0).getItem().getDescriptionId().contains("iron") || items.get(1).getDescriptionId().contains("iron");
+        return items.get(0).getItem().getDescriptionId().contains("iron") || items.get(1).getItem().getDescriptionId().contains("iron");
     }
 
     @ExpectPlatform
@@ -170,14 +170,14 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
 
     }
 
-    private void toastItems(ServerWorld world) {
+    private void toastItems(ServerLevel world) {
         if (PaladinFurnitureMod.getModList().contains("sandwichable")) {
             sandwichableToast(this);
         }
         else {
             for (int i = 0; i < 2; i++) {
                 SingleRecipeInput inv = new SingleRecipeInput(items.get(i));
-                Optional<RecipeHolder<CampfireCookingRecipe>> match = level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inv, level);
+                Optional<RecipeHolder<CampfireCookingRecipe>> match = world.recipeAccess().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inv, level);
 
                 boolean changed = false;
                 if(match.isPresent()) {
@@ -253,7 +253,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
                 blockEntity.explode();
             }
         }
-        if(blockEntity.toastProgress == toastTime && world instanceof ServerWorld serverWorld) {
+        if(blockEntity.toastProgress == toastTime && level instanceof ServerLevel serverWorld) {
             blockEntity.stopToasting(null);
             blockEntity.toastItems(serverWorld);
             blockEntity.smoking = true;

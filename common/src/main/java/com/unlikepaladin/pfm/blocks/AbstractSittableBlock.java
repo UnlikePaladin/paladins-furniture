@@ -5,11 +5,12 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.Statistics;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.entity.SpawnReason;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.animal.IronGolem;
@@ -26,12 +27,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.ScheduledTickView;
+import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -73,12 +69,12 @@ public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
         if (state.hasProperty(BlockStateProperties.WATERLOGGED)) {
             if (state.getValue(BlockStateProperties.WATERLOGGED))
-                world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+                scheduledTickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         }
-        return super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     public float height;
@@ -150,7 +146,7 @@ public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock {
         }
         double py = pos.getY() + this.height;
         float yaw = state.getValue(FACING).getOpposite().toYRot();
-        ChairEntity chairEntity = Entities.CHAIR.create(world, SpawnReason.TRIGGERED);
+        ChairEntity chairEntity = Entities.CHAIR.create(world, EntitySpawnReason.TRIGGERED);
         chairEntity.moveTo(px, py, pz, yaw, 0);
         chairEntity.setNoGravity(true);
         chairEntity.setSilent(true);

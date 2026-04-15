@@ -60,9 +60,9 @@ public class ArmChairBlock extends AbstractSittableBlock {
     }
 
     @Override
-    public void updateEntityAfterFallOn(BlockGetter world, Entity entity) {
+    public void updateEntityMovementAfterFallOn(BlockGetter blockGetter, Entity entity) {
         if (entity.isSuppressingBounce()) {
-            super.updateEntityAfterFallOn(world, entity);
+            super.updateEntityMovementAfterFallOn(blockGetter, entity);
         } else {
             this.bounceEntity(entity);
         }

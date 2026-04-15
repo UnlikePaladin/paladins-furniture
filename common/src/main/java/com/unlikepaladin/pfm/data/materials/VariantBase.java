@@ -5,6 +5,7 @@ import com.google.common.collect.HashBiMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.world.flag.FeatureFlag;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.level.block.Block;
 
 import net.minecraft.world.item.BlockItem;
@@ -82,7 +83,7 @@ public abstract class VariantBase<T> implements StringRepresentable, Comparable<
         V found = null;
         for (var r : targets) {
             if (reg.containsKey(r)) {
-                found = reg.get(r);
+                found = reg.getValue(r);
                 break;
             }
         }
@@ -118,8 +119,12 @@ public abstract class VariantBase<T> implements StringRepresentable, Comparable<
             return getBaseBlock();
         else if (Objects.equals(key, "secondary"))
             return getSecondaryBlock();
-        else if (this.children.get(key) != null)
+        else if (this.children.get(key) != null) {
+            if (!(children.get(key) instanceof ItemLike)) {
+                System.out.println("FAAAH");
+            }
             return (ItemLike) this.children.get(key);
+        }
         return getBaseBlock();
     }
 
@@ -134,7 +139,7 @@ public abstract class VariantBase<T> implements StringRepresentable, Comparable<
         }
     }
 
-    public boolean isEnabled(FeatureSet set) {
+    public boolean isEnabled(FeatureFlagSet set) {
         for (FeatureFlag flag : getFeatureList()) {
             if (!set.contains(flag)) {
                 return false;

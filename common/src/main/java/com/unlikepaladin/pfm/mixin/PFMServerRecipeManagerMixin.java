@@ -1,11 +1,11 @@
 package com.unlikepaladin.pfm.mixin;
 
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.recipe.RecipePropertySet;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.ServerRecipeManager;
-import net.minecraft.recipe.SingleStackRecipe;
-import net.minecraft.registry.RegistryKey;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipePropertySet;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleItemRecipe;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -18,20 +18,20 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-@Mixin(ServerRecipeManager.class)
+@Mixin(RecipeManager.class)
 public abstract class PFMServerRecipeManagerMixin {
     @Mutable
-    @Shadow @Final private static Map<RegistryKey<RecipePropertySet>, ServerRecipeManager.SoleIngredientGetter> SOLE_INGREDIENT_GETTERS;
+    @Shadow @Final private static Map<ResourceKey<RecipePropertySet>, RecipeManager.IngredientExtractor> RECIPE_PROPERTY_SETS;
 
     @Shadow
-    private static ServerRecipeManager.SoleIngredientGetter cookingIngredientGetter(RecipeType<? extends SingleStackRecipe> expectedType) {
+    private static RecipeManager.IngredientExtractor forSingleInput(RecipeType<? extends SingleItemRecipe> expectedType) {
         return null;
     }
 
     @Inject(method = "<clinit>", at = @At("TAIL"))
     private static void onServerRecipeManagerInit(CallbackInfo ci) {
-        SOLE_INGREDIENT_GETTERS = new HashMap<>(SOLE_INGREDIENT_GETTERS);
-        SOLE_INGREDIENT_GETTERS.put(RecipeTypes.FREEZING_INPUT, cookingIngredientGetter(RecipeTypes.FREEZING_RECIPE));
-        SOLE_INGREDIENT_GETTERS = Collections.unmodifiableMap(SOLE_INGREDIENT_GETTERS);
+        RECIPE_PROPERTY_SETS = new HashMap<>(RECIPE_PROPERTY_SETS);
+        RECIPE_PROPERTY_SETS.put(RecipeTypes.FREEZING_INPUT, forSingleInput(RecipeTypes.FREEZING_RECIPE));
+        RECIPE_PROPERTY_SETS = Collections.unmodifiableMap(RECIPE_PROPERTY_SETS);
     }
 }

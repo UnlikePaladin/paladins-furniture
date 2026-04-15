@@ -40,10 +40,12 @@ import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import com.unlikepaladin.pfm.client.ScreenRegistry;
 import com.unlikepaladin.pfm.client.screens.*;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
+import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.render.item.BuiltinModelItemRenderer;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoadingContext;
@@ -94,14 +96,14 @@ public class PaladinFurnitureModClientNeoForge {
         for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
             event.registerItem(new IClientItemExtensions() {
                 @Override
-                public BuiltinModelItemRenderer getCustomRenderer() {
+                public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                     return PFMItemRendererNeoForge.INSTANCE;
                 }
             }, block.asItem());
         }
         event.registerItem(new IClientItemExtensions() {
             @Override
-            public BuiltinModelItemRenderer getCustomRenderer() {
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 return PFMItemRendererNeoForge.INSTANCE;
             }
         }, PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM);

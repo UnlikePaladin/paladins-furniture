@@ -1,13 +1,11 @@
 package com.unlikepaladin.pfm.client.screens;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.menus.TrashcanScreenHandler;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.renderer.GameRenderer;
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.network.chat.Component;
 
@@ -49,7 +47,7 @@ public class TrashcanScreen extends AbstractContainerScreen<TrashcanScreenHandle
     protected void renderBg(GuiGraphics context, float delta, int mouseX, int mouseY) {
         int i = this.leftPos;
         int j = this.topPos;
-        context.blit(RenderLayer::getGuiTextured, background, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        context.blit(RenderType::guiTextured, background, i, j, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -13,12 +14,10 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -58,12 +57,12 @@ public class SimpleBunkLadderBlock extends LadderBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (direction.getAxis().isVertical() && canSurvive(state, world, pos)) {
-            boolean up = world.getBlockState(pos.above()).getBlock() instanceof SimpleBunkLadderBlock;
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (direction.getAxis().isVertical() && canSurvive(state, levelReader, pos)) {
+            boolean up = levelReader.getBlockState(pos.above()).getBlock() instanceof SimpleBunkLadderBlock;
             return state.setValue(UP, up);
         }
-        return super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     private boolean canPlaceOn(BlockGetter world, BlockPos pos, Direction side) {

@@ -1,5 +1,6 @@
 package com.unlikepaladin.pfm.runtime;
 
+import com.mojang.blaze3d.platform.FramerateLimitTracker;
 import com.unlikepaladin.pfm.client.screens.overlay.PFMGeneratingOverlay;
 import com.unlikepaladin.pfm.mixin.PFMMinecraftClientAcccessor;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
@@ -27,18 +28,18 @@ public class ClientOverlaySetter {
         }
 
         client.getMainRenderTarget().bindWrite(true);
-        client.gameRenderer.render(client.getTimer(), shouldTick(client));
+        client.gameRenderer.render(client.getDeltaTracker(), shouldTick(client));
         client.getMainRenderTarget().unbindWrite();
 
         client.getMainRenderTarget().blitToScreen(client.getWindow().getWidth(), client.getWindow().getHeight());
 
         if (((PFMMinecraftClientAcccessor)client).getFrameCapturer() != null) {
             ((PFMMinecraftClientAcccessor)client).getFrameCapturer().upload();
-            ((PFMMinecraftClientAcccessor)client).getFrameCapturer().capture(client.getFramebuffer());
+            ((PFMMinecraftClientAcccessor)client).getFrameCapturer().capture(client.getMainRenderTarget());
         }
         client.getWindow().updateDisplay(((PFMMinecraftClientAcccessor)client).getFrameCapturer());
-        ((DeltaTracker.Timer)client.getTimer()).updatePauseState(client.isPaused());
-        ((DeltaTracker.Timer)client.getTimer()).updateFrozenState(!shouldTick(client));
+        ((DeltaTracker.Timer)client.getDeltaTracker()).updatePauseState(client.isPaused());
+        ((DeltaTracker.Timer)client.getDeltaTracker()).updateFrozenState(!shouldTick(client));
 
         client.getTextureManager().tick();
     }

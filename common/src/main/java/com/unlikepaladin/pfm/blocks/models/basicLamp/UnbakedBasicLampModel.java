@@ -91,8 +91,8 @@ public class UnbakedBasicLampModel implements UnbakedModel {
     }
 
     @Override
-    public void resolve(Resolver resolver) {
-        for (Identifier c : ALL_MODEL_IDS)
+    public void resolveDependencies(Resolver resolver) {
+        for (ResourceLocation c : ALL_MODEL_IDS)
             resolver.resolve(c);
     }
 }

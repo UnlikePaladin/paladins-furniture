@@ -41,10 +41,10 @@ public class PaladinFurnitureModJEIPlugin implements IModPlugin {
         Minecraft mc = Minecraft.getInstance();
         ClientLevel world = Objects.requireNonNull(mc.level);
 
-        List<FreezingRecipe> freezingRecipes = world.getRecipeManager().getAllRecipesFor(RecipeTypes.FREEZING_RECIPE).stream().map(RecipeHolder::value).collect(Collectors.toList());
+        List<FreezingRecipe> freezingRecipes = world.recipeAccess().getAllRecipesFor(RecipeTypes.FREEZING_RECIPE).stream().map(RecipeHolder::value).collect(Collectors.toList());
         registration.addRecipes(PaladinFurnitureModJEI.FREEZING_RECIPE, freezingRecipes);
 
-        List<FurnitureRecipe> furnitureRecipes = world.getRecipeManager().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeHolder::value).collect(Collectors.toList());;
+        List<FurnitureRecipe> furnitureRecipes = world.recipeAccess().getAllRecipesFor(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeHolder::value).collect(Collectors.toList());;
         registration.addRecipes(PaladinFurnitureModJEI.FURNITURE_RECIPE, furnitureRecipes);
     }
 

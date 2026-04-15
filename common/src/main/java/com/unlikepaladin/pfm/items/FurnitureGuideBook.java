@@ -1,19 +1,15 @@
 package com.unlikepaladin.pfm.items;
 
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.world.InteractionHand;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -22,11 +18,11 @@ public class FurnitureGuideBook extends Item {
         super(settings);
     }
     @Override
-    public ActionResult use(Level world, Player user, InteractionHand hand) {
+    public InteractionResult use(Level world, Player user, InteractionHand hand) {
         return openBook(world, user, hand);
     }
     @ExpectPlatform
-    public static ActionResult openBook(Level world, Player user, InteractionHand hand) {
+    public static InteractionResult openBook(Level world, Player user, InteractionHand hand) {
         throw new AssertionError();
     }
 

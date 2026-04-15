@@ -3,11 +3,9 @@ package com.unlikepaladin.pfm.runtime.data;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.gson.stream.JsonWriter;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
-import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
@@ -15,19 +13,17 @@ import com.unlikepaladin.pfm.runtime.PFMProvider;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.storage.loot.LootDataType;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.functions.CopyCustomDataFunction;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.predicates.ConditionUserBuilder;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
@@ -43,7 +39,7 @@ import java.util.function.Supplier;
 
 
 public class PFMLootTableProvider extends PFMProvider {
-    private final List<Pair<Supplier<Consumer<BiConsumer<Identifier, LootTable.Builder>>>, ContextType>> lootTypeGenerators = ImmutableList.of(Pair.of(PFMLootTableGenerator::new, LootContextTypes.BLOCK));
+    private final List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, ContextKeySet>> lootTypeGenerators = ImmutableList.of(Pair.of(PFMLootTableGenerator::new, LootContextParamSets.BLOCK));
 
     public PFMLootTableProvider(PFMGenerator parent) {
         super(parent, "PFM Drops");
@@ -55,7 +51,7 @@ public class PFMLootTableProvider extends PFMProvider {
         startProviderRun();
         createWriter();
 
-        Path path = getParent().getResultItem();
+        Path path = getParent().getOutput();
         Set<ResourceLocation> identifiers = new HashSet<>();
         this.lootTypeGenerators.forEach((pair) -> pair.getFirst().get().accept((identifier, builder) -> {
             if (!identifiers.add(identifier)) {
@@ -109,7 +105,8 @@ public class PFMLootTableProvider extends PFMProvider {
             for (Block block : pfmBlocks) {
                 if (block.getLootTable().isEmpty()) continue;
 
-                ResourceLocation identifier = block.getLootTable().location();                if (!set.add(identifier)) continue;
+                ResourceLocation identifier = block.getLootTable().get().location();
+                if (!set.add(identifier)) continue;
                 LootTable.Builder builder5 = this.lootTables.remove(identifier);
                 if (builder5 == null) {
                     throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", identifier, BuiltInRegistries.BLOCK.getKey(block)));

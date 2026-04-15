@@ -5,25 +5,20 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.CampfireBlockEntity;
-import net.minecraft.entity.LivingEntity;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.item.crafting.CampfireCookingRecipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.recipe.RecipePropertySet;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.server.world.ServerWorld;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.Containers;
 import net.minecraft.core.NonNullList;
@@ -32,7 +27,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.event.GameEvent;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -48,7 +43,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
     }
     public static void litServerTick(Level world1, BlockPos pos, BlockState state, StovetopBlockEntity stovetopBlockEntity) {
         boolean bl = false;
-        ServerLevel world = (ServerWorld) world1;
+        ServerLevel world = (ServerLevel) world1;
         for (int i = 0; i < stovetopBlockEntity.itemsBeingCooked.size(); ++i) {
             ItemStack itemStack = stovetopBlockEntity.itemsBeingCooked.get(i);
             if (itemStack.isEmpty()) continue;
@@ -58,7 +53,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
             }
             if (stovetopBlockEntity.cookingTimes[i] < stovetopBlockEntity.cookingTotalTimes[i]) continue;
             SingleRecipeInput inventory = new SingleRecipeInput(itemStack);
-            ItemStack itemStack2 = world.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.value().assemble(inventory, world.registryAccess())).orElse(itemStack);
+            ItemStack itemStack2 = world.recipeAccess().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.value().assemble(inventory, world.registryAccess())).orElse(itemStack);
                 if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
                     Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack2);
                     stovetopBlockEntity.itemsBeingCooked.set(i, ItemStack.EMPTY);
@@ -91,7 +86,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         i = state.getValue(KitchenStovetopBlock.FACING).getClockWise().get2DDataValue();
         for (int j = 0; j < stovetopBlockEntity.itemsBeingCooked.size(); ++j) {
             ItemStack stack = stovetopBlockEntity.itemsBeingCooked.get(j);
-            if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || !world.getRecipeManager().getPropertySet(RecipePropertySet.CAMPFIRE_INPUT).canUse(stack)) continue;
+            if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || !world.recipeAccess().propertySet(RecipePropertySet.CAMPFIRE_INPUT).test(stack)) continue;
             Direction direction = Direction.from2DDataValue(Math.floorMod(j + i, 4));
             float f = 0.2125f;
             double x = pos.getX() + 0.5 - ((direction.getStepX() * f) + (direction.getClockWise().getStepX() * f));
@@ -156,16 +151,16 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable {
         for (int i = 0; i < this.itemsBeingCooked.size(); i++) {
             ItemStack itemStack = this.itemsBeingCooked.get(i);
             if (itemStack.isEmpty()) {
-                Optional<RecipeEntry<CampfireCookingRecipe>> optional = world.getRecipeManager()
-                        .getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleStackRecipeInput(stack), world);
+                Optional<RecipeHolder<CampfireCookingRecipe>> optional = world.recipeAccess()
+                        .getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SingleRecipeInput(stack), world);
                 if (optional.isEmpty()) {
                     return false;
                 }
 
-                this.cookingTotalTimes[i] = ((CampfireCookingRecipe)((RecipeEntry<?>)optional.get()).value()).getCookingTime();
+                this.cookingTotalTimes[i] = ((CampfireCookingRecipe)((RecipeHolder<?>)optional.get()).value()).cookingTime();
                 this.cookingTimes[i] = 0;
-                this.itemsBeingCooked.set(i, stack.splitUnlessCreative(1, entity));
-                world.emitGameEvent(GameEvent.BLOCK_CHANGE, this.getPos(), GameEvent.Emitter.of(entity, this.getCachedState()));
+                this.itemsBeingCooked.set(i, stack.consumeAndReturn(1, entity));
+                world.gameEvent(GameEvent.BLOCK_CHANGE, this.getBlockPos(), GameEvent.Context.of(entity, this.getBlockState()));
                 this.sendBlockUpdated();
                 return true;
             }

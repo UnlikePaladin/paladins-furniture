@@ -3,7 +3,9 @@ package com.unlikepaladin.pfm.blocks;
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHandleBlockEntity;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.component.CustomData;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.LivingEntity;
@@ -11,8 +13,7 @@ import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.BlockState;
@@ -22,20 +23,13 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.tick.ScheduledTickView;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -93,11 +87,11 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (direction.getOpposite() == state.getValue(FACING) && !state.canSurvive(world, pos)) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (direction.getOpposite() == state.getValue(FACING) && !state.canSurvive(levelReader, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override
@@ -184,7 +178,7 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
             ((ShowerHandleBlockEntity)(world.getBlockEntity(pos))).setState(false);
         }
         this.spawnDestroyParticles(world, player, pos, state);
-        if (state.is(BlockTags.GUARDED_BY_PIGLINS) && world instanceof ServerWorld serverWorld) {
+        if (state.is(BlockTags.GUARDED_BY_PIGLINS) && world instanceof ServerLevel serverWorld) {
             PiglinAi.angerNearbyPiglins(serverWorld, player, false);
         }
         world.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);

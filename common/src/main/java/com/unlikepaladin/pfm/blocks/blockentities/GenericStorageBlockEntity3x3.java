@@ -130,7 +130,7 @@ public class GenericStorageBlockEntity3x3 extends RandomizableContainerBlockEnti
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.getValue(BlockStateProperties.HORIZONTAL_FACING).getNormal();
+        Vec3i vec3i = state.getValue(BlockStateProperties.HORIZONTAL_FACING).getUnitVec3i();
         double d = (double)this.worldPosition.getX() + 0.5 + (double)vec3i.getX() / 2.0;
         double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
         double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;

@@ -3,10 +3,12 @@ package com.unlikepaladin.pfm.blocks;
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -19,10 +21,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +59,11 @@ public class CutleryBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.canSurvive(world, pos)) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (!state.canSurvive(levelReader, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     private static final VoxelShape FACING_NORTH = Shapes.or(box(3, 0, 0,11, 0.5, 15.5));
@@ -93,14 +91,14 @@ public class CutleryBlock extends HorizontalDirectionalBlock {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        Block block = (BuiltInRegistries.BLOCK.get(BuiltInRegistries.ITEM.getKey(itemStack.getItem())));
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        Block block = (BuiltInRegistries.BLOCK.getValue(BuiltInRegistries.ITEM.getKey(itemStack.getItem())));
         if(block instanceof PlateBlock) {
             BlockState newState = block.defaultBlockState();
             world.setBlockAndUpdate(pos, newState.setValue(PlateBlock.CUTLERY, true).setValue(FACING, state.getValue(FACING)));
             if (!player.isCreative())
                 itemStack.shrink(1);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         return super.useItemOn(itemStack, state, world, pos, player, hand, hit);
     }

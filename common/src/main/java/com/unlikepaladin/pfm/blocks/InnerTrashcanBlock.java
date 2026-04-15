@@ -5,7 +5,6 @@ import com.unlikepaladin.pfm.blocks.blockentities.TrashcanBlockEntity;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.Containers;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -19,6 +18,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.util.*;
+import net.minecraft.world.level.redstone.Orientation;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,7 +27,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.block.WireOrientation;
 import org.jetbrains.annotations.Nullable;
 
 import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
@@ -110,7 +109,7 @@ public class InnerTrashcanBlock extends BaseEntityBlock {
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable Orientation wireOrientation, boolean notify) {
         boolean bl = world.hasNeighborSignal(pos);
         if (bl != state.getValue(POWERED)) {
             if (bl) {
@@ -121,7 +120,7 @@ public class InnerTrashcanBlock extends BaseEntityBlock {
             }
             world.setBlock(pos, state.setValue(POWERED, bl), 3);
         }
-        super.neighborUpdate(state, world, pos, sourceBlock, wireOrientation, notify);
+        super.neighborChanged(state, world, pos, sourceBlock, wireOrientation, notify);
     }
 
     @Override

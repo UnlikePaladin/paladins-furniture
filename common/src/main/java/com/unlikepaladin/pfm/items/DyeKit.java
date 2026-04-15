@@ -48,7 +48,7 @@ public class DyeKit extends Item {
                 level.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 String newBlock= blockState.getBlock().toString();
                 newBlock = newBlock.replace(((DyeableFurnitureBlock) blockState.getBlock()).getPFMColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
-                BlockState blockState1 = BuiltInRegistries.BLOCK.get(ResourceLocation.parse(newBlock)).withPropertiesOf(blockState);
+                BlockState blockState1 = BuiltInRegistries.BLOCK.getValue(ResourceLocation.parse(newBlock)).withPropertiesOf(blockState);
                 level.setBlock(blockPos, blockState1, 3);
                 stack.shrink(1);
                 dyed = true;
@@ -81,7 +81,7 @@ public class DyeKit extends Item {
                     stack.shrink(1);
                 }
 
-                return ActionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
         } else if (entity instanceof DyeableFurnitureEntity<?>) {
             if (((DyeableFurnitureEntity<?>) entity).getPFMColor() != getColor()){
@@ -90,7 +90,7 @@ public class DyeKit extends Item {
                     ((DyeableFurnitureEntity<?>) entity).setPFMColor(getColor());
                     stack.shrink(1);
                 }
-                return ActionResult.SUCCESS_SERVER;
+                return InteractionResult.SUCCESS_SERVER;
             }
         }
         return InteractionResult.PASS;

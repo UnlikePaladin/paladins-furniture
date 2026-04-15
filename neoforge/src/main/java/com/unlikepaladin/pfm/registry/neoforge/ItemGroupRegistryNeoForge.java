@@ -44,7 +44,7 @@ public class ItemGroupRegistryNeoForge {
                     }).build();
             helper.register(ResourceLocation.fromNamespaceAndPath(MOD_ID, "furniture"), furnitureGroup);
             PaladinFurnitureMod.FURNITURE_GROUP.setB(furnitureGroup);
-            PaladinFurnitureMod.BUILDING_BLOCKS.setB(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS));
+            PaladinFurnitureMod.BUILDING_BLOCKS.setB(BuiltInRegistries.CREATIVE_MODE_TAB.getValue(CreativeModeTabs.BUILDING_BLOCKS));
         });
     }
 

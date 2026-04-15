@@ -10,6 +10,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.renderer.GameRenderer;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +47,7 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
             AbstractMicrowaveScreenHandler.setActive(microwaveBlockEntity,true);
         }).pos(this.leftPos + 8, this.topPos + 40).size( 40, 20).build());
         if (recipePropertySet == null)
-            recipePropertySet = microwaveBlockEntity.getWorld().getRecipeManager().getPropertySet(RecipePropertySet.SMOKER_INPUT);
+            recipePropertySet = microwaveBlockEntity.getLevel().recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT);
     }
 
     @Override
@@ -69,10 +70,10 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
         int k;
         int i = this.leftPos;
         int j = this.topPos;
-        context.drawTexture(RenderLayer::getGuiTextured, this.background, i, j, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
-        k = this.handler.getCookProgress();
+        context.blit(RenderType::guiTextured, this.background, i, j, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        k = this.menu.getCookProgress();
         k = Math.round(k * 1.75f);
-        context.drawTexture(RenderLayer::getGuiTextured, this.background, i + 147, j + 66 + -k, 176, 40 - k, 13, k +1, 256, 256);
+        context.blit(RenderType::guiTextured, this.background, i + 147, j + 66 + -k, 176, 40 - k, 13, k +1, 256, 256);
     }
 
     @Override
@@ -80,7 +81,7 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
         super.containerTick();
         this.isActive = menu.isActive;
 
-        if(!recipePropertySet.canUse(microwaveBlockEntity.getItem(0)) && !this.menu.isActive()) {
+        if(!recipePropertySet.test(microwaveBlockEntity.getItem(0)) && !this.menu.isActive()) {
             this.startButton.active = false;
         }
         else {

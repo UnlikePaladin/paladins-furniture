@@ -53,7 +53,7 @@ public class UnbakedClassicNightstandModel implements UnbakedModel {
         return List.of(PARENT);
     }
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getTextureDependencies(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         return Collections.emptyList();
     }
 
@@ -81,7 +81,7 @@ public class UnbakedClassicNightstandModel implements UnbakedModel {
     }
 
     @Override
-    public void resolve(Resolver resolver) {
+    public void resolveDependencies(Resolver resolver) {
         for (ResourceLocation c : NIGHTSTAND_MODEL_PARTS_BASE)
             resolver.resolve(c);
     }

@@ -47,7 +47,7 @@ public class UnbakedSimpleStoolModel implements UnbakedModel {
         return List.of(PARENT);
     }
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getTextureDependencies(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<Pair<String, String>> unresolvedTextureReferences) {
         return Collections.emptyList();
     }
 
@@ -75,7 +75,7 @@ public class UnbakedSimpleStoolModel implements UnbakedModel {
     }
 
     @Override
-    public void resolve(Resolver resolver) {
+    public void resolveDependencies(Resolver resolver) {
         for (ResourceLocation c : SIMPLE_STOOL_PARTS_BASE)
             resolver.resolve(c);
     }

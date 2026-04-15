@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -29,7 +29,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.block.WireOrientation;
+import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.Nullable;
 
 import static com.unlikepaladin.pfm.blocks.LogTableBlock.rotateShape;
@@ -98,7 +98,7 @@ public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable Orientation wireOrientation, boolean notify) {
         super.neighborChanged(state, world, pos, sourceBlock, wireOrientation, notify);
         if (world.getBlockEntity(pos) instanceof PFMToasterBlockEntity) {
             boolean toasting = ((PFMToasterBlockEntity)world.getBlockEntity(pos)).isToasting();
@@ -136,7 +136,7 @@ public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    public InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (world.getBlockEntity(pos) instanceof PFMToasterBlockEntity) {
             PFMToasterBlockEntity blockEntity = (PFMToasterBlockEntity) world.getBlockEntity(pos);
             if (!player.isShiftKeyDown()) {
@@ -160,7 +160,7 @@ public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
             }
         }
 
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @ExpectPlatform

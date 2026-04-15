@@ -1,29 +1,19 @@
 package com.unlikepaladin.pfm.recipes;
 
-import com.google.gson.*;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 
 import java.util.*;
@@ -37,7 +27,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     public SimpleFurnitureRecipe(String group, ItemStack output, List<Ingredient> input) {
         this.group = group;
         this.output = output;
-        this.input = DefaultedList.ofSize(input.size());
+        this.input = NonNullList.createWithCapacity(input.size());
         this.input.addAll(input);
     }
 
@@ -87,17 +77,17 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     }
 
     @Override
-    public String getGroup() {
+    public String group() {
         return this.group;
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider registryManager) {
+    public ItemStack getResult(HolderLookup.Provider registryManager) {
         return this.output;
     }
 
     @Override
-    public void write(RegistryByteBuf buf) {
+    public void write(RegistryFriendlyByteBuf buf) {
         Serializer.write(buf, this);
     }
 
@@ -107,12 +97,12 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     }
 
     @Override
-    public IngredientPlacement getIngredientPlacement() {
-        return IngredientPlacement.forMultipleSlots(input.stream().map(Optional::of).toList());
+    public PlacementInfo placementInfo() {
+        return PlacementInfo.createFromOptionals(input.stream().map(Optional::of).toList());
     }
 
     @Override
-    public RecipeBookCategory getRecipeBookCategory() {
+    public RecipeBookCategory recipeBookCategory() {
         return RecipeBookCategories.CRAFTING_MISC;
     }
 
@@ -127,7 +117,7 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
     }
 
     @Override
-    public List<CraftableFurnitureRecipe> getInnerRecipes(FeatureSet featureSet) {
+    public List<CraftableFurnitureRecipe> getInnerRecipes(FeatureFlagSet featureSet) {
         return Collections.singletonList(this);
     }
 
@@ -148,10 +138,10 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
 
         private static final MapCodec<SimpleFurnitureRecipe> CODEC = RecordCodecBuilder.mapCodec((instance) ->
                 instance.group(
-                                Codec.STRING.optionalFieldOf("group", "").forGetter(SimpleFurnitureRecipe::getGroup),
-                                ItemStack.VALIDATED_CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
+                                Codec.STRING.optionalFieldOf("group", "").forGetter(SimpleFurnitureRecipe::group),
+                                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.output),
                                 Ingredient.CODEC.listOf().fieldOf("ingredients").flatXmap((ingredients) -> {
-                                    DefaultedList<Ingredient> defaultedList = DefaultedList.of();
+                                    NonNullList<Ingredient> defaultedList = NonNullList.create();
                                     defaultedList.addAll(ingredients);
                                     if (defaultedList.isEmpty()) {
                                         return DataResult.error(() -> "No ingredients for furniture recipe");
@@ -174,16 +164,16 @@ public class SimpleFurnitureRecipe implements FurnitureRecipe, FurnitureRecipe.C
             return PACKET_CODEC;
         }
 
-        public static SimpleFurnitureRecipe read(RegistryByteBuf packetByteBuf) {
-            String string = packetByteBuf.readString();
-            DefaultedList<Ingredient> defaultedList = packetByteBuf.readCollection(DefaultedList::ofSize, buf1 -> Ingredient.PACKET_CODEC.decode((RegistryByteBuf) buf1));
-            ItemStack itemStack = ItemStack.PACKET_CODEC.decode(packetByteBuf);
+        public static SimpleFurnitureRecipe read(RegistryFriendlyByteBuf packetByteBuf) {
+            String string = packetByteBuf.readUtf();
+            NonNullList<Ingredient> defaultedList = packetByteBuf.readCollection(NonNullList::createWithCapacity, buf1 -> Ingredient.CONTENTS_STREAM_CODEC.decode((RegistryFriendlyByteBuf) buf1));
+            ItemStack itemStack = ItemStack.STREAM_CODEC.decode(packetByteBuf);
             return new SimpleFurnitureRecipe(string, itemStack, defaultedList);
         }
 
         public static void write(RegistryFriendlyByteBuf packetByteBuf, SimpleFurnitureRecipe simpleFurnitureRecipe) {
             packetByteBuf.writeUtf(simpleFurnitureRecipe.group);
-            packetByteBuf.writeCollection(simpleFurnitureRecipe.input, (buff, ingredient) -> Ingredient.CONTENTS_STREAM_CODEC.encode((RegistryByteBuf) buff, ingredient));
+            packetByteBuf.writeCollection(simpleFurnitureRecipe.input, (buff, ingredient) -> Ingredient.CONTENTS_STREAM_CODEC.encode((RegistryFriendlyByteBuf) buff, ingredient));
             ItemStack.STREAM_CODEC.encode(packetByteBuf, simpleFurnitureRecipe.output);
         }
     }

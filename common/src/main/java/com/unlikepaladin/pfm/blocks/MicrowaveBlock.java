@@ -8,33 +8,28 @@ import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.block.entity.CampfireBlockEntity;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.recipe.CampfireCookingRecipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.recipe.ServerRecipeManager;
-import net.minecraft.recipe.SmokingRecipe;
-import net.minecraft.recipe.input.SingleStackRecipeInput;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.Containers;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
@@ -44,7 +39,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -88,7 +82,7 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
         if (!world.isClientSide) {
             openScreen(player, state, world, pos);
             player.awardStat(Statistics.MICROWAVE_USED);
-            PiglinAi.angerNearbyPiglins((ServerWorld) world,player, true);
+            PiglinAi.angerNearbyPiglins((ServerLevel) world,player, true);
         }
         return InteractionResult.SUCCESS;
     }
@@ -140,13 +134,13 @@ public class MicrowaveBlock extends HorizontalFacingBlockWithEntity implements D
     @Override
     @Nullable
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level world, BlockState state, BlockEntityType<T> type) {
-        return createTickerHelper(world, type, BlockEntities.MICROWAVE_BLOCK_ENTITY);
+        return checkType(world, type, BlockEntities.MICROWAVE_BLOCK_ENTITY);
     }
 
     @Nullable
-    protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(World world, BlockEntityType<T> givenType, BlockEntityType<? extends MicrowaveBlockEntity> expectedType) {
-        if (!world.isClient) {
-            ServerRecipeManager.MatchGetter<SingleStackRecipeInput, SmokingRecipe> cachedcheck = ServerRecipeManager.createCachedMatchGetter(
+    protected static <T extends BlockEntity> BlockEntityTicker<T> checkType(Level world, BlockEntityType<T> givenType, BlockEntityType<? extends MicrowaveBlockEntity> expectedType) {
+        if (!world.isClientSide) {
+            RecipeManager.CachedCheck<SingleRecipeInput, SmokingRecipe> cachedcheck = RecipeManager.createCheck(
                     RecipeType.SMOKING
             );
             return createTickerHelper(givenType, expectedType, (worldx, pos, statex, blockEntity) -> MicrowaveBlockEntity.tick(worldx, pos, statex, blockEntity, cachedcheck));

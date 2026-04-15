@@ -50,7 +50,7 @@ public class UnbakedKitchenSinkModel implements UnbakedModel {
         }
     };
 
-    public Collection<SpriteIdentifier> getTextureDependencies(Function<Identifier, UnbakedModel> unbakedModelGetter, Set<com.mojang.datafixers.util.Pair<String, String>> unresolvedTextureReferences) {
+    public Collection<Material> getTextureDependencies(Function<ResourceLocation, UnbakedModel> unbakedModelGetter, Set<com.mojang.datafixers.util.Pair<String, String>> unresolvedTextureReferences) {
         return Collections.emptyList();
     }
 
@@ -78,7 +78,7 @@ public class UnbakedKitchenSinkModel implements UnbakedModel {
     }
 
     @Override
-    public void resolve(Resolver resolver) {
+    public void resolveDependencies(Resolver resolver) {
         for (ResourceLocation c : SINK_MODEL_PARTS_BASE)
             resolver.resolve(c);
     }

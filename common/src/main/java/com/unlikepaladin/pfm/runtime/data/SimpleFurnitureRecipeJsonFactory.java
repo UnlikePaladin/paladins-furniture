@@ -3,30 +3,20 @@ package com.unlikepaladin.pfm.runtime.data;
 
 import com.unlikepaladin.pfm.recipes.SimpleFurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.registry.RecipeTypes;
 import net.minecraft.advancements.*;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeSerializer;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.RegistryKeys;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.registry.entry.RegistryEntryList;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -77,7 +67,7 @@ public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
         return new SimpleFurnitureRecipeJsonFactory(stack);
     }
 
-    public SimpleFurnitureRecipeJsonFactory input(RegistryEntryList<Item> tag) {
+    public SimpleFurnitureRecipeJsonFactory input(HolderSet<Item> tag) {
         return this.input(Ingredient.of(tag));
     }
 
@@ -127,13 +117,13 @@ public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
     }
 
     @Override
-    public void save(RecipeOutput exporter, RegistryKey<Recipe<?>> recipeKey) {
+    public void save(RecipeOutput exporter, ResourceKey<Recipe<?>> recipeKey) {
         if (emptyCriterion) {
-            criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.ofItems(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
+            criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.of(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
         }
-        Advancement.Builder advancement$builder = exporter.getAdvancementBuilder().criterion("has_the_recipe", RecipeUnlockedCriterion.create(recipeKey)).rewards(AdvancementRewards.Builder.recipe(recipeKey)).criteriaMerger(AdvancementRequirements.CriterionMerger.OR);
-        this.criteria.forEach(advancement$builder::criterion);
-        exporter.accept(recipeKey, new SimpleFurnitureRecipe(this.group == null || this.group.isBlank() ? "" : this.group, stack, this.inputs), advancement$builder.build(recipeKey.getValue().withPrefixedPath("recipes/furniture/")));
+        Advancement.Builder advancement$builder = exporter.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeKey)).rewards(AdvancementRewards.Builder.recipe(recipeKey)).requirements(AdvancementRequirements.Strategy.OR);
+        this.criteria.forEach(advancement$builder::addCriterion);
+        exporter.accept(recipeKey, new SimpleFurnitureRecipe(this.group == null || this.group.isBlank() ? "" : this.group, stack, this.inputs), advancement$builder.build(recipeKey.location().withPrefix("recipes/furniture/")));
     }
 
     public void save(RecipeOutput exporter, ResourceLocation recipeId) {
@@ -141,10 +131,10 @@ public class SimpleFurnitureRecipeJsonFactory implements RecipeBuilder {
             criteria.put("has_workbench", PFMRecipeProvider.conditionsFromIngredient(Ingredient.of(PaladinFurnitureModBlocksItems.WORKING_TABLE)));
         }
         Recipe<?> recipe =  new SimpleFurnitureRecipe(this.group == null || this.group.isBlank() ? " " : this.group, stack, this.inputs);
-        RegistryKey<Recipe<?>> recipeKey = RegistryKey.of(RegistryKeys.RECIPE, recipeId);
+        ResourceKey<Recipe<?>> recipeKey = ResourceKey.create(Registries.RECIPE, recipeId);
         Advancement.Builder advancement$builder = exporter.advancement().addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(recipeKey)).rewards(AdvancementRewards.Builder.recipe(recipeKey)).requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(advancement$builder::addCriterion);
-        exporter.accept(recipeKey, recipe, advancement$builder.build(recipeKey.getValue().withPrefix("recipes/furniture/")));
+        exporter.accept(recipeKey, recipe, advancement$builder.build(recipeKey.location().withPrefix("recipes/furniture/")));
     }
 
         private void validate(ResourceLocation recipeId) {

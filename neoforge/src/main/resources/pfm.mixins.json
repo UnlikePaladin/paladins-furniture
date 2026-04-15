@@ -6,17 +6,17 @@
   "client": [
     "BlockColorsAccessor",
     "ItemColorsAccessor",
-    "PFMModelBakeryMixin",
+    "PFMReferencedModelsCollectorMixin",
     "PFMRenderLayersNeoForgeMixin"
   ],
   "mixins": [
+    "MappedRegistryAccessor",
     "PFMCFBModBlockEntitiesMixin",
     "PFMCookingPotBlockEntityMixin",
     "PFMLootItemAccessor",
     "PFMLootPool$BuilderMixin",
     "PFMReloadableResourceManagerImplMixin",
-    "PFMSaveLoaderMixin",
-    "MappedRegistryAccessor"
+    "PFMSaveLoaderMixin"
   ],
   "server": [
     "PFMMinecraftServerMixin"

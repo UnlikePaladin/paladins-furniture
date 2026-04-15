@@ -1,31 +1,18 @@
 package com.unlikepaladin.pfm.compat.patchouli;
 
-import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.registry.entry.RegistryEntry;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.api.IComponentProcessor;
 import vazkii.patchouli.api.IVariable;
 import vazkii.patchouli.api.IVariableProvider;
 
-import java.util.List;
-
 public class FurnitureRecipeProcessor implements IComponentProcessor {
     @Override
-    public void setup(World level, IVariableProvider variables) {
+    public void setup(Level level, IVariableProvider variables) {
 
     }
 
     @Override
-    public IVariable process(World level, String key) {
+    public IVariable process(Level level, String key) {
         return null;
     }
  /*   private FurnitureRecipe recipe;
@@ -34,7 +21,7 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
     @Override
     public void setup(Level level, IVariableProvider variables) {
         String recipeId = variables.get("recipe", level.registryAccess()).asString();
-        RecipeManager manager = level.getRecipeManager();
+        RecipeManager manager = level.recipeAccess();
         Recipe<?> recipe = manager.byKey(ResourceLocation.parse(recipeId)).map(RecipeHolder::value).orElse(null);
         this.recipe = recipe instanceof FurnitureRecipe ? (FurnitureRecipe) recipe : null;
         this.variant = variables.has("variant") ? ResourceLocation.tryParse(variables.get("variant", level.registryAccess()).asString()) : null;
@@ -59,7 +46,7 @@ public class FurnitureRecipeProcessor implements IComponentProcessor {
                         continue;
                     }
                     Ingredient ingredient = innerRecipe.getIngredientPlacement().getIngredients().get(index);
-                    List<RegistryEntry<Item>> stacks = ingredient.getMatchingItems();
+                    List<Holder<Item>> stacks = ingredient.getMatchingItems();
                     ingredientsArr[i] = stacks.isEmpty() ? ItemStack.EMPTY : stacks.get(0).value().getDefaultStack();
                 }
                 return IVariable.from(ingredientsArr, level.registryAccess());

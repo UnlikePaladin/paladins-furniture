@@ -6,25 +6,24 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.recipebook.ServerPlaceRecipe;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.StackedContents;
+import net.minecraft.world.entity.player.StackedItemContents;
 import net.minecraft.world.inventory.*;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.item.crafting.AbstractCookingRecipe;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.Optional;
 
-public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScreenHandler {
+public abstract class AbstractMicrowaveScreenHandler extends RecipeBookMenu {
     private final Container container;
     private final ContainerData dataAccess;
     protected final Level level;
@@ -53,7 +52,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
         container.startOpen(playerInventory.player);
         this.dataAccess = dataAccess;
         this.level = playerInventory.player.getCommandSenderWorld();
-        this.recipePropertySet = this.world.getRecipeManager().getPropertySet(RecipePropertySet.CAMPFIRE_INPUT);
+        this.recipePropertySet = this.level.recipeAccess().propertySet(RecipePropertySet.CAMPFIRE_INPUT);
         this.addSlot(new SizeableSlot(playerInventory.player, container, 0, 78, 40));
 
         for (i = 0; i < 3; ++i) {
@@ -150,7 +149,7 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     }
 
     protected boolean isCookable(ItemStack itemStack) {
-        return this.recipePropertySet.canUse(itemStack);
+        return this.recipePropertySet.test(itemStack);
     }
 
     public int getCookProgress() {
@@ -190,24 +189,24 @@ public abstract class AbstractMicrowaveScreenHandler extends AbstractRecipeScree
     }
 
     @Override
-    public PostFillAction fillInputSlots(boolean craftAll, boolean creative, RecipeEntry<?> recipe, ServerWorld world, PlayerInventory inventory) {
+    public PostPlaceAction handlePlacement(boolean craftAll, boolean creative, RecipeHolder<?> recipe, ServerLevel world, Inventory inventory) {
         final List<Slot> list = List.of(this.getSlot(0));
-        return InputSlotFiller.fill(new InputSlotFiller.Handler<>() {
+        return ServerPlaceRecipe.placeRecipe(new ServerPlaceRecipe.CraftingMenuAccess<AbstractCookingRecipe>() {
             @Override
-            public void populateRecipeFinder(RecipeFinder finder) {
-                AbstractMicrowaveScreenHandler.this.populateRecipeFinder(finder);
+            public void fillCraftSlotsStackedContents(StackedItemContents finder) {
+                AbstractMicrowaveScreenHandler.this.fillCraftSlotsStackedContents(finder);
             }
 
             @Override
-            public void clear() {
-                list.forEach(slot -> slot.setStackNoCallbacks(ItemStack.EMPTY));
+            public void clearCraftingContent() {
+                list.forEach(slot -> slot.set(ItemStack.EMPTY));
             }
 
             @Override
-            public boolean matches(RecipeEntry<AbstractCookingRecipe> entry) {
-                return entry.value().matches(new SingleStackRecipeInput(AbstractMicrowaveScreenHandler.this.inventory.getStack(0)), world);
+            public boolean recipeMatches(RecipeHolder<AbstractCookingRecipe> entry) {
+                return entry.value().matches(new SingleRecipeInput(AbstractMicrowaveScreenHandler.this.container.getItem(0)), world);
             }
-        }, 1, 1, List.of(this.getSlot(0)), list, inventory, (RecipeEntry<AbstractCookingRecipe>)recipe, craftAll, creative);
+        }, 1, 1, List.of(this.getSlot(0)), list, inventory, (RecipeHolder<AbstractCookingRecipe>)recipe, craftAll, creative);
     }
 }
 

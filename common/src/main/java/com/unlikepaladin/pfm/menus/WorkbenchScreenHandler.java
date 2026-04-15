@@ -7,6 +7,8 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
+import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
@@ -17,6 +19,8 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.Level;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class WorkbenchScreenHandler extends AbstractContainerMenu {
@@ -80,13 +84,13 @@ public class WorkbenchScreenHandler extends AbstractContainerMenu {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 156));
         }
         this.addDataSlot(this.selectedRecipe);
-        if (level instanceof ServerWorld) {
+        if (level instanceof ServerLevel) {
             if (ALL_RECIPES.isEmpty() || CRAFTABLE_RECIPES.isEmpty()) {
                 CRAFTABLE_RECIPES.clear();
                 ALL_RECIPES.clear();
-                ((ServerRecipeManagerAccessor)((ServerWorld)level).getRecipeManager()).getPreparedRecipes().getAll(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeEntry::value).forEach(recipe -> {
+                ((ServerRecipeManagerAccessor)((ServerLevel)level).recipeAccess()).getPreparedRecipes().byType(RecipeTypes.FURNITURE_RECIPE).stream().map(RecipeHolder::value).forEach(recipe -> {
                     ALL_RECIPES.add(recipe);
-                    CRAFTABLE_RECIPES.addAll(recipe.getInnerRecipes(world.getEnabledFeatures()));
+                    CRAFTABLE_RECIPES.addAll(recipe.getInnerRecipes(level.enabledFeatures()));
                 });
                 CRAFTABLE_RECIPES.sort(FurnitureRecipe.CraftableFurnitureRecipe::compareTo);
             }
@@ -97,17 +101,17 @@ public class WorkbenchScreenHandler extends AbstractContainerMenu {
     }
 
     @ExpectPlatform
-    public static void sendSyncRecipesPayload(PlayerEntity player, World world, ArrayList<FurnitureRecipe> recipes) {
+    public static void sendSyncRecipesPayload(Player player, Level world, ArrayList<FurnitureRecipe> recipes) {
         throw new AssertionError();
     }
 
-    public static void setAllRecipes(World world, List<FurnitureRecipe> recipes) {
+    public static void setAllRecipes(Level world, List<FurnitureRecipe> recipes) {
         if (!ALL_RECIPES.isEmpty()) return;
 
         ALL_RECIPES.addAll(recipes);
         CRAFTABLE_RECIPES.clear();
         for (FurnitureRecipe recipe : ALL_RECIPES) {
-            CRAFTABLE_RECIPES.addAll(recipe.getInnerRecipes(world.getEnabledFeatures()));
+            CRAFTABLE_RECIPES.addAll(recipe.getInnerRecipes(world.enabledFeatures()));
         }
         CRAFTABLE_RECIPES.sort(FurnitureRecipe.CraftableFurnitureRecipe::compareTo);
     }

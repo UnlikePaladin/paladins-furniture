@@ -1,6 +1,7 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneTorchBlock;
@@ -19,10 +20,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.block.WireOrientation;
-import net.minecraft.world.tick.ScheduledTickView;
+import net.minecraft.world.level.redstone.Orientation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -85,15 +84,15 @@ public class SimpleLightBlock extends PowerableBlock {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.canSurvive(world, pos)) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (!state.canSurvive(levelReader, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
         return state;
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable WireOrientation wireOrientation, boolean notify) {
+    protected void neighborChanged(BlockState state, Level world, BlockPos pos, Block sourceBlock, @Nullable Orientation wireOrientation, boolean notify) {
         if (world.isClientSide) {
             return;
         }

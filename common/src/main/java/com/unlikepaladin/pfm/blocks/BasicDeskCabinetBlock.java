@@ -21,7 +21,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -313,7 +313,7 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         if (blockEntity instanceof GenericStorageBlockEntity3x3) {
             player.openMenu((GenericStorageBlockEntity3x3)blockEntity);
             player.awardStat(Statistics.DRAWER_SEARCHED);
-            PiglinAi.angerNearbyPiglins((ServerWorld) world, player, true);
+            PiglinAi.angerNearbyPiglins((ServerLevel) world, player, true);
         }
         return InteractionResult.CONSUME;
     }

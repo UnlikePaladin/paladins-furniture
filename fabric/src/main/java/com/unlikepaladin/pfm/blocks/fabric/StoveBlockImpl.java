@@ -7,7 +7,7 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.PFMCookingForBlo
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;

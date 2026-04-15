@@ -20,9 +20,7 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
 import net.minecraft.server.packs.repository.KnownPack;
 import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackCompatibility;
 import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.AddPackFindersEvent;
@@ -42,7 +40,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
     public static PaladinFurnitureModConfig pfmConfig;
     public PaladinFurnitureModForge(FMLJavaModLoadingContext loadContext) {
         pfmConfig = new PaladinFurnitureModConfig(FMLPaths.CONFIGDIR.get());
-        PaladinFurnitureMod.isClientSide = FMLEnvironment.dist == Dist.CLIENT;
+        PaladinFurnitureMod.isClient = FMLEnvironment.dist == Dist.CLIENT;
         try {
             pfmConfig.initialize();
         } catch (IOException e) {
@@ -59,7 +57,7 @@ public class PaladinFurnitureModForge extends PaladinFurnitureMod {
         MinecraftForge.EVENT_BUS.register(SoundRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(NetworkRegistryForge.class);
         MinecraftForge.EVENT_BUS.register(PFMComponentsImpl.class);
-        if (isClientSide) {
+        if (isClient) {
             loadContext.getModEventBus().addListener(EventPriority.LOW, ColorRegistryForge::registerBlockColors);
             loadContext.getModEventBus().addListener(EventPriority.LOWEST, ColorRegistryForge::registerItemColors);
         }

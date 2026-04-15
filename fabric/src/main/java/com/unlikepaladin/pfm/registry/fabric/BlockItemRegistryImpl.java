@@ -36,7 +36,7 @@ public class BlockItemRegistryImpl {
 
     public static void registerBlockItemPlatformSpecific(String itemName, Block block, Tuple<String, CreativeModeTab> group) {
         PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-        registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Properties().registryKey(LateBlockRegistry.getItemRegistryKey(itemName)).useBlockPrefixedTranslationKey()), group);
+        registerItemPlatformSpecific(itemName, () -> new BlockItem(block, new Item.Properties().setId(LateBlockRegistry.getItemRegistryKey(itemName)).useBlockDescriptionPrefix()), group);
         if (AbstractSittableBlock.isWoodBased(block.defaultBlockState())) {
             FlammableBlockRegistry.getDefaultInstance().add(block, 20, 5);
             FuelRegistryEvents.BUILD.register((builder, context) -> {
@@ -48,7 +48,7 @@ public class BlockItemRegistryImpl {
     public static void registerBlockPlatformSpecific(String blockName, Block block, boolean registerItem) {
         if (registerItem) {
             PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-            registerBlockItemPlatformSpecific(blockName, block, new Tuple<>("building_blocks", BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.BUILDING_BLOCKS)));
+            registerBlockItemPlatformSpecific(blockName, block, new Tuple<>("building_blocks", BuiltInRegistries.CREATIVE_MODE_TAB.getValue(CreativeModeTabs.BUILDING_BLOCKS)));
         }
         Registry.register(BuiltInRegistries.BLOCK, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, blockName),  block);
     }

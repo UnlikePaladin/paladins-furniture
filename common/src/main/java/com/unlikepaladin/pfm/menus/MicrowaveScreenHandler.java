@@ -4,12 +4,9 @@ import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.registry.ScreenHandlerIDs;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.Container;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.inventory.RecipeBookType;
 import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.recipe.book.RecipeBookType;
-import net.minecraft.network.chat.Component;
 
 public class MicrowaveScreenHandler
         extends AbstractMicrowaveScreenHandler {

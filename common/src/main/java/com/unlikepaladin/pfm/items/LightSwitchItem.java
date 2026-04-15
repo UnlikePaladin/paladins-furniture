@@ -20,7 +20,6 @@ import net.minecraft.network.chat.Component;
 
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -40,17 +39,17 @@ public class LightSwitchItem extends BlockItem {
     }
 
     @Override
-    public ActionResult use(Level world, Player player, InteractionHand hand) {
+    public InteractionResult use(Level world, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
         if (world.isClientSide) {
-            return ActionResult.FAIL;
+            return InteractionResult.FAIL;
         }
         if (player.isShiftKeyDown()) {
             stack.remove(DataComponents.BLOCK_ENTITY_DATA);
             createTag(stack);
-            return ActionResult.SUCCESS.withNewHandStack(stack);
+            return InteractionResult.SUCCESS.heldItemTransformedTo(stack);
         }
-        return ActionResult.PASS;
+        return InteractionResult.PASS;
     }
 
 

@@ -1,11 +1,7 @@
 package com.unlikepaladin.pfm.runtime;
 
 import com.google.common.base.Stopwatch;
-import com.google.gson.JsonParser;
-import com.google.gson.stream.JsonReader;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
-import com.unlikepaladin.pfm.config.PaladinFurnitureModConfig;
 import com.unlikepaladin.pfm.data.materials.StoneVariantRegistry;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMLootTableProvider;
@@ -15,8 +11,6 @@ import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import net.minecraft.SharedConstants;
 import com.unlikepaladin.pfm.utilities.Version;
-import net.minecraft.data.DataProvider;
-import net.minecraft.SharedConstants;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -26,7 +20,6 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.Collectors;
 
 public class PFMDataGenerator extends PFMGenerator {
     public static boolean FROZEN = false;
@@ -75,7 +68,7 @@ public class PFMDataGenerator extends PFMGenerator {
                 providers.add(metaProvider);
                 this.setTotalCount(providers.size());
 
-                if (PaladinFurnitureMod.isClientSide && !PaladinFurnitureMod.getPFMConfig().disableGeneratingScreen())
+                if (PaladinFurnitureMod.isClient && !PaladinFurnitureMod.getPFMConfig().disableGeneratingScreen())
                     ClientOverlaySetter.setOverlayToPFMOverlay(this);
                 boolean allDone = false;
 
@@ -91,7 +84,7 @@ public class PFMDataGenerator extends PFMGenerator {
 
                     int completedTasks = (int) futures.stream().filter(Future::isDone).count();
                     this.setCount(completedTasks);
-                    if (PaladinFurnitureMod.isClientSide)
+                    if (PaladinFurnitureMod.isClient)
                         ClientOverlaySetter.updateScreen();
                 }
                 executor.shutdown();

@@ -5,8 +5,10 @@ import com.unlikepaladin.pfm.blocks.blockentities.ShowerHeadBlockEntity;
 import com.unlikepaladin.pfm.items.ShowerHandleItem;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -25,10 +27,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.Nullable;
 
 import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
@@ -59,11 +57,11 @@ public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (direction == state.getValue(FACING) && !state.canSurvive(world, pos)) {
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (direction == state.getValue(FACING) && !state.canSurvive(levelReader, pos)) {
             return Blocks.AIR.defaultBlockState();
         }
-        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return  super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override
@@ -87,11 +85,11 @@ public class BasicShowerHeadBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack stack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (stack.getItem() instanceof ShowerHandleItem)
-            return ItemInteractionResult.PASS;
+            return InteractionResult.PASS;
 
-        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        return InteractionResult.TRY_WITH_EMPTY_HAND;
     }
 
 

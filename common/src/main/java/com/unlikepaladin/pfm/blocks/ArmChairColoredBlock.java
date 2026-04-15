@@ -4,13 +4,13 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -18,14 +18,10 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.ScheduledTickView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -214,8 +210,8 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        return direction.getAxis().isHorizontal() ? state.setValue(FACING, state.getValue(FACING)).setValue(SHAPE, getShape(state, world, pos)) : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        return direction.getAxis().isHorizontal() ? state.setValue(FACING, state.getValue(FACING)).setValue(SHAPE, getShape(state, levelReader, pos)) : super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     @Override

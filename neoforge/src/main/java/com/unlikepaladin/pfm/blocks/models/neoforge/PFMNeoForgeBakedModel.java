@@ -7,11 +7,11 @@ import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.models.AbstractBakedModel;
 import com.unlikepaladin.pfm.client.neoforge.PFMBakedModelGetQuadsExtension;
+import net.minecraft.client.renderer.block.model.BakedOverrides;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -319,8 +319,8 @@ public abstract class PFMNeoForgeBakedModel extends AbstractBakedModel implement
         }
 
         @Override
-        public ItemOverrides getOverrides() {
-            return ItemOverrides.EMPTY;
+        public BakedOverrides overrides() {
+            return BakedOverrides.EMPTY;
         }
 
         @Override

@@ -7,7 +7,9 @@ import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.*;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -33,10 +35,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -69,20 +67,20 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         PlateBlockEntity plateBlockEntity;
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof PlateBlockEntity && (itemStack.has(DataComponents.FOOD))) {
             if (!world.isClientSide && ((PlateBlockEntity)blockEntity).addItem(player.getAbilities().instabuild ? itemStack.copy() : itemStack)) {
                 player.awardStat(Statistics.PLATE_USED);
-                return ItemInteractionResult.SUCCESS;
+                return InteractionResult.SUCCESS;
             }
-            return ItemInteractionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
-        if(BuiltInRegistries.BLOCK.get(BuiltInRegistries.ITEM.getKey(itemStack.getItem())) instanceof CutleryBlock) {
+        if(BuiltInRegistries.BLOCK.getValue(BuiltInRegistries.ITEM.getKey(itemStack.getItem())) instanceof CutleryBlock) {
             world.setBlockAndUpdate(pos, state.setValue(CUTLERY, true));
             itemStack.shrink(1);
-            return ItemInteractionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
         if (player.isShiftKeyDown() && blockEntity instanceof PlateBlockEntity) {
             plateBlockEntity = (PlateBlockEntity)blockEntity;
@@ -91,9 +89,9 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
                     ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, plateBlockEntity.removeItem());
                     world.addFreshEntity(itemEntity);
                     player.awardStat(Statistics.PLATE_USED);
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
-                return ItemInteractionResult.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
         if(blockEntity instanceof PlateBlockEntity){
@@ -109,11 +107,11 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
                             ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stack.finishUsingItem(world, player));
                             world.addFreshEntity(itemEntity);
                         }
-                        player.eat(world, stack);
+                        stack.use(world, player, InteractionHand.MAIN_HAND);
                     }
                     plateBlockEntity.removeItem();
                     player.awardStat(Statistics.PLATE_USED);
-                    return ItemInteractionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 }
         }
         return super.useItemOn(itemStack, state, world, pos, player, hand, hit);
@@ -161,15 +159,15 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.canSurvive(world, pos)) {
-            if (state.getValue(CUTLERY)) {
-                ItemEntity itemEntity = new ItemEntity((Level) world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
-                world.addFreshEntity(itemEntity);
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (!state.canSurvive(levelReader, pos)) {
+            if (levelReader instanceof Level && state.getValue(CUTLERY)) {
+                ItemEntity itemEntity = new ItemEntity((Level) levelReader, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
+                ((Level) levelReader).addFreshEntity(itemEntity);
             }
             return Blocks.AIR.defaultBlockState();
         }
-        return super.updateShape(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
     protected static final VoxelShape PLATE = Shapes.or(box(2,0,3, 12,1,13));
