@@ -6,40 +6,40 @@ import com.unlikepaladin.pfm.compat.cookingforblockheads.fabric.PFMCookingForBlo
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
-import net.minecraft.client.gui.screen.ingame.HandledScreens;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.network.RegistryByteBuf;
-import net.minecraft.network.codec.PacketCodec;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerContext;
-import net.minecraft.screen.ScreenHandlerType;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Pair;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.util.Tuple;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.flag.FeatureFlags;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.BiFunction;
 
 public class ScreenHandlerRegistryImpl {
 
-    public static <T extends ScreenHandler, D>  ScreenHandlerType<T> registerScreenHandlerExtended(Identifier id, TriFunc<Integer, PlayerInventory, D, T> factory, PacketCodec<RegistryByteBuf, D> pac) {
+    public static <T extends AbstractContainerMenu, D>  MenuType<T> registerScreenHandlerExtended(ResourceLocation id, TriFunc<Integer, Inventory, D, T> factory, StreamCodec<RegistryFriendlyByteBuf, D> pac) {
         if (pac == null)
-            return Registry.register(Registries.SCREEN_HANDLER, id, new ScreenHandlerType<>((syncId, playerInventory) -> factory.apply(syncId, playerInventory, null), FeatureFlags.VANILLA_FEATURES));
+            return Registry.register(BuiltInRegistries.MENU, id, new MenuType<>((syncId, playerInventory) -> factory.apply(syncId, playerInventory, null), FeatureFlags.DEFAULT_FLAGS));
 
-        return Registry.register(Registries.SCREEN_HANDLER, id, new ExtendedScreenHandlerType<>(factory::apply, pac));
+        return Registry.register(BuiltInRegistries.MENU, id, new ExtendedScreenHandlerType<>(factory::apply, pac));
     }
 
-    public static <T extends ScreenHandler> ScreenHandlerType<T> registerScreenHandlerSimple(Identifier id, BiFunction<Integer, PlayerInventory, T> factory) {
-        return Registry.register(Registries.SCREEN_HANDLER, id, new ScreenHandlerType<>(factory::apply, FeatureFlags.VANILLA_FEATURES));
+    public static <T extends AbstractContainerMenu> MenuType<T> registerScreenHandlerSimple(ResourceLocation id, BiFunction<Integer, Inventory, T> factory) {
+        return Registry.register(BuiltInRegistries.MENU, id, new MenuType<>(factory::apply, FeatureFlags.DEFAULT_FLAGS));
     }
 
-    public static <T extends ScreenHandler> Pair<TriFunc<Integer, PlayerInventory, StoveScreenHandler.StoveData, T>, PacketCodec<RegistryByteBuf, StoveScreenHandler.StoveData>> getStoveMenuFactory() {
+    public static <T extends AbstractContainerMenu> Tuple<TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, T>, StreamCodec<RegistryFriendlyByteBuf, StoveScreenHandler.StoveData>> getStoveMenuFactory() {
         if (PaladinFurnitureMod.getModList().contains("cookingforblockheads")) {
-            return new Pair<>((TriFunc<Integer, PlayerInventory, StoveScreenHandler.StoveData, T>) PFMCookingForBlockHeadsCompat.getStoveScreenHandler(), PFMCookingForBlockHeadsCompat.getStovePacket()) ;
+            return new Tuple<>((TriFunc<Integer, Inventory, StoveScreenHandler.StoveData, T>) PFMCookingForBlockHeadsCompat.getStoveScreenHandler(), PFMCookingForBlockHeadsCompat.getStovePacket()) ;
         }
         else
-            return new Pair<>((integer, playerInventory, data) -> (T) new StoveScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
+            return new Tuple<>((integer, playerInventory, data) -> (T) new StoveScreenHandler(integer, playerInventory, data), StoveScreenHandler.PACKET_CODEC);
     }
 }

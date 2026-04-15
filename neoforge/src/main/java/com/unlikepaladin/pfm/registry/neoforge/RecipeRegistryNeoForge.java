@@ -8,10 +8,10 @@ import com.unlikepaladin.pfm.recipes.FurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.SimpleFurnitureRecipe;
 import com.unlikepaladin.pfm.recipes.neoforge.FurnitureSerializerNeoForge;
 import com.unlikepaladin.pfm.registry.RecipeTypes;
-import net.minecraft.recipe.AbstractCookingRecipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.AbstractCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -22,7 +22,7 @@ public class RecipeRegistryNeoForge {
 
     @SubscribeEvent
     public static void registerRecipeSerializers(RegisterEvent event) {
-        event.register(Registries.RECIPE_SERIALIZER.getKey(), recipeSerializerRegisterHelper -> {
+        event.register(BuiltInRegistries.RECIPE_SERIALIZER.key(), recipeSerializerRegisterHelper -> {
             recipeSerializerRegisterHelper.register(
                     RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE_SERIALIZER = new AbstractCookingRecipe.Serializer<>(FreezingRecipe::new, 200)
             );
@@ -40,7 +40,7 @@ public class RecipeRegistryNeoForge {
 
     @SubscribeEvent
     public static void registerRecipeTypes(RegisterEvent event){
-        event.register(Registries.RECIPE_TYPE.getKey(), recipeTypeRegisterHelper -> {
+        event.register(BuiltInRegistries.RECIPE_TYPE.key(), recipeTypeRegisterHelper -> {
             recipeTypeRegisterHelper.register(RecipeTypes.FREEZING_ID, RecipeTypes.FREEZING_RECIPE = new RecipeType<>() {
                 @Override
                 public String toString() {

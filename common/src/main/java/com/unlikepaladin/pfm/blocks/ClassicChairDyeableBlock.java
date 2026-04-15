@@ -3,13 +3,14 @@ package com.unlikepaladin.pfm.blocks;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalFacingBlock;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.math.Direction;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.core.Direction;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,12 +22,12 @@ public class ClassicChairDyeableBlock extends ClassicChairBlock implements Dyeab
     private final DyeColor color;
     private static final List<FurnitureBlock> WOOD_DYEABLE_CLASSIC_CHAIRS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DYEABLE_CLASSIC_CHAIRS = new ArrayList<>();
-    public static MapCodec<ClassicChairDyeableBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(DyeColor.CODEC.fieldOf("color").forGetter(abstractSittableBlock -> abstractSittableBlock.color), createSettingsCodec()).apply(instance, ClassicChairDyeableBlock::new));;;
+    public static MapCodec<ClassicChairDyeableBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(DyeColor.CODEC.fieldOf("color").forGetter(abstractSittableBlock -> abstractSittableBlock.color), propertiesCodec()).apply(instance, ClassicChairDyeableBlock::new));;;
 
-    public ClassicChairDyeableBlock(DyeColor color, Settings settings) {
+    public ClassicChairDyeableBlock(DyeColor color, Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));
-        if(isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(ClassicChairDyeableBlock.class)){
+        registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(TUCKED, false));
+        if(isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(ClassicChairDyeableBlock.class)){
             WOOD_DYEABLE_CLASSIC_CHAIRS.add(new FurnitureBlock(this, "oak_chair_classic"));
         }
         else if (this.getClass().isAssignableFrom(ClassicChairDyeableBlock.class)){
@@ -43,8 +44,8 @@ public class ClassicChairDyeableBlock extends ClassicChairBlock implements Dyeab
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        super.appendProperties(stateManager);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        super.createBlockStateDefinition(stateManager);
     }
 
     @Override
@@ -53,7 +54,7 @@ public class ClassicChairDyeableBlock extends ClassicChairBlock implements Dyeab
     }
 
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 }

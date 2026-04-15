@@ -8,14 +8,18 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.color.block.BlockColorProvider;
-import net.minecraft.client.color.world.BiomeColors;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.util.DyeColor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
 import java.util.List;
@@ -34,7 +38,7 @@ public class ColorRegistry {
                 if (entity != null && tintIndex == 1) {
                     if (entity instanceof LampBlockEntity) {
                         DyeColor color = ((LampBlockEntity)entity).getPFMColor();
-                        return color.getMapColor().color;
+                        return color.getMapColor().col;
                     }
                 } else if (entity != null && tintIndex == 0) {
                     if (entity instanceof LampBlockEntity && getBlockColor(((LampBlockEntity)entity).getVariant().getLogBlock()) != null) {
@@ -51,7 +55,7 @@ public class ColorRegistry {
         });
         PaladinFurnitureMod.furnitureEntryMap.forEach((key, value) -> {
             value.getVariantToBlockMap().forEach((variantBase, block) -> {
-                BlockColorProvider blockColorProvider = getBlockColor(variantBase.getBaseBlock());
+                BlockColor blockColorProvider = getBlockColor(variantBase.getBaseBlock());
                 if (key.isAssignableFrom(KitchenSinkBlock.class)) {
                     registerBlockColor(block, ((state, world, pos, tintIndex) -> {
                         if (tintIndex == 1) {
@@ -68,7 +72,7 @@ public class ColorRegistry {
                 }
             });
             value.getVariantToBlockMapNonBase().forEach((variantBase, block) -> {
-                BlockColorProvider blockColorProvider = getBlockColor(variantBase.getBaseBlock());
+                BlockColor blockColorProvider = getBlockColor(variantBase.getBaseBlock());
                 if (key.isAssignableFrom(KitchenSinkBlock.class)) {
                     registerBlockColor(block, ((state, world, pos, tintIndex) -> {
                         if (tintIndex == 1) {
@@ -88,12 +92,12 @@ public class ColorRegistry {
     }
 
     public static void registerBlockRenderLayers() {
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.IRON_CHAIN, RenderLayer.getCutout());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.MESH_TRASHCAN, RenderLayer.getCutout());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.WHITE_MIRROR, RenderLayer.getCutout());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.GRAY_MIRROR, RenderLayer.getCutout());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.BASIC_LAMP, RenderLayer.getCutout());
-        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP, RenderLayer.getCutout());
+        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.IRON_CHAIN, RenderType.cutout());
+        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.MESH_TRASHCAN, RenderType.cutout());
+        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.WHITE_MIRROR, RenderType.cutout());
+        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.GRAY_MIRROR, RenderType.cutout());
+        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.BASIC_LAMP, RenderType.cutout());
+        registerBlockToRenderLayer(PaladinFurnitureModBlocksItems.KITCHEN_STOVETOP, RenderType.cutout());
     }
 
     public static void registerItemColors() {
@@ -108,24 +112,24 @@ public class ColorRegistry {
     }
 
     @ExpectPlatform
-    public static void registerBlockColor(Block block, BlockColorProvider blockColorProvider){
+    public static void registerBlockColor(Block block, BlockColor blockColorProvider){
         throw new RuntimeException();
     }
     @ExpectPlatform
-    public static BlockColorProvider getBlockColor(Block block){
+    public static BlockColor getBlockColor(Block block){
         throw new RuntimeException();
     }
 
     @ExpectPlatform
-    public static void registerBlockToRenderLayer(Block block, RenderLayer renderLayer){
+    public static void registerBlockToRenderLayer(Block block, RenderType renderLayer){
         throw new RuntimeException();
     }
 
-    private static BlockColorProvider addToiletColor() {
-        return (state, view, pos, index) -> view != null && state.get(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? BiomeColors.getWaterColor(view, pos) : state.get(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? 0x3c44a9 : 0x534230;
+    private static BlockColor addToiletColor() {
+        return (state, view, pos, index) -> view != null && state.getValue(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? BiomeColors.getAverageWaterColor(view, pos) : state.getValue(BasicToiletBlock.TOILET_STATE) != ToiletState.DIRTY ? 0x3c44a9 : 0x534230;
     }
 
-    private static BlockColorProvider addWaterColor() {
-        return (state, view, pos, index) -> view != null && index == 1 ? BiomeColors.getWaterColor(view, pos) : index == 1 ? 0x3c44a9 : 0xFFFFFF;
+    private static BlockColor addWaterColor() {
+        return (state, view, pos, index) -> view != null && index == 1 ? BiomeColors.getAverageWaterColor(view, pos) : index == 1 ? 0x3c44a9 : 0xFFFFFF;
     }
 }

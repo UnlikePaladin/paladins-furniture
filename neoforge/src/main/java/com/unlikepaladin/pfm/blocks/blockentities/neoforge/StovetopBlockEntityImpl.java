@@ -1,16 +1,14 @@
 package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,31 +18,31 @@ public class StovetopBlockEntityImpl extends StovetopBlockEntity {
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        NbtCompound nbt =  this.saveInitialChunkData(new NbtCompound(), registryLookup);
-        Inventories.writeNbt(nbt, this.itemsBeingCooked, true, registryLookup);
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider lookup) {
+        CompoundTag nbt = this.saveInitialChunkData(new CompoundTag(), lookup);
+        ContainerHelper.saveAllItems(nbt, this.itemsBeingCooked, true, lookup);
         return nbt;
     }
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return  BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag, RegistryWrapper.WrapperLookup holders) {
-        this.readNbt(tag, holders);
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider holders) {
+        this.loadAdditional(tag, holders);
     }
 
     @Override
-    public void onDataPacket(ClientConnection connection, BlockEntityUpdateS2CPacket pkt, RegistryWrapper.WrapperLookup lookup) {
-        super.onDataPacket(connection, pkt, lookup);
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookup) {
+        super.onDataPacket(net, pkt, lookup);
         this.itemsBeingCooked.clear();
-        Inventories.readNbt(pkt.getNbt(), this.itemsBeingCooked, lookup);
+        ContainerHelper.loadAllItems(pkt.getTag(), this.itemsBeingCooked, lookup);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends StovetopBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends StovetopBlockEntity> getFactory() {
         return StovetopBlockEntityImpl::new;
     }
 }

@@ -3,25 +3,26 @@ package com.unlikepaladin.pfm.blocks.models.dinnerTable.forge;
 import com.unlikepaladin.pfm.blocks.DinnerTableBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class ForgeDinnerTableModel extends PFMForgeBakedModel {
-    public ForgeDinnerTableModel(ModelBakeSettings settings, List<BakedModel> modelList) {
+    public ForgeDinnerTableModel(ModelState settings, List<BakedModel> modelList) {
         super(settings, modelList);
     }
 
@@ -29,7 +30,7 @@ public class ForgeDinnerTableModel extends PFMForgeBakedModel {
 
     @NotNull
     @Override
-    public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
+    public ModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
         if (state.getBlock() instanceof DinnerTableBlock) {
             ModelData.Builder builder = ModelData.builder();
 
@@ -37,9 +38,9 @@ public class ForgeDinnerTableModel extends PFMForgeBakedModel {
             data = super.getModelData(world, pos, state, data);
 
             DinnerTableBlock block = (DinnerTableBlock) state.getBlock();
-            Direction dir = state.get(DinnerTableBlock.FACING);
-            boolean left = block.isTable(world, pos, dir.rotateYCounterclockwise(), dir);
-            boolean right = block.isTable(world, pos, dir.rotateYClockwise(), dir);
+            Direction dir = state.getValue(DinnerTableBlock.FACING);
+            boolean left = block.isTable(world, pos, dir.getCounterClockWise(), dir);
+            boolean right = block.isTable(world, pos, dir.getClockWise(), dir);
             BitSet set = new BitSet();
             set.set(0, left);
             set.set(1, right);
@@ -50,7 +51,7 @@ public class ForgeDinnerTableModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull Random rand, @NotNull ModelData extraData, RenderLayer renderType) {
+    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, @NotNull RandomSource rand, @NotNull ModelData extraData, RenderType renderType) {
         if (state != null && state.getBlock() instanceof DinnerTableBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             List<BakedQuad> baseQuads = new ArrayList<>();
             List<BakedQuad> secondaryQuads = new ArrayList<>();
@@ -58,7 +59,7 @@ public class ForgeDinnerTableModel extends PFMForgeBakedModel {
             BitSet set = extraData.get(CONNECTIONS).connections;
             boolean left = set.get(0);
             boolean right = set.get(1);
-            Direction dir = state.get(DinnerTableBlock.FACING);
+            Direction dir = state.getValue(DinnerTableBlock.FACING);
             baseQuads.addAll(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData, renderType));
             if (!left) {
                 int index = dir == Direction.NORTH || dir == Direction.WEST ? 1 : 2;
@@ -71,7 +72,7 @@ public class ForgeDinnerTableModel extends PFMForgeBakedModel {
             if (!right && !left) {
                 secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData, renderType));
             }
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
             quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
             return quads;
@@ -80,13 +81,13 @@ public class ForgeDinnerTableModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(@Nullable Direction face, RandomSource random) {
         // base
         List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(null, face, random));
         // legs
         List<BakedQuad> secondaryQuads = new ArrayList<>(getTemplateBakedModels().get(3).getQuads(null, face, random));
 
-        List<Sprite> spriteList = getSpriteList(blockState);
+        List<TextureAtlasSprite> spriteList = getSpriteList(blockState);
         List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
         quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
         return quads;

@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.ducks;
 
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.SpriteContents;
-import net.minecraft.util.Identifier;
+import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.renderer.texture.SpriteContents;
+import net.minecraft.resources.ResourceLocation;
 
 public interface PFMSpriteExtensions {
     int pfm$getMipmapLevel();
@@ -11,5 +11,5 @@ public interface PFMSpriteExtensions {
 
     void pfm$setContents(SpriteContents contents);
 
-    Identifier pfm$getId();
+    ResourceLocation pfm$getId();
 }

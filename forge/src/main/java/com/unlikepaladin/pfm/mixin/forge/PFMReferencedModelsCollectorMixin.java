@@ -43,9 +43,11 @@ import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinner
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
 import com.unlikepaladin.pfm.client.forge.PaladinFurnitureModClientForge;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.BlockStateModelLoader;
+import net.minecraft.client.resources.model.ModelDiscovery;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -56,17 +58,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Map;
 
-@Mixin(ReferencedModelsCollector.class)
+@Mixin(ModelDiscovery.class)
 public abstract class PFMReferencedModelsCollectorMixin {
 
 
-    @Shadow abstract UnbakedModel computeResolvedModel(Identifier id);
+    @Shadow
+    protected abstract void getBlockModel(ResourceLocation modelResourceLocation);
 
     @Shadow public abstract void add(ResolvableModel model);
 
-    @ModifyVariable(method = "getModel", at = @At(value = "STORE", ordinal = 0), ordinal = 0)
-    private UnbakedModel pfm$loadModels(UnbakedModel olModel, Identifier olId) throws IOException {
-        Identifier resourceId = olId;
+    @ModifyVariable(method = "loadBlockModel", at = @At(value = "STORE", ordinal = 0), ordinal = 0)
+    private UnbakedModel pfm$loadModels(UnbakedModel olModel, ResourceLocation olId) throws IOException {
+        ResourceLocation resourceId = olId;
         if (ModelHelper.containsIdentifier(UnbakedMirrorModel.MIRROR_MODEL_IDS, resourceId)){
             return new UnbakedMirrorModel(UnbakedMirrorModel.DEFAULT_TEXTURES[2], ModelHelper.getVanillaConcreteColor(resourceId), UnbakedMirrorModel.DEFAULT_TEXTURES[1], new ArrayList<>(), ModelHelper.getColor(resourceId));
         } else if (UnbakedBedModel.BED_MODEL_IDS.contains(resourceId)){
@@ -129,15 +132,15 @@ public abstract class PFMReferencedModelsCollectorMixin {
             UnbakedModel model = new UnbakedKitchenWallDrawerSmallModel();
             return model;
         }
-        else if (ModelHelper.containsIdentifier(UnbakedIronFridgeModel.IRON_FRIDGE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+        else if (ModelHelper.containsIdentifier(UnbakedIronFridgeModel.IRON_FRIDGE_MODEL_IDS.toArray(new ResourceLocation[0]), resourceId)){
             UnbakedModel model = new UnbakedIronFridgeModel();
             return model;
         }
-        else if (ModelHelper.containsIdentifier(UnbakedFridgeModel.FRIDGE_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+        else if (ModelHelper.containsIdentifier(UnbakedFridgeModel.FRIDGE_MODEL_IDS.toArray(new ResourceLocation[0]), resourceId)){
             UnbakedModel model = new UnbakedFridgeModel(resourceId);
             return model;
         }
-        else if (ModelHelper.containsIdentifier(UnbakedFreezerModel.FREEZER_MODEL_IDS.toArray(new Identifier[0]), resourceId)){
+        else if (ModelHelper.containsIdentifier(UnbakedFreezerModel.FREEZER_MODEL_IDS.toArray(new ResourceLocation[0]), resourceId)){
             UnbakedModel model = new UnbakedFreezerModel(resourceId);
             return model;
         }
@@ -214,7 +217,7 @@ public abstract class PFMReferencedModelsCollectorMixin {
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void onReturnInit(CallbackInfo ci) {
-        PaladinFurnitureModClientForge.registerExtraModels(this::computeResolvedModel);
+        PaladinFurnitureModClientForge.registerExtraModels(this::getBlockModel);
     }
 
 }

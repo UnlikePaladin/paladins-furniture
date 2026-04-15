@@ -1,10 +1,10 @@
 package com.unlikepaladin.pfm.blocks.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.forge.MicrowaveBlockEntityImpl;
-import net.minecraft.screen.ArrayPropertyDelegate;
-import net.minecraft.screen.PropertyDelegate;
+import net.minecraft.world.inventory.SimpleContainerData;
+import net.minecraft.world.inventory.ContainerData;
 
-public class MicrowavePropertyDelegate extends ArrayPropertyDelegate {
+public class MicrowavePropertyDelegate extends SimpleContainerData {
     private final MicrowaveBlockEntityImpl microwaveBlockEntity;
     public MicrowavePropertyDelegate(MicrowaveBlockEntityImpl microwaveBlockEntity, int dataCount) {
         super(dataCount);

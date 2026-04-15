@@ -13,8 +13,6 @@ import com.unlikepaladin.pfm.client.model.PFMItemModel;
 import com.unlikepaladin.pfm.client.screens.PFMConfigScreen;
 import com.unlikepaladin.pfm.config.option.Side;
 import com.unlikepaladin.pfm.fabric.PaladinFurnitureModFabric;
-import com.unlikepaladin.pfm.networking.MicrowaveUpdatePayload;
-import com.unlikepaladin.pfm.networking.SyncConfigPayload;
 import com.unlikepaladin.pfm.networking.fabric.LeaveEventHandlerFabric;
 import com.unlikepaladin.pfm.registry.NetworkIDs;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
@@ -30,11 +28,11 @@ import net.fabricmc.fabric.api.client.rendering.v1.SpecialBlockRendererRegistry;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.Block;
-import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.render.item.model.ItemModelTypes;
 import net.minecraft.client.render.item.model.special.SpecialModelTypes;
 import net.minecraft.client.render.item.tint.TintSourceTypes;
-import net.minecraft.client.util.InputUtil;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -55,9 +53,9 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
 
         TextureReloadQueueImpl.registerTextureReload();
         PFMSpriteRegistry.registerAdditionalSprites();
-        PaladinFurnitureModClient.USE_TOILET_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyBinding(
+        PaladinFurnitureModClient.USE_TOILET_KEYBIND = KeyBindingHelper.registerKeyBinding(new KeyMapping(
                 "key.pfm.toiletUse", // The translation key of the keybinding's name
-                InputUtil.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
+                InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 GLFW.GLFW_KEY_U, // The keycode of the key
                 "keybindings.category.pfm" // The translation key of the keybinding's category.
         ));

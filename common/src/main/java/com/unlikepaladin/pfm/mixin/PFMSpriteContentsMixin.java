@@ -1,11 +1,9 @@
 package com.unlikepaladin.pfm.mixin;
 
 import com.unlikepaladin.pfm.ducks.PFMSpriteContentExtensions;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.SpriteContents;
+import net.minecraft.client.renderer.texture.SpriteContents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(SpriteContents.class)
 public class PFMSpriteContentsMixin implements PFMSpriteContentExtensions {

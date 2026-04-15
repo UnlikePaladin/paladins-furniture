@@ -4,33 +4,36 @@ import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.mob.PiglinBrain;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.State;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.BlockState;
+
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.StateHolder;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.Containers;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -39,18 +42,18 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.KitchenCounterBlock.rotateShape;
 
-public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockEntityProvider {
+public class KitchenCabinetBlock extends HorizontalDirectionalBlock implements EntityBlock {
     private final BlockState baseBlockState;
     private final Block baseBlock;
     private static final List<FurnitureBlock> WOOD_CABINETS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_CABINETS = new ArrayList<>();
 
-    public KitchenCabinetBlock(Settings settings) {
-        super(settings.luminance((state) -> 0).emissiveLighting((blockstate, b, c) -> false));
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(OPEN, false));
-        this.baseBlockState = this.getDefaultState();
+    public KitchenCabinetBlock(Properties settings) {
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(OPEN, false));
+        this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(KitchenCabinetBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(KitchenCabinetBlock.class)){
             WOOD_CABINETS.add(new FurnitureBlock(this, "kitchen_cabinet"));
         }
         else if (this.getClass().isAssignableFrom(KitchenCabinetBlock.class)){
@@ -58,9 +61,9 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
         }
     }
 
-    public static final MapCodec<KitchenCabinetBlock> CODEC = createCodec(KitchenCabinetBlock::new);
+    public static final MapCodec<KitchenCabinetBlock> CODEC = simpleCodec(KitchenCabinetBlock::new);
     @Override
-    protected MapCodec<? extends HorizontalFacingBlock> getCodec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 
@@ -71,15 +74,15 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
         return STONE_CABINETS.stream();
     }
 
-    public static final BooleanProperty OPEN = Properties.OPEN;
+    public static final BooleanProperty OPEN = BlockStateProperties.OPEN;
 
-    protected static final VoxelShape STRAIGHT = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 8), createCuboidShape(0, 1, 8,16, 16, 9), createCuboidShape(6, 3, 9,7, 7, 10), createCuboidShape(9, 3, 9,10, 7, 10));
-    protected static final VoxelShape INNER_CORNER = VoxelShapes.union(createCuboidShape(0, 0, 0,8, 16, 8),createCuboidShape(1, 3, 9,2, 7, 10), createCuboidShape(0, 1, 8,8, 16, 9),createCuboidShape(7, 1, 9,8, 16, 16),createCuboidShape(8, 0, 0,16, 16, 16),createCuboidShape(6, 3, 13,7, 7, 14));
-    protected static final VoxelShape OUTER_CORNER = VoxelShapes.union(createCuboidShape(0, 0, 0,8, 16, 8),createCuboidShape(6, 3, 9,7, 7, 10),createCuboidShape(0, 1, 8,8, 16, 9),createCuboidShape(8, 1, 0,9, 16, 8),createCuboidShape(9, 3, 6,10, 7, 7));
+    protected static final VoxelShape STRAIGHT = Shapes.or(box(0, 0, 0,16, 16, 8), box(0, 1, 8,16, 16, 9), box(6, 3, 9,7, 7, 10), box(9, 3, 9,10, 7, 10));
+    protected static final VoxelShape INNER_CORNER = Shapes.or(box(0, 0, 0,8, 16, 8),box(1, 3, 9,2, 7, 10), box(0, 1, 8,8, 16, 9),box(7, 1, 9,8, 16, 16),box(8, 0, 0,16, 16, 16),box(6, 3, 13,7, 7, 14));
+    protected static final VoxelShape OUTER_CORNER = Shapes.or(box(0, 0, 0,8, 16, 8),box(6, 3, 9,7, 7, 10),box(0, 1, 8,8, 16, 9),box(8, 1, 0,9, 16, 8),box(9, 3, 6,10, 7, 7));
 
-    protected static final VoxelShape STRAIGHT_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,16, 16, 8), createCuboidShape(16, 3, 14,17, 7, 15), createCuboidShape(15, 1, 8,16, 16, 16), createCuboidShape(-1, 3, 14,0, 7, 15),createCuboidShape(0, 1, 8,1, 16, 16));
-    protected static final VoxelShape INNER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(7, 1, 9,8, 16, 16),createCuboidShape(8, 0, 8,16, 16, 16), createCuboidShape(6, 3, 13,7, 7, 14),createCuboidShape(0, 0, 0,16, 16, 8));
-    protected static final VoxelShape OUTER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(0, 0, 0,8, 16, 8),createCuboidShape(0, 1, 8,1, 16, 16),createCuboidShape(-1, 3, 14,0, 7, 15),createCuboidShape(8, 1, 0,9, 16, 8),createCuboidShape(9, 3, 6,10, 7, 7));
+    protected static final VoxelShape STRAIGHT_OPEN = Shapes.or(box(0, 0, 0,16, 16, 8), box(16, 3, 14,17, 7, 15), box(15, 1, 8,16, 16, 16), box(-1, 3, 14,0, 7, 15),box(0, 1, 8,1, 16, 16));
+    protected static final VoxelShape INNER_CORNER_OPEN = Shapes.or(box(7, 1, 9,8, 16, 16),box(8, 0, 8,16, 16, 16), box(6, 3, 13,7, 7, 14),box(0, 0, 0,16, 16, 8));
+    protected static final VoxelShape OUTER_CORNER_OPEN = Shapes.or(box(0, 0, 0,8, 16, 8),box(0, 1, 8,1, 16, 16),box(-1, 3, 14,0, 7, 15),box(8, 1, 0,9, 16, 8),box(9, 3, 6,10, 7, 7));
 
     protected static final VoxelShape STRAIGHT_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, STRAIGHT);
     protected static final VoxelShape STRAIGHT_EAST = rotateShape(Direction.NORTH, Direction.EAST, STRAIGHT);
@@ -103,20 +106,20 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
     protected static final VoxelShape OUTER_CORNER_OPEN_WEST = rotateShape(Direction.NORTH, Direction.WEST, OUTER_CORNER_OPEN);
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        stateManager.add(Properties.HORIZONTAL_FACING);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        stateManager.add(BlockStateProperties.HORIZONTAL_FACING);
         stateManager.add(OPEN);
     }
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction direction = state.get(KitchenCounterBlock.FACING);
-        BlockState neighborStateFacing = view.getBlockState(pos.offset(direction));
-        BlockState neighborStateOpposite = view.getBlockState(pos.offset(direction.getOpposite()));
-        boolean open = state.get(OPEN);
-        if (isCabinet(neighborStateFacing) && neighborStateFacing.getProperties().contains(Properties.HORIZONTAL_FACING)) {
-            Direction direction2 = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
-            if (direction2.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, view, pos, direction2.getOpposite())) {
-                if (direction2 == direction.rotateYCounterclockwise()) {
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+        Direction direction = state.getValue(KitchenCounterBlock.FACING);
+        BlockState neighborStateFacing = view.getBlockState(pos.relative(direction));
+        BlockState neighborStateOpposite = view.getBlockState(pos.relative(direction.getOpposite()));
+        boolean open = state.getValue(OPEN);
+        if (isCabinet(neighborStateFacing) && neighborStateFacing.getProperties().contains(BlockStateProperties.HORIZONTAL_FACING)) {
+            Direction direction2 = neighborStateFacing.getValue(BlockStateProperties.HORIZONTAL_FACING);
+            if (direction2.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, view, pos, direction2.getOpposite())) {
+                if (direction2 == direction.getCounterClockWise()) {
                     switch (direction) {
                         case NORTH: {
                             if (open) {
@@ -201,16 +204,16 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
                 }
             }
         }
-        else if (isCabinet(neighborStateOpposite) && neighborStateOpposite.getProperties().contains(Properties.HORIZONTAL_FACING)) {
+        else if (isCabinet(neighborStateOpposite) && neighborStateOpposite.getProperties().contains(BlockStateProperties.HORIZONTAL_FACING)) {
             Direction direction3;
             if (neighborStateOpposite.getBlock() instanceof AbstractFurnaceBlock) {
-                direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING).getOpposite();
+                direction3 = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
             }
             else {
-                direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
+                direction3 = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING);
             }
-            if (direction3.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, view, pos, direction3)) {
-                if (direction3 == direction.rotateYCounterclockwise()) {
+            if (direction3.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(state, view, pos, direction3)) {
+                if (direction3 == direction.getCounterClockWise()) {
                     switch (direction) {
                         case NORTH: return INNER_CORNER_WEST;
                         case SOUTH: return INNER_CORNER_EAST;
@@ -285,62 +288,62 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
     }
 
     @Override
-    public void onStateReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (state.isOf(newState.getBlock())) {
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean moved) {
+        if (state.is(newState.getBlock())) {
             return;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof Inventory) {
-            ItemScatterer.spawn(world, pos, (Inventory) blockEntity);
-            world.updateComparators(pos, this);
+        if (blockEntity instanceof Container) {
+            Containers.dropContents(world, pos, (Container) blockEntity);
+            world.updateNeighbourForOutputSignal(pos, this);
         }
-        super.onStateReplaced(state, world, pos, newState, moved);
+        super.onRemove(state, world, pos, newState, moved);
     }
     public boolean isCabinet(BlockState state) {
         return state.getBlock() instanceof KitchenCabinetBlock;
     }
 
-    public boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
-        BlockState blockState = world.getBlockState(pos.offset(dir));
+    public boolean isDifferentOrientation(BlockState state, BlockGetter world, BlockPos pos, Direction dir) {
+        BlockState blockState = world.getBlockState(pos.relative(dir));
         return !this.isCabinet(blockState);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection());
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, BlockHitResult hit) {
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
+    public InteractionResult useWithoutItem(BlockState state, Level world, BlockPos pos, Player player, BlockHitResult hit) {
+        if (world.isClientSide) {
+            return InteractionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (world instanceof ServerWorld serverWorld && blockEntity instanceof GenericStorageBlockEntity9x3) {
-            player.openHandledScreen((GenericStorageBlockEntity9x3)blockEntity);
-            player.incrementStat(Statistics.CABINET_SEARCHED);
-            PiglinBrain.onGuardedBlockInteracted(serverWorld, player, true);
+        if (world instanceof ServerLevel serverWorld && blockEntity instanceof GenericStorageBlockEntity9x3) {
+            player.openMenu((GenericStorageBlockEntity9x3)blockEntity);
+            player.awardStat(Statistics.CABINET_SEARCHED);
+            PiglinAi.angerNearbyPiglins(serverWorld, player, true);
         }
-        return ActionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+    public boolean isCollisionShapeFullBlock(BlockState state, BlockGetter world, BlockPos pos) {
         return false;
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return GenericStorageBlockEntity9x3.getFactory().create(pos, state);
     }
 
-    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
@@ -348,12 +351,12 @@ public class KitchenCabinetBlock extends HorizontalFacingBlock implements BlockE
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 }

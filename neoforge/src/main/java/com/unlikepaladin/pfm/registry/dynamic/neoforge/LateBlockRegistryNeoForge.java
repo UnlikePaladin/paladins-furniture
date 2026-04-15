@@ -2,12 +2,12 @@ package com.unlikepaladin.pfm.registry.dynamic.neoforge;
 
 import com.mojang.datafixers.util.Pair;
 import com.unlikepaladin.pfm.data.materials.DynamicBlockRegistry;
-import com.unlikepaladin.pfm.mixin.neoforge.SimpleRegistryAccessor;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.SimpleRegistry;
+import com.unlikepaladin.pfm.mixin.neoforge.MappedRegistryAccessor;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.RegisterEvent;
@@ -26,11 +26,11 @@ public class LateBlockRegistryNeoForge {
             bus.addListener(EventPriority.HIGHEST, LateBlockRegistryNeoForge::registerLateBlockAndItems);
         }
         Consumer<RegisterEvent> eventConsumer = registerEvent ->  {
-            if (registerEvent.getRegistryKey().equals(Registries.BLOCK.getKey())) {
+            if (registerEvent.getRegistryKey().equals(BuiltInRegistries.BLOCK.key())) {
                 Runnable blockEvent = () -> {
                     Registry<?> registry = registerEvent.getRegistry();
-                    if (registry instanceof SimpleRegistry<?> fr) {
-                        boolean frozen = ((SimpleRegistryAccessor)fr).isFrozen();
+                    if (registry instanceof MappedRegistry<?> fr) {
+                        boolean frozen = ((MappedRegistryAccessor)fr).isFrozen();
                         fr.unfreeze(false);
                         LateBlockRegistryImpl.registerBlocks((Registry<Block>) registry);
                         if (frozen) fr.freeze();
@@ -46,7 +46,7 @@ public class LateBlockRegistryNeoForge {
     }
 
     public static void registerLateBlockAndItems(RegisterEvent event) {
-        if (!event.getRegistryKey().equals(Registries.ITEM.getKey()))
+        if (!event.getRegistryKey().equals(BuiltInRegistries.ITEM.key()))
             return;
         if (!hasRegisteredBlockSets) {
             DynamicBlockRegistry.initialize();

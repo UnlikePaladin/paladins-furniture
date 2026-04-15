@@ -2,17 +2,21 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.*;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,13 +31,13 @@ public class BasicDeskBlock extends Block {
     private static final List<FurnitureBlock> STONE_BASIC_DESKS = new ArrayList<>();
     private final BlockState baseBlockState;
     public final FurnitureBlock deskBlock;
-    public BasicDeskBlock(Settings settings) {
-        super(settings.luminance((state) -> 0).emissiveLighting((blockstate, b, c) -> false));
-        setDefaultState(this.getStateManager().getDefaultState());
-        this.baseBlockState = this.getDefaultState();
+    public BasicDeskBlock(Properties settings) {
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        registerDefaultState(this.getStateDefinition().any());
+        this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
         this.deskBlock = new FurnitureBlock(this, "desk_basic");
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(BasicDeskBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(BasicDeskBlock.class)){
             WOOD_BASIC_DESKS.add(deskBlock);
         }
         else if (this.getClass().isAssignableFrom(BasicDeskBlock.class)){
@@ -49,19 +53,20 @@ public class BasicDeskBlock extends Block {
     }
 
     @Override
-    public boolean isShapeFullCube(BlockState state, BlockView world, BlockPos pos) {
+    public boolean isCollisionShapeFullBlock(BlockState state, BlockGetter world, BlockPos pos) {
         return false;
     }
 
-    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
         return 0;
     }
 
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState();
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState();
     }
 
     public boolean canConnect(BlockState blockState) {
@@ -91,7 +96,7 @@ public class BasicDeskBlock extends Block {
 
     // Cursed I know
     final static Map<String, VoxelShape> VOXEL_SHAPES = new HashMap<>();
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
 
         Boolean north = canConnect(world.getBlockState(pos.north()));
         boolean east = canConnect(world.getBlockState(pos.east()));
@@ -107,25 +112,25 @@ public class BasicDeskBlock extends Block {
     private static void generateVoxelShape(String key, Boolean north, Boolean east, Boolean west, Boolean south) {
         VoxelShape newVoxelShape = TABLE_CLASSIC_BASE;
         if (!north && !south && !east && !west) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_CLASSIC_NORTH_EAST_LEG, TABLE_CLASSIC_SOUTH_WEST_LEG, TABLE_CLASSIC_SOUTH_EAST_LEG, TABLE_CLASSIC_NORTH_WEST_LEG);
+            newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_NORTH_EAST_LEG, TABLE_CLASSIC_SOUTH_WEST_LEG, TABLE_CLASSIC_SOUTH_EAST_LEG, TABLE_CLASSIC_NORTH_WEST_LEG);
         }
         if (!north && !east) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_CLASSIC_NORTH_EAST_LEG);
+            newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_NORTH_EAST_LEG);
         }
         if (!north && !west)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_CLASSIC_NORTH_WEST_LEG);
+            newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_NORTH_WEST_LEG);
         }
         if (!south && !east)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_CLASSIC_SOUTH_EAST_LEG);
+            newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_SOUTH_EAST_LEG);
         }
         if (!south && !west)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_CLASSIC_SOUTH_WEST_LEG);
+            newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_SOUTH_WEST_LEG);
         }
         VOXEL_SHAPES.put(key, newVoxelShape);
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 }

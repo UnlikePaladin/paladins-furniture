@@ -10,24 +10,16 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexFormatElement;
-import net.minecraft.client.render.VertexFormats;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.PlayerScreenHandler;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -38,42 +30,42 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
     protected BlockState blockState;
     protected VariantBase<?> variant;
 
-    public PFMFabricBakedModel(ModelBakeSettings settings, List<BakedModel> bakedModels) {
+    public PFMFabricBakedModel(ModelState settings, List<BakedModel> bakedModels) {
         super(settings, bakedModels);
     }
 
-    public void pushTextureTransform(QuadEmitter context, Sprite sprite) {
+    public void pushTextureTransform(QuadEmitter context, TextureAtlasSprite sprite) {
         context.pushTransform(quad -> {
-            Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getBakedModelManager().getAtlas(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE)).find(quad, 0);
-            if (originalSprite.getContents().getId() != sprite.getContents().getId()) {
+            TextureAtlasSprite originalSprite = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS)).find(quad, 0);
+            if (originalSprite.contents().name() != sprite.contents().name()) {
                 for (int index = 0; index < 4; index++) {
-                    float frameU = originalSprite.getFrameFromU(quad.u(index));
-                    float frameV = originalSprite.getFrameFromV(quad.v(index));
-                    quad.uv(index, sprite.getFrameU(frameU), sprite.getFrameV(frameV));
+                    float frameU = originalSprite.getUOffset(quad.u(index));
+                    float frameV = originalSprite.getVOffset(quad.v(index));
+                    quad.uv(index, sprite.getU(frameU), sprite.getV(frameV));
                 }
             }
             return true;
         });
     }
-    public void pushTextureTransform(QuadEmitter context, List<Sprite> toReplace, List<Sprite> replacement) {
-        pushTextureTransform(context, toReplace, replacement, SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE);
+    public void pushTextureTransform(QuadEmitter context, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacement) {
+        pushTextureTransform(context, toReplace, replacement, TextureAtlas.LOCATION_BLOCKS);
     }
-    public void pushTextureTransform(QuadEmitter context, List<Sprite> toReplace, List<Sprite> replacement, Identifier atlasId) {
+    public void pushTextureTransform(QuadEmitter context, List<TextureAtlasSprite> toReplace, List<TextureAtlasSprite> replacement, ResourceLocation atlasId) {
         context.pushTransform(quad -> {
             if (replacement != null && toReplace != null ){
-                Sprite originalSprite = SpriteFinder.get(MinecraftClient.getInstance().getBakedModelManager().getAtlas(atlasId)).find(quad, 0);
-                Identifier keyId = originalSprite.getContents().getId();
+                TextureAtlasSprite originalSprite = SpriteFinder.get(Minecraft.getInstance().getModelManager().getAtlas(atlasId)).find(quad, 0);
+                ResourceLocation keyId = originalSprite.contents().name();
                 int textureIndex = IntStream.range(0, toReplace.size())
-                        .filter(i -> keyId.equals(toReplace.get(i).getContents().getId()))
+                        .filter(i -> keyId.equals(toReplace.get(i).contents().name()))
                         .findFirst()
                         .orElse(-1);
 
                 if (textureIndex != -1 && !toReplace.equals(replacement)) {
-                    Sprite sprite = replacement.get(textureIndex);
+                    TextureAtlasSprite sprite = replacement.get(textureIndex);
                     for (int index = 0; index < 4; index++) {
-                        float frameU = originalSprite.getFrameFromU(quad.u(index));
-                        float frameV = originalSprite.getFrameFromV(quad.v(index));
-                        quad.uv(index, sprite.getFrameU(frameU), sprite.getFrameV(frameV));
+                        float frameU = originalSprite.getUOffset(quad.u(index));
+                        float frameV = originalSprite.getVOffset(quad.v(index));
+                        quad.uv(index, sprite.getU(frameU), sprite.getV(frameV));
                     }
                 }
             }
@@ -83,13 +75,13 @@ public abstract class PFMFabricBakedModel extends AbstractBakedModel implements 
 
 
     @Override
-    public Sprite pfm$getParticle(World world, BlockPos pos, BlockState state) {
+    public TextureAtlasSprite pfm$getParticle(Level world, BlockPos pos, BlockState state) {
         return pfm$getParticle(state);
     }
 
     @Override
-    public Sprite getParticleSprite() {
-        return getTemplateBakedModels().get(0).getParticleSprite();
+    public TextureAtlasSprite getParticleIcon() {
+        return getTemplateBakedModels().get(0).getParticleIcon();
     }
 
     @Override

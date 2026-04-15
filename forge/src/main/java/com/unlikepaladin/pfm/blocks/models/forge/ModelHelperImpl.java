@@ -1,13 +1,13 @@
 package com.unlikepaladin.pfm.blocks.models.forge;
 
 import com.unlikepaladin.pfm.ducks.forge.PFMBakedModelManagerExtensions;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.util.ModelIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.resources.ResourceLocation;
 
 public class ModelHelperImpl {
-    public static BakedModel getModelFromIdentifier(Identifier id) {
-        return ((PFMBakedModelManagerExtensions)MinecraftClient.getInstance().getBakedModelManager()).pfm_getModel(id);
+    public static BakedModel getModelFromIdentifier(ResourceLocation id) {
+        return ((PFMBakedModelManagerExtensions)Minecraft.getInstance().getModelManager()).pfm_getModel(id);
     }
 }

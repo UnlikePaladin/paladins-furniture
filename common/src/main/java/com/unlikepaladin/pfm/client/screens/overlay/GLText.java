@@ -1,7 +1,5 @@
 package com.unlikepaladin.pfm.client.screens.overlay;
 
-import org.joml.Vector4f;
-
 import java.io.Closeable;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
@@ -407,23 +405,6 @@ public class GLText {
     //}
     public void gltColor(float r, float g, float b, float a) {
         glUniform4f(_gltText2DShaderColorUniformLocation, r, g, b, a);
-    }
-
-    // GLT_API void gltGetColor(GLfloat *r, GLfloat *g, GLfloat *b, GLfloat *a)
-    //{
-    //	GLfloat color[4];
-    //	glGetUniformfv(_gltText2DShader, _gltText2DShaderColorUniformLocation, color);
-    //
-    //	if (r) (*r) = color[0];
-    //	if (g) (*g) = color[1];
-    //	if (b) (*b) = color[2];
-    //	if (a) (*a) = color[3];
-    //}
-    public Vector4f gltGetColor() {
-        final float[] color = new float[4];
-        glGetUniformfv(_gltText2DShader, _gltText2DShaderColorUniformLocation, color);
-
-        return new Vector4f(color[0], color[1], color[2], color[3]);
     }
 
     // GLT_API GLfloat gltGetLineHeight(GLfloat scale)

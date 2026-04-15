@@ -7,11 +7,14 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.PFMBakedModelContainer;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.client.render.model.*;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -19,32 +22,32 @@ import java.util.function.Function;
 
 public class UnbakedHerringboneModel implements UnbakedModel {
 
-    private static final List<Identifier> TEMPLATE_MODEL = List.of(Identifier.of("minecraft:block/cube_all"));
-    private final Identifier id;
-    public UnbakedHerringboneModel(Identifier id) {
+    private static final List<ResourceLocation> TEMPLATE_MODEL = List.of(ResourceLocation.parse("minecraft:block/cube_all"));
+    private final ResourceLocation id;
+    public UnbakedHerringboneModel(ResourceLocation id) {
         this.id = id;
     }
 
-    public static final Identifier ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/herringbone_planks");
-    public static final List<Identifier> MODEL_IDS = new ArrayList<>() {
+    public static final ResourceLocation ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/herringbone_planks");
+    public static final List<ResourceLocation> MODEL_IDS = new ArrayList<>() {
         {
             add(ID);
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "item/" + variant.asString() + "_herringbone_planks"));
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, "block/" + variant.asString() + "_herringbone_planks"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_herringbone_planks"));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + variant.getSerializedName() + "_herringbone_planks"));
             }
         }
     };
 
     @Override
-    public void resolve(Resolver resolver) {
-        for (Identifier modelPart : TEMPLATE_MODEL) {
+    public void resolveDependencies(Resolver resolver) {
+        for (ResourceLocation modelPart : TEMPLATE_MODEL) {
             resolver.resolve(modelPart);
         }
     }
 
     @Override
-    public @Nullable BakedModel bake(ModelTextures textures, Baker loader, ModelBakeSettings rotationContainer, boolean ambientOcclusion, boolean isSideLit, ModelTransformation transformation) {
+    public BakedModel bake(TextureSlots textures, ModelBaker loader, ModelState rotationContainer, boolean ambientOcclusion, boolean isSideLit, ItemTransforms transformation){
         if (PFMRuntimeResources.modelCacheMap.containsKey(id) && PFMRuntimeResources.modelCacheMap.get(id).getCachedModelParts().containsKey(rotationContainer))
             return getBakedModel(id, rotationContainer, PFMRuntimeResources.modelCacheMap.get(id).getCachedModelParts().get(rotationContainer));
 
@@ -52,7 +55,7 @@ public class UnbakedHerringboneModel implements UnbakedModel {
             PFMRuntimeResources.modelCacheMap.put(id, new PFMBakedModelContainer());
 
         List<BakedModel> bakedModelList = new ArrayList<>();
-        for (Identifier modelPart : TEMPLATE_MODEL) {
+        for (ResourceLocation modelPart : TEMPLATE_MODEL) {
             bakedModelList.add(loader.bake(modelPart, rotationContainer));
         }
 
@@ -61,7 +64,7 @@ public class UnbakedHerringboneModel implements UnbakedModel {
     }
 
     @ExpectPlatform
-    public static BakedModel getBakedModel(Identifier modelId, ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public static BakedModel getBakedModel(ResourceLocation modelId, ModelState settings, List<BakedModel> modelParts) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 }

@@ -9,8 +9,8 @@ import net.blay09.mods.balm.api.fluid.BalmFluidTankProvider;
 import net.blay09.mods.balm.api.fluid.FluidTank;
 import net.blay09.mods.balm.api.provider.BalmProvider;
 import net.blay09.mods.balm.api.provider.BalmProviderHolder;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Container;
 
 import java.util.*;
 
@@ -25,9 +25,9 @@ public interface BlockEntityContract extends BalmProviderHolder {
             providers.add(new BalmProviderHolder() {
                 @Override
                 public List<BalmProvider<?>> getProviders() {
-                    Inventory container = containerProvider.getContainer();
+                    Container container = containerProvider.getContainer();
                     if (container != null) {
-                        return Lists.newArrayList(new BalmProvider<>(Inventory.class, container));
+                        return Lists.newArrayList(new BalmProvider<>(Container.class, container));
                     }
 
                     return Collections.emptyList();
@@ -37,9 +37,9 @@ public interface BlockEntityContract extends BalmProviderHolder {
                 public List<Pair<Direction, BalmProvider<?>>> getSidedProviders() {
                     List<Pair<Direction, BalmProvider<?>>> providers = new ArrayList<>();
                     for (Direction direction : Direction.values()) {
-                        Inventory container = containerProvider.getContainer(direction);
+                        Container container = containerProvider.getContainer(direction);
                         if (container != null) {
-                            providers.add(Pair.of(direction, new BalmProvider<>(Inventory.class, container)));
+                            providers.add(Pair.of(direction, new BalmProvider<>(Container.class, container)));
                         }
                     }
                     return providers;
