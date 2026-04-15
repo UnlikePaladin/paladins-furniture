@@ -55,22 +55,22 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
 
     @Override
     protected void renderBg(GuiGraphics drawContext, float partialTicks, int mouseX, int mouseY) {
-        drawContext.blit(RenderType::guiTextured, texture, this.leftPos + 22, this.topPos, 0, 0, this.imageWidth - 22, this.imageHeight, this.imageWidth - 22, this.imageHeight);
-        drawContext.blit(RenderType::guiTextured, texture, this.leftPos, this.topPos + 10, 176, 30, 25, 87, 25, 87);
+        drawContext.blit(RenderType::guiTextured, texture, this.leftPos + 22, this.topPos, 0.0F, 0.0F, this.imageWidth - 22, this.imageHeight, 256, 256);
+        drawContext.blit(RenderType::guiTextured, texture, this.leftPos, this.topPos + 10, 176.0F, 30.0F, 25, 87, 256, 256);
         StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();
         int offsetX = tileEntity.hasPowerUpgrade() ? -5 : 0;
-        drawContext.blit(RenderType::guiTextured, texture, this.leftPos + 22 + 61 + offsetX, this.topPos + 18, 176, 117, 76, 76, 76, 76);
-        drawContext.blit(RenderType::guiTextured, texture, this.leftPos + 22 + 38 + offsetX, this.topPos + 43, 205, 84, 18, 33, 18, 33);
+        drawContext.blit(RenderType::guiTextured, texture, this.leftPos + 22 + 61 + offsetX, this.topPos + 18, 176.0F, 117.0F, 76, 76, 256, 256);
+        drawContext.blit(RenderType::guiTextured, texture, this.leftPos + 22 + 38 + offsetX, this.topPos + 43, 205.0F, 84.0F, 18, 33, 256, 256);
         if (tileEntity.isBurning()) {
             int burnTime = (int)(12.0F * tileEntity.getBurnTimeProgress());
-            drawContext.blit(RenderType::guiTextured, texture, this.leftPos + 22 + 40 + offsetX, this.topPos + 43 + 12 - burnTime, 176, 12 - burnTime, 14, burnTime + 1, 12 - burnTime, 14, burnTime + 1);
+            drawContext.blit(RenderType::guiTextured, texture, this.leftPos + 22 + 40 + offsetX, this.topPos + 43 + 12 - burnTime, 176.0F, (float)(12 - burnTime), 14, burnTime + 1, 256, 256);
         }
 
         if (tileEntity.hasPowerUpgrade()) {
-            drawContext.blit(RenderType::guiTextured, texture, this.leftPos + this.width - 25, this.topPos + 22, 205, 0, 18, 72, 18, 72);
+            drawContext.blit(RenderType::guiTextured, texture, this.leftPos + this.imageWidth - 25, this.topPos + 22, 205.0F, 0.0F, 18, 72, 256, 256);
             EnergyStorage energyStorage = tileEntity.getEnergyStorage();
             float energyPercentage = (float)energyStorage.getEnergy() / (float)energyStorage.getCapacity();
-            drawContext.blit(RenderType::guiTextured, texture, this.leftPos + this.width - 25 + 1, this.topPos + 22 + 1 + 70 - (int)(energyPercentage * 70.0F), 223, 0, 16, (int)(energyPercentage * 70.0F), 16, (int)(energyPercentage * 70.0F));
+            drawContext.blit(RenderType::guiTextured, texture, this.leftPos + this.imageWidth - 25 + 1, this.topPos + 22 + 1 + 70 - (int)(energyPercentage * 70.0F), 223.0F, 0.0F, 16, (int)(energyPercentage * 70.0F), 256, 256);
         }
 
     }
