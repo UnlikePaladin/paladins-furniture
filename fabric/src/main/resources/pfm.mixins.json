@@ -15,8 +15,7 @@
     "PFMCookingPotBlockEntityMixin",
     "PFMModResourcePackCreatorMixin",
     "PFMSaveLoaderMixin",
-    "PFMSimpleReloadableResourceManagerMixin",
-    "RecipeOutputMixin"
+    "PFMSimpleReloadableResourceManagerMixin"
   ],
   "server": [
     "PFMMinecraftServerMixin"

@@ -103,11 +103,11 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
                        eatSandwich(stack, world, player);
                     }
                     else {
+                        ItemStack result = stack.finishUsingItem(world, player);
                         if (!player.isCreative()) {
-                            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stack.finishUsingItem(world, player));
+                            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, result);
                             world.addFreshEntity(itemEntity);
                         }
-                        stack.use(world, player, InteractionHand.MAIN_HAND);
                     }
                     plateBlockEntity.removeItem();
                     player.awardStat(Statistics.PLATE_USED);
