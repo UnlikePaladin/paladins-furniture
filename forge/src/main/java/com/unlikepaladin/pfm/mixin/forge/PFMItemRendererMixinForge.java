@@ -34,8 +34,8 @@ public abstract class PFMItemRendererMixinForge {
         throw new AssertionError();
     }
 
-    @Inject(at = @At("HEAD"), method = "renderItem", cancellable = true)
-    private void renderPFMItem(ItemStack stack, ItemDisplayContext renderMode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, BakedModel model, boolean leftHanded, CallbackInfo ci) {
+    @Inject(at = @At("HEAD"), method = "render", cancellable = true)
+    private void renderPFMItem(ItemStack stack, ItemDisplayContext renderMode, boolean leftHanded, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, BakedModel model, CallbackInfo ci) {
         if (!stack.isEmpty() && model instanceof PFMBakedModelGetQuadsExtension) {
             matrices.pushPose();
             PoseStack.Pose pose = matrices.last();
