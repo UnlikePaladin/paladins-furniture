@@ -15,7 +15,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.BlockPos;
 
-import org.jetbrains.annotations.Nullable;;
+import org.jetbrains.annotations.Nullable;
 
 public class StoveBlockEntityImpl extends StoveBlockEntity implements ExtendedScreenHandlerFactory<StoveScreenHandler.StoveData> {
 

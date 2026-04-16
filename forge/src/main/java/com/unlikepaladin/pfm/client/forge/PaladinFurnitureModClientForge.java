@@ -91,7 +91,7 @@ public class PaladinFurnitureModClientForge {
     }
 
 
-    public static void registerExtraModels(Consumer<ModelResourceLocation> event) {
+    public static void registerExtraModels(Consumer<ResourceLocation> event) {
         for (ResourceLocation id : UnbakedBedModel.BED_MODEL_PARTS_BASE) {
             event.accept(id);
         }

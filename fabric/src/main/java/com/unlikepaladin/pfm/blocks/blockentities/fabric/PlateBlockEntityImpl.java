@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
 
-import org.jetbrains.annotations.Nullable;;
+import org.jetbrains.annotations.Nullable;
 
 public class PlateBlockEntityImpl extends PlateBlockEntity {
     public PlateBlockEntityImpl(BlockPos blockPos, BlockState blockState) {

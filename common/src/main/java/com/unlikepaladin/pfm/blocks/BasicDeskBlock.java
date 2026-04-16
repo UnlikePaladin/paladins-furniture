@@ -88,11 +88,11 @@ public class BasicDeskBlock extends Block {
         return super.getFluidState(state);
     }
 
-    final static VoxelShape TABLE_CLASSIC_BASE = createCuboidShape(0, 14, 0, 16, 16, 16);
-    final static VoxelShape TABLE_CLASSIC_NORTH_EAST_LEG = createCuboidShape(13, 0, 1, 15, 14, 3);
-    final static VoxelShape TABLE_CLASSIC_NORTH_WEST_LEG = createCuboidShape(1, 0, 1, 3, 14, 3);
-    final static VoxelShape TABLE_CLASSIC_SOUTH_WEST_LEG = createCuboidShape(1, 0, 13, 3, 14, 15);
-    final static VoxelShape TABLE_CLASSIC_SOUTH_EAST_LEG = createCuboidShape(13, 0, 13, 15, 14, 15);
+    final static VoxelShape TABLE_CLASSIC_BASE = box(0, 14, 0, 16, 16, 16);
+    final static VoxelShape TABLE_CLASSIC_NORTH_EAST_LEG = box(13, 0, 1, 15, 14, 3);
+    final static VoxelShape TABLE_CLASSIC_NORTH_WEST_LEG = box(1, 0, 1, 3, 14, 3);
+    final static VoxelShape TABLE_CLASSIC_SOUTH_WEST_LEG = box(1, 0, 13, 3, 14, 15);
+    final static VoxelShape TABLE_CLASSIC_SOUTH_EAST_LEG = box(13, 0, 13, 15, 14, 15);
 
     // Cursed I know
     final static Map<String, VoxelShape> VOXEL_SHAPES = new HashMap<>();

@@ -10,19 +10,15 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.ducks.PFMSpriteContentExtensions;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.Nullable;
@@ -41,9 +37,9 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
         VariantBase<?> variant = getVariant(state);
         if (variant instanceof WoodVariant) {
             ResourceLocation finalId = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/" + variant.getIdentifier().getPath() + "_herringbone_planks");
-            Material mainTexture = new Material(InventoryMenu.BLOCK_ATLAS, finalId);
+            Material mainTexture = new Material(TextureAtlas.LOCATION_BLOCKS, finalId);
             if (!((PFMSpriteContentExtensions)mainTexture.sprite().contents()).pfm$isInitialized()) {
-                Material baseTextureSpriteId = new Material(InventoryMenu.BLOCK_ATLAS, variant.getTextureLocation(BlockType.PRIMARY));
+                Material baseTextureSpriteId = new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.PRIMARY));
                 ModelHelper.generateTexture(herringboneTextureId.sprite(), baseTextureSpriteId.sprite(), 7, finalId);
             }
             return mainTexture.sprite();
@@ -58,7 +54,7 @@ public class FabricHerringboneModel extends PFMFabricBakedModel {
 
     static Material herringboneTextureId = new Material(TextureAtlas.LOCATION_BLOCKS, PFMSpriteRegistry.HERRINGBONE_PLANKS);
     @Override
-    public void emitBlockQuads(QuadEmitter context, BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, Predicate<@Nullable Direction> cullTest) {
+    public void emitBlockQuads(QuadEmitter emitter, BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, Predicate<@Nullable Direction> cullTest) {
         VariantBase<?> variant = getVariant(state);
         if (variant instanceof WoodVariant) {
             generateTextureIfNeeded(emitter, variant);

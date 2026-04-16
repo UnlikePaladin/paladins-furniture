@@ -1,9 +1,9 @@
 package com.unlikepaladin.pfm.ducks.forge;
 
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
 
 public interface PFMBakedModelManagerExtensions {
 
-    BakedModel pfm_getModel(Identifier id);
+    BakedModel pfm_getModel(ResourceLocation id);
 }

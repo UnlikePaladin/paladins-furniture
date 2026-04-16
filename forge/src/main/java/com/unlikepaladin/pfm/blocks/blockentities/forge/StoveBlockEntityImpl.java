@@ -14,7 +14,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.Nullable;;
+import org.jetbrains.annotations.Nullable;
 
 public class StoveBlockEntityImpl extends StoveBlockEntity {
 

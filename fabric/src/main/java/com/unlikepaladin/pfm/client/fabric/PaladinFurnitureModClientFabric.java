@@ -27,13 +27,13 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.rendering.v1.SpecialBlockRendererRegistry;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.block.Block;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.render.item.model.ItemModelTypes;
-import net.minecraft.client.render.item.model.special.SpecialModelTypes;
-import net.minecraft.client.render.item.tint.TintSourceTypes;
+import net.minecraft.client.renderer.item.ItemModels;
+import net.minecraft.client.renderer.special.SpecialModelRenderers;
+import net.minecraft.client.color.item.ItemTintSources;
 import com.mojang.blaze3d.platform.InputConstants;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.glfw.GLFW;
@@ -70,9 +70,9 @@ public class PaladinFurnitureModClientFabric implements ClientModInitializer {
     }
 
     public static void registerModels() {
-        ItemModelTypes.ID_MAPPER.put(Identifier.of(PaladinFurnitureMod.MOD_ID, "furniture_model"), PFMItemModel.Unbaked.CODEC);
-        SpecialModelTypes.ID_MAPPER.put(Identifier.of(PaladinFurnitureMod.MOD_ID, "pfm_bed"), PFMBedModelRenderer.Unbaked.CODEC);
-        TintSourceTypes.ID_MAPPER.put(Identifier.of(PaladinFurnitureMod.MOD_ID, "furniture_color"), FurnitureTintSource.CODEC);
+        ItemModels.ID_MAPPER.put(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "furniture_model"), PFMItemModel.Unbaked.CODEC);
+        SpecialModelRenderers.ID_MAPPER.put(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "pfm_bed"), PFMBedModelRenderer.Unbaked.CODEC);
+        ItemTintSources.ID_MAPPER.put(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "furniture_color"), FurnitureTintSource.CODEC);
         for (Block block : PaladinFurnitureModBlocksItems.getBeds()) {
             if (block instanceof DyeableFurnitureBlock)
                 SpecialBlockRendererRegistry.register(block, new PFMBedModelRenderer.Unbaked(((DyeableFurnitureBlock) block).getPFMColor()));

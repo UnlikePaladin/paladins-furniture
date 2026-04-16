@@ -6,9 +6,9 @@ import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import com.unlikepaladin.pfm.items.PFMComponents;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
+import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.client.resources.model.BakedModel;
@@ -16,9 +16,6 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
@@ -42,7 +39,7 @@ public class FabricBasicLampModel extends PFMFabricBakedModel {
     }
 
     @Override
-    public void emitBlockQuads(QuadEmitter context, BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, Predicate<@Nullable Direction> cullTest) {
+    public void emitBlockQuads(QuadEmitter context, BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, Predicate<@Nullable Direction> cullTest) {
         WoodVariant variant = WoodVariantRegistry.OAK;
         BlockEntity entity = blockView.getBlockEntity(pos);
         int onOffset = state.getValue(BlockStateProperties.LIT) ? 1 : 0;

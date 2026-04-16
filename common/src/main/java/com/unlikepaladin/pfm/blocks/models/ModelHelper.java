@@ -12,7 +12,9 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.runtime.TextureReloadQueue;
 import de.androidpit.colorthief.ColorThief;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,7 +24,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -54,7 +55,7 @@ public class ModelHelper {
     public static List<TextureAtlasSprite> getOakBedSprites() {
         if (OAK_SPRITES_BED_TO_REPLACE == null) {
             Material planksId = new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.parse("minecraft:block/oak_planks"));
-            Material bedId = Sheets.BED_TEXTURES[DyeColor.RED.getId()];
+            Material bedId = Sheets.getBedMaterial(DyeColor.RED);
             OAK_SPRITES_BED_TO_REPLACE = Arrays.asList(planksId.sprite(), bedId.sprite());
         }
         return OAK_SPRITES_BED_TO_REPLACE;

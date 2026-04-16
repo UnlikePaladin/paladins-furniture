@@ -45,7 +45,7 @@ public class PaladinFurnitureMod {
 	public static final Logger GENERAL_LOGGER = LogManager.getLogger();
 	public static Tuple<String, CreativeModeTab> FURNITURE_GROUP = new Tuple<>("furniture", null);
     public static Tuple<String, CreativeModeTab> BUILDING_BLOCKS = new Tuple<>("building_blocks", null);
-    public static Tuple<String, CreativeModeTab> DYE_KITS = new Tuple<>("dye_kits", null);;
+    public static Tuple<String, CreativeModeTab> DYE_KITS = new Tuple<>("dye_kits", null);
 	private static PaladinFurnitureModUpdateChecker updateChecker;
 	public static boolean isClient = false;
 	public static List<PFMModCompatibility> pfmModCompatibilities = new ArrayList<>();

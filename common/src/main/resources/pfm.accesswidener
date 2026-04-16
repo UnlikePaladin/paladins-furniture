@@ -24,3 +24,5 @@ accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
 accessible method net/minecraft/world/level/block/entity/BlockEntityType <init> (Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;Ljava/util/Set;)V
 accessible class net/minecraft/client/resources/model/ModelBakery$ModelBakerImpl
 accessible method net/minecraft/client/resources/model/ModelBakery$ModelBakerImpl <init>	(Lnet/minecraft/client/resources/model/ModelBakery;Lnet/minecraft/client/resources/model/ModelBakery$TextureGetter;Lnet/minecraft/client/resources/model/ModelDebugName;)V
+accessible field net/minecraft/world/level/block/entity/BedBlockEntity color Lnet/minecraft/world/item/DyeColor;
+mutable field net/minecraft/world/level/block/entity/BedBlockEntity color Lnet/minecraft/world/item/DyeColor;

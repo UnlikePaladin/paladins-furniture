@@ -1,16 +1,16 @@
 package com.unlikepaladin.pfm.mixin;
 
-import net.minecraft.client.render.item.model.ItemModel;
-import net.minecraft.client.render.item.model.RangeDispatchItemModel;
-import net.minecraft.client.render.item.property.numeric.NumericProperty;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.item.RangeSelectItemModel;
+import net.minecraft.client.renderer.item.properties.numeric.RangeSelectItemModelProperty;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(RangeDispatchItemModel.class)
+@Mixin(RangeSelectItemModel.class)
 public interface RangeDispatchItemModelAccessor {
     @Accessor
-    NumericProperty getProperty();
+    RangeSelectItemModelProperty getProperty();
 
     @Accessor
     ItemModel[] getModels();
@@ -24,7 +24,7 @@ public interface RangeDispatchItemModelAccessor {
     @Accessor
     float getScale();
 
-    @Invoker("getIndex")
+    @Invoker("lastIndexLessOrEqual")
     static int getIndex(float[] thresholds, float value) {
         throw new AssertionError();
     }

@@ -11,13 +11,13 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderStateShard;
+import net.minecraft.client.renderer.texture.TextureContents;
 import net.minecraft.util.ARGB;
 import net.minecraft.client.gui.screens.Overlay;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.metadata.texture.TextureMetadataSection;
 import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.client.renderer.texture.SimpleTexture;
-import net.minecraft.client.texture.TextureContents;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.TriState;
@@ -56,8 +56,8 @@ public class PFMGeneratingOverlay extends Overlay {
         this.resourceProgress = resourceProgress;
         this.minecraft = client;
         this.parent = parent;
-        client.getTextureManager().register(pfmLogo, new LogoTexture());
-        this.glText = new GLText();
+        client.getTextureManager().registerAndLoad(pfmLogo, new LogoTexture());
+        this.glText = GLText.shared();
         this.progressText = GLText.gltCreateText();
         this.notificationText = GLText.gltCreateText();
     }
@@ -161,8 +161,9 @@ public class PFMGeneratingOverlay extends Overlay {
             this.renderProgressBar(context, width / 2 - barWidth, barHeight - 5, width / 2 + barWidth, barHeight + 5, 1.0f - Mth.clamp(timeProgress, 0.0f, 1.0f));
         }
         if (timeProgress >= 2.0f || (!PFMGenerator.areAssetsRunning() && !PFMGenerator.isDataRunning())) {
+            gltDeleteText(progressText);
+            gltDeleteText(notificationText);
             this.minecraft.setOverlay(parent);
-            glText.gltTerminate();
         }
     }
 

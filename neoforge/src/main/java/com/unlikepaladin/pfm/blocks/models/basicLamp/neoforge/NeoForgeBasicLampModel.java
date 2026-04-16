@@ -10,13 +10,15 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.items.PFMComponents;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransforms; 
+import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.item.ItemStack;
@@ -142,7 +144,7 @@ public class NeoForgeBasicLampModel extends PFMNeoForgeBakedModel {
 
     protected Map<Pair<VariantBase<?>, Direction>, List<BakedQuad>> cache = new HashMap<>();
     @Override
-    public List<BakedQuad> getQuadsCached(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuadsCached(@Nullable Direction face, RandomSource random) {
         Pair<VariantBase<?>, Direction> directionPair = new Pair<>(variant, face);
         if (cache.containsKey(directionPair))
             return cache.get(directionPair);

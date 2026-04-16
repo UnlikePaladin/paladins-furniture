@@ -43,10 +43,7 @@ import com.unlikepaladin.pfm.blocks.models.modernDinnerTable.UnbakedModernDinner
 import com.unlikepaladin.pfm.blocks.models.modernStool.UnbakedModernStoolModel;
 import com.unlikepaladin.pfm.blocks.models.simpleStool.UnbakedSimpleStoolModel;
 import com.unlikepaladin.pfm.client.forge.PaladinFurnitureModClientForge;
-import net.minecraft.client.resources.model.BlockStateModelLoader;
-import net.minecraft.client.resources.model.ModelDiscovery;
-import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.*;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -61,11 +58,8 @@ import java.util.Map;
 @Mixin(ModelDiscovery.class)
 public abstract class PFMReferencedModelsCollectorMixin {
 
-
     @Shadow
-    protected abstract void getBlockModel(ResourceLocation modelResourceLocation);
-
-    @Shadow public abstract void add(ResolvableModel model);
+    abstract UnbakedModel getBlockModel(ResourceLocation resourceLocation);
 
     @ModifyVariable(method = "loadBlockModel", at = @At(value = "STORE", ordinal = 0), ordinal = 0)
     private UnbakedModel pfm$loadModels(UnbakedModel olModel, ResourceLocation olId) throws IOException {

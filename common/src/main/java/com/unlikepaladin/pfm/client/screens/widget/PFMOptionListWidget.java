@@ -87,8 +87,8 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
     }
 
     @Override
-    protected int getScrollbarPosition() {
-        return super.getScrollbarPosition() + 15;
+    protected int scrollBarX() {
+        return super.scrollBarX() + 15;
     }
 
     @Override
@@ -177,7 +177,7 @@ public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionL
             context.drawString(PFMOptionListWidget.this.minecraft.font, this.optionName, (x + 90 - PFMOptionListWidget.this.maxKeyNameLength), (y + entryHeight / 2 - PFMOptionListWidget.this.minecraft.font.lineHeight / 2), 0xFFFFFF, false);
             this.resetButton.setX(x + 190);
             this.resetButton.setY(y);
-            this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption)) : !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption));;
+            this.resetButton.active = this.configOption.getSide() == Side.SERVER ? !PFMConfigScreen.isOnServer && !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption)) : !(this.configOption.getDefaultValue() == PFMOptionListWidget.this.newConfigValues.get(configOption));
             this.resetButton.render(context, mouseX, mouseY, tickDelta);
             this.valueButton.setX(x + 105);
             this.valueButton.setY(y);

@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.BlockPos;
-import org.jetbrains.annotations.Nullable;;
+import org.jetbrains.annotations.Nullable;
 
 public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity {
     public ShowerHeadBlockEntityImpl(BlockPos blockPos, BlockState blockState) {

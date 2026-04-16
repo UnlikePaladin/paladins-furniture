@@ -3,7 +3,7 @@ package com.unlikepaladin.pfm.blocks.models.basicTable.forge;
 import com.unlikepaladin.pfm.blocks.BasicTableBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
-import com.unlikepaladin.pfm.client.forge.PFMBakedModelGetQuadsExtension;
+import com.unlikepaladin.pfm.client.model.PFMBakedModelGetQuadsExtension;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;

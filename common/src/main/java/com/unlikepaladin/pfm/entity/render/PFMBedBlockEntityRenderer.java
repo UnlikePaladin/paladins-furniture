@@ -23,8 +23,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BrightnessCombiner;
-import net.minecraft.client.render.entity.model.EntityModelLayers;
-import net.minecraft.client.render.entity.model.LoadedEntityModels;
+import net.minecraft.client.model.geom.ModelLayers;
+import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.resources.model.Material;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.DyeColor;
@@ -36,9 +36,9 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
         this(ctx.getModelSet());
     }
 
-    public PFMBedBlockEntityRenderer(LoadedEntityModels models) {
-        this.bedHead = new Model.SinglePartModel(models.getModelPart(EntityRenderIDs.BED_HEAD_LAYER), RenderLayer::getEntitySolid);
-        this.bedFoot = new Model.SinglePartModel(models.getModelPart(EntityRenderIDs.BED_FOOT_LAYER), RenderLayer::getEntitySolid);
+    public PFMBedBlockEntityRenderer(EntityModelSet models) {
+        this.bedHead = new Model.Simple(models.bakeLayer(EntityRenderIDs.BED_HEAD_LAYER), RenderType::entitySolid);
+        this.bedFoot = new Model.Simple(models.bakeLayer(EntityRenderIDs.BED_FOOT_LAYER), RenderType::entitySolid);
     }
 
     private final Model bedHead;
@@ -69,7 +69,7 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
 
     @Override
     public void render(PFMBedBlockEntity bedBlockEntity, float f, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int i, int j) {
-        Material spriteIdentifier = bedBlockEntity != null ? Sheets.getBedTextureId(bedBlockEntity.getColor()) : Sheets.getBedTextureId(DyeColor.WHITE);
+        Material spriteIdentifier = bedBlockEntity != null ? Sheets.getBedMaterial(bedBlockEntity.getColor()) : Sheets.getBedMaterial(DyeColor.WHITE);
         Level world2 = bedBlockEntity != null ? bedBlockEntity.getLevel() :  null;
         if (world2 != null) {
             BlockState blockState = bedBlockEntity.getBlockState();
@@ -101,7 +101,7 @@ public class PFMBedBlockEntityRenderer implements BlockEntityRenderer<PFMBedBloc
         }
 
         VertexConsumer vertexConsumer = sprite.buffer(vertexConsumers, RenderType::entitySolid);
-        part.render(matrix, vertexConsumer, light, overlay);
+        part.renderToBuffer(matrix, vertexConsumer, light, overlay);
         matrix.popPose();
     }
 

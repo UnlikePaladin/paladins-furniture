@@ -12,6 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -85,7 +86,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
             }
 
 
-            provider.getBuffer(Sheets.itemEntityTranslucentCull())
+            provider.getBuffer(Sheets.translucentItemSheet())
                     .putBulkData(stack.last(), quad, red, green, blue, 1.0f, light, overlay);
         }
 

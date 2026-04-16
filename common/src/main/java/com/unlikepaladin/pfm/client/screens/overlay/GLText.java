@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.client.screens.overlay;
 
 import java.io.Closeable;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL32.*;
@@ -105,6 +106,7 @@ public class GLText {
     private int _gltText2DShaderColorUniformLocation = -1;
 
     private float[] _gltText2DProjectionMatrix = new float[16];
+    private static GLText sharedInstance;
 
     public static class GLTtext {
         public String _text;
@@ -115,6 +117,8 @@ public class GLText {
         public int _vao;
         public int _vbo;
     }
+
+    private boolean initialized = false;
 
     public static GLTtext gltCreateText() {
         GLTtext text = new GLTtext();
@@ -144,6 +148,15 @@ public class GLText {
         glBindVertexArray(0);
 
         return text;
+    }
+
+    public static synchronized GLText shared() {
+        if (sharedInstance == null) {
+            sharedInstance = new GLText();
+        } else {
+            sharedInstance.ensureInitialized();
+        }
+        return sharedInstance;
     }
 
     public static void gltDeleteText(GLTtext text) {
@@ -245,6 +258,7 @@ public class GLText {
     }
 
     public Closeable gltBeginDraw() {
+        ensureInitialized();
         glUseProgram(_gltText2DShader);
 
         glActiveTexture(GL_TEXTURE0);
@@ -979,8 +993,18 @@ public class GLText {
         gltInit();
     };
     private void gltInit() {
+        if (initialized && _gltText2DShader != GLT_NULL_HANDLE && _gltText2DFontTexture != GLT_NULL_HANDLE) {
+            return;
+        }
         _gltCreateText2DShader();
         _gltCreateText2DFontTexture();
+        initialized = true;
+    }
+
+    private void ensureInitialized() {
+        if (!initialized || _gltText2DShader == GLT_NULL_HANDLE || _gltText2DFontTexture == GLT_NULL_HANDLE) {
+            gltInit();
+        }
     }
 
     // GLT_API void gltTerminate(void)
@@ -1009,6 +1033,8 @@ public class GLText {
             glDeleteTextures(_gltText2DFontTexture);
             _gltText2DFontTexture = GLT_NULL_HANDLE;
         }
+
+        initialized = false;
     }
 
     // static const GLchar* _gltText2DVertexShaderSource =
@@ -1472,10 +1498,31 @@ public class GLText {
             _gltFontGlyphs2[glyph.c - _gltFontGlyphMinChar] = glyph;
         }
 
+        // Create OpenGL texture with safety checks to avoid native crashes on some drivers/hardware.
+        if (texWidth <= 0 || texHeight <= 0) {
+            throw new IllegalStateException("Invalid font texture size: " + texWidth + "x" + texHeight);
+        }
+        if (texData.length != texWidth * texHeight * 4) {
+            throw new IllegalStateException("Invalid font texture data length: " + texData.length);
+        }
+
+        if (_gltText2DFontTexture != GLT_NULL_HANDLE) {
+            glDeleteTextures(_gltText2DFontTexture);
+            _gltText2DFontTexture = GLT_NULL_HANDLE;
+        }
+
         _gltText2DFontTexture = glGenTextures();
+        if (_gltText2DFontTexture == GLT_NULL_HANDLE) {
+            throw new IllegalStateException("Failed to generate font texture handle");
+        }
+
         glBindTexture(GL_TEXTURE_2D, _gltText2DFontTexture);
 
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, ByteBuffer.allocateDirect(texData.length).put(texData).position(0));
+        ByteBuffer texBuffer = ByteBuffer.allocateDirect(texData.length).order(ByteOrder.nativeOrder());
+        texBuffer.put(texData);
+        texBuffer.flip();
+
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, texWidth, texHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, texBuffer);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

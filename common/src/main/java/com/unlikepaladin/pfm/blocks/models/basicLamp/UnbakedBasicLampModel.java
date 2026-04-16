@@ -8,7 +8,8 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.renderer.block.model.ItemTransforms; 
+import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -33,7 +34,7 @@ public class UnbakedBasicLampModel implements UnbakedModel {
         }
     };
 
-    public static ResourceLocation getItemModelId() {
+    public static ResourceLocation getModelLocation() {
         return LAMP_MODEL_IDS.get(1);
     }
 

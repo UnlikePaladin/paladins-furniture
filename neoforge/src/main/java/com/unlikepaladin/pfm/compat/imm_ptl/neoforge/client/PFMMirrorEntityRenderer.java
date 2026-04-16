@@ -11,7 +11,7 @@ public class PFMMirrorEntityRenderer extends PortalEntityRenderer {
     }
 
     @Override
-    public void render(Portal portal, float yaw, float tickDelta, PoseStack matrixStack, VertexConsumerProvider vertexConsumerProvider, int light) {
+    public void render(Portal portal, float yaw, float tickDelta, PoseStack matrixStack, MultiBufferSource vertexConsumerProvider, int light) {
         if (PaladinFurnitureMod.getPFMConfig().doImmersivePortalsMirrorsRender())
             super.render(portal, yaw, tickDelta, matrixStack, vertexConsumerProvider, light);
     }

@@ -11,7 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.BlockPos;
 
-import org.jetbrains.annotations.Nullable;;
+import org.jetbrains.annotations.Nullable;
 
 public class LampBlockEntityImpl extends LampBlockEntity {
 

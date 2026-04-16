@@ -3,19 +3,17 @@ package com.unlikepaladin.pfm.blocks.models.basicDeskCabinet.fabric;
 import com.unlikepaladin.pfm.blocks.BasicDeskCabinetBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.model.FabricBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Predicate;
@@ -33,7 +31,7 @@ public class FabricBasicDeskCabinetModel extends PFMFabricBakedModel {
     @Override
     public void emitBlockQuads(QuadEmitter context, BlockAndTintGetter world, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, Predicate<@Nullable Direction> cullTest) {
         if (state.getBlock() instanceof BasicDeskCabinetBlock block) {
-            Direction isFacing = state.get(BasicDeskCabinetBlock.FACING);
+            Direction isFacing = state.getValue(BasicDeskCabinetBlock.FACING);
 
             BlockState rightState = world.getBlockState(pos.relative(isFacing.getCounterClockWise()));
             boolean right = block.canConnect(rightState) && rightState.getBlock() instanceof BasicDeskCabinetBlock;

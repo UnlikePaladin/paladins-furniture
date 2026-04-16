@@ -10,7 +10,7 @@ import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.Nullable;

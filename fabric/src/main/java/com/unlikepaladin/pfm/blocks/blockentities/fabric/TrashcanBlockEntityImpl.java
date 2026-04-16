@@ -13,7 +13,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.BlockPos;
 
-import org.jetbrains.annotations.Nullable;;
+import org.jetbrains.annotations.Nullable;
 
 public class TrashcanBlockEntityImpl extends TrashcanBlockEntity implements ExtendedScreenHandlerFactory<TrashcanScreenHandler.TrashCanData> {
     public TrashcanBlockEntityImpl(BlockPos pos, BlockState state) {

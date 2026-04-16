@@ -5,6 +5,9 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.TextureSlots;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -26,9 +29,9 @@ public class UnbakedMirrorModel implements UnbakedModel {
     protected final Material glassTex;
     protected final Material frameTex;
     public UnbakedMirrorModel(ResourceLocation reflect, ResourceLocation defaultFrameTexture, ResourceLocation glass, List<String> modelParts, DyeColor color) {
-        this.reflectTex = new Material(InventoryMenu.BLOCK_ATLAS, reflect);
-        this.frameTex = new Material(InventoryMenu.BLOCK_ATLAS, defaultFrameTexture);
-        this.glassTex = new Material(InventoryMenu.BLOCK_ATLAS, glass);
+        this.reflectTex = new Material(TextureAtlas.LOCATION_BLOCKS, reflect);
+        this.frameTex = new Material(TextureAtlas.LOCATION_BLOCKS, defaultFrameTexture);
+        this.glassTex = new Material(TextureAtlas.LOCATION_BLOCKS, glass);
         for(String modelPartName : BASE_MODEL_PARTS){
             String s = modelPartName;
             if (color != DyeColor.WHITE)
@@ -65,7 +68,7 @@ public class UnbakedMirrorModel implements UnbakedModel {
         for (String modelPartName: MODEL_PARTS) {
             bakedModels.put(modelPartName, loader.bake(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, modelPartName), rotationContainer));
         }
-        SpriteGetter textureGetter = loader.getSpriteGetter();
+        SpriteGetter textureGetter = loader.sprites();
         return getBakedModel(textureGetter.get(frameTex), textureGetter.get(glassTex), textureGetter.get(reflectTex), rotationContainer, bakedModels, MODEL_PARTS);
     }
 

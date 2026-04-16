@@ -7,12 +7,10 @@ import com.unlikepaladin.pfm.blocks.models.fabric.PFMFabricBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.Direction;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockAndTintGetter;
 
 import java.util.List;

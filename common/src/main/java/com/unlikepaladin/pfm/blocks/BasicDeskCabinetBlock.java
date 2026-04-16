@@ -131,11 +131,11 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         return super.getFluidState(state);
     }
 
-    final static VoxelShape TABLE_CLASSIC_BASE = createCuboidShape(0, 14, 0, 16, 16, 16);
-    final static VoxelShape TABLE_CLASSIC_NORTH_EAST_LEG = createCuboidShape(13, 0, 1, 15, 14, 3);
-    final static VoxelShape TABLE_CLASSIC_NORTH_WEST_LEG = createCuboidShape(1, 0, 1, 3, 14, 3);
-    final static VoxelShape TABLE_CLASSIC_SOUTH_WEST_LEG = createCuboidShape(1, 0, 13, 3, 14, 15);
-    final static VoxelShape TABLE_CLASSIC_SOUTH_EAST_LEG = createCuboidShape(13, 0, 13, 15, 14, 15);
+    final static VoxelShape TABLE_CLASSIC_BASE = box(0, 14, 0, 16, 16, 16);
+    final static VoxelShape TABLE_CLASSIC_NORTH_EAST_LEG = box(13, 0, 1, 15, 14, 3);
+    final static VoxelShape TABLE_CLASSIC_NORTH_WEST_LEG = box(1, 0, 1, 3, 14, 3);
+    final static VoxelShape TABLE_CLASSIC_SOUTH_WEST_LEG = box(1, 0, 13, 3, 14, 15);
+    final static VoxelShape TABLE_CLASSIC_SOUTH_EAST_LEG = box(13, 0, 13, 15, 14, 15);
 
     final static VoxelShape DESK_SINGLE_CLOSED = Shapes.or(box(3, 2, 3, 13, 14, 13), box(3, 9, 2,13, 13, 3), box(3, 4, 2,13, 8, 3),box(6.5, 5.5, 1, 9.5, 6.5, 2), box(6.5, 10.5, 1,9.5, 11.5, 2));
     final static VoxelShape DESK_SINGLE_OPEN = Shapes.or(box(3, 2, 3, 13, 14, 13), box(3, 9, 2,13, 13, 3), box(3, 4, -2,13, 8, 3),box(6.5, 5.5, -3, 9.5, 6.5, -2), box(6.5, 10.5, 1,9.5, 11.5, 2));

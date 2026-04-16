@@ -3,30 +3,21 @@ package com.unlikepaladin.pfm.client;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.blockentities.LampBlockEntity;
-import com.unlikepaladin.pfm.items.PFMComponents;
-import com.unlikepaladin.pfm.data.materials.WoodVariant;
-import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.resources.ResourceLocation;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ColorRegistry {
-    public static final Map<ItemConvertible, ItemConvertible> itemColorProviders = new HashMap<>();
+    public static final Map<ItemLike, ItemLike> itemColorProviders = new HashMap<>();
 
     public static void registerBlockColors(){
         registerBlockColor(PaladinFurnitureModBlocksItems.BASIC_TOILET, addToiletColor());

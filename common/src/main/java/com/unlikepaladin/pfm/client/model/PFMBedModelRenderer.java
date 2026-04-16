@@ -1,59 +1,55 @@
 package com.unlikepaladin.pfm.client.model;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.unlikepaladin.pfm.entity.render.PFMBedBlockEntityRenderer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.TexturedRenderLayers;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BedBlockEntityRenderer;
-import net.minecraft.client.render.entity.model.LoadedEntityModels;
-import net.minecraft.client.render.item.model.special.BedModelRenderer;
-import net.minecraft.client.render.item.model.special.SimpleSpecialModelRenderer;
-import net.minecraft.client.render.item.model.special.SpecialModelRenderer;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ModelTransformationMode;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.special.NoDataSpecialModelRenderer;
+import net.minecraft.client.renderer.special.SpecialModelRenderer;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
 
-public class PFMBedModelRenderer implements SimpleSpecialModelRenderer {
+public class PFMBedModelRenderer implements NoDataSpecialModelRenderer {
     private final PFMBedBlockEntityRenderer blockEntityRenderer;
-    private final SpriteIdentifier textureId;
+    private final Material textureId;
 
-    public PFMBedModelRenderer(PFMBedBlockEntityRenderer blockEntityRenderer, SpriteIdentifier textureId) {
+    public PFMBedModelRenderer(PFMBedBlockEntityRenderer blockEntityRenderer, Material textureId) {
         this.blockEntityRenderer = blockEntityRenderer;
         this.textureId = textureId;
     }
 
     @Override
     public void render(
-            ModelTransformationMode modelTransformationMode, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, boolean glint
+            ItemDisplayContext modelTransformationMode, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, boolean glint
     ) {
         this.blockEntityRenderer.renderAsItem(matrices, vertexConsumers, light, overlay, this.textureId);
     }
 
     @Environment(EnvType.CLIENT)
-    public record Unbaked(Identifier texture) implements SpecialModelRenderer.Unbaked {
+    public record Unbaked(ResourceLocation texture) implements SpecialModelRenderer.Unbaked {
         public static final MapCodec<PFMBedModelRenderer.Unbaked> CODEC = RecordCodecBuilder.mapCodec(
-                instance -> instance.group(Identifier.CODEC.fieldOf("texture").forGetter(PFMBedModelRenderer.Unbaked::texture)).apply(instance, PFMBedModelRenderer.Unbaked::new)
+                instance -> instance.group(ResourceLocation.CODEC.fieldOf("texture").forGetter(PFMBedModelRenderer.Unbaked::texture)).apply(instance, PFMBedModelRenderer.Unbaked::new)
         );
 
         public Unbaked(DyeColor color) {
-            this(TexturedRenderLayers.createColorId(color));
+            this(Sheets.colorToResourceMaterial(color));
         }
 
         @Override
-        public MapCodec<PFMBedModelRenderer.Unbaked> getCodec() {
+        public MapCodec<PFMBedModelRenderer.Unbaked> type() {
             return CODEC;
         }
 
         @Override
-        public SpecialModelRenderer<?> bake(LoadedEntityModels entityModels) {
-            return new PFMBedModelRenderer(new PFMBedBlockEntityRenderer(entityModels), TexturedRenderLayers.createBedTextureId(this.texture));
+        public SpecialModelRenderer<?> bake(EntityModelSet entityModels) {
+            return new PFMBedModelRenderer(new PFMBedBlockEntityRenderer(entityModels), Sheets.createBedMaterial(this.texture));
         }
     }
 }

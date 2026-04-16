@@ -1,12 +1,12 @@
 package com.unlikepaladin.pfm.mixin;
 
-import net.minecraft.client.render.item.model.ConditionItemModel;
-import net.minecraft.client.render.item.model.ItemModel;
-import net.minecraft.client.render.item.property.bool.BooleanProperty;
+import net.minecraft.client.renderer.item.ConditionalItemModel;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.item.properties.conditional.ConditionalItemModelProperty;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Mixin(ConditionItemModel.class)
+@Mixin(ConditionalItemModel.class)
 public interface ConditionItemModelAccessor {
     @Accessor
     ItemModel getOnTrue();
@@ -15,5 +15,5 @@ public interface ConditionItemModelAccessor {
     ItemModel getOnFalse();
 
     @Accessor
-    BooleanProperty getProperty();
+    ConditionalItemModelProperty getProperty();
 }

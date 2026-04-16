@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.runtime.assets;
 
 import com.google.gson.JsonElement;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
@@ -15,9 +17,13 @@ import com.unlikepaladin.pfm.registry.TriFunc;
 import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
+import net.minecraft.client.color.item.ItemTintSource;
+import net.minecraft.client.data.models.blockstates.*;
+import net.minecraft.client.data.models.model.*;
+import net.minecraft.client.renderer.item.ClientItem;
+import net.minecraft.client.renderer.item.ItemModel;
+import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.data.models.blockstates.*;
-import net.minecraft.data.models.model.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.item.Item;
@@ -54,7 +60,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             enqueueJsonWrite(getWriteQueue(), jsonPath, jsonContent);
         };
 
-        BiConsumer<ResourceLocation, ModelSupplier> identifierSupplierBiConsumer = (identifier, supplier) -> {
+        BiConsumer<ResourceLocation, ModelInstance> identifierSupplierBiConsumer = (identifier, supplier) -> {
             Path jsonPath = getModelJsonPath(path, identifier);
             String jsonContent = PFMDataGenerator.GSON.toJson(supplier.get());
             enqueueJsonWrite(getWriteQueue(), jsonPath, jsonContent);
@@ -77,10 +83,10 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         });
 
 
-        Set<Identifier> itemModels = new HashSet<>();
-        BiConsumer<Identifier, ItemModel.Unbaked> consumer = (id, unbakedModel) -> {
-            ItemAsset asset = new ItemAsset(unbakedModel, ItemAsset.Properties.DEFAULT);
-            DataResult<JsonElement> result = ItemAsset.CODEC.encodeStart(JsonOps.INSTANCE, asset);
+        Set<ResourceLocation> itemModels = new HashSet<>();
+        BiConsumer<ResourceLocation, ItemModel.Unbaked> consumer = (id, unbakedModel) -> {
+            ClientItem asset = new ClientItem(unbakedModel, ClientItem.Properties.DEFAULT);
+            DataResult<JsonElement> result = ClientItem.CODEC.encodeStart(JsonOps.INSTANCE, asset);
             Path dest = getItemsJsonPath(path, id);
             if (result.isSuccess() && !itemModels.contains(id)) {
                 enqueueJsonWrite(getWriteQueue(), dest, result.getOrThrow());
@@ -104,36 +110,36 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         return root.resolve("assets/" + id.getNamespace() + "/models/" + id.getPath() + ".json");
     }
 
-    private static Path getItemsJsonPath(Path root, Identifier id) {
+    private static Path getItemsJsonPath(Path root, ResourceLocation id) {
         return root.resolve("assets/" + id.getNamespace() + "/items/" + id.getPath() + ".json");
     }
 
     private static final ResourceLocation replaceable = ResourceLocation.parse("block/stone");
 
     static class PFMItemModelGenerator {
-        final BiConsumer<Identifier, ItemModel.Unbaked> output;
-        public final BiConsumer<Identifier, ModelSupplier> modelCollector;
+        final BiConsumer<ResourceLocation, ItemModel.Unbaked> output;
+        public final BiConsumer<ResourceLocation, ModelInstance> modelCollector;
 
-        PFMItemModelGenerator(BiConsumer<Identifier, ItemModel.Unbaked> output, BiConsumer<Identifier, ModelSupplier> modelCollector) {
+        PFMItemModelGenerator(BiConsumer<ResourceLocation, ItemModel.Unbaked> output, BiConsumer<ResourceLocation, ModelInstance> modelCollector) {
             this.output = output;
             this.modelCollector = modelCollector;
         }
 
 
         public final void registerBasicModel(Item item) {
-            this.output.accept(Registries.ITEM.getId(item), ItemModels.basic(ModelIds.getItemModelId(item)));
+            this.output.accept(BuiltInRegistries.ITEM.getKey(item), ItemModelUtils.plainModel(ModelLocationUtils.getModelLocation(item)));
         }
 
         public final void registerFurnitureModel(Item item) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(ModelIds.getItemModelId(item), Optional.empty(), List.of()));
+            this.output.accept(BuiltInRegistries.ITEM.getKey(item), new PFMItemModel.Unbaked(ModelLocationUtils.getModelLocation(item), Optional.empty(), List.of()));
         }
 
         public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(ModelIds.getItemModelId(item), Optional.of(specialModel), List.of()));
+            this.output.accept(BuiltInRegistries.ITEM.getKey(item), new PFMItemModel.Unbaked(ModelLocationUtils.getModelLocation(item), Optional.of(specialModel), List.of()));
         }
 
-        public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel, List<TintSource> tints) {
-            this.output.accept(Registries.ITEM.getId(item), new PFMItemModel.Unbaked(ModelIds.getItemModelId(item), Optional.of(specialModel), tints));
+        public final void registerFurnitureModel(Item item, SpecialModelRenderer.Unbaked specialModel, List<ItemTintSource> tints) {
+            this.output.accept(BuiltInRegistries.ITEM.getKey(item), new PFMItemModel.Unbaked(ModelLocationUtils.getModelLocation(item), Optional.of(specialModel), tints));
         }
 
         public void register(List<Item> items) {
@@ -158,12 +164,12 @@ public class PFMBlockstateModelProvider extends PFMProvider {
         public static Map<ModelTemplate, ResourceLocation> ModelIDS = new HashMap<>();
 
         final Consumer<BlockStateGenerator> blockStateCollector;
-        final BiConsumer<ResourceLocation, ModelSupplier> modelCollector;
+        final BiConsumer<ResourceLocation, ModelInstance> modelCollector;
 
         final List<ResourceLocation> generatedStates = new ArrayList<>();
         final PFMBlockstateModelProvider provider;
 
-        PFMBlockStateModelGenerator(PFMBlockstateModelProvider provider, Consumer<BlockStateGenerator> blockStateCollector, BiConsumer<ResourceLocation, ModelSupplier> modelCollector) {
+        PFMBlockStateModelGenerator(PFMBlockstateModelProvider provider, Consumer<BlockStateGenerator> blockStateCollector, BiConsumer<ResourceLocation, ModelInstance> modelCollector) {
             this.provider = provider;
             this.blockStateCollector = blockStateCollector;
             this.modelCollector = modelCollector;
@@ -339,7 +345,7 @@ public class PFMBlockstateModelProvider extends PFMProvider {
             provider.getParent().log("Basic Lamps");
             ResourceLocation modelID = ModelLocationUtils.getModelLocation(PaladinFurnitureModBlocksItems.BASIC_LAMP);
             this.blockStateCollector.accept(createSingleStateBlockState(PaladinFurnitureModBlocksItems.BASIC_LAMP, List.of(modelID)));
-            PFMBlockstateModelProvider.modelPathMap.put(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.getItemModelId());
+            PFMBlockstateModelProvider.modelPathMap.put(PaladinFurnitureModBlocksItems.BASIC_LAMP, UnbakedBasicLampModel.getModelLocation());
         }
 
         public static TextureMapping createPlankBlockTexture(Boolean stripped, VariantBase<?> variantBase) {

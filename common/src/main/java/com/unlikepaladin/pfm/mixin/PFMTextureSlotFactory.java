@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.mixin;
 
+import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.data.models.model.TextureSlot;
 import net.minecraft.world.entity.ai.village.poi.PoiType;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;

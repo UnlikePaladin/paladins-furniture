@@ -6,11 +6,12 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.SpriteGetter;
+import net.minecraft.client.resources.model.SpriteGetter;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.renderer.block.model.ItemTransforms; 
+import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -59,7 +60,7 @@ public class UnbakedFreezerModel implements UnbakedModel {
     private final ResourceLocation id;
     public UnbakedFreezerModel(ResourceLocation id) {
         this.id = id;
-        this.frameTex = new Material(InventoryMenu.BLOCK_ATLAS, ModelHelper.getVanillaConcreteColor(this.id));
+        this.frameTex = new Material(TextureAtlas.LOCATION_BLOCKS, ModelHelper.getVanillaConcreteColor(this.id));
     }
     @Nullable
     @Override
@@ -70,7 +71,7 @@ public class UnbakedFreezerModel implements UnbakedModel {
                 modelPart = modelPart.replaceAll("white", "gray");
             bakedModels.put(modelPart, loader.bake(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
         }
-        SpriteGetter textureGetter = loader.getSpriteGetter();
+        SpriteGetter textureGetter = loader.sprites();
         return getBakedModel(textureGetter.get(frameTex), rotationContainer, bakedModels, bakedModels.keySet().stream().toList());
     }
 

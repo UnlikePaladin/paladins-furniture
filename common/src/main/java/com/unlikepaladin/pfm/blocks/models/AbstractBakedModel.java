@@ -8,7 +8,7 @@ import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.runtime.data.PFMRecipeProvider;
-import net.minecraft.client.renderer.block.model.BakedOverrides;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -16,17 +16,16 @@ import net.minecraft.client.renderer.Sheets;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.ModelState;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.block.model.ItemTransforms; 
+import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.util.Tuple;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
-import net.minecraft.core.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -155,7 +154,7 @@ public abstract class AbstractBakedModel implements BakedModel {
         if (state.getBlock() instanceof SimpleBedBlock) {
             DyeColor color = ModelHelper.getColor(BuiltInRegistries.BLOCK.getKey(state.getBlock()));
             Material mainTexture = new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.PLANKS));
-            Material spriteIdentifier = Sheets.BED_TEXTURES[color.getId()];
+            Material spriteIdentifier = Sheets.getBedMaterial(color);
             list.add(mainTexture.sprite());
             list.add(spriteIdentifier.sprite());
         }  else if (state.getBlock() instanceof LogStoolBlock) {

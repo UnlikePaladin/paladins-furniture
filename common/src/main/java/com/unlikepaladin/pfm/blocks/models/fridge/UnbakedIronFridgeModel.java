@@ -5,11 +5,12 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.model.SpriteGetter;
+import net.minecraft.client.resources.model.SpriteGetter;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.ModelBaker;
-import net.minecraft.client.render.model.json.ModelTransformation;
+import net.minecraft.client.renderer.block.model.ItemTransforms; 
+import net.minecraft.client.renderer.block.model.TextureSlots;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
@@ -59,7 +60,7 @@ public class UnbakedIronFridgeModel implements UnbakedModel {
     }};
 
     public UnbakedIronFridgeModel() {
-        this.frameTex = new Material(InventoryMenu.BLOCK_ATLAS, ResourceLocation.fromNamespaceAndPath("minecraft", "block/iron_block"));
+        this.frameTex = new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.fromNamespaceAndPath("minecraft", "block/iron_block"));
     }
     @Nullable
     @Override
@@ -68,7 +69,7 @@ public class UnbakedIronFridgeModel implements UnbakedModel {
         for (String modelPart : FRIDGE_MODEL_PARTS_BASE) {
             bakedModels.put(modelPart, loader.bake(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, modelPart), rotationContainer));
         }
-        SpriteGetter textureGetter = loader.getSpriteGetter();
+        SpriteGetter textureGetter = loader.sprites();
         return getBakedModel(textureGetter.get(frameTex), rotationContainer, bakedModels, FRIDGE_MODEL_PARTS_BASE);
     }
 
