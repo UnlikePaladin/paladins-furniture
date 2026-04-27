@@ -5,11 +5,11 @@ import io.github.foundationgames.sandwichable.Sandwichable;
 import io.github.foundationgames.sandwichable.blocks.BlocksRegistry;
 import io.github.foundationgames.sandwichable.items.ItemsRegistry;
 import io.github.foundationgames.sandwichable.recipe.ToastingRecipe;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.World;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,29 +17,29 @@ import java.util.Optional;
 public class PFMSandwichableCompat {
 
     public static void toastSandwich(PFMToasterBlockEntity pfmToasterBlockEntity) {
-        World world = pfmToasterBlockEntity.getWorld();
+        Level world = pfmToasterBlockEntity.getLevel();
         List<ItemStack> items = pfmToasterBlockEntity.getItems();
         for (int i = 0; i < 2; i++) {
-            SimpleInventory inv = new SimpleInventory(pfmToasterBlockEntity.getItems().get(i));
-            Optional<ToastingRecipe> match = world.getRecipeManager().getFirstMatch(ToastingRecipe.Type.INSTANCE, inv, world);
+            SimpleContainer inv = new SimpleContainer(pfmToasterBlockEntity.getItems().get(i));
+            Optional<ToastingRecipe> match = world.getRecipeManager().getRecipeFor(ToastingRecipe.Type.INSTANCE, inv, world);
 
             boolean changed = false;
             if(match.isPresent()) {
-                pfmToasterBlockEntity.setItem(i, match.get().getOutput().copy());
+                pfmToasterBlockEntity.setItem(i, match.get().getResultItem().copy());
                 changed = true;
             } else {
-                if(items.get(i).isFood()) {
+                if(items.get(i).isEdible()) {
                     Item item = Sandwichable.SMALL_FOODS.contains(items.get(i).getItem()) ? ItemsRegistry.BURNT_MORSEL : ItemsRegistry.BURNT_FOOD;
                     items.set(i, new ItemStack(item, 1));
                     changed = true;
                 }
             }
 
-            if (!world.isClient() && changed) {
+            if (!world.isClientSide() && changed) {
                 ItemStack advStack = items.get(i);
                 pfmToasterBlockEntity.getLastUser().ifPresent(player -> {
-                    if (player instanceof ServerPlayerEntity) {
-                        Sandwichable.TOAST_ITEM.trigger((ServerPlayerEntity) player, advStack);
+                    if (player instanceof ServerPlayer) {
+                        Sandwichable.TOAST_ITEM.trigger((ServerPlayer) player, advStack);
                     }
                 });
             }

@@ -3,16 +3,16 @@ package com.unlikepaladin.pfm.blocks.forge;
 import com.unlikepaladin.pfm.blocks.blockentities.forge.TrashcanBlockEntityImpl;
 import com.unlikepaladin.pfm.menus.TrashcanScreenHandler;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
 
 public class InnerTrashcanBlockImpl {
@@ -20,12 +20,12 @@ public class InnerTrashcanBlockImpl {
         return new TrashcanBlockEntityImpl(BlockEntities.TRASHCAN_BLOCK_ENTITY);
     }
 
-    public static void openScreen(PlayerEntity player, BlockState state, World world, BlockPos pos) {
-        if (world.isChunkLoaded(pos) && world.getBlockEntity(pos) instanceof TrashcanBlockEntityImpl){
+    public static void openScreen(Player player, BlockState state, Level world, BlockPos pos) {
+        if (world.hasChunkAt(pos) && world.getBlockEntity(pos) instanceof TrashcanBlockEntityImpl){
             TrashcanBlockEntityImpl trashcanScreenHandler = (TrashcanBlockEntityImpl) world.getBlockEntity(pos);
-            NamedScreenHandlerFactory namedScreenHandlerFactory = new SimpleNamedScreenHandlerFactory(((syncId, inv, player1) -> new TrashcanScreenHandler(trashcanScreenHandler, syncId, inv, trashcanScreenHandler)), new TranslatableText("container.pfm.trashcan"));
-            NetworkHooks.openGui((ServerPlayerEntity) player, namedScreenHandlerFactory, packetByteBuf -> {
-                packetByteBuf.writeBlockPos(trashcanScreenHandler.getPos());
+            MenuProvider namedScreenHandlerFactory = new SimpleMenuProvider(((containerId, inv, player1) -> new TrashcanScreenHandler(trashcanScreenHandler, containerId, inv, trashcanScreenHandler)), new TranslatableComponent("container.pfm.trashcan"));
+            NetworkHooks.openGui((ServerPlayer) player, namedScreenHandlerFactory, packetByteBuf -> {
+                packetByteBuf.writeBlockPos(trashcanScreenHandler.getBlockPos());
             } );
         }
     }

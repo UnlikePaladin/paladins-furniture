@@ -4,16 +4,16 @@ import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.model.json.ModelTransformation;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3f;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.Direction;
+import com.mojang.math.Vector3f;
 
 @Environment(value= EnvType.CLIENT)
 public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
@@ -24,17 +24,17 @@ public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
     }
 
     @Override
-    public void render(StovetopBlockEntity stovetopBlockEntity, float f, MatrixStack matrices, VertexConsumerProvider vertexConsumerProvider, int i, int j) {
+    public void render(StovetopBlockEntity stovetopBlockEntity, float f, PoseStack matrices, MultiBufferSource vertexConsumerProvider, int i, int j) {
         if (stovetopBlockEntity instanceof StovetopBlockEntity) {
-            Direction direction = stovetopBlockEntity.getCachedState().get(KitchenStovetopBlock.FACING);
-            DefaultedList<ItemStack> itemList = stovetopBlockEntity.getItemsBeingCooked();
-            int k = (int)stovetopBlockEntity.getPos().asLong();
+            Direction direction = stovetopBlockEntity.getBlockState().getValue(KitchenStovetopBlock.FACING);
+            NonNullList<ItemStack> itemList = stovetopBlockEntity.getItemsBeingCooked();
+            int k = (int)stovetopBlockEntity.getBlockPos().asLong();
             for (int l = 0; l < itemList.size(); ++l) {
                 ItemStack itemStack = itemList.get(l);
                 if (itemStack == ItemStack.EMPTY) continue;
-                matrices.push();
-                Direction direction2 = Direction.fromHorizontal((l + direction.getHorizontal()) % 4);
-                float g = -direction2.asRotation();
+                matrices.pushPose();
+                Direction direction2 = Direction.from2DDataValue((l + direction.get2DDataValue()) % 4);
+                float g = -direction2.toYRot();
                 int rot = 180;
                 switch (direction) {
                     case NORTH:
@@ -49,13 +49,13 @@ public class StovetopBlockEntityRenderer<T extends StovetopBlockEntity>
                     case EAST:
                         matrices.translate(0.55, 0.08, 0.5);
                 }
-                matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(g));
-                matrices.multiply(Vec3f.POSITIVE_Y.getDegreesQuaternion(rot));
-                matrices.multiply(Vec3f.POSITIVE_X.getDegreesQuaternion(90.0f));
+                matrices.mulPose(Vector3f.YP.rotationDegrees(g));
+                matrices.mulPose(Vector3f.YP.rotationDegrees(rot));
+                matrices.mulPose(Vector3f.XP.rotationDegrees(90.0f));
                 matrices.translate(-0.1625, -0.1625, 0.0);
                 matrices.scale(0.355f, 0.355f, 0.355f);
-                MinecraftClient.getInstance().getItemRenderer().renderItem(itemStack, ModelTransformation.Mode.FIXED, i, j, matrices, vertexConsumerProvider);
-                matrices.pop();
+                Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemTransforms.TransformType.FIXED, i, j, matrices, vertexConsumerProvider);
+                matrices.popPose();
             }
         }
     }

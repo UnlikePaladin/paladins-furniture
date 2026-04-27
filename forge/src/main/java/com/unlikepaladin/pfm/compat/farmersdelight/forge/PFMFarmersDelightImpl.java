@@ -6,8 +6,8 @@ import com.unlikepaladin.pfm.compat.farmersdelight.PFMFarmersDelight;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.runtime.data.PFMTagProvider;
-import net.minecraft.block.Block;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.data.recipes.FinishedRecipe;
 import vectorwing.farmersdelight.FarmersDelight;
 import vectorwing.farmersdelight.utils.tags.ModTags;
 

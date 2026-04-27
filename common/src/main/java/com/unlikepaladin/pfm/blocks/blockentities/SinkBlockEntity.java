@@ -4,18 +4,18 @@ import com.unlikepaladin.pfm.blocks.AbstractSinkBlock;
 import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.math.Vec3i;
 import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
+import net.minecraft.world.level.Level;
 
 import java.util.function.Supplier;
 
@@ -26,23 +26,23 @@ public class SinkBlockEntity extends BlockEntity implements Tickable {
     private int sinkTimer = 0;
     private boolean isFilling = false;
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return super.toInitialChunkDataNbt();
+    public CompoundTag getUpdateTag() {
+        return super.getUpdateTag();
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public CompoundTag save(CompoundTag nbt) {
+        super.save(nbt);
         nbt.putInt("sinkTimer", sinkTimer);
         nbt.putBoolean("isFilling", isFilling);
         return nbt;
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         sinkTimer = nbt.getInt("sinkTimer");
         isFilling = nbt.getBoolean("isFilling");
-        super.fromTag(state, nbt);
+        super.load(state, nbt);
     }
 
     public void setSinkTimer(int sinkTimer) {
@@ -51,7 +51,7 @@ public class SinkBlockEntity extends BlockEntity implements Tickable {
 
     public void setFilling(boolean isFilling) {
         if (isFilling){
-            world.playSound(null, pos, SoundEvents.BLOCK_WATER_AMBIENT, SoundCategory.BLOCKS, 0.7f, 1.0f);
+            level.playSound(null, getBlockPos(), SoundEvents.WATER_AMBIENT, SoundSource.BLOCKS, 0.7f, 1.0f);
         }
         this.isFilling = isFilling;
     }
@@ -63,8 +63,8 @@ public class SinkBlockEntity extends BlockEntity implements Tickable {
                 this.setSinkTimer(0);
                 this.setFilling(false);
             } else {
-                if (world.isClient) {
-                    AbstractSinkBlock.spawnParticles(this.getCachedState().get(Properties.HORIZONTAL_FACING), this.world, this.getPos());
+                if (world.isClientSide) {
+                    AbstractSinkBlock.spawnParticles(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), this.getLevel(), this.getBlockPos());
                 }
                 this.sinkTimer++;
             }

@@ -17,10 +17,10 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
@@ -53,7 +53,7 @@ public class FurnitureCategory implements DisplayCategory<FurnitureDisplay>{
     }
 
     @Override
-    public Text getTitle() {
+    public Component getTitle() {
         return new TranslatableText("rei.pfm.furniture");
     }
 

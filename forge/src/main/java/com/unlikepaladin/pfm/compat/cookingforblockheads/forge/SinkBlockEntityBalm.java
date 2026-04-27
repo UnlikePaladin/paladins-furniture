@@ -2,8 +2,8 @@ package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
 import net.blay09.mods.cookingforblockheads.api.capability.CapabilityKitchenConnector;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.math.Direction;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 

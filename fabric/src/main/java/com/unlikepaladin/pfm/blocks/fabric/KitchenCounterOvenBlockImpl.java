@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.blocks.fabric;
 
 import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.function.Supplier;
 

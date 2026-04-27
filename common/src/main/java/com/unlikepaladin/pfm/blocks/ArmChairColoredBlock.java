@@ -2,24 +2,24 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.State;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.StringIdentifiable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.StateHolder;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +28,13 @@ import java.util.stream.Stream;
 import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnitureBlock {
-    public static final EnumProperty<ArmChairShape> SHAPE = EnumProperty.of("shape", ArmChairShape.class);
+    public static final EnumProperty<ArmChairShape> SHAPE = EnumProperty.create("shape", ArmChairShape.class);
     private static final List<FurnitureBlock> COLORED_ARMCHAIRS = new ArrayList<>();
     private final DyeColor color;
 
-    public ArmChairColoredBlock(DyeColor color, Settings settings) {
+    public ArmChairColoredBlock(DyeColor color, Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(SHAPE, ArmChairShape.STRAIGHT));
+        registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(SHAPE, ArmChairShape.STRAIGHT));
             if (this.getClass().isAssignableFrom(ArmChairColoredBlock.class)) {
                 COLORED_ARMCHAIRS.add(new FurnitureBlock(this, "arm_chair"));
             }
@@ -50,17 +50,17 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        super.appendProperties(stateManager);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        super.createBlockStateDefinition(stateManager);
         stateManager.add(SHAPE);
     }
 
-    protected static final VoxelShape STANDARD = VoxelShapes.union(createCuboidShape(12, 0, 12 ,14.5, 3, 14.5),createCuboidShape(12, 0, 1.5,14.5, 3, 4), createCuboidShape(1, 0, 1.5, 3.5, 3, 4), createCuboidShape(1, 0, 12, 3.5, 3, 14.5), createCuboidShape(6.6, 2, 13, 16.3, 13.71, 16), createCuboidShape(6.6, 2, 0, 16.3, 13.71, 3), createCuboidShape(0.3, 2, 3, 16.3, 10.51, 13), createCuboidShape(0.3, 10.5, 3, 5.3, 25.51, 13), createCuboidShape(0.3, 2, 13, 6.6, 25.51, 16), createCuboidShape(0.3, 2, 0, 6.6, 25.51, 3));
-    protected static final VoxelShape MIDDLE = VoxelShapes.union(createCuboidShape(0, 2, 0.3,16, 9.51, 16),createCuboidShape(0, 9.5, 0.3,16, 25.51, 5.3), createCuboidShape(0, 9.5, 5.3, 16, 10.5, 16));
-    protected static final VoxelShape OUTER = VoxelShapes.union(createCuboidShape(0, 2, 0,16, 10.51, 15.7),createCuboidShape(0, 10.5, 10.7,5.3, 25.51, 15.7), createCuboidShape(0.3, 2, 15.7, 5.3, 25.51, 16),createCuboidShape(5.3, 2, 15.7,16, 10.51, 16),createCuboidShape(12.5, 0, 1.7,15, 3, 4.2),createCuboidShape(1, 0, 11.7,3.5, 3, 14.2));
-    protected static final VoxelShape LEFT_EDGE = VoxelShapes.union(createCuboidShape(1.5, 0, 12,4, 3, 14.5),createCuboidShape(1.5, 0, 1,4, 3, 3.5), createCuboidShape(0, 2, 6.6, 3, 13.71, 16),createCuboidShape(3, 2, 0.3,16, 10.51, 16),createCuboidShape(3, 10.5, 0.3,16, 25.51, 5.3),createCuboidShape(0, 2, 0.3,3, 25.51, 6.6));
-    protected static final VoxelShape RIGHT_EDGE = VoxelShapes.union(createCuboidShape(12.5, 0, 12,15, 3, 14.5),createCuboidShape(12.5, 0, 1,15, 3, 3.5), createCuboidShape(13, 2, 6.6, 16, 13.71, 16),createCuboidShape(0, 2, 0.3,13, 10.51, 16),createCuboidShape(0, 10.5, 0.3,13, 25.51, 5.3),createCuboidShape(13, 2, 0.3,16, 25.51, 6.6));
-    protected static final VoxelShape INNER = VoxelShapes.union(createCuboidShape(12.5, 0, 12,15, 3, 14.5),createCuboidShape(1, 0, 1.5,3.5, 3, 4), createCuboidShape(0.3, 2, 0.3, 16, 10.51, 16),createCuboidShape(0.3, 10.5, 5.3,5.3, 25.51, 16),createCuboidShape(0.3, 10.5, 0.3,16, 25.51, 5.3));
+    protected static final VoxelShape STANDARD = Shapes.or(box(12, 0, 12 ,14.5, 3, 14.5),box(12, 0, 1.5,14.5, 3, 4), box(1, 0, 1.5, 3.5, 3, 4), box(1, 0, 12, 3.5, 3, 14.5), box(6.6, 2, 13, 16.3, 13.71, 16), box(6.6, 2, 0, 16.3, 13.71, 3), box(0.3, 2, 3, 16.3, 10.51, 13), box(0.3, 10.5, 3, 5.3, 25.51, 13), box(0.3, 2, 13, 6.6, 25.51, 16), box(0.3, 2, 0, 6.6, 25.51, 3));
+    protected static final VoxelShape MIDDLE = Shapes.or(box(0, 2, 0.3,16, 9.51, 16),box(0, 9.5, 0.3,16, 25.51, 5.3), box(0, 9.5, 5.3, 16, 10.5, 16));
+    protected static final VoxelShape OUTER = Shapes.or(box(0, 2, 0,16, 10.51, 15.7),box(0, 10.5, 10.7,5.3, 25.51, 15.7), box(0.3, 2, 15.7, 5.3, 25.51, 16),box(5.3, 2, 15.7,16, 10.51, 16),box(12.5, 0, 1.7,15, 3, 4.2),box(1, 0, 11.7,3.5, 3, 14.2));
+    protected static final VoxelShape LEFT_EDGE = Shapes.or(box(1.5, 0, 12,4, 3, 14.5),box(1.5, 0, 1,4, 3, 3.5), box(0, 2, 6.6, 3, 13.71, 16),box(3, 2, 0.3,16, 10.51, 16),box(3, 10.5, 0.3,16, 25.51, 5.3),box(0, 2, 0.3,3, 25.51, 6.6));
+    protected static final VoxelShape RIGHT_EDGE = Shapes.or(box(12.5, 0, 12,15, 3, 14.5),box(12.5, 0, 1,15, 3, 3.5), box(13, 2, 6.6, 16, 13.71, 16),box(0, 2, 0.3,13, 10.51, 16),box(0, 10.5, 0.3,13, 25.51, 5.3),box(13, 2, 0.3,16, 25.51, 6.6));
+    protected static final VoxelShape INNER = Shapes.or(box(12.5, 0, 12,15, 3, 14.5),box(1, 0, 1.5,3.5, 3, 4), box(0.3, 2, 0.3, 16, 10.51, 16),box(0.3, 10.5, 5.3,5.3, 25.51, 16),box(0.3, 10.5, 0.3,16, 25.51, 5.3));
 
     protected static final VoxelShape STANDARD_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, STANDARD);
     protected static final VoxelShape STANDARD_EAST = rotateShape(Direction.WEST, Direction.EAST, STANDARD);
@@ -87,9 +87,9 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
     protected static final VoxelShape INNER_EAST = rotateShape(Direction.WEST, Direction.EAST, INNER);
     @SuppressWarnings("deprecated")
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
-        ArmChairShape shape = state.get(SHAPE);
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+        Direction dir = state.getValue(FACING);
+        ArmChairShape shape = state.getValue(SHAPE);
         switch(shape) {
             case STRAIGHT:
                 switch (dir) {
@@ -190,22 +190,22 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
     }
 
 
-    private ArmChairShape getShape(BlockState state, BlockView world, BlockPos pos) {
+    private ArmChairShape getShape(BlockState state, BlockGetter world, BlockPos pos) {
         Direction direction3;
         Object direction2;
-        Direction direction = state.get(FACING);
-        BlockState blockState = world.getBlockState(pos.offset(direction));
-        boolean right = this.canConnect(world, pos, state.get(FACING).rotateYCounterclockwise(), state.get(FACING));
-        boolean left = this.canConnect(world, pos, state.get(FACING).rotateYClockwise(), state.get(FACING));
-        if (this.isArmChair(blockState) && ((Direction)(direction2 = blockState.get(FACING))).getAxis() != state.get(FACING).getAxis() && this.isDifferentOrientation(state, world, pos, ((Direction)direction2).getOpposite())) {
-            if (direction2 == direction.rotateYCounterclockwise()) {
+        Direction direction = state.getValue(FACING);
+        BlockState blockState = world.getBlockState(pos.relative(direction));
+        boolean right = this.canConnect(world, pos, state.getValue(FACING).getCounterClockWise(), state.getValue(FACING));
+        boolean left = this.canConnect(world, pos, state.getValue(FACING).getClockWise(), state.getValue(FACING));
+        if (this.isArmChair(blockState) && ((Direction)(direction2 = blockState.getValue(FACING))).getAxis() != state.getValue(FACING).getAxis() && this.isDifferentOrientation(state, world, pos, ((Direction)direction2).getOpposite())) {
+            if (direction2 == direction.getCounterClockWise()) {
                 return ArmChairShape.OUTER_LEFT;
             }
             return ArmChairShape.OUTER_RIGHT;
         }
-        direction2 = world.getBlockState(pos.offset(direction.getOpposite()));
-        if (this.isArmChair((BlockState)direction2) && (direction3 = (Direction) ((State)direction2).get(FACING)).getAxis() != state.get(FACING).getAxis() && this.isDifferentOrientation(state, world, pos, direction3)) {
-            if (direction3 == direction.rotateYCounterclockwise()) {
+        direction2 = world.getBlockState(pos.relative(direction.getOpposite()));
+        if (this.isArmChair((BlockState)direction2) && (direction3 = (Direction) ((BlockState)direction2).getValue(FACING)).getAxis() != state.getValue(FACING).getAxis() && this.isDifferentOrientation(state, world, pos, direction3)) {
+            if (direction3 == direction.getCounterClockWise()) {
                 return ArmChairShape.INNER_LEFT;
             }
             return ArmChairShape.INNER_RIGHT;
@@ -222,40 +222,40 @@ public class ArmChairColoredBlock extends ArmChairBlock implements DyeableFurnit
         return ArmChairShape.STRAIGHT;
     }
 
-    public boolean canConnect(BlockView world, BlockPos pos, Direction direction, Direction tableDirection)
+    public boolean canConnect(BlockGetter world, BlockPos pos, Direction direction, Direction tableDirection)
     {
-        BlockState state = world.getBlockState(pos.offset(direction));
+        BlockState state = world.getBlockState(pos.relative(direction));
         return (state.getBlock().getClass().isAssignableFrom(ArmChairColoredBlock.class) && state.getBlock() instanceof ArmChairColoredBlock);
     }
 
-    private boolean isDifferentOrientation(BlockState state, BlockView world, BlockPos pos, Direction dir) {
-        BlockState blockState = world.getBlockState(pos.offset(dir));
-        return !this.isArmChair(blockState) || blockState.get(FACING) != state.get(FACING);
+    private boolean isDifferentOrientation(BlockState state, BlockGetter world, BlockPos pos, Direction dir) {
+        BlockState blockState = world.getBlockState(pos.relative(dir));
+        return !this.isArmChair(blockState) || blockState.getValue(FACING) != state.getValue(FACING);
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return direction.getAxis().isHorizontal() ? state.with(FACING, state.get(FACING)).with(SHAPE, getShape(state, world, pos)) : super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        return direction.getAxis().isHorizontal() ? state.setValue(FACING, state.getValue(FACING)).setValue(SHAPE, getShape(state, world, pos)) : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        BlockState blockState = this.getDefaultState().with(FACING, ctx.getPlayerFacing());
-        Direction facing = PaladinFurnitureMod.getPFMConfig().doChairsFacePlayer() ? ctx.getPlayerFacing() : ctx.getPlayerFacing().getOpposite();
-        return this.getDefaultState().with(SHAPE, getShape(blockState, ctx.getWorld(), ctx.getBlockPos())).with(FACING, facing);
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        BlockState blockState = this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection());
+        Direction facing = PaladinFurnitureMod.getPFMConfig().doChairsFacePlayer() ? ctx.getHorizontalDirection() : ctx.getHorizontalDirection().getOpposite();
+        return this.defaultBlockState().setValue(SHAPE, getShape(blockState, ctx.getLevel(), ctx.getClickedPos())).setValue(FACING, facing);
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (!state.isOf(state.getBlock())) {
-            this.getDefaultState().neighborUpdate(world, pos, Blocks.AIR, pos, false);
-            this.onBlockAdded(this.getDefaultState(), world, pos, oldState, false);
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+        if (!state.is(state.getBlock())) {
+            this.defaultBlockState().neighborChanged(world, pos, Blocks.AIR, pos, false);
+            this.onPlace(this.defaultBlockState(), world, pos, oldState, false);
         }
     }
 
 
 }
 
-enum ArmChairShape implements StringIdentifiable
+enum ArmChairShape implements StringRepresentable
 {
     STRAIGHT("straight"),
     INNER_LEFT("inner_left"),
@@ -278,7 +278,7 @@ enum ArmChairShape implements StringIdentifiable
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.name;
     }
 }

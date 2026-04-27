@@ -4,8 +4,8 @@
 		"2": "pfm:block/leather",
 		"3": "block/dark_oak_log",
 		"4": "pfm:block/leather_edgeless",
-		"particle": "pfm:block/leather",
-		"legs": "pfm:block/leather_edge"
+		"legs": "pfm:block/leather_edge",
+		"particle": "#2"
 	},
 	"elements": [
 		{

@@ -1,11 +1,11 @@
 package com.unlikepaladin.pfm.config.option;
 
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtNull;
-import net.minecraft.nbt.NbtTagSizeTracker;
-import net.minecraft.nbt.NbtType;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.EndTag;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.nbt.TagType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import java.io.DataInput;
 import java.io.DataOutput;
@@ -24,7 +24,7 @@ public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
             nbtTagSizeTracker.add(224L + 16L * tooltip.length());
             nbtTagSizeTracker.add(224L + 16L * category.length());
             nbtTagSizeTracker.add(64L);
-            BooleanConfigOption booleanConfigOption = new BooleanConfigOption(new TranslatableText(title), new TranslatableText(tooltip), category, value, side);
+            BooleanConfigOption booleanConfigOption = new BooleanConfigOption(new TranslatableComponent(title), new TranslatableComponent(tooltip), category, value, side);
             return booleanConfigOption;
         }
 
@@ -36,14 +36,14 @@ public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
             return true;
         }
     };
-    private final Text title;
-    private final Text tooltip;
+    private final Component title;
+    private final Component tooltip;
     private final String category;
     private boolean value;
     private final boolean defaultValue;
 
     private final Side side;
-    public BooleanConfigOption(Text title, Text tooltip, String category, boolean value, Side side) {
+    public BooleanConfigOption(Component title, Component tooltip, String category, boolean value, Side side) {
         this.title = title;
         this.category = category;
         this.tooltip = tooltip;
@@ -53,7 +53,7 @@ public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
     }
 
     @Override
-    public Text getTitle() {
+    public Component getTitle() {
         return title;
     }
 
@@ -73,7 +73,7 @@ public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
     }
 
     @Override
-    public Text getToolTip() {
+    public Component getToolTip() {
         return tooltip;
     }
 
@@ -104,10 +104,10 @@ public class BooleanConfigOption extends AbstractConfigOption<Boolean>{
 
     @Override
     public void write(DataOutput output) throws IOException {
-        output.writeUTF(((TranslatableText)title).getKey());
-        output.writeUTF(((TranslatableText)tooltip).getKey());
+        output.writeUTF(((TranslatableComponent)title).getKey());
+        output.writeUTF(((TranslatableComponent)tooltip).getKey());
         output.writeUTF(category);
         output.writeBoolean(value);
-        output.writeUTF(side.asString());
+        output.writeUTF(side.getSerializedName());
     }
 }

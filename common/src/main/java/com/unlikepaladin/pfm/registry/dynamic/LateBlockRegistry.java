@@ -12,13 +12,18 @@ import com.unlikepaladin.pfm.items.*;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.*;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.util.DyeColor;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LayeredCauldronBlock;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.function.Supplier;
@@ -26,13 +31,13 @@ import java.util.function.Supplier;
 public class LateBlockRegistry {
 
     @ExpectPlatform
-    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> block, boolean registerItem, ItemGroup group)
+    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> block, boolean registerItem, CreativeModeTab group)
     {
         return block.get();
     }
 
     @ExpectPlatform
-    public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, ItemGroup group)
+    public static <T extends Block> T registerLateBlockClassic(String blockName, T block, boolean registerItem, CreativeModeTab group)
     {
         return block;
     }
@@ -42,10 +47,10 @@ public class LateBlockRegistry {
         return item.get();
     }
 
-    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> blockSupplier, int count, ItemGroup group) {
+    public static <T extends Block> T registerLateBlock(String blockName, Supplier<T> blockSupplier, int count, CreativeModeTab group) {
         T block = registerLateBlock(blockName, blockSupplier, false, group);
         PaladinFurnitureModBlocksItems.BLOCKS.add(block);
-        registerLateItem(blockName, () -> new BlockItem(block, new Item.Settings().group(group).maxCount(count)));
+        registerLateItem(blockName, () -> new BlockItem(block, new BlockItem.Properties().tab(group).stacksTo(count)));
         return block;
     }
 
@@ -53,41 +58,41 @@ public class LateBlockRegistry {
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::createBlocks);
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(HerringbonePlankBlock.class, new FurnitureEntry<HerringbonePlankBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_herringbone_planks", () -> new HerringbonePlankBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, ItemGroup.BUILDING_BLOCKS), true);
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_herringbone_planks", () -> new HerringbonePlankBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(BlockBehaviour.Properties.copy(variant.getBaseBlock()))).pfm$setMapColor(color).noOclussion()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, ItemGroup.BUILDING_BLOCKS), true);
             }
         }});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(BasicChairBlock.class, new FurnitureEntry<BasicChairBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_chair", () -> new BasicChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_chair", () -> new BasicChairBlock(BlockBehaviour.Properties.copy(variant.getBaseBlock()).color(color).noOcclusion()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_chair", () -> new BasicChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_chair", () -> new BasicChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_chair", () -> new BasicChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
         }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(DinnerChairBlock.class, new FurnitureEntry<DinnerChairBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_chair_dinner", () -> new DinnerChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_chair_dinner", () -> new DinnerChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_chair_dinner", () -> new DinnerChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ClassicChairBlock.class, new FurnitureEntry<ClassicChairBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_chair_classic", () -> new ClassicChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_chair_classic", () -> new ClassicChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_chair_classic", () -> new ClassicChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ClassicChairDyeableBlock.class, new FurnitureEntry<ClassicChairDyeableBlock>() {{
@@ -102,16 +107,16 @@ public class LateBlockRegistry {
 
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ModernChairBlock.class, new FurnitureEntry<ModernChairBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_chair_modern", () -> new ModernChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_chair_modern", () -> new ModernChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_chair_modern", () -> new ModernChairBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
-        PaladinFurnitureModBlocksItems.furnitureEntryMap.put(FroggyChairBlock.class, new FurnitureEntry<FroggyChairBlock>() {{
+        PaladinFurnitureModBlocksItems.furnitureEntryMap.put(FroggyChairBlock.class, new FurnitureEntry<>() {{
             this.addBlock(registerLateBlock("froggy_chair", () -> new FroggyChairBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.METAL, MapColor.GREEN).strength(9.0f, 8.0f).nonOpaque().requiresTool(), ToolType.getToolTypeFromMaterial(Material.METAL))), true, PaladinFurnitureMod.FURNITURE_GROUP));
             this.addBlock(registerLateBlock("froggy_chair_pink", () -> new FroggyChairBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.METAL, MapColor.PINK).strength(9.0f, 8.0f).nonOpaque().requiresTool(), ToolType.getToolTypeFromMaterial(Material.METAL))), true, PaladinFurnitureMod.FURNITURE_GROUP));
             this.addBlock(registerLateBlock("froggy_chair_light_blue", () -> new FroggyChairBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.METAL, MapColor.LIGHT_BLUE).strength(9.0f, 8.0f).nonOpaque().requiresTool(), ToolType.getToolTypeFromMaterial(Material.METAL))), true, PaladinFurnitureMod.FURNITURE_GROUP));
@@ -143,43 +148,43 @@ public class LateBlockRegistry {
 
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(BasicTableBlock.class, new FurnitureEntry<BasicTableBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_table_basic", () -> new BasicTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_table_basic", () -> new BasicTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_table_basic", () -> new BasicTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ClassicTableBlock.class, new FurnitureEntry<ClassicTableBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_table_classic", () -> new ClassicTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_table_classic", () -> new ClassicTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_table_classic", () -> new ClassicTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
 
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(LogTableBlock.class, new FurnitureEntry<LogTableBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 String postfix = variant.isNetherWood() ? "stem" : "log";
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_table_" + postfix, () -> new LogTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_table_" + postfix, () -> new LogTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_table_natural", () -> new LogTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
 
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(RawLogTableBlock.class, new FurnitureEntry<RawLogTableBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 String postfix = variant.isNetherWood() ? "stem" : "log";
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_raw_table_" + postfix, () -> new RawLogTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
@@ -188,114 +193,114 @@ public class LateBlockRegistry {
         }});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(DinnerTableBlock.class, new FurnitureEntry<DinnerTableBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_table_dinner", () -> new DinnerTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_table_dinner", () -> new DinnerTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_table_dinner", () -> new DinnerTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
         }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ModernDinnerTableBlock.class, new FurnitureEntry<ModernDinnerTableBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_table_modern_dinner", () -> new ModernDinnerTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_table_modern_dinner", () -> new ModernDinnerTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_table_modern_dinner", () -> new ModernDinnerTableBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
         }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(BasicCoffeeTableBlock.class, new FurnitureEntry<BasicCoffeeTableBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_coffee_table_basic", () -> new BasicCoffeeTableBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ModernCoffeeTableBlock.class, new FurnitureEntry<ModernCoffeeTableBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_coffee_table_modern", () -> new ModernCoffeeTableBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ClassicCoffeeTableBlock.class, new FurnitureEntry<ClassicCoffeeTableBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_coffee_table_classic", () -> new ClassicCoffeeTableBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(BasicDeskBlock.class, new FurnitureEntry<BasicDeskBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_desk_basic", () -> new BasicDeskBlock(((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_desk_basic", () -> new BasicDeskBlock(((AbstractBlock$SettingsExtension)AbstractBlock.Settings.copy(variant.getBaseBlock())).pfm$setMapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_basic", () -> new BasicDeskBlock(((AbstractBlock$SettingsExtension)AbstractBlock.Settings.copy(variant.getBaseBlock())).pfm$setMapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(BasicDeskCabinetBlock.class, new FurnitureEntry<BasicDeskCabinetBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_desk_cabinet_basic", () -> new BasicDeskCabinetBlock(((AbstractBlock$SettingsExtension)AbstractBlock.Settings.copy(variant.getBaseBlock())).pfm$setMapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_desk_cabinet_basic", () -> new BasicDeskCabinetBlock(((AbstractBlock$SettingsExtension)AbstractBlock.Settings.copy(variant.getBaseBlock())).pfm$setMapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_cabinet_basic", () -> new BasicDeskCabinetBlock(((AbstractBlock$SettingsExtension)AbstractBlock.Settings.copy(variant.getBaseBlock())).pfm$setMapColor(color).nonOpaque()), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ClassicDeskBlock.class, new FurnitureEntry<ClassicDeskBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_classic", () -> new ClassicDeskBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ClassicDeskCabinetBlock.class, new FurnitureEntry<ClassicDeskCabinetBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_desk_cabinet_classic", () -> new ClassicDeskCabinetBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
-        PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = OfficeChairItem.getItemFactory(new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+        PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM = OfficeChairItem.getItemFactory(new BlockItem.Properties().tab(PaladinFurnitureMod.FURNITURE_GROUP));
         LateBlockRegistry.registerLateItem("office_chair", () -> PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM);
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ClassicNightstandBlock.class, new FurnitureEntry<ClassicNightstandBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_classic_nightstand", () -> new ClassicNightstandBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_classic_nightstand", () -> new ClassicNightstandBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_classic_nightstand", () -> new ClassicNightstandBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(SimpleBedBlock.class, new FurnitureEntry<SimpleBedBlock>() {{
@@ -303,8 +308,8 @@ public class LateBlockRegistry {
                 int i = 0;for (DyeColor color : DyeColor.values()) {
                 if (i > 15)
                         break;
-                    String blockName = variant.asString() + "_" + color.getName() +  "_simple_bed";
-                    SimpleBedBlock block = LateBlockRegistry.registerLateBlock(blockName, () -> new SimpleBedBlock(color, PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.WOOL, state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMapColor() : MapColor.WHITE_GRAY).sounds(BlockSoundGroup.WOOD).strength(0.2f).nonOpaque(), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), false, PaladinFurnitureMod.FURNITURE_GROUP);
+                    String blockName = variant.getSerializedName() + "_" + color.getName() +  "_simple_bed";
+                    SimpleBedBlock block = LateBlockRegistry.registerLateBlock(blockName, () -> new SimpleBedBlock(color, PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.WOOL, state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMaterialColor() : MapColor.WHITE_GRAY).sounds(BlockSoundGroup.WOOD).strength(0.2f).nonOpaque(), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), false, PaladinFurnitureMod.FURNITURE_GROUP);
                     LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Settings().maxCount(1).group(PaladinFurnitureMod.FURNITURE_GROUP)));
                     this.addBlock(variant, block, true);
                     PaladinFurnitureModBlocksItems.beds.add(block);
@@ -318,7 +323,7 @@ public class LateBlockRegistry {
                 for (DyeColor color : DyeColor.values()) {
                     if (i > 15)
                         break;
-                    String blockName = variant.asString() + "_" + color.getName() +  "_classic_bed";
+                    String blockName = variant.getSerializedName() + "_" + color.getName() +  "_classic_bed";
                     ClassicBedBlock block = LateBlockRegistry.registerLateBlock(blockName, () -> new ClassicBedBlock(color, PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.of(Material.WOOL, state -> state.get(BedBlock.PART) == BedPart.FOOT ? color.getMapColor() : MapColor.WHITE_GRAY).sounds(BlockSoundGroup.WOOD).strength(0.2f).nonOpaque(), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), false, PaladinFurnitureMod.FURNITURE_GROUP);
                     LateBlockRegistry.registerLateItem(blockName, () -> BedBlockItem.getItemFactory(block, new Item.Settings().maxCount(1).group(PaladinFurnitureMod.FURNITURE_GROUP)));
                     this.addBlock(variant, block, true);
@@ -329,51 +334,51 @@ public class LateBlockRegistry {
         }});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(SimpleBunkLadderBlock.class, new FurnitureEntry<SimpleBunkLadderBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_simple_bunk_ladder", () -> new SimpleBunkLadderBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(LogStoolBlock.class, new FurnitureEntry<LogStoolBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 String postfix = variant.isNetherWood() ? "stem" : "log";
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString() + "_" + postfix + "_stool", () -> new LogStoolBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(SimpleStoolBlock.class, new FurnitureEntry<SimpleStoolBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_simple_stool", () -> new SimpleStoolBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_simple_stool", () -> new SimpleStoolBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_simple_stool", () -> new SimpleStoolBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ClassicStoolBlock.class, new FurnitureEntry<ClassicStoolBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_classic_stool", () -> new ClassicStoolBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_classic_stool", () -> new ClassicStoolBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_classic_stool", () -> new ClassicStoolBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }}});
 
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(ModernStoolBlock.class, new FurnitureEntry<ModernStoolBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_modern_stool", () -> new ModernStoolBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped())
                     this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_modern_stool", () -> new ModernStoolBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_modern_stool", () -> new ModernStoolBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }
             for (ExtraStoolVariant variant : ExtraStoolVariant.values()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock( variant.asString()+"_modern_stool", () -> new ModernStoolBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }
         }});
@@ -387,8 +392,8 @@ public class LateBlockRegistry {
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(KitchenWallDrawerSmallBlock.class, new FurnitureEntry<KitchenWallDrawerSmallBlock>());
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(KitchenCounterBlock.class, new FurnitureEntry<KitchenCounterBlock>() {{
             for (WoodVariant variant : WoodVariantRegistry.getVariants()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
-                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_counter", () -> new KitchenCounterBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
+                this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.getSerializedName()+"_kitchen_counter", () -> new KitchenCounterBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_drawer", () -> new KitchenDrawerBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_sink", () -> new KitchenSinkBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial())), SinkBehavior.WATER_SINK_BEHAVIOR), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
@@ -397,7 +402,7 @@ public class LateBlockRegistry {
                 PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_wall_drawer", () -> new KitchenWallDrawerBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_wall_small_drawer", () -> new KitchenWallDrawerSmallBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 if (variant.hasStripped()) {
-                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_kitchen_counter", () -> new KitchenCounterBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
+                    this.addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.getSerializedName()+"_kitchen_counter", () -> new KitchenCounterBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
                     PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_kitchen_drawer", () -> new KitchenDrawerBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
                     PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
                     PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenSinkBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock("stripped_" + variant.asString()+"_kitchen_sink", () -> new KitchenSinkBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial())), SinkBehavior.WATER_SINK_BEHAVIOR), true, PaladinFurnitureMod.FURNITURE_GROUP), false);
@@ -409,7 +414,7 @@ public class LateBlockRegistry {
             }
             for (StoneVariant variant : StoneVariantRegistry.getVariants()) {if (variant.identifier.getPath().equals("quartz"))
                     continue;
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_counter", () -> new KitchenCounterBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_drawer", () -> new KitchenDrawerBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
@@ -420,7 +425,7 @@ public class LateBlockRegistry {
                 PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenWallDrawerSmallBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_wall_small_drawer", () -> new KitchenWallDrawerSmallBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
             }
             for (ExtraCounterVariant variant : ExtraCounterVariant.values()) {
-                MapColor color = variant.getBaseBlock().getDefaultMapColor();
+                MaterialColor color = variant.getBaseBlock().defaultMaterialColor();
                 this.addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_counter", () -> new KitchenCounterBlock((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque())), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenDrawerBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_drawer", () -> new KitchenDrawerBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
                 PaladinFurnitureModBlocksItems.furnitureEntryMap.get(KitchenCabinetBlock.class).addBlock(variant, LateBlockRegistry.registerLateBlock(variant.asString()+"_kitchen_cabinet", () -> new KitchenCabinetBlock(PFMBlockSettings.breaksWithTool((((AbstractBlock$SettingsExtension)(AbstractBlock.Settings.copy(variant.getBaseBlock()))).pfm$setMapColor(color).nonOpaque()), ToolType.getToolTypeFromMaterial(variant.getBaseMaterial()))), true, PaladinFurnitureMod.FURNITURE_GROUP), true);
@@ -476,7 +481,7 @@ public class LateBlockRegistry {
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(SimpleLightBlock.class, new FurnitureEntry<SimpleLightBlock>() {{
             this.addBlock( LateBlockRegistry.registerLateBlock( "simple_light",() -> PaladinFurnitureModBlocksItems.SIMPLE_LIGHT, true, PaladinFurnitureMod.FURNITURE_GROUP));
         }});
-        PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+        PaladinFurnitureModBlocksItems.LIGHT_SWITCH_ITEM = new LightSwitchItem(PaladinFurnitureModBlocksItems.LIGHT_SWITCH, new BlockItem.Properties().tab(PaladinFurnitureMod.FURNITURE_GROUP));
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(LightSwitchBlock.class, new FurnitureEntry<LightSwitchBlock>() {{
             this.addBlock( LateBlockRegistry.registerLateBlock( "light_switch",() -> PaladinFurnitureModBlocksItems.LIGHT_SWITCH, false, PaladinFurnitureMod.FURNITURE_GROUP));
             PaladinFurnitureModBlocksItems.BLOCKS.add(PaladinFurnitureModBlocksItems.LIGHT_SWITCH);
@@ -497,7 +502,7 @@ public class LateBlockRegistry {
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(BasicShowerHeadBlock.class, new FurnitureEntry<BasicShowerHeadBlock>() {{
             this.addBlock( LateBlockRegistry.registerLateBlock( "basic_shower_head",() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HEAD, true, PaladinFurnitureMod.FURNITURE_GROUP));
         }});
-        PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM = new ShowerHandleItem(() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+        PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM = new ShowerHandleItem(() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, new BlockItem.Properties().tab(PaladinFurnitureMod.FURNITURE_GROUP));
         PaladinFurnitureModBlocksItems.furnitureEntryMap.put(BasicShowerHandleBlock.class, new FurnitureEntry<BasicShowerHandleBlock>() {{
             this.addBlock( LateBlockRegistry.registerLateBlock( "basic_shower_handle",() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE, false, PaladinFurnitureMod.FURNITURE_GROUP));
             LateBlockRegistry.registerLateItem( "basic_shower_handle",() -> PaladinFurnitureModBlocksItems.BASIC_SHOWER_HANDLE_ITEM);
@@ -528,7 +533,7 @@ public class LateBlockRegistry {
             for (WoodVariant variant : WoodVariantRegistry.getVariants())
                 addBlock(variant, lampBlock, true);
         }});
-        PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM = LampItem.getItemFactory(PaladinFurnitureModBlocksItems.BASIC_LAMP, new Item.Settings().group(PaladinFurnitureMod.FURNITURE_GROUP));
+        PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM = LampItem.getItemFactory(PaladinFurnitureModBlocksItems.BASIC_LAMP, new BlockItem.Properties().tab(PaladinFurnitureMod.FURNITURE_GROUP));
         LateBlockRegistry.registerLateItem( "basic_lamp", () -> PaladinFurnitureModBlocksItems.BASIC_LAMP_ITEM);
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerBlocks);
         PaladinFurnitureMod.pfmModCompatibilities.forEach(PFMModCompatibility::registerItems);

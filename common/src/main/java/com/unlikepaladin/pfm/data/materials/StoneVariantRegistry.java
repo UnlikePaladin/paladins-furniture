@@ -1,8 +1,13 @@
 package com.unlikepaladin.pfm.data.materials;
 
-import net.minecraft.block.*;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
+import net.minecraft.world.level.block.BasePressurePlateBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
@@ -11,7 +16,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
-    public static final StoneVariant STONE = new StoneVariant(new Identifier("stone"), Blocks.STONE, Blocks.COBBLESTONE);
+    public static final StoneVariant STONE = new StoneVariant(new ResourceLocation("stone"), Blocks.STONE, Blocks.COBBLESTONE);
     public static final StoneVariantRegistry INSTANCE = new StoneVariantRegistry();
     public static Collection<String> getNamespaces() {
         return INSTANCE.variants.values().stream().map(VariantBase::getNamespace).collect(Collectors.toList());
@@ -21,26 +26,26 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
         return Collections.unmodifiableCollection(INSTANCE.variants.values());
     }
     @Nullable
-    public static StoneVariant getVariant(Identifier name) {
+    public static StoneVariant getVariant(ResourceLocation name) {
         return INSTANCE.variants.getOrDefault(name, STONE);
     }
 
-    public static Optional<StoneVariant> getOptionalVariant(Identifier name) {
+    public static Optional<StoneVariant> getOptionalVariant(ResourceLocation name) {
         return INSTANCE.variants.containsKey(name) ? Optional.of(INSTANCE.variants.get(name)) : Optional.empty();
     }
 
     /**
      * Simplified Wood/Block detection based on MoonlightLib<a href="https://github.com/MehVahdJukaar/Moonlight/blob/multi-loader/common/src/main/java/net/mehvahdjukaar/moonlight/api/set/BlockTypeRegistry.java#L18">...</a>
      */
-    public Optional<StoneVariant> getVariantFromBlock(Block baseBlock, Identifier blockId) {
+    public Optional<StoneVariant> getVariantFromBlock(Block baseBlock, ResourceLocation blockId) {
         String name = null;
         String path = blockId.getPath();
         if (blockId.getNamespace().equals("tfc")) {
             if (path.contains("rock/polished/")) {
-                Optional<Block> cobble = Registry.BLOCK.getOrEmpty(
-                        new Identifier(blockId.getNamespace(), path.replace("polished", "raw")));
+                Optional<Block> cobble = Registry.BLOCK.getOptional(
+                        new ResourceLocation(blockId.getNamespace(), path.replace("polished", "raw")));
                 if (cobble.isPresent()) {
-                    Identifier id = new Identifier(blockId.getNamespace(), path.replace("rock/polished/", ""));
+                    ResourceLocation id = new ResourceLocation(blockId.getNamespace(), path.replace("rock/polished/", ""));
                     return Optional.of(new StoneVariant(id, baseBlock, cobble.get()));
                 }
             }
@@ -63,9 +68,9 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
                 && !path.contains("fence") && !path.contains("door") && !path.contains("trapdoor") && !path.contains("sign")
                 && !path.contains("button")) {
 
-            BlockState state = baseBlock.getDefaultState();
+            BlockState state = baseBlock.defaultBlockState();
             // can't check if the block is a full one, so I do this. Adding some checks here
-            if (state.getProperties().size() <= 2 && !(baseBlock instanceof SlabBlock) && !name.contains("slab") && !(baseBlock instanceof AbstractPressurePlateBlock) && !name.contains("pressure_plate")) {
+            if (state.getProperties().size() <= 2 && !(baseBlock instanceof SlabBlock) && !name.contains("slab") && !(baseBlock instanceof BasePressurePlateBlock) && !name.contains("pressure_plate")) {
                 // needs to use wood sound type
                 // if (state.getSoundType() == SoundType.WOOD) { //wood from tcon has diff sounds
                 Material mat = state.getMaterial();
@@ -73,7 +78,7 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
                 if (mat == Material.STONE) {
                     // we do not allow "/" in the wood name
                     name = name.replace("/", "_");
-                    Identifier id = new Identifier(blockId.getNamespace(), name);
+                    ResourceLocation id = new ResourceLocation(blockId.getNamespace(), name);
                     Block rawBlock = findRaw(id);
                     if (rawBlock != null) {
                         return Optional.of(new StoneVariant(id, baseBlock, rawBlock));
@@ -95,29 +100,29 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
     }
 
     @Nullable
-    private static Block findRaw(Identifier id) {
-        Identifier[] test = {
-                new Identifier(id.getNamespace(), id.getPath()),
-                new Identifier(id.getNamespace(), id.getPath() + "raw"),
-                new Identifier(id.getNamespace(), id.getPath() + "_raw"),
-                new Identifier(id.getNamespace(), "raw_" + id.getPath()),
-                new Identifier(id.getNamespace(), "raw" + id.getPath()),
-                new Identifier(id.getNamespace(), id.getPath() + "_cobble"),
-                new Identifier(id.getNamespace(), id.getPath() + "cobble"),
-                new Identifier(id.getNamespace(), "cobble_" + id.getPath()),
-                new Identifier(id.getNamespace(), "cobble" + id.getPath()),
-                new Identifier(id.getPath()),
-                new Identifier(id.getPath() + "raw"),
-                new Identifier(id.getPath() + "_raw"),
-                new Identifier("raw_" + id.getPath()),
-                new Identifier("raw" + id.getPath()),
-                new Identifier(id.getPath() + "_cobble"),
-                new Identifier(id.getPath() + "cobble"),
-                new Identifier("cobble_" + id.getPath()),
-                new Identifier("cobble" + id.getPath())
+    private static Block findRaw(ResourceLocation id) {
+        ResourceLocation[] test = {
+                new ResourceLocation(id.getNamespace(), id.getPath()),
+                new ResourceLocation(id.getNamespace(), id.getPath() + "raw"),
+                new ResourceLocation(id.getNamespace(), id.getPath() + "_raw"),
+                new ResourceLocation(id.getNamespace(), "raw_" + id.getPath()),
+                new ResourceLocation(id.getNamespace(), "raw" + id.getPath()),
+                new ResourceLocation(id.getNamespace(), id.getPath() + "_cobble"),
+                new ResourceLocation(id.getNamespace(), id.getPath() + "cobble"),
+                new ResourceLocation(id.getNamespace(), "cobble_" + id.getPath()),
+                new ResourceLocation(id.getNamespace(), "cobble" + id.getPath()),
+                new ResourceLocation(id.getPath()),
+                new ResourceLocation(id.getPath() + "raw"),
+                new ResourceLocation(id.getPath() + "_raw"),
+                new ResourceLocation("raw_" + id.getPath()),
+                new ResourceLocation("raw" + id.getPath()),
+                new ResourceLocation(id.getPath() + "_cobble"),
+                new ResourceLocation(id.getPath() + "cobble"),
+                new ResourceLocation("cobble_" + id.getPath()),
+                new ResourceLocation("cobble" + id.getPath())
         };
         Block temp = null;
-        for (Identifier r : test) {
+        for (ResourceLocation r : test) {
             if (Registry.BLOCK.getOrEmpty(r).isPresent()) {
                 temp = Registry.BLOCK.get(r);
                 break;

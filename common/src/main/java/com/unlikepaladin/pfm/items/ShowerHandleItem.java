@@ -2,26 +2,26 @@ package com.unlikepaladin.pfm.items;
 
 import com.unlikepaladin.pfm.blocks.BasicShowerHandleBlock;
 import com.unlikepaladin.pfm.blocks.BasicShowerHeadBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUsageContext;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.nbt.NbtLong;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.LongTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -30,116 +30,116 @@ import java.util.function.Supplier;
 public class ShowerHandleItem extends BlockItem {
     private Supplier<BasicShowerHandleBlock> block;
 
-    public ShowerHandleItem(Supplier<BasicShowerHandleBlock> block, Settings settings) {
+    public ShowerHandleItem(Supplier<BasicShowerHandleBlock> block, Properties settings) {
         super(block.get(), settings);
         this.block = block;
     }
 
     @Override
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        ItemStack stack = player.getStackInHand(hand);
-        if (world.isClient) {
-            return new TypedActionResult<>(ActionResult.FAIL, stack);
+    public InteractionResultHolder<ItemStack> use(Level world, Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+        if (world.isClientSide) {
+            return new InteractionResultHolder<>(InteractionResult.FAIL, stack);
         }
-        if (player.isSneaking()) {
+        if (player.isShiftKeyDown()) {
             stack.setTag(null);
-            return new TypedActionResult<>(ActionResult.SUCCESS, stack);
+            return new InteractionResultHolder<>(InteractionResult.SUCCESS, stack);
         }
-        return new TypedActionResult<>(ActionResult.PASS, stack);
+        return new InteractionResultHolder<>(InteractionResult.PASS, stack);
     }
     @Override
-    public ActionResult useOnBlock(ItemUsageContext context) {
-        super.useOnBlock(context);
-        BlockPos pos = context.getBlockPos();
-        BlockState state = context.getWorld().getBlockState(context.getBlockPos());
+    public InteractionResult useOn(UseOnContext context) {
+        super.useOn(context);
+        BlockPos pos = context.getClickedPos();
+        BlockState state = context.getLevel().getBlockState(context.getClickedPos());
         Block block = state.getBlock();
         if(block instanceof BasicShowerHeadBlock){
-            setShowerHeadPosNBT(context.getStack(), pos);
+            setShowerHeadPosNBT(context.getItemInHand(), pos);
         }
-        return ActionResult.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    protected boolean canPlace(ItemPlacementContext context, BlockState state) {
-        BlockPos pos = context.getBlockPos();
-        WorldView world = context.getWorld();
-        NbtLong showerHeadLong = getShowerHead(context.getStack());
-        Direction playerFacing = context.getPlayerFacing();
-        Direction placeDirection = context.getSide();
+    protected boolean canPlace(BlockPlaceContext context, BlockState state) {
+        BlockPos pos = context.getClickedPos();
+        LevelReader world = context.getLevel();
+        LongTag showerHeadLong = getShowerHead(context.getItemInHand());
+        Direction playerFacing = context.getHorizontalDirection();
+        Direction placeDirection = context.getNearestLookingDirection();
 
-        boolean canPlace = state.getBlock().canPlaceAt(state, world, pos) && placeDirection.getAxis().isHorizontal();
+        boolean canPlace = state.getBlock().canSurvive(state, world, pos) && placeDirection.getAxis().isHorizontal();
         if (!canPlace) {
             return false;
         }
         if (showerHeadLong != null) {
-            BlockPos headPos = BlockPos.fromLong(showerHeadLong.longValue());
-            BlockPos placedPos = pos.offset(playerFacing);
+            BlockPos headPos = BlockPos.of(showerHeadLong.getAsLong());
+            BlockPos placedPos = pos.relative(playerFacing);
 
-            double distance = Math.sqrt(headPos.getSquaredDistance(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5, true));
-            if (distance > 16 && world.isClient()){
-                context.getPlayer().sendMessage(new TranslatableText("message.pfm.shower_handle_far", headPos.toString()), false);
+            double distance = Math.sqrt(headPos.distSqr(placedPos.getX() + 0.5, placedPos.getY() + 0.5, placedPos.getZ() + 0.5, true));
+            if (distance > 16 && world.isClientSide()){
+                context.getPlayer().displayClientMessage(new TranslatableComponent("message.pfm.shower_handle_far", headPos.toString()), false);
             }
             if (distance > 16) {
-                context.getStack().setTag(null);
+                context.getItemInHand().setTag(null);
             } else {
-                setShowerHeadPosNBT(context.getStack(), pos.subtract(headPos));
+                setShowerHeadPosNBT(context.getItemInHand(), pos.subtract(headPos));
             }
-            return state.getBlock().canPlaceAt(state, world, pos) && placeDirection.getAxis().isHorizontal();
+            return state.getBlock().canSurvive(state, world, pos) && placeDirection.getAxis().isHorizontal();
         }
         return true;
     }
 
     private void setShowerHeadPosNBT(ItemStack stack, BlockPos pos)
     {
-        NbtCompound nbtCompound = createNbt(stack);
+        CompoundTag nbtCompound = createNbt(stack);
         if(!nbtCompound.contains("BlockEntityTag", 10))
         {
-            nbtCompound.put("BlockEntityTag", new NbtCompound());
+            nbtCompound.put("BlockEntityTag", new CompoundTag());
         }
 
-        NbtCompound blockEntityTag = nbtCompound.getCompound("BlockEntityTag");
+        CompoundTag blockEntityTag = nbtCompound.getCompound("BlockEntityTag");
         if(!blockEntityTag.contains("showerHead", 4))
         {
-            blockEntityTag.put("showerHead", NbtLong.of(0));
+            blockEntityTag.put("showerHead", LongTag.valueOf(0));
         }
 
-        NbtLong showerHeadPos = (NbtLong) blockEntityTag.get("showerHead");
-        if(showerHeadPos.longValue() != pos.asLong()) {
-            blockEntityTag.put("showerHead", NbtLong.of(pos.asLong()));
+        LongTag showerHeadPos = (LongTag) blockEntityTag.get("showerHead");
+        if(showerHeadPos.getAsLong() != pos.asLong()) {
+            blockEntityTag.put("showerHead", LongTag.valueOf(pos.asLong()));
         }
     }
 
     @Nullable
-    public static NbtLong getShowerHead(ItemStack stack)
+    public static LongTag getShowerHead(ItemStack stack)
     {
         if (stack.hasTag()) {
-            NbtCompound stackNbt = stack.getTag();
+            CompoundTag stackNbt = stack.getTag();
             if(stackNbt.contains("BlockEntityTag", 10))
             {
-                NbtCompound blockEntityTag = stackNbt.getCompound("BlockEntityTag");
+                CompoundTag blockEntityTag = stackNbt.getCompound("BlockEntityTag");
                 if(blockEntityTag.contains("showerHead", 4))
                 {
-                    return (NbtLong) blockEntityTag.get("showerHead");
+                    return (LongTag) blockEntityTag.get("showerHead");
                 }
             }
         }
         return null;
     }
 
-    private static NbtCompound createNbt(ItemStack stack)
+    private static CompoundTag createNbt(ItemStack stack)
     {
         if(!stack.hasTag())
         {
-            stack.setTag(new NbtCompound());
+            stack.setTag(new CompoundTag());
         }
         return stack.getTag();
     }
 
     @Override
-    public void appendTooltip(ItemStack stack, @Nullable World world, List<Text> tooltip, TooltipContext context) {
+    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
         if (stack.hasTag() && getShowerHead(stack) != null) {
-            tooltip.add(new TranslatableText("tooltip.pfm.shower_handle_connected", 1));
+            tooltip.add(new TranslatableComponent("tooltip.pfm.shower_handle_connected", 1));
         }
-        super.appendTooltip(stack, world, tooltip, context);
+        super.appendHoverText(stack, world, tooltip, context);
     }
 }

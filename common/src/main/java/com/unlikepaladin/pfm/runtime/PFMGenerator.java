@@ -4,11 +4,10 @@ import com.google.common.hash.HashCode;
 import com.google.common.hash.HashFunction;
 import com.google.common.hash.Hashing;
 import com.google.gson.*;
-import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.utilities.PFMFileUtil;
 import com.unlikepaladin.pfm.utilities.Version;
 import net.minecraft.SharedConstants;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.ResourceLocation;
 import org.apache.logging.log4j.Logger;
 
 import javax.imageio.ImageIO;
@@ -88,7 +87,7 @@ public abstract class PFMGenerator implements PFMResourceProgress {
         return logger;
     }
 
-    public Path getOutput() {
+    public Path getResultItem() {
         return output;
     }
 
@@ -184,9 +183,9 @@ public abstract class PFMGenerator implements PFMResourceProgress {
         private final String modVersion;
         private final PFMFileUtil.ModLoader modLoader;
         private final List<String> folderHash;
-        private  final List<Identifier> variants;
+        private  final List<ResourceLocation> variants;
 
-        public PFMCache(String gameVersion, String modVersion, PFMFileUtil.ModLoader modLoader, List<String> folderHash, List<Identifier> variants) {
+        public PFMCache(String gameVersion, String modVersion, PFMFileUtil.ModLoader modLoader, List<String> folderHash, List<ResourceLocation> variants) {
             this.gameVersion = gameVersion;
             this.modVersion = modVersion;
             this.modLoader = modLoader;
@@ -194,13 +193,13 @@ public abstract class PFMGenerator implements PFMResourceProgress {
             this.variants = variants;
         }
 
-        public static void createAndWriteCacheToDisk(Path output, List<Identifier> variants, Logger logger) throws IOException {
+        public static void createAndWriteCacheToDisk(Path output, List<ResourceLocation> variants, Logger logger) throws IOException {
             Path pfmCacheDataFile = output.resolve("pfmCacheData.json");
 
             Files.deleteIfExists(pfmCacheDataFile);
             Files.createFile(pfmCacheDataFile);
             List<String> newDataHash = hashDirectory(output.toFile(), false, logger);
-            PFMCache cache = new PFMCache(SharedConstants.getGameVersion().getName(), Version.getCurrentVersion(), PFMFileUtil.getModLoader(), newDataHash, variants);
+            PFMCache cache = new PFMCache(SharedConstants.getCurrentVersion().getName(), Version.getCurrentVersion(), PFMFileUtil.getModLoader(), newDataHash, variants);
             Files.write(
                     pfmCacheDataFile,
                     GSON.toJson(cache.toJson()).getBytes(StandardCharsets.UTF_8),
@@ -224,7 +223,7 @@ public abstract class PFMGenerator implements PFMResourceProgress {
             return folderHash;
         }
 
-        public List<Identifier> variants() {
+        public List<ResourceLocation> variants() {
             return variants;
         }
 
@@ -260,10 +259,10 @@ public abstract class PFMGenerator implements PFMResourceProgress {
             JsonObject obj = new JsonObject();
             obj.addProperty("game_version", gameVersion);
             obj.addProperty("mod_version", modVersion);
-            obj.addProperty("mod_loader", modLoader.asString());
+            obj.addProperty("mod_loader", modLoader.getSerializedName());
 
             JsonArray registeredVariants = new JsonArray();
-            for (Identifier variant : variants) {
+            for (ResourceLocation variant : variants) {
                 registeredVariants.add(variant.toString());
             }
             obj.add("block_variants", registeredVariants);
@@ -283,7 +282,7 @@ public abstract class PFMGenerator implements PFMResourceProgress {
                 String modVersion = "0";
                 List<String> folderHash = new ArrayList<>();
                 PFMFileUtil.ModLoader modLoader = PFMFileUtil.ModLoader.INVALID;
-                List<Identifier> variants = new ArrayList<>();
+                List<ResourceLocation> variants = new ArrayList<>();
                 String gameVersion = "0";
                 if (jsonObject.has("game_version")) {
                     gameVersion = jsonObject.get("game_version").getAsString();
@@ -296,7 +295,7 @@ public abstract class PFMGenerator implements PFMResourceProgress {
                 }
                 if (jsonObject.has("block_variants") && jsonObject.get("block_variants").isJsonArray()) {
                     for (JsonElement jsonElement : jsonObject.getAsJsonArray("block_variants")) {
-                        variants.add(Identifier.tryParse(jsonElement.getAsString()));
+                        variants.add(ResourceLocation.tryParse(jsonElement.getAsString()));
                     }
                 }
 

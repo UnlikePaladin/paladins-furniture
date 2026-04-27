@@ -4,12 +4,12 @@ import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.InventoryHandler;
 import net.blay09.mods.cookingforblockheads.api.capability.CapabilityKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
-import net.blay09.mods.cookingforblockheads.api.capability.KitchenItemProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.math.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.Container;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -38,14 +38,16 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity {
         this.itemProviderCap = LazyOptional.of(() -> this.itemProvider);
     }
 
+    @Override
     public void fromTag(BlockState state, NbtCompound tagCompound) {
         super.fromTag(state, tagCompound);
         NbtCompound itemHandlerCompound = tagCompound.getCompound("ItemHandler");
         this.inventoryHandler.deserializeNBT(itemHandlerCompound);
     }
 
-    public NbtCompound writeNbt(NbtCompound tagCompound) {
-        super.writeNbt(tagCompound);
+    @Override
+    public NbtCompound save(NbtCompound tagCompound) {
+        super.save(tagCompound);
         tagCompound.put("ItemHandler", this.inventoryHandler.serializeNBT());
         return tagCompound;
     }

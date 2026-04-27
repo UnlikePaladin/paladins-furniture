@@ -1,15 +1,15 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Material;
-import net.minecraft.block.ShapeContext;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,9 +20,9 @@ public class DinnerChairBlock extends BasicChairBlock {
 
     private static final List<FurnitureBlock> WOOD_DINNER_CHAIRS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_DINNER_CHAIRS = new ArrayList<>();
-    public DinnerChairBlock(Settings settings) {
+    public DinnerChairBlock(Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(Properties.HORIZONTAL_FACING, Direction.NORTH).with(TUCKED, false));
+        registerDefaultState(this.getStateDefinition().any().setValue(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH).setValue(TUCKED, false));
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(DinnerChairBlock.class)){
             WOOD_DINNER_CHAIRS.add(new FurnitureBlock(this.asBlock(), "chair_dinner"));
         }
@@ -38,7 +38,7 @@ public class DinnerChairBlock extends BasicChairBlock {
         return STONE_DINNER_CHAIRS.stream();
     }
 
-    protected static final VoxelShape FACE_WEST = VoxelShapes.union(createCuboidShape(2.6, 12.4, 3.5,3.9, 21.4, 12.5), createCuboidShape(3.99, 8.8, 1.6, 14.99, 10.3, 14.4), createCuboidShape(4, 8, 1.5, 15.1, 9, 14.5), createCuboidShape(2, 0, 1.5, 4, 22, 3.5), createCuboidShape(12, 0, 12.5, 14, 8, 14.5),  createCuboidShape(2, 0, 12.5, 4, 22, 14.5), createCuboidShape(12, 0, 1.5, 14, 8, 3.5));
+    protected static final VoxelShape FACE_WEST = Shapes.or(box(2.6, 12.4, 3.5,3.9, 21.4, 12.5), box(3.99, 8.8, 1.6, 14.99, 10.3, 14.4), box(4, 8, 1.5, 15.1, 9, 14.5), box(2, 0, 1.5, 4, 22, 3.5), box(12, 0, 12.5, 14, 8, 14.5),  box(2, 0, 12.5, 4, 22, 14.5), box(12, 0, 1.5, 14, 8, 3.5));
     protected static final VoxelShape FACE_SOUTH = rotateShape(Direction.WEST, Direction.SOUTH, FACE_WEST);
     protected static final VoxelShape FACE_NORTH = rotateShape(Direction.WEST, Direction.NORTH, FACE_WEST);
     protected static final VoxelShape FACE_EAST = rotateShape(Direction.WEST, Direction.EAST, FACE_WEST);
@@ -47,9 +47,9 @@ public class DinnerChairBlock extends BasicChairBlock {
     protected static final VoxelShape FACE_EAST_TUCKED = tuckShape(Direction.EAST, FACE_EAST);
     protected static final VoxelShape FACE_WEST_TUCKED = tuckShape(Direction.WEST, FACE_WEST);
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
-        if (state.get(TUCKED)) {
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+        Direction dir = state.getValue(FACING);
+        if (state.getValue(TUCKED)) {
              switch (dir) {
                 case WEST: return FACE_WEST_TUCKED;
                 case NORTH: return FACE_NORTH_TUCKED;

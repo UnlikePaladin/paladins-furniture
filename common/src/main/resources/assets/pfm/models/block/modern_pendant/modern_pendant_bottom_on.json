@@ -2,10 +2,10 @@
 	"credit": "By UnlikePaladin",
 	"textures": {
 		"0": "block/light_gray_concrete",
-		"wire": "block/light_gray_concrete",
+		"wire": "#0",
 		"1": "block/gray_concrete",
 		"2": "pfm:block/lamp",
-		"particle": "block/light_gray_concrete"
+		"particle": "#0"
 	},
 	"elements": [
 		{

@@ -11,16 +11,16 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.server.PlayerStream;
 import net.fabricmc.fabric.impl.networking.ServerSidePacketRegistryImpl;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.core.BlockPos;
 
 import java.util.Collection;
 import java.util.function.Supplier;
@@ -34,12 +34,12 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity implements Bl
     public static void setActiveonClient(MicrowaveBlockEntity microwaveBlockEntity, boolean active) {
         microwaveBlockEntity.setActive(active);
         if (!microwaveBlockEntity.getWorld().isClient) {
-            Collection<ServerPlayerEntity> watchingPlayers = PlayerLookup.tracking(microwaveBlockEntity);
+            Collection<ServerPlayer> watchingPlayers = PlayerLookup.tracking(microwaveBlockEntity);
             // Look at the other methods of `PlayerStream` to capture different groups of players.
             // We'll get to this later
-            PacketByteBuf clientData = new PacketByteBuf(Unpooled.buffer());
+            FriendlyByteBuf clientData = new FriendlyByteBuf(Unpooled.buffer());
             clientData.writeBoolean(active);
-            clientData.writeBlockPos(microwaveBlockEntity.getPos());
+            clientData.writeBlockPos(microwaveBlockEntity.getBlockPos());
             // Then we'll send the packet to all the players
             watchingPlayers.forEach(player -> {
                         ServerPlayNetworking.send(player, NetworkIDs.MICROWAVE_UPDATE_PACKET_ID,clientData);
@@ -49,18 +49,18 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity implements Bl
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        fromTag(this.getCachedState(), tag);
+    public void fromClientTag(CompoundTag tag) {
+        load(getBlockState(), tag);
     }
 
     @Override
-    public NbtCompound toClientTag(NbtCompound tag) {
-        return writeNbt(tag);
+    public CompoundTag toClientTag(CompoundTag tag) {
+        return save(tag);
     }
     @Override
-    public void writeScreenOpeningData(ServerPlayerEntity serverPlayerEntity, PacketByteBuf packetByteBuf) {
+    public void writeScreenOpeningData(ServerPlayer serverPlayerEntity, FriendlyByteBuf packetByteBuf) {
         packetByteBuf.writeBoolean(this.isActive);
-        packetByteBuf.writeBlockPos(this.pos);
+        packetByteBuf.writeBlockPos(this.worldPosition);
     }
 
     public static Supplier<? extends MicrowaveBlockEntity> getFactory() {

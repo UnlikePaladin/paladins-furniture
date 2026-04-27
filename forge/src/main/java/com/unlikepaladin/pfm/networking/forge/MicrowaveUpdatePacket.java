@@ -2,12 +2,12 @@ package com.unlikepaladin.pfm.networking.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import com.unlikepaladin.pfm.client.screens.MicrowaveScreen;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -33,14 +33,14 @@ public class MicrowaveUpdatePacket {
         ctx.get().setPacketHandled(true);
     }
 
-    public static void encode(MicrowaveUpdatePacket packet, PacketByteBuf buffer) {
+    public static void encode(MicrowaveUpdatePacket packet, FriendlyByteBuf buffer) {
         BlockPos entityPos = packet.entityPos;
         boolean active = packet.active;
         buffer.writeBlockPos(entityPos);
         buffer.writeBoolean(active);
     }
 
-    public static MicrowaveUpdatePacket decode(PacketByteBuf buffer) {
+    public static MicrowaveUpdatePacket decode(FriendlyByteBuf buffer) {
         BlockPos entityPos = buffer.readBlockPos();
         boolean active = buffer.readBoolean();
         return new MicrowaveUpdatePacket(entityPos, active);

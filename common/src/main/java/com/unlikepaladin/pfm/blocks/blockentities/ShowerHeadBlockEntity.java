@@ -3,17 +3,17 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 
 import java.util.Random;
 import java.util.function.Supplier;
@@ -24,21 +24,21 @@ public class ShowerHeadBlockEntity extends BlockEntity implements Tickable {
     }
     protected boolean isOpen = false;
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return super.toInitialChunkDataNbt();
+    public CompoundTag getUpdateTag() {
+        return super.getUpdateTag();
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public CompoundTag save(CompoundTag nbt) {
+        super.save(nbt);
         nbt.putBoolean("isOpen", isOpen);
         return nbt;
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         isOpen = nbt.getBoolean("isOpen");
-        super.fromTag(state, nbt);
+        super.load(state, nbt);
     }
 
     public boolean isOpen() {
@@ -50,16 +50,16 @@ public class ShowerHeadBlockEntity extends BlockEntity implements Tickable {
     }
 
     public void tick() {
-        if (world != null && this.isOpen && world.isClient) {
-            spawnParticles(this.getCachedState().get(Properties.HORIZONTAL_FACING), this.world, this.getPos());
+        if (level != null && this.isOpen && level.isClientSide) {
+            spawnParticles(this.getCachedState().get(Properties.HORIZONTAL_FACING), this.level, this.getBlockPos());
         }
         if (this.isOpen) {
-            world.playSound(null, pos, SoundEvents.WEATHER_RAIN, SoundCategory.BLOCKS, 0.1f, 8.0f);
+            world.playSound(null, pos, SoundEvents.WEATHER_RAIN, SoundSource.BLOCKS, 0.1f, 8.0f);
         }
     }
 
-    public static void spawnParticles(Direction facing, World world, BlockPos pos) {
-        if (world.isClient) {
+    public static void spawnParticles(Direction facing, Level world, BlockPos pos) {
+        if (world.isClientSide) {
             int x = pos.getX(), y = pos.getY(), z = pos.getZ();
             if (facing == Direction.WEST) {
                 addShowerParticles(world, pos, new float[]{0.55f, 0.2f, 0.5f}, new float[]{0.1f, 0f, 0.1f});
@@ -76,7 +76,7 @@ public class ShowerHeadBlockEntity extends BlockEntity implements Tickable {
         }
     }
 
-    public static void addShowerParticles(World world, BlockPos pos, float[] offset, float[] difference) {
+    public static void addShowerParticles(Level world, BlockPos pos, float[] offset, float[] difference) {
         int x = pos.getX(), y = pos.getY(), z = pos.getZ();
         Random rand = world.random;
         if (rand.nextBoolean()) {
@@ -101,8 +101,8 @@ public class ShowerHeadBlockEntity extends BlockEntity implements Tickable {
         }
     }
 
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    protected CompoundTag saveInitialChunkData(CompoundTag nbt) {
+        super.save(nbt);
         nbt.putBoolean("isOpen", isOpen);
         return nbt;
     }

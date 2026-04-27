@@ -6,17 +6,17 @@ import com.unlikepaladin.pfm.blocks.KitchenDrawerBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.AbstractFurnaceBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.AbstractFurnaceBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -27,7 +27,7 @@ import java.util.*;
 import java.util.function.Supplier;
 
 public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
-    public ForgeBasicDeskCabinetModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public ForgeBasicDeskCabinetModel(ModelState settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
 
@@ -36,8 +36,8 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
     public static ModelProperty<BlockState> NEIGHBOR_OPPOSITE = new ModelProperty<>();
 
     @Override
-    public void appendProperties(ModelDataMap.Builder builder) {
-        super.appendProperties(builder);
+    public void createBlockStateDefinition(ModelDataMap.Builder builder) {
+        super.createBlockStateDefinition(builder);
         builder.withProperty(CONNECTIONS);
         builder.withProperty(NEIGHBOR_FACING);
         builder.withProperty(NEIGHBOR_OPPOSITE);
@@ -45,10 +45,10 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
 
     @NotNull
     @Override
-    public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
+    public IModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
         if (state.getBlock() instanceof BasicDeskCabinetBlock) {
             ModelDataMap.Builder builder = new ModelDataMap.Builder();
-            appendProperties(builder);
+            createBlockStateDefinition(builder);
 
             IModelData data = builder.build();
             super.getModelData(world, pos, state, data);
@@ -59,28 +59,28 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
             boolean west = block.canConnect(world.getBlockState(pos.west()));
             boolean south = block.canConnect(world.getBlockState(pos.south()));
 
-            Direction isFacing = state.get(BasicDeskCabinetBlock.FACING);
-            BlockState neighborStateFacing = world.getBlockState(pos.offset(isFacing));
-            BlockState neighborStateOpposite = world.getBlockState(pos.offset(isFacing.getOpposite()));
+            Direction isFacing = state.getValue(BasicDeskCabinetBlock.FACING);
+            BlockState neighborStateFacing = world.getBlockState(pos.relative(isFacing));
+            BlockState neighborStateOpposite = world.getBlockState(pos.relative(isFacing.getOpposite()));
 
             boolean isNeighborStateOppositeFacingDifferentDirection;
-            if (neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
-                isNeighborStateOppositeFacingDifferentDirection = block.isDifferentOrientation(world, pos, neighborStateOpposite.get(Properties.HORIZONTAL_FACING));
+            if (neighborStateOpposite.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                isNeighborStateOppositeFacingDifferentDirection = block.isDifferentOrientation(world, pos, neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING));
             } else {
                 isNeighborStateOppositeFacingDifferentDirection = false;
             }
 
             boolean isNeighborStateFacingDifferentDirection;
-            if (neighborStateFacing.contains(Properties.HORIZONTAL_FACING)) {
-                isNeighborStateFacingDifferentDirection = block.isDifferentOrientation(world, pos, neighborStateFacing.get(Properties.HORIZONTAL_FACING).getOpposite());
+            if (neighborStateFacing.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                isNeighborStateFacingDifferentDirection = block.isDifferentOrientation(world, pos, neighborStateFacing.getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite());
             } else {
                 isNeighborStateFacingDifferentDirection = false;
             }
 
-            BlockState rightState = world.getBlockState(pos.offset(isFacing.rotateYCounterclockwise()));
+            BlockState rightState = world.getBlockState(pos.relative(isFacing.getCounterClockWise()));
             boolean right = block.canConnect(rightState) && rightState.getBlock() instanceof BasicDeskCabinetBlock;
 
-            BlockState leftState = world.getBlockState(pos.offset(isFacing.rotateYClockwise()));
+            BlockState leftState = world.getBlockState(pos.relative(isFacing.getClockWise()));
             boolean left = block.canConnect(leftState) && leftState.getBlock() instanceof BasicDeskCabinetBlock;
 
             BitSet set = new BitSet();
@@ -111,7 +111,7 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
             boolean east = set.get(1);
             boolean west = set.get(2);
             boolean south = set.get(3);
-            Direction isFacing = state.get(BasicDeskCabinetBlock.FACING);
+            Direction isFacing = state.getValue(BasicDeskCabinetBlock.FACING);
 
             switch (isFacing) {
                 case SOUTH:
@@ -134,13 +134,13 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
             boolean isNeighborStateFacingDifferentDirection = set.get(7);
             BlockState neighborStateFacing = extraData.getData(NEIGHBOR_FACING);
             BlockState neighborStateOpposite = extraData.getData(NEIGHBOR_OPPOSITE);
-            int openOffset = state.get(BasicDeskCabinetBlock.OPEN) ? 8 : 0;
+            int openOffset = state.getValue(BasicDeskCabinetBlock.OPEN) ? 8 : 0;
 
-            if (block.canConnect(neighborStateFacing) && neighborStateFacing.contains(Properties.HORIZONTAL_FACING)) {
-                Direction neighborFacing = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
+            if (block.canConnect(neighborStateFacing) && neighborStateFacing.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                Direction neighborFacing = neighborStateFacing.getValue(BlockStateProperties.HORIZONTAL_FACING);
                 // outer corner
-                if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateFacingDifferentDirection) {
-                    if (neighborFacing == isFacing.rotateYCounterclockwise()) {
+                if (neighborFacing.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isNeighborStateFacingDifferentDirection) {
+                    if (neighborFacing == isFacing.getCounterClockWise()) {
                         secondaryQuads.addAll(getTemplateBakedModels().get((4 + openOffset)).getQuads(state, side, rand, extraData));
                     }
                     else {
@@ -150,11 +150,11 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
                     secondaryQuads.addAll(middleDesk(state, side, rand, extraData, left, right, openOffset));
                 }
             }
-            else if (block.canConnect(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
-                Direction neighborFacing = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
+            else if (block.canConnect(neighborStateOpposite) && neighborStateOpposite.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                Direction neighborFacing = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING);
                 // inner corner
-                if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
-                    if (neighborFacing == isFacing.rotateYCounterclockwise()) {
+                if (neighborFacing.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
+                    if (neighborFacing == isFacing.getCounterClockWise()) {
                         secondaryQuads.addAll(getTemplateBakedModels().get((6 + openOffset)).getQuads(state, side, rand, extraData));
                     } else {
                         secondaryQuads.addAll(getTemplateBakedModels().get((7 + openOffset)).getQuads(state, side, rand, extraData));
@@ -167,7 +167,7 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
                 secondaryQuads.addAll(middleDesk(state, side, rand, extraData, left, right, openOffset));
             }
 
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             return getQuadsWithTexture(secondaryQuads, ModelHelper.getOakPlankLogSprites(), spriteList);
         }
        return Collections.emptyList();
@@ -217,7 +217,7 @@ public class ForgeBasicDeskCabinetModel extends PFMForgeBakedModel {
         // in between pieces
 
 
-        List<Sprite> spriteList = getSpriteList(stack);
+        List<TextureAtlasSprite> spriteList = getSpriteList(stack);
         List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
         quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
         return quads;

@@ -1,23 +1,27 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.StateManager;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.registry.Registry;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Registry;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,11 +29,11 @@ import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.ClassicStoolBlock.rotateShape;
 
-public class CutleryBlock extends HorizontalFacingBlock {
+public class CutleryBlock extends HorizontalDirectionalBlock {
     private static final List<FurnitureBlock> CUTLERY = new ArrayList<>();
-    public CutleryBlock(Settings settings) {
+    public CutleryBlock(Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH));
+        registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH));
         CUTLERY.add(new FurnitureBlock(this, "cutlery"));
     }
 
@@ -38,32 +42,32 @@ public class CutleryBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
     }
 
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState()
-                .with(FACING, ctx.getPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState()
+                .setValue(FACING, ctx.getHorizontalDirection());
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        if (!state.canPlaceAt(world, pos)) {
-            return Blocks.AIR.getDefaultState();
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        if (!state.canSurvive(world, pos)) {
+            return Blocks.AIR.defaultBlockState();
         }
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    private static final VoxelShape FACING_NORTH = VoxelShapes.union(createCuboidShape(3, 0, 0,11, 0.5, 15.5));
+    private static final VoxelShape FACING_NORTH = Shapes.or(box(3, 0, 0,11, 0.5, 15.5));
     private static final VoxelShape FACING_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, FACING_NORTH);
     private static final VoxelShape FACING_EAST = rotateShape(Direction.NORTH, Direction.EAST, FACING_NORTH);
     private static final VoxelShape FACING_WEST = rotateShape(Direction.NORTH, Direction.WEST, FACING_NORTH);
 
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        Direction dir = state.getValue(FACING);
         switch (dir) {
             case WEST: {
                 return FACING_SOUTH;
@@ -81,22 +85,22 @@ public class CutleryBlock extends HorizontalFacingBlock {
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack itemStack = player.getStackInHand(hand);
-        Block block = (Registry.BLOCK.get(Registry.ITEM.getId(itemStack.getItem())));
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        Block block = (Registry.BLOCK.get(Registry.ITEM.getKey(itemStack.getItem())));
         if(block instanceof PlateBlock) {
-            BlockState newState = block.getDefaultState();
-            world.setBlockState(pos, newState.with(PlateBlock.CUTLERY, true).with(FACING, state.get(FACING)));
+            BlockState newState = block.defaultBlockState();
+            world.setBlockAndUpdate(pos, newState.setValue(PlateBlock.CUTLERY, true).setValue(FACING, state.getValue(FACING)));
             if (!player.isCreative())
-                itemStack.decrement(1);
-            return ActionResult.SUCCESS;
+                itemStack.shrink(1);
+            return InteractionResult.SUCCESS;
         }
-        return super.onUse(state, world, pos, player, hand, hit);
+        return super.use(state, world, pos, player, hand, hit);
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         Direction direction = Direction.DOWN;
-        return Block.sideCoversSmallSquare(world, pos.offset(direction), direction.getOpposite());
+        return Block.canSupportCenter(world, pos.relative(direction), direction.getOpposite());
     }
 }

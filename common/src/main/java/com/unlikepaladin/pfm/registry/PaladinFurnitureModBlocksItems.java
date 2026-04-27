@@ -9,12 +9,15 @@ import com.unlikepaladin.pfm.data.ToolType;
 import com.unlikepaladin.pfm.ducks.AbstractBlock$SettingsExtension;
 import com.unlikepaladin.pfm.items.DyeKit;
 import com.unlikepaladin.pfm.registry.dynamic.FurnitureEntry;
-import net.minecraft.block.*;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.sound.BlockSoundGroup;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.DyeColor;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
 
 import java.util.*;
 import java.util.function.Supplier;
@@ -44,22 +47,22 @@ public class PaladinFurnitureModBlocksItems {
     public static final TrashcanBlock TRASHCAN = new TrashcanBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.IRON_BLOCK), ToolType.PICKAXE));
     public static final InnerTrashcanBlock MESH_TRASHCAN = new InnerTrashcanBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.CHAIN).nonOpaque(), ToolType.PICKAXE));
 
-    public static final Item DYE_KIT_YELLOW = new DyeKit(new Item.Settings().maxCount(16), DyeColor.YELLOW);
-    public static final Item DYE_KIT_BLUE = new DyeKit(new Item.Settings().maxCount(16), DyeColor.BLUE);
-    public static final Item DYE_KIT_WHITE = new DyeKit(new Item.Settings().maxCount(16), DyeColor.WHITE);
-    public static final Item DYE_KIT_PINK = new DyeKit(new Item.Settings().maxCount(16), DyeColor.PINK);
-    public static final Item DYE_KIT_PURPLE = new DyeKit(new Item.Settings().maxCount(16), DyeColor.PURPLE);
-    public static final Item DYE_KIT_GREEN = new DyeKit(new Item.Settings().maxCount(16), DyeColor.GREEN);
-    public static final Item DYE_KIT_LIGHT_BLUE = new DyeKit(new Item.Settings().maxCount(16), DyeColor.LIGHT_BLUE);
-    public static final Item DYE_KIT_LIGHT_GRAY = new DyeKit(new Item.Settings().maxCount(16), DyeColor.LIGHT_GRAY);
-    public static final Item DYE_KIT_LIME = new DyeKit(new Item.Settings().maxCount(16), DyeColor.LIME);
-    public static final Item DYE_KIT_ORANGE = new DyeKit(new Item.Settings().maxCount(16), DyeColor.ORANGE);
-    public static final Item DYE_KIT_BLACK = new DyeKit(new Item.Settings().maxCount(16), DyeColor.BLACK);
-    public static final Item DYE_KIT_BROWN = new DyeKit(new Item.Settings().maxCount(16), DyeColor.BROWN);
-    public static final Item DYE_KIT_MAGENTA = new DyeKit(new Item.Settings().maxCount(16), DyeColor.MAGENTA);
-    public static final Item DYE_KIT_RED = new DyeKit(new Item.Settings().maxCount(16), DyeColor.RED);
-    public static final Item DYE_KIT_CYAN = new DyeKit(new Item.Settings().maxCount(16), DyeColor.CYAN);
-    public static final Item DYE_KIT_GRAY = new DyeKit(new Item.Settings().maxCount(16), DyeColor.GRAY);
+    public static final Item DYE_KIT_YELLOW = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.YELLOW);
+    public static final Item DYE_KIT_BLUE = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.BLUE);
+    public static final Item DYE_KIT_WHITE = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.WHITE);
+    public static final Item DYE_KIT_PINK = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.PINK);
+    public static final Item DYE_KIT_PURPLE = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.PURPLE);
+    public static final Item DYE_KIT_GREEN = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.GREEN);
+    public static final Item DYE_KIT_LIGHT_BLUE = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.LIGHT_BLUE);
+    public static final Item DYE_KIT_LIGHT_GRAY = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.LIGHT_GRAY);
+    public static final Item DYE_KIT_LIME = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.LIME);
+    public static final Item DYE_KIT_ORANGE = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.ORANGE);
+    public static final Item DYE_KIT_BLACK = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.BLACK);
+    public static final Item DYE_KIT_BROWN = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.BROWN);
+    public static final Item DYE_KIT_MAGENTA = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.MAGENTA);
+    public static final Item DYE_KIT_RED = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.RED);
+    public static final Item DYE_KIT_CYAN = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.CYAN);
+    public static final Item DYE_KIT_GRAY = new DyeKit(new Item.Properties().stacksTo(16), DyeColor.GRAY);
 
     public static final Block RAW_CONCRETE = new Block(AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE).sounds(BlockSoundGroup.STONE));
     public static final Block RAW_CONCRETE_POWDER = new ConcretePowderBlock(RAW_CONCRETE, AbstractBlock.Settings.copy(Blocks.GRAY_CONCRETE_POWDER).sounds(BlockSoundGroup.SAND));
@@ -77,7 +80,7 @@ public class PaladinFurnitureModBlocksItems {
     public static final Block BASIC_LAMP = new BasicLampBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(Blocks.OAK_PLANKS).luminance(createLightLevelFromLitBlockState(15)), ToolType.AXE));
     public static final Block TOASTER_BLOCK = new PFMToasterBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(IRON_STOVE), ToolType.PICKAXE));
     private static ToIntFunction<BlockState> createLightLevelFromLitBlockState(int litLevel) {
-        return state -> state.get(Properties.LIT) ? litLevel : 0;
+        return state -> state.getValue(BlockStateProperties.LIT) ? litLevel : 0;
     }
 
 

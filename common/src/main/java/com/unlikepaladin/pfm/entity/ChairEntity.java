@@ -7,24 +7,26 @@ import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.entity.*;
-import net.minecraft.entity.attribute.DefaultAttributeContainer;
-import net.minecraft.entity.attribute.EntityAttributes;
-import net.minecraft.entity.mob.MobEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.World;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.entity.vehicle.DismountHelper;
+import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.Level;
 
-public class ChairEntity extends MobEntity {
-    public ChairEntity(EntityType<? extends ChairEntity> type, World world) {
+public class ChairEntity extends Mob {
+    public ChairEntity(EntityType<? extends ChairEntity> type, Level world) {
         super(type, world);
-        this.noClip = true;
+        this.noPhysics = true;
     }
 
     @ExpectPlatform
@@ -34,32 +36,32 @@ public class ChairEntity extends MobEntity {
 
     @Override
     public void tick() {
-        this.setVelocity(Vec3d.ZERO);
-        if (!this.hasPassengers()) {
-            if (!this.world.isClient){
+        this.setDeltaMovement(Vec3.ZERO);
+        if (!this.isVehicle()) {
+            if (!this.level.isClientSide){
                 this.remove();
             }
         }
-        else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicToiletBlock && world.isClient()){
-            if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isPressed() && this.world.getBlockState(this.getBlockPos()).get(BasicToiletBlock.TOILET_STATE) == ToiletState.CLEAN) {
-                fart(this.getBlockPos());
+        else if (this.level.getBlockState(this.blockPosition()).getBlock() instanceof BasicToiletBlock && level.isClientSide()){
+            if (PaladinFurnitureModClient.USE_TOILET_KEYBIND.isDown() && this.level.getBlockState(this.blockPosition()).getValue(BasicToiletBlock.TOILET_STATE) == ToiletState.CLEAN) {
+                fart(this.blockPosition());
             }
             super.tick();
         }
-        else if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock || this.world.getBlockState(this.getBlockPos()).getBlock() instanceof BasicBathtubBlock){
+        else if (this.level.getBlockState(this.blockPosition()).getBlock() instanceof AbstractSittableBlock || this.level.getBlockState(this.blockPosition()).getBlock() instanceof BasicBathtubBlock){
             super.tick();
         }
         else {
-            if (!this.world.isClient) {
-                this.removeAllPassengers();
+            if (!this.level.isClientSide) {
+                this.ejectPassengers();
                 this.remove();
             }
         }
     }
 
     @Override
-    public void tickMovement() {
-        super.tickMovement();
+    public void aiStep() {
+        super.aiStep();
     }
 
     @Override
@@ -68,34 +70,34 @@ public class ChairEntity extends MobEntity {
     }
 
 
-    public ActionResult interactAt(PlayerEntity player, Vec3d hitPos, Hand hand) {
+    public InteractionResult interactAt(Player player, Vec3 hitPos, InteractionHand hand) {
         return super.interactAt(player, hitPos, hand);
     }
 
     @Override
-    public boolean isPushedByFluids() {
+    public boolean isPushedByFluid() {
         return false;
     }
 
     @Override
-    public Vec3d updatePassengerForDismount(LivingEntity passenger) {
-        Direction direction = this.getMovementDirection();
-        if (this.world.getBlockState(this.getBlockPos()).getBlock() instanceof AbstractSittableBlock) {
-            direction = this.world.getBlockState(this.getBlockPos()).get(AbstractSittableBlock.FACING).getOpposite();
+    public Vec3 getDismountLocationForPassenger(LivingEntity passenger) {
+        Direction direction = this.getMotionDirection();
+        if (this.level.getBlockState(this.blockPosition()).getBlock() instanceof AbstractSittableBlock) {
+            direction = this.level.getBlockState(this.blockPosition()).getValue(AbstractSittableBlock.FACING).getOpposite();
         }
         if (direction.getAxis() != Direction.Axis.Y) {
-            int[][] dismountingOffsets = Dismounting.getDismountOffsets(direction);
-            BlockPos chairPos = this.getBlockPos();
-            BlockPos.Mutable dismountPos = new BlockPos.Mutable();
+            int[][] dismountingOffsets = DismountHelper.offsetsForDirection(direction);
+            BlockPos chairPos = this.blockPosition();
+            BlockPos.MutableBlockPos dismountPos = new BlockPos.MutableBlockPos();
 
-            for (EntityPose entityPose : passenger.getPoses()) {
-                Box box = passenger.getBoundingBox(entityPose);
+            for (Pose entityPose : passenger.getDismountPoses()) {
+                AABB box = passenger.getLocalBoundsForPose(entityPose);
                 for (int[] dismountingOffset : dismountingOffsets) {
                     dismountPos.set(chairPos.getX() + dismountingOffset[0], chairPos.getY() + 0.3, chairPos.getZ() + dismountingOffset[1]);
-                    double dismountHeight = this.world.getDismountHeight(dismountPos);
-                    if (Dismounting.canDismountInBlock(dismountHeight)) {
-                        Vec3d vec3d = Vec3d.ofCenter(dismountPos, dismountHeight);
-                        if (Dismounting.canPlaceEntityAt(this.world, passenger, box.offset(vec3d))) {
+                    double dismountHeight = this.level.getBlockFloorHeight(dismountPos);
+                    if (DismountHelper.isBlockFloorValid(dismountHeight)) {
+                        Vec3 vec3d = Vec3.upFromBottomCenterOf(dismountPos, dismountHeight);
+                        if (DismountHelper.canDismountTo(this.level, passenger, box.move(vec3d))) {
                             passenger.setPose(entityPose);
                             return vec3d;
                         }
@@ -103,12 +105,12 @@ public class ChairEntity extends MobEntity {
                 }
             }
         }
-        return super.updatePassengerForDismount(passenger);
+        return super.getDismountLocationForPassenger(passenger);
     }
 
-    public static DefaultAttributeContainer.Builder createMobAttributes(){
-        return MobEntity.createMobAttributes().add(EntityAttributes.GENERIC_MAX_HEALTH, 0)
-                .add(EntityAttributes.GENERIC_MOVEMENT_SPEED, 0.5f);
+    public static AttributeSupplier.Builder createMobAttributes(){
+        return Mob.createMobAttributes().add(Attributes.MAX_HEALTH, 0)
+                .add(Attributes.MOVEMENT_SPEED, 0.5f);
     }
 
     @Nullable
@@ -118,7 +120,7 @@ public class ChairEntity extends MobEntity {
     }
 
     @Override
-    public boolean canBeRiddenInWater() {
+    public boolean rideableUnderWater() {
         return true;
     }
 }

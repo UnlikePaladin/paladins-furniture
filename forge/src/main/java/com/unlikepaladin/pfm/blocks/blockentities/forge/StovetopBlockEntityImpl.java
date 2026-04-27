@@ -2,13 +2,13 @@ package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,27 +20,28 @@ public class StovetopBlockEntityImpl extends StovetopBlockEntity {
     }
 
     @Override
-    public @NotNull NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt = this.saveInitialChunkData(new NbtCompound());
-        Inventories.writeNbt(nbt, this.itemsBeingCooked, true);
+    public @NotNull CompoundTag getUpdateTag() {
+        CompoundTag nbt = this.saveInitialChunkData(new CompoundTag());
+        ContainerHelper.saveAllItems(nbt, this.itemsBeingCooked, true);
         return nbt;
     }
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, 13, this.toInitialChunkDataNbt());
-    }
-
-    public void handleUpdateTag(BlockState state, NbtCompound tag) {
-        this.fromTag(getCachedState(), tag);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, ClientboundBlockEntityDataPacket.TYPE_CAMPFIRE, this.getUpdateTag());
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
+    public void handleUpdateTag(BlockState state, CompoundTag tag) {
+        this.load(state, tag);
+    }
+
+    @Override
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
         this.itemsBeingCooked.clear();
-        Inventories.readNbt(pkt.getNbt(), this.itemsBeingCooked);
+        ContainerHelper.loadAllItems(pkt.getTag(), this.itemsBeingCooked);
     }
 
     public static Supplier<? extends StovetopBlockEntity> getFactory() {

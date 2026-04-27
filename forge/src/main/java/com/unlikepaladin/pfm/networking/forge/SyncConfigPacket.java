@@ -2,8 +2,8 @@ package com.unlikepaladin.pfm.networking.forge;
 
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.config.option.AbstractConfigOption;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.network.NetworkEvent;
@@ -25,7 +25,7 @@ public class SyncConfigPacket {
         ctx.get().setPacketHandled(true);
     }
 
-    public static void encode(SyncConfigPacket packet, PacketByteBuf buffer) {
+    public static void encode(SyncConfigPacket packet, FriendlyByteBuf buffer) {
         //Sync Config
         Collection<AbstractConfigOption> configOptions = packet.configOptions.values();
         //Write length
@@ -34,7 +34,7 @@ public class SyncConfigPacket {
         configOptions.forEach(abstractConfigOption -> AbstractConfigOption.writeConfigOption(buffer, abstractConfigOption));
     }
 
-    public static SyncConfigPacket decode(PacketByteBuf buf) {
+    public static SyncConfigPacket decode(FriendlyByteBuf buf) {
         int configTotalNum = buf.readInt();
         ArrayList<AbstractConfigOption> configOptions = Lists.newArrayListWithCapacity(configTotalNum); // buf.readCollection(Lists::newArrayListWithCapacity, AbstractConfigOption::readConfigOption);
         for (int i = 0; i < configTotalNum; i++){
@@ -42,7 +42,7 @@ public class SyncConfigPacket {
         }
         Map<String, AbstractConfigOption> map = new HashMap<>();
         configOptions.forEach(abstractConfigOption -> {
-            map.put(((TranslatableText)abstractConfigOption.getTitle()).getKey(), abstractConfigOption);
+            map.put(((TranslatableComponent)abstractConfigOption.getTitle()).getKey(), abstractConfigOption);
         });
         return new SyncConfigPacket(map);
     }

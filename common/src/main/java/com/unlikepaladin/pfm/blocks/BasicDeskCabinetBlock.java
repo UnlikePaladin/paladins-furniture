@@ -5,30 +5,35 @@ import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity3x3;
 import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.entity.mob.PiglinBrain;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockRenderView;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -37,16 +42,16 @@ import java.util.stream.Stream;
 
 public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     private final Block baseBlock;
-    public static BooleanProperty OPEN = Properties.OPEN;
+    public static BooleanProperty OPEN = BlockStateProperties.OPEN;
 
     private static final List<FurnitureBlock> WOOD_BASIC_DESK_CABINETS = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_BASIC_DESK_CABINETS = new ArrayList<>();
     private final BlockState baseBlockState;
     protected FurnitureBlock deskCabinetBlock;
-    public BasicDeskCabinetBlock(Settings settings) {
-        super(settings.luminance((state) -> 0).emissiveLighting((blockstate, b, c) -> false));
-        setDefaultState(this.getStateManager().getDefaultState().with(OPEN, false));
-        this.baseBlockState = this.getDefaultState();
+    public BasicDeskCabinetBlock(Properties settings) {
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        registerDefaultState(this.getStateDefinition().any().setValue(OPEN, false));
+        this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
         this.deskCabinetBlock = new FurnitureBlock(this, "desk_cabinet_basic");
         if((material.equals(Material.WOOD) || material.equals(Material.NETHER_WOOD)) && this.getClass().isAssignableFrom(BasicDeskCabinetBlock.class)){
@@ -65,14 +70,14 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public void onBlockAdded(BlockState state, World world, BlockPos pos, BlockState oldState, boolean notify) {
-        if (!state.isOf(state.getBlock())) {
-            this.baseBlockState.neighborUpdate(world, pos, Blocks.AIR, pos, false);
-            this.baseBlock.onBlockAdded(this.baseBlockState, world, pos, oldState, false);
+    public void onPlace(BlockState state, Level world, BlockPos pos, BlockState oldState, boolean notify) {
+        if (!state.is(state.getBlock())) {
+            this.baseBlockState.neighborChanged(world, pos, Blocks.AIR, pos, false);
+            this.baseBlock.onPlace(this.baseBlockState, world, pos, oldState, false);
         }
     }
 
-    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         if (state.getMaterial() == Material.WOOD || state.getMaterial() == Material.WOOL) {
             return 20;
         }
@@ -80,23 +85,23 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public BlockState getStateForNeighborUpdate(BlockState state, Direction direction, BlockState neighborState, WorldAccess world, BlockPos pos, BlockPos neighborPos) {
-        return super.getStateForNeighborUpdate(state, direction, neighborState, world, pos, neighborPos);
+    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
     }
 
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getPlayerFacing().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
         stateManager.add(OPEN);
-        super.appendProperties(stateManager);
+        super.createBlockStateDefinition(stateManager);
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     public boolean canConnect(BlockState blockState) {
@@ -112,9 +117,9 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         return false;
     }
 
-    public boolean isDifferentOrientation(BlockView world, BlockPos pos, Direction dir) {
-        BlockState blockState = world.getBlockState(pos.offset(dir));
-        return !canConnect(blockState); //|| blockState.get(FACING) != state.get(FACING);
+    public boolean isDifferentOrientation(BlockGetter world, BlockPos pos, Direction dir) {
+        BlockState blockState = world.getBlockState(pos.relative(dir));
+        return !canConnect(blockState); //|| blockState.getValue(FACING) != state.getValue(FACING);
     }
 
     @Override
@@ -124,80 +129,80 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
 
     /** Method to rotate VoxelShapes from this random Forge Forums thread: https://forums.minecraftforge.net/topic/74979-1144-rotate-voxel-shapes/ */
     public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
-        VoxelShape[] buffer = new VoxelShape[]{ shape, VoxelShapes.empty() };
+        VoxelShape[] buffer = new VoxelShape[]{ shape, Shapes.empty() };
 
-        int times = (to.getHorizontal() - from.getHorizontal() + 4) % 4;
+        int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
         for (int i = 0; i < times; i++) {
-            buffer[0].forEachBox((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = VoxelShapes.union(buffer[1], VoxelShapes.cuboid(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
+            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1-maxZ, minY, minX, 1-minZ, maxY, maxX)));
             buffer[0] = buffer[1];
-            buffer[1] = VoxelShapes.empty();
+            buffer[1] = Shapes.empty();
         }
 
         return buffer[0];
     }
 
-    final static VoxelShape TABLE_CLASSIC_BASE = createCuboidShape(0, 14, 0, 16, 16, 16);
-    final static VoxelShape TABLE_CLASSIC_NORTH_EAST_LEG = createCuboidShape(13, 0, 1, 15, 14, 3);
-    final static VoxelShape TABLE_CLASSIC_NORTH_WEST_LEG = createCuboidShape(1, 0, 1, 3, 14, 3);
-    final static VoxelShape TABLE_CLASSIC_SOUTH_WEST_LEG = createCuboidShape(1, 0, 13, 3, 14, 15);
-    final static VoxelShape TABLE_CLASSIC_SOUTH_EAST_LEG = createCuboidShape(13, 0, 13, 15, 14, 15);
+    final static VoxelShape TABLE_CLASSIC_BASE = box(0, 14, 0, 16, 16, 16);
+    final static VoxelShape TABLE_CLASSIC_NORTH_EAST_LEG = box(13, 0, 1, 15, 14, 3);
+    final static VoxelShape TABLE_CLASSIC_NORTH_WEST_LEG = box(1, 0, 1, 3, 14, 3);
+    final static VoxelShape TABLE_CLASSIC_SOUTH_WEST_LEG = box(1, 0, 13, 3, 14, 15);
+    final static VoxelShape TABLE_CLASSIC_SOUTH_EAST_LEG = box(13, 0, 13, 15, 14, 15);
 
-    final static VoxelShape DESK_SINGLE_CLOSED = VoxelShapes.union(createCuboidShape(3, 2, 3, 13, 14, 13), createCuboidShape(3, 9, 2,13, 13, 3), createCuboidShape(3, 4, 2,13, 8, 3),createCuboidShape(6.5, 5.5, 1, 9.5, 6.5, 2), createCuboidShape(6.5, 10.5, 1,9.5, 11.5, 2));
-    final static VoxelShape DESK_SINGLE_OPEN = VoxelShapes.union(createCuboidShape(3, 2, 3, 13, 14, 13), createCuboidShape(3, 9, 2,13, 13, 3), createCuboidShape(3, 4, -2,13, 8, 3),createCuboidShape(6.5, 5.5, -3, 9.5, 6.5, -2), createCuboidShape(6.5, 10.5, 1,9.5, 11.5, 2));
+    final static VoxelShape DESK_SINGLE_CLOSED = Shapes.or(box(3, 2, 3, 13, 14, 13), box(3, 9, 2,13, 13, 3), box(3, 4, 2,13, 8, 3),box(6.5, 5.5, 1, 9.5, 6.5, 2), box(6.5, 10.5, 1,9.5, 11.5, 2));
+    final static VoxelShape DESK_SINGLE_OPEN = Shapes.or(box(3, 2, 3, 13, 14, 13), box(3, 9, 2,13, 13, 3), box(3, 4, -2,13, 8, 3),box(6.5, 5.5, -3, 9.5, 6.5, -2), box(6.5, 10.5, 1,9.5, 11.5, 2));
 
-    final static VoxelShape DESK_RIGHT_CLOSED = VoxelShapes.union(createCuboidShape(1, 9, 2, 11, 13, 3), createCuboidShape(1, 4, 2,11, 8, 3), createCuboidShape(4.5, 5.5, 1,7.5, 6.5, 2),createCuboidShape(4.5, 10.5, 1, 7.5, 11.5, 2), createCuboidShape(0, 2, 3,13, 14, 13));
-    final static VoxelShape DESK_RIGHT_OPEN= VoxelShapes.union(createCuboidShape(1, 9, 2, 11, 13, 3), createCuboidShape(4.5, 10.5, 1,7.5, 11.5, 2), createCuboidShape(0, 2, 3,13, 14, 13),createCuboidShape(1, 4, -2, 11, 8, 3), createCuboidShape(4.5, 5.5, -3,7.5, 6.5, -2));
+    final static VoxelShape DESK_RIGHT_CLOSED = Shapes.or(box(1, 9, 2, 11, 13, 3), box(1, 4, 2,11, 8, 3), box(4.5, 5.5, 1,7.5, 6.5, 2),box(4.5, 10.5, 1, 7.5, 11.5, 2), box(0, 2, 3,13, 14, 13));
+    final static VoxelShape DESK_RIGHT_OPEN= Shapes.or(box(1, 9, 2, 11, 13, 3), box(4.5, 10.5, 1,7.5, 11.5, 2), box(0, 2, 3,13, 14, 13),box(1, 4, -2, 11, 8, 3), box(4.5, 5.5, -3,7.5, 6.5, -2));
 
-    final static VoxelShape DESK_LEFT_CLOSED = VoxelShapes.union(createCuboidShape(5, 9, 2, 15, 13, 3), createCuboidShape(5, 4, 2,15, 8, 3), createCuboidShape(8.5, 5.5, 1,11.5, 6.5, 2),createCuboidShape(8.5, 10.5, 1, 11.5, 11.5, 2), createCuboidShape(3, 2, 3,16, 14, 13));
-    final static VoxelShape DESK_LEFT_OPEN = VoxelShapes.union(createCuboidShape(5, 9, 2, 15, 13, 3), createCuboidShape(8.5, 10.5, 1,11.5, 11.5, 2), createCuboidShape(3, 2, 3,16, 14, 13),createCuboidShape(5, 4, -2, 15, 8, 3), createCuboidShape(8.5, 5.5, -3,11.5, 6.5, -2));
+    final static VoxelShape DESK_LEFT_CLOSED = Shapes.or(box(5, 9, 2, 15, 13, 3), box(5, 4, 2,15, 8, 3), box(8.5, 5.5, 1,11.5, 6.5, 2),box(8.5, 10.5, 1, 11.5, 11.5, 2), box(3, 2, 3,16, 14, 13));
+    final static VoxelShape DESK_LEFT_OPEN = Shapes.or(box(5, 9, 2, 15, 13, 3), box(8.5, 10.5, 1,11.5, 11.5, 2), box(3, 2, 3,16, 14, 13),box(5, 4, -2, 15, 8, 3), box(8.5, 5.5, -3,11.5, 6.5, -2));
 
-    final static VoxelShape DESK_MIDDLE_CLOSED = VoxelShapes.union(createCuboidShape(3, 9, 2, 13, 13, 3), createCuboidShape(3, 4, 2,13, 8, 3), createCuboidShape(6.5, 5.5, 1,9.5, 6.5, 2),createCuboidShape(6.5, 10.5, 1, 9.5, 11.5, 2), createCuboidShape(0, 2, 3,16, 14, 13));
-    final static VoxelShape DESK_MIDDLE_OPEN = VoxelShapes.union(createCuboidShape(3, 9, 2, 13, 13, 3), createCuboidShape(6.5, 10.5, 1,9.5, 11.5, 2), createCuboidShape(0, 2, 3,16, 14, 13),createCuboidShape(3, 4, -2, 13, 8, 3), createCuboidShape(6.5, 5.5, -3,9.5, 6.5, -2));
+    final static VoxelShape DESK_MIDDLE_CLOSED = Shapes.or(box(3, 9, 2, 13, 13, 3), box(3, 4, 2,13, 8, 3), box(6.5, 5.5, 1,9.5, 6.5, 2),box(6.5, 10.5, 1, 9.5, 11.5, 2), box(0, 2, 3,16, 14, 13));
+    final static VoxelShape DESK_MIDDLE_OPEN = Shapes.or(box(3, 9, 2, 13, 13, 3), box(6.5, 10.5, 1,9.5, 11.5, 2), box(0, 2, 3,16, 14, 13),box(3, 4, -2, 13, 8, 3), box(6.5, 5.5, -3,9.5, 6.5, -2));
 
-    final static VoxelShape DESK_OUTER_CORNER_CLOSED = VoxelShapes.union(createCuboidShape(3, 2, 3, 16, 14, 13), createCuboidShape(3, 2, 13,13, 14, 16), createCuboidShape(4, 9, 2,14, 13, 3),createCuboidShape(4, 4, 2, 14, 8, 3), createCuboidShape(7.5, 5.5, 1,10.5, 6.5, 2), createCuboidShape(7.5, 10.5, 1,10.5, 11.5, 2),createCuboidShape(2, 9, 4,3, 13, 14),createCuboidShape(2, 4, 4,3, 8, 14),createCuboidShape(1, 5.5, 7.5,2, 6.5, 10.5),createCuboidShape(1, 10.5, 7.5,2, 11.5, 10.5));
-    final static VoxelShape DESK_OUTER_CORNER_OPEN = VoxelShapes.union(createCuboidShape(3, 2, 3, 13, 14, 16), createCuboidShape(-2, 4, 4,3, 8, 14), createCuboidShape(-3, 5.5, 7.5,-2, 6.5, 10.5),createCuboidShape(13, 2, 3, 16, 14, 13), createCuboidShape(4, 9, 2,14, 13, 3), createCuboidShape(4, 4, 2,14, 8, 3),createCuboidShape(7.5, 5.5, 1,10.5, 6.5, 2),createCuboidShape(7.5, 10.5, 1,10.5, 11.5, 2),createCuboidShape(2, 9, 4,3, 13, 14),createCuboidShape(1, 10.5, 7.5,2, 11.5, 10.5));
+    final static VoxelShape DESK_OUTER_CORNER_CLOSED = Shapes.or(box(3, 2, 3, 16, 14, 13), box(3, 2, 13,13, 14, 16), box(4, 9, 2,14, 13, 3),box(4, 4, 2, 14, 8, 3), box(7.5, 5.5, 1,10.5, 6.5, 2), box(7.5, 10.5, 1,10.5, 11.5, 2),box(2, 9, 4,3, 13, 14),box(2, 4, 4,3, 8, 14),box(1, 5.5, 7.5,2, 6.5, 10.5),box(1, 10.5, 7.5,2, 11.5, 10.5));
+    final static VoxelShape DESK_OUTER_CORNER_OPEN = Shapes.or(box(3, 2, 3, 13, 14, 16), box(-2, 4, 4,3, 8, 14), box(-3, 5.5, 7.5,-2, 6.5, 10.5),box(13, 2, 3, 16, 14, 13), box(4, 9, 2,14, 13, 3), box(4, 4, 2,14, 8, 3),box(7.5, 5.5, 1,10.5, 6.5, 2),box(7.5, 10.5, 1,10.5, 11.5, 2),box(2, 9, 4,3, 13, 14),box(1, 10.5, 7.5,2, 11.5, 10.5));
 
-    final static VoxelShape DESK_INSIDE_CORNER = createCuboidShape(0, 2, 0,13, 14, 13);
+    final static VoxelShape DESK_INSIDE_CORNER = box(0, 2, 0,13, 14, 13);
 
     // Cursed I know
     final static Map<String, VoxelShape> VOXEL_SHAPES = new HashMap<>();
-    public VoxelShape getOutlineShape(BlockState state, BlockView world, BlockPos pos, ShapeContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
 
         Boolean north = canConnect(world.getBlockState(pos.north()));
         boolean east = canConnect(world.getBlockState(pos.east()));
         boolean west = canConnect(world.getBlockState(pos.west()));
         boolean south = canConnect(world.getBlockState(pos.south()));
-        boolean open = state.get(OPEN);
-        Direction isFacing = state.get(BasicDeskCabinetBlock.FACING);
+        boolean open = state.getValue(OPEN);
+        Direction isFacing = state.getValue(BasicDeskCabinetBlock.FACING);
 
-        BlockState rightState = world.getBlockState(pos.offset(isFacing.rotateYCounterclockwise()));
+        BlockState rightState = world.getBlockState(pos.relative(isFacing.getCounterClockWise()));
         boolean right = canConnect(rightState) && rightState.getBlock() instanceof BasicDeskCabinetBlock;
 
-        BlockState leftState = world.getBlockState(pos.offset(isFacing.rotateYClockwise()));
+        BlockState leftState = world.getBlockState(pos.relative(isFacing.getClockWise()));
         boolean left = canConnect(leftState) && leftState.getBlock() instanceof BasicDeskCabinetBlock;
 
-        BlockState neighborStateFacing = world.getBlockState(pos.offset(isFacing));
-        BlockState neighborStateOpposite = world.getBlockState(pos.offset(isFacing.getOpposite()));
+        BlockState neighborStateFacing = world.getBlockState(pos.relative(isFacing));
+        BlockState neighborStateOpposite = world.getBlockState(pos.relative(isFacing.getOpposite()));
 
         boolean rotatedCorner = false;
         String corner;
-        if (canConnect(neighborStateFacing) && neighborStateFacing.contains(Properties.HORIZONTAL_FACING)) {
-            Direction neighborFacing = neighborStateFacing.get(Properties.HORIZONTAL_FACING);
+        if (canConnect(neighborStateFacing) && neighborStateFacing.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            Direction neighborFacing = neighborStateFacing.getValue(BlockStateProperties.HORIZONTAL_FACING);
             // inner corner
-            if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(world, pos, neighborFacing.getOpposite())) {
+            if (neighborFacing.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(world, pos, neighborFacing.getOpposite())) {
                 corner = "inner";
-                if (neighborFacing != isFacing.rotateYCounterclockwise()) {
+                if (neighborFacing != isFacing.getCounterClockWise()) {
                     rotatedCorner = true;
                 }
             } else {
                 corner = "none";
             }
-        } else if (canConnect(neighborStateOpposite) && neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
-            Direction neighborFacing = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
+        } else if (canConnect(neighborStateOpposite) && neighborStateOpposite.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            Direction neighborFacing = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING);
             // outer corner
-            if (neighborFacing.getAxis() != state.get(Properties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(world, pos, neighborFacing)) {
+            if (neighborFacing.getAxis() != state.getValue(BlockStateProperties.HORIZONTAL_FACING).getAxis() && isDifferentOrientation(world, pos, neighborFacing)) {
                 corner = "outer";
-                if (neighborFacing != isFacing.rotateYCounterclockwise()) {
+                if (neighborFacing != isFacing.getCounterClockWise()) {
                    rotatedCorner = true;
                 }
             } else {
@@ -208,7 +213,7 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
         }
 
 
-        String key = north.toString()+ east + west + south + left + right + corner + rotatedCorner + open + isFacing.asString();
+        String key = north.toString()+ east + west + south + left + right + corner + rotatedCorner + open + isFacing.getSerializedName();
         if (!VOXEL_SHAPES.containsKey(key)) {
             generateVoxelShape(key, north, east, west, south, left, right, corner, rotatedCorner, open, isFacing);
         }
@@ -217,41 +222,41 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     private static void generateVoxelShape(String key, Boolean north, Boolean east, Boolean west, Boolean south, boolean left, boolean right, String corner, boolean rotatedCorner, boolean open, Direction facing) {
         VoxelShape newVoxelShape = TABLE_CLASSIC_BASE;
         if (!north && !south && !east && !west) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_CLASSIC_NORTH_EAST_LEG, TABLE_CLASSIC_SOUTH_WEST_LEG, TABLE_CLASSIC_SOUTH_EAST_LEG, TABLE_CLASSIC_NORTH_WEST_LEG);
+            newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_NORTH_EAST_LEG, TABLE_CLASSIC_SOUTH_WEST_LEG, TABLE_CLASSIC_SOUTH_EAST_LEG, TABLE_CLASSIC_NORTH_WEST_LEG);
         }
         if (!north && !east) {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_CLASSIC_NORTH_EAST_LEG);
+            newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_NORTH_EAST_LEG);
         }
         if (!north && !west)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_CLASSIC_NORTH_WEST_LEG);
+            newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_NORTH_WEST_LEG);
         }
         if (!south && !east)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_CLASSIC_SOUTH_EAST_LEG);
+            newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_SOUTH_EAST_LEG);
         }
         if (!south && !west)  {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, TABLE_CLASSIC_SOUTH_WEST_LEG);
+            newVoxelShape = Shapes.or(newVoxelShape, TABLE_CLASSIC_SOUTH_WEST_LEG);
         }
         if (corner == "none") {
-            newVoxelShape = VoxelShapes.union(newVoxelShape, rotateShape(Direction.NORTH, facing, middleDeskShape(left, right, open)));
+            newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.NORTH, facing, middleDeskShape(left, right, open)));
         } else if (corner == "outer") {
             if (!rotatedCorner) {
                 if (open) {
-                    newVoxelShape = VoxelShapes.union(newVoxelShape, rotateShape(Direction.NORTH, facing, DESK_OUTER_CORNER_OPEN));
+                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.NORTH, facing, DESK_OUTER_CORNER_OPEN));
                 } else {
-                    newVoxelShape = VoxelShapes.union(newVoxelShape, rotateShape(Direction.NORTH, facing, DESK_OUTER_CORNER_CLOSED));
+                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.NORTH, facing, DESK_OUTER_CORNER_CLOSED));
                 }
             } else {
                 if (open) {
-                    newVoxelShape = VoxelShapes.union(newVoxelShape, rotateShape(Direction.WEST, facing, DESK_OUTER_CORNER_OPEN));
+                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.WEST, facing, DESK_OUTER_CORNER_OPEN));
                 } else {
-                    newVoxelShape = VoxelShapes.union(newVoxelShape, rotateShape(Direction.WEST, facing, DESK_OUTER_CORNER_CLOSED));
+                    newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.WEST, facing, DESK_OUTER_CORNER_CLOSED));
                 }
             }
         } else {
             if (!rotatedCorner)
-                newVoxelShape = VoxelShapes.union(newVoxelShape, rotateShape(Direction.NORTH, facing, DESK_INSIDE_CORNER));
+                newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.NORTH, facing, DESK_INSIDE_CORNER));
             else
-                newVoxelShape = VoxelShapes.union(newVoxelShape, rotateShape(Direction.WEST, facing, DESK_INSIDE_CORNER));
+                newVoxelShape = Shapes.or(newVoxelShape, rotateShape(Direction.WEST, facing, DESK_INSIDE_CORNER));
         }
 
         VOXEL_SHAPES.put(key, newVoxelShape);
@@ -282,41 +287,41 @@ public class BasicDeskCabinetBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, BlockView world, BlockPos pos, NavigationType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter world, BlockPos pos, PathComputationType type) {
         return false;
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockView world) {
+    public BlockEntity newBlockEntity(BlockView world) {
         return GenericStorageBlockEntity3x3.getFactory().get();
     }
 
     @Override
-    public int getComparatorOutput(BlockState state, World world, BlockPos pos) {
-        return ScreenHandler.calculateComparatorOutput(world.getBlockEntity(pos));
+    public int getAnalogOutputSignal(BlockState state, Level world, BlockPos pos) {
+        return AbstractContainerMenu.getRedstoneSignalFromBlockEntity(world.getBlockEntity(pos));
     }
 
     @Override
-    public void onPlaced(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
+    public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         BlockEntity blockEntity;
-        if (itemStack.hasCustomName() && (blockEntity = world.getBlockEntity(pos)) instanceof GenericStorageBlockEntity3x3) {
-            ((GenericStorageBlockEntity3x3)blockEntity).setCustomName(itemStack.getName());
+        if (itemStack.hasCustomHoverName() && (blockEntity = world.getBlockEntity(pos)) instanceof GenericStorageBlockEntity3x3) {
+            ((GenericStorageBlockEntity3x3)blockEntity).setCustomName(itemStack.getHoverName());
         }
     }
 
     @Override
-    public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (world.isClient) {
-            return ActionResult.SUCCESS;
+    public InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (world.isClientSide) {
+            return InteractionResult.SUCCESS;
         }
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof GenericStorageBlockEntity3x3) {
-            player.openHandledScreen((GenericStorageBlockEntity3x3)blockEntity);
-            player.incrementStat(Statistics.DRAWER_SEARCHED);
-            PiglinBrain.onGuardedBlockInteracted(player, true);
+            player.openMenu((GenericStorageBlockEntity3x3)blockEntity);
+            player.awardStat(Statistics.DRAWER_SEARCHED);
+            PiglinAi.angerNearbyPiglins(player, true);
         }
-        return ActionResult.CONSUME;
+        return InteractionResult.CONSUME;
     }
 }
 

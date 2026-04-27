@@ -4,14 +4,14 @@ import com.qouteall.immersive_portals.Helper;
 import com.qouteall.immersive_portals.my_util.IntBox;
 import com.qouteall.immersive_portals.portal.GeometryPortalShape;
 import com.qouteall.immersive_portals.portal.Portal;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtInt;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.util.Pair;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.math.Vec3i;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.util.Tuple;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Vec3i;
 import org.apache.commons.lang3.Validate;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +39,7 @@ public class BlockPortalShape {
     public BlockPos firstFramePos;
     
     public BlockPortalShape(
-        Set<BlockPos> area, Direction.Axis axis
+            Set<BlockPos> area, Direction.Axis axis
     ) {
         this.area = area;
         this.axis = axis;
@@ -52,7 +52,7 @@ public class BlockPortalShape {
     }
     
     public BlockPortalShape(
-        NbtCompound tag
+            CompoundTag tag
     ) {
         this(
             readArea(tag.getList("poses", 3)),
@@ -60,7 +60,7 @@ public class BlockPortalShape {
         );
     }
     
-    private static Set<BlockPos> readArea(NbtList list) {
+    private static Set<BlockPos> readArea(ListTag list) {
         int size = list.size();
         
         Validate.isTrue(size % 3 == 0);
@@ -77,18 +77,18 @@ public class BlockPortalShape {
         return result;
     }
     
-    public static BlockPortalShape fromTag(NbtCompound tag) {
+    public static BlockPortalShape fromTag(CompoundTag tag) {
         return new BlockPortalShape(tag);
     }
     
-    public NbtCompound toTag() {
-        NbtCompound data = new NbtCompound();
-        NbtList list = new NbtList();
+    public CompoundTag toTag() {
+        CompoundTag data = new CompoundTag();
+        ListTag list = new ListTag();
         
         area.forEach(blockPos -> {
-            list.add(list.size(), NbtInt.of(blockPos.getX()));
-            list.add(list.size(), NbtInt.of(blockPos.getY()));
-            list.add(list.size(), NbtInt.of(blockPos.getZ()));
+            list.add(list.size(), IntTag.valueOf(blockPos.getX()));
+            list.add(list.size(), IntTag.valueOf(blockPos.getY()));
+            list.add(list.size(), IntTag.valueOf(blockPos.getZ()));
         });
         
         data.put("poses", list);
@@ -129,28 +129,28 @@ public class BlockPortalShape {
         Direction[] directions = Helper.getAnotherFourDirections(axis);
         frameAreaWithoutCorner = area.stream().flatMap(
             blockPos -> Stream.of(
-                blockPos.add(directions[0].getVector()),
-                blockPos.add(directions[1].getVector()),
-                blockPos.add(directions[2].getVector()),
-                blockPos.add(directions[3].getVector())
+                blockPos.offset(directions[0].getNormal()),
+                blockPos.offset(directions[1].getNormal()),
+                blockPos.offset(directions[2].getNormal()),
+                blockPos.offset(directions[3].getNormal())
             )
         ).filter(
             blockPos -> !area.contains(blockPos)
         ).collect(Collectors.toSet());
         
         BlockPos[] cornerOffsets = {
-            new BlockPos(directions[0].getVector()).add(directions[1].getVector()),
-            new BlockPos(directions[1].getVector()).add(directions[2].getVector()),
-            new BlockPos(directions[2].getVector()).add(directions[3].getVector()),
-            new BlockPos(directions[3].getVector()).add(directions[0].getVector())
+            new BlockPos(directions[0].getNormal()).offset(directions[1].getNormal()),
+            new BlockPos(directions[1].getNormal()).offset(directions[2].getNormal()),
+            new BlockPos(directions[2].getNormal()).offset(directions[3].getNormal()),
+            new BlockPos(directions[3].getNormal()).offset(directions[0].getNormal())
         };
         
         frameAreaWithCorner = area.stream().flatMap(
             blockPos -> Stream.of(
-                blockPos.add(cornerOffsets[0]),
-                blockPos.add(cornerOffsets[1]),
-                blockPos.add(cornerOffsets[2]),
-                blockPos.add(cornerOffsets[3])
+                blockPos.offset(cornerOffsets[0]),
+                blockPos.offset(cornerOffsets[1]),
+                blockPos.offset(cornerOffsets[2]),
+                blockPos.offset(cornerOffsets[3])
             )
         ).filter(
             blockPos -> !area.contains(blockPos)
@@ -163,10 +163,10 @@ public class BlockPortalShape {
     // null for not found
     @Nullable
     public static BlockPortalShape findArea(
-        BlockPos startingPos,
-        Direction.Axis axis,
-        Predicate<BlockPos> isAir,
-        Predicate<BlockPos> isObsidian
+            BlockPos startingPos,
+            Direction.Axis axis,
+            Predicate<BlockPos> isAir,
+            Predicate<BlockPos> isObsidian
     ) {
         if (!isAir.test(startingPos)) {
             return null;
@@ -177,9 +177,9 @@ public class BlockPortalShape {
     
     @Nullable
     public static BlockPortalShape findShapeWithoutRegardingStartingPos(
-        BlockPos startingPos, Direction.Axis axis, Predicate<BlockPos> isAir, Predicate<BlockPos> isObsidian
+            BlockPos startingPos, Direction.Axis axis, Predicate<BlockPos> isAir, Predicate<BlockPos> isObsidian
     ) {
-        startingPos = startingPos.toImmutable();
+        startingPos = startingPos.immutable();
         
         Set<BlockPos> area = new HashSet<>();
         area.add(startingPos);
@@ -202,12 +202,12 @@ public class BlockPortalShape {
     }
     
     private static boolean findAreaBreadthFirst(
-        BlockPos startingPos,
-        Predicate<BlockPos> isAir,
-        Predicate<BlockPos> isObsidian,
-        Direction[] directions,
-        Set<BlockPos> foundArea,
-        BlockPos initialPos
+            BlockPos startingPos,
+            Predicate<BlockPos> isAir,
+            Predicate<BlockPos> isObsidian,
+            Direction[] directions,
+            Set<BlockPos> foundArea,
+            BlockPos initialPos
     ) {
         
         ArrayDeque<BlockPos> newlyAdded = new ArrayDeque<>();
@@ -220,7 +220,7 @@ public class BlockPortalShape {
             
             BlockPos last = newlyAdded.pollFirst();
             for (Direction direction : directions) {
-                BlockPos curr = last.offset(direction).toImmutable();
+                BlockPos curr = last.relative(direction).immutable();
                 if (!foundArea.contains(curr)) {
                     if (isAir.test(curr)) {
                         newlyAdded.addLast(curr);
@@ -246,12 +246,12 @@ public class BlockPortalShape {
     
     @Deprecated
     private static boolean findAreaRecursively(
-        BlockPos currPos,
-        Predicate<BlockPos> isAir,
-        Predicate<BlockPos> isObsidian,
-        Direction[] directions,
-        Set<BlockPos> foundArea,
-        BlockPos initialPos
+            BlockPos currPos,
+            Predicate<BlockPos> isAir,
+            Predicate<BlockPos> isObsidian,
+            Direction[] directions,
+            Set<BlockPos> foundArea,
+            BlockPos initialPos
     ) {
         if (foundArea.size() > 400) {
             return false;
@@ -261,10 +261,10 @@ public class BlockPortalShape {
             return false;
         }
         for (Direction direction : directions) {
-            BlockPos newPos = currPos.add(direction.getVector());
+            BlockPos newPos = currPos.offset(direction.getNormal());
             if (!foundArea.contains(newPos)) {
                 if (isAir.test(newPos)) {
-                    foundArea.add(newPos.toImmutable());
+                    foundArea.add(newPos.immutable());
                     boolean shouldContinue = findAreaRecursively(
                         newPos,
                         isAir,
@@ -290,10 +290,10 @@ public class BlockPortalShape {
     
     // return null for not match
     public BlockPortalShape matchShape(
-        Predicate<BlockPos> isAir,
-        Predicate<BlockPos> isObsidian,
-        BlockPos newAnchor,
-        BlockPos.Mutable temp
+            Predicate<BlockPos> isAir,
+            Predicate<BlockPos> isObsidian,
+            BlockPos newAnchor,
+            BlockPos.MutableBlockPos temp
     ) {
         if (!isAir.test(newAnchor)) {
             return null;
@@ -324,11 +324,11 @@ public class BlockPortalShape {
     }
     
     private boolean testFrameWithoutCorner(
-        Predicate<BlockPos> isObsidian,
-        BlockPos newAnchor,
-        BlockPos.Mutable temp
+            Predicate<BlockPos> isObsidian,
+            BlockPos newAnchor,
+            BlockPos.MutableBlockPos temp
     ) {
-        Function<BlockPos, BlockPos.Mutable> mapper = blockPos -> temp.set(
+        Function<BlockPos, BlockPos.MutableBlockPos> mapper = blockPos -> temp.set(
             blockPos.getX() - anchor.getX() + newAnchor.getX(),
             blockPos.getY() - anchor.getY() + newAnchor.getY(),
             blockPos.getZ() - anchor.getZ() + newAnchor.getZ()
@@ -343,12 +343,12 @@ public class BlockPortalShape {
     }
     
     public BlockPortalShape getShapeWithMovedAnchor(
-        BlockPos newAnchor
+            BlockPos newAnchor
     ) {
         BlockPos offset = newAnchor.subtract(anchor);
         return new BlockPortalShape(
             area.stream().map(
-                blockPos -> blockPos.add(offset)
+                blockPos -> blockPos.offset(offset)
             ).collect(Collectors.toSet()),
             axis
         );
@@ -369,28 +369,28 @@ public class BlockPortalShape {
     }
     
     public void initPortalPosAxisShape(Portal portal, Direction.AxisDirection axisDirection) {
-        Vec3d center = innerAreaBox.getCenterVec();
+        Vec3 center = innerAreaBox.getCenterVec();
         portal.setPos(center.x, center.y, center.z);
         
-        initPortalAxisShape(portal, center, Direction.from(axis, axisDirection));
+        initPortalAxisShape(portal, center, Direction.fromAxisAndDirection(axis, axisDirection));
     }
     
-    public void initPortalAxisShape(Portal portal, Vec3d center, Direction facing) {
+    public void initPortalAxisShape(Portal portal, Vec3 center, Direction facing) {
         Validate.isTrue(facing.getAxis() == axis);
         
-        Pair<Direction, Direction> perpendicularDirections = Helper.getPerpendicularDirections(facing);
-        Direction wDirection = perpendicularDirections.getLeft();
-        Direction hDirection = perpendicularDirections.getRight();
+        Tuple<Direction, Direction> perpendicularDirections = Helper.getPerpendicularDirections(facing);
+        Direction wDirection = perpendicularDirections.getA();
+        Direction hDirection = perpendicularDirections.getB();
         
-        portal.axisW = Vec3d.of(wDirection.getVector());
-        portal.axisH = Vec3d.of(hDirection.getVector());
+        portal.axisW = Vec3.atLowerCornerOf(wDirection.getNormal());
+        portal.axisH = Vec3.atLowerCornerOf(hDirection.getNormal());
         portal.width = Helper.getCoordinate(innerAreaBox.getSize(), wDirection.getAxis());
         portal.height = Helper.getCoordinate(innerAreaBox.getSize(), hDirection.getAxis());
         
-        Vec3d offset = Vec3d.of(
+        Vec3 offset = Vec3.atLowerCornerOf(
             Direction.get(Direction.AxisDirection.POSITIVE, axis)
-                .getVector()
-        ).multiply(0.5);
+                .getNormal()
+        ).scale(0.5);
         
         if (isRectangle()) {
             portal.specialShape = null;
@@ -410,12 +410,12 @@ public class BlockPortalShape {
                     .map(blockPos -> new IntBox(blockPos, blockPos)),
                 Stream.of(rectanglePart)
             ).forEach(part -> {
-                Vec3d p1 = Vec3d.of(part.l).add(offset);
-                Vec3d p2 = Vec3d.of(part.h).add(1, 1, 1).add(offset);
-                double p1LocalX = p1.subtract(center).dotProduct(portal.axisW);
-                double p1LocalY = p1.subtract(center).dotProduct(portal.axisH);
-                double p2LocalX = p2.subtract(center).dotProduct(portal.axisW);
-                double p2LocalY = p2.subtract(center).dotProduct(portal.axisH);
+                Vec3 p1 = Vec3.atLowerCornerOf(part.l).add(offset);
+                Vec3 p2 = Vec3.atLowerCornerOf(part.h).add(1, 1, 1).add(offset);
+                double p1LocalX = p1.subtract(center).dot(portal.axisW);
+                double p1LocalY = p1.subtract(center).dot(portal.axisH);
+                double p2LocalX = p2.subtract(center).dot(portal.axisW);
+                double p2LocalY = p2.subtract(center).dot(portal.axisH);
                 shape.addTriangleForRectangle(
                     p1LocalX, p1LocalY,
                     p2LocalX, p2LocalY
@@ -424,12 +424,12 @@ public class BlockPortalShape {
             
             portal.specialShape = shape;
             
-            Vec3d p1 = Vec3d.of(rectanglePart.l).add(offset);
-            Vec3d p2 = Vec3d.of(rectanglePart.h).add(1, 1, 1).add(offset);
-            double p1LocalX = p1.subtract(center).dotProduct(portal.axisW);
-            double p1LocalY = p1.subtract(center).dotProduct(portal.axisH);
-            double p2LocalX = p2.subtract(center).dotProduct(portal.axisW);
-            double p2LocalY = p2.subtract(center).dotProduct(portal.axisH);
+            Vec3 p1 = Vec3.atLowerCornerOf(rectanglePart.l).add(offset);
+            Vec3 p2 = Vec3.atLowerCornerOf(rectanglePart.h).add(1, 1, 1).add(offset);
+            double p1LocalX = p1.subtract(center).dot(portal.axisW);
+            double p1LocalY = p1.subtract(center).dot(portal.axisH);
+            double p2LocalX = p2.subtract(center).dot(portal.axisW);
+            double p2LocalY = p2.subtract(center).dot(portal.axisH);
             portal.initCullableRange(
                 p1LocalX, p2LocalX,
                 p1LocalY, p2LocalY
@@ -438,10 +438,10 @@ public class BlockPortalShape {
     }
     
     public BlockPortalShape matchShapeWithMovedFirstFramePos(
-        Predicate<BlockPos> isAir,
-        Predicate<BlockPos> isObsidian,
-        BlockPos newFirstObsidianPos,
-        BlockPos.Mutable temp
+            Predicate<BlockPos> isAir,
+            Predicate<BlockPos> isObsidian,
+            BlockPos newFirstObsidianPos,
+            BlockPos.MutableBlockPos temp
     ) {
         boolean testFrame = frameAreaWithoutCorner.stream().map(blockPos1 -> temp.set(
             blockPos1.getX() - firstFramePos.getX() + newFirstObsidianPos.getX(),
@@ -466,7 +466,7 @@ public class BlockPortalShape {
         BlockPos offset = newFirstObsidianPos.subtract(firstFramePos);
         return new BlockPortalShape(
             area.stream().map(
-                blockPos -> blockPos.add(offset)
+                blockPos -> blockPos.offset(offset)
             ).collect(Collectors.toSet()),
             axis
         );
@@ -475,19 +475,19 @@ public class BlockPortalShape {
     public static boolean isSquareShape(BlockPortalShape shape, int length) {
         BlockPos areaSize = shape.innerAreaBox.getSize();
         
-        Pair<Direction.Axis, Direction.Axis> xs = Helper.getAnotherTwoAxis(shape.axis);
+        Tuple<Direction.Axis, Direction.Axis> xs = Helper.getAnotherTwoAxis(shape.axis);
         
-        return Helper.getCoordinate(areaSize, xs.getLeft()) == length &&
-            Helper.getCoordinate(areaSize, xs.getRight()) == length &&
+        return Helper.getCoordinate(areaSize, xs.getA()) == length &&
+            Helper.getCoordinate(areaSize, xs.getB()) == length &&
             shape.area.size() == (length * length);
     }
     
     public static BlockPortalShape getSquareShapeTemplate(
-        Direction.Axis axis,
-        int length
+            Direction.Axis axis,
+            int length
     ) {
-        Pair<Direction, Direction> perpendicularDirections = Helper.getPerpendicularDirections(
-            Direction.from(axis, Direction.AxisDirection.POSITIVE)
+        Tuple<Direction, Direction> perpendicularDirections = Helper.getPerpendicularDirections(
+            Direction.fromAxisAndDirection(axis, Direction.AxisDirection.POSITIVE)
         );
         
         Set<BlockPos> area = new HashSet<>();
@@ -495,8 +495,8 @@ public class BlockPortalShape {
         for (int i = 0; i < length; i++) {
             for (int j = 0; j < length; j++) {
                 area.add(
-                    BlockPos.ORIGIN.offset(perpendicularDirections.getLeft(), i)
-                        .offset(perpendicularDirections.getRight(), j)
+                    BlockPos.ZERO.relative(perpendicularDirections.getA(), i)
+                        .relative(perpendicularDirections.getB(), j)
                 );
             }
         }
@@ -509,7 +509,7 @@ public class BlockPortalShape {
         
         return getShapeWithMovedAnchor(
             newTotalAreaBox.l.subtract(totalAreaBox.l)
-                .add(anchor)
+                .offset(anchor)
         );
     }
     

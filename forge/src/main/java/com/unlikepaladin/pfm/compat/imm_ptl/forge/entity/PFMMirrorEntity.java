@@ -7,18 +7,18 @@ import com.qouteall.immersive_portals.portal.Mirror;
 import com.unlikepaladin.pfm.compat.imm_ptl.forge.PFMImmersivePortalsImpl;
 import com.unlikepaladin.pfm.compat.imm_ptl.forge.PFMMirrorBlockIP;
 import com.unlikepaladin.pfm.compat.imm_ptl.forge.shape.BlockPortalShape;
-import net.minecraft.block.BlockState;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.stream.Stream;
@@ -31,13 +31,13 @@ public class PFMMirrorEntity extends Mirror {
     public boolean unbreakable = false;
     private Direction facing;
 
-    public PFMMirrorEntity(EntityType<PFMMirrorEntity> entityType, World world) {
+    public PFMMirrorEntity(EntityType<PFMMirrorEntity> entityType, Level world) {
         super(entityType, world);
     }
 
     @Override
-    protected void readCustomDataFromNbt(NbtCompound tag) {
-        super.readCustomDataFromNbt(tag);
+    protected void readAdditionalSaveData(CompoundTag tag) {
+        super.readAdditionalSaveData(tag);
         if (tag.contains("boxXL")) {
             wallArea = new IntBox(
                     new BlockPos(
@@ -67,8 +67,8 @@ public class PFMMirrorEntity extends Mirror {
     }
 
     @Override
-    protected void writeCustomDataToNbt(NbtCompound tag) {
-        super.writeCustomDataToNbt(tag);
+    protected void addAdditionalSaveData(CompoundTag tag) {
+        super.addAdditionalSaveData(tag);
         if (wallArea != null) {
             tag.putInt("boxXL", wallArea.l.getX());
             tag.putInt("boxYL", wallArea.l.getY());
@@ -87,9 +87,9 @@ public class PFMMirrorEntity extends Mirror {
     @Override
     public void tick() {
         super.tick();
-        if (!world.isClient) {
+        if (!level.isClientSide) {
             if (!unbreakable) {
-                if (world.getTime() % 10 == getEntityId() % 10) {
+                if (level.getDayTime() % 10 == getEntityId() % 10) {
                     checkWallIntegrity();
                 }
             }
@@ -103,19 +103,19 @@ public class PFMMirrorEntity extends Mirror {
 
     private void checkWallIntegrity() {
         boolean wallValid;
-        if (this.facing == null && this.world.getBlockState(getBlockPos()).contains(Properties.HORIZONTAL_FACING))
-            this.facing = this.world.getBlockState(getBlockPos()).get(Properties.HORIZONTAL_FACING).getOpposite();
+        if (this.facing == null && this.level.getBlockState(getOnPos()).hasProperty(BlockStateProperties.HORIZONTAL_FACING))
+            this.facing = this.level.getBlockState(getOnPos()).getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite();
         else if (this.facing == null){
             this.facing = Direction.NORTH;
         }
         if (wallArea != null) {
             wallValid = wallArea.fastStream().allMatch(
-                    blockPos -> isMirrorBlock(world, blockPos, this.facing.getOpposite())
+                    blockPos -> isMirrorBlock(level, blockPos, this.facing.getOpposite())
             );
         }
         else if (blockPortalShape != null) {
             wallValid = blockPortalShape.area.stream().allMatch(
-                    blockPos -> isMirrorBlock(world, blockPos, this.facing.getOpposite())
+                    blockPos -> isMirrorBlock(level, blockPos, this.facing.getOpposite())
             );
         }
         else {
@@ -126,68 +126,68 @@ public class PFMMirrorEntity extends Mirror {
         }
     }
 
-    public static boolean isMirrorBlock(World world, BlockPos blockPos, Direction facing) {
-        BlockState blockState = world.getBlockState(blockPos);
-        if (blockState.contains(Properties.HORIZONTAL_FACING)) {
-            return blockState.getBlock() instanceof PFMMirrorBlockIP && blockState.get(Properties.HORIZONTAL_FACING).equals(facing);
+    public static boolean isMirrorBlock(Level level, BlockPos blockPos, Direction facing) {
+        BlockState blockState = level.getBlockState(blockPos);
+        if (blockState.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+            return blockState.getBlock() instanceof PFMMirrorBlockIP && blockState.getValue(BlockStateProperties.HORIZONTAL_FACING).equals(facing);
         }
         return false;
     }
 
-    public static void createMirror(ServerWorld world, BlockPos glassPos, Direction facing) {
-        if (!isMirrorBlock(world, glassPos, facing.getOpposite())) {
+    public static void createMirror(ServerLevel level, BlockPos glassPos, Direction facing) {
+        if (!isMirrorBlock(level, glassPos, facing.getOpposite())) {
             return;
         }
 
         BlockPortalShape shape = BlockPortalShape.findArea(
                 glassPos, facing.getAxis(),
-                blockPos -> isMirrorBlock(world, blockPos, facing.getOpposite()),
-                blockPos -> !(isMirrorBlock(world, blockPos, facing.getOpposite()))
+                blockPos -> isMirrorBlock(level, blockPos, facing.getOpposite()),
+                blockPos -> !(isMirrorBlock(level, blockPos, facing.getOpposite()))
         );
 
         if (shape == null) {
             return;
         }
 
-        PFMMirrorEntity pfmMirrorEntity = PFMImmersivePortalsImpl.MIRROR.create(world);
+        PFMMirrorEntity pfmMirrorEntity = PFMImmersivePortalsImpl.MIRROR.create(level);
         double distanceToCenter = -0.452;
 
-        Box wallBox = getWallBox(world, shape.area.stream());
+        AABB wallBox = getWallBox(level, shape.area.stream());
         if (wallBox == null) {
             return;
         }
         pfmMirrorEntity.facing = facing;
-        Vec3d pos = Helper.getBoxSurfaceInversed(wallBox, facing.getOpposite()).getCenter();
+        Vec3 pos = Helper.getBoxSurfaceInversed(wallBox, facing.getOpposite()).getCenter();
         pos = Helper.putCoordinate(
                 pos, facing.getAxis(),
                 Helper.getCoordinate(
                         shape.innerAreaBox.getCenterVec().add(
-                                Vec3d.of(facing.getVector()).multiply(distanceToCenter)
+                                Vec3.atLowerCornerOf(facing.getNormal()).scale(distanceToCenter)
                         ),
                         facing.getAxis()
                 )
         );
         ((Entity)pfmMirrorEntity).setPos(pos.x, pos.y, pos.z);
         pfmMirrorEntity.setDestination(pos);
-        pfmMirrorEntity.dimensionTo = world.getRegistryKey();
+        pfmMirrorEntity.dimensionTo = level.dimension();
 
         shape.initPortalAxisShape(pfmMirrorEntity, pos, facing);
 
         pfmMirrorEntity.blockPortalShape = shape;
-        world.spawnEntity(pfmMirrorEntity);
+        level.addFreshEntity(pfmMirrorEntity);
 
     }
 
     @Nullable
-    public static Box getWallBox(World world, Stream<BlockPos> blockPosStream) {
+    public static AABB getWallBox(ServerLevel level, Stream<BlockPos> blockPosStream) {
         return blockPosStream.map(blockPos -> {
-            VoxelShape collisionShape = world.getBlockState(blockPos).getCollisionShape(world, blockPos);
+            VoxelShape collisionShape = level.getBlockState(blockPos).getCollisionShape(level, blockPos);
 
             if (collisionShape.isEmpty()) {
                 return null;
             }
 
-            return collisionShape.getBoundingBox().offset(Vec3d.of(blockPos));
-        }).filter(b -> b != null).reduce(Box::union).orElse(null);
+            return collisionShape.bounds().move(Vec3.atLowerCornerOf(blockPos));
+        }).filter(b -> b != null).reduce(AABB::minmax).orElse(null);
     }
 }

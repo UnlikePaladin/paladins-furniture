@@ -3,8 +3,8 @@
 	"textures": {
 		"4": "block/iron_block",
 		"6": "pfm:block/iron_stove",
-		"particle": "block/oak_planks",
-		"base": "block/oak_planks"
+		"base": "block/oak_planks",
+		"particle": "#base"
 	},
 	"elements": [
 		{

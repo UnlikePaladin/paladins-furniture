@@ -5,11 +5,11 @@ import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.block.Block;
-import net.minecraft.block.Material;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
@@ -22,22 +22,22 @@ public class StoneVariant extends VariantBase<StoneVariant> {
     private final Block rawBlock;
     private final Material vanillaMaterial;
 
-    StoneVariant(Identifier identifier, Block polishedBlock, Block rawBlock) {
+    StoneVariant(ResourceLocation identifier, Block polishedBlock, Block rawBlock) {
         super(identifier);
         this.polishedBlock = polishedBlock;
         this.rawBlock = rawBlock;
-        this.vanillaMaterial = polishedBlock.getDefaultState().getMaterial();
+        this.vanillaMaterial = polishedBlock.defaultBlockState().getMaterial();
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         String postfix = this.isVanilla() ? "" : "_"+this.getNamespace();
         return this.identifier.getPath()+postfix;
     }
 
     @Environment(EnvType.CLIENT)
     @Override
-    public Identifier getTexture(BlockType type) {
+    public ResourceLocation getTextureLocation(BlockType type) {
         if (type == BlockType.SECONDARY)
             return ModelHelper.getTextureId(rawBlock);
         return ModelHelper.getTextureId(polishedBlock);
@@ -102,8 +102,8 @@ public class StoneVariant extends VariantBase<StoneVariant> {
     }
 
     @Override
-    public @Nullable ItemConvertible getItemForRecipe(String key, Class<? extends Block> blockClass) {
-        ItemConvertible itemConvertible = super.getItemForRecipe(key, blockClass);
+    public @Nullable ItemLike getItemForRecipe(String key, Class<? extends Block> blockClass) {
+        ItemLike itemConvertible = super.getItemForRecipe(key, blockClass);
         if ((identifier.getPath().equals("calcite") || identifier.getPath().equals("netherite")) && (key.equals("base") || key.equals("secondary")) && blockClass.getSimpleName().contains("Kitchen")) {
             if (itemConvertible == getBaseBlock())
                 return getSecondaryBlock();
@@ -128,32 +128,32 @@ public class StoneVariant extends VariantBase<StoneVariant> {
 
     public static class Finder implements SetFinder<StoneVariant> {
 
-        private final Map<String, Identifier> childNames = new HashMap<>();
+        private final Map<String, ResourceLocation> childNames = new HashMap<>();
         private final Supplier<Block> polishedFinder;
         private final Supplier<Block> rawFinder;
-        private final Identifier id;
+        private final ResourceLocation id;
 
-        public Finder(Identifier id, Supplier<Block> polished, Supplier<Block> raw) {
+        public Finder(ResourceLocation id, Supplier<Block> polished, Supplier<Block> raw) {
             this.id = id;
             this.polishedFinder = polished;
             this.rawFinder = raw;
         }
 
         public static Finder simple(String modId, String stoneTypeName, String polishedName, String rawName) {
-            return simple(new Identifier(modId, stoneTypeName), new Identifier(modId, polishedName), new Identifier(modId, rawName));
+            return simple(new ResourceLocation(modId, stoneTypeName), new ResourceLocation(modId, polishedName), new ResourceLocation(modId, rawName));
         }
 
-        public static Finder simple(Identifier stoneTypeName, Identifier polishedName, Identifier rawName) {
+        public static Finder simple(ResourceLocation stoneTypeName, ResourceLocation polishedName, ResourceLocation rawName) {
             return new Finder(stoneTypeName,
                     () -> Registry.BLOCK.get(polishedName),
                     () -> Registry.BLOCK.get(rawName));
         }
 
         public void addChild(String childType, String childName) {
-            addChild(childType, new Identifier(id.getNamespace(), childName));
+            addChild(childType, new ResourceLocation(id.getNamespace(), childName));
         }
 
-        public void addChild(String childType, Identifier childName) {
+        public void addChild(String childType, ResourceLocation childName) {
             this.childNames.put(childType, childName);
         }
 
@@ -162,11 +162,11 @@ public class StoneVariant extends VariantBase<StoneVariant> {
                 try {
                     Block plank = polishedFinder.get();
                     Block log = rawFinder.get();
-                    Block d = Registry.BLOCK.get(new Identifier("minecraft","air"));
+                    Block d = Registry.BLOCK.get(new ResourceLocation("minecraft","air"));
                     if (plank != d && log != d && plank != null && log != null) {
                         StoneVariant w = new StoneVariant(id, plank, log);
-                        for (Map.Entry<String, Identifier> entry : childNames.entrySet()){
-                            Object child = Registry.BLOCK.getOrEmpty(entry.getValue()).isPresent() ? Registry.BLOCK.get(entry.getValue()) : Registry.ITEM.get(entry.getValue());
+                        for (Map.Entry<String, ResourceLocation> entry : childNames.entrySet()){
+                            Object child = Registry.BLOCK.getOptional(entry.getValue()).isPresent() ? Registry.BLOCK.get(entry.getValue()) : Registry.ITEM.get(entry.getValue());
                             w.addChild(entry.getKey(), child);
                         }
                         return Optional.of(w);

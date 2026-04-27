@@ -6,13 +6,13 @@ import net.blay09.mods.cookingforblockheads.api.capability.CapabilityKitchenItem
 import com.unlikepaladin.pfm.blocks.blockentities.forge.FreezerBlockEntityImpl;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IngredientPredicate;
-import net.blay09.mods.cookingforblockheads.api.capability.KitchenItemProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.math.Direction;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.Container;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -20,8 +20,8 @@ import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 import net.blay09.mods.cookingforblockheads.api.SourceItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
 import javax.annotation.Nonnull;
 import java.util.*;
@@ -75,26 +75,27 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl {
     }
 
 
-    public void fromTag(BlockState state, NbtCompound tagCompound) {
+    public void fromTag(BlockState state, CompoundTag tagCompound) {
         super.fromTag(state, tagCompound);
         NbtCompound itemHandlerCompound = tagCompound.getCompound("ItemHandler");
         this.inventoryHandler.deserializeNBT(itemHandlerCompound);
     }
 
-    public NbtCompound writeNbt(NbtCompound tagCompound) {
-        super.writeNbt(tagCompound);
+    @Override
+    public CompoundTag save(CompoundTag tagCompound) {
+        super.save(tagCompound);
         tagCompound.put("ItemHandler", this.inventoryHandler.serializeNBT());
         return tagCompound;
     }
 
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        this.fromTag(this.getCachedState(), pkt.getNbt());
+        this.load(this.getCachedState(), pkt.getNbt());
     }
 
-    public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound tagCompound = super.toInitialChunkDataNbt();
-        this.writeNbt(tagCompound);
+    public CompoundTag getUpdateTag() {
+        CompoundTag tagCompound = super.getUpdateTag();
+        this.save(tagCompound);
         return tagCompound;
     }
 

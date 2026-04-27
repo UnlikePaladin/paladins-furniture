@@ -5,15 +5,15 @@ import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.NbtType;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
 
 import java.util.function.Supplier;
 
@@ -28,39 +28,39 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         if (nbt.contains("color", 8)) {
             this.color = DyeColor.byName(nbt.getString("color"), DyeColor.WHITE);
         }
         if (nbt.contains("variant", 8)) {
             String variantName = nbt.getString("variant");
-            if (WoodVariantRegistry.getVariant(Identifier.tryParse(variantName)) != null)
-                this.variant = WoodVariantRegistry.getVariant(Identifier.tryParse(variantName));
+            if (WoodVariantRegistry.getVariant(ResourceLocation.tryParse(variantName)) != null)
+                this.variant = WoodVariantRegistry.getVariant(ResourceLocation.tryParse(variantName));
             else {
                 PaladinFurnitureMod.GENERAL_LOGGER.warn("Couldn't find variant for lamp: {}", variantName);
                 this.variant = WoodVariantRegistry.OAK;
             }
         }
-        super.fromTag(state, nbt);
+        super.load(state, nbt);
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        nbt.putString("color", color.asString());
+    public CompoundTag save(CompoundTag nbt) {
+        super.save(nbt);
+        nbt.putString("color", color.getSerializedName());
         nbt.putString("variant", variant.getIdentifier().toString());
         return nbt;
     }
 
 
-    public NbtCompound writeColorAndVariant(NbtCompound nbt) {
-        NbtCompound newNBT = writeColor(nbt);
+    public CompoundTag writeColorAndVariant(CompoundTag nbt) {
+        CompoundTag newNBT = writeColor(nbt);
         newNBT.putString("variant", variant.getIdentifier().toString());
         return newNBT;
     }
 
-    public NbtCompound writeColor(NbtCompound nbt) {
-        nbt.putString("color", color.asString());
+    public CompoundTag writeColor(CompoundTag nbt) {
+        nbt.putString("color", color.getSerializedName());
         return nbt;
     }
 

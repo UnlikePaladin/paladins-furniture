@@ -3,15 +3,15 @@ package com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.forge;
 import com.unlikepaladin.pfm.blocks.BasicCoffeeTableBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedModel;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.IModelData;
 import net.minecraftforge.client.model.data.ModelDataMap;
 import net.minecraftforge.client.model.data.ModelProperty;
@@ -21,23 +21,23 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 public class ForgeCoffeeBasicTableModel extends PFMForgeBakedModel {
-    public ForgeCoffeeBasicTableModel(ModelBakeSettings settings, List<BakedModel> modelParts) {
+    public ForgeCoffeeBasicTableModel(ModelState settings, List<BakedModel> modelParts) {
         super(settings, modelParts);
     }
 
     public static ModelProperty<ModelBitSetProperty> CONNECTIONS = new ModelProperty<>();
     @Override
-    public void appendProperties(ModelDataMap.Builder builder) {
-        super.appendProperties(builder);
+    public void createBlockStateDefinition(ModelDataMap.Builder builder) {
+        super.createBlockStateDefinition(builder);
         builder.withProperty(CONNECTIONS);
     }
 
     @NotNull
     @Override
-    public IModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
+    public IModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull IModelData tileData) {
         if (state.getBlock() instanceof BasicCoffeeTableBlock) {
             ModelDataMap.Builder builder = new ModelDataMap.Builder();
-            appendProperties(builder);
+            createBlockStateDefinition(builder);
 
             IModelData data = builder.build();
             super.getModelData(world, pos, state, data);
@@ -81,7 +81,7 @@ public class ForgeCoffeeBasicTableModel extends PFMForgeBakedModel {
             boolean cornerNorthEast = set.get(5);
             boolean cornerSouthEast = set.get(6);
             boolean cornerSouthWest = set.get(7);
-            Direction.Axis dir = state.get(BasicCoffeeTableBlock.AXIS);
+            Direction.Axis dir = state.getValue(BasicCoffeeTableBlock.AXIS);
             baseQuads.addAll(getTemplateBakedModels().get(0).getQuads(state, side, rand, extraData));
             if (!north && !south && !east && !west) {
                 secondaryQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, side, rand, extraData));
@@ -197,7 +197,7 @@ public class ForgeCoffeeBasicTableModel extends PFMForgeBakedModel {
                     secondaryQuads.addAll(getTemplateBakedModels().get(3).getQuads(state, side, rand, extraData));
                 }
             }
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
             List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
             quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
             return quads;
@@ -221,7 +221,7 @@ public class ForgeCoffeeBasicTableModel extends PFMForgeBakedModel {
         secondaryQuads.addAll(getTemplateBakedModels().get(8).getQuads(state, face, random));
         secondaryQuads.addAll(getTemplateBakedModels().get(7).getQuads(state, face, random));
 
-        List<Sprite> spriteList = getSpriteList(stack);
+        List<TextureAtlasSprite> spriteList = getSpriteList(stack);
         List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
         quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
         return quads;

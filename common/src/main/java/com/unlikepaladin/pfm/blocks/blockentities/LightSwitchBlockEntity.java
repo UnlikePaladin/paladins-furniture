@@ -3,11 +3,14 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.blocks.PowerableBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.*;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.LongTag;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,30 +19,30 @@ public class LightSwitchBlockEntity extends BlockEntity {
     private final List<BlockPos> lights;
     public LightSwitchBlockEntity() {
         super(BlockEntities.LIGHT_SWITCH_BLOCK_ENTITY);
-        lights = DefaultedList.of();
+        lights = NonNullList.create();
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        NbtList tagList = new NbtList();
-        lights.forEach(blockPos -> tagList.add(NbtLong.of(blockPos.asLong())));
+    public CompoundTag save(CompoundTag nbt) {
+        super.save(nbt);
+        ListTag tagList = new ListTag();
+        lights.forEach(blockPos -> tagList.add(LongTag.valueOf(blockPos.asLong())));
         nbt.put("lights", tagList);
         return nbt;
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound nbt) {
-        super.fromTag(state, nbt);
+    public void load(BlockState state, CompoundTag nbt) {
+        super.load(state, nbt);
         if(nbt.contains("lights", 9)){
-            this.lights.clear();
-            NbtList lightTagList = nbt.getList("lights", 4);
-            lightTagList.forEach(nbtElement -> addLight(((NbtLong)nbtElement).longValue()));
+            lights.clear();
+            ListTag lightTagList = nbt.getList("lights", 4);
+            lightTagList.forEach(nbtElement -> addLight(((LongTag)nbtElement).getAsLong()));
         }
     }
     public void addLight(long pos)
     {
-        BlockPos lightPos = BlockPos.fromLong(pos);
+        BlockPos lightPos = BlockPos.of(pos);
         if(!this.lights.contains(lightPos))
         {
             this.lights.add(lightPos);
@@ -53,14 +56,14 @@ public class LightSwitchBlockEntity extends BlockEntity {
         if(!lights.isEmpty()) {
             lights.removeIf(offset ->
             {
-                BlockState state = world.getBlockState(this.pos.subtract(offset));
+                BlockState state = level.getBlockState(this.worldPosition.subtract(offset));
                 return !(state.getBlock() instanceof PowerableBlock);
             });
             lights.forEach(offset ->
             {
-                BlockPos actualPos = this.pos.subtract(offset);
-                BlockState state = world.getBlockState(actualPos);
-                ((PowerableBlock) state.getBlock()).setPowered(world, actualPos, powered);
+                BlockPos actualPos = this.worldPosition.subtract(offset);
+                BlockState state = level.getBlockState(actualPos);
+                ((PowerableBlock) state.getBlock()).setPowered(level, actualPos, powered);
 
             });
 

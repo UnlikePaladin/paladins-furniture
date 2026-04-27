@@ -33,17 +33,17 @@ import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class FurnitureDisplay extends BasicDisplay implements SimpleGridMenuDisplay {
     protected FurnitureRecipe recipe;
-    public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(new Identifier(PaladinFurnitureMod.MOD_ID, "furniture"));
+    public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "furniture"));
     private int itemsPerInnerRecipe;
     public FurnitureDisplay(FurnitureRecipe recipe) {
         super(Collections.emptyList(), Collections.singletonList(EntryIngredients.of(recipe.getOutput())));
@@ -73,7 +73,7 @@ public class FurnitureDisplay extends BasicDisplay implements SimpleGridMenuDisp
             }
             List<Ingredient> finalList = new ArrayList<>();
             for (Map.Entry<Item, Integer> entry: containedItems.entrySet()) {
-                finalList.add(Ingredient.ofStacks(new ItemStack(entry.getKey(), entry.getValue())));
+                finalList.add(Ingredient.of(new ItemStack(entry.getKey(), entry.getValue())));
             }
             finalList.sort(Comparator.comparing(o -> PFMRecipeProvider.pfm$getMatchingStacks(o)[0].getItem().toString()));
 
@@ -101,7 +101,7 @@ public class FurnitureDisplay extends BasicDisplay implements SimpleGridMenuDisp
     @Override
     public List<EntryIngredient> getOutputEntries() {
         if (outputs.isEmpty())
-            outputs.addAll(recipe.getInnerRecipes().stream().map(FurnitureRecipe.CraftableFurnitureRecipe::getOutput).map(EntryIngredients::of).collect(Collectors.toList()));
+            outputs.addAll(recipe.getInnerRecipes().stream().map(FurnitureRecipe.CraftableFurnitureRecipe::getResultItem).map(EntryIngredients::of).collect(Collectors.toList()));
         return outputs;
     }
 

@@ -14,34 +14,34 @@ import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
 import net.blay09.mods.cookingforblockheads.tile.IMutableNameable;
 import net.blay09.mods.cookingforblockheads.tile.OvenTileEntity;
 import net.blay09.mods.cookingforblockheads.tile.util.EnergyStorageModifiable;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.block.entity.AbstractFurnaceBlockEntity;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.Inventory;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.Container;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.recipe.Recipe;
-import net.minecraft.recipe.RecipeType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.PropertyDelegate;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvent;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.state.property.Properties;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.world.inventory.ContainerData;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -84,10 +84,10 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
             }
 
             StoveBlockEntityBalm.this.isDirty = true;
-            StoveBlockEntityBalm.this.markDirty();
+            StoveBlockEntityBalm.this.setChanged();
         }
     };
-    private final PropertyDelegate dataAccess = new PropertyDelegate() {
+    private final ContainerData dataAccess = new ContainerData() {
         public int get(int id) {
             if (id == 0) {
                 return StoveBlockEntityBalm.this.furnaceBurnTime;
@@ -109,7 +109,7 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
 
         }
 
-        public int size() {
+        public int getCount() {
             return 11;
         }
     };
@@ -117,7 +117,7 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
         @Override
         public int receiveEnergy(int maxReceive, boolean simulate) {
             if (!simulate) {
-                StoveBlockEntityBalm.this.markDirty();
+                StoveBlockEntityBalm.this.setChanged();
             }
 
             return super.receiveEnergy(maxReceive, simulate);
@@ -126,7 +126,7 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
         @Override
         public int extractEnergy(int maxExtract, boolean simulate) {
             if (!simulate) {
-                StoveBlockEntityBalm.this.markDirty();
+                StoveBlockEntityBalm.this.setChanged();
             }
 
             return super.extractEnergy(maxExtract, simulate);
@@ -139,7 +139,7 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
     private final RangedWrapper toolsContainer;
     private final DefaultKitchenItemProvider itemProvider;
     private final ItemStackHandler singleSlotItemHandler;
-    private Text customName;
+    private Component customName;
     private boolean isFirstTick;
     public int[] slotCookTime;
     public int furnaceBurnTime;
@@ -147,7 +147,7 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
     private boolean isDirty;
     private boolean hasPowerUpgrade;
     private Direction facing;
-    private final Inventory singleSlotRecipeWrapper;
+    private final Container singleSlotRecipeWrapper;
 
     private final LazyOptional<IKitchenItemProvider> itemProviderCap;
     private final LazyOptional<IKitchenSmeltingProvider> smeltingProviderCap;
@@ -193,8 +193,9 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
         });
     }
 
-    public boolean onSyncedBlockEvent(int id, int type) {
-        return super.onSyncedBlockEvent(id, type);
+    @Override
+    public boolean triggerEvent(int id, int type) {
+        return super.triggerEvent(id, type);
     }
 
     public void clientTick() {
@@ -202,9 +203,9 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
 
 
     public void serverTick() {
-        World world = this.world;
-        if (this.isFirstTick && getCachedState().getBlock() instanceof StoveBlock) {
-            this.facing = getCachedState().get(StoveBlock.FACING);
+        World world = this.level;
+        if (this.isFirstTick && getBlockState().getBlock() instanceof StoveBlock) {
+            this.facing = getBlockState().getValue(StoveBlock.FACING);
             this.isFirstTick = false;
         }
 
@@ -223,19 +224,19 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
             --this.furnaceBurnTime;
         }
 
-        if (!world.isClient) {
+        if (!world.isClientSide) {
             int firstEmptySlot;
             ItemStack containerItem;
             if (this.furnaceBurnTime == 0 && this.shouldConsumeFuel()) {
-                for(firstEmptySlot = 0; firstEmptySlot < this.fuelContainer.getSlots(); ++firstEmptySlot) {
-                    ItemStack fuelItem = this.fuelContainer.getStackInSlot(firstEmptySlot);
+                for(firstEmptySlot = 0; firstEmptySlot < this.fuelContainer.getContainerSize(); ++firstEmptySlot) {
+                    ItemStack fuelItem = this.fuelContainer.getItem(firstEmptySlot);
                     if (!fuelItem.isEmpty()) {
                         this.currentItemBurnTime = this.furnaceBurnTime = (int)Math.max(1.0, (double)((float)getBurnTime(fuelItem)) * CookingForBlockheadsConfig.COMMON.ovenFuelTimeMultiplier.get());
                         if (this.furnaceBurnTime != 0) {
                             containerItem = fuelItem.getItem().getContainerItem(fuelItem);
-                            fuelItem.decrement(1);
+                            fuelItem.shrink(1);
                             if (fuelItem.isEmpty()) {
-                                this.fuelContainer.setStackInSlot(firstEmptySlot, containerItem);
+                                this.fuelContainer.setItem(firstEmptySlot, containerItem);
                             }
 
                             hasChanged = true;
@@ -250,8 +251,8 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
 
             ItemStack itemStack;
             int i;
-            for(i = 0; i < this.processingContainer.getSlots(); ++i) {
-                itemStack = this.processingContainer.getStackInSlot(i);
+            for(i = 0; i < this.processingContainer.getContainerSize(); ++i) {
+                itemStack = this.processingContainer.getItem(i);
                 if (!itemStack.isEmpty()) {
                     if (this.slotCookTime[i] != -1) {
                         double maxCookTime = 200.0 * CookingForBlockheadsConfig.COMMON.ovenCookTimeMultiplier.get();
@@ -266,8 +267,8 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
                                 ItemStack smeltingResult = this.getSmeltingResult(itemStack);
                                 if (!smeltingResult.isEmpty()) {
                                     ItemStack resultStack = smeltingResult.copy();
-                                    this.processingContainer.setStackInSlot(i, resultStack);
-                                    MinecraftForge.EVENT_BUS.post(new OvenCookedEvent(this.world, this.pos, resultStack));
+                                    this.processingContainer.setItem(i, resultStack);
+                                    MinecraftForge.EVENT_BUS.post(new OvenCookedEvent(this.level, this.worldPosition, resultStack));
                                     this.slotCookTime[i] = -1;
                                     if (firstTransferSlot == -1) {
                                         firstTransferSlot = i;
@@ -284,9 +285,9 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
             }
 
             if (firstTransferSlot != -1) {
-                containerItem = this.processingContainer.getStackInSlot(firstTransferSlot);
-                containerItem = ItemHandlerHelper.insertItemStacked(this.outputContainer, containerItem, false);
-                this.processingContainer.setStackInSlot(firstTransferSlot, containerItem);
+                containerItem = this.processingContainer.getItem(firstTransferSlot);
+                containerItem = ContainerUtils.insertItemStacked(this.outputContainer, containerItem, false);
+                this.processingContainer.setItem(firstTransferSlot, containerItem);
                 if (containerItem.isEmpty()) {
                     this.slotCookTime[firstTransferSlot] = 0;
                 }
@@ -295,12 +296,12 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
             }
 
             if (firstEmptySlot != -1) {
-                for(i = 0; i < this.inputContainer.getSlots(); ++i) {
-                    itemStack = this.inputContainer.getStackInSlot(i);
+                for(i = 0; i < this.inputContainer.getContainerSize(); ++i) {
+                    itemStack = this.inputContainer.getItem(i);
                     if (!itemStack.isEmpty()) {
-                        this.processingContainer.setStackInSlot(firstEmptySlot, itemStack.split(1));
+                        this.processingContainer.setItem(firstEmptySlot, itemStack.split(1));
                         if (itemStack.getCount() <= 0) {
-                            this.inputContainer.setStackInSlot(i, ItemStack.EMPTY);
+                            this.inputContainer.setItem(i, ItemStack.EMPTY);
                         }
                         break;
                     }
@@ -309,7 +310,7 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
         }
 
         if (hasChanged) {
-            this.markDirty();
+            this.setChanged();
         }
 
     }
@@ -319,11 +320,11 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
         if (!result.isEmpty()) {
             return result;
         } else {
-            this.singleSlotRecipeWrapper.setStack(0, itemStack);
-            Recipe<?> recipe = this.world.getRecipeManager().getFirstMatch(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.world).orElse(null);
+            this.singleSlotRecipeWrapper.setItem(0, itemStack);
+            Recipe<?> recipe = this.level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, this.singleSlotRecipeWrapper, this.level).orElse(null);
             if (recipe != null) {
-                result = recipe.getOutput();
-                if (!result.isEmpty() && result.getItem().isFood()) {
+                result = recipe.getResultItem();
+                if (!result.isEmpty() && result.getItem().isEdible()) {
                     return result;
                 }
             }
@@ -349,8 +350,8 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
     }
 
     private boolean shouldConsumeFuel() {
-        for(int i = 0; i < this.processingContainer.getSlots(); ++i) {
-            ItemStack cookingStack = this.processingContainer.getStackInSlot(i);
+        for(int i = 0; i < this.processingContainer.getContainerSize(); ++i) {
+            ItemStack cookingStack = this.processingContainer.getItem(i);
             if (!cookingStack.isEmpty() && this.slotCookTime[i] != -1) {
                 return true;
             }
@@ -360,9 +361,9 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound tagCompound) {
-        super.fromTag(state, tagCompound);
-        this.container.deserializeNBT(tagCompound.getCompound("ItemHandler"));
+    public void load(BlockState state, CompoundTag tagCompound) {
+        super.load(state, tagCompound);
+        this.container.deserialize(tagCompound.getCompound("ItemHandler"));
         this.furnaceBurnTime = tagCompound.getShort("BurnTime");
         this.currentItemBurnTime = tagCompound.getShort("CurrentItemBurnTime");
         this.slotCookTime = tagCompound.getIntArray("CookTimes");
@@ -373,13 +374,13 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
         this.hasPowerUpgrade = tagCompound.getBoolean("HasPowerUpgrade");
         this.energyStorage.setEnergyStored(tagCompound.getInt("EnergyStored"));
         if (tagCompound.contains("CustomName", 8)) {
-            this.customName = Text.Serializer.fromJson(tagCompound.getString("CustomName"));
+            this.customName = Component.Serializer.fromJson(tagCompound.getString("CustomName"));
         }
 
     }
 
-    public NbtCompound writeNbt(NbtCompound tagCompound) {
-        super.writeNbt(tagCompound);
+    public CompoundTag save(CompoundTag tagCompound) {
+        super.save(tagCompound);
         tagCompound.put("ItemHandler", this.container.serializeNBT());
         tagCompound.putShort("BurnTime", (short)this.furnaceBurnTime);
         tagCompound.putShort("CurrentItemBurnTime", (short)this.currentItemBurnTime);
@@ -387,7 +388,7 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
         tagCompound.putBoolean("HasPowerUpgrade", this.hasPowerUpgrade);
         tagCompound.putInt("EnergyStored", this.energyStorage.getEnergyStored());
         if (this.customName != null) {
-            tagCompound.putString("CustomName", Text.Serializer.toJson(this.customName));
+            tagCompound.putString("CustomName", Component.Serializer.toJson(this.customName));
         }
 
         return tagCompound;
@@ -399,9 +400,9 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
 
     public void setHasPowerUpgrade(boolean hasPowerUpgrade) {
         this.hasPowerUpgrade = hasPowerUpgrade;
-        BlockState state = this.world.getBlockState(this.pos);
-        this.world.setBlockState(this.pos, state.with(OvenBlock.POWERED, hasPowerUpgrade));
-        this.markDirty();
+        BlockState state = this.level.getBlockState(this.worldPosition);
+        this.level.setBlockAndUpdate(this.worldPosition, state.setValue(OvenBlock.POWERED, hasPowerUpgrade));
+        this.setChanged();
     }
 
     public boolean isBurning() {
@@ -421,11 +422,11 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
     }
 
     public ItemStack getToolItem(int i) {
-        return this.toolsContainer.getStackInSlot(i);
+        return this.toolsContainer.getItem(i);
     }
 
     public void setToolItem(int i, ItemStack itemStack) {
-        this.toolsContainer.setStackInSlot(i, itemStack);
+        this.toolsContainer.setItem(i, itemStack);
     }
 
     public <T> LazyOptional<T> getCapability(Capability<T> capability, @javax.annotation.Nullable Direction facing) {
@@ -467,40 +468,40 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
         return this.facing == null ? Direction.NORTH : this.facing;
     }
 
-    public @Nullable ScreenHandler createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+    public @Nullable AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
         return new StoveScreenHandlerBalm(i, playerInventory, this);
     }
 
-    public Text getName() {
+    public Component getName() {
         return this.customName != null ? this.customName : this.getDefaultName();
     }
 
-    public void setCustomName(Text customName) {
+    public void setCustomName(Component customName) {
         this.customName = customName;
-        this.markDirty();
+        this.setChanged();
     }
 
-    public boolean hasCustomName() {
+    public boolean hasCustomHoverName() {
         return this.customName != null;
     }
 
-    public @Nullable Text getCustomName() {
+    public @Nullable Component getCustomName() {
         return this.customName;
     }
 
-    public Text getDisplayName() {
+    public Component getDisplayName() {
         return this.getName();
     }
 
-    public Text getDefaultName() {
-        return new TranslatableText("container.cookingforblockheads.oven");
+    public Component getDefaultName() {
+        return new TranslatableComponent("container.cookingforblockheads.oven");
     }
 
     public IItemHandler getContainer() {
         return this.container;
     }
 
-    public PropertyDelegate getContainerData() {
+    public ContainerData getContainerData() {
         return this.dataAccess;
     }
 
@@ -510,65 +511,65 @@ public class StoveBlockEntityBalm extends BlockEntity implements IKitchenSmeltin
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, 13, this.toInitialChunkDataNbt());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 13, this.getUpdateTag());
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt = super.toInitialChunkDataNbt();
+    public CompoundTag getUpdateTag() {
+        CompoundTag nbt = super.getUpdateTag();
         nbt.put("ItemHandler", this.container.serializeNBT());
         return nbt;
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, NbtCompound tag) {
+    public void handleUpdateTag(BlockState state, CompoundTag tag) {
         this.fromTag(state, tag);
         super.handleUpdateTag(state, tag);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        this.container.deserializeNBT(pkt.getNbt().getCompound("ItemHandler"));
+        this.container.deserializeNBT(pkt.getTag().getCompound("ItemHandler"));
     }
 
-    protected void onContainerOpen(World world, BlockPos pos, BlockState state) {
+    protected void onContainerOpen(Level world, BlockPos pos, BlockState state) {
         if (state.getBlock() instanceof StoveBlock){
-            StoveBlockEntityBalm.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
+            StoveBlockEntityBalm.this.playSound(state, SoundEvents.IRON_TRAPDOOR_OPEN);
             StoveBlockEntityBalm.this.setOpen(state, true);
         }
     }
 
-    protected void onContainerClose(World world, BlockPos pos, BlockState state) {
+    protected void onContainerClose(Level world, BlockPos pos, BlockState state) {
         if (state.getBlock() instanceof StoveBlock) {
-            StoveBlockEntityBalm.this.playSound(state, SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
+            StoveBlockEntityBalm.this.playSound(state, SoundEvents.IRON_TRAPDOOR_CLOSE);
             StoveBlockEntityBalm.this.setOpen(state, false);
         }
     }
 
     void setOpen(BlockState state, boolean open) {
-        this.world.setBlockState(this.getPos(), state.with(Properties.OPEN, open), 3);
+        this.level.setBlock(this.getBlockPos(), state.setValue(BlockStateProperties.OPEN, open), 3);
     }
 
-    public void onClose(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
-            this.onContainerClose(this.getWorld(), this.getPos(), this.getCachedState());
+    public void stopOpen(Player player) {
+        if (!this.remove && !player.isSpectator()) {
+            this.onContainerClose(this.getLevel(), this.getBlockPos(), this.getBlockState());
         }
     }
 
-    public void onOpen(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
-            this.onContainerOpen(this.getWorld(), this.getPos(), this.getCachedState());
+    public void startOpen(Player player) {
+        if (!this.remove && !player.isSpectator()) {
+            this.onContainerOpen(this.getLevel(), this.getBlockPos(), this.getBlockState());
         }
     }
 
     void playSound(BlockState state, SoundEvent soundEvent) {
-        Vec3i vec3i = state.get(Properties.HORIZONTAL_FACING).getVector();
-        double d = (double)this.pos.getX() + 0.5 + (double)vec3i.getX() / 2.0;
-        double e = (double)this.pos.getY() + 0.5 + (double)vec3i.getY() / 2.0;
-        double f = (double)this.pos.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
-        this.world.playSound(null, d, e, f, soundEvent, SoundCategory.BLOCKS, 0.5f, this.world.random.nextFloat() * 0.1f + 0.9f);
+        Vec3i vec3i = state.getValue(BlockStateProperties.HORIZONTAL_FACING).getNormal();
+        double d = (double)this.worldPosition.getX() + 0.5 + (double)vec3i.getX() / 2.0;
+        double e = (double)this.worldPosition.getY() + 0.5 + (double)vec3i.getY() / 2.0;
+        double f = (double)this.worldPosition.getZ() + 0.5 + (double)vec3i.getZ() / 2.0;
+        this.level.playSound(null, d, e, f, soundEvent, SoundSource.BLOCKS, 0.5f, this.level.random.nextFloat() * 0.1f + 0.9f);
     }
 
     @Override

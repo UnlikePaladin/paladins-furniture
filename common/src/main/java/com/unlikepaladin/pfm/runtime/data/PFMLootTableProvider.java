@@ -11,21 +11,26 @@ import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.BeehiveBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.data.DataCache;
+import net.minecraft.world.level.block.BedBlock;
+import net.minecraft.world.level.block.BeehiveBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.properties.BedPart;
+import net.minecraft.data.HashCache;
 import net.minecraft.data.DataProvider;
-import net.minecraft.data.server.BlockLootTableGenerator;
-import net.minecraft.loot.*;
-import net.minecraft.loot.context.LootContextType;
-import net.minecraft.loot.context.LootContextTypes;
-import net.minecraft.loot.entry.ItemEntry;
-import net.minecraft.loot.function.CopyNbtLootFunction;
-import net.minecraft.loot.function.CopyStateFunction;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
+import net.minecraft.data.loot.BlockLoot;
+import net.minecraft.world.level.storage.loot.LootTables;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
+import net.minecraft.world.level.storage.loot.functions.CopyBlockState;
+import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Registry;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -38,10 +43,10 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static net.minecraft.data.server.BlockLootTableGenerator.dropsWithProperty;
+import static net.minecraft.data.loot.BlockLoot.createSinglePropConditionTable;
 
 public class PFMLootTableProvider extends PFMProvider {
-    private final List<Pair<Supplier<Consumer<BiConsumer<Identifier, LootTable.Builder>>>, LootContextType>> lootTypeGenerators = ImmutableList.of(Pair.of(PFMLootTableGenerator::new, LootContextTypes.BLOCK));
+    private final List<Pair<Supplier<Consumer<BiConsumer<ResourceLocation, LootTable.Builder>>>, LootContextParamSet>> lootTypeGenerators = ImmutableList.of(Pair.of(PFMLootTableGenerator::new, LootContextParamSets.BLOCK));
 
     public PFMLootTableProvider(PFMGenerator parent) {
         super(parent, "PFM Drops");
@@ -53,14 +58,14 @@ public class PFMLootTableProvider extends PFMProvider {
         startProviderRun();
         createWriter();
 
-        Path path = getParent().getOutput();
-        Set<Identifier> identifiers = new HashSet<>();
+        Path path = getParent().getResultItem();
+        Set<ResourceLocation> identifiers = new HashSet<>();
         this.lootTypeGenerators.forEach((pair) -> pair.getFirst().get().accept((identifier, builder) -> {
             if (!identifiers.add(identifier)) {
                 throw new IllegalStateException("Duplicate loot table " + identifier);
             } else {
-                Path path2 = getOutput(path, identifier);
-                enqueueJsonWrite(getWriteQueue(), path2, LootManager.toJson(builder.type(pair.getSecond()).build()));
+                Path path2 = getResultItem(path, identifier);
+                enqueueJsonWrite(getWriteQueue(), path2, LootTables.serialize(builder.setParamSet(pair.getSecond()).build()));
             }
         }));
 
@@ -68,40 +73,40 @@ public class PFMLootTableProvider extends PFMProvider {
         endProviderRun();
     }
 
-    private static Path getOutput(Path rootOutput, Identifier lootTableId) {
+    private static Path getResultItem(Path rootOutput, ResourceLocation lootTableId) {
         return rootOutput.resolve("data/" + lootTableId.getNamespace() + "/loot_tables/" + lootTableId.getPath() + ".json");
     }
 
     private static LootTable.Builder lampDrop(Block drop) {
-        return LootTable.builder()
-                .pool(
-                        LootPool.builder()
-                                .rolls(ConstantLootTableRange.create(1))
-                                .with(
-                                        ItemEntry.builder(drop)
-                                                .apply(CopyNbtLootFunction.builder(CopyNbtLootFunction.Source.BLOCK_ENTITY).withOperation("variant", "BlockEntityTag.variant").withOperation("color", "BlockEntityTag.color"))
+        return LootTable.lootTable()
+                .withPool(
+                        LootPool.lootPool()
+                                .setRolls(ConstantValue.exactly(1.0F))
+                                .add(
+                                        LootItem.lootTableItem(drop)
+                                                .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("variant", "BlockEntityTag.variant").copy("color", "BlockEntityTag.color"))
                                 )
                 );
     }
 
-    static class PFMLootTableGenerator implements Consumer<BiConsumer<Identifier, LootTable.Builder>> {
-        private final Map<Identifier, LootTable.Builder> lootTables = Maps.newHashMap();
+    static class PFMLootTableGenerator implements Consumer<BiConsumer<ResourceLocation, LootTable.Builder>> {
+        private final Map<ResourceLocation, LootTable.Builder> lootTables = Maps.newHashMap();
         private final List<Block> pfmBlocks = new ArrayList<>();
-        public void accept(BiConsumer<Identifier, LootTable.Builder> biConsumer) {
+        public void accept(BiConsumer<ResourceLocation, LootTable.Builder> biConsumer) {
             List<Block> blocks = PaladinFurnitureModBlocksItems.BLOCKS;
             blocks.forEach(this::addDrop);
             Block[] beds = PaladinFurnitureModBlocksItems.getBeds();
-            Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
-            BasicBathtubBlock.basicBathtubBlockStream().forEach(basicBathtubBlock -> this.addDrop(basicBathtubBlock, (Block block) -> dropsWithProperty(block, BedBlock.PART, BedPart.HEAD)));
+            Arrays.stream(beds).forEach(bed -> this.addDrop(bed, (Block block) -> createSinglePropConditionTable(block, BedBlock.PART, BedPart.HEAD)));
+            BasicBathtubBlock.basicBathtubBlockStream().forEach(basicBathtubBlock -> this.addDrop(basicBathtubBlock, (Block block) -> createSinglePropConditionTable(block, BedBlock.PART, BedPart.HEAD)));
             this.addDrop(PaladinFurnitureModBlocksItems.BASIC_LAMP, PFMLootTableProvider::lampDrop);
 
-            HashSet<Identifier> set = Sets.newHashSet();
+            HashSet<ResourceLocation> set = Sets.newHashSet();
             for (Block block : pfmBlocks) {
-                Identifier identifier = block.getLootTableId();
-                if (identifier == LootTables.EMPTY || !set.add(identifier)) continue;
+                ResourceLocation identifier = block.getLootTable();
+                if (identifier == BuiltInLootTables.EMPTY || !set.add(identifier)) continue;
                 LootTable.Builder builder5 = this.lootTables.remove(identifier);
                 if (builder5 == null) {
-                    throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", identifier, Registry.BLOCK.getId(block)));
+                    throw new IllegalStateException(String.format("Missing loottable '%s' for '%s'", identifier, Registry.BLOCK.getKey(block)));
                 }
                 biConsumer.accept(identifier, builder5);
             }
@@ -115,7 +120,7 @@ public class PFMLootTableProvider extends PFMProvider {
         }
 
         public void addDrop(Block block, Block drop) {
-            this.addDrop(block, BlockLootTableGenerator.drops(drop));
+            this.addDrop(block, BlockLoot.createSingleItemTable(drop));
         }
 
         public void addDrop(Block block) {
@@ -123,7 +128,7 @@ public class PFMLootTableProvider extends PFMProvider {
         }
 
         public final void addDrop(Block block, LootTable.Builder lootTable) {
-            this.lootTables.put(block.getLootTableId(), lootTable);
+            this.lootTables.put(block.getLootTable(), lootTable);
             this.pfmBlocks.add(block);
         }
     }

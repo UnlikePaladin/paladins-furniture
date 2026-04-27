@@ -3,12 +3,12 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.registry.BlockEntities;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.nbt.NbtCompound;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 
 
 public class ToiletBlockEntity extends BlockEntity implements Tickable {
@@ -18,21 +18,21 @@ public class ToiletBlockEntity extends BlockEntity implements Tickable {
     private int flushTimer = 0;
 
     @Override
-    public NbtCompound toInitialChunkDataNbt() {
-        return super.toInitialChunkDataNbt();
+    public CompoundTag getUpdateTag() {
+        return super.getUpdateTag();
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
-        super.writeNbt(nbt);
+    public CompoundTag save(CompoundTag nbt) {
+        super.save(nbt);
         nbt.putInt("flushTimer", flushTimer);
         return nbt;
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         flushTimer = nbt.getInt("flushTimer");
-        super.fromTag(state, nbt);
+        super.load(state, nbt);
     }
 
     public void setFlushTimer(int flushTimer) {
@@ -41,8 +41,8 @@ public class ToiletBlockEntity extends BlockEntity implements Tickable {
 
     @Override
     public void tick() {
-        BlockState state = this.getCachedState();
-        if (state.get(BasicToiletBlock.TOILET_STATE) == ToiletState.FLUSHING) {
+        BlockState state = this.getBlockState();
+        if (state.getValue(BasicToiletBlock.TOILET_STATE) == ToiletState.FLUSHING) {
             if (this.flushTimer >= 120) {
                 BasicToiletBlock.setClean(state, world, pos);
                 this.setFlushTimer(0);

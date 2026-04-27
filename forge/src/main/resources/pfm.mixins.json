@@ -7,15 +7,15 @@
     "BlockColorsAccessor",
     "ItemColorsAccessor",
     "PFMClientModLoaderMixin",
-    "PFMModelLoaderMixin",
-    "PFMRenderLayersForgeMixin",
+    "PFMModelBakeryMixin",
+    "PFMItemBlockRenderTypesForgeMixin",
     "PFMSpriteAtlasTexturesMixin"
   ],
   "mixins": [
     "PFMCookingPotBlockEntityMixin",
-    "PFMItemEntryAccessor",
+    "PFMLootItemAccessor",
     "PFMLootPool$BuilderMixin",
-    "PFMReloadableResourceManagerImplMixin",
+    "PFMSimpleReloadableResourceManagerMixin",
     "PFMResourcePackManagerMixin"
   ],
   "injectors": {

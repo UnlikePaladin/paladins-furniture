@@ -1,12 +1,13 @@
 package com.unlikepaladin.pfm.client.screens.overlay;
 
-import net.minecraft.util.math.Vector4f;
+import com.mojang.math.Vector4f;
 
 import java.io.BufferedWriter;
 import java.io.Closeable;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Arrays;
 
 import static org.lwjgl.opengl.GL20.*;
@@ -104,6 +105,7 @@ public class GLText {
     private int _gltText2DFontTexture = GLT_NULL_HANDLE;
 
     private float[] _gltText2DProjectionMatrix = new float[16];
+    private static GLText sharedInstance;
 
     public static class GLTtext {
         public String _text;
@@ -113,6 +115,8 @@ public class GLText {
         public float[] _vertices;
         public int _vbo;
     }
+
+    private boolean initialized = false;
 
     public static GLTtext gltCreateText() {
         GLTtext text = new GLTtext();
@@ -126,6 +130,15 @@ public class GLText {
         }
 
         return text;
+    }
+
+    public static synchronized GLText shared() {
+        if (sharedInstance == null) {
+            sharedInstance = new GLText();
+        } else {
+            sharedInstance.ensureInitialized();
+        }
+        return sharedInstance;
     }
 
     public static void gltDeleteText(GLTtext text) {
@@ -223,6 +236,7 @@ public class GLText {
 
     public Closeable gltBeginDraw() {
         // activate immediate mode and bind the texture
+        ensureInitialized();
         glUseProgram(0);
 
         glActiveTexture(GL_TEXTURE0);
@@ -1061,7 +1075,17 @@ public class GLText {
         gltInit();
     };
     private void gltInit() {
+        if (initialized && _gltText2DFontTexture != GLT_NULL_HANDLE) {
+            return;
+        }
         _gltCreateText2DFontTexture();
+        initialized = true;
+    }
+
+    private void ensureInitialized() {
+        if (!initialized || _gltText2DFontTexture == GLT_NULL_HANDLE) {
+            gltInit();
+        }
     }
 
     // GLT_API void gltTerminate(void)
@@ -1085,6 +1109,8 @@ public class GLText {
             glDeleteTextures(_gltText2DFontTexture);
             _gltText2DFontTexture = GLT_NULL_HANDLE;
         }
+
+        initialized = false;
     }
 
     private static final long[] _gltFontGlyphRects = new long[] {

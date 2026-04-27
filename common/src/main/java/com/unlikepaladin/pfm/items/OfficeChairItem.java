@@ -4,88 +4,89 @@ import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.predicate.entity.EntityPredicates;
-import net.minecraft.sound.SoundCategory;
-import net.minecraft.sound.SoundEvents;
-import net.minecraft.stat.Stats;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Hand;
-import net.minecraft.util.TypedActionResult;
-import net.minecraft.util.UseAction;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.hit.HitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Box;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.world.RaycastContext;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.stats.Stats;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.List;
 
 public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExtension {
-    public OfficeChairItem(Settings settings) {
+    public OfficeChairItem(Properties settings) {
         super(settings);
     }
 
     @Override
-    public String getTranslationKey(ItemStack stack) {
+    public String getDescriptionId(ItemStack stack) {
         DyeColor color = DyeColor.WHITE;
         if (stack.hasTag()) {
             if (stack.getTag().contains("Color")) {
                 color = DyeColor.byName(stack.getTag().getString("Color"), DyeColor.WHITE);
             }
         }
-        return String.format("block.pfm.%s_office_chair", color.asString());
+        return String.format("block.pfm.%s_office_chair", color.getSerializedName());
     }
 
     @Override
-    public ItemStack getDefaultStack() {
+    public ItemStack getDefaultInstance() {
         ItemStack stack = new ItemStack(this);
-        stack.getOrCreateTag().putString("Color", DyeColor.WHITE.asString());
+        stack.getOrCreateTag().putString("Color", DyeColor.WHITE.getSerializedName());
         return stack;
     }
 
     @Override
-    public void appendStacks(ItemGroup group, DefaultedList<ItemStack> stacks) {
-        if (this.isIn(group)) {
+    public void fillItemCategory(CreativeModeTab group, NonNullList<ItemStack> stacks) {
+        if (this.allowdedIn(group)) {
             for (DyeColor color : DyeColor.values()) {
                 ItemStack stack = new ItemStack(this);
-                stack.getOrCreateTag().putString("Color", color.asString());
+                stack.getOrCreateTag().putString("Color", color.getSerializedName());
                 stacks.add(stack);
             }
         }
     }
 
     @Override
-    public UseAction getUseAction(ItemStack stack) {
-        return UseAction.BLOCK;
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return UseAnim.BLOCK;
     }
 
-    public TypedActionResult<ItemStack> use(World world, PlayerEntity user, Hand hand) {
-        ItemStack itemStack = user.getStackInHand(hand);
-        HitResult hitResult = raycast(world, user, RaycastContext.FluidHandling.ANY);
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
+        ItemStack itemStack = user.getItemInHand(hand);
+        HitResult hitResult = getPlayerPOVHitResult(world, user, ClipContext.Fluid.ANY);
         if (hitResult.getType() == HitResult.Type.MISS) {
-            return TypedActionResult.pass(itemStack);
+            return InteractionResultHolder.pass(itemStack);
         } else {
-            Vec3d vec3d = user.getRotationVec(1.0F);
+            Vec3 vec3d = user.getViewVector(1.0F);
             double boxSize = 5.0F;
-            List<Entity> list = world.getOtherEntities(user, user.getBoundingBox().stretch(vec3d.multiply(boxSize)).expand(1.0F),
-                    EntityPredicates.EXCEPT_SPECTATOR.and(Entity::collides));
+            List<Entity> list = world.getEntities(user, user.getBoundingBox().expandTowards(vec3d.scale(boxSize)).inflate(1.0F),
+                    EntitySelector.NO_SPECTATORS.and(Entity::isPickable));
             if (!list.isEmpty()) {
-                Vec3d eyePos = user.getCameraPosVec(1.0f);
+                Vec3 eyePos = user.getEyePosition(1.0f);
 
                 for(Entity entity : list) {
-                    Box box = entity.getBoundingBox().expand(entity.getTargetingMargin());
+                    AABB box = entity.getBoundingBox().inflate(entity.getPickRadius());
                     if (box.contains(eyePos)) {
-                        return TypedActionResult.pass(itemStack);
+                        return InteractionResultHolder.pass(itemStack);
                     }
                 }
             }
@@ -94,36 +95,36 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
                 OfficeChairEntity chair = Entities.OFFICE_CHAIR.create(world);
                 DyeColor color = DyeColor.WHITE;
                 if (itemStack.hasTag()) {
-                    NbtCompound nbt = itemStack.getTag();
+                    CompoundTag nbt = itemStack.getTag();
                     if (nbt.contains("Color")) {
                         color = DyeColor.byName(nbt.getString("Color"), DyeColor.WHITE);
                     }
                 }
 
-                chair.setPersistent();
+                chair.setPersistenceRequired();
                 chair.refreshPositionAndAngles(hitResult.getPos().x, hitResult.getPos().y+0.1f, hitResult.getPos().z, user.yaw, 0);
                 chair.setPFMColor(color);
-                chair.yaw = (user.yaw);
-                world.playSound(null, new BlockPos(hitResult.getPos()), SoundEvents.BLOCK_STONE_PLACE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                chair.yRot = (user.yRot());
+                world.playSound(null, new BlockPos(hitResult.getLocation()), SoundEvents.STONE_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-                if (!world.isClient) {
-                    world.spawnEntity(chair);
-                    if (!user.abilities.creativeMode) {
-                        itemStack.decrement(1);
+                if (!world.isClientSide) {
+                    world.addFreshEntity(chair);
+                    if (!user.isCreative()) {
+                        itemStack.shrink(1);
                     }
                 }
 
-                user.incrementStat(Stats.USED.getOrCreateStat(this));
-                return TypedActionResult.success(itemStack, world.isClient());
+                user.awardStat(Stats.ITEM_USED.get(this));
+                return InteractionResultHolder.sidedSuccess(itemStack, world.isClientSide());
 
             } else {
-                return TypedActionResult.pass(itemStack);
+                return InteractionResultHolder.pass(itemStack);
             }
         }
     }
 
     @ExpectPlatform
-    public static Item getItemFactory(Settings settings) {
+    public static Item getItemFactory(Properties settings) {
         throw new AssertionError();
     }
 

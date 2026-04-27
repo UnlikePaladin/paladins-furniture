@@ -2,7 +2,7 @@
 	"credit": "By UnlikePaladin",
 	"textures": {
 		"2": "pfm:block/mesh",
-		"particle": "pfm:block/mesh"
+		"particle": "#2"
 	},
 	"elements": [
 		{

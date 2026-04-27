@@ -3,9 +3,9 @@ package com.unlikepaladin.pfm.compat.farmersdelight;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.PFMTags;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.tag.Tag;
-import net.minecraft.util.Identifier;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.tags.Tag;
+import net.minecraft.resources.ResourceLocation;
 
 public abstract class PFMFarmersDelight implements PFMModCompatibility {
     @ExpectPlatform
@@ -13,5 +13,5 @@ public abstract class PFMFarmersDelight implements PFMModCompatibility {
         throw new AssertionError();
     };
 
-    protected static final Tag.Identified<Block> HEAT_SOURCES = PFMTags.createTag(new Identifier("farmersdelight", "heat_sources"));
+    protected static final Tag.Named<Block> HEAT_SOURCES = PFMTags.createTag(new ResourceLocation("farmersdelight", "heat_sources"));
 }

@@ -1,15 +1,15 @@
 package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,27 +22,27 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, 13, this.toInitialChunkDataNbt());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 13, this.getUpdateTag());
     }
 
     @Override
-    public @NotNull NbtCompound toInitialChunkDataNbt() {
-        NbtCompound nbt = this.saveInitialChunkData(new NbtCompound());
-        Inventories.writeNbt(nbt, this.itemInPlate, true);
+    public @NotNull CompoundTag getUpdateTag() {
+        CompoundTag nbt = this.saveInitialChunkData(new CompoundTag());
+        ContainerHelper.saveAllItems(nbt, this.itemInPlate, true);
         return nbt;
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, NbtCompound tag) {
-        fromTag(state, tag);
+    public void handleUpdateTag(BlockState state, CompoundTag tag) {
+        this.load(state, tag);
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
         this.itemInPlate.clear();
-        Inventories.readNbt(pkt.getNbt(), this.itemInPlate);
+        ContainerHelper.loadAllItems(pkt.getTag(), this.itemInPlate);
     }
 
     public static Supplier<? extends PlateBlockEntity> getFactory() {

@@ -3,11 +3,11 @@ package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
 import com.unlikepaladin.pfm.compat.sandwichable.PFMSandwichableCompat;
 import net.fabricmc.fabric.api.block.entity.BlockEntityClientSerializable;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.BlockPos;
 
 import java.util.function.Supplier;
 
@@ -25,13 +25,13 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity implements 
     }
 
     @Override
-    public void fromClientTag(NbtCompound NbtCompound) {
-        this.fromTag(this.getCachedState(), NbtCompound);
+    public void fromClientTag(CompoundTag CompoundTag) {
+        this.load(getBlockState(), CompoundTag);
     }
 
     @Override
-    public NbtCompound toClientTag(NbtCompound NbtCompound) {
-        return this.writeNbt(NbtCompound);
+    public CompoundTag toClientTag(CompoundTag CompoundTag) {
+        return this.save(CompoundTag);
     }
 
     public static Supplier<? extends PFMToasterBlockEntity> getFactory() {

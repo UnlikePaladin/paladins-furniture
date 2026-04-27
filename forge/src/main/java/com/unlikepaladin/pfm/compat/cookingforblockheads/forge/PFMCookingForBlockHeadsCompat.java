@@ -13,34 +13,24 @@ import com.unlikepaladin.pfm.registry.TriFunc;
 import net.blay09.mods.cookingforblockheads.KitchenMultiBlock;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ingame.ScreenHandlerProvider;
-import net.minecraft.client.render.block.entity.BlockEntityRenderDispatcher;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.entity.EntityRenderer;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.PacketByteBuf;
-import net.minecraft.screen.NamedScreenHandlerFactory;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
-import net.minecraftforge.items.ItemHandlerHelper;
-
-import java.util.Arrays;
-import java.util.function.Function;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,17 +54,17 @@ public class PFMCookingForBlockHeadsCompat {
     }
 
     public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(PaladinFurnitureModBlocksItems.GRAY_STOVE), ToolType.PICKAXE));
-    public static <T extends ScreenHandler> TriFunc<Integer, PlayerInventory, PacketByteBuf, T> getStoveScreenHandler() {
+    public static <T extends AbstractContainerMenu> TriFunc<Integer, Inventory, FriendlyByteBuf, T> getStoveScreenHandler() {
         return (integer, playerInventory, packetByteBuf) -> {
             BlockPos pos = packetByteBuf.readBlockPos();
-            BlockEntity blockEntity = playerInventory.player.world.getBlockEntity(pos);
+            BlockEntity blockEntity = playerInventory.player.level.getBlockEntity(pos);
             return (T) new StoveScreenHandlerBalm(integer, playerInventory, (StoveBlockEntityBalm)blockEntity);
         };
     }
 
-    public static void openMenuScreen(World world, BlockPos pos, PlayerEntity player) {
-        StoveBlockEntityBalm stove = (StoveBlockEntityBalm)world.getBlockEntity(pos);
-        if (!world.isClient) {
+    public static void openMenuScreen(Level level, BlockPos pos, Player player) {
+        StoveBlockEntityBalm stove = (StoveBlockEntityBalm)level.getBlockEntity(pos);
+        if (!level.isClientSide) {
             NetworkHooks.openGui((ServerPlayerEntity)player, stove, pos);
         }
     }
@@ -83,26 +73,26 @@ public class PFMCookingForBlockHeadsCompat {
         return new StoveBlockEntityBalm();
     }
 
-    public static ActionResult onUseStove(BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        ItemStack heldItem = player.getStackInHand(hand);
+    public static InteractionResult onUseStove(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemStack heldItem = player.getItemInHand(hand);
         if (heldItem.getItem() == ModItems.heatingUnit) {
-            return ActionResult.PASS;
-        } else if (hit.getSide() == Direction.UP && CookingRegistry.isToolItem(heldItem)) {
-            Direction stateFacing = state.get(StoveBlock.FACING);
-            double hx =  (hit.getPos().x - hit.getBlockPos().getX());
-            double hz = (hit.getPos().z - hit.getBlockPos().getZ());
+            return InteractionResult.PASS;
+        } else if (hit.getDirection() == Direction.UP && CookingRegistry.isToolItem(heldItem)) {
+            Direction stateFacing = state.getValue(StoveBlock.FACING);
+            double hx =  (hit.getLocation().x - hit.getBlockPos().getX());
+            double hz = (hit.getLocation().z - hit.getBlockPos().getZ());
             switch (stateFacing) {
                 case NORTH:
-                    hx = 1.0 - (hit.getPos().x - hit.getBlockPos().getX());
-                    hz = 1.0 - (hit.getPos().z - hit.getBlockPos().getZ());
+                    hx = 1.0 - (hit.getLocation().x - hit.getBlockPos().getX());
+                    hz = 1.0 - (hit.getLocation().z - hit.getBlockPos().getZ());
                     break;
                 case WEST:
-                    hz = 1.0 - (hit.getPos().x - hit.getBlockPos().getX());
-                    hx = (hit.getPos().z - hit.getBlockPos().getZ());
+                    hz = 1.0 - (hit.getLocation().x - hit.getBlockPos().getX());
+                    hx = (hit.getLocation().z - hit.getBlockPos().getZ());
                     break;
                 case EAST:
-                    hz = (hit.getPos().x - hit.getBlockPos().getX());
-                    hx = 1.0 - (hit.getPos().z - hit.getBlockPos().getZ());
+                    hz = (hit.getLocation().x - hit.getBlockPos().getX());
+                    hx = 1.0 - (hit.getLocation().z - hit.getBlockPos().getZ());
             }
             int index = -1;
             if (hx < 0.5f && hz < 0.5f) {
@@ -121,29 +111,29 @@ public class PFMCookingForBlockHeadsCompat {
                     stove.setToolItem(index, toolItem);
                 }
             }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         } else {
             StoveBlockEntityBalm stove = (StoveBlockEntityBalm)level.getBlockEntity(pos);
-            if (hit.getSide() == state.get(Properties.HORIZONTAL_FACING) && stove != null) {
-                if (player.isSneaking()) {
-                    return ActionResult.SUCCESS;
+            if (hit.getDirection() == state.getValue(BlockStateProperties.HORIZONTAL_FACING) && stove != null) {
+                if (player.isShiftKeyDown()) {
+                    return InteractionResult.SUCCESS;
                 }
 
                 if (!heldItem.isEmpty() && stove.getSmeltingResult(heldItem) != ItemStack.EMPTY) {
                     heldItem = ItemHandlerHelper.insertItemStacked(stove.getInputContainer(), heldItem, false);
-                    player.setStackInHand(hand, heldItem);
+                    player.setItemInHand(hand, heldItem);
 
-                    return ActionResult.SUCCESS;
+                    return InteractionResult.SUCCESS;
                 } else if (!heldItem.isEmpty() && StoveBlockEntityBalm.isItemFuel(heldItem)) {
                     heldItem = ItemHandlerHelper.insertItemStacked(stove.getFuelContainer(), heldItem, false);
-                    player.setStackInHand(hand, heldItem);
-                    return ActionResult.SUCCESS;
+                    player.setItemInHand(hand, heldItem);
+                    return InteractionResult.SUCCESS;
                 }
             }
-            if (!level.isClient) {
+            if (!level.isClientSide) {
                 NetworkHooks.openGui((ServerPlayerEntity)player, stove, pos);
             }
-            return ActionResult.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
     }
 }

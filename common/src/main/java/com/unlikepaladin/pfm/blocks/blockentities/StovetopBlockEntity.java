@@ -4,27 +4,27 @@ import com.unlikepaladin.pfm.blocks.KitchenStovetopBlock;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.block.entity.CampfireBlockEntity;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.recipe.CampfireCookingRecipe;
-import net.minecraft.recipe.RecipeType;
-import net.minecraft.util.Clearable;
-import net.minecraft.util.ItemScatterer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.CampfireBlockEntity;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.Container;
+import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.item.crafting.CampfireCookingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.Clearable;
+import net.minecraft.world.Containers;
 import net.minecraft.util.Tickable;
-import net.minecraft.util.collection.DefaultedList;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 
 import java.util.Optional;
 import java.util.Random;
@@ -33,7 +33,7 @@ import java.util.function.Supplier;
 
 public class StovetopBlockEntity extends BlockEntity implements Clearable, Tickable {
 
-    public final DefaultedList<ItemStack> itemsBeingCooked = DefaultedList.ofSize(4, ItemStack.EMPTY);
+    public final NonNullList<ItemStack> itemsBeingCooked = NonNullList.withSize(4, ItemStack.EMPTY);
     private final int[] cookingTimes = new int[4];
     private final int[] cookingTotalTimes = new int[4];
     public StovetopBlockEntity() {
@@ -50,19 +50,19 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
             this.cookingTimes[n] = this.cookingTimes[n] + 2;
         }
             if (this.cookingTimes[i] < this.cookingTotalTimes[i]) continue;
-            SimpleInventory inventory = new SimpleInventory(itemStack);
-            ItemStack itemStack2 = world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.craft(inventory)).orElse(itemStack);
+            SimpleContainer inventory = new SimpleContainer(itemStack);
+            ItemStack itemStack2 = world.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.assemble(inventory)).orElse(itemStack);
                 if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
-                    ItemScatterer.spawn(world, pos.getX(), pos.getY(), pos.getZ(), itemStack2);
+                    Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack2);
                     this.itemsBeingCooked.set(i, ItemStack.EMPTY);
                 }
                 else {
                     this.itemsBeingCooked.set(i, itemStack2);
                 }
-            world.updateListeners(pos, getCachedState(), getCachedState(), 3);
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         }
         if (bl) {
-            markDirty();
+            setChanged();
         }
     }
 
@@ -71,50 +71,51 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
         for (int i = 0; i < this.itemsBeingCooked.size(); ++i) {
             if (this.cookingTimes[i] <= 0) continue;
             bl = true;
-            this.cookingTimes[i] = MathHelper.clamp(this.cookingTimes[i] - 2, 0, this.cookingTotalTimes[i]);
+            this.cookingTimes[i] = Mth.clamp(this.cookingTimes[i] - 2, 0, this.cookingTotalTimes[i]);
         }
         if (bl) {
-            markDirty();
+            setChanged();
         }
     }
 
     public void clientTick() {
         int i;
-        Random random = world.random;
-        i = getCachedState().get(KitchenStovetopBlock.FACING).rotateYClockwise().getHorizontal();
+        Random random = level.random;
+        i = getCachedState().getValue(KitchenStovetopBlock.FACING).getClockWise().get2DDataValue();
         for (int j = 0; j < this.itemsBeingCooked.size(); ++j) {
             ItemStack stack = this.itemsBeingCooked.get(j);
-            if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || !world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(stack), world).isPresent()) continue;
-            Direction direction = Direction.fromHorizontal(Math.floorMod(j + i, 4));
+            if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || !world.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SimpleContainer(stack), world).isPresent()) continue;
+            Direction direction = Direction.from2DDataValue(Math.floorMod(j + i, 4));
+            BlockPos pos = worldPosition;
             float f = 0.2125f;
-            double x = pos.getX() + 0.5 - ((direction.getOffsetX() * f) + (direction.rotateYClockwise().getOffsetX() * f));
+            double x = pos.getX() + 0.5 - ((direction.getStepX() * f) + (direction.getClockWise().getStepX() * f));
             double y = pos.getY() + 0.2;
-            double z = pos.getZ() + 0.5 - ((direction.getOffsetZ() * f) + (direction.rotateYClockwise().getOffsetZ() * f));
+            double z = pos.getZ() + 0.5 - ((direction.getStepZ() * f) + (direction.getClockWise().getStepZ() * f));
             for (int k = 0; k < 4; ++k) {
                 if (!(random.nextFloat() < 0.9f))
-                    world.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 5.0E-4, 0.0);
+                    level.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 5.0E-4, 0.0);
             }
         }
     }
 
-    public DefaultedList<ItemStack> getItemsBeingCooked() {
+    public NonNullList<ItemStack> getItemsBeingCooked() {
         return this.itemsBeingCooked;
     }
 
-    public Inventory getInventory(){
-        SimpleInventory inventory = new SimpleInventory(itemsBeingCooked.size());
+    public Container getContainer(){
+        SimpleContainer inventory = new SimpleContainer(itemsBeingCooked.size());
         for (int i = 0; i < itemsBeingCooked.size(); i++) {
-            inventory.setStack(i, itemsBeingCooked.get(i));
+            inventory.setItem(i, itemsBeingCooked.get(i));
         }
         return inventory;
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound nbt) {
+    public void load(BlockState state, CompoundTag nbt) {
         int[] is;
-        super.fromTag(state, nbt);
+        super.load(state, nbt);
         this.itemsBeingCooked.clear();
-        Inventories.readNbt(nbt, this.itemsBeingCooked);
+        ContainerHelper.loadAllItems(nbt, this.itemsBeingCooked);
         if (nbt.contains("CookingTimes", 11)) {
             is = nbt.getIntArray("CookingTimes");
             System.arraycopy(is, 0, this.cookingTimes, 0, Math.min(this.cookingTotalTimes.length, is.length));
@@ -126,23 +127,23 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
     }
 
     @Override
-    public NbtCompound writeNbt(NbtCompound nbt) {
+    public CompoundTag save(CompoundTag nbt) {
         this.saveInitialChunkData(nbt);
         nbt.putIntArray("CookingTimes", this.cookingTimes);
         nbt.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
         return nbt;
     }
 
-    protected NbtCompound saveInitialChunkData(NbtCompound nbt) {
-        super.writeNbt(nbt);
-        Inventories.writeNbt(nbt, this.itemsBeingCooked, true);
+    protected CompoundTag saveInitialChunkData(CompoundTag nbt) {
+        super.save(nbt);
+        ContainerHelper.saveAllItems(nbt, this.itemsBeingCooked, true);
         return nbt;
     }
 
-    public ItemStack removeStack(int slot) {
+    public ItemStack removeItemNoUpdate(int slot) {
         ItemStack stack = this.itemsBeingCooked.get(slot).copy();
         this.itemsBeingCooked.set(slot, ItemStack.EMPTY);
-        updateListeners();
+        sendBlockUpdated();
         return stack;
     }
 
@@ -150,7 +151,7 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
         if (this.itemsBeingCooked.stream().noneMatch(ItemStack::isEmpty)) {
             return Optional.empty();
         }
-        return this.world.getRecipeManager().getFirstMatch(RecipeType.CAMPFIRE_COOKING, new SimpleInventory(item), this.world);
+        return this.level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SimpleContainer(item), this.level);
     }
 
     public boolean addItem(ItemStack item, int integer) {
@@ -160,21 +161,21 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
             this.cookingTotalTimes[i] = integer;
             this.cookingTimes[i] = 0;
             this.itemsBeingCooked.set(i, item.split(1));
-            this.updateListeners();
+            this.sendBlockUpdated();
             return true;
         }
         return false;
     }
 
-    private void updateListeners() {
-        this.markDirty();
-        this.getWorld().updateListeners(this.getPos(), this.getCachedState(), this.getCachedState(), 3);
+    private void sendBlockUpdated() {
+        this.setChanged();
+        this.getLevel().sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
     }
 
     @Override
-    public void clear() {
+    public void clearContent() {
         this.itemsBeingCooked.clear();
-        updateListeners();
+        sendBlockUpdated();
     }
 
     @Override
