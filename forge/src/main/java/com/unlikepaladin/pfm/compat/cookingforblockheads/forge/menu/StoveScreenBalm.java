@@ -54,7 +54,7 @@ public class StoveScreenBalm extends AbstractContainerScreen<StoveScreenHandlerB
 
     protected void renderBg(PoseStack poseStack, float partialTicks, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.getMinecraft().getTextureManager().bindTexture(texture);
+        this.getMinecraft().getTextureManager().bind(texture);
         this.blit(poseStack, this.leftPos + 22, this.topPos, 0, 0, this.imageWidth - 22, this.imageHeight);
         this.blit(poseStack, this.leftPos, this.topPos + 10, 176, 30, 25, 87);
         StoveBlockEntityBalm tileEntity = this.menu.getTileEntity();

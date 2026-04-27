@@ -2,11 +2,9 @@ package com.unlikepaladin.pfm.compat.rei.forge;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import me.shedaniel.clothconfig2.api.animator.NumberAnimator;
-import me.shedaniel.clothconfig2.api.animator.ValueAnimator;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.widgets.BurningFire;
-import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.resources.ResourceLocation;
@@ -49,7 +47,7 @@ public class FreezingWidget extends BurningFire {
 
     public void renderBackground(PoseStack matrices, boolean dark, float alpha) {
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, alpha);
-        MinecraftClient.getInstance().getTextureManager().bindTexture(background);
+        Minecraft.getInstance().getTextureManager().bind(background);
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(770, 771, 1, 0);
         RenderSystem.blendFunc(770, 771);

@@ -115,7 +115,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
             double speed = horizontalLength(this.getDeltaMovement());
             wheelSpinAngle += (float)(speed * 200);  // Adjust multiplier to control spin speed
 
-            this.tryCheckInsideBlocks();
+            this.checkInsideBlocks();
         } else {
             this.flyingSpeed = 0.02F;
             super.travel(movementInput);
@@ -147,9 +147,9 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
         if (this.hasPassenger(passenger)) {
             float g = (float)((this.removed ? 0.01F : this.getPassengersRidingOffset()) + passenger.getMyRidingOffset());
 
-            Vec3 offset = new Vec3(0.0, 0.0, 0.0).yRot(-this.getYRot() * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
+            Vec3 offset = new Vec3(0.0, 0.0, 0.0).yRot(-this.yRot * (float) (Math.PI / 180.0) - (float) (Math.PI / 2));
             passenger.setPos(this.getX() + offset.x, this.getY() + (double)g, this.getZ() + offset.z);
-            passenger.yRot = (passenger.getYRot() + this.yawVelocity);
+            passenger.yRot = (passenger.yRot + this.yawVelocity);
             passenger.setYHeadRot(passenger.getYHeadRot() + this.yawVelocity);
             this.copyEntityData(passenger);
         }
@@ -160,7 +160,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
         float f = Mth.wrapDegrees(entity.yRot - this.yRot);
         float g = Mth.clamp(f, -105.0F, 105.0F);
         entity.yRotO += g - f;
-        entity.setYRot(entity.yRot + g - f);
+        entity.yRot = (entity.yRot + g - f);
         entity.setYHeadRot(entity.yRot);
     }
 
@@ -189,7 +189,7 @@ public class OfficeChairEntity extends Mob implements DyeableFurnitureEntity<Off
 
     @Override
     public @Nullable Entity getControllingPassenger() {
-        List<Entity> list = this.getPassengerList();
+        List<Entity> list = this.getPassengers();
         return list.isEmpty() ? null : list.get(0);
     }
 

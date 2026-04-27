@@ -6,20 +6,14 @@ import com.unlikepaladin.pfm.blocks.KitchenDrawerBlock;
 import com.unlikepaladin.pfm.blocks.KitchenWallDrawerBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -39,7 +33,7 @@ public class GenericStorageBlockEntity9x3 extends RandomizableContainerBlockEnti
         super(BlockEntities.DRAWER_BLOCK_ENTITY);
     }
 
-    private NonNullList<ItemStack> inventory = NonNullList.withSize(27, ItemStack.EMPTY);
+    protected NonNullList<ItemStack> inventory = NonNullList.withSize(27, ItemStack.EMPTY);
 
     protected void onOpen(Level world, BlockPos pos, BlockState state) {
         if (state.getBlock() instanceof KitchenDrawerBlock || state.getBlock() instanceof KitchenCabinetBlock || state.getBlock() instanceof ClassicNightstandBlock){

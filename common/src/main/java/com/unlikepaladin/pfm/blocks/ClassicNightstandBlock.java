@@ -116,7 +116,7 @@ public class ClassicNightstandBlock extends HorizontalFacingBlockWithEntity {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockView blockView) {
+    public BlockEntity newBlockEntity(BlockGetter blockView) {
         return GenericStorageBlockEntity9x3.getFactory().get();
     }
 

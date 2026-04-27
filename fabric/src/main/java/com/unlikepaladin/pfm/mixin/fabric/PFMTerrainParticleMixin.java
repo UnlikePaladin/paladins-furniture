@@ -19,8 +19,8 @@ public abstract class PFMTerrainParticleMixin extends TextureSheetParticle {
         super(clientWorld, d, e, f);
     }
 
-    @Inject(method = "<init>(Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDLnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;)V", at = @At("TAIL"))
-    public void setCustomModelParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, BlockState state, BlockPos blockPos, CallbackInfo ci){
+    @Inject(method = "<init>", at = @At("TAIL"))
+    public void setCustomModelParticle(ClientLevel world, double x, double y, double z, double velocityX, double velocityY, double velocityZ, BlockState state, CallbackInfo ci){
         if (state != null) {
             BakedModel model = Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state);
             if (model instanceof PFMBakedModelParticleExtension) {

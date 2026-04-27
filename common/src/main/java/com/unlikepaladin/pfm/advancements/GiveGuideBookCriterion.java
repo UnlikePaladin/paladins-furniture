@@ -23,7 +23,7 @@ public class GiveGuideBookCriterion extends SimpleCriterionTrigger<GiveGuideBook
     }
 
     public void trigger(ServerPlayer player) {
-        this.test(player, conditions -> true);
+        this.trigger(player, conditions -> true);
     }
 
     public static class Conditions
@@ -33,7 +33,7 @@ public class GiveGuideBookCriterion extends SimpleCriterionTrigger<GiveGuideBook
         }
 
         @Override
-        protected EntityPredicate.Extended getPlayerPredicate() {
+        protected EntityPredicate.Composite getPlayerPredicate() {
             return super.getPlayerPredicate();
         }
     }

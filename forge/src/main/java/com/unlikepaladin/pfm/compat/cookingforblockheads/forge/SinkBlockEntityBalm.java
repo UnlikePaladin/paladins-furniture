@@ -23,7 +23,8 @@ public class SinkBlockEntityBalm extends SinkBlockEntity {
         return CapabilityKitchenConnector.CAPABILITY.orEmpty(cap, this.connector);
     }
 
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return new BlockEntityUpdateS2CPacket(this.pos, 0, this.toInitialChunkDataNbt());
+    @Override
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 0, this.getUpdateTag());
     }
 }

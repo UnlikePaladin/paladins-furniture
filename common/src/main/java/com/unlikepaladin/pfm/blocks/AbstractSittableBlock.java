@@ -85,8 +85,8 @@ public abstract class AbstractSittableBlock extends HorizontalDirectionalBlock {
             return InteractionResult.FAIL;
 
         List<Entity> hasPassenger = new ArrayList<>();
-        active.forEach(chairEntity -> hasPassenger.add(chairEntity.getFirstPassenger()));
-        if (!active.isEmpty() && hasPassenger.stream().anyMatch(Entity::isAlwaysTicking)) {
+        active.forEach(chairEntity -> hasPassenger.add(chairEntity.getControllingPassenger()));
+        if (hasPassenger.stream().anyMatch(entity -> entity instanceof Player)) {
             return InteractionResult.FAIL;
         }
         else if (!active.isEmpty()) {

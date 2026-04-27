@@ -47,7 +47,7 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity {
 
     @Override
     public void handleUpdateTag(BlockState state, CompoundTag tag) {
-        this.fromTag(state,tag);
+        this.load(state,tag);
     }
 
     @Override

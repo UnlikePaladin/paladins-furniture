@@ -71,17 +71,17 @@ public class StoneVariant extends VariantBase<StoneVariant> {
     }
 
     public Material getVanillaMaterial() {
-        return rawBlock.getDefaultState().getMaterial();
+        return rawBlock.defaultBlockState().getMaterial();
     }
 
     @Override
     public Material getBaseMaterial() {
-        return rawBlock.getDefaultState().getMaterial();
+        return rawBlock.defaultBlockState().getMaterial();
     }
 
     @Override
     public Material getSecondaryMaterial() {
-        return polishedBlock.getDefaultState().getMaterial();
+        return polishedBlock.defaultBlockState().getMaterial();
     }
 
     @Override

@@ -83,7 +83,7 @@ public class NetworkRegistryFabric {
                     MicrowaveBlockEntity blockEntity = (MicrowaveBlockEntity) handler.getLevel().getBlockEntity(blockPos);
                     client.execute(() -> {
                         if (Objects.nonNull(client.screen) && client.screen instanceof MicrowaveScreen)  {
-                            MicrowaveScreen currentScreen = (MicrowaveScreen) client.currentScreen;
+                            MicrowaveScreen currentScreen = (MicrowaveScreen) client.screen;
                             currentScreen.getMenu().setActive(blockEntity, active);}
                     });
                 }

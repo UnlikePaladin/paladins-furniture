@@ -38,7 +38,7 @@ public class UnbakedMirrorModel implements UnbakedModel {
         MODEL_PARTS = modelParts;
     }
 
-    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<Identifier>() {
+    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<ResourceLocation>() {
         {
             for (String part : BASE_MODEL_PARTS) {
                 add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, part));

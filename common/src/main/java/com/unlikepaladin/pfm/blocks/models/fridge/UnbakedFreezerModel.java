@@ -32,7 +32,7 @@ public class UnbakedFreezerModel implements UnbakedModel {
         }
     };
 
-    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<Identifier>() {
+    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<ResourceLocation>() {
         {
             for (String part : FREEZER_MODEL_PARTS_BASE) {
                 add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, part));
@@ -56,7 +56,7 @@ public class UnbakedFreezerModel implements UnbakedModel {
         return Collections.singleton(frameTex);
     }
 
-    public static final List<ResourceLocation> FREEZER_MODEL_IDS = new ArrayList<Identifier>() { {
+    public static final List<ResourceLocation> FREEZER_MODEL_IDS = new ArrayList<ResourceLocation>() { {
         add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/white_freezer"));
         add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/gray_freezer"));
     }};

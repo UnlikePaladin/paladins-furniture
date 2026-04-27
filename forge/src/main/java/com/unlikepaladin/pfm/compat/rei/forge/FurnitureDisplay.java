@@ -46,7 +46,7 @@ public class FurnitureDisplay extends BasicDisplay implements SimpleGridMenuDisp
     public static final CategoryIdentifier<FurnitureDisplay> IDENTIFIER = CategoryIdentifier.of(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "furniture"));
     private int itemsPerInnerRecipe;
     public FurnitureDisplay(FurnitureRecipe recipe) {
-        super(Collections.emptyList(), Collections.singletonList(EntryIngredients.of(recipe.getOutput())));
+        super(Collections.emptyList(), Collections.singletonList(EntryIngredients.of(recipe.getResultItem())));
         this.recipe = recipe;
         this.itemsPerInnerRecipe = recipe.getIngredients().size();
     }

@@ -8,15 +8,13 @@ import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.inventory.RecipeHolder;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.ContainerHelper;
@@ -35,7 +33,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.core.Vec3i;
@@ -43,7 +40,6 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements MenuProvider, WorldlyContainer, RecipeHolder, TickableBlockEntity {
     public boolean isActive = false;
@@ -124,22 +120,22 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
 
     @Override
     public void startOpen(Player player) {
-        if (!this.removed && !player.isSpectator()) {
+        if (!this.remove && !player.isSpectator()) {
             if (this.viewerCount < 0) {
                 this.viewerCount = 0;
             }
             ++this.viewerCount;
-            MicrowaveBlockEntity.this.playSound(getCachedState(), SoundEvents.IRON_TRAPDOOR_OPEN, 0);
-            MicrowaveBlockEntity.this.setOpen(getCachedState(), true);
+            MicrowaveBlockEntity.this.playSound(getBlockState(), SoundEvents.IRON_TRAPDOOR_OPEN, 0);
+            MicrowaveBlockEntity.this.setOpen(getBlockState(), true);
         }
     }
 
     @Override
-    public void stopOpen(PlayerEntity player) {
-        if (!this.removed && !player.isSpectator()) {
+    public void stopOpen(Player player) {
+        if (!this.remove && !player.isSpectator()) {
             --this.viewerCount;
-            MicrowaveBlockEntity.this.playSound(getCachedState(), SoundEvents.IRON_TRAPDOOR_CLOSE, 0);
-            MicrowaveBlockEntity.this.setOpen(getCachedState(), false);
+            MicrowaveBlockEntity.this.playSound(getBlockState(), SoundEvents.IRON_TRAPDOOR_CLOSE, 0);
+            MicrowaveBlockEntity.this.setOpen(getBlockState(), false);
         }
     }
 
@@ -232,9 +228,14 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     }
 
     @Override
+    public ItemStack getItem(int i) {
+        return container.get(i);
+    }
+
+    @Override
     public ItemStack removeItem(int slot, int amount) {
         ItemStack stack =  ContainerHelper.removeItem(this.container, slot, amount);
-        level.sendBlockUpdated(getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+        level.sendBlockUpdated(getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
         this.setChanged();
         return stack;
     }
@@ -242,15 +243,9 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
         ItemStack stack =  ContainerHelper.takeItem(this.container, slot);
-        level.sendBlockUpdated(getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+        level.sendBlockUpdated(getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
         this.setChanged();
         return stack;
-    }
-
-    public void fillStackedContents(StackedContents finder) {
-        for (ItemStack itemStack : this.container) {
-            finder.accountStack(itemStack);
-        }
     }
 
     @Override
@@ -265,7 +260,7 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
             this.cookTimeTotal = MicrowaveBlockEntity.getCookingTime(this.level, this.recipeType, this);
             this.cookTime = 0;
             this.setChanged();
-            level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+            level.sendBlockUpdated(worldPosition, this.getBlockState(), this.getBlockState(), 3);
         }
     }
 
@@ -341,24 +336,24 @@ public class MicrowaveBlockEntity extends BaseContainerBlockEntity implements Me
                 ++this.cookTime;
                 if (this.cookTime == this.cookTimeTotal) {
                     this.cookTime = 0;
-                    this.cookTimeTotal = getCookTime(level, this.recipeType, this);
-                    if (craftRecipe(recipe, this.inventory, i)) {
+                    this.cookTimeTotal = getCookingTime(level, this.recipeType, this);
+                    if (craftRecipe(recipe, this.container, i)) {
                         this.setRecipeUsed(recipe);
-                        this.level.setBlock(pos, getBlockState().setValue(MicrowaveBlock.POWERED, false), 3);
+                        this.level.setBlock(worldPosition, getBlockState().setValue(MicrowaveBlock.POWERED, false), 3);
                         this.playSound(getBlockState(), SoundIDs.MICROWAVE_BEEP_EVENT, 1);
                         this.setActiveonClient(this, false);
-                        level.sendBlockUpdated(pos, getBlockState(), getCachedState(), 3);
+                        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
                     }
                     bl2 = true;
                 }
                 else {
-                    this.playSound(getCachedState(), SoundIDs.MICROWAVE_RUNNING_EVENT, 1);
+                    this.playSound(getBlockState(), SoundIDs.MICROWAVE_RUNNING_EVENT, 1);
                 }
             } else {
                 this.cookTime = 0;
                 if(itemStack.isEmpty()) {
                     this.setActiveonClient(this,false);
-                    level.sendBlockUpdated(pos, getBlockState(), getBlockState(), 3);
+                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
                 }
             }
         } else if (!this.isActive && this.cookTime > 0) {

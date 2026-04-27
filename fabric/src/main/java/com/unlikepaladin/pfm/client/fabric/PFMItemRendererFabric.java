@@ -4,14 +4,12 @@ import com.unlikepaladin.pfm.blocks.SimpleBedBlock;
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
 import com.unlikepaladin.pfm.blocks.models.bed.UnbakedBedModel;
 import com.unlikepaladin.pfm.client.PFMBakedModelManagerAccessor;
-import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.entity.render.OfficeChairEntityRenderer;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
-import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
@@ -19,7 +17,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.HumanoidArm;
-import net.minecraft.core.BlockPos;
 
 import java.util.*;
 
@@ -58,7 +55,7 @@ public class PFMItemRendererFabric extends BlockEntityWithoutLevelRenderer {
             matrices.translate(-.5, -.5, -.5); // Replicate ItemRenderer's translation
 
             this.renderBed.setColor(((SimpleBedBlock)block).getColor());
-            BlockEntityRenderDispatcher.INSTANCE.renderItem(renderBed, matrices, vertexConsumers, light, overlay);
+            BlockEntityRenderDispatcher.instance.renderItem(renderBed, matrices, vertexConsumers, light, overlay);
             matrices.popPose();
         } else if (stack.getItem() == PaladinFurnitureModBlocksItems.OFFICE_CHAIR_ITEM) {
             matrices.pushPose();

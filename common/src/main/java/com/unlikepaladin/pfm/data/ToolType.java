@@ -1,10 +1,10 @@
 package com.unlikepaladin.pfm.data;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Material;
-import net.minecraft.util.StringIdentifiable;
 
-public enum ToolType implements StringIdentifiable {
+import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.material.Material;
+
+public enum ToolType implements StringRepresentable {
     AXE("axe"),
     HOE("hoe"),
     PICKAXE("pickaxe"),
@@ -16,14 +16,14 @@ public enum ToolType implements StringIdentifiable {
         this.name = toolName;
     }
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return name;
     }
 
     public static ToolType getToolTypeFromMaterial(Material material) {
-        if (material == Material.WOOD || material.isBurnable() || material == Material.NETHER_WOOD || material == Material.BAMBOO)
+        if (material == Material.WOOD || material.isFlammable() || material == Material.NETHER_WOOD || material == Material.BAMBOO)
             return AXE;
-        else if (material == Material.AGGREGATE || material == Material.SOIL)
+        else if (material == Material.SAND || material == Material.DIRT)
             return HOE;
         else if (material == Material.STONE || material == Material.METAL)
             return PICKAXE;

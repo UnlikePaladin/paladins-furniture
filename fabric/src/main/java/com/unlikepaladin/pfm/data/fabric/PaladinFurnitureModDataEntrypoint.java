@@ -1,27 +1,5 @@
 package com.unlikepaladin.pfm.data.fabric;
 
-import com.unlikepaladin.pfm.blocks.*;
-import com.unlikepaladin.pfm.data.FurnitureBlock;
-import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import net.minecraft.block.BedBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.enums.BedPart;
-import net.minecraft.data.server.BlockLootTableGenerator;
-import net.minecraft.data.server.RecipesProvider;
-import net.minecraft.data.server.recipe.RecipeJsonProvider;
-import net.minecraft.data.server.recipe.ShapedRecipeJsonFactory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemConvertible;
-import net.minecraft.item.Items;
-import net.minecraft.recipe.Ingredient;
-import net.minecraft.tag.*;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.registry.Registry;
-
-import java.util.Arrays;
-import java.util.function.Consumer;
-import java.util.stream.Stream;
 //FAPI Data gen does not exist in 1.16
 /*
 public class PaladinFurnitureModDataEntrypoint implements DataGeneratorEntrypoint {

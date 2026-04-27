@@ -10,7 +10,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
@@ -48,7 +48,7 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
             }
         }
         if (!world.isClientSide) {
-            NetworkHooks.openGui((ServerPlayerEntity)player, blockEntity, pos);
+            NetworkHooks.openGui((ServerPlayer)player, blockEntity, pos);
         }
         return InteractionResult.SUCCESS;
     }
@@ -63,7 +63,7 @@ public class PFMCookingTableBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockView blockView) {
+    public BlockEntity newBlockEntity(BlockGetter blockView) {
         return new CookingTableTileEntity();
     }
 

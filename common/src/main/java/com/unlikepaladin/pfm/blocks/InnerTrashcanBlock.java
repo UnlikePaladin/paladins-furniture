@@ -73,7 +73,7 @@ public class InnerTrashcanBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockView world) {
+    public BlockEntity newBlockEntity(BlockGetter world) {
         return getBlockEntity();
     }
 

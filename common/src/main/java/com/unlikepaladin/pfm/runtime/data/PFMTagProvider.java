@@ -6,24 +6,19 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
 import com.unlikepaladin.pfm.compat.PFMModCompatibility;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import com.unlikepaladin.pfm.data.Material;
 import com.unlikepaladin.pfm.data.PFMTags;
 import com.unlikepaladin.pfm.mixin.PFMTagsProvider$TagAppenderMixin;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import com.unlikepaladin.pfm.runtime.PFMDataGenerator;
 import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
+import net.minecraft.tags.SetTag;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.data.tags.TagsProvider;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tag.SetTag;
 import net.minecraft.tags.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -278,10 +273,10 @@ public class PFMTagProvider extends PFMProvider {
         tagBuilders.clear();
         this.generateTags();
         Tag<Block> tag = SetTag.empty();
-        Function<Identifier, Tag<Block>> function = (identifier) -> tagBuilders.containsKey(identifier) ? tag : null;
-        Function<Identifier, Block> function2 = (identifier) -> Registry.BLOCK.getOptional(identifier).orElse(null);
+        Function<ResourceLocation, Tag<Block>> function = (identifier) -> tagBuilders.containsKey(identifier) ? tag : null;
+        Function<ResourceLocation, Block> function2 = (identifier) -> Registry.BLOCK.getOptional(identifier).orElse(null);
         tagBuilders.forEach((id, builder) -> {
-            List<Tag.TrackedEntry> list = builder.getUnresolvedEntries(function, function2).collect(Collectors.toList());
+            List<Tag.BuilderEntry> list = builder.getUnresolvedEntries(function, function2).collect(Collectors.toList());
             if (!list.isEmpty()) {
                 throw new IllegalArgumentException(String.format("Couldn't define tag %s as it is missing following references: %s", id, list.stream().map(Objects::toString).collect(Collectors.joining(","))));
             }

@@ -163,11 +163,6 @@ public abstract class AbstractFreezerScreenHandler extends RecipeBookMenu<Contai
     }
 
     @Override
-    public boolean shouldMoveToInventory(Slot slot) {
-        return slot.id != 1;
-    }
-
-    @Override
     public void removed(Player player) {
         super.removed(player);
         this.container.stopOpen(player);
@@ -175,8 +170,8 @@ public abstract class AbstractFreezerScreenHandler extends RecipeBookMenu<Contai
 
     @Environment(value= EnvType.CLIENT)
     public int getCookProgress() {
-        int i = this.propertyDelegate.get(2);
-        int j = this.propertyDelegate.get(3);
+        int i = this.dataAccess.get(2);
+        int j = this.dataAccess.get(3);
         if (j == 0 || i == 0) {
             return 0;
         }
@@ -185,7 +180,7 @@ public abstract class AbstractFreezerScreenHandler extends RecipeBookMenu<Contai
 
     @Environment(value=EnvType.CLIENT)
     public boolean isBurning() {
-        return this.propertyDelegate.get(0) > 0;
+        return this.dataAccess.get(0) > 0;
     }
 }
 

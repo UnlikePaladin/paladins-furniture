@@ -3,6 +3,7 @@ package com.unlikepaladin.pfm.blocks.blockentities.forge;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.StoveBlockEntityBalm;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -36,7 +37,7 @@ public class StoveBlockEntityImpl extends StoveBlockEntity {
     }
 
     @Override
-    public void handleUpdateTag(NbtCompound tag) {
+    public void handleUpdateTag(BlockState state, CompoundTag tag) {
         this.load(getBlockState(), tag);
     }
 

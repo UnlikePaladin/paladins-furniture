@@ -29,7 +29,7 @@ public class ShowerHandleBlockEntity extends BlockEntity {
     @Override
     public void load(BlockState state, CompoundTag nbt) {
         super.load(state, nbt);
-        if(nbt.contains("showerHead", Tag.TAG_LONG)){
+        if(nbt.contains("showerHead", 4)){
             this.showerOffset = BlockPos.of(nbt.getLong("showerHead"));
         }
     }

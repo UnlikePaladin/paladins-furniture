@@ -7,6 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 
 public class PFMTagsImpl {
     public static Tag.Named<Block> createTag(ResourceLocation identifier) {
-        return (Tag.Identified<Block>) TagRegistry.block(identifier);
+        return (Tag.Named<Block>) TagRegistry.block(identifier);
     }
 }

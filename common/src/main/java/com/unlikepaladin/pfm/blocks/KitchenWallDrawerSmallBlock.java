@@ -96,7 +96,7 @@ public class KitchenWallDrawerSmallBlock extends KitchenWallDrawerBlock {
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockView world) {
+    public BlockEntity newBlockEntity(BlockGetter world) {
         return GenericStorageBlockEntity3x3.getFactory().get();
     }
 

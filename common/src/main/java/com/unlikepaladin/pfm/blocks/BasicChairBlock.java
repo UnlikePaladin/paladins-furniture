@@ -99,7 +99,7 @@ public class BasicChairBlock extends AbstractSittableBlock {
 
         int times = (to.get2DDataValue() - from.get2DDataValue() + 4) % 4;
         for (int i = 0; i < times; i++) {
-            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
+            buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.box(1 - maxZ, minY, minX, 1 - minZ, maxY, maxX)));
             buffer[0] = buffer[1];
             buffer[1] = Shapes.empty();
         }
@@ -110,17 +110,17 @@ public class BasicChairBlock extends AbstractSittableBlock {
     /** Method to tuck the Chair's Voxel Shapes */
     public static VoxelShape tuckShape(Direction from, VoxelShape shape) {
         VoxelShape[] buffer = new VoxelShape[]{shape, Shapes.empty()};
-            if (from == Direction.NORTH) { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(minX, minY, minZ + 0.5, maxX, maxY, maxZ + 0.5)));
+            if (from == Direction.NORTH) { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.box(minX, minY, minZ + 0.5, maxX, maxY, maxZ + 0.5)));
                 buffer[0] = buffer[1];
                 buffer[1] = Shapes.empty();}
-            else if (from == Direction.SOUTH) { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(minX, minY, minZ - 0.5, maxX, maxY, maxZ - 0.5)));
+            else if (from == Direction.SOUTH) { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.box(minX, minY, minZ - 0.5, maxX, maxY, maxZ - 0.5)));
                 buffer[0] = buffer[1];
                 buffer[1] = Shapes.empty();}
-            else if (from == Direction.WEST) { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(minX + 0.5, minY, minZ, maxX + 0.5, maxY, maxZ)));
+            else if (from == Direction.WEST) { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.box(minX + 0.5, minY, minZ, maxX + 0.5, maxY, maxZ)));
                 buffer[0] = buffer[1];
                 buffer[1] = Shapes.empty();
                 }
-            else { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.create(minX - 0.5, minY, minZ, maxX - 0.5, maxY, maxZ)));
+            else { buffer[0].forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> buffer[1] = Shapes.or(buffer[1], Shapes.box(minX - 0.5, minY, minZ, maxX - 0.5, maxY, maxZ)));
                 buffer[0] = buffer[1];
                 buffer[1] = Shapes.empty();}
         return buffer[0];

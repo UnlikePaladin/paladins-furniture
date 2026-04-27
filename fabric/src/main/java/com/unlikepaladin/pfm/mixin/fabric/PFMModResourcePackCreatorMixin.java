@@ -32,14 +32,14 @@ public class PFMModResourcePackCreatorMixin {
     private void addPFMResources(Consumer<Pack> consumer, Pack.PackConstructor factory, CallbackInfo ci) {
         if (type == PackType.CLIENT_RESOURCES) {
             AbstractBakedModel.reloading = true;
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new TextComponent("Runtime Generated Assets for PFM"), SharedConstants.getCurrentVersion().getPackVersion());
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(new TextComponent("Runtime Generated Assets for PFM"), SharedConstants.getCurrentVersion().getPackVersion());
             consumer.accept(Pack.create("PFM Assets", true, () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
                 if (!PFMDataGenerator.areAssetsRunning())
                             PFMRuntimeResources.prepareAndRunAssetGen(false);
                         return PFMRuntimeResources.ASSETS_PACK;
             }), packResourceMetadata), factory, Pack.Position.BOTTOM, PackSource.DEFAULT));
         } else if (type == PackType.SERVER_DATA) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(new TextComponent("Runtime Generated Data for PFM"), SharedConstants.getCurrentVersion().getPackVersion());
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(new TextComponent("Runtime Generated Data for PFM"), SharedConstants.getCurrentVersion().getPackVersion());
             consumer.accept(Pack.create("PFM Data", true, () -> new PathPackRPWrapper(Suppliers.memoize(() -> {
                 if (!PFMDataGenerator.isDataRunning())
                             PFMRuntimeResources.prepareAndRunDataGen(false);

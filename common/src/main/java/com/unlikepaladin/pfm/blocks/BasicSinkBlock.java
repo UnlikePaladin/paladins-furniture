@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.blocks;
 
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.core.BlockPos;
@@ -10,13 +9,11 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.biome.Biome;
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.DinnerTableBlock.rotateShape;

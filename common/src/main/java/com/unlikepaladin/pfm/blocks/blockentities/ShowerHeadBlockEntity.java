@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.util.Tickable;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -18,7 +18,7 @@ import net.minecraft.world.level.Level;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class ShowerHeadBlockEntity extends BlockEntity implements Tickable {
+public class ShowerHeadBlockEntity extends BlockEntity implements TickableBlockEntity {
     public ShowerHeadBlockEntity() {
         super(BlockEntities.SHOWER_HEAD_BLOCK_ENTITY);
     }
@@ -51,10 +51,10 @@ public class ShowerHeadBlockEntity extends BlockEntity implements Tickable {
 
     public void tick() {
         if (level != null && this.isOpen && level.isClientSide) {
-            spawnParticles(this.getCachedState().get(Properties.HORIZONTAL_FACING), this.level, this.getBlockPos());
+            spawnParticles(this.getBlockState().getValue( BlockStateProperties.HORIZONTAL_FACING), this.level, this.getBlockPos());
         }
         if (this.isOpen) {
-            world.playSound(null, pos, SoundEvents.WEATHER_RAIN, SoundSource.BLOCKS, 0.1f, 8.0f);
+            level.playSound(null, worldPosition, SoundEvents.WEATHER_RAIN, SoundSource.BLOCKS, 0.1f, 8.0f);
         }
     }
 

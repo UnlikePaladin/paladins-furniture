@@ -6,12 +6,10 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Tickable;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 
 
-public class ToiletBlockEntity extends BlockEntity implements Tickable {
+public class ToiletBlockEntity extends BlockEntity implements TickableBlockEntity {
     public ToiletBlockEntity() {
         super(BlockEntities.TOILET_BLOCK_ENTITY);
     }
@@ -44,7 +42,7 @@ public class ToiletBlockEntity extends BlockEntity implements Tickable {
         BlockState state = this.getBlockState();
         if (state.getValue(BasicToiletBlock.TOILET_STATE) == ToiletState.FLUSHING) {
             if (this.flushTimer >= 120) {
-                BasicToiletBlock.setClean(state, world, pos);
+                BasicToiletBlock.setClean(state, level, worldPosition);
                 this.setFlushTimer(0);
             } else {
                 this.flushTimer++;

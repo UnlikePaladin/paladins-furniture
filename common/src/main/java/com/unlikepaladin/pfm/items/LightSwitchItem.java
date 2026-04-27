@@ -117,13 +117,13 @@ public class LightSwitchItem extends BlockItem {
     private void addLight(ItemStack stack, BlockPos pos)
     {
         CompoundTag nbtCompound = createTag(stack);
-        if(!nbtCompound.contains("BlockEntityTag", Tag.TAG_COMPOUND))
+        if(!nbtCompound.contains("BlockEntityTag", 10))
         {
             nbtCompound.put("BlockEntityTag", new CompoundTag());
         }
 
         CompoundTag blockEntityTag = nbtCompound.getCompound("BlockEntityTag");
-        if(!blockEntityTag.contains("lights", Tag.TAG_LIST))
+        if(!blockEntityTag.contains("lights", 9))
         {
             blockEntityTag.put("lights", new ListTag());
         }
@@ -153,10 +153,10 @@ public class LightSwitchItem extends BlockItem {
     {
         if(stack.hasTag()) {
             CompoundTag nbtCompound = stack.getTag();
-            if(nbtCompound.contains("BlockEntityTag", Tag.TAG_COMPOUND))
+            if(nbtCompound.contains("BlockEntityTag", 10))
             {
                 CompoundTag blockEntityTag = nbtCompound.getCompound("BlockEntityTag");
-                if(blockEntityTag.contains("lights", Tag.TAG_LIST))
+                if(blockEntityTag.contains("lights", 9))
                 {
                     return (ListTag) blockEntityTag.get("lights");
                 }

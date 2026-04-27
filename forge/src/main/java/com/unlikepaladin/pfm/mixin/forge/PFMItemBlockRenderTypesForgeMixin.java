@@ -42,7 +42,7 @@ public abstract class PFMItemBlockRenderTypesForgeMixin {
             }
 
             if (Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state) instanceof AbstractBakedModel) {
-                AbstractBakedModel abstractBakedModel = (AbstractBakedModel) MinecraftClient.getInstance().getBakedModelManager().getBlockModels().getModel(state);
+                AbstractBakedModel abstractBakedModel = (AbstractBakedModel) Minecraft.getInstance().getModelManager().getBlockModelShaper().getBlockModel(state);
                 VariantBase<?> variant = abstractBakedModel.getVariant(state);
                 if (variant != null) {
                     boolean doesBaseRender = canRenderInLayer(variant.getBaseBlock().defaultBlockState(), type);

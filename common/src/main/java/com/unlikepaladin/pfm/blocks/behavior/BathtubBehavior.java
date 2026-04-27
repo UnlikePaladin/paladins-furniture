@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import net.minecraft.world.item.alchemy.Potions;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -89,8 +89,8 @@ public interface BathtubBehavior {
             }
             if (stack.isEmpty()) {
                 player.setItemInHand(hand, itemStack);
-            } else if (player.inventory.add(itemStack) && player instanceof ServerPlayerEntity) {
-                ((ServerPlayerEntity)player).refreshContainer(player.playerScreenHandler);
+            } else if (player.inventory.add(itemStack) && player instanceof ServerPlayer) {
+                ((ServerPlayer)player).refreshContainer(player.containerMenu);
             }  else {
                 player.drop(itemStack, false);
             }

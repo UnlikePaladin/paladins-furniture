@@ -99,8 +99,8 @@ public class PFMGeneratingOverlay extends Overlay {
         float r = (float)(PFM_ORANGE >> 16 & 0xFF) / 255.0f;
         float g = (float)(PFM_ORANGE >> 8 & 0xFF) / 255.0f;
         float b = (float)(PFM_ORANGE & 0xFF) / 255.0f;
-        GlStateManager.clearColor(r, g, b, 1.0f);
-        GlStateManager.clear(16384, Minecraft.ON_OSX);
+        GlStateManager._clearColor(r, g, b, 1.0f);
+        GlStateManager._clear(16384, Minecraft.ON_OSX);
 
         glText.gltViewport(this.minecraft.getWindow().getWidth(), this.minecraft.getWindow().getHeight());
         float timeProgress = this.reloadCompleteTime > -1L ? (float)(l - this.reloadCompleteTime) / 1000.0f : -1.0f;
@@ -126,7 +126,7 @@ public class PFMGeneratingOverlay extends Overlay {
 
         int x = (width - logoWidth) / 2;
         int y = (height - logoHeight) / 2;
-        this.minecraft.getTextureManager().bindTexture(pfmLogo);
+        this.minecraft.getTextureManager().bind(pfmLogo);
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
         blit(matrices, x, y, 0, 0, logoWidth, logoHeight, logoWidth, logoHeight);
         RenderSystem.disableCull();
@@ -220,7 +220,7 @@ public class PFMGeneratingOverlay extends Overlay {
     }
 
     void renderMessage(String message, float[] colour, int line, float alpha) {
-        GlStateManager.enableClientState(32884);
+        GlStateManager._enableClientState(32884);
         ByteBuffer charBuffer = MemoryUtil.memAlloc(message.length() * 270);
         int quads = STBEasyFont.stb_easy_font_print(0.0F, 0.0F, message, (ByteBuffer)null, charBuffer);
         GL14.glVertexPointer(2, 5126, 16, charBuffer);
@@ -228,7 +228,7 @@ public class PFMGeneratingOverlay extends Overlay {
         RenderSystem.disableTexture();
         RenderSystem.disableCull();
         GL14.glBlendColor(0.0F, 0.0F, 0.0F, alpha);
-        RenderSystem.blendFunc(GlStateManager.SrcFactor.CONSTANT_ALPHA, GlStateManager.DstFactor.ONE_MINUS_CONSTANT_ALPHA);
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.CONSTANT_ALPHA, GlStateManager.DestFactor.ONE_MINUS_CONSTANT_ALPHA);
         RenderSystem.color3f(colour[0], colour[1], colour[2]);
         RenderSystem.pushMatrix();
         RenderSystem.translatef(10.0F, (float)(line * 10), 0.0F);
@@ -236,7 +236,7 @@ public class PFMGeneratingOverlay extends Overlay {
         RenderSystem.drawArrays(7, 0, quads * 4);
         RenderSystem.popMatrix();
         RenderSystem.enableCull();
-        GlStateManager.disableClientState(32884);
+        GlStateManager._disableClientState(32884);
         MemoryUtil.memFree(charBuffer);
     }
 }

@@ -103,14 +103,14 @@ public class WoodVariant extends VariantBase<WoodVariant> {
                     new ResourceLocation(id.getNamespace(), append + "_" + id.getPath() + postNether.replace("_", ""))
             };
             for (ResourceLocation r : nether_targets) {
-                if (Registry.BLOCK.getOrEmpty(r).isPresent()) {
+                if (Registry.BLOCK.getOptional(r).isPresent()) {
                     found = Registry.BLOCK.get(r);
                     break;
                 }
             }
         }
         for (ResourceLocation r : targets) {
-            if (Registry.BLOCK.getOrEmpty(r).isPresent()) {
+            if (Registry.BLOCK.getOptional(r).isPresent()) {
                 found = Registry.BLOCK.get(r);
                 break;
             }
@@ -146,12 +146,12 @@ public class WoodVariant extends VariantBase<WoodVariant> {
 
     @Override
     public Material getBaseMaterial() {
-        return plankBlock.getDefaultState().getMaterial();
+        return plankBlock.defaultBlockState().getMaterial();
     }
 
     @Override
     public Material getSecondaryMaterial() {
-        return logBlock.getDefaultState().getMaterial();
+        return logBlock.defaultBlockState().getMaterial();
     }
 
     @Override

@@ -19,7 +19,7 @@ import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.Clearable;
 import net.minecraft.world.Containers;
-import net.minecraft.util.Tickable;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -31,7 +31,7 @@ import java.util.Random;
 import java.util.function.Supplier;
 
 
-public class StovetopBlockEntity extends BlockEntity implements Clearable, Tickable {
+public class StovetopBlockEntity extends BlockEntity implements Clearable, TickableBlockEntity {
 
     public final NonNullList<ItemStack> itemsBeingCooked = NonNullList.withSize(4, ItemStack.EMPTY);
     private final int[] cookingTimes = new int[4];
@@ -51,9 +51,9 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
         }
             if (this.cookingTimes[i] < this.cookingTotalTimes[i]) continue;
             SimpleContainer inventory = new SimpleContainer(itemStack);
-            ItemStack itemStack2 = world.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, world).map(campfireCookingRecipe -> campfireCookingRecipe.assemble(inventory)).orElse(itemStack);
+            ItemStack itemStack2 = level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, level).map(campfireCookingRecipe -> campfireCookingRecipe.assemble(inventory)).orElse(itemStack);
                 if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
-                    Containers.dropItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStack2);
+                    Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), itemStack2);
                     this.itemsBeingCooked.set(i, ItemStack.EMPTY);
                 }
                 else {
@@ -81,10 +81,10 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
     public void clientTick() {
         int i;
         Random random = level.random;
-        i = getCachedState().getValue(KitchenStovetopBlock.FACING).getClockWise().get2DDataValue();
+        i = getBlockState().getValue(KitchenStovetopBlock.FACING).getClockWise().get2DDataValue();
         for (int j = 0; j < this.itemsBeingCooked.size(); ++j) {
             ItemStack stack = this.itemsBeingCooked.get(j);
-            if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || !world.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SimpleContainer(stack), world).isPresent()) continue;
+            if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || !level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SimpleContainer(stack), level).isPresent()) continue;
             Direction direction = Direction.from2DDataValue(Math.floorMod(j + i, 4));
             BlockPos pos = worldPosition;
             float f = 0.2125f;
@@ -180,13 +180,13 @@ public class StovetopBlockEntity extends BlockEntity implements Clearable, Ticka
 
     @Override
     public void tick() {
-        BlockState state = getCachedState();
-        if (world.isClient) {
-            if (getCachedState().get(KitchenStovetopBlock.LIT)) {
+        BlockState state = getBlockState();
+        if (level.isClientSide) {
+            if (getBlockState().getValue(KitchenStovetopBlock.LIT)) {
                 clientTick();
             }
         } else {
-            if (state.get(KitchenStovetopBlock.LIT)) {
+            if (state.getValue(KitchenStovetopBlock.LIT)) {
                 litServerTick();
             }
             else {

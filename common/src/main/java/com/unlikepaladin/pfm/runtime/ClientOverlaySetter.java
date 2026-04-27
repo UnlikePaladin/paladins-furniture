@@ -20,8 +20,8 @@ public class ClientOverlaySetter {
         Minecraft client = Minecraft.getInstance();
         // I can't believe i missed this single pushMatrix call
         RenderSystem.pushMatrix();
-        client.getFramebuffer().beginWrite(true);
-        long i = Util.getMeasuringTimeNano();
+        client.getMainRenderTarget().bindWrite(true);
+        long i = Util.getNanos();
         client.gameRenderer.render(1, i, false);
         client.getMainRenderTarget().unbindWrite();
         RenderSystem.popMatrix();

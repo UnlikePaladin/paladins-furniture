@@ -2,7 +2,6 @@ package com.unlikepaladin.pfm.compat.rei.forge;
 
 import com.google.common.collect.Lists;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
-import it.unimi.dsi.fastutil.ints.IntList;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -14,17 +13,11 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -38,7 +31,7 @@ public class FurnitureCategory implements DisplayCategory<FurnitureDisplay>{
     }
 
     @Override
-    public @NotNull Identifier getIdentifier() {
+    public @NotNull ResourceLocation getIdentifier() {
         return FurnitureDisplay.IDENTIFIER.getIdentifier();
     }
 
@@ -54,7 +47,7 @@ public class FurnitureCategory implements DisplayCategory<FurnitureDisplay>{
 
     @Override
     public Component getTitle() {
-        return new TranslatableText("rei.pfm.furniture");
+        return new TranslatableComponent("rei.pfm.furniture");
     }
 
     @Override

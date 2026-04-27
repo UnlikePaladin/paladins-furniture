@@ -3,12 +3,12 @@ package com.unlikepaladin.pfm.data.fabric;
 import com.unlikepaladin.pfm.data.ToolType;
 import net.fabricmc.fabric.api.object.builder.v1.block.FabricBlockSettings;
 import net.fabricmc.fabric.api.tool.attribute.v1.FabricToolTags;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.item.Item;
-import net.minecraft.tag.Tag;
+import net.minecraft.tags.Tag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class PFMBlockSettingsImpl {
-    public static AbstractBlock.Settings breaksWithTool(AbstractBlock.Settings settings, ToolType type) {
+    public static BlockBehaviour.Properties breaksWithTool(BlockBehaviour.Properties settings, ToolType type) {
         return type != ToolType.NONE ? FabricBlockSettings.copyOf(settings).breakByTool(getToolTag(type)) : settings;
     }
 

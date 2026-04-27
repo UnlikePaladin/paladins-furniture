@@ -4,7 +4,9 @@ import com.unlikepaladin.pfm.blocks.blockentities.GenericStorageBlockEntity9x3;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.InventoryHandler;
 import net.blay09.mods.cookingforblockheads.api.capability.CapabilityKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.api.capability.KitchenItemProvider;
 import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.Container;
 import net.minecraft.nbt.CompoundTag;
@@ -30,7 +32,7 @@ public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9
         this.inventoryHandler = new InventoryHandler(this.inventory) {
             @Override
             protected void onContentsChanged(int slot) {
-                GenericStorageBlockEntityBalm9x3.this.markDirty();
+                GenericStorageBlockEntityBalm9x3.this.setChanged();
                 super.onContentsChanged(slot);
             }
         };
@@ -55,7 +57,7 @@ public class GenericStorageBlockEntityBalm9x3 extends GenericStorageBlockEntity9
 
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        this.load(this.getCachedState(), pkt.getNbt());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     @Override

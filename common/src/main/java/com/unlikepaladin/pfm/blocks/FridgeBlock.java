@@ -241,7 +241,7 @@ public class FridgeBlock extends HorizontalFacingBlockWithEntity {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockView view) {
+    public BlockEntity newBlockEntity(BlockGetter view) {
         return FridgeBlockEntity.getFactory().get();
     }
 

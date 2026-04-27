@@ -5,11 +5,8 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.registry.SoundIDs;
 import com.unlikepaladin.pfm.registry.Statistics;
-import com.unlikepaladin.pfm.registry.BlockEntities;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -136,7 +133,7 @@ public class BasicToiletBlock extends AbstractSittableBlock implements EntityBlo
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockGetter world) {
         return new ToiletBlockEntity();
     }
 

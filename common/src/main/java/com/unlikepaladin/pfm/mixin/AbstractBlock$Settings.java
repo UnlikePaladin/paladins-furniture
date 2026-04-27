@@ -1,21 +1,21 @@
 package com.unlikepaladin.pfm.mixin;
 
 import com.unlikepaladin.pfm.ducks.AbstractBlock$SettingsExtension;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.MapColor;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.MaterialColor;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.function.Function;
 
-@Mixin(AbstractBlock.Settings.class)
+@Mixin(BlockBehaviour.Properties.class)
 public class AbstractBlock$Settings implements AbstractBlock$SettingsExtension {
     @Shadow
-    private Function<BlockState, MapColor> materialColorFactory;
+    private Function<BlockState, MaterialColor> materialColor;
     @Override
-    public AbstractBlock.Settings pfm$setMapColor(MapColor color) {
-        materialColorFactory = blockState -> color;
-        return (AbstractBlock.Settings)(Object)(this);
+    public BlockBehaviour.Properties pfm$setMapColor(MaterialColor color) {
+        materialColor = blockState -> color;
+        return (BlockBehaviour.Properties)(Object)(this);
     }
 }

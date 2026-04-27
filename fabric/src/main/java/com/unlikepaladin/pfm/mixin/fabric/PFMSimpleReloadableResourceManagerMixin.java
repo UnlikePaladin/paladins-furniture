@@ -14,7 +14,7 @@ import java.util.List;
 @Mixin(value = SimpleReloadableResourceManager.class)
 public class PFMSimpleReloadableResourceManagerMixin {
 
-    @ModifyVariable(at = @At(value = "HEAD"), method = "createReload", argsOnly = true)
+    @ModifyVariable(at = @At(value = "HEAD"), method = "createFullReload", argsOnly = true)
     private List<PackResources> createReload(List<PackResources> packs) {
         List<PackResources> resourcePacks = new ArrayList<>(packs);
         resourcePacks.removeIf(pack -> pack instanceof PathPackRPWrapper);

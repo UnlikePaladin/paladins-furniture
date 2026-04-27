@@ -4,7 +4,6 @@ import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.behavior.BathtubBehavior;
 import com.unlikepaladin.pfm.blocks.blockentities.BathtubBlockEntity;
 import com.unlikepaladin.pfm.entity.ChairEntity;
-import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Entities;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
 import com.unlikepaladin.pfm.registry.Statistics;
@@ -13,8 +12,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BedPart;
@@ -53,7 +50,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import static com.unlikepaladin.pfm.blocks.SimpleStoolBlock.rotateShape;
@@ -157,8 +153,8 @@ public class BasicBathtubBlock extends BedBlock {
             return;
         }
         BlockState blockState = world.getBlockState(pos);
-        if (blockState.get(LEVEL_8) < 8) {
-            world.setBlockAndUpdate(pos, blockState.cycle(LEVEL_8), 2);
+        if (blockState.getValue(LEVEL_8) < 8) {
+            world.setBlock(pos, blockState.cycle(LEVEL_8), 2);
         }
     }
 
@@ -229,7 +225,7 @@ public class BasicBathtubBlock extends BedBlock {
             pz = pos.getZ() + 0.5;
             double py = pos.getY() + this.height;
 
-            List<ChairEntity> active = world.getEntitiesOfClass(ChairEntity.class, new AABB(pos), Entity::hasExactlyOnePlayerPassenger);
+            List<ChairEntity> active = world.getEntitiesOfClass(ChairEntity.class, new AABB(pos), Entity::hasOnePlayerPassenger);
             if (!active.isEmpty())
                 return InteractionResult.PASS;
 
@@ -317,7 +313,7 @@ public class BasicBathtubBlock extends BedBlock {
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockView world) {
+    public BlockEntity newBlockEntity(BlockGetter world) {
         return new BathtubBlockEntity();
     }
 

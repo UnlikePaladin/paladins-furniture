@@ -32,7 +32,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -177,12 +176,12 @@ public class BasicShowerHandleBlock extends HorizontalFacingBlockWithEntity {
         if (state.is(BlockTags.GUARDED_BY_PIGLINS)) {
             PiglinAi.angerNearbyPiglins(player, false);
         }
-        world.syncWorldEvent(player, 2001, pos, getRawIdFromState(state));
+        world.levelEvent(player, 2001, pos, getId(state));
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockView world) {
+    public BlockEntity newBlockEntity(BlockGetter world) {
         return new ShowerHandleBlockEntity();
     }
 

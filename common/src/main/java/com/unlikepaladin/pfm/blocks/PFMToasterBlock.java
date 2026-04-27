@@ -7,8 +7,6 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -64,7 +62,7 @@ public class PFMToasterBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Nullable
-    public BlockEntity createBlockEntity(BlockGetter world) {
+    public BlockEntity newBlockEntity(BlockGetter world) {
         return PFMToasterBlockEntity.getFactory().get();
     }
 

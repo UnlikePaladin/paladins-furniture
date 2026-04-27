@@ -14,12 +14,12 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.state.property.Property;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.Level;
@@ -45,7 +45,7 @@ public class DyeKit extends Item {
         if (playerEntity.isShiftKeyDown() && stack.getItem() instanceof DyeKit) {
             boolean dyed;
             if(blockState.getBlock() instanceof DyeableFurnitureBlock) {
-                level.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(null, blockPos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
                 String newBlock= blockState.getBlock().toString();
                 newBlock = newBlock.replace(((DyeableFurnitureBlock) blockState.getBlock()).getPFMColor().toString(), getColor().toString()).replace("block.pfm.","").replace("Block{", "").replace("}", "");
                 BlockState blockState1 = getStateWithProperties(Registry.BLOCK.get(new ResourceLocation(newBlock)), blockState);
@@ -54,7 +54,7 @@ public class DyeKit extends Item {
                 dyed = true;
             }
             else if (level.getBlockEntity(blockPos) instanceof DyeableFurnitureBlockEntity<?>) {
-                level.playSound(null, blockPos, SoundEvents.DYE_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                level.playSound(null, blockPos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS, 1.0F, 1.0F);
                 DyeableFurnitureBlockEntity<?> dyeableFurnitureBlockEntity = (DyeableFurnitureBlockEntity<?>) level.getBlockEntity(blockPos);
                 dyeableFurnitureBlockEntity.setPFMColor(getColor());
                 level.sendBlockUpdated(blockPos, blockState, blockState, 3);
@@ -85,10 +85,10 @@ public class DyeKit extends Item {
 
     @Override
     public InteractionResult interactLivingEntity(ItemStack stack, Player user, LivingEntity entity, InteractionHand hand) {
-        if (entity instanceof SheepEntity) {
-            SheepEntity sheepEntity = (SheepEntity)entity;
+        if (entity instanceof Sheep) {
+            Sheep sheepEntity = (Sheep)entity;
             if (sheepEntity.isAlive() && !sheepEntity.isSheared() && sheepEntity.getColor() != ((DyeKit) stack.getItem()).getColor()) {
-                sheepEntity.level.playSound(user, sheepEntity, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+                sheepEntity.level.playSound(user, sheepEntity, SoundEvents.BOTTLE_EMPTY, SoundSource.PLAYERS, 1.0F, 1.0F);
                 if (!user.level.isClientSide) {
                     sheepEntity.setColor(this.color);
                     stack.shrink(1);
@@ -98,7 +98,7 @@ public class DyeKit extends Item {
             }
         } else if (entity instanceof DyeableFurnitureEntity<?>) {
             if (((DyeableFurnitureEntity<?>) entity).getPFMColor() != getColor()){
-                entity.level.playSound(user, entity, SoundEvents.DYE_USE, SoundSource.PLAYERS, 1.0F, 1.0F);
+                entity.level.playSound(user, entity, SoundEvents.BOTTLE_EMPTY, SoundSource.PLAYERS, 1.0F, 1.0F);
                 if (!user.level.isClientSide) {
                     ((DyeableFurnitureEntity<?>) entity).setPFMColor(getColor());
                     stack.shrink(1);

@@ -5,7 +5,7 @@ import com.unlikepaladin.pfm.blocks.blockentities.forge.ShowerHeadBlockEntityImp
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.level.BlockGetter;
 
 public class BasicShowerHeadBlockImpl {
     public static BlockEntity getBlockEntity() {

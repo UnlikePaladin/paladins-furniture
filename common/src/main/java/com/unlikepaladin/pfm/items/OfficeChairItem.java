@@ -4,10 +4,8 @@ import com.unlikepaladin.pfm.client.PFMBuiltinItemRendererExtension;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import com.unlikepaladin.pfm.registry.Entities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
@@ -27,7 +25,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.List;
 
@@ -102,9 +99,9 @@ public class OfficeChairItem extends Item implements PFMBuiltinItemRendererExten
                 }
 
                 chair.setPersistenceRequired();
-                chair.refreshPositionAndAngles(hitResult.getPos().x, hitResult.getPos().y+0.1f, hitResult.getPos().z, user.yaw, 0);
+                chair.moveTo(hitResult.getLocation().x, hitResult.getLocation().y+0.1f, hitResult.getLocation().z, user.yRot, 0);
                 chair.setPFMColor(color);
-                chair.yRot = (user.yRot());
+                chair.yRot = (user.yRot);
                 world.playSound(null, new BlockPos(hitResult.getLocation()), SoundEvents.STONE_PLACE, SoundSource.BLOCKS, 1.0F, 1.0F);
 
                 if (!world.isClientSide) {

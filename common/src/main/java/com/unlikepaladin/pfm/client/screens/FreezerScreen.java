@@ -43,14 +43,14 @@ public class FreezerScreen extends AbstractContainerScreen<AbstractFreezerScreen
         int k;
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
         this.minecraft.getTextureManager().bind(this.background);
-        int i = this.x;
-        int j = this.y;
-        this.blit(matrices, i, j, 0, 0, this.backgroundWidth, this.backgroundHeight);
-        if (((AbstractFreezerScreenHandler)this.handler).isBurning()) {
-            k = ((AbstractFreezerScreenHandler)this.handler).getFuelProgress();
+        int i = this.leftPos;
+        int j = this.topPos;
+        this.blit(matrices, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        if (((AbstractFreezerScreenHandler)this.menu).isBurning()) {
+            k = ((AbstractFreezerScreenHandler)this.menu).getFuelProgress();
             this.blit(matrices, i + 56, j + 36 + 12 - k, 176, 12 - k, 14, k + 1);
         }
-        k = ((AbstractFreezerScreenHandler)this.handler).getCookProgress();
+        k = ((AbstractFreezerScreenHandler)this.menu).getCookProgress();
         this.blit(matrices, i + 79, j + 34, 176, 14, k + 1, 16);
     }
 

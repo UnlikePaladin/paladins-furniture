@@ -10,9 +10,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.BakedQuad;
@@ -27,7 +26,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import com.mojang.math.Vector3f;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
@@ -138,7 +136,7 @@ public class OfficeChairEntityRenderer extends MobRenderer<OfficeChairEntity, Of
         // Calculate wheel rotation based on movement direction
         Vec3 velocity = mobEntity.getDeltaMovement();
         float wheelYaw = 0.0F;
-        double speed = OfficeChairEntity.horizontalDistance(velocity);
+        double speed = OfficeChairEntity.horizontalLength(velocity);
         if (speed > 1.0E-7) {
             wheelYaw = (float) (Mth.atan2(velocity.z, velocity.x) * (180.0 / Math.PI)) - 90.0F;
         }

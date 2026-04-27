@@ -2,6 +2,7 @@ package com.unlikepaladin.pfm.mixin;
 
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
+import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.SimpleReloadableResourceManager;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.resources.ReloadInstance;
@@ -19,7 +20,7 @@ import java.util.concurrent.Executor;
 public class PFMSimpleReloadableResourceManagerMixin {
 
     @Inject(at = @At(value = "HEAD"), method = "createReload")
-    private void createReload(Executor prepareExecutor, Executor applyExecutor, CompletableFuture<Unit> initialStage, List<PackResources> packs, CallbackInfoReturnable<ReloadInstance> cir) {
+    private void createReload(Executor executor, Executor executor2, List<PreparableReloadListener> list, CompletableFuture<Unit> completableFuture, CallbackInfoReturnable<ReloadInstance> cir) {
         PFMRuntimeResources.modelCacheMap.clear();
         ModelHelper.blockToTextureMap.clear();
         ModelHelper.GENERATED_TEXTURE_IDS.clear();

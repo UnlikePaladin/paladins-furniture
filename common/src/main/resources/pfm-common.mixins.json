@@ -25,7 +25,7 @@
     "PFMSpriteInfoAccesor",
     "PFMTextureAtlasSpriteMixin",
     "PFMTitleScreenMixin",
-    "PFMTextureSlotFactory"
+    "PFMTextureSlotFactory",
     "PFMTitleScreenMixin"
   ],
   "injectors": {

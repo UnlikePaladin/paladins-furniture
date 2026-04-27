@@ -3,6 +3,9 @@ package com.unlikepaladin.pfm.blocks.behavior;
 import com.unlikepaladin.pfm.blocks.AbstractSinkBlock;
 import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.registry.Statistics;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.Util;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -20,26 +23,24 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.gameevent.GameEvent;
-
 import java.util.Map;
 import java.util.function.Predicate;
 
 public interface SinkBehavior {
 
-    SinkBehavior FILL_SINK_WITH_WATER = (state, world, pos, player, hand, stack) -> SinkBehavior.fillCauldron(world, pos, player, hand, stack, state.with(AbstractSinkBlock.LEVEL_4, 3), SoundEvents.ITEM_BUCKET_EMPTY);
+    SinkBehavior FILL_SINK_WITH_WATER = (state, world, pos, player, hand, stack) -> SinkBehavior.fillCauldron(world, pos, player, hand, stack, state.setValue(AbstractSinkBlock.LEVEL_4, 3), SoundEvents.BUCKET_EMPTY);
     Map<Item, SinkBehavior> WATER_SINK_BEHAVIOR = SinkBehavior.createMap();
 
 
     static Object2ObjectOpenHashMap<Item, SinkBehavior> createMap() {
-        return (Object2ObjectOpenHashMap)Util.make(new Object2ObjectOpenHashMap(), (map) -> {
+        return (Object2ObjectOpenHashMap) Util.make(new Object2ObjectOpenHashMap(), (map) -> {
             map.defaultReturnValue(null);});
     }
 
-    public ActionResult interact(BlockState var1, Level var2, BlockPos var3, Player var4, InteractionHand var5, ItemStack var6);
+    public InteractionResult interact(BlockState var1, Level var2, BlockPos var3, Player var4, InteractionHand var5, ItemStack var6);
 
     SinkBehavior CLEAN_SHULKER_BOX = (state, world, pos, player, hand, stack) -> {
-        if (state.get(AbstractSinkBlock.LEVEL_4) == 0) {
+        if (state.getValue(AbstractSinkBlock.LEVEL_4) == 0) {
             return InteractionResult.PASS;
         }
         Block block = Block.byItem(stack.getItem());
@@ -59,7 +60,7 @@ public interface SinkBehavior {
     };
 
     SinkBehavior CLEAN_DYEABLE_ITEM = (state, world, pos, player, hand, stack) -> {
-       if (state.get(KitchenSinkBlock.LEVEL_4) == 0) {
+       if (state.getValue(KitchenSinkBlock.LEVEL_4) == 0) {
            return InteractionResult.PASS;
        }
         Item item = stack.getItem();
@@ -91,7 +92,7 @@ public interface SinkBehavior {
             if (stack.isEmpty()) {
                 player.setItemInHand(hand, itemStack);
             } else if (player.inventory.add(itemStack)) {
-                ((ServerPlayerEntity)player).refreshContainer(player.containerMenu);
+                ((ServerPlayer)player).refreshContainer(player.containerMenu);
             } else {
                 player.drop(itemStack, false);
             }

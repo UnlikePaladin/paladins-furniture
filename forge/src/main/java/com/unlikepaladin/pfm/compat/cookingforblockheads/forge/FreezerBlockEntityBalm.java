@@ -1,17 +1,16 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
-import com.unlikepaladin.pfm.blocks.blockentities.FreezerBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.InventoryHandler;
 import net.blay09.mods.cookingforblockheads.api.capability.CapabilityKitchenItemProvider;
 import com.unlikepaladin.pfm.blocks.blockentities.forge.FreezerBlockEntityImpl;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IngredientPredicate;
+import net.blay09.mods.cookingforblockheads.api.capability.KitchenItemProvider;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.Container;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
@@ -37,7 +36,7 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl {
         this.inventoryHandler = new InventoryHandler(this.inventory) {
             @Override
             protected void onContentsChanged(int slot) {
-                FreezerBlockEntityBalm.this.markDirty();
+                FreezerBlockEntityBalm.this.setChanged();
                 super.onContentsChanged(slot);
             }
         };
@@ -75,9 +74,10 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl {
     }
 
 
-    public void fromTag(BlockState state, CompoundTag tagCompound) {
-        super.fromTag(state, tagCompound);
-        NbtCompound itemHandlerCompound = tagCompound.getCompound("ItemHandler");
+    @Override
+    public void load(BlockState state, CompoundTag tagCompound) {
+        super.load(state, tagCompound);
+        CompoundTag itemHandlerCompound = tagCompound.getCompound("ItemHandler");
         this.inventoryHandler.deserializeNBT(itemHandlerCompound);
     }
 
@@ -90,7 +90,7 @@ public class FreezerBlockEntityBalm extends FreezerBlockEntityImpl {
 
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        this.load(this.getCachedState(), pkt.getNbt());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     public CompoundTag getUpdateTag() {

@@ -1,15 +1,12 @@
 package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.blockentities.StovetopBlockEntity;
-import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
@@ -43,7 +40,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.createTicketHelper;
 import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
@@ -128,7 +124,7 @@ public class KitchenStovetopBlock extends HorizontalFacingBlockWithEntity {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockView world) {
+    public BlockEntity newBlockEntity(BlockGetter world) {
         return getBlockEntity();
     }
 

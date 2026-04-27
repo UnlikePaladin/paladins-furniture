@@ -37,7 +37,7 @@ public interface FurnitureRecipe extends Recipe<Inventory> {
 
     static int getSlotWithStackIgnoreNBT(Inventory inventory, ItemStack stack) {
         for(int i = 0; i < inventory.items.size(); ++i) {
-            if (!inventory.items.get(i).isEmpty() && stack.is(inventory.items.get(i).getItem())) {
+            if (!inventory.items.get(i).isEmpty() && stack.getItem() == (inventory.items.get(i).getItem())) {
                 return i;
             }
         }

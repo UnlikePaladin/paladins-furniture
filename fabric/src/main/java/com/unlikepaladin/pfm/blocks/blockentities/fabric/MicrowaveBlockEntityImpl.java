@@ -33,7 +33,7 @@ public class MicrowaveBlockEntityImpl extends MicrowaveBlockEntity implements Bl
 
     public static void setActiveonClient(MicrowaveBlockEntity microwaveBlockEntity, boolean active) {
         microwaveBlockEntity.setActive(active);
-        if (!microwaveBlockEntity.getWorld().isClient) {
+        if (!microwaveBlockEntity.getLevel().isClientSide) {
             Collection<ServerPlayer> watchingPlayers = PlayerLookup.tracking(microwaveBlockEntity);
             // Look at the other methods of `PlayerStream` to capture different groups of players.
             // We'll get to this later

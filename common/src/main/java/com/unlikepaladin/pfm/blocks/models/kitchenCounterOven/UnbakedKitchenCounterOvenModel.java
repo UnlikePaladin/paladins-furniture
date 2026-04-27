@@ -34,7 +34,7 @@ public class UnbakedKitchenCounterOvenModel implements UnbakedModel {
 
     private static final ResourceLocation PARENT = new ResourceLocation("block/block");
     public static final ResourceLocation OVEN_MODEL_ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/kitchen_counter_oven");
-    public static final List<ResourceLocation> OVEN_MODEL_IDS  = new ArrayList<Identifier>() {
+    public static final List<ResourceLocation> OVEN_MODEL_IDS  = new ArrayList<ResourceLocation>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_kitchen_counter_oven"));

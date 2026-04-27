@@ -7,30 +7,22 @@ import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.FreezerScreenHandler;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.world.*;
 import net.minecraft.world.entity.player.StackedContents;
-import net.minecraft.world.inventory.RecipeHolder;
-import net.minecraft.world.inventory.StackedContentsCompatible;
+import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.crafting.AbstractCookingRecipe;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.BaseContainerBlockEntity;
-import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.Container;
-import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.inventory.ContainerData;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -39,11 +31,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
@@ -54,17 +46,17 @@ import java.util.function.Supplier;
 
 public class FreezerBlockEntity extends BaseContainerBlockEntity implements MenuProvider, WorldlyContainer, RecipeHolder, StackedContentsCompatible, TickableBlockEntity {
     public FreezerBlockEntity() {
-        super(BlockEntities.FREEZER_BLOCK_ENTITY, pos, state);
+        super(BlockEntities.FREEZER_BLOCK_ENTITY);
         this.recipeType = RecipeTypes.FREEZING_RECIPE;
     }
 
     public static int countViewers(Level world, BaseContainerBlockEntity inventory, int x, int y, int z) {
         int i = 0;
         float f = 5.0f;
-        List<Player> list = world.getNonSpectatingEntities(PlayerEntity.class, new Box((float)x - 5.0f, (float)y - 5.0f, (float)z - 5.0f, (float)(x + 1) + 5.0f, (float)(y + 1) + 5.0f, (float)(z + 1) + 5.0f));
+        List<Player> list = world.getEntitiesOfClass(Player.class, new AABB((float)x - 5.0f, (float)y - 5.0f, (float)z - 5.0f, (float)(x + 1) + 5.0f, (float)(y + 1) + 5.0f, (float)(z + 1) + 5.0f));
         for (Player playerEntity : list) {
-            Inventory inventory2;
-            if (!(playerEntity.containerMenu instanceof ChestMenu) || (inventory2 = ((ChestMenu)playerEntity.containerMenu).getInventory()) != inventory && (!(inventory2 instanceof CompoundContainer) || !((CompoundContainer)inventory2).contains(inventory))) continue;
+            Container inventory2;
+            if (!(playerEntity.containerMenu instanceof ChestMenu) || (inventory2 = ((ChestMenu)playerEntity.containerMenu).getContainer()) != inventory && (!(inventory2 instanceof CompoundContainer) || !((CompoundContainer)inventory2).contains(inventory))) continue;
             ++i;
         }
         return i;
@@ -82,22 +74,22 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
 
     @Override
     public void startOpen(Player player) {
-        if (!this.removed && !player.isSpectator()) {
+        if (!this.remove && !player.isSpectator()) {
             if (this.viewerCount < 0) {
                 this.viewerCount = 0;
             }
             ++this.viewerCount;
-            FreezerBlockEntity.this.playSound(getCachedState(), SoundEvents.BLOCK_IRON_TRAPDOOR_OPEN);
-            FreezerBlockEntity.this.setOpen(getCachedState(), true);
+            FreezerBlockEntity.this.playSound(getBlockState(), SoundEvents.IRON_TRAPDOOR_OPEN);
+            FreezerBlockEntity.this.setOpen(getBlockState(), true);
         }
     }
 
     @Override
     public void stopOpen(Player player) {
-        if (!this.removed && !player.isSpectator()) {
+        if (!this.remove && !player.isSpectator()) {
             --this.viewerCount;
-            FreezerBlockEntity.this.playSound(this.getCachedState(), SoundEvents.BLOCK_IRON_TRAPDOOR_CLOSE);
-            FreezerBlockEntity.this.setOpen(this.getCachedState(), false);
+            FreezerBlockEntity.this.playSound(this.getBlockState(), SoundEvents.IRON_TRAPDOOR_CLOSE);
+            FreezerBlockEntity.this.setOpen(this.getBlockState(), false);
         }
     }
 
@@ -105,7 +97,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
     private static final int[] TOP_SLOTS = new int[]{0};
     private static final int[] BOTTOM_SLOTS = new int[]{2, 1, 0};
     private static final int[] SIDE_SLOTS = new int[]{1};
-    private NonNullList<ItemStack> inventory = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
+    protected NonNullList<ItemStack> inventory = NonNullList.withSize(getContainerSize(), ItemStack.EMPTY);
     int fuelTime;
     int fuelTimeTotal;
     int freezeTime;
@@ -431,7 +423,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
         }
         ItemStack itemStack = this.inventory.get(1);
         if (this.isActive() || !itemStack.isEmpty() && !this.inventory.get(0).isEmpty()) {
-            Recipe recipe = world.getRecipeManager().getRecipeFor(this.recipeType, this, world).orElse(null);
+            Recipe recipe = level.getRecipeManager().getRecipeFor(this.recipeType, this, level).orElse(null);
             int i = this.getMaxStackSize();
             if (!this.isActive() && FreezerBlockEntity.canAcceptRecipeOutput(recipe, this.inventory, i)) {
                 this.fuelTimeTotal = this.fuelTime = this.getFuelTime(itemStack);
@@ -451,7 +443,7 @@ public class FreezerBlockEntity extends BaseContainerBlockEntity implements Menu
                 ++this.freezeTime;
                 if (this.freezeTime == this.freezeTimeTotal) {
                     this.freezeTime = 0;
-                    this.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(world, this.recipeType, this);
+                    this.freezeTimeTotal = FreezerBlockEntity.getFreezeTime(level, this.recipeType, this);
                     if (FreezerBlockEntity.craftRecipe(recipe, this.inventory, i)) {
                         this.setRecipeUsed(recipe);
                     }

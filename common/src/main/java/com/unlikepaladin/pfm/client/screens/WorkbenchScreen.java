@@ -166,7 +166,7 @@ public class WorkbenchScreen extends AbstractContainerScreen<WorkbenchScreenHand
     protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         this.renderBackground(matrices);
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-        this.client.getTextureManager().bindTexture(TEXTURE);
+        this.minecraft.getTextureManager().bind(TEXTURE);
         int x = this.leftPos;
         int y = this.topPos;
         this.blit(matrices, x, y, 0, 0, this.imageWidth, this.imageHeight);

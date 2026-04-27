@@ -4,6 +4,9 @@ import com.unlikepaladin.pfm.blocks.blockentities.CounterOvenBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.InventoryHandler;
 import net.blay09.mods.cookingforblockheads.api.capability.CapabilityKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.api.capability.KitchenItemProvider;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.Container;
 import net.minecraft.nbt.CompoundTag;
@@ -26,10 +29,10 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity {
 
     public CounterOvenBlockEntityBalm() {
         super();
-        this.inventoryHandler = new InventoryHandler(this.inventory) {
+        this.inventoryHandler = new InventoryHandler(this.items) {
             @Override
             protected void onContentsChanged(int slot) {
-                CounterOvenBlockEntityBalm.this.markDirty();
+                CounterOvenBlockEntityBalm.this.setChanged();
                 super.onContentsChanged(slot);
             }
         };
@@ -39,27 +42,28 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity {
     }
 
     @Override
-    public void fromTag(BlockState state, NbtCompound tagCompound) {
-        super.fromTag(state, tagCompound);
-        NbtCompound itemHandlerCompound = tagCompound.getCompound("ItemHandler");
+    public void load(BlockState state, CompoundTag tagCompound) {
+        super.load(state, tagCompound);
+        CompoundTag itemHandlerCompound = tagCompound.getCompound("ItemHandler");
         this.inventoryHandler.deserializeNBT(itemHandlerCompound);
     }
 
     @Override
-    public NbtCompound save(NbtCompound tagCompound) {
+    public CompoundTag save(CompoundTag tagCompound) {
         super.save(tagCompound);
         tagCompound.put("ItemHandler", this.inventoryHandler.serializeNBT());
         return tagCompound;
     }
 
-    public void onDataPacket(ClientConnection net, BlockEntityUpdateS2CPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        this.fromTag(this.getCachedState(), pkt.getNbt());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
-    public NbtCompound toInitialChunkDataNbt() {
-        NbtCompound tagCompound = super.toInitialChunkDataNbt();
-        this.writeNbt(tagCompound);
+    @Override
+    public CompoundTag getUpdateTag() {
+        CompoundTag tagCompound = super.getUpdateTag();
+        this.save(tagCompound);
         return tagCompound;
     }
 

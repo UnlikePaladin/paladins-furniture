@@ -6,44 +6,40 @@ import com.unlikepaladin.pfm.blocks.StoveBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.menus.StoveScreenHandler;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.inventory.Inventories;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.world.item.crafting.CampfireCookingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.world.Containers;
-import net.minecraft.util.Tickable;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tickable {
+public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements TickableBlockEntity {
     public StoveBlockEntity() {
         super(BlockEntities.STOVE_BLOCK_ENTITY, RecipeType.SMOKING);
     }
@@ -52,17 +48,17 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
     }
 
     @Override
-    protected Text getContainerName() {
-        if (this.getCachedState().getBlock() instanceof KitchenCounterOvenBlock) {
-            return new TranslatableText("container.pfm.kitchen_counter_oven");
+    protected Component getDefaultName() {
+        if (this.getBlockState().getBlock() instanceof KitchenCounterOvenBlock) {
+            return new TranslatableComponent("container.pfm.kitchen_counter_oven");
         }
-        String blockname = this.getCachedState().getBlock().getTranslationKey().replace("block.pfm", "");
-        return new TranslatableText("container.pfm" + blockname);
+        String blockname = this.getBlockState().getBlock().getDescriptionId().replace("block.pfm", "");
+        return new TranslatableComponent("container.pfm" + blockname);
     }
 
     @Override
-    protected ScreenHandler createMenu(int syncId, PlayerInventory playerInventory) {
-        return new StoveScreenHandler(syncId, playerInventory, this, this.propertyDelegate);
+    protected AbstractContainerMenu createMenu(int syncId, Inventory playerInventory) {
+        return new StoveScreenHandler(syncId, playerInventory, this, this.dataAccess);
     }
 
     protected void onContainerOpen(Level world, BlockPos pos, BlockState state) {
@@ -209,13 +205,13 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
             SimpleContainer inventory = new SimpleContainer(itemStack);
             ItemStack itemStack2 = level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, inventory, level).map(campfireCookingRecipe -> campfireCookingRecipe.assemble(inventory)).orElse(itemStack);
                 if (PaladinFurnitureMod.getPFMConfig().doesFoodPopOffStove()) {
-                    Containers.dropItemStack(level, pos.getX(), pos.above().getY(), pos.getZ(), itemStack2);
+                    Containers.dropItemStack(level, worldPosition.getX(), worldPosition.above().getY(), worldPosition.getZ(), itemStack2);
                     this.itemsBeingCooked.set(i, ItemStack.EMPTY);
                 }
                 else {
                     this.itemsBeingCooked.set(i, itemStack2);
                 }
-            level.sendBlockUpdated(pos, getBlockState(), state, 3);
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
         }
         if (bl) {
             setChanged();
@@ -225,7 +221,7 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
 
     @Override
     public void tick() {
-        if (world.isClient) {
+        if (level.isClientSide) {
             clientTick();
         } else {
             litServerTick();
@@ -255,9 +251,9 @@ public class StoveBlockEntity extends AbstractFurnaceBlockEntity implements Tick
             if (stack.isEmpty() || !(random.nextFloat() < 0.2f) || !level.getRecipeManager().getRecipeFor(RecipeType.CAMPFIRE_COOKING, new SimpleContainer(stack), level).isPresent()) continue;
             Direction direction = Direction.from2DDataValue(Math.floorMod(j + i, 4));
             float f = 0.2125f;
-            double x = pos.getX() + 0.5 - ((direction.getStepX() * f) + (direction.getClockWise().getStepX() * f));
-            double y = pos.getY() + 1.1;
-            double z = pos.getZ() + 0.5 - ((direction.getStepZ() * f) + (direction.getClockWise().getStepZ() * f));
+            double x = worldPosition.getX() + 0.5 - ((direction.getStepX() * f) + (direction.getClockWise().getStepX() * f));
+            double y = worldPosition.getY() + 1.1;
+            double z = worldPosition.getZ() + 0.5 - ((direction.getStepZ() * f) + (direction.getClockWise().getStepZ() * f));
             for (int k = 0; k < 4; ++k) {
                 if (!(random.nextFloat() < 0.9f))
                     level.addParticle(ParticleTypes.SMOKE, x, y, z, 0.0, 5.0E-4, 0.0);

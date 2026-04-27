@@ -1,10 +1,10 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu;
 
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.CounterOvenBlockEntityBalm;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtList;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.common.util.INBTSerializable;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.IItemHandlerModifiable;
@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nonnull;
 import java.util.List;
 
-public class InventoryHandler implements IItemHandler, IItemHandlerModifiable, INBTSerializable<NbtCompound> {
+public class InventoryHandler implements IItemHandler, IItemHandlerModifiable, INBTSerializable<CompoundTag> {
 
     private List<ItemStack> inventory;
 
@@ -38,7 +38,7 @@ public class InventoryHandler implements IItemHandler, IItemHandlerModifiable, I
     }
 
     public void setSize(int size) {
-        this.inventory = DefaultedList.ofSize(size, ItemStack.EMPTY);
+        this.inventory = NonNullList.withSize(size, ItemStack.EMPTY);
     }
 
     protected void onContentsChanged(int slot) {
@@ -71,7 +71,7 @@ public class InventoryHandler implements IItemHandler, IItemHandlerModifiable, I
                     if (existing.isEmpty()) {
                         this.inventory.set(slot, reachedLimit ? ItemHandlerHelper.copyStackWithSize(stack, limit) : stack);
                     } else {
-                        existing.increment(reachedLimit ? limit : stack.getCount());
+                        existing.grow(reachedLimit ? limit : stack.getCount());
                     }
 
                     this.onContentsChanged(slot);
@@ -93,7 +93,7 @@ public class InventoryHandler implements IItemHandler, IItemHandlerModifiable, I
             if (existing.isEmpty()) {
                 return ItemStack.EMPTY;
             } else {
-                int toExtract = Math.min(amount, existing.getMaxCount());
+                int toExtract = Math.min(amount, existing.getCount());
                 if (existing.getCount() <= toExtract) {
                     if (!simulate) {
                         this.inventory.set(slot, ItemStack.EMPTY);
@@ -124,33 +124,33 @@ public class InventoryHandler implements IItemHandler, IItemHandlerModifiable, I
         return true;
     }
 
-    public NbtCompound serializeNBT() {
-        NbtList nbtTagList = new NbtList();
+    public CompoundTag serializeNBT() {
+        ListTag nbtTagList = new ListTag();
 
         for(int i = 0; i < this.inventory.size(); ++i) {
             if (!this.inventory.get(i).isEmpty()) {
-                NbtCompound itemTag = new NbtCompound();
+                CompoundTag itemTag = new CompoundTag();
                 itemTag.putInt("Slot", i);
-                this.inventory.get(i).writeNbt(itemTag);
+                this.inventory.get(i).save(itemTag);
                 nbtTagList.add(itemTag);
             }
         }
 
-        NbtCompound nbt = new NbtCompound();
+        CompoundTag nbt = new CompoundTag();
         nbt.put("Items", nbtTagList);
         nbt.putInt("Size", this.inventory.size());
         return nbt;
     }
 
-    public void deserializeNBT(NbtCompound nbt) {
+    public void deserializeNBT(CompoundTag nbt) {
         this.setSize(nbt.contains("Size", 3) ? nbt.getInt("Size") : this.inventory.size());
-        NbtList tagList = nbt.getList("Items", 10);
+        ListTag tagList = nbt.getList("Items", 10);
 
         for(int i = 0; i < tagList.size(); ++i) {
-            NbtCompound itemTags = tagList.getCompound(i);
+            CompoundTag itemTags = tagList.getCompound(i);
             int slot = itemTags.getInt("Slot");
             if (slot >= 0 && slot < this.inventory.size()) {
-                this.inventory.set(slot, ItemStack.fromNbt(itemTags));
+                this.inventory.set(slot, ItemStack.of(itemTags));
             }
         }
 
@@ -164,7 +164,7 @@ public class InventoryHandler implements IItemHandler, IItemHandlerModifiable, I
     }
 
     protected int getStackLimit(int slot, @Nonnull ItemStack stack) {
-        return Math.min(this.getSlotLimit(slot), stack.getMaxCount());
+        return Math.min(this.getSlotLimit(slot), stack.getCount());
     }
 
     protected void onLoad() {

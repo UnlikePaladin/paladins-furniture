@@ -15,11 +15,8 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraft.util.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
-import java.util.Collection;
 import java.util.List;
 
 public class FreezingCategory implements DisplayCategory<FreezingDisplay> {

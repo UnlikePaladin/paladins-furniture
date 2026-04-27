@@ -1,11 +1,11 @@
 package com.unlikepaladin.pfm.entity.model;
 
-
 import com.google.common.collect.ImmutableList;
 import com.unlikepaladin.pfm.entity.ChairEntity;
 import com.unlikepaladin.pfm.entity.OfficeChairEntity;
 import net.minecraft.client.model.*;
 import net.minecraft.client.model.AgeableListModel;
+import net.minecraft.client.model.geom.ModelPart;
 
 public class OfficeChairModelEmpty extends AgeableListModel<OfficeChairEntity> {
 

@@ -1,25 +1,19 @@
 package com.unlikepaladin.pfm.blocks.blockentities;
 
 import com.unlikepaladin.pfm.blocks.AbstractSinkBlock;
-import com.unlikepaladin.pfm.blocks.KitchenSinkBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.util.Tickable;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 
 import java.util.function.Supplier;
 
-public class SinkBlockEntity extends BlockEntity implements Tickable {
+public class SinkBlockEntity extends BlockEntity implements TickableBlockEntity {
     public SinkBlockEntity() {
         super(BlockEntities.SINK_BLOCK_ENTITY);
     }
@@ -63,7 +57,7 @@ public class SinkBlockEntity extends BlockEntity implements Tickable {
                 this.setSinkTimer(0);
                 this.setFilling(false);
             } else {
-                if (world.isClientSide) {
+                if (level.isClientSide) {
                     AbstractSinkBlock.spawnParticles(this.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING), this.getLevel(), this.getBlockPos());
                 }
                 this.sinkTimer++;

@@ -9,8 +9,7 @@ import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.EntryStack;
 import me.shedaniel.rei.api.RecipeHelper;
 import me.shedaniel.rei.api.plugins.REIPluginV0;
-import net.minecraft.util.Identifier;
-
+import net.minecraft.resources.ResourceLocation;
 
 public class PaladinFurnitureModREIPlugin implements REIPluginV0 {
 
@@ -37,7 +36,7 @@ public class PaladinFurnitureModREIPlugin implements REIPluginV0 {
     }
 
     @Override
-    public Identifier getPluginIdentifier() {
-        return new Identifier("pfm:pfm");
+    public ResourceLocation getPluginIdentifier() {
+        return new ResourceLocation("pfm:pfm");
     }
 }

@@ -1,22 +1,17 @@
 package com.unlikepaladin.pfm.compat.cookingforblockheads.forge;
 
-import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.blocks.*;
-import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
-import com.unlikepaladin.pfm.blocks.forge.StoveBlockImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.StoveScreenHandlerBalm;
 import com.unlikepaladin.pfm.data.PFMBlockSettings;
 import com.unlikepaladin.pfm.data.ToolType;
-import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.TriFunc;
 import net.blay09.mods.cookingforblockheads.KitchenMultiBlock;
 import net.blay09.mods.cookingforblockheads.item.ModItems;
 import net.blay09.mods.cookingforblockheads.registry.CookingRegistry;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -31,8 +26,11 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
+import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class PFMCookingForBlockHeadsCompat {
@@ -53,7 +51,7 @@ public class PFMCookingForBlockHeadsCompat {
         connectorBlocks.forEach(KitchenMultiBlock::registerConnectorBlock);
     }
 
-    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(PFMBlockSettings.breaksWithTool(AbstractBlock.Settings.copy(PaladinFurnitureModBlocksItems.GRAY_STOVE), ToolType.PICKAXE));
+    public static final PFMCookingTableBlock COOKING_TABLE_BLOCK = new PFMCookingTableBlock(PFMBlockSettings.breaksWithTool(BlockBehaviour.Properties.copy(PaladinFurnitureModBlocksItems.GRAY_STOVE), ToolType.PICKAXE));
     public static <T extends AbstractContainerMenu> TriFunc<Integer, Inventory, FriendlyByteBuf, T> getStoveScreenHandler() {
         return (integer, playerInventory, packetByteBuf) -> {
             BlockPos pos = packetByteBuf.readBlockPos();
@@ -65,7 +63,7 @@ public class PFMCookingForBlockHeadsCompat {
     public static void openMenuScreen(Level level, BlockPos pos, Player player) {
         StoveBlockEntityBalm stove = (StoveBlockEntityBalm)level.getBlockEntity(pos);
         if (!level.isClientSide) {
-            NetworkHooks.openGui((ServerPlayerEntity)player, stove, pos);
+            NetworkHooks.openGui((ServerPlayer)player, stove, pos);
         }
     }
 
@@ -131,7 +129,7 @@ public class PFMCookingForBlockHeadsCompat {
                 }
             }
             if (!level.isClientSide) {
-                NetworkHooks.openGui((ServerPlayerEntity)player, stove, pos);
+                NetworkHooks.openGui((ServerPlayer)player, stove, pos);
             }
             return InteractionResult.SUCCESS;
         }

@@ -613,10 +613,6 @@ public class PFMRecipeProvider extends PFMProvider {
         SimpleFurnitureRecipeJsonFactory.create(output, 2).group("bathroom").unlockedBy("has_" + getItemPath(base), conditionsFromIngredient(base)).input(base,3).input(Ingredient.of(Items.GLASS), 2).save(exporter, new ResourceLocation("pfm", output.asItem().getDescriptionId().replace("block.pfm.", "")));
     }
 
-    private static InventoryChangeTrigger.TriggerInstance conditionsFromItem(MinMaxBounds.Ints count, ItemLike item) {
-        return conditionsFromItemPredicates(ItemPredicate.Builder.item().of(item).withCount(count).build());
-    }
-
     public static InventoryChangeTrigger.TriggerInstance conditionsFromItem(ItemLike item) {
         return conditionsFromItemPredicates(ItemPredicate.Builder.item().of(item).build());
     }

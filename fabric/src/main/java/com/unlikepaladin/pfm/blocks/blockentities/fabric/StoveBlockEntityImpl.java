@@ -10,7 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.level.BlockGetter;
 
 import java.util.function.Supplier;
 

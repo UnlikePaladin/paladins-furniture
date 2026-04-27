@@ -48,7 +48,7 @@ public class TrashcanScreen extends AbstractContainerScreen<TrashcanScreenHandle
     @Override
     protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-        this.minecraft.getTextureManager().bindForSetup(background);
+        this.minecraft.getTextureManager().bind(background);
         int i = this.leftPos;
         int j = this.topPos;
         this.blit(matrices, i, j, 0, 0, this.imageWidth, this.imageHeight);

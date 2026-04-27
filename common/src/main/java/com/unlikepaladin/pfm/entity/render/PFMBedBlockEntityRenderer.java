@@ -1,11 +1,9 @@
 package com.unlikepaladin.pfm.entity.render;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PFMBedBlockEntity;
-import com.unlikepaladin.pfm.client.EntityRenderIDs;
 import it.unimi.dsi.fastutil.ints.Int2IntFunction;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.ChestBlock;
@@ -18,9 +16,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.Sheets;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.blockentity.BedRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.blockentity.BrightnessCombiner;
 import net.minecraft.client.resources.model.Material;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -48,10 +44,10 @@ public class PFMBedBlockEntityRenderer extends BlockEntityRenderer<PFMBedBlockEn
         setRotationAngle(head_r1, -1.5708F, 3.1416F, 0.0F);
         head_r1.texOffs(2, 2).addBox(-28.0F, -5.0F, -3.0F, 16.0F, 13.0F, 4.0F, 0.0F, false);
         pillow = new ModelPart(64, 64, 0 ,0);
-        pillow.setPivot(-20.0F, 2.0F, -1.5F);
+        pillow.setPos(-20.0F, 2.0F, -1.5F);
         bedHead.addChild(pillow);
         head_r2 = new ModelPart(64, 64, 0 ,0);
-        head_r2.setPivot(0.0F, 0.0F, 0.0F);
+        head_r2.setPos(0.0F, 0.0F, 0.0F);
         pillow.addChild(head_r2);
         setRotationAngle(head_r2, -1.5708F, 3.1416F, 0.0F);
         head_r2.texOffs(7, 5).addBox(-20.0F, -5.0F, -5.0F, 7.0F, 8.0F, 1.0F, 0.0F, true);
@@ -88,7 +84,7 @@ public class PFMBedBlockEntityRenderer extends BlockEntityRenderer<PFMBedBlockEn
         matrix.mulPose(Vector3f.XP.rotationDegrees(90.0f));
 
         matrix.translate(0.5, 0.5, 0.5);
-        matrix.multiply(Vector3f.ZP.rotationDegrees(180.0f + direction.toYRot()));
+        matrix.mulPose(Vector3f.ZP.rotationDegrees(180.0f + direction.toYRot()));
         matrix.translate(-0.5, -0.5, -0.5);
 
         matrix.translate(0.5, -0.9385, -0.5625);

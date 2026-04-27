@@ -67,7 +67,7 @@ public abstract class PFMForgeBakedModel extends AbstractBakedModel implements P
         return tileData;
     }
 
-    final Map<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> separatedQuads =  Collections.synchronizedMap(new LinkedHashMap<Pair<Identifier, SpriteData>, List<BakedQuad>>(1024, 0.75f, true) {
+    final Map<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> separatedQuads =  Collections.synchronizedMap(new LinkedHashMap<Pair<ResourceLocation, SpriteData>, List<BakedQuad>>(1024, 0.75f, true) {
         @Override
         protected boolean removeEldestEntry(Map.Entry<Pair<ResourceLocation, SpriteData>, List<BakedQuad>> eldest) {
             return size() > 250; // Adjust based on your mod's needs

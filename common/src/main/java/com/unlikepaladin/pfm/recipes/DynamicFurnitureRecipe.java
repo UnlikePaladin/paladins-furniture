@@ -422,9 +422,9 @@ public class DynamicFurnitureRecipe implements FurnitureRecipe {
         public DynamicFurnitureRecipe fromNetwork(ResourceLocation id, FriendlyByteBuf buf) {
             String group = buf.readUtf();
             int variantListSize = buf.readInt();
-            List<Identifier> supportedVariants = new ArrayList<>(variantListSize);
+            List<ResourceLocation> supportedVariants = new ArrayList<>(variantListSize);
             for (int i = 0; i < variantListSize; i++) {
-                Identifier variant = buf.readResourceLocation();
+                ResourceLocation variant = buf.readResourceLocation();
                 supportedVariants.add(variant);
             }
             FurnitureIngredients ingredients = FurnitureIngredients.read(buf);

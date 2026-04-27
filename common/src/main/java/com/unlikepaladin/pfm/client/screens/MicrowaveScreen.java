@@ -40,7 +40,7 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
         isActive = menu.getActive();
         this.narrow = this.width < 379;
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
-        this.startButton = this.addRenderableWidget(new Button(this.leftPos + 8, this.topPos + 40, 40, 20, startButtonText, button -> {
+        this.startButton = this.addButton(new Button(this.leftPos + 8, this.topPos + 40, 40, 20, startButtonText, button -> {
             AbstractMicrowaveScreenHandler.setActive(microwaveBlockEntity,true);
         }));
     }
@@ -65,7 +65,7 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
     protected void renderBg(PoseStack matrices, float delta, int mouseX, int mouseY) {
         int k;
         RenderSystem.color4f(1.0f, 1.0f, 1.0f, 1.0f);
-        this.client.getTextureManager().bindTexture(this.background);
+        this.minecraft.getTextureManager().bind(this.background);
         int i = this.leftPos;
         int j = this.topPos;
         this.blit(matrices, i, j, 0, 0, this.imageWidth, this.imageHeight);
@@ -79,7 +79,7 @@ public class MicrowaveScreen extends AbstractContainerScreen<MicrowaveScreenHand
     }
 
     @Override
-    protected void tick() {
+    public void tick() {
         super.tick();
         this.isActive = menu.isActive;
         NonNullList<ItemStack> inventory = NonNullList.withSize(1,menu.getContainer().getItem(0));

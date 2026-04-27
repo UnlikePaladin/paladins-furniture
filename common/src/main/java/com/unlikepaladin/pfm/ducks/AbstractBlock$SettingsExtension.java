@@ -1,8 +1,9 @@
 package com.unlikepaladin.pfm.ducks;
 
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.MapColor;
+
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.MaterialColor;
 
 public interface AbstractBlock$SettingsExtension {
-    AbstractBlock.Settings pfm$setMapColor(MapColor color);
+    BlockBehaviour.Properties pfm$setMapColor(MaterialColor color);
 }

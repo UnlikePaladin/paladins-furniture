@@ -29,7 +29,7 @@ public class StovetopBlockEntityImpl extends StovetopBlockEntity {
     @Nullable
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, ClientboundBlockEntityDataPacket.TYPE_CAMPFIRE, this.getUpdateTag());
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 13, this.getUpdateTag());
     }
 
     @Override

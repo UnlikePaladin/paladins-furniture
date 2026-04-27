@@ -32,7 +32,7 @@ public class UnbakedKitchenWallCounterModel implements UnbakedModel {
 
     private static final ResourceLocation PARENT = new ResourceLocation("block/block");
     public static final ResourceLocation COUNTER_MODEL_ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/kitchen_wall_counter");
-    public static final List<ResourceLocation> COUNTER_MODEL_IDS = new ArrayList<Identifier>() {
+    public static final List<ResourceLocation> COUNTER_MODEL_IDS = new ArrayList<ResourceLocation>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "item/" + variant.getSerializedName() + "_kitchen_wall_counter"));

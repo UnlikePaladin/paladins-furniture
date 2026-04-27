@@ -26,7 +26,7 @@ public class UnbakedLogStoolModel implements UnbakedModel {
     };
 
     public static final ResourceLocation STOOL_MODEL_ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/log_stool");
-    public static final List<ResourceLocation> LOG_STOOL_MODEL_IDS = new ArrayList<Identifier>() {
+    public static final List<ResourceLocation> LOG_STOOL_MODEL_IDS = new ArrayList<ResourceLocation>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 String logType = variant.isNetherWood() ? "stem" : "log";

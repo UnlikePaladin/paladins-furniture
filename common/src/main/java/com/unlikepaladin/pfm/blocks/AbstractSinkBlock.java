@@ -2,19 +2,14 @@ package com.unlikepaladin.pfm.blocks;
 
 import com.unlikepaladin.pfm.blocks.behavior.SinkBehavior;
 import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
-import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.ParticleIDs;
-import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -34,10 +29,8 @@ import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
-import java.util.function.Predicate;
 
 import static com.unlikepaladin.pfm.blocks.BasicShowerHandleBlock.FACING;
-import static com.unlikepaladin.pfm.blocks.BasicToiletBlock.createTicketHelper;
 
 public abstract class AbstractSinkBlock extends CauldronBlock implements EntityBlock {
     public static final IntegerProperty LEVEL_4 = IntegerProperty.create("level", 0, 3);
@@ -114,8 +107,8 @@ public abstract class AbstractSinkBlock extends CauldronBlock implements EntityB
             return;
         }
         BlockState blockState = world.getBlockState(pos);
-        if (blockState.get(LEVEL_4) < 4) {
-            world.setBlockAndUpdate(pos, blockState.cycle(LEVEL_4), 2);
+        if (blockState.getValue(LEVEL_4) < 4) {
+            world.setBlock(pos, blockState.cycle(LEVEL_4), 2);
         }
     }
 
@@ -175,11 +168,11 @@ public abstract class AbstractSinkBlock extends CauldronBlock implements EntityB
     }
 
     @Override
-    public void onEntityCollision(BlockState state, Level world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
         int level = state.getValue(LEVEL);
-        float waterLevel = pos.getY() + getContentHeight(state);
+        double waterLevel = pos.getY() + getContentHeight(state);
         if (!world.isClientSide && entity.isOnFire() && level > 0 && entity.getY() <= waterLevel){
-            entity.extinguish();
+            entity.clearFire();
             this.onFireCollision(state, world, pos);
         }
     }

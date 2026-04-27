@@ -28,7 +28,7 @@ public class UnbakedHerringboneModel implements UnbakedModel {
     }
 
     public static final ResourceLocation ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/herringbone_planks");
-    public static final List<ResourceLocation> MODEL_IDS = new ArrayList<Identifier>() {
+    public static final List<ResourceLocation> MODEL_IDS = new ArrayList<ResourceLocation>() {
         {
             add(ID);
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){

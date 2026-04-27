@@ -33,7 +33,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.Explosion;
 
 import java.util.ArrayList;
@@ -137,7 +136,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
         if (state.is(BlockTags.GUARDED_BY_PIGLINS)) {
             PiglinAi.angerNearbyPiglins(player, false);
         }
-        world.gameEvent(player, 2001, pos);
+        world.levelEvent(player, 2001, pos, Block.getId(state));
     }
 
     @Override
@@ -217,7 +216,7 @@ public class SimpleBedBlock extends BedBlock implements DyeableFurnitureBlock, P
     }
 
     @Override
-    public BlockEntity newBlockEntity(BlockView world) {
+    public BlockEntity newBlockEntity(BlockGetter world) {
         return new PFMBedBlockEntity(this.color);
     }
 

@@ -23,7 +23,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.util.Tickable;
+import net.minecraft.world.level.block.entity.TickableBlockEntity;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -218,15 +218,15 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
     public void tick() {
         int smokeTime = 80;
         if(this.updateNeighbors) {
-            level.updateNeighborsAt(pos, level.getBlockState(pos).getBlock());
+            level.updateNeighborsAt(worldPosition, level.getBlockState(worldPosition).getBlock());
             this.updateNeighbors = false;
         }
         this.previouslyPowered = this.currentlyPowered;
-        this.currentlyPowered = level.hasNeighborSignal(pos);
+        this.currentlyPowered = level.hasNeighborSignal(worldPosition);
         if(this.toasting) {
             this.toastProgress++;
             if(this.toastProgress % 4 == 0 && this.toastProgress != toastTime) {
-                level.playSound(null, pos, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.05F, this.tickPitch ? 2.0F : 1.9F);
+                level.playSound(null, worldPosition, SoundEvents.LEVER_CLICK, SoundSource.BLOCKS, 0.05F, this.tickPitch ? 2.0F : 1.9F);
                 this.tickPitch = !this.tickPitch;
             }
             if(this.hasMetalInside()) {
@@ -240,7 +240,7 @@ public class PFMToasterBlockEntity extends BlockEntity implements WorldlyContain
         }
         if(this.smoking) {
             if(this.smokeProgress % 3 == 0) {
-                level.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.5, pos.getY() + 0.8, pos.getZ() + 0.5, 0, 0.03, 0);
+                level.addParticle(ParticleTypes.SMOKE, worldPosition.getX() + 0.5, worldPosition.getY() + 0.8, worldPosition.getZ() + 0.5, 0, 0.03, 0);
             }
             this.smokeProgress++;
         } if (this.smokeProgress == smokeTime) { this.smoking = false; this.smokeProgress = 0; }

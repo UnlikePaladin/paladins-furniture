@@ -75,7 +75,7 @@ public class PaladinFurnitureModClientForge {
     }
 
     public static KeyMapping registerKey(String name, String category, int keyCode) {
-        final KeyBinding key = new KeyMapping(
+        final KeyMapping key = new KeyMapping(
                 name, // The translation key of the keybinding's name
                 InputConstants.Type.KEYSYM, // The type of the keybinding, KEYSYM for keyboard, MOUSE for mouse.
                 keyCode, // The keycode of the key

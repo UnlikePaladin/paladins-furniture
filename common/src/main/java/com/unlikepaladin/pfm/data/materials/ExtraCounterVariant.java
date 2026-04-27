@@ -88,12 +88,12 @@ public class ExtraCounterVariant extends VariantBase<ExtraCounterVariant> {
 
     @Override
     public Material getBaseMaterial() {
-        return baseBlock.getDefaultState().getMaterial();
+        return baseBlock.defaultBlockState().getMaterial();
     }
 
     @Override
     public Material getSecondaryMaterial() {
-        return secondaryBlock.getDefaultState().getMaterial();
+        return secondaryBlock.defaultBlockState().getMaterial();
     }
 
     @Override

@@ -89,7 +89,7 @@ public class PFMMirrorEntity extends Mirror {
         super.tick();
         if (!level.isClientSide) {
             if (!unbreakable) {
-                if (level.getDayTime() % 10 == getEntityId() % 10) {
+                if (level.getDayTime() % 10 == getId() % 10) {
                     checkWallIntegrity();
                 }
             }

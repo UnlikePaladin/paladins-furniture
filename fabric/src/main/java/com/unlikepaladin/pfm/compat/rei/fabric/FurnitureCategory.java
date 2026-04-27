@@ -1,6 +1,8 @@
 package com.unlikepaladin.pfm.compat.rei.fabric;
 
 import com.google.common.collect.Lists;
+import net.minecraft.client.resources.language.I18n;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.unlikepaladin.pfm.mixin.fabric.PFMEntryWidgetAccessor;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -13,22 +15,13 @@ import me.shedaniel.rei.api.widgets.Slot;
 import me.shedaniel.rei.api.widgets.Widgets;
 import me.shedaniel.rei.gui.widget.EntryWidget;
 import me.shedaniel.rei.gui.widget.Widget;
-import me.shedaniel.rei.plugin.DefaultPlugin;
-import me.shedaniel.rei.plugin.crafting.DefaultCraftingDisplay;
 import me.shedaniel.rei.server.ContainerInfo;
 import me.shedaniel.rei.server.ContainerInfoHandler;
-import net.minecraft.block.Blocks;
-import net.minecraft.client.gui.DrawableHelper;
-import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemStack;
-import net.minecraft.screen.ScreenHandler;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
@@ -42,7 +35,7 @@ public class FurnitureCategory implements TransferRecipeCategory<FurnitureDispla
     }
 
     @Override
-    public @NotNull Identifier getIdentifier() {
+    public @NotNull ResourceLocation getIdentifier() {
         return FurnitureDisplay.IDENTIFIER;
     }
 
@@ -54,7 +47,7 @@ public class FurnitureCategory implements TransferRecipeCategory<FurnitureDispla
 
     @Override
     public @NotNull String getCategoryName() {
-        return I18n.translate("rei.pfm.furniture");
+        return I18n.get("rei.pfm.furniture");
     }
 
     @Override
@@ -101,21 +94,21 @@ public class FurnitureCategory implements TransferRecipeCategory<FurnitureDispla
     }
 
     @Override
-    public void renderRedSlots(MatrixStack matrices, List<Widget> widgets, Rectangle bounds, FurnitureDisplay display, IntList redSlots) {
+    public void renderRedSlots(PoseStack matrices, List<Widget> widgets, Rectangle bounds, FurnitureDisplay display, IntList redSlots) {
         if (REIHelper.getInstance().getPreviousContainerScreen() == null) return;
-        ContainerInfo<ScreenHandler> info = (ContainerInfo<ScreenHandler>) ContainerInfoHandler.getContainerInfo(getIdentifier(), REIHelper.getInstance().getPreviousContainerScreen().getScreenHandler().getClass());
+        ContainerInfo<AbstractContainerMenu> info = (ContainerInfo<AbstractContainerMenu>) ContainerInfoHandler.getContainerInfo(getIdentifier(), REIHelper.getInstance().getPreviousContainerScreen().getMenu().getClass());
         if (info == null)
             return;
-        matrices.push();
+        matrices.pushPose();
         matrices.translate(0, 0, 400);
         Point startPoint = new Point(bounds.getCenterX() - 58, bounds.getCenterY() - 27);
-        int width = info.getCraftingWidth(REIHelper.getInstance().getPreviousContainerScreen().getScreenHandler());
+        int width = info.getCraftingWidth(REIHelper.getInstance().getPreviousContainerScreen().getMenu());
         for (Integer slot : redSlots) {
             int i = slot;
             int x = i % width;
-            int y = MathHelper.floor(i / (float) width);
-            DrawableHelper.fill(matrices, startPoint.x + 1 + x * 18, startPoint.y + 1 + y * 18, startPoint.x + 1 + x * 18 + 16, startPoint.y + 1 + y * 18 + 16, 0x60ff0000);
+            int y = Mth.floor(i / (float) width);
+            GuiComponent.fill(matrices, startPoint.x + 1 + x * 18, startPoint.y + 1 + y * 18, startPoint.x + 1 + x * 18 + 16, startPoint.y + 1 + y * 18 + 16, 0x60ff0000);
         }
-        matrices.pop();
+        matrices.popPose();
     }
 }

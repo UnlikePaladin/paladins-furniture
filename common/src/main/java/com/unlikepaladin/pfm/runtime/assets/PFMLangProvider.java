@@ -237,7 +237,7 @@ public class PFMLangProvider extends PFMProvider {
     private List<LanguageInfo> languagesToGenerate = new ArrayList<>();
     public void loadLanguages(ResourceManager manager) {
         Map<String, LanguageInfo> defs = loadAvailableLanguages(PFMRuntimeResources.RESOURCE_PACK_LIST.stream());
-        LanguageInfo enUSDefinition = defs.getOrDefault(LanguageManager.field_25291, PFMLanguageManagerAccessor.getEnglish_Us());
+        LanguageInfo enUSDefinition = defs.getOrDefault(LanguageManager.DEFAULT_LANGUAGE, PFMLanguageManagerAccessor.getEnglish_Us());
 
         LanguageInfo selectedLangDefinition;
         String currentCode = ((PFMLanguageManagerAccessor) Minecraft.getInstance().getLanguageManager()).getCurrentCode();

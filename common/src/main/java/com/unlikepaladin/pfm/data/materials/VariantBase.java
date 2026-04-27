@@ -81,7 +81,7 @@ public abstract class VariantBase<T> implements StringRepresentable, Comparable<
         };
         V found = null;
         for (ResourceLocation r : targets) {
-            if (reg.getOrEmpty(r).isPresent()) {
+            if (reg.getOptional(r).isPresent()) {
                 found = reg.get(r);
                 break;
             }

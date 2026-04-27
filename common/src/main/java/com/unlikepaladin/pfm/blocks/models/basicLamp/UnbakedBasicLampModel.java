@@ -25,7 +25,7 @@ public class UnbakedBasicLampModel implements UnbakedModel {
     public UnbakedBasicLampModel() {
     }
 
-    public static final List<ResourceLocation> LAMP_MODEL_IDS = new ArrayList<Identifier>() {
+    public static final List<ResourceLocation> LAMP_MODEL_IDS = new ArrayList<ResourceLocation>() {
         {
             add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/basic_lamp"));
             add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, "item/basic_lamp"));
@@ -49,7 +49,7 @@ public class UnbakedBasicLampModel implements UnbakedModel {
         add("block/basic_lamp/basic_lamp_light_bulb_on");
     }};
     private static final ResourceLocation PARENT = new ResourceLocation("block/block");
-    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<Identifier>() {
+    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<ResourceLocation>() {
         {
             for (String part : MODEL_PARTS_BASE) {
                 add(new ResourceLocation(PaladinFurnitureMod.MOD_ID, part));

@@ -14,16 +14,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.network.chat.*;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import java.util.*;
-import java.util.function.Consumer;
 
 public class PFMOptionListWidget extends ContainerObjectSelectionList<PFMOptionListWidget.Entry> {
     final PFMConfigScreen parent;

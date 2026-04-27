@@ -123,7 +123,7 @@ public class StoneVariantRegistry extends VariantRegistryBase<StoneVariant> {
         };
         Block temp = null;
         for (ResourceLocation r : test) {
-            if (Registry.BLOCK.getOrEmpty(r).isPresent()) {
+            if (Registry.BLOCK.getOptional(r).isPresent()) {
                 temp = Registry.BLOCK.get(r);
                 break;
             }

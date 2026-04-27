@@ -11,7 +11,7 @@ import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.BlockView;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.fml.network.NetworkHooks;
 

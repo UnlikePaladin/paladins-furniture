@@ -16,8 +16,8 @@ public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity implements 
     }
 
     @Override
-    public void fromClientTag(NbtCompound tag) {
-        readNbt(getBlockState(), tag);
+    public void fromClientTag(CompoundTag tag) {
+        load(getBlockState(), tag);
     }
 
     @Override

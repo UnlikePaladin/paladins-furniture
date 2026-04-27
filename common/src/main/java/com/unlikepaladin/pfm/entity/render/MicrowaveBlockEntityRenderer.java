@@ -5,10 +5,11 @@ import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.core.Direction;
 import com.mojang.math.Vector3f;
@@ -53,7 +54,7 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> extend
             if (blockEntity.isActive && MicrowaveBlockEntity.canAcceptRecipeOutput(blockEntity.getRecipe(), blockEntity.container, blockEntity.getMaxStackSize())) {
                 matrices.mulPose(Vector3f.YP.rotationDegrees((blockEntity.getLevel().getDayTime() + tickDelta) * 4));}
             matrices.scale(0.5f, 0.5f, 0.5f);
-            Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemTransforms.TransformType.GROUND, lightAbove, OverlayTexture.DEFAULT_UV, matrices, vertexConsumers);
+            Minecraft.getInstance().getItemRenderer().renderStatic(itemStack, ItemTransforms.TransformType.GROUND, lightAbove, OverlayTexture.NO_OVERLAY, matrices, vertexConsumers);
             matrices.popPose();
         }
     }

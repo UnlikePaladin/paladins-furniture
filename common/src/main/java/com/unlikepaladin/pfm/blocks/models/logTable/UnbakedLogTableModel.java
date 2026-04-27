@@ -31,7 +31,7 @@ public class UnbakedLogTableModel implements UnbakedModel {
 
     private static final ResourceLocation PARENT = new ResourceLocation("block/block");
     public static final ResourceLocation TABLE_MODEL_ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/log_table");
-    public static final List<ResourceLocation> TABLE_MODEL_IDS = new ArrayList<Identifier>() {
+    public static final List<ResourceLocation> TABLE_MODEL_IDS = new ArrayList<ResourceLocation>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 String logType = variant.isNetherWood() ? "stem" : "log";

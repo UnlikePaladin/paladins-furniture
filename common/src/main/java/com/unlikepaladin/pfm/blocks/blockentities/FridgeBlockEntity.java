@@ -3,23 +3,18 @@ package com.unlikepaladin.pfm.blocks.blockentities;
 import com.unlikepaladin.pfm.blocks.FridgeBlock;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.block.entity.ContainerOpenersCounter;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.inventory.ChestMenu;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.BlockPos;
@@ -38,7 +33,7 @@ public class FridgeBlockEntity extends RandomizableContainerBlockEntity {
     public FridgeBlockEntity() {
         super(BlockEntities.FRIDGE_BLOCK_ENTITY);
     }
-    private NonNullList<ItemStack> inventory = NonNullList.withSize(54, ItemStack.EMPTY);
+    protected NonNullList<ItemStack> inventory = NonNullList.withSize(54, ItemStack.EMPTY);
 
     protected void onOpen(Level world, BlockPos pos, BlockState state) {
         if (state.getBlock() instanceof FridgeBlock) {
@@ -97,8 +92,9 @@ public class FridgeBlockEntity extends RandomizableContainerBlockEntity {
         return nbt;
     }
 
-    protected Text getContainerName() {
-        String blockname = this.getCachedState().getBlock().getTranslationKey();
+    @Override
+    protected Component getDefaultName() {
+        String blockname = this.getBlockState().getBlock().getDescriptionId();
         blockname = blockname.replace("block.pfm", "");
         return new TranslatableComponent("container.pfm" + blockname);
     }

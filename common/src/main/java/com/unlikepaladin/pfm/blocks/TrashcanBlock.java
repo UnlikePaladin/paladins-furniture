@@ -58,7 +58,7 @@ public class TrashcanBlock extends BaseEntityBlock {
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(BlockView world) {
+    public BlockEntity newBlockEntity(BlockGetter world) {
         return getBlockEntity();
     }
     @ExpectPlatform

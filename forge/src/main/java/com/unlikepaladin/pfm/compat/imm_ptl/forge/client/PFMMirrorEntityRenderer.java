@@ -4,10 +4,8 @@ import com.qouteall.immersive_portals.portal.Portal;
 import com.qouteall.immersive_portals.render.PortalEntityRenderer;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import com.mojang.blaze3d.vertex.PoseStack;
-import qouteall.imm_ptl.core.portal.Portal;
-import qouteall.imm_ptl.core.render.PortalEntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 
 public class PFMMirrorEntityRenderer extends PortalEntityRenderer {
 

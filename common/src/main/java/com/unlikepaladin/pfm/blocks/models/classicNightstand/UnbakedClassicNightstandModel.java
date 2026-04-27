@@ -32,7 +32,7 @@ public class UnbakedClassicNightstandModel implements UnbakedModel {
     };
 
     public static final ResourceLocation NIGHTSTAND_MODEL_ID = new ResourceLocation(PaladinFurnitureMod.MOD_ID, "block/classic_nightstand");
-    public static final List<ResourceLocation> NIGHSTAND_MODEL_IDS = new ArrayList<Identifier>() {
+    public static final List<ResourceLocation> NIGHSTAND_MODEL_IDS = new ArrayList<ResourceLocation>() {
         {
             for(WoodVariant variant : WoodVariantRegistry.getVariants()){
                 

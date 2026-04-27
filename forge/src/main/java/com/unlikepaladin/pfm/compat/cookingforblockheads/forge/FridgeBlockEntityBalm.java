@@ -4,7 +4,9 @@ import com.unlikepaladin.pfm.blocks.blockentities.FridgeBlockEntity;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.menu.InventoryHandler;
 import net.blay09.mods.cookingforblockheads.api.capability.CapabilityKitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.api.capability.IKitchenItemProvider;
+import net.blay09.mods.cookingforblockheads.api.capability.KitchenItemProvider;
 import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.Container;
 import net.minecraft.nbt.CompoundTag;
@@ -31,7 +33,7 @@ public class FridgeBlockEntityBalm extends FridgeBlockEntity {
         this.inventoryHandler = new InventoryHandler(this.inventory) {
             @Override
             protected void onContentsChanged(int slot) {
-                FridgeBlockEntityBalm.this.markDirty();
+                FridgeBlockEntityBalm.this.setChanged();
                 super.onContentsChanged(slot);
             }
         };
@@ -43,12 +45,12 @@ public class FridgeBlockEntityBalm extends FridgeBlockEntity {
     @Override
     public void load(BlockState state, CompoundTag tagCompound) {
         super.load(state, tagCompound);
-        NbtCompound itemHandlerCompound = tagCompound.getCompound("ItemHandler");
+        CompoundTag itemHandlerCompound = tagCompound.getCompound("ItemHandler");
         this.inventoryHandler.deserializeNBT(itemHandlerCompound);
     }
 
     @Override
-    public NbtCompound save(CompoundTag tagCompound) {
+    public CompoundTag save(CompoundTag tagCompound) {
         super.save(tagCompound);
         tagCompound.put("ItemHandler", this.inventoryHandler.serializeNBT());
         return tagCompound;
@@ -56,7 +58,7 @@ public class FridgeBlockEntityBalm extends FridgeBlockEntity {
 
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        this.load(this.getCachedState(), pkt.getNbt());
+        this.load(this.getBlockState(), pkt.getTag());
     }
 
     public CompoundTag getUpdateTag() {

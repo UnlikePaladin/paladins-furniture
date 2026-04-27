@@ -1,15 +1,11 @@
 package com.unlikepaladin.pfm.blocks.forge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.blockentities.StoveBlockEntity;
 import com.unlikepaladin.pfm.blocks.blockentities.forge.StoveBlockEntityImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.forge.PFMCookingForBlockHeadsCompat;
-import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.Statistics;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.InteractionResult;
@@ -17,7 +13,6 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Nullable;
 
 public class StoveBlockImpl {
     public static BlockEntity getBlockEntity() {
@@ -37,7 +32,7 @@ public class StoveBlockImpl {
         }
     }
 
-    public static ActionResult onUseCookingForBlockheads(BlockState blockState, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
+    public static InteractionResult onUseCookingForBlockheads(BlockState blockState, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult blockHitResult) {
         return PFMCookingForBlockHeadsCompat.onUseStove(blockState, world, pos, player, hand, blockHitResult);
     }
 }

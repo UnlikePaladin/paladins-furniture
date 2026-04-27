@@ -20,9 +20,6 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.BlockPos;
-import net.minecraft.util.math.Vec3i;
-import net.minecraft.world.BlockView;
 
 import java.util.function.Supplier;
 

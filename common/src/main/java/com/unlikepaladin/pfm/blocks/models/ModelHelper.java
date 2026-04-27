@@ -608,14 +608,14 @@ public class ModelHelper {
         return false;
     }
 
-    public static float method_35805(Sprite sprite, float f) {
-        float g = sprite.getMaxV() - sprite.getMinV();
-        return (f - sprite.getMinV()) / g * 16.0F;
+    public static float getVOffset(TextureAtlasSprite sprite, float f) {
+        float g = sprite.getV1() - sprite.getV0();
+        return (f - sprite.getV0()) / g * 16.0F;
     }
 
-    public static float method_35804(Sprite sprite, float f) {
-        float g = sprite.getMaxU() - sprite.getMinU();
-        return (f - sprite.getMinU()) / g * 16.0F;
+    public static float getUOffset(TextureAtlasSprite sprite, float f) {
+        float g = sprite.getU1() - sprite.getU0();
+        return (f - sprite.getU0()) / g * 16.0F;
     }
 
     public enum IdLocation implements StringRepresentable {

@@ -18,17 +18,12 @@ import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.data.HashCache;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.loot.BlockLoot;
-import net.minecraft.world.level.storage.loot.LootTables;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.BuiltInLootTables;
+import net.minecraft.world.level.storage.loot.*;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyNbtFunction;
 import net.minecraft.world.level.storage.loot.functions.CopyBlockState;
-import net.minecraft.world.level.storage.loot.providers.nbt.ContextNbtProvider;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.core.Registry;
 
@@ -81,10 +76,10 @@ public class PFMLootTableProvider extends PFMProvider {
         return LootTable.lootTable()
                 .withPool(
                         LootPool.lootPool()
-                                .setRolls(ConstantValue.exactly(1.0F))
+                                .setRolls(ConstantIntValue.exactly(1))
                                 .add(
                                         LootItem.lootTableItem(drop)
-                                                .apply(CopyNbtFunction.copyData(ContextNbtProvider.BLOCK_ENTITY).copy("variant", "BlockEntityTag.variant").copy("color", "BlockEntityTag.color"))
+                                                .apply(CopyNbtFunction.copyData(CopyNbtFunction.DataSource.BLOCK_ENTITY).copy("variant", "BlockEntityTag.variant").copy("color", "BlockEntityTag.color"))
                                 )
                 );
     }

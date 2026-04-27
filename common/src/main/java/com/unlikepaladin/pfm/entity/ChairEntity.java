@@ -1,19 +1,15 @@
 package com.unlikepaladin.pfm.entity;
 
-import com.google.common.collect.UnmodifiableIterator;
 import com.unlikepaladin.pfm.blocks.AbstractSittableBlock;
 import com.unlikepaladin.pfm.blocks.BasicBathtubBlock;
 import com.unlikepaladin.pfm.blocks.BasicToiletBlock;
 import com.unlikepaladin.pfm.blocks.ToiletState;
 import com.unlikepaladin.pfm.client.PaladinFurnitureModClient;
 import dev.architectury.injectables.annotations.ExpectPlatform;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.vehicle.DismountHelper;
-import net.minecraft.world.entity.Pose;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionHand;
@@ -22,6 +18,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 
 public class ChairEntity extends Mob {
     public ChairEntity(EntityType<? extends ChairEntity> type, Level world) {
@@ -115,8 +112,8 @@ public class ChairEntity extends Mob {
 
     @Nullable
     @Override
-    public Entity getPrimaryPassenger() {
-        return !this.getPassengerList().isEmpty() ? this.getPassengerList().get(0) : null;
+    public Entity getControllingPassenger() {
+        return !this.getPassengers().isEmpty() ? this.getPassengers().get(0) : null;
     }
 
     @Override
