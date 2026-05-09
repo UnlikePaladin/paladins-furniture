@@ -14,7 +14,7 @@ import vectorwing.farmersdelight.common.block.entity.HeatableBlockEntity;
 
 @Pseudo
 @Mixin(HeatableBlockEntity.class)
-public class PFMHeatableBlockEntityMixin {
+public interface PFMHeatableBlockEntityMixin {
     @Inject(method = "isHeated", at = @At("HEAD"), cancellable = true)
     private void pfm$stovesHeatable(Level world, BlockPos pos, CallbackInfoReturnable<Boolean> cir) {
         Block checkBlock = world.getBlockState(pos.below()).getBlock();
