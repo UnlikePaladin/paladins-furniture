@@ -6,19 +6,19 @@ import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
 import com.unlikepaladin.pfm.items.PFMComponents;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.component.ComponentMap;
-import net.minecraft.component.ComponentsAccess;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.NbtElement;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.storage.ReadView;
 import net.minecraft.storage.WriteView;
-import net.minecraft.util.DyeColor;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
 
 import java.util.Optional;
 
@@ -56,16 +56,16 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
 
 
     @Override
-    protected void addComponents(ComponentMap.Builder componentMapBuilder) {
-        super.addComponents(componentMapBuilder);
-        componentMapBuilder.add(PFMComponents.VARIANT_COMPONENT, this.variant.identifier);
-        componentMapBuilder.add(PFMComponents.COLOR_COMPONENT, this.color);
+    protected void collectImplicitComponents(DataComponentMap.Builder componentMapBuilder) {
+        super.collectImplicitComponents(componentMapBuilder);
+        componentMapBuilder.set(PFMComponents.VARIANT_COMPONENT, this.variant.identifier);
+        componentMapBuilder.set(PFMComponents.COLOR_COMPONENT, this.color);
     }
 
     @Override
-    protected void readComponents(ComponentsAccess components) {
-        super.readComponents(components);
-        Identifier variantName = components.getOrDefault(PFMComponents.VARIANT_COMPONENT, WoodVariantRegistry.OAK.identifier);
+    protected void applyImplicitComponents(DataComponentGetter components) {
+        super.applyImplicitComponents(components);
+        ResourceLocation variantName = components.getOrDefault(PFMComponents.VARIANT_COMPONENT, WoodVariantRegistry.OAK.identifier);
         if (WoodVariantRegistry.getVariant(variantName) != null)
             this.variant = WoodVariantRegistry.getVariant(variantName);
         else {
@@ -76,20 +76,20 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
     }
 
     @Override
-    public void removeFromCopiedStackData(WriteView view) {
-        super.removeFromCopiedStackData(view);
+    public void removeComponentsFromTag(WriteView view) {
+        super.removeComponentsFromTag(view);
         view.remove("color");
         view.remove("variant");
     }
 
-    public NbtCompound writeColorAndVariant(NbtCompound nbt) {
-        NbtCompound newNBT = writeColor(nbt);
+    public CompoundTag writeColorAndVariant(CompoundTag nbt) {
+        CompoundTag newNBT = writeColor(nbt);
         newNBT.putString("variant", variant.getIdentifier().toString());
         return newNBT;
     }
 
-    public NbtCompound writeColor(NbtCompound nbt) {
-        nbt.putString("color", color.asString());
+    public CompoundTag writeColor(CompoundTag nbt) {
+        nbt.putString("color", color.getSerializedName());
         return nbt;
     }
 
@@ -115,7 +115,7 @@ public class LampBlockEntity extends BlockEntity implements DyeableFurnitureBloc
     }
 
     @ExpectPlatform
-    public static BlockEntityType.BlockEntityFactory<? extends LampBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends LampBlockEntity> getFactory() {
         throw new UnsupportedOperationException();
     }
 }

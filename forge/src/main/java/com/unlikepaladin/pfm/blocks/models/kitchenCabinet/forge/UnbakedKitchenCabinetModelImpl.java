@@ -1,16 +1,16 @@
 package com.unlikepaladin.pfm.blocks.models.kitchenCabinet.forge;
 
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.BlockStateModel;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelSettings;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
 
 public class UnbakedKitchenCabinetModelImpl {
-    public static BlockStateModel getBakedModel(Identifier modelId, ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+    public static BlockStateModel getBakedModel(ResourceLocation modelId, ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
         if (PFMRuntimeResources.modelCacheMap.get(modelId).getBakedModels().containsKey(settings))
             return PFMRuntimeResources.modelCacheMap.get(modelId).getBakedModels().get(settings);
 

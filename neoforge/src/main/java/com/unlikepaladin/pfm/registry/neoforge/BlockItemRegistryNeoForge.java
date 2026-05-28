@@ -1,19 +1,16 @@
 package com.unlikepaladin.pfm.registry.neoforge;
 
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
-import com.unlikepaladin.pfm.blocks.blockentities.neoforge.FreezerBlockEntityImpl;
 import com.unlikepaladin.pfm.compat.cookingforblockheads.neoforge.PFMCookingForBlockHeadsCompat;
 import com.unlikepaladin.pfm.items.neoforge.FurnitureGuideBookImpl;
 import com.unlikepaladin.pfm.registry.BlockEntities;
 import com.unlikepaladin.pfm.registry.BlockItemRegistry;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.dynamic.LateBlockRegistry;
-import net.minecraft.block.Blocks;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.item.Item;
-import net.minecraft.registry.Registries;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.Rarity;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -30,19 +27,19 @@ import java.util.*;
 public class BlockItemRegistryNeoForge {
     @SubscribeEvent
     public static void registerBlocks(RegisterEvent event) {
-        event.register(Registries.BLOCK.getKey(), blockRegisterHelper -> {
+        event.register(BuiltInRegistries.BLOCK.key(), blockRegisterHelper -> {
             BlockItemRegistry.registerCommonBlocks();
-            BlockItemRegistryImpl.blocks.forEach((blockName, block) -> blockRegisterHelper.register(Identifier.of(PaladinFurnitureMod.MOD_ID, blockName), block));
+            BlockItemRegistryImpl.blocks.forEach((blockName, block) -> blockRegisterHelper.register(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, blockName), block));
         });
     }
 
     @SubscribeEvent
     public static void registerItems(RegisterEvent event) {
-        event.register(Registries.ITEM.getKey(), itemRegisterHelper -> {
+        event.register(BuiltInRegistries.ITEM.key(), itemRegisterHelper -> {
             if (!PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.containsKey(PaladinFurnitureMod.FURNITURE_GROUP)) {
                 PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(PaladinFurnitureMod.FURNITURE_GROUP, new LinkedHashSet<>());
             }
-            PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Settings().rarity(Rarity.RARE).maxCount(1).registryKey(LateBlockRegistry.getItemRegistryKey("furniture_book")));
+            PaladinFurnitureModBlocksItems.FURNITURE_BOOK = new FurnitureGuideBookImpl(new Item.Properties().rarity(Rarity.RARE).stacksTo(1).setId(LateBlockRegistry.getItemRegistryKey("furniture_book")));
             PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.get(PaladinFurnitureMod.FURNITURE_GROUP).add(PaladinFurnitureModBlocksItems.FURNITURE_BOOK);
             BlockItemRegistry.registerCommonItems();
             BlockItemRegistryImpl.items.forEach((itemName, itemSupplier) -> {
@@ -51,7 +48,7 @@ public class BlockItemRegistryNeoForge {
                     PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.put(BlockItemRegistryImpl.itemNameToGroup.get(itemName), new LinkedHashSet<>());
                 }
                 PaladinFurnitureModBlocksItems.ITEM_GROUP_LIST_MAP.get(BlockItemRegistryImpl.itemNameToGroup.get(itemName)).add(item);
-                itemRegisterHelper.register(Identifier.of(PaladinFurnitureMod.MOD_ID, itemName), item);
+                itemRegisterHelper.register(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, itemName), item);
             });
         });
     }

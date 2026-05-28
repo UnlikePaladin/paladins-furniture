@@ -2,32 +2,31 @@ package com.unlikepaladin.pfm.blocks.models.basicCoffeeTable.neoforge;
 
 import com.unlikepaladin.pfm.blocks.BasicCoffeeTableBlock;
 import com.unlikepaladin.pfm.blocks.models.neoforge.PFMNeoForgeBakedModel;
-import net.minecraft.block.BlockState;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.random.Random;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NeoForgeCoffeeBasicTableModel extends PFMNeoForgeBakedModel {
-    public NeoForgeCoffeeBasicTableModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+    public NeoForgeCoffeeBasicTableModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
     @Override
-    public void collectParts(BlockRenderView world, BlockPos pos, BlockState state, Random random, List<BlockModelPart> parts) {
-
-
+    public void collectParts(BlockAndTintGetter world, BlockPos pos, BlockState state, RandomSource random, List<BlockModelPart> parts) {
         if (state == null || !(state.getBlock() instanceof BasicCoffeeTableBlock))
             return;
+
         List<BlockModelPart> baseParts = new ArrayList<>();
         List<BlockModelPart> secondarParts = new ArrayList<>();
         BasicCoffeeTableBlock block = (BasicCoffeeTableBlock) state.getBlock();
@@ -39,7 +38,7 @@ public class NeoForgeCoffeeBasicTableModel extends PFMNeoForgeBakedModel {
         boolean cornerNorthEast = north && east && !block.canConnect(world, state, pos.north().east(), pos);
         boolean cornerSouthEast = south && east && !block.canConnect(world, state, pos.south().east(), pos);
         boolean cornerSouthWest = south && west && !block.canConnect(world, state, pos.south().west(), pos);
-        Direction.Axis dir = state.get(BasicCoffeeTableBlock.AXIS);
+        Direction.Axis dir = state.getValue(BasicCoffeeTableBlock.AXIS);
 
         baseParts.add(getTemplateBakedModels().get(0));
         if (!north && !south && !east && !west) {
@@ -156,7 +155,7 @@ public class NeoForgeCoffeeBasicTableModel extends PFMNeoForgeBakedModel {
                 secondarParts.add(getTemplateBakedModels().get(3));
             }
         }
-        List<Sprite> spriteList = getSpriteList(state);
+        List<TextureAtlasSprite> spriteList = getSpriteList(state);
         List<BlockModelPart> quads = getPartsWithTexture(baseParts, new SpriteData(spriteList.get(0)));
         quads.addAll(getPartsWithTexture(secondarParts, new SpriteData(spriteList.get(1))));
         parts.addAll(quads);
@@ -164,7 +163,7 @@ public class NeoForgeCoffeeBasicTableModel extends PFMNeoForgeBakedModel {
 
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(@Nullable Direction face, RandomSource random) {
         // base
         List<BakedQuad> baseQuads = new ArrayList<>(getTemplateBakedModels().get(0).getQuads(face));
 
@@ -178,7 +177,7 @@ public class NeoForgeCoffeeBasicTableModel extends PFMNeoForgeBakedModel {
         secondaryQuads.addAll(getTemplateBakedModels().get(8).getQuads(face));
         secondaryQuads.addAll(getTemplateBakedModels().get(7).getQuads(face));
 
-        List<Sprite> spriteList = getSpriteList(blockState);
+        List<TextureAtlasSprite> spriteList = getSpriteList(blockState);
         List<BakedQuad> quads = getQuadsWithTexture(baseQuads, new SpriteData(spriteList.get(0)));
         quads.addAll(getQuadsWithTexture(secondaryQuads, new SpriteData(spriteList.get(1))));
         return quads;

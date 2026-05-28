@@ -10,14 +10,16 @@
     "PFMUnbakedBlockStateModelMixin"
   ],
   "mixins": [
+    "MappedRegistryAccessor",
     "PFMCFBModBlockEntitiesMixin",
     "PFMCookingPotBlockEntityMixin",
-    "PFMItemEntryAccessor",
+    "PFMLootItemAccessor",
     "PFMLootPool$BuilderMixin",
-    "PFMMinecraftServerMixin",
     "PFMReloadableResourceManagerImplMixin",
-    "PFMSaveLoaderMixin",
-    "SimpleRegistryAccessor"
+    "PFMSaveLoaderMixin"
+  ],
+  "server": [
+    "PFMMinecraftServerMixin"
   ],
   "injectors": {
     "defaultRequire": 1

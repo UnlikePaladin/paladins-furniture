@@ -1,14 +1,14 @@
 package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.ShowerHeadBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.storage.ReadView;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,28 +19,28 @@ public class ShowerHeadBlockEntityImpl extends ShowerHeadBlockEntity {
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return this.saveInitialChunkData(new NbtCompound(), registryLookup);
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return this.saveInitialChunkData(new CompoundTag(), registryLookup);
     }
 
     @Override
-    public void handleUpdateTag(ReadView tag, RegistryWrapper.WrapperLookup holders) {
-        super.handleUpdateTag(tag, holders);
+    public void handleUpdateTag(ReadView tag, HolderLookup.Provider holders) {
+        this.loadAdditional(tag, holders);
         this.readData(tag);
     }
 
     @Override
-    public void onDataPacket(ClientConnection connection, ReadView data, RegistryWrapper.WrapperLookup lookup) {
-        super.onDataPacket(connection, data, lookup);
+    public void onDataPacket(Connection net, ReadView data, HolderLookup.Provider lookup) {
+        super.onDataPacket(net, data, lookup);
         this.isOpen = data.getBoolean("isOpen", false);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends ShowerHeadBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends ShowerHeadBlockEntity> getFactory() {
         return ShowerHeadBlockEntityImpl::new;
     }
 }

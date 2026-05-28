@@ -3,25 +3,27 @@ package com.unlikepaladin.pfm.blocks.models.mirror.forge;
 import com.unlikepaladin.pfm.blocks.MirrorBlock;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.render.BlockRenderLayer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class ForgeMirrorModel extends PFMForgeBakedModel {
-    public ForgeMirrorModel(ModelBakeSettings settings, Map<String, BlockModelPart> bakedModels, List<String> MODEL_PARTS) {
+    public ForgeMirrorModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> MODEL_PARTS) {
         super(settings, null, bakedModels.values().stream().toList());
         this.modelParts = MODEL_PARTS;
     }
@@ -30,7 +32,7 @@ public class ForgeMirrorModel extends PFMForgeBakedModel {
     public static ModelProperty<ModelBitSetProperty> DIRECTIONS = new ModelProperty<>();
 
     @Override
-    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable BlockRenderLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
         BlockState state = extraData.get(STATE);
         List<BlockModelPart> quads = new ArrayList<>();
         quads.add(getTemplateBakedModels().get((0)));
@@ -66,21 +68,21 @@ public class ForgeMirrorModel extends PFMForgeBakedModel {
 
     @NotNull
     @Override
-    public ModelData getModelData(@NotNull BlockRenderView blockView, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
+    public ModelData getModelData(@NotNull BlockAndTintGetter blockView, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
         ModelData.Builder builder = ModelData.builder();
         if (state.getBlock() instanceof MirrorBlock) {
             MirrorBlock block = (MirrorBlock) state.getBlock();
-            Direction facing = state.get(MirrorBlock.FACING);
+            Direction facing = state.getValue(MirrorBlock.FACING);
             BitSet connections = new BitSet(8);
-            connections.set(0, block.canConnect(blockView.getBlockState(pos.up()), state));
-            connections.set(1, block.canConnect(blockView.getBlockState(pos.down()), state));
-            connections.set(2, block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYClockwise())), state));
-            connections.set(3, block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYCounterclockwise())), state));
+            connections.set(0, block.canConnect(blockView.getBlockState(pos.above()), state));
+            connections.set(1, block.canConnect(blockView.getBlockState(pos.below()), state));
+            connections.set(2, block.canConnect(blockView.getBlockState(pos.relative(facing.getClockWise())), state));
+            connections.set(3, block.canConnect(blockView.getBlockState(pos.relative(facing.getCounterClockWise())), state));
 
-            connections.set(4, block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYClockwise()).up()), state));
-            connections.set(5, block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYClockwise()).down()), state));
-            connections.set(6, block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYCounterclockwise()).up()), state));
-            connections.set(7, block.canConnect(blockView.getBlockState(pos.offset(facing.rotateYCounterclockwise()).down()), state));
+            connections.set(4, block.canConnect(blockView.getBlockState(pos.relative(facing.getClockWise()).above()), state));
+            connections.set(5, block.canConnect(blockView.getBlockState(pos.relative(facing.getClockWise()).below()), state));
+            connections.set(6, block.canConnect(blockView.getBlockState(pos.relative(facing.getCounterClockWise()).above()), state));
+            connections.set(7, block.canConnect(blockView.getBlockState(pos.relative(facing.getCounterClockWise()).below()), state));
             ModelBitSetProperty mirrorDirections = new ModelBitSetProperty(connections);
             builder.with(DIRECTIONS, mirrorDirections);
         }
@@ -88,7 +90,7 @@ public class ForgeMirrorModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(@Nullable Direction face, RandomSource random) {
         return List.of();
     }
 }

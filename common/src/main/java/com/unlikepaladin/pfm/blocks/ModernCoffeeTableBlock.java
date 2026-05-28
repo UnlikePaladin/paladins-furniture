@@ -3,19 +3,24 @@ package com.unlikepaladin.pfm.blocks;
 import com.mojang.serialization.MapCodec;
 import com.unlikepaladin.pfm.PaladinFurnitureMod;
 import com.unlikepaladin.pfm.data.FurnitureBlock;
-import net.minecraft.block.*;
-import net.minecraft.entity.ai.pathing.NavigationType;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.EnumProperty;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,17 +28,17 @@ import java.util.stream.Stream;
 
 public class ModernCoffeeTableBlock extends Block {
     private final Block baseBlock;
-    public static final EnumProperty<Direction.Axis> AXIS = Properties.HORIZONTAL_AXIS;
+    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.HORIZONTAL_AXIS;
     private static final List<FurnitureBlock> WOOD_COFFEE_MODERN_TABLES = new ArrayList<>();
     private static final List<FurnitureBlock> STONE_COFEEE_MODERN_TABLES = new ArrayList<>();
     private final BlockState baseBlockState;
 
-    public ModernCoffeeTableBlock(Settings settings) {
-        super(settings.luminance((state) -> 0).emissiveLighting((blockstate, b, c) -> false));
-        setDefaultState(this.getStateManager().getDefaultState().with(AXIS, Direction.Axis.X));
-        this.baseBlockState = this.getDefaultState();
+    public ModernCoffeeTableBlock(Properties settings) {
+        super(settings.lightLevel((state) -> 0).emissiveRendering((blockstate, b, c) -> false));
+        registerDefaultState(this.getStateDefinition().any().setValue(AXIS, Direction.Axis.X));
+        this.baseBlockState = this.defaultBlockState();
         this.baseBlock = baseBlockState.getBlock();
-        if(AbstractSittableBlock.isWoodBased(this.getDefaultState()) && this.getClass().isAssignableFrom(ModernCoffeeTableBlock.class)){
+        if(AbstractSittableBlock.isWoodBased(this.defaultBlockState()) && this.getClass().isAssignableFrom(ModernCoffeeTableBlock.class)){
             WOOD_COFFEE_MODERN_TABLES.add(new FurnitureBlock(this, "coffee_table_modern"));
         }
         else if (this.getClass().isAssignableFrom(ModernCoffeeTableBlock.class)){
@@ -49,12 +54,13 @@ public class ModernCoffeeTableBlock extends Block {
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
         stateManager.add(AXIS);
     }
 
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(AXIS, ctx.getHorizontalPlayerFacing().rotateYClockwise().getAxis());
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(AXIS, ctx.getHorizontalDirection().getClockWise().getAxis());
     }
 
     boolean canConnect(BlockState blockState)
@@ -62,18 +68,18 @@ public class ModernCoffeeTableBlock extends Block {
         return PaladinFurnitureMod.getPFMConfig().doTablesOfDifferentMaterialsConnect() ? blockState.getBlock() instanceof ModernCoffeeTableBlock : blockState.getBlock() == this;
     }
 
-    public boolean isTable(BlockView world, BlockPos pos, Direction.Axis direction, int i)
+    public boolean isTable(BlockGetter world, BlockPos pos, Direction.Axis direction, int i)
     {
-        BlockState state = world.getBlockState(pos.offset(direction, i));
+        BlockState state = world.getBlockState(pos.relative(direction, i));
         if(canConnect(state))
         {
-            Direction.Axis sourceDirection = state.get(AXIS);
+            Direction.Axis sourceDirection = state.getValue(AXIS);
             return sourceDirection.equals(direction);
         }
         return false;
     }
 
-    public int getFlammability(BlockState state, BlockView world, BlockPos pos, Direction face) {
+    public int getFlammability(BlockState state, BlockGetter world, BlockPos pos, Direction face) {
         if (AbstractSittableBlock.isWoodBased(state)) {
             return 20;
         }
@@ -84,17 +90,17 @@ public class ModernCoffeeTableBlock extends Block {
         return LogTableBlock.rotateShape(from, to, shape);
     }
 
-    final static VoxelShape MODERN_COFFEE_TABLE = VoxelShapes.union(createCuboidShape(0, 8, 0, 16, 10, 16), createCuboidShape(12, 0, 12, 14, 8, 14), createCuboidShape(12, 0, 2, 14, 8, 4), createCuboidShape(13, 2, 7,15, 8, 9), createCuboidShape(1, 2, 7, 3, 8, 9),createCuboidShape(2, 0, 2,4, 8, 4),createCuboidShape(2, 0, 4, 4, 2, 12), createCuboidShape(3, 2, 7,13, 4, 9),createCuboidShape(12, 0, 4,14, 2, 12), createCuboidShape(2, 0, 12,4, 8, 14));
-    final static VoxelShape MODERN_COFFEE_TABLE_MIDDLE = VoxelShapes.union(createCuboidShape(0, 8, 0, 16, 10, 16),createCuboidShape(0, 2, 7,16, 4, 9 ));
-    final static VoxelShape MODERN_COFFEE_TABLE_ONE = VoxelShapes.union(createCuboidShape(0, 8, 0, 16, 10, 16), createCuboidShape(13, 2, 7, 15, 8, 9), createCuboidShape(12, 0, 12,14, 8, 14), createCuboidShape(12, 0, 4,14, 2, 12 ), createCuboidShape(0, 2, 7,13, 4, 9), createCuboidShape(12, 0, 2,14, 8, 4 ));
+    final static VoxelShape MODERN_COFFEE_TABLE = Shapes.or(box(0, 8, 0, 16, 10, 16), box(12, 0, 12, 14, 8, 14), box(12, 0, 2, 14, 8, 4), box(13, 2, 7,15, 8, 9), box(1, 2, 7, 3, 8, 9),box(2, 0, 2,4, 8, 4),box(2, 0, 4, 4, 2, 12), box(3, 2, 7,13, 4, 9),box(12, 0, 4,14, 2, 12), box(2, 0, 12,4, 8, 14));
+    final static VoxelShape MODERN_COFFEE_TABLE_MIDDLE = Shapes.or(box(0, 8, 0, 16, 10, 16),box(0, 2, 7,16, 4, 9 ));
+    final static VoxelShape MODERN_COFFEE_TABLE_ONE = Shapes.or(box(0, 8, 0, 16, 10, 16), box(13, 2, 7, 15, 8, 9), box(12, 0, 12,14, 8, 14), box(12, 0, 4,14, 2, 12 ), box(0, 2, 7,13, 4, 9), box(12, 0, 2,14, 8, 4 ));
     final static VoxelShape MODERN_COFFEE_TABLE_ONE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, MODERN_COFFEE_TABLE_ONE);
     final static VoxelShape MODERN_COFFEE_TABLE_ONE_WEST = rotateShape(Direction.NORTH, Direction.WEST, MODERN_COFFEE_TABLE_ONE);
     final static VoxelShape MODERN_COFFEE_TABLE_ONE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_COFFEE_TABLE_ONE);
     final static VoxelShape MODERN_COFFEE_TABLE_MIDDLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_COFFEE_TABLE_MIDDLE);
     final static VoxelShape MODERN_COFFEE_TABLE_EAST = rotateShape(Direction.NORTH, Direction.EAST, MODERN_COFFEE_TABLE);
 
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction.Axis dir = state.get(AXIS);
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+        Direction.Axis dir = state.getValue(AXIS);
         boolean dirNorthOrSouth = dir.equals(Direction.Axis.X);
         boolean dirWestOrEast = dir.equals(Direction.Axis.Z);
         boolean left = isTable(view, pos, dir, -1);
@@ -131,12 +137,12 @@ public class ModernCoffeeTableBlock extends Block {
     }
 
     @Override
-    public boolean canPathfindThrough(BlockState state, NavigationType type) {
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 
     @Override
-    protected MapCodec<? extends Block> getCodec() {
+    protected MapCodec<? extends Block> codec() {
         return CODEC;
     }
 }

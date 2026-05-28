@@ -1,20 +1,17 @@
 package com.unlikepaladin.pfm.blocks.blockentities.neoforge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PlateBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.network.listener.ClientPlayPacketListener;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.storage.ReadView;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 
-import org.jetbrains.annotations.Nullable;;
+import org.jetbrains.annotations.Nullable;
 
 public class PlateBlockEntityImpl extends PlateBlockEntity {
     public PlateBlockEntityImpl(BlockPos blockPos, BlockState blockState) {
@@ -23,13 +20,13 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
 
     @Nullable
     @Override
-    public Packet<ClientPlayPacketListener> toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public @NotNull NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return this.createNbt(registryLookup);
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
     @Override
@@ -38,13 +35,13 @@ public class PlateBlockEntityImpl extends PlateBlockEntity {
     }
 
     @Override
-    public void onDataPacket(ClientConnection net, ReadView valueInput) {
+    public void onDataPacket(Connection net, ReadView valueInput) {
         super.onDataPacket(net, valueInput);
         this.itemInPlate.clear();
-        Inventories.readData(valueInput, this.itemInPlate);
+        Inventories.readNbt(valueInput, this.itemInPlate);
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends PlateBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends PlateBlockEntity> getFactory() {
         return PlateBlockEntityImpl::new;
     }
 }

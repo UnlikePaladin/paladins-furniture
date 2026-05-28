@@ -8,17 +8,25 @@ import com.unlikepaladin.pfm.client.model.PFMUnbakedBlockStateModel;
 import dev.architectury.injectables.annotations.ExpectPlatform;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.render.model.*;
-import net.minecraft.client.render.model.json.ModelVariant;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.resources.model.SpriteGetter;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 @Environment(EnvType.CLIENT)
-public record UnbakedIronFridgeModel(ModelVariant variant) implements PFMUnbakedBlockStateModel {
+public record UnbakedIronFridgeModel(Variant variant) implements PFMUnbakedBlockStateModel {
     public static final MapCodec<UnbakedIronFridgeModel> MAP_CODEC = RecordCodecBuilder.mapCodec
             (instance ->
-                    instance.group(ModelVariant.MAP_CODEC.forGetter(UnbakedIronFridgeModel::variant))
+                    instance.group(Variant.MAP_CODEC.forGetter(UnbakedIronFridgeModel::variant))
                             .apply(instance, UnbakedIronFridgeModel::new));
 
     public static final Codec<UnbakedIronFridgeModel> CODEC = MAP_CODEC.codec();
@@ -38,41 +46,41 @@ public record UnbakedIronFridgeModel(ModelVariant variant) implements PFMUnbaked
         }
     };
 
-    public static final List<Identifier> ALL_MODEL_IDS = new ArrayList<>() {
+    public static final List<ResourceLocation> ALL_MODEL_IDS = new ArrayList<>() {
         {
             for (String part : FRIDGE_MODEL_PARTS_BASE) {
-                add(Identifier.of(PaladinFurnitureMod.MOD_ID, part));
+                add(ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, part));
             }
         }
     };
 
-    public static final Identifier IRON_FRIDGE_ID = Identifier.of(PaladinFurnitureMod.MOD_ID, "block/iron_fridge");
-    public static final List<Identifier> IRON_FRIDGE_MODEL_IDS = new ArrayList<>() { {
+    public static final ResourceLocation IRON_FRIDGE_ID = ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, "block/iron_fridge");
+    public static final List<ResourceLocation> IRON_FRIDGE_MODEL_IDS = new ArrayList<>() { {
         add(IRON_FRIDGE_ID);
     }};
 
 
 
     @Override
-    public BlockStateModel bake(Baker baker){
-        ModelBakeSettings settings = variant.modelState().asModelBakeSettings();
+    public BlockStateModel bake(ModelBaker baker){
+        ModelState settings = variant.modelState().asModelState();
 
         Map<String,BlockModelPart> bakedModels = new LinkedHashMap<>();
         for (String modelPart : FRIDGE_MODEL_PARTS_BASE) {
-            bakedModels.put(modelPart, GeometryBakedModel.create(baker, Identifier.of(PaladinFurnitureMod.MOD_ID, modelPart), settings));
+            bakedModels.put(modelPart, SimpleModelWrapper.bake(baker, ResourceLocation.fromNamespaceAndPath(PaladinFurnitureMod.MOD_ID, modelPart), settings));
         }
 
         return getBakedModel(settings, bakedModels, FRIDGE_MODEL_PARTS_BASE);
     }
 
     @ExpectPlatform
-    public static BlockStateModel getBakedModel(ModelBakeSettings settings, Map<String,BlockModelPart> bakedModels, List<String> MODEL_PARTS) {
+    public static BlockStateModel getBakedModel(ModelState settings, Map<String, BlockModelPart> bakedModels, List<String> MODEL_PARTS) {
         throw new RuntimeException("Method wasn't replaced correctly");
     }
 
     @Override
-    public void resolve(Resolver resolver) {
-        for (Identifier c : ALL_MODEL_IDS)
+    public void resolveDependencies(Resolver resolver) {
+        for (ResourceLocation c : ALL_MODEL_IDS)
             resolver.markDependency(c);
     }
 

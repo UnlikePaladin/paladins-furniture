@@ -6,34 +6,36 @@ import com.unlikepaladin.pfm.data.FurnitureBlock;
 import com.unlikepaladin.pfm.registry.PaladinFurnitureModBlocksItems;
 import com.unlikepaladin.pfm.registry.Statistics;
 import dev.architectury.injectables.annotations.ExpectPlatform;
-import net.minecraft.block.*;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.component.DataComponentTypes;
-import net.minecraft.entity.ItemEntity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.particle.ItemStackParticleEffect;
-import net.minecraft.particle.ParticleTypes;
-import net.minecraft.registry.Registries;
-import net.minecraft.server.world.ServerWorld;
-import net.minecraft.state.StateManager;
-import net.minecraft.state.property.BooleanProperty;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.util.ItemScatterer;
-import net.minecraft.util.hit.BlockHitResult;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.Vec3d;
-import net.minecraft.util.shape.VoxelShape;
-import net.minecraft.util.shape.VoxelShapes;
-import net.minecraft.world.BlockView;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
-import net.minecraft.world.WorldView;
-import net.minecraft.world.tick.ScheduledTickView;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.level.*;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.particles.ItemParticleOption;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.Containers;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -45,19 +47,19 @@ import static com.unlikepaladin.pfm.blocks.KitchenDrawerBlock.rotateShape;
 
 public class PlateBlock extends HorizontalFacingBlockWithEntity {
 
-    public static final BooleanProperty CUTLERY = BooleanProperty.of("cutlery");
+    public static final BooleanProperty CUTLERY = BooleanProperty.create("cutlery");
 
     private static final List<FurnitureBlock> PLATES = new ArrayList<>();
-    public static final MapCodec<PlateBlock> CODEC = createCodec(PlateBlock::new);
+    public static final MapCodec<PlateBlock> CODEC = simpleCodec(PlateBlock::new);
 
-    public PlateBlock(AbstractBlock.Settings settings) {
+    public PlateBlock(Properties settings) {
         super(settings);
-        setDefaultState(this.getStateManager().getDefaultState().with(FACING, Direction.NORTH).with(CUTLERY, false));
+        registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(CUTLERY, false));
         PLATES.add(new FurnitureBlock(this, "plate"));
     }
 
     @Override
-    protected MapCodec<? extends BlockWithEntity> getCodec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return CODEC;
     }
 
@@ -66,31 +68,31 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    protected ActionResult onUseWithItem(ItemStack itemStack, BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
+    protected InteractionResult useItemOn(ItemStack itemStack, BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         PlateBlockEntity plateBlockEntity;
         BlockEntity blockEntity = world.getBlockEntity(pos);
-        if (blockEntity instanceof PlateBlockEntity && (itemStack.get(DataComponentTypes.FOOD) != null)) {
-            if (!world.isClient && ((PlateBlockEntity)blockEntity).addItem(player.getAbilities().creativeMode ? itemStack.copy() : itemStack)) {
-                player.incrementStat(Statistics.PLATE_USED);
-                return ActionResult.SUCCESS;
+        if (blockEntity instanceof PlateBlockEntity && (itemStack.has(DataComponents.FOOD))) {
+            if (!world.isClientSide && ((PlateBlockEntity)blockEntity).addItem(player.getAbilities().instabuild ? itemStack.copy() : itemStack)) {
+                player.awardStat(Statistics.PLATE_USED);
+                return InteractionResult.SUCCESS;
             }
-            return ActionResult.CONSUME;
+            return InteractionResult.CONSUME;
         }
-        if(Registries.BLOCK.get(Registries.ITEM.getId(itemStack.getItem())) instanceof CutleryBlock) {
-            world.setBlockState(pos, state.with(CUTLERY, true));
-            itemStack.decrement(1);
-            return ActionResult.SUCCESS;
+        if(BuiltInRegistries.BLOCK.getValue(BuiltInRegistries.ITEM.getKey(itemStack.getItem())) instanceof CutleryBlock) {
+            world.setBlockAndUpdate(pos, state.setValue(CUTLERY, true));
+            itemStack.shrink(1);
+            return InteractionResult.SUCCESS;
         }
-        if (player.isSneaking() && blockEntity instanceof PlateBlockEntity) {
+        if (player.isShiftKeyDown() && blockEntity instanceof PlateBlockEntity) {
             plateBlockEntity = (PlateBlockEntity)blockEntity;
             if (!plateBlockEntity.getItemInPlate().isEmpty()) {
-                if (!world.isClient) {
+                if (!world.isClientSide) {
                     ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, plateBlockEntity.removeItem());
-                    world.spawnEntity(itemEntity);
-                    player.incrementStat(Statistics.PLATE_USED);
-                    return ActionResult.SUCCESS;
+                    world.addFreshEntity(itemEntity);
+                    player.awardStat(Statistics.PLATE_USED);
+                    return InteractionResult.SUCCESS;
                 }
-                return ActionResult.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
         if(blockEntity instanceof PlateBlockEntity){
@@ -98,39 +100,40 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
                 if (!plateBlockEntity.getItemInPlate().isEmpty()) {
                     ItemStack stack = plateBlockEntity.getItemInPlate();
                     player.spawnItemParticles(stack, 16);
-                    if (Registries.ITEM.getId(stack.getItem()).toString().equals("sandwichable:sandwich")) {
+                    if (BuiltInRegistries.ITEM.getKey(stack.getItem()).toString().equals("sandwichable:sandwich")) {
                        eatSandwich(stack, world, player);
                     }
                     else {
+                        ItemStack result = stack.finishUsingItem(world, player);
                         if (!player.isCreative()) {
-                            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, stack.finishUsing(world, player));
-                            world.spawnEntity(itemEntity);
+                            ItemEntity itemEntity = new ItemEntity(world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, result);
+                            world.addFreshEntity(itemEntity);
                         }
                     }
                     plateBlockEntity.removeItem();
-                    player.incrementStat(Statistics.PLATE_USED);
-                    return ActionResult.SUCCESS;
+                    player.awardStat(Statistics.PLATE_USED);
+                    return InteractionResult.SUCCESS;
                 }
         }
-        return super.onUseWithItem(itemStack, state, world, pos, player, hand, hit);
+        return super.useItemOn(itemStack, state, world, pos, player, hand, hit);
     }
 
     @ExpectPlatform
-    public static void eatSandwich(ItemStack stack, World world, PlayerEntity player) {
+    public static void eatSandwich(ItemStack stack, Level world, Player player) {
 
     }
     @Override
-    public BlockState onBreak(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        if (state.get(CUTLERY) && !player.getAbilities().creativeMode) {
+    public BlockState playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
+        if (state.getValue(CUTLERY) && !player.getAbilities().instabuild) {
             ItemEntity itemEntity = new ItemEntity( world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
-            world.spawnEntity(itemEntity);
+            world.addFreshEntity(itemEntity);
         }
-        return super.onBreak(world, pos, state, player);
+        return super.playerWillDestroy(world, pos, state, player);
     }
 
     @Nullable
     @Override
-    public BlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return getBlockEntity(pos, state);
     }
 
@@ -140,41 +143,41 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> stateManager) {
-        super.appendProperties(stateManager);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateManager) {
+        super.createBlockStateDefinition(stateManager);
         stateManager.add(CUTLERY);
     }
 
     @Nullable
     @Override
-    public BlockState getPlacementState(ItemPlacementContext ctx) {
-        return this.getDefaultState().with(FACING, ctx.getHorizontalPlayerFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        return this.defaultBlockState().setValue(FACING, ctx.getHorizontalDirection());
     }
 
     @Override
-    protected BlockState getStateForNeighborUpdate(BlockState state, WorldView world, ScheduledTickView tickView, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, net.minecraft.util.math.random.Random random) {
-        if (!state.canPlaceAt(world, pos)) {
-            if (world instanceof World && state.get(CUTLERY)) {
-                ItemEntity itemEntity = new ItemEntity((World) world, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
-                ((World) world).spawnEntity(itemEntity);
+    public BlockState updateShape(BlockState state, LevelReader levelReader, ScheduledTickAccess scheduledTickAccess, BlockPos pos, Direction direction, BlockPos neighborPos, BlockState neighborState, RandomSource random) {
+        if (!state.canSurvive(levelReader, pos)) {
+            if (levelReader instanceof Level && state.getValue(CUTLERY)) {
+                ItemEntity itemEntity = new ItemEntity((Level) levelReader, pos.getX() + 0.5D, pos.getY() + 0.8D, pos.getZ() + 0.5D, new ItemStack(PaladinFurnitureModBlocksItems.BASIC_CUTLERY, 1));
+                ((Level) levelReader).addFreshEntity(itemEntity);
             }
-            return Blocks.AIR.getDefaultState();
+            return Blocks.AIR.defaultBlockState();
         }
-        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+        return super.updateShape(state, levelReader, scheduledTickAccess, pos, direction, neighborPos, neighborState, random);
     }
 
-    protected static final VoxelShape PLATE = VoxelShapes.union(createCuboidShape(2,0,3, 12,1,13));
+    protected static final VoxelShape PLATE = Shapes.or(box(2,0,3, 12,1,13));
     protected static final VoxelShape PLATE_SOUTH = rotateShape(Direction.NORTH, Direction.SOUTH, PLATE);
     protected static final VoxelShape PLATE_EAST = rotateShape(Direction.NORTH, Direction.EAST, PLATE);
     protected static final VoxelShape PLATE_WEST = rotateShape(Direction.NORTH, Direction.WEST, PLATE);
     @Override
-    public VoxelShape getOutlineShape(BlockState state, BlockView view, BlockPos pos, ShapeContext context) {
-        Direction dir = state.get(FACING);
+    public VoxelShape getShape(BlockState state, BlockGetter view, BlockPos pos, CollisionContext context) {
+        Direction dir = state.getValue(FACING);
         return switch (dir) {
             case WEST -> PLATE_SOUTH;
             case NORTH -> PLATE_WEST;
@@ -184,19 +187,19 @@ public class PlateBlock extends HorizontalFacingBlockWithEntity {
     }
 
     @Override
-    public void onStateReplaced(BlockState state, ServerWorld world, BlockPos pos, boolean moved) {
+    public void affectNeighborsAfterRemoval(BlockState state, ServerLevel world, BlockPos pos, boolean moved) {
         BlockEntity blockEntity = world.getBlockEntity(pos);
         if (blockEntity instanceof PlateBlockEntity plateBlockEntity) {
-            ItemScatterer.spawn(world, pos, plateBlockEntity.getInventory());
-            world.updateComparators(pos, this);
-            plateBlockEntity.markRemoved();
+            Containers.dropContents(world, pos, plateBlockEntity.getContainer());
+            world.updateNeighbourForOutputSignal(pos, this);
+            plateBlockEntity.setRemoved();
         }
-        super.onStateReplaced(state, world, pos, moved);
+        super.affectNeighborsAfterRemoval(state, world, pos, moved);
     }
 
     @Override
-    public boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
+    public boolean canSurvive(BlockState state, LevelReader world, BlockPos pos) {
         Direction direction = Direction.DOWN;
-        return Block.sideCoversSmallSquare(world, pos.offset(direction), direction.getOpposite());
+        return Block.canSupportCenter(world, pos.relative(direction), direction.getOpposite());
     }
 }

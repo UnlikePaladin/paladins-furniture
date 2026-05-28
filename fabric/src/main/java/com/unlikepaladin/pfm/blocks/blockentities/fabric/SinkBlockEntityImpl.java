@@ -1,10 +1,10 @@
 package com.unlikepaladin.pfm.blocks.blockentities.fabric;
 
 import com.unlikepaladin.pfm.blocks.blockentities.SinkBlockEntity;
-import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class SinkBlockEntityImpl {
-    public static BlockEntityType.BlockEntityFactory<? extends SinkBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends SinkBlockEntity> getFactory() {
         return SinkBlockEntity::new;
     }
 }

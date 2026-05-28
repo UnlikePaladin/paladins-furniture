@@ -1,7 +1,7 @@
 package com.unlikepaladin.pfm.registry.neoforge;
 
 import com.unlikepaladin.pfm.registry.BlockEntityRegistry;
-import net.minecraft.registry.Registries;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
@@ -11,7 +11,7 @@ public class BlockEntityRegistryNeoForge {
 
     @SubscribeEvent
     public static void registerEntities(RegisterEvent event) {
-        event.register(Registries.BLOCK_ENTITY_TYPE.getKey(), blockEntityTypeRegisterHelper -> {
+        event.register(BuiltInRegistries.BLOCK_ENTITY_TYPE.key(), blockEntityTypeRegisterHelper -> {
             BlockEntityRegistry.registerBlockEntities();
             BlockEntityRegistryImpl.blockEntityTypes.forEach(blockEntityTypeRegisterHelper::register);
         });

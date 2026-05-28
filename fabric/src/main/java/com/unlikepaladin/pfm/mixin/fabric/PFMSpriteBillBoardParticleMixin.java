@@ -1,14 +1,14 @@
 package com.unlikepaladin.pfm.mixin.fabric;
 
-import net.minecraft.client.particle.SpriteBillboardParticle;
-import net.minecraft.client.texture.Sprite;
+import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import org.spongepowered.asm.mixin.Intrinsic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(SpriteBillboardParticle.class)
+@Mixin(TextureSheetParticle.class)
 public interface PFMSpriteBillBoardParticleMixin {
     @Invoker("setSprite")
     @Intrinsic
-    void setSprite(Sprite sprite);
+    void setSprite(TextureAtlasSprite sprite);
 }

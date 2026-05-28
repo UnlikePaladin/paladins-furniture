@@ -9,11 +9,17 @@ import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import com.unlikepaladin.pfm.utilities.Version;
 import net.fabricmc.fabric.impl.resource.loader.ModResourcePackCreator;
 import net.minecraft.SharedConstants;
-import net.minecraft.registry.VersionedIdentifier;
-import net.minecraft.resource.*;
-import net.minecraft.resource.featuretoggle.FeatureFlags;
-import net.minecraft.resource.metadata.PackResourceMetadata;
-import net.minecraft.text.Text;
+import net.minecraft.server.packs.PackLocationInfo;
+import net.minecraft.server.packs.PackSelectionConfig;
+import net.minecraft.server.packs.repository.KnownPack;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.packs.PackResources;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.metadata.pack.PackMetadataSection;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.server.packs.repository.PackCompatibility;
+import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.world.flag.FeatureFlags;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -27,18 +33,19 @@ import java.util.function.Consumer;
 
 @Mixin(ModResourcePackCreator.class)
 public class PFMModResourcePackCreatorMixin {
-    @Final
-    @Shadow
-    private ResourceType type;
 
-    @Inject(method = "register", at = @At("TAIL"))
-    private void addPFMResources(Consumer<ResourcePackProfile> consumer, CallbackInfo ci) {
-        if (type == ResourceType.CLIENT_RESOURCES) {
+    @Shadow
+    @Final
+    private net.minecraft.server.packs.PackType type;
+
+    @Inject(method = "loadPacks", at = @At("TAIL"))
+    private void addPFMResources(Consumer<Pack> consumer, CallbackInfo ci) {
+        if (type == net.minecraft.server.packs.PackType.CLIENT_RESOURCES) {
             AbstractBakedModel.reloading = true;
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Assets for PFM"), SharedConstants.getGameVersion().packVersion(ResourceType.CLIENT_RESOURCES), Optional.empty());
-            ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Assets for PFM"), SharedConstants.getCurrentVersion().getPackVersion(PackType.CLIENT_RESOURCES), Optional.empty());
+            Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
                 @Override
-                public ResourcePack open(ResourcePackInfo info) {
+                public PackResources openPrimary(PackLocationInfo info) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.areAssetsRunning())
                             PFMRuntimeResources.prepareAndRunAssetGen(false);
@@ -46,16 +53,16 @@ public class PFMModResourcePackCreatorMixin {
                 }
 
                 @Override
-                public ResourcePack openWithOverlays(ResourcePackInfo info, ResourcePackProfile.Metadata metadata) {
-                    return open(info);
+                public PackResources openFull(PackLocationInfo info, Pack.Metadata metadata) {
+                    return openPrimary(info);
                 }
             };
-            consumer.accept(ResourcePackProfile.create(new ResourcePackInfo("pfm-asset-resources", Text.literal("PFM Assets"), ResourcePackSource.NONE, Optional.of(new VersionedIdentifier(PaladinFurnitureMod.MOD_ID, "pfm_assets", Version.getCurrentVersion()))), packFactory, ResourceType.CLIENT_RESOURCES, new ResourcePackPosition(true, ResourcePackProfile.InsertionPosition.BOTTOM, false)));
-        } else if (type == ResourceType.SERVER_DATA) {
-            PackResourceMetadata packResourceMetadata = new PackResourceMetadata(Text.literal("Runtime Generated Data for PFM"), SharedConstants.getGameVersion().packVersion(ResourceType.SERVER_DATA), Optional.empty());
-            ResourcePackProfile.PackFactory packFactory = new ResourcePackProfile.PackFactory() {
+            consumer.accept(Pack.readMetaAndCreate(new PackLocationInfo("pfm-asset-resources", Component.literal("PFM Assets"), PackSource.DEFAULT, Optional.of(new KnownPack(PaladinFurnitureMod.MOD_ID, "pfm_assets", Version.getCurrentVersion()))), packFactory, PackType.CLIENT_RESOURCES, new PackSelectionConfig(true, Pack.Position.BOTTOM, false)));
+        } else if (type == PackType.SERVER_DATA) {
+            PackMetadataSection packResourceMetadata = new PackMetadataSection(Component.literal("Runtime Generated Data for PFM"), SharedConstants.getCurrentVersion().getPackVersion(PackType.SERVER_DATA), Optional.empty());
+            Pack.ResourcesSupplier packFactory = new Pack.ResourcesSupplier() {
                 @Override
-                public ResourcePack open(ResourcePackInfo name) {
+                public PackResources openPrimary(PackLocationInfo name) {
                     return new PathPackRPWrapper(Suppliers.memoize(() -> {
                         if (!PFMDataGenerator.isDataRunning())
                             PFMRuntimeResources.prepareAndRunDataGen(false);
@@ -63,11 +70,11 @@ public class PFMModResourcePackCreatorMixin {
                 }
 
                 @Override
-                public ResourcePack openWithOverlays(ResourcePackInfo name, ResourcePackProfile.Metadata metadata) {
-                    return this.open(name);
+                public PackResources openFull(PackLocationInfo name, Pack.Metadata metadata) {
+                    return this.openPrimary(name);
                 }
             };
-            consumer.accept(ResourcePackProfile.create(new ResourcePackInfo("pfm-data-resources", Text.literal("PFM Data"), ResourcePackSource.NONE, Optional.of(new VersionedIdentifier(PaladinFurnitureMod.MOD_ID, "pfm_data", Version.getCurrentVersion()))),  packFactory, ResourceType.SERVER_DATA, new ResourcePackPosition(true, ResourcePackProfile.InsertionPosition.BOTTOM, false)));
+            consumer.accept(Pack.readMetaAndCreate(new PackLocationInfo("pfm-data-resources", Component.literal("PFM Data"), PackSource.DEFAULT, Optional.of(new KnownPack(PaladinFurnitureMod.MOD_ID, "pfm_data", Version.getCurrentVersion()))),  packFactory, PackType.SERVER_DATA, new PackSelectionConfig(true, Pack.Position.BOTTOM, false)));
         }
     }
 }

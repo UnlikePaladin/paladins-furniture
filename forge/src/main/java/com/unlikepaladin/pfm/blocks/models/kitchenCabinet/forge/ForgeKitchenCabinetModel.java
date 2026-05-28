@@ -5,28 +5,29 @@ import com.unlikepaladin.pfm.blocks.KitchenWallDrawerBlock;
 import com.unlikepaladin.pfm.blocks.models.ModelHelper;
 import com.unlikepaladin.pfm.blocks.models.forge.ModelBitSetProperty;
 import com.unlikepaladin.pfm.blocks.models.forge.PFMForgeBakedModel;
-import net.minecraft.block.BlockState;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.render.BlockRenderLayer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.BlockModelPart;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class ForgeKitchenCabinetModel extends PFMForgeBakedModel {
-    public ForgeKitchenCabinetModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+    public ForgeKitchenCabinetModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
@@ -36,7 +37,7 @@ public class ForgeKitchenCabinetModel extends PFMForgeBakedModel {
 
     @NotNull
     @Override
-    public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
+    public ModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
         if (state.getBlock() instanceof KitchenCabinetBlock) {
             ModelData.Builder builder = ModelData.builder();
 
@@ -44,15 +45,15 @@ public class ForgeKitchenCabinetModel extends PFMForgeBakedModel {
             data = super.getModelData(world, pos, state, data);
 
             KitchenCabinetBlock block = (KitchenCabinetBlock) state.getBlock();
-            Direction direction = state.get(KitchenCabinetBlock.FACING);
-            BlockState neighborStateOpposite = world.getBlockState(pos.offset(direction.getOpposite()));
+            Direction direction = state.getValue(KitchenCabinetBlock.FACING);
+            BlockState neighborStateOpposite = world.getBlockState(pos.relative(direction.getOpposite()));
             Direction direction3;
             Direction direction2;
-            boolean innerCorner = block.isCabinet(neighborStateOpposite) && (direction3 = neighborStateOpposite.get(KitchenCabinetBlock.FACING)).getAxis() != state.get(KitchenCabinetBlock.FACING).getAxis() && block.isDifferentOrientation(state, world, pos, direction3);
-            BlockState blockState = world.getBlockState(pos.offset(direction));
+            boolean innerCorner = block.isCabinet(neighborStateOpposite) && (direction3 = neighborStateOpposite.getValue(KitchenCabinetBlock.FACING)).getAxis() != state.getValue(KitchenCabinetBlock.FACING).getAxis() && block.isDifferentOrientation(state, world, pos, direction3);
+            BlockState blockState = world.getBlockState(pos.relative(direction));
             boolean isNeighborStateOppositeFacingDifferentDirection;
-            if (blockState.contains(Properties.HORIZONTAL_FACING)) {
-                direction2 = blockState.get(Properties.HORIZONTAL_FACING);
+            if (blockState.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                direction2 = blockState.getValue(BlockStateProperties.HORIZONTAL_FACING);
                 isNeighborStateOppositeFacingDifferentDirection = block.isDifferentOrientation(state, world, pos, direction2.getOpposite());
             } else {
                 isNeighborStateOppositeFacingDifferentDirection = false;
@@ -67,26 +68,26 @@ public class ForgeKitchenCabinetModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable BlockRenderLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
         BlockState state = extraData.get(STATE);
         if (state != null && state.getBlock() instanceof KitchenCabinetBlock && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             BitSet set = extraData.get(CONNECTIONS).connections;
             KitchenCabinetBlock block = (KitchenCabinetBlock) state.getBlock();
-            Direction direction = state.get(KitchenCabinetBlock.FACING);
+            Direction direction = state.getValue(KitchenCabinetBlock.FACING);
             BlockState neighborStateOpposite = extraData.get(NEIGHBOR_OPPOSITE);
-            List<Sprite> spriteList = getSpriteList(state);
+            List<TextureAtlasSprite> spriteList = getSpriteList(state);
 
             Direction direction3 = null;
-            if (neighborStateOpposite.contains(Properties.HORIZONTAL_FACING)) {
-                direction3 = neighborStateOpposite.get(Properties.HORIZONTAL_FACING);
+            if (neighborStateOpposite.hasProperty(BlockStateProperties.HORIZONTAL_FACING)) {
+                direction3 = neighborStateOpposite.getValue(BlockStateProperties.HORIZONTAL_FACING);
             }
             Direction direction2;
             BlockState blockState = extraData.get(NEIGHBOR_FACING);
-            int openOffset = state.get(KitchenWallDrawerBlock.OPEN) ? 5 : 0;
+            int openOffset = state.getValue(KitchenWallDrawerBlock.OPEN) ? 5 : 0;
             boolean innerCorner = set.get(0);
             boolean isNeighborStateOppositeFacingDifferentDirection = set.get(1);
-            if (block.isCabinet(blockState) && (direction2 = blockState.get(KitchenCabinetBlock.FACING)).getAxis() != state.get(KitchenCabinetBlock.FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
-                if (direction2 == direction.rotateYCounterclockwise()) {
+            if (block.isCabinet(blockState) && (direction2 = blockState.getValue(KitchenCabinetBlock.FACING)).getAxis() != state.getValue(KitchenCabinetBlock.FACING).getAxis() && isNeighborStateOppositeFacingDifferentDirection) {
+                if (direction2 == direction.getCounterClockWise()) {
                     dest.add(getQuadsWithTexture(getTemplateBakedModels().get(3 + openOffset), ModelHelper.getOakPlankLogSprites(), spriteList));
                 }
                 else {
@@ -94,7 +95,7 @@ public class ForgeKitchenCabinetModel extends PFMForgeBakedModel {
                 }
             }
             else if (innerCorner) {
-                if (direction3 == direction.rotateYCounterclockwise()) {
+                if (direction3 == direction.getCounterClockWise()) {
                     dest.add(getQuadsWithTexture(getTemplateBakedModels().get(2 + openOffset), ModelHelper.getOakPlankLogSprites(), spriteList));
                 } else {
                     dest.add(getQuadsWithTexture(getTemplateBakedModels().get(1 + openOffset), ModelHelper.getOakPlankLogSprites(), spriteList));
@@ -106,8 +107,8 @@ public class ForgeKitchenCabinetModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
-        List<Sprite> spriteList = getSpriteList(blockState);
+    public List<BakedQuad> getQuads(@Nullable Direction face, RandomSource random) {
+        List<TextureAtlasSprite> spriteList = getSpriteList(blockState);
         return getQuadsWithTextureInner(getTemplateBakedModels().get(0).getQuads(face), ModelHelper.getOakPlankLogSprites(), spriteList);
     }
 }

@@ -1,26 +1,25 @@
 package com.unlikepaladin.pfm.runtime.data.neoforge;
 
 import com.unlikepaladin.pfm.data.PFMTag;
-import net.minecraft.data.tag.ProvidedTagBuilder;
-import net.minecraft.registry.Registry;
-import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.tag.TagBuilder;
-import net.minecraft.registry.tag.TagEntry;
-import net.minecraft.registry.tag.TagKey;
+import net.minecraft.data.tags.TagsProvider;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagBuilder;
+import net.minecraft.core.Registry;
+import net.minecraft.tags.TagKey;
 
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class PFMTagProviderImpl {
     public static <T> PFMTag<T> getProviderPlatform(TagBuilder builder, Registry<T> registry, String modID) {
-        return new ObjectBuilder<T>(builder, t -> registry.getKey(t).get(), modID);
+        return new ObjectBuilder<T>(builder, t -> registry.getResourceKey(t).get(), modID);
     }
 
-    public static class ObjectBuilder<T> implements PFMTag<T>, ProvidedTagBuilder<RegistryKey<T>, T> {
-        private final Function<T, RegistryKey<T>> valueToKey;
+    public static class ObjectBuilder<T> extends TagsProvider.TagAppender<T>  implements PFMTag<T> {
+        private final Function<T, ResourceKey<T>> valueToKey;
         private final TagBuilder tagBuilder;
-        ObjectBuilder(TagBuilder arg, Function<T, RegistryKey<T>> function, String modId) {
-            super();
+        ObjectBuilder(TagBuilder arg, Function<T, ResourceKey<T>> function, String modId) {
+            super(arg);
             this.valueToKey = function;
             this.tagBuilder = arg;
         }
@@ -34,8 +33,8 @@ public class PFMTagProviderImpl {
         }
 
         @Override
-        public PFMTag<T> addKey(RegistryKey<T>... keys) {
-            for (RegistryKey<T> key : keys){
+        public PFMTag<T> addKey(ResourceKey<T>... keys) {
+            for (ResourceKey<T> key : keys){
                 tagBuilder.add(key.getValue());
             }
             return this;
@@ -64,7 +63,7 @@ public class PFMTagProviderImpl {
             return this;
         }
 
-        public final RegistryKey<T> getKey(T value) {
+        public final ResourceKey<T> getKey(T value) {
             return this.valueToKey.apply(value);
         }
 

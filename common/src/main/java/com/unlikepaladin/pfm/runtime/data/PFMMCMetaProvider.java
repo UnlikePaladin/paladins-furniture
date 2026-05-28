@@ -4,15 +4,13 @@ import com.unlikepaladin.pfm.runtime.PFMGenerator;
 import com.unlikepaladin.pfm.runtime.PFMProvider;
 import com.unlikepaladin.pfm.runtime.PFMRuntimeResources;
 import net.minecraft.SharedConstants;
-import net.minecraft.data.DataWriter;
-import net.minecraft.resource.ResourceType;
+import net.minecraft.server.packs.PackType;
 import org.apache.commons.io.IOUtils;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.concurrent.CompletableFuture;
 
 public class PFMMCMetaProvider extends PFMProvider {
     private PackInfo info;
@@ -33,7 +31,7 @@ public class PFMMCMetaProvider extends PFMProvider {
             writer.write("{\n");
             writer.write("  \"pack\":\n   {\n");
             writer.write("          \"pack_format\": ");
-            writer.write(String.valueOf(SharedConstants.getGameVersion().packVersion(info.type)));
+            writer.write(String.valueOf(SharedConstants.getCurrentVersion().getPackVersion(info.type)));
             writer.write(",\n           \"description\" : \"" + info.description + "\"\n  }\n");
             writer.write("}");
         } catch (IOException e) {
@@ -43,6 +41,6 @@ public class PFMMCMetaProvider extends PFMProvider {
         endProviderRun();
     }
 
-    public record PackInfo(ResourceType type, String description) {
+    public record PackInfo(PackType type, String description) {
     }
 }

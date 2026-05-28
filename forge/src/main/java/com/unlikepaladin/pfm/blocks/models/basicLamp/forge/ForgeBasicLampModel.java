@@ -9,32 +9,35 @@ import com.unlikepaladin.pfm.data.materials.BlockType;
 import com.unlikepaladin.pfm.data.materials.VariantBase;
 import com.unlikepaladin.pfm.data.materials.WoodVariant;
 import com.unlikepaladin.pfm.data.materials.WoodVariantRegistry;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntity;
-import net.minecraft.client.render.BlockRenderLayer;
-import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.model.BakedQuad;
-import net.minecraft.client.render.model.BlockModelPart;
-import net.minecraft.client.render.model.ModelBakeSettings;
-import net.minecraft.client.render.model.ModelSettings;
-import net.minecraft.client.texture.Sprite;
-import net.minecraft.client.texture.SpriteAtlasTexture;
-import net.minecraft.client.util.SpriteIdentifier;
-import net.minecraft.state.property.Properties;
-import net.minecraft.util.Identifier;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.Direction;
-import net.minecraft.world.BlockRenderView;
+import com.unlikepaladin.pfm.items.PFMComponents;
+import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.item.ModelRenderProperties;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraftforge.client.model.data.ModelData;
 import net.minecraftforge.client.model.data.ModelProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
-import net.minecraft.util.math.random.Random;
+import net.minecraft.util.RandomSource;
 
 public class ForgeBasicLampModel extends PFMForgeBakedModel {
-    public ForgeBasicLampModel(ModelBakeSettings settings, ModelSettings modelSettings, List<BlockModelPart> modelParts) {
+    public ForgeBasicLampModel(ModelState settings, ModelRenderProperties modelSettings, List<BlockModelPart> modelParts) {
         super(settings, modelSettings, modelParts);
     }
 
@@ -44,7 +47,7 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
 
     @NotNull
     @Override
-    public ModelData getModelData(@NotNull BlockRenderView world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
+    public ModelData getModelData(@NotNull BlockAndTintGetter world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ModelData tileData) {
         if (state.getBlock() instanceof BasicLampBlock) {
             ModelData.Builder builder = ModelData.builder();
 
@@ -57,42 +60,43 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
                 variant = ((LampBlockEntity) entity).getVariant();
             }
             BitSet set = new BitSet();
-            set.set(0, world.getBlockState(pos.up()).getBlock() instanceof BasicLampBlock);
-            set.set(1, world.getBlockState(pos.down()).getBlock() instanceof BasicLampBlock);
+            set.set(0, world.getBlockState(pos.above()).getBlock() instanceof BasicLampBlock);
+            set.set(1, world.getBlockState(pos.below()).getBlock() instanceof BasicLampBlock);
             data = data.derive().with(CONNECTIONS, new ModelBitSetProperty(set)).with(VARIANT, variant).build();
             return data;
         }
         return tileData;
     }
 
-    static List<Sprite> oakSprite = new ArrayList<>();
-    static List<Sprite> getOakStrippedLogSprite() {
+    static List<TextureAtlasSprite> oakSprite = new ArrayList<>();
+    static List<TextureAtlasSprite> getOakStrippedLogSprite() {
         if (!oakSprite.isEmpty())
             return oakSprite;
-        Sprite wood = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE,  Identifier.of("minecraft:block/stripped_oak_log")).getSprite();
+        TextureAtlasSprite wood = new Material(TextureAtlas.LOCATION_BLOCKS, ResourceLocation.parse("minecraft:block/stripped_oak_log")).sprite();
         oakSprite.add(wood);
         return oakSprite;
     }
 
-    Map<WoodVariant, List<Sprite>> sprites = new HashMap<>();
-    List<Sprite> getVariantStrippedLogSprite(WoodVariant variant) {
+    Map<WoodVariant, List<TextureAtlasSprite>> sprites = new HashMap<>();
+    List<TextureAtlasSprite> getVariantStrippedLogSprite(WoodVariant variant) {
         if (sprites.containsKey(variant))
             return sprites.get(variant);
 
-        Sprite wood = new SpriteIdentifier(SpriteAtlasTexture.BLOCK_ATLAS_TEXTURE, variant.getTexture(BlockType.STRIPPED_LOG)).getSprite();
-        List<Sprite> spriteList = new ArrayList<>();
+        TextureAtlasSprite wood = new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)).sprite();
+        List<TextureAtlasSprite> spriteList = new ArrayList<>();
         spriteList.add(wood);
         sprites.put(variant, spriteList);
         return spriteList;
     }
 
     @Override
-    public void collectParts(Random random, List<BlockModelPart> dest, ModelData extraData, @Nullable BlockRenderLayer renderType) {
+    public void collectParts(RandomSource random, List<BlockModelPart> dest, ModelData extraData, @Nullable ChunkSectionLayer renderType) {
         BlockState state = extraData.get(STATE);
         if (state != null && extraData.get(CONNECTIONS) != null && extraData.get(CONNECTIONS).connections != null) {
             List<BlockModelPart> quads = new ArrayList<>();
-            int onOffset = state.get(Properties.LIT) ? 1 : 0;
+            int onOffset = state.getValue(BlockStateProperties.LIT) ? 1 : 0;
             WoodVariant variant = extraData.get(VARIANT);
+            TextureAtlasSprite sprite = new Material(TextureAtlas.LOCATION_BLOCKS, variant.getTextureLocation(BlockType.STRIPPED_LOG)).sprite();
             BitSet set = extraData.get(CONNECTIONS).connections;
             if (set.get(0) && set.get(1)) {
                 quads.add(getTemplateBakedModels().get(1));
@@ -112,9 +116,9 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
             dest.addAll(getTexturedParts(quads, getOakStrippedLogSprite(), getVariantStrippedLogSprite(variant)));
         }
     }
-    
+
     @Override
-    public Sprite particleIcon(@NotNull ModelData data) {
+    public TextureAtlasSprite particleIcon(@NotNull ModelData data) {
         if (data != null && data.has(VARIANT)) {
             return getVariantStrippedLogSprite(data.get(VARIANT)).get(0);
         }
@@ -122,7 +126,7 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
     }
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuads(@Nullable Direction face, RandomSource random) {
         List<BakedQuad> quads = new ArrayList<>();
         WoodVariant variant = WoodVariantRegistry.OAK;
         if (this.variant != null) {
@@ -136,7 +140,7 @@ public class ForgeBasicLampModel extends PFMForgeBakedModel {
 
     protected Map<Pair<VariantBase<?>, Direction>, List<BakedQuad>> cache = new HashMap<>();
     @Override
-    public List<BakedQuad> getQuadsCached(@Nullable Direction face, Random random) {
+    public List<BakedQuad> getQuadsCached(@Nullable Direction face, RandomSource random) {
         Pair<VariantBase<?>, Direction> directionPair = new Pair<>(variant, face);
         if (cache.containsKey(directionPair))
             return cache.get(directionPair);

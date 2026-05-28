@@ -1,8 +1,8 @@
 package com.unlikepaladin.pfm.blocks;
 
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.util.StringRepresentable;
 
-public enum ToiletState implements StringIdentifiable {
+public enum ToiletState implements StringRepresentable {
     CLEAN("clean"),
     DIRTY("dirty"),
     FLUSHING("flushing"),
@@ -19,7 +19,7 @@ public enum ToiletState implements StringIdentifiable {
     }
 
     @Override
-    public String asString() {
+    public String getSerializedName() {
         return this.name;
     }
 }

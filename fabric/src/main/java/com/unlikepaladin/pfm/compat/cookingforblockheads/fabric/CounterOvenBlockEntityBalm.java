@@ -5,9 +5,10 @@ import net.blay09.mods.balm.api.container.BalmContainerProvider;
 import net.blay09.mods.cookingforblockheads.api.KitchenItemProvider;
 import net.blay09.mods.cookingforblockheads.capability.KitchenItemProviderHolder;
 import net.blay09.mods.cookingforblockheads.kitchen.ContainerKitchenItemProvider;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.Inventory;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.Container;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implements BalmContainerProvider, KitchenItemProviderHolder {
     private final KitchenItemProvider itemProvider;
@@ -18,7 +19,7 @@ public class CounterOvenBlockEntityBalm extends CounterOvenBlockEntity implement
     }
 
     @Override
-    public Inventory getContainer() {
+    public Container getContainer() {
         return this;
     }
 

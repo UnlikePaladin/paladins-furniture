@@ -1,38 +1,38 @@
 package com.unlikepaladin.pfm.entity.render;
 
 
+import com.mojang.math.Axis;
 import com.unlikepaladin.pfm.blocks.blockentities.MicrowaveBlockEntity;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.render.WorldRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRenderer;
-import net.minecraft.client.render.block.entity.BlockEntityRendererFactory;
-import net.minecraft.client.render.item.ItemRenderer;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemDisplayContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.recipe.RecipePropertySet;
-import net.minecraft.util.math.Direction;
-import net.minecraft.util.math.RotationAxis;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.crafting.RecipePropertySet;
+import net.minecraft.world.phys.Vec3;
 
 public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implements BlockEntityRenderer<T> {
     public ItemStack itemStack;
     private final ItemRenderer itemRenderer;
     private RecipePropertySet recipePropertySet;
 
-    public MicrowaveBlockEntityRenderer(BlockEntityRendererFactory.Context ctx) {
+    public MicrowaveBlockEntityRenderer(BlockEntityRendererProvider.Context ctx) {
         itemRenderer = ctx.getItemRenderer();
     }
 
     @Override
-    public void render(T blockEntity, float tickDelta, MatrixStack matrices, VertexConsumerProvider vertexConsumers, int light, int overlay, Vec3d cameraPos) {
+    public void render(T blockEntity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay, Vec3 cameraPos) {
         if (blockEntity instanceof MicrowaveBlockEntity) {
-            itemStack = blockEntity.getStack(0);
-            matrices.push();
+            itemStack = blockEntity.getItem(0);
+            matrices.pushPose();
             if (recipePropertySet == null)
-                recipePropertySet = blockEntity.getWorld().getRecipeManager().getPropertySet(RecipePropertySet.SMOKER_INPUT);
+                recipePropertySet = blockEntity.getLevel().recipeAccess().propertySet(RecipePropertySet.SMOKER_INPUT);
 
-            int lightAbove = WorldRenderer.getLightmapCoordinates(blockEntity.getWorld(), blockEntity.getPos().up());
+            int lightAbove = LevelRenderer.getLightColor(blockEntity.getLevel(), blockEntity.getBlockPos().above());
             Direction facing = blockEntity.getFacing();
             float x,y,z;
             switch (facing) {
@@ -59,12 +59,12 @@ public class MicrowaveBlockEntityRenderer<T extends MicrowaveBlockEntity> implem
                 default -> throw new IllegalStateException("Unexpected value: " + facing);
             }
             matrices.translate(x, y ,z);
-            matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees(-facing.getPositiveHorizontalDegrees()));
-            if (blockEntity.isActive && recipePropertySet.canUse(itemStack)) {
-                matrices.multiply(RotationAxis.POSITIVE_Y.rotationDegrees((blockEntity.getWorld().getTime() + tickDelta) * 4));}
+            matrices.mulPose(Axis.YP.rotationDegrees(-facing.toYRot()));
+            if (blockEntity.isActive && recipePropertySet.test(itemStack)) {
+                matrices.mulPose(Axis.YP.rotationDegrees((blockEntity.getLevel().getDayTime() + tickDelta) * 4));}
             matrices.scale(0.5f, 0.5f, 0.5f);
-            this.itemRenderer.renderItem(itemStack, ItemDisplayContext.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getWorld(), 0);
-            matrices.pop();
+            this.itemRenderer.renderStatic(itemStack, ItemDisplayContext.GROUND, lightAbove, overlay, matrices, vertexConsumers, blockEntity.getLevel(), 0);
+            matrices.popPose();
         }
     }
 

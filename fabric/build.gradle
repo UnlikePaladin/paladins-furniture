@@ -68,6 +68,7 @@ repositories {
             includeGroup "net.blay09.mods"
         }
     }
+    maven { url 'https://maven.fallenbreath.me/releases' }
 }
 
 if (rootProject.sandwichable_compatibility == "true") {
@@ -198,6 +199,8 @@ dependencies {
     include(implementation("com.github.SvenWoltmann:color-thief-java:${rootProject.color_thief_version}"))
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.4.1")))
 
+    modImplementation 'me.fallenbreath:conditional-mixin-fabric:0.6.4'
+    include 'me.fallenbreath:conditional-mixin-fabric:0.6.4'
 }
 
 dependencies {

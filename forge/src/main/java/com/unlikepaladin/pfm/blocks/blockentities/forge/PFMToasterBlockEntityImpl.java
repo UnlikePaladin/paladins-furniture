@@ -1,24 +1,17 @@
 package com.unlikepaladin.pfm.blocks.blockentities.forge;
 
 import com.unlikepaladin.pfm.blocks.blockentities.PFMToasterBlockEntity;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.entity.BlockEntityType;
-import net.minecraft.inventory.Inventories;
-import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.network.ClientConnection;
-import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
-import net.minecraft.registry.RegistryEntryLookup;
-import net.minecraft.registry.RegistryWrapper;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.storage.ReadView;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.BlockPos;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Optional;
 
 public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
     public PFMToasterBlockEntityImpl(BlockPos pos, BlockState state) {
@@ -26,37 +19,37 @@ public class PFMToasterBlockEntityImpl extends PFMToasterBlockEntity{
     }
 
     public static boolean isMetal(ItemStack stack) {
-        return stack.getItem().getTranslationKey().contains("iron");
+        return stack.getItem().getDescriptionId().contains("iron");
     }
 
     public static void sandwichableToast(PFMToasterBlockEntity pfmToasterBlockEntity) {
     }
 
-    public static BlockEntityType.BlockEntityFactory<? extends PFMToasterBlockEntity> getFactory() {
+    public static BlockEntityType.BlockEntitySupplier<? extends PFMToasterBlockEntity> getFactory() {
         return PFMToasterBlockEntityImpl::new;
     }
 
     @Nullable
     @Override
-    public BlockEntityUpdateS2CPacket toUpdatePacket() {
-        return BlockEntityUpdateS2CPacket.create(this);
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
-    public NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registryLookup) {
-        return createNbt(registryLookup);
+    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
+        return saveWithoutMetadata(registryLookup);
     }
 
     @Override
-    public void handleUpdateTag(ReadView tag, RegistryWrapper.WrapperLookup holders) {
-        super.handleUpdateTag(tag, holders);
+    public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider holders) {
+       this.loadAdditional(tag, holders);
         this.readData(tag);
     }
 
     @Override
-    public void onDataPacket(ClientConnection connection, ReadView data, RegistryWrapper.WrapperLookup lookup) {
-        super.onDataPacket(connection, data, lookup);
+    public void onDataPacket(Connection net, ReadView data, HolderLookup.Provider registryLookup) {
+        super.onDataPacket(net, data, registryLookup);
         this.getItems().clear();
-        Inventories.readData(data, this.items);
+        ContainerHelper.loadAllItems(data, this.items, registryLookup);
     }
 }
